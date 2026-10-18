@@ -174,7 +174,8 @@ class ReadBroker:
             raise BrokerFailure()
         if (index.get('state') != 'ONLINE' or type(config.get('vector.dimensions')) is not int
                 or config['vector.dimensions'] != 3072
-                or str(config.get('vector.similarity_function','cosine')).lower() != 'cosine'):
+                or not isinstance(config.get('vector.similarity_function'), str)
+                or config['vector.similarity_function'].lower() != 'cosine'):
             raise BrokerFailure(503)
 
     def read(self,value,authorization):

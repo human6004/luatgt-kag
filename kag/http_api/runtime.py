@@ -563,12 +563,12 @@ class RuntimeSupervisor:
         self._llm_runtime_error = None
         self._llm_base_settings = None
 
-    def _config_storage(self, path, *, private=False):
+    def _config_storage(self, path, *, private=False, writable=True):
         root = path.parent
         info = root.lstat()
         if (not stat.S_ISDIR(info.st_mode) or root.resolve() != root or info.st_uid != os.geteuid()
                 or info.st_mode & (0o077 if private else 0o022)
-                or not os.access(root, os.R_OK | os.W_OK | os.X_OK)):
+                or not os.access(root, os.R_OK | os.X_OK | (os.W_OK if writable else 0))):
             raise OSError('Configuration directory unavailable')
         if path.exists() or path.is_symlink():
             info = path.lstat()
@@ -718,7 +718,7 @@ class RuntimeSupervisor:
                     (value['dimension'] is None or not 1 <= value['dimension'] <= 65536 if role == 'embedding' else value['output_chars'] < 1))):
             raise ApiFailure('INVALID_REQUEST')
 
-    def load_llm_config(self, secrets):
+    def load_llm_config(self, secrets, *, read_only=False):
         self._llm_config, self._llm_error = None, None
         self._llm_secrets = (*secrets.query_tokens, *secrets.inspect_tokens, *secrets.credentials_write_tokens,
                             *secrets.provider_test_tokens, *secrets.config_apply_tokens)
@@ -726,7 +726,7 @@ class RuntimeSupervisor:
         self._llm_test_allowed, self._llm_apply_allowed = bool(secrets.provider_test_tokens), bool(secrets.config_apply_tokens)
         self._llm_bound, self._llm_runtime_error = {}, None
         try:
-            self._config_storage(LLM_CONFIG_PATH, private=True)
+            self._config_storage(LLM_CONFIG_PATH, private=True, writable=not read_only)
             if LLM_CONFIG_PATH.exists():
                 with LLM_CONFIG_PATH.open('rb') as stream:
                     raw = stream.read(65537)
@@ -767,7 +767,7 @@ class RuntimeSupervisor:
                 'connection_tested': any(row['test'] and row['test']['status']=='PASS' for row in roles.values()),
                 'save_allowed': self._llm_write_allowed and self._llm_error is None and revision < 2147483647,
                 'error_code': self._llm_error, 'roles': roles,
-                'build_config': dict(state='NOT_SUPPORTED', reason='BUILDER_REPLAY_ONLY')}
+                'build_config': dict(state='SEPARATE', reason='BUILDER_CONFIGURATION_API')}
 
     def _persist_llm(self, updated):
         from kag.run_state import atomic_json

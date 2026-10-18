@@ -63,6 +63,8 @@ class RunnerPreflightTests(unittest.TestCase):
         cls.adapter = importlib.import_module('kag.builder.writer_adapter')
 
     def setUp(self):
+        schema = patch('kag.runner._check_target_layout')
+        schema.start(); self.addCleanup(schema.stop)
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
@@ -403,6 +405,17 @@ class RunnerExecutionTests(unittest.TestCase):
         self.reader.database_identity = lambda: 'physical-fixture-db'
         self.reader.database_metadata = Database().database_metadata
         self.calls = []
+        # The fixture starts with graph data; retain its same-model readback history.
+        from kag.verify import index_expected
+        prior = Path(self.config['paths']['run_root']) / 'model-origin'
+        prior.mkdir(parents=True)
+        with sqlite3.connect(prior / 'ledger.sqlite3') as db:
+            db.execute('CREATE TABLE run_meta(key TEXT PRIMARY KEY,value TEXT)')
+            db.execute('INSERT INTO run_meta VALUES (?,?)', ('identity', canonical_json(dict(
+                database_id='physical-fixture-db', namespace=self.config['namespace'],
+                model_identity=MODEL, dimension=3072))))
+        index_expected(prior / 'expected.sqlite3', self.nodes, self.edges,
+                       contract=CONTRACT, provenance=self.jobs)
 
     def execute(self, run_id='fixture-run', **kwargs):
         api = self.api()
@@ -483,7 +496,10 @@ class RunnerExecutionTests(unittest.TestCase):
         from kag import verify
         original = verify.verify_graph
         def barrier(reader, **kwargs):
-            if kwargs.get('nodes_only'): raise RunBlocked('NODES')
+            if kwargs.get('nodes_only'):
+                status=self.record('status.json')
+                self.assertEqual((status['stage'],status['state'],status['done']),('verify-nodes','RUNNING',0))
+                raise RunBlocked('NODES')
             return original(reader, **kwargs)
         with patch.object(verify, 'verify_graph', barrier):
             self.assertEqual(self.execute(), 2)

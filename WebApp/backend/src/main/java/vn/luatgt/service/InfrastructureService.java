@@ -38,7 +38,15 @@ public class InfrastructureService {
     public JsonNode builderStatus() { return kag.builderStatus(); }
     public JsonNode builderInputs() { return kag.builderInputs(); }
     public JsonNode checkBuilderInputs() { return kag.checkBuilderInputs(); }
+    public JsonNode builderConfiguration() { return kag.builderConfiguration(); }
+    public JsonNode builderProjects() { return kag.builderProjects(); }
+    public JsonNode builderStructure(String action,JsonNode change) { return kag.builderStructure(action,change); }
+    public JsonNode saveBuilderConfiguration(JsonNode change) { return kag.saveBuilderConfiguration(change); }
+    public JsonNode previewBuilderSelection(JsonNode change) { return kag.previewBuilderSelection(change); }
+    public JsonNode builderClear(String action,JsonNode change) { return kag.builderClear(action,change); }
+    public JsonNode checkBuilderReadiness() { return kag.checkBuilderReadiness(); }
     public JsonNode builderAction(String action,String runId) { return kag.builderAction(action,runId); }
+    public JsonNode builderAction(String action,String runId,String revision) { return kag.builderAction(action,runId,revision); }
     public JsonNode benchmarkDatasets() { return kag.benchmarkDatasets(); }
     public JsonNode sampleInspection() { return kag.sampleInspection(); }
     public JsonNode retrieve(KagRetrieveRequest request) { return kag.retrieve(request.message(),request.top_k(),request.expand()); }

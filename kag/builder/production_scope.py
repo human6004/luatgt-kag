@@ -1,10 +1,11 @@
 """Offline production preflight. Call before constructing any vectorizer/writer."""
 from collections.abc import Mapping
 from collections import Counter
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 import hashlib
 import ipaddress
 import json
+import re
 from pathlib import Path, PurePosixPath, PureWindowsPath
 from types import SimpleNamespace
 import sqlite3
@@ -44,6 +45,13 @@ def _checksum(path):
     return digest.hexdigest()
 
 
+def _input_version(path):
+    path = Path(path)
+    value = path.stat()
+    return (str(path.resolve()), value.st_dev, value.st_ino, value.st_size,
+            value.st_mtime_ns, value.st_ctime_ns)
+
+
 def _endpoint(value, schemes, location):
     try:
         parsed = urlsplit(value)
@@ -80,16 +88,14 @@ class ProductionSettings:
             raise ProductionScopeError('explicit PRODUCTION scope and runtime location are required')
         if (not isinstance(self.project_name, str) or not self.project_name.strip()
                 or self.project_name.strip() != self.project_name
-                or self.project_name == 'VietRoadTrafficC43A10Pct'
-                or self.project_name.startswith('C4_1_SMOKE_')
-                or self.namespace != 'VietRoadTraffic'):
-            raise ProductionScopeError('production project name/namespace must identify a separate target')
+                or len(self.project_name) > 255
+                or not isinstance(self.namespace, str)
+                or not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]{0,63}', self.namespace)):
+            raise ProductionScopeError('production project name/namespace is invalid')
         if type(self.expected_project_id) is not int or self.expected_project_id <= 0:
             raise ProductionScopeError('expected production project ID must be a positive native int')
-        if self.expected_project_id == SAMPLE_PROJECT_ID:
-            raise ProductionScopeError('reserved sample project ID cannot authorize production')
-        if type(self.vector_dimensions) is not int or self.vector_dimensions != 3072:
-            raise ProductionScopeError('production vector dimension must be 3072')
+        if type(self.vector_dimensions) is not int or not 1 <= self.vector_dimensions <= 65536:
+            raise ProductionScopeError('production vector dimension must be between 1 and 65536')
         expected = (f'CONFIRM_PRODUCTION:{self.project_name}:{self.namespace}:'
                     f'{self.expected_project_id}:{C3_IDENTITY["plan_sha256"]}')
         if self.confirmation != expected:
@@ -100,6 +106,99 @@ class ProductionSettings:
 
 def _spec_hash(spec):
     return hashlib.sha256(canonical_json(spec).encode('utf-8')).hexdigest()
+
+
+def target_contract(namespace):
+    if not isinstance(namespace, str) or not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]{0,63}', namespace):
+        raise ProductionScopeError('invalid target namespace')
+    contract = json.loads((ROOT / 'kag/schema/schema_contract.json').read_bytes())
+    contract['namespace'] = namespace
+    contract['edge_application_key_contract']['type_qualification'] = namespace + '.<EntityType>'
+    return contract
+
+
+def map_spec(spec, namespace):
+    """Requalify verified source types; leave corpus files and property values untouched."""
+    from .mapping import application_edge_key
+    if 'type' in spec:
+        return dict(spec, type=namespace + '.' + spec['type'].rsplit('.', 1)[-1])
+    fields = list(spec['tuple'])
+    for position in (0, 3):
+        fields[position] = namespace + '.' + fields[position].rsplit('.', 1)[-1]
+    return dict(spec, tuple=fields, application_edge_key=application_edge_key(fields))
+
+
+def selected_hashes(node_hashes, edge_hashes, selection, *, max_nodes=128, max_edges=256):
+    """Restrict verified identities; legacy SAMPLE callers retain their limits."""
+    try:
+        if set(selection) != {'node_limit', 'node_keys', 'edge_tuples'}:
+            raise ValueError
+        keys = [tuple(key) for key in selection['node_keys']]
+        edges = [tuple(key) for key in selection['edge_tuples']]
+        chosen = set(keys)
+        if (type(selection['node_limit']) is not int or not 1 <= len(keys) <= selection['node_limit'] <= max_nodes
+                or len(keys) != len(chosen) or not 1 <= len(edges) <= max_edges or len(edges) != len(set(edges))
+                or any(len(key) != 2 or key not in node_hashes for key in keys)
+                or any(len(key) != 5 or key not in edge_hashes or key[:2] not in chosen or key[3:] not in chosen for key in edges)):
+            raise ValueError
+        return ({key: node_hashes[key] for key in keys}, {key: edge_hashes[key] for key in edges})
+    except (KeyError, TypeError, ValueError):
+        raise ProductionScopeError('bounded source selection is invalid or escapes the verified corpus') from None
+
+
+def selection_limit(total, mode, value):
+    """Percentages round up; never silently increase an undersized request."""
+    if mode == 'ALL' and value is None:return None
+    if type(value) is not int or mode not in ('COUNT','PERCENT'):
+        raise ProductionScopeError('choose all, an integer count or an integer percentage')
+    if mode == 'PERCENT':
+        if not 1 <= value <= 100:raise ProductionScopeError('percentage must be between 1 and 100')
+        value = (total*value+99)//100
+    if not 3 <= value <= total:
+        raise ProductionScopeError('selection must contain at least 3 nodes and cannot exceed the source')
+    return value
+
+
+def selection_summary(data, selection=None):
+    if selection is None:
+        nodes=data['manifest']['node_counts'];edges=data['manifest']['edge_unique_counts']
+    else:
+        nodes=Counter(key[0].rsplit('.',1)[-1] for key in selection['node_keys'])
+        edges=Counter(key[2] for key in selection['edge_tuples'])
+    return dict(nodes=sum(nodes.values()),edges=sum(edges.values()),node_counts=dict(sorted(nodes.items())),
+        edge_counts=dict(sorted(edges.items())),excluded_edges=len(data['edge_hashes'])-sum(edges.values()))
+
+
+def select_bounded_sources(data, node_limit, *, extended=False):
+    """Choose short real records deterministically, retaining types and closed relations."""
+    maximum = len(data['node_hashes']) if extended else min(128,len(data['node_hashes']))
+    if type(node_limit) is not int or not 3 <= node_limit <= maximum:
+        raise ProductionScopeError('node limit must be between 3 and the permitted source count')
+    costs = {(n['type'], n['id']): sum(len(n['properties'].get(prop) or '')
+             for prop, _ in TARGETS[n['type'].rsplit('.', 1)[-1]]) for n in data['nodes']}
+    edges = list(data['edge_hashes'])
+    if not edges or not costs:
+        raise ProductionScopeError('bounded selection requires nodes and relations')
+    ordered = sorted(edges, key=lambda key: (-len({key[0], key[3]}), costs[key[:2]] + costs[key[3:]], key))
+    chosen = {ordered[0][:2], ordered[0][3:]}
+    for kind in sorted({key[0] for key in costs}):
+        if not any(key[0] == kind for key in chosen):
+            chosen.add(min((key for key in costs if key[0] == kind), key=lambda key: (costs[key], key)))
+    if len(chosen)>node_limit:
+        raise ProductionScopeError('selection is too small to retain all source types and a relation')
+    for key in ordered:
+        added = {key[:2], key[3:]} - chosen
+        if len(chosen) + len(added) <= node_limit:
+            chosen.update(added)
+    for key in sorted(costs, key=lambda key: (costs[key], key)):
+        if len(chosen) >= node_limit:
+            break
+        chosen.add(key)
+    selected_edges=[key for key in sorted(edges) if key[:2] in chosen and key[3:] in chosen]
+    selection = dict(node_limit=node_limit, node_keys=sorted(chosen),edge_tuples=selected_edges if extended else selected_edges[:256])
+    selected_hashes(data['node_hashes'], data['edge_hashes'], selection,
+        max_nodes=maximum,max_edges=len(edges) if extended else 256)
+    return selection
 
 
 @dataclass(frozen=True)
@@ -114,6 +213,11 @@ class ProductionScope:
     @property
     def node_keys(self):
         return self.node_hashes.keys()
+
+    def restrict(self, selection):
+        nodes, edges = selected_hashes(self.node_hashes, self.edge_hashes, selection,
+            max_nodes=len(self.node_hashes),max_edges=len(self.edge_hashes))
+        return replace(self, node_hashes=nodes, edge_hashes=edges)
 
     def verify_files(self, contract):
         self.settings.validate()
@@ -132,12 +236,12 @@ class ProductionScope:
             permitted = {vector for _, vector in targets}
             for name in list(props):
                 if name.startswith('_'):
-                    if name not in permitted or not _valid_vector(props[name], 3072):
-                        raise ProductionScopeError('production node contains an unauthorized or invalid 3072 vector')
+                    if name not in permitted or not _valid_vector(props[name], self.settings.vector_dimensions):
+                        raise ProductionScopeError('production node contains an unauthorized or invalid vector')
                     props.pop(name)
             if require_vectors and any(spec['properties'].get(prop) and vector not in spec['properties']
                                        for prop, vector in targets):
-                raise ProductionScopeError('production content requires its 3072 vector before writing')
+                raise ProductionScopeError('production content requires its vector before writing')
             key = (spec['type'], spec['id'])
             if self.node_hashes.get(key) != _spec_hash(dict(spec, properties=props)):
                 raise ProductionScopeError('production node payload differs from C3 golden plan')
@@ -221,9 +325,13 @@ class _DiskHashes(Mapping):
 def validate_c3_manifest(contract, manifest_path, *, project_root=None, db_path=None):
     """Verify C3 data only; returns no project/scope authorization or writer proof."""
     root = Path(project_root if project_root is not None else ROOT).resolve()
-    path = Path(manifest_path).resolve()
+    path = Path(manifest_path).absolute()
     index = None
     try:
+        versions = {path: _input_version(path)}
+        documents_dir = root / 'data/processed/documents'
+        if documents_dir.is_dir():
+            versions[documents_dir] = _input_version(documents_dir)
         raw = path.read_bytes()
         manifest = json.loads(raw)
         if not isinstance(manifest, dict) or 'chosen_partition' in manifest:
@@ -234,6 +342,7 @@ def validate_c3_manifest(contract, manifest_path, *, project_root=None, db_path=
         files = [(path, hashlib.sha256(raw).hexdigest())]
         schema_paths = (ROOT / 'kag/schema/VietRoadTraffic.schema', ROOT / 'kag/schema/schema_contract.json')
         for schema_path, key in zip(schema_paths, ('schema_sha256', 'contract_sha256')):
+            versions[schema_path] = _input_version(schema_path)
             files.append((schema_path, C3_IDENTITY[key]))
         if json.loads(schema_paths[1].read_bytes()) != contract:
             raise ProductionScopeError('supplied schema contract differs from the approved contract')
@@ -248,6 +357,7 @@ def validate_c3_manifest(contract, manifest_path, *, project_root=None, db_path=
             hashes[name] = row['sha256']
             input_path = ((root / 'artifacts/inputs/xref-a3g2' / name)
                           if name in dict(ARTIFACT_HASHES) and name.startswith('xref_') else root / name)
+            versions[input_path] = _input_version(input_path)
             resolved = input_path.resolve()
             if not resolved.is_relative_to(root):
                 raise ProductionScopeError('production input escapes project root')
@@ -265,6 +375,7 @@ def validate_c3_manifest(contract, manifest_path, *, project_root=None, db_path=
             index.db.execute('DELETE FROM c3_sources')
             for name, key in (('nodes', 'nodes_jsonl_sha256'), ('edges', 'edges_jsonl_sha256')):
                 record_path = path.parent / (name + '.jsonl')
+                versions[record_path] = _input_version(record_path)
                 files.append((record_path, C3_IDENTITY[key]))
                 if _checksum(record_path) != C3_IDENTITY[key]:
                     raise ProductionScopeError(f'actual C3 {key} checksum mismatch')
@@ -300,6 +411,7 @@ def validate_c3_manifest(contract, manifest_path, *, project_root=None, db_path=
             if orphan: raise ProductionScopeError('C3 edge endpoint missing')
         records = {name: _DiskRecords(index, name) for name in ('nodes', 'edges')}
         plan_path = path.parent / 'plan.sha256'
+        versions[plan_path] = _input_version(plan_path)
         expected_plan_bytes = (C3_IDENTITY['plan_sha256'] + '\n').encode('ascii')
         files.append((plan_path, hashlib.sha256(expected_plan_bytes).hexdigest()))
         plan = SimpleNamespace(**records, input_manifest=inputs,
@@ -310,9 +422,12 @@ def validate_c3_manifest(contract, manifest_path, *, project_root=None, db_path=
         for file_path, expected in files:
             if _checksum(file_path) != expected:
                 raise ProductionScopeError(f'{file_path.name}: C3 checksum mismatch')
+        if any(_input_version(source) != version for source, version in versions.items()):
+            raise ProductionScopeError('C3 inputs changed during validation')
         index.seal()
         files.append((index.path.resolve(), _checksum(index.path)))
         return dict(records, manifest=manifest, file_checksums=tuple(files), index=index,
+                    file_versions=tuple(versions.items()),
                     node_hashes=node_hashes, edge_hashes=edge_hashes,
                     contract_hash=_spec_hash(contract))
     except ProductionScopeError:
@@ -328,8 +443,27 @@ def validate_production_scope(settings, contract, manifest_path, *, project_root
     if not isinstance(settings, ProductionSettings):
         raise ProductionScopeError('explicit production settings are required')
     settings.validate()
-    data = validate_c3_manifest(contract, manifest_path, project_root=project_root)
+    canonical = json.loads((ROOT / 'kag/schema/schema_contract.json').read_bytes())
+    if contract != target_contract(settings.namespace):
+        raise ProductionScopeError('target contract differs from the supplied LuatGT schema')
+    data = validate_c3_manifest(canonical, manifest_path, project_root=project_root)
+    index = data['index']
+    if settings.namespace != canonical['namespace']:
+        index.db.close()
+        index.db = sqlite3.connect(index.path)
+        with index.db:
+            for kind in ('nodes', 'edges'):
+                rows = index.db.execute('SELECT ordinal,payload FROM c3_sources WHERE kind=? ORDER BY ordinal', (kind,))
+                for ordinal, payload in rows:
+                    spec = map_spec(json.loads(payload), settings.namespace)
+                    key = (spec['type'], spec['id']) if kind == 'nodes' else tuple(spec['tuple'])
+                    endpoints = (None, None) if kind == 'nodes' else (canonical_json(key[:2]), canonical_json(key[3:]))
+                    index.db.execute('UPDATE c3_sources SET key=?,source_hash=?,payload=?,from_key=?,to_key=? WHERE kind=? AND ordinal=?',
+                        (canonical_json(key), _spec_hash(spec), canonical_json(spec), *endpoints, kind, ordinal))
+        index.seal()
+        data['file_checksums'] = tuple((path, _checksum(path) if path == index.path.resolve() else digest)
+            for path, digest in data['file_checksums'])
     scope = ProductionScope(settings, data['file_checksums'], data['node_hashes'],
-                            data['edge_hashes'], data['contract_hash'], _PRODUCTION_PROOF)
+                            data['edge_hashes'], _spec_hash(contract), _PRODUCTION_PROOF)
     scope.verify_files(contract)
     return scope

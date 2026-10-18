@@ -24,7 +24,7 @@ export type LLMCredentials = {
     status: 'NOT_CONFIGURED' | 'SAVED' | 'PENDING_APPLY' | 'APPLIED' | 'BLOCKED'; blocker: string | null
     actions: { test: boolean; apply: boolean }
   }>
-  build_config: { state: 'NOT_SUPPORTED'; reason: 'BUILDER_REPLAY_ONLY' }
+  build_config: { state: 'SEPARATE'; reason: 'BUILDER_CONFIGURATION_API' } | { state: 'NOT_SUPPORTED'; reason: 'BUILDER_REPLAY_ONLY' }
 }
 function llmInput(value: LLMInput) {
   if (!value || value.provider !== 'openai-compatible' || typeof value.model !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(value.model) ||
@@ -41,7 +41,8 @@ function validateLLMCredentials(value: LLMCredentials) {
     value.contract_version !== 'llm-credentials-v3' || !count(value.revision, 2147483647) || typeof value.saved !== 'boolean' ||
     typeof value.save_allowed !== 'boolean' || typeof value.applied !== 'boolean' || typeof value.connection_tested !== 'boolean' ||
     !shape(value.roles, ['chat', 'embedding']) || !shape(value.build_config, ['state', 'reason']) ||
-    value.build_config.state !== 'NOT_SUPPORTED' || value.build_config.reason !== 'BUILDER_REPLAY_ONLY' ||
+    !(value.build_config.state === 'SEPARATE' && value.build_config.reason === 'BUILDER_CONFIGURATION_API' ||
+      value.build_config.state === 'NOT_SUPPORTED' && value.build_config.reason === 'BUILDER_REPLAY_ONLY') ||
     value.error_code !== null && !['CONFIG_INVALID', 'CONFIG_STORAGE_UNAVAILABLE'].includes(value.error_code)) invalid()
   for (const role of ['chat', 'embedding'] as const) {
     const model = value[role]
@@ -136,25 +137,259 @@ export async function loadKagConfiguration(signal?: AbortSignal): Promise<KagCon
     [solver.top_k, solver.max_evidence_chars, solver.max_iteration, solver.search_k, solver.expansion_limit, solver.required_vector_dimensions].some(n => !count(n) || n < 1) || solver.top_k > solver.search_k)) invalid()
   return value
 }
-export type BuilderState = 'IDLE' | 'RUNNING' | 'STOPPING' | 'STOPPED' | 'COMPLETE' | 'BLOCKED'
-export type BuilderStatus = { contract_version: 'builder-control-v1'; state: BuilderState; run_id: string | null; target: { project_id: number; database: string; namespace: 'VietRoadTraffic' } | null; progress: { stage: string; done: number; total: number } | null; error_code: string | null; actions: { build: boolean; stop: boolean; resume: boolean; delete: false }; delete_reason: 'DELETE_NOT_AUTHORIZED'; production_write: 'BLOCKED' | 'CONFIGURED' }
+export type BuilderState = 'IDLE' | 'RUNNING' | 'STOPPING' | 'STOPPED' | 'COMPLETE' | 'BLOCKED' | 'ABANDONED' | 'CLEARED'
+export const builderStages = ['preflight', 'plan', 'vectorize', 'export-artifact', 'write-nodes', 'verify-nodes', 'write-edges', 'verify', 'release'] as const
+export type BuilderStage = typeof builderStages[number]
+export type BuilderStatus = { state: BuilderState; run_id: string | null; target: { project_id: number; database: string; namespace: string } | null; progress: { stage: string; done: number; total: number } | null; error_code: string | null; actions: { build: boolean; stop: boolean; resume: boolean; abandon?: boolean; delete: false }; delete_reason: 'DELETE_NOT_AUTHORIZED'; production_write: 'BLOCKED' | 'CONFIGURED' } & (
+  { contract_version: 'builder-control-v1' } | {
+    contract_version: 'builder-control-v2' | 'builder-control-v3'
+    stages: { name: BuilderStage; state: 'PENDING' | 'RUNNING' | 'COMPLETE' | 'STOPPED' | 'BLOCKED'; done: number | null; total: number | null; error_code: string | null }[]
+    timing: { started_at: string; updated_at: string } | null
+    binding: { run_id: string; scope: 'FRESH_SAMPLE' | 'PRODUCTION'; plan_sha256: string; config_sha256: string; model_identity: string; database_id: string; project_id: number; database: string; namespace: string; node_limit?: number | null } | null
+    result: { nodes: number; edges: number; vectors: number; dimension: number; indexes: 4; fingerprint: string; verified_at: string; chat_activation: 'SEPARATE' } | null
+  })
 export function builderStateLabel(state: BuilderState) {
-  return { IDLE: 'Chưa build', RUNNING: 'Đang build', STOPPING: 'Đang dừng...', STOPPED: 'Đã dừng an toàn', COMPLETE: 'Hoàn tất', BLOCKED: 'Bị chặn' }[state]
+  return { IDLE: 'Chưa dựng', RUNNING: 'Đang dựng đồ thị', STOPPING: 'Đang dừng an toàn', STOPPED: 'Đã dừng an toàn', COMPLETE: 'Đã xác minh đồ thị', BLOCKED: 'Cần xử lý', ABANDONED: 'Đã bỏ phiên · graph được giữ', CLEARED: 'Dữ liệu đã được yêu cầu xóa · phiên cũ chỉ là lịch sử' }[state]
 }
 function validateBuilder(value: BuilderStatus): BuilderStatus {
-  if (!value || Object.keys(value).sort().join() !== ['contract_version', 'state', 'run_id', 'target', 'progress', 'error_code', 'actions', 'delete_reason', 'production_write'].sort().join() ||
-    value.contract_version !== 'builder-control-v1' || !['IDLE', 'RUNNING', 'STOPPING', 'STOPPED', 'COMPLETE', 'BLOCKED'].includes(value.state) || !['BLOCKED', 'CONFIGURED'].includes(value.production_write) || value.delete_reason !== 'DELETE_NOT_AUTHORIZED' ||
-    !value.actions || Object.keys(value.actions).sort().join() !== ['build', 'stop', 'resume', 'delete'].sort().join() ||
-    value.actions.build !== ['IDLE', 'COMPLETE'].includes(value.state) || value.actions.stop !== (value.state === 'RUNNING') || value.actions.resume !== (value.state === 'STOPPED') || value.actions.delete !== false ||
+  const extended = value?.contract_version === 'builder-control-v3', detail = extended || value?.contract_version === 'builder-control-v2'
+  if (!shape(value, ['contract_version', 'state', 'run_id', 'target', 'progress', 'error_code', 'actions', 'delete_reason', 'production_write', ...(detail ? ['stages', 'timing', 'binding', 'result'] : [])]) ||
+    !['builder-control-v1', 'builder-control-v2', 'builder-control-v3'].includes(value.contract_version) || !['IDLE', 'RUNNING', 'STOPPING', 'STOPPED', 'COMPLETE', 'BLOCKED', ...(extended ? ['ABANDONED','CLEARED'] : [])].includes(value.state) || !['BLOCKED', 'CONFIGURED'].includes(value.production_write) || value.delete_reason !== 'DELETE_NOT_AUTHORIZED' ||
+    !value.actions || Object.keys(value.actions).sort().join() !== ['build', 'stop', 'resume', 'delete', ...(extended ? ['abandon'] : [])].sort().join() ||
+    typeof value.actions.build !== 'boolean' || typeof value.actions.resume !== 'boolean' ||
+    (detail ? value.actions.build && !['IDLE', 'COMPLETE', ...(extended ? ['ABANDONED','CLEARED'] : [])].includes(value.state) || value.actions.resume && value.state !== 'STOPPED' : value.actions.build !== ['IDLE', 'COMPLETE'].includes(value.state) || value.actions.resume !== (value.state === 'STOPPED')) ||
+    extended && value.actions.abandon !== (value.state === 'STOPPED') ||
+    value.actions.stop !== (value.state === 'RUNNING') || value.actions.delete !== false ||
     (value.run_id === null ? !['IDLE', 'BLOCKED'].includes(value.state) : typeof value.run_id !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value.run_id))) throw new ApiError('Trạng thái Builder không hợp lệ', 502)
   const target = value.target, progress = value.progress
-  if (target === null ? value.state !== 'BLOCKED' : !target || Object.keys(target).sort().join() !== ['project_id', 'database', 'namespace'].sort().join() || !Number.isInteger(target.project_id) || target.project_id < 1 || !(value.production_write === 'CONFIGURED' ? /^[a-z][a-z0-9.-]{0,62}$/ : /^(?:neo4j|vietroadtraffic|freshsample[a-z0-9]{8,40})$/).test(target.database) || target.namespace !== 'VietRoadTraffic') throw new ApiError('Cấu hình đích Builder không hợp lệ', 502)
+  if (target === null ? value.state !== 'BLOCKED' : !target || Object.keys(target).sort().join() !== ['project_id', 'database', 'namespace'].sort().join() || !Number.isInteger(target.project_id) || target.project_id < 1 || !(value.production_write === 'CONFIGURED' ? /^[a-z][a-z0-9.-]{0,62}$/ : /^(?:neo4j|vietroadtraffic|freshsample[a-z0-9]{8,40})$/).test(target.database) || !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(target.namespace)) throw new ApiError('Cấu hình đích Builder không hợp lệ', 502)
   if (progress !== null && (!progress || Object.keys(progress).sort().join() !== ['stage', 'done', 'total'].sort().join() || !['preflight', 'plan', 'vectorize', 'export-artifact', 'write-nodes', 'verify-nodes', 'write-edges', 'verify', 'release'].includes(progress.stage) || !Number.isSafeInteger(progress.done) || !Number.isSafeInteger(progress.total) || progress.done < 0 || progress.total < progress.done)) throw new ApiError('Tiến độ Builder không hợp lệ', 502)
   if (value.error_code !== null && (typeof value.error_code !== 'string' || !/^[A-Z_]{1,32}$/.test(value.error_code))) throw new ApiError('Lỗi Builder không hợp lệ', 502)
+  if (value.contract_version !== 'builder-control-v1') {
+    const invalid = () => { throw new ApiError('Kết quả Builder không hợp lệ', 502) }
+    const { stages, binding, timing, result } = value
+    const timestamp = (text: unknown) => typeof text === 'string' && /(?:Z|[+-]\d{2}:\d{2})$/.test(text) && Number.isFinite(Date.parse(text))
+    if (!Array.isArray(stages) || stages.length !== (binding === null ? 0 : builderStages.length)) invalid()
+    for (const [index, row] of stages.entries()) {
+      if (!shape(row, ['name', 'state', 'done', 'total', 'error_code']) || row.name !== builderStages[index] ||
+        !['PENDING', 'RUNNING', 'COMPLETE', 'STOPPED', 'BLOCKED'].includes(row.state) ||
+        (row.state === 'PENDING' ? row.done !== null || row.total !== null : !count(row.done) || !count(row.total) || row.done! > row.total!) ||
+        row.state === 'COMPLETE' && row.done !== row.total || row.error_code !== null && (typeof row.error_code !== 'string' || !/^[A-Z_]{1,32}$/.test(row.error_code))) invalid()
+    }
+    if (binding === null) {
+      if (timing !== null || result !== null || value.state === 'COMPLETE') invalid()
+    } else {
+      if (!shape(binding, ['run_id', 'scope', 'plan_sha256', 'config_sha256', 'model_identity', 'database_id', 'project_id', 'database', 'namespace', ...('node_limit' in binding ? ['node_limit'] : [])]) || binding.run_id !== value.run_id ||
+        'node_limit' in binding && (binding.node_limit !== null && (!count(binding.node_limit) || binding.node_limit < 3 || binding.node_limit > 2147483647) || binding.scope !== 'PRODUCTION') ||
+        !['FRESH_SAMPLE', 'PRODUCTION'].includes(binding.scope) || !hash(binding.plan_sha256) || !hash(binding.config_sha256) ||
+        typeof binding.database_id !== 'string' || !/^[A-Za-z0-9._:-]{1,128}$/.test(binding.database_id) ||
+        !target || binding.project_id !== target.project_id || binding.database !== target.database || binding.namespace !== target.namespace ||
+        (binding.scope === 'PRODUCTION') !== (value.production_write === 'CONFIGURED')) invalid()
+      try {
+        const split = binding.model_identity.lastIndexOf('|'), url = new URL(binding.model_identity.slice(0, split))
+        if (split < 1 || !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(binding.model_identity.slice(split + 1)) || !['http:', 'https:'].includes(url.protocol) || !url.hostname || url.username || url.password || url.search || url.hash) invalid()
+      } catch { invalid() }
+      if (!shape(timing, ['started_at', 'updated_at']) || !timestamp(timing!.started_at) || !timestamp(timing!.updated_at)) invalid()
+      if (result === null) {
+        if (value.state === 'COMPLETE') invalid()
+      } else if (value.state !== 'COMPLETE' || !shape(result, ['nodes', 'edges', 'vectors', 'dimension', 'indexes', 'fingerprint', 'verified_at', 'chat_activation']) ||
+        !count(result.nodes) || !count(result.edges) || !count(result.vectors) || !count(result.dimension) || result.dimension < 1 || result.dimension > 65536 || result.indexes !== 4 || !hash(result.fingerprint) || !timestamp(result.verified_at) || result.chat_activation !== 'SEPARATE' || stages.some(row => row.state !== 'COMPLETE')) invalid()
+    }
+  }
   return value
 }
 export async function loadBuilderStatus(signal?: AbortSignal): Promise<BuilderStatus> {
-  return validateBuilder(await api<BuilderStatus>('/admin/kag/builder/status', { signal }))
+  return validateBuilder(await api<BuilderStatus>('/admin/kag/builder/status', { signal, cache: 'no-store' }))
+}
+export type BuilderConfiguration = {
+  contract_version: 'builder-configuration-v1' | 'builder-configuration-v2' | 'builder-configuration-v3' | 'builder-configuration-v4'; revision: number; saved: boolean; error_code: 'CONFIG' | null
+  target: { project_id: number; project_name: string; database: string; namespace: string } | null
+  embedding: { provider: 'openai-compatible'; base_url: string; model: string; revision: number; key_configured: boolean; tested: boolean; dimension: number | null } | null
+  batch_size: number; request_limit: number | null
+  selection?: { node_limit: number | null; nodes: number | null; edges: number | null; request?: SelectionRequest; summary?: SelectionSummary | null }
+  links?: { openspg: string; neo4j: string; bolt: string } | null
+  readiness: { state: 'NOT_RUN' | 'CHECKING' | 'READY' | 'BLOCKED'; checks: { name: 'source' | 'embedding' | 'target' | 'lock'; state: 'READY' | 'BLOCKED' | 'NOT_CHECKED'; code: string | null; owner?: { run_id: string; project_id: number } }[]; checked_at: string | null }
+}
+export type BuilderConfigurationChange = Pick<BuilderConfiguration, 'revision' | 'batch_size' | 'request_limit'> & { embedding_revision: number; node_limit?: number | null; project_id?: number; selection_preview_id?: string }
+export type SelectionRequest = { mode: 'ALL' | 'COUNT' | 'PERCENT'; value: number | null }
+export type SelectionSummary = { nodes: number; edges: number; node_counts: Record<string, number>; edge_counts: Record<string, number>; excluded_edges: number }
+export type BuilderSelection = { contract_version: 'builder-selection-v1'; revision: number; preview_id: string; node_limit: number | null; request: SelectionRequest; summary: SelectionSummary }
+function validSelectionRequest(request: SelectionRequest) {
+  return shape(request, ['mode', 'value']) && ['ALL', 'COUNT', 'PERCENT'].includes(request.mode) &&
+    (request.mode === 'ALL' ? request.value === null : count(request.value) && request.value! >= (request.mode === 'COUNT' ? 3 : 1) && request.value! <= (request.mode === 'COUNT' ? 2147483647 : 100))
+}
+function validSelectionSummary(summary: SelectionSummary) {
+  return shape(summary, ['nodes', 'edges', 'node_counts', 'edge_counts', 'excluded_edges']) && count(summary.nodes) && count(summary.edges) && count(summary.excluded_edges) &&
+    (['node_counts', 'edge_counts'] as const).every(name => {
+      const counts = summary[name]
+      return !!counts && typeof counts === 'object' && !Array.isArray(counts) && Object.keys(counts).length <= 512 &&
+        Object.entries(counts).every(([key, value]) => /^[A-Za-z][A-Za-z0-9_.]{0,255}$/.test(key) && count(value)) &&
+        Object.values(counts).reduce((a, b) => a + b, 0) === summary[name === 'node_counts' ? 'nodes' : 'edges']
+    })
+}
+export async function previewBuilderSelection(revision: number, request: SelectionRequest): Promise<BuilderSelection> {
+  const value = await api<BuilderSelection>('/admin/kag/builder/selection', send('POST', { revision, ...request }))
+  if (!shape(value, ['contract_version', 'revision', 'preview_id', 'node_limit', 'request', 'summary']) || value.contract_version !== 'builder-selection-v1' || value.revision !== revision || !hash(value.preview_id) ||
+    !validSelectionRequest(value.request) || !validSelectionSummary(value.summary) || value.request.mode !== request.mode || value.request.value !== request.value ||
+    (value.request.mode === 'ALL' ? value.node_limit !== null : !count(value.node_limit) || value.node_limit! < 3 || value.node_limit !== value.summary.nodes)) throw new ApiError('Bản xem trước phạm vi không hợp lệ', 502)
+  return value
+}
+export type BuilderStructure = {
+  contract_version: 'builder-structure-v1'; state: 'NOT_RUN' | 'PREVIEW' | 'APPLYING' | 'COMPLETE' | 'PARTIAL' | 'INTERRUPTED' | 'BLOCKED'
+  revision: number; preview_id: string | null; checked_at: string | null; can_apply: boolean; code: string | null
+  report: { target: NonNullable<BuilderConfiguration['target']>; database_id: string; dimension: number; counts: { nodes: number; edges: number }
+    changes: { kind: 'type' | 'property' | 'relation'; action: 'ADD' | 'UPDATE' | 'REMOVE' | 'KEEP'; name: string }[]
+    indexes: { label: string; property: string; action: 'ADD' | 'KEEP' | 'REBUILD' | 'BLOCKED' }[]; conflicts: string[]; native_rebuild: string[]; code: string | null
+    build_ready?: boolean; default_types?: string[]
+    index_changes?: { name: string; type: string; labels: string[]; properties: string[]; action: 'ADD' | 'KEEP' | 'REMOVE' | 'REBUILD' | 'BLOCKED' }[] } | null
+}
+function validateBuilderStructure(value: BuilderStructure) {
+  const invalid = () => { throw new ApiError('Trạng thái chuẩn bị cấu trúc không hợp lệ', 502) }
+  const code = (v: unknown) => v === null || typeof v === 'string' && /^[A-Z_]{1,32}$/.test(v)
+  if (!shape(value, ['contract_version', 'state', 'revision', 'preview_id', 'checked_at', 'can_apply', 'report', 'code']) ||
+    value.contract_version !== 'builder-structure-v1' || !['NOT_RUN', 'PREVIEW', 'APPLYING', 'COMPLETE', 'PARTIAL', 'INTERRUPTED', 'BLOCKED'].includes(value.state) ||
+    !count(value.revision) || value.revision > 2147483647 || value.preview_id !== null && !hash(value.preview_id) || typeof value.can_apply !== 'boolean' || !code(value.code) ||
+    value.checked_at !== null && (typeof value.checked_at !== 'string' || !Number.isFinite(Date.parse(value.checked_at)))) invalid()
+  const r = value.report
+  if (r !== null) {
+    const extended = 'build_ready' in r
+    if (!shape(r, ['target', 'database_id', 'dimension', 'counts', 'changes', 'indexes', 'conflicts', 'code', 'native_rebuild', ...(extended ? ['build_ready', 'default_types', 'index_changes'] : [])]) ||
+      !shape(r.target, ['project_id', 'project_name', 'namespace', 'database']) || !count(r.target.project_id) || r.target.project_id < 1 ||
+      typeof r.target.project_name !== 'string' || r.target.project_name.length > 255 || !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(r.target.namespace) || !/^[a-z][a-z0-9.-]{0,62}$/.test(r.target.database) ||
+      typeof r.database_id !== 'string' || !r.database_id || r.database_id.length > 255 || !count(r.dimension) || r.dimension < 1 || r.dimension > 65536 ||
+      !shape(r.counts, ['nodes', 'edges']) || !count(r.counts.nodes) || !count(r.counts.edges) || !code(r.code) ||
+      !Array.isArray(r.changes) || r.changes.length > 512 || r.changes.some(row => !shape(row, ['kind', 'action', 'name']) || !['type', 'property', 'relation'].includes(row.kind) || !['ADD', 'UPDATE', 'REMOVE', 'KEEP'].includes(row.action) || !/^[A-Za-z][A-Za-z0-9_.]{0,255}$/.test(row.name)) ||
+      !Array.isArray(r.indexes) || r.indexes.length !== 4 || r.indexes.some(row => !shape(row, ['label', 'property', 'action']) || !/^[A-Za-z][A-Za-z0-9_]{0,63}\.(LegalDocument|LegalUnit|TrafficSign)$/.test(row.label) || !['_title_vector', '_text_vector', '_ten_vector', '_mo_ta_vector'].includes(row.property) || !['ADD', 'KEEP', 'REBUILD', 'BLOCKED'].includes(row.action)) ||
+      [r.conflicts, r.native_rebuild].some(rows => !Array.isArray(rows) || rows.length > 2048 || rows.some(text => typeof text !== 'string' || text.length > 512))) invalid()
+    if (extended && (typeof r.build_ready !== 'boolean' || !Array.isArray(r.default_types) || r.default_types.length > 18 || r.default_types.some(name => typeof name !== 'string' || !/^[A-Za-z][A-Za-z0-9_.]{0,255}$/.test(name)) ||
+      !Array.isArray(r.index_changes) || r.index_changes.length > 2048 || r.index_changes.some(row => !shape(row, ['name', 'type', 'labels', 'properties', 'action']) ||
+        typeof row.name !== 'string' || !row.name || row.name.length > 512 || typeof row.type !== 'string' || !/^[A-Z_]{1,32}$/.test(row.type) ||
+        !['ADD', 'KEEP', 'REMOVE', 'REBUILD', 'BLOCKED'].includes(row.action) || [row.labels, row.properties].some(items => !Array.isArray(items) || items.length > 512 || items.some(item => typeof item !== 'string' || item.length > 512))))) invalid()
+  }
+  if (value.can_apply && (value.state !== 'PREVIEW' || !r || r.code !== null)) invalid()
+  if (value.state === 'COMPLETE' && (!r || r.code !== null || r.changes.some(row => row.action !== 'KEEP') || r.indexes.some(row => row.action !== 'KEEP') || r.default_types?.length || r.index_changes?.some(row => row.action !== 'KEEP'))) invalid()
+  return value
+}
+export async function loadBuilderStructure(signal?: AbortSignal): Promise<BuilderStructure> {
+  return validateBuilderStructure(await api<BuilderStructure>('/admin/kag/builder/structure', { signal, cache: 'no-store' }))
+}
+export async function prepareBuilderStructure(action: 'preview' | 'apply', project_id: number, revision: number, preview_id?: string): Promise<BuilderStructure> {
+  return validateBuilderStructure(await api<BuilderStructure>('/admin/kag/builder/structure/' + action, send('POST', { project_id, revision, ...(action === 'apply' ? { preview_id } : {}) })))
+}
+export type BuilderClear = {
+  contract_version: 'builder-clear-v1'; state: 'NOT_RUN' | 'PREVIEW' | 'APPLYING' | 'COMPLETE' | 'PARTIAL' | 'INTERRUPTED' | 'BLOCKED'
+  revision: number; preview_id: string | null; checked_at: string | null; code: string | null; deleted: { nodes: number; edges: number }
+  report: { target: NonNullable<BuilderConfiguration['target']>; database_id: string; counts: { nodes: number; edges: number }; batch_size: 500 } | null
+}
+function validateBuilderClear(value: BuilderClear) {
+  const invalid = () => { throw new ApiError('Trạng thái xóa dữ liệu không hợp lệ', 502) }
+  if (!shape(value, ['contract_version','state','revision','preview_id','checked_at','code','deleted','report']) || value.contract_version !== 'builder-clear-v1' ||
+    !['NOT_RUN','PREVIEW','APPLYING','COMPLETE','PARTIAL','INTERRUPTED','BLOCKED'].includes(value.state) || !count(value.revision) || value.revision > 2147483647 ||
+    value.preview_id !== null && !hash(value.preview_id) || value.code !== null && (typeof value.code !== 'string' || !/^[A-Z_]{1,32}$/.test(value.code)) ||
+    value.checked_at !== null && (typeof value.checked_at !== 'string' || !Number.isFinite(Date.parse(value.checked_at))) ||
+    !shape(value.deleted, ['nodes','edges']) || !count(value.deleted.nodes) || !count(value.deleted.edges)) invalid()
+  const report = value.report
+  if (report === null) {
+    if (['PREVIEW','APPLYING','COMPLETE','PARTIAL'].includes(value.state)) invalid()
+  } else if (!shape(report, ['target','database_id','counts','batch_size']) || report.batch_size !== 500 || !/^[A-Za-z0-9._:-]{1,128}$/.test(report.database_id) ||
+    !shape(report.target, ['project_id','project_name','namespace','database']) || !count(report.target.project_id) || report.target.project_id < 1 ||
+    typeof report.target.project_name !== 'string' || !report.target.project_name.trim() || report.target.project_name.length > 255 ||
+    !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(report.target.namespace) || !/^[a-z][a-z0-9.-]{0,62}$/.test(report.target.database) ||
+    !shape(report.counts, ['nodes','edges']) || !count(report.counts.nodes) || !count(report.counts.edges) || value.preview_id === null) invalid()
+  return value
+}
+export async function loadBuilderClear(signal?: AbortSignal): Promise<BuilderClear> {
+  return validateBuilderClear(await api<BuilderClear>('/admin/kag/builder/clear', { signal, cache: 'no-store' }))
+}
+export async function clearBuilderData(action: 'preview' | 'apply', revision: number, preview_id?: string, database?: string): Promise<BuilderClear> {
+  return validateBuilderClear(await api<BuilderClear>('/admin/kag/builder/clear/'+action, send('POST', { revision, ...(action === 'apply' ? { preview_id, database } : {}) })))
+}
+function validateBuilderConfiguration(value: BuilderConfiguration): BuilderConfiguration {
+  const invalid = () => { throw new ApiError('Cấu hình Builder không hợp lệ', 502) }
+  const extended = value.contract_version === 'builder-configuration-v4', projects = extended || value.contract_version === 'builder-configuration-v3', selected = projects || value.contract_version === 'builder-configuration-v2'
+  if (!shape(value, ['contract_version', 'revision', 'saved', 'error_code', 'target', 'embedding', 'batch_size', 'request_limit', 'readiness', ...(selected ? ['selection'] : []), ...(projects ? ['links'] : [])]) ||
+    !['builder-configuration-v1', 'builder-configuration-v2', 'builder-configuration-v3', 'builder-configuration-v4'].includes(value.contract_version) || !count(value.revision) || value.revision > 2147483647 || typeof value.saved !== 'boolean' || value.saved !== (value.revision > 0) ||
+    ![null, 'CONFIG'].includes(value.error_code) || !count(value.batch_size) || value.batch_size < 1 || value.batch_size > 4096 ||
+    value.request_limit !== null && (!count(value.request_limit) || value.request_limit < 1 || value.request_limit > 1000000)) invalid()
+  if (selected) {
+    const selection = value.selection
+    if (!shape(selection, ['node_limit', 'nodes', 'edges', ...(extended ? ['request', 'summary'] : [])]) || selection!.node_limit !== null && (!count(selection!.node_limit) || selection!.node_limit! < 3 || selection!.node_limit! > (extended ? 2147483647 : 128)) ||
+      selection!.nodes !== null && !count(selection!.nodes) || selection!.edges !== null && !count(selection!.edges) ||
+      selection!.node_limit !== null && (selection!.nodes === null || selection!.nodes < 1 || selection!.nodes > selection!.node_limit || selection!.edges === null || selection!.edges < 1 || selection!.edges > (extended ? 2147483647 : 256))) invalid()
+    if (extended && (!validSelectionRequest(selection!.request!) || selection!.summary !== null && (!validSelectionSummary(selection!.summary!) || selection!.summary!.nodes !== selection!.nodes || selection!.summary!.edges !== selection!.edges))) invalid()
+  }
+  const target = value.target, embedding = value.embedding, ready = value.readiness
+  if (target !== null && (!shape(target, ['project_id', 'project_name', 'database', 'namespace']) || !count(target.project_id) || target.project_id < 1 ||
+    typeof target.project_name !== 'string' || !target.project_name.trim() || target.project_name.length > 255 || !/^[a-z][a-z0-9.-]{0,62}$/.test(target.database) || !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(target.namespace))) invalid()
+  if (projects && value.links !== null) {
+    if (!shape(value.links, ['openspg', 'neo4j', 'bolt'])) invalid()
+    for (const [name, text] of Object.entries(value.links!)) {
+      try {
+        const url = new URL(text)
+        if (!(name === 'bolt' ? ['bolt:', 'neo4j:', 'bolt+s:', 'neo4j+s:'] : ['http:', 'https:']).includes(url.protocol) || !url.hostname || url.username || url.password || url.search || url.hash) invalid()
+      } catch { invalid() }
+    }
+  }
+  if (embedding !== null) {
+    if (!shape(embedding, ['provider', 'base_url', 'model', 'revision', 'key_configured', 'tested', 'dimension']) || embedding.provider !== 'openai-compatible' ||
+      !count(embedding.revision) || embedding.revision < 1 || typeof embedding.key_configured !== 'boolean' || typeof embedding.tested !== 'boolean' ||
+      typeof embedding.model !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(embedding.model) ||
+      embedding.dimension !== null && (!count(embedding.dimension) || embedding.dimension < 1 || embedding.dimension > 65536)) invalid()
+    try {
+      const url = new URL(embedding.base_url)
+      if (!['http:', 'https:'].includes(url.protocol) || !url.hostname || url.username || url.password || url.search || url.hash) invalid()
+    } catch { invalid() }
+  }
+  if (!shape(ready, ['state', 'checks', 'checked_at']) || !['NOT_RUN', 'CHECKING', 'READY', 'BLOCKED'].includes(ready.state) ||
+    !Array.isArray(ready.checks) || ready.checks.length > 4 || ready.checked_at !== null && (typeof ready.checked_at !== 'string' || !Number.isFinite(Date.parse(ready.checked_at)))) invalid()
+  const names = new Set<string>()
+  for (const row of ready.checks) {
+    if (!shape(row, row.owner === undefined ? ['name', 'state', 'code'] : ['name', 'state', 'code', 'owner']) || !['source', 'embedding', 'target', 'lock'].includes(row.name) || names.has(row.name) ||
+      !['READY', 'BLOCKED', 'NOT_CHECKED'].includes(row.state) || row.state === 'NOT_CHECKED' && !['WAIT_SOURCE', 'WAIT_EMBEDDING', 'WAIT_TARGET'].includes(row.code ?? '') ||
+      (row.state === 'READY' ? row.code !== null : typeof row.code !== 'string' || !/^[A-Z_]{1,32}$/.test(row.code))) invalid()
+    if (row.owner !== undefined && (row.name !== 'lock' || row.state !== 'BLOCKED' || row.code !== 'LOCK' ||
+      !shape(row.owner, ['run_id', 'project_id']) || typeof row.owner.run_id !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(row.owner.run_id) ||
+      !count(row.owner.project_id) || row.owner.project_id < 1 || row.owner.project_id > 2147483647)) invalid()
+    names.add(row.name)
+  }
+  if (ready.state === 'READY' && (names.size !== 4 || ready.checks.some(row => row.state !== 'READY') || !value.saved || !target || !embedding?.tested || !count(embedding.dimension) || embedding.dimension! < 1 || embedding.dimension! > 65536)) invalid()
+  return value
+}
+export async function loadBuilderConfiguration(signal?: AbortSignal): Promise<BuilderConfiguration> {
+  return validateBuilderConfiguration(await api<BuilderConfiguration>('/admin/kag/builder/configuration', { signal, cache: 'no-store' }))
+}
+export async function saveBuilderConfiguration(change: BuilderConfigurationChange): Promise<BuilderConfiguration> {
+  return validateBuilderConfiguration(await api<BuilderConfiguration>('/admin/kag/builder/configuration', send('POST', change)))
+}
+export async function checkBuilderReadiness(): Promise<BuilderConfiguration> {
+  return validateBuilderConfiguration(await api<BuilderConfiguration>('/admin/kag/builder/preflight', { method: 'POST' }))
+}
+export type BuilderProjects = {
+  contract_version: 'builder-projects-v1'
+  state: 'AVAILABLE' | 'EMPTY' | 'FORBIDDEN' | 'NOT_CONFIGURED' | 'UNAVAILABLE'
+  projects: { project_id: number; project_name: string; namespace: string; database: string | null; state: 'AVAILABLE' | 'CONNECTION_NOT_CONFIGURED' | 'SERVING_PROTECTED' }[]
+}
+export async function loadBuilderProjects(signal?: AbortSignal): Promise<BuilderProjects> {
+  const value = await api<BuilderProjects>('/admin/kag/builder/projects', { signal, cache: 'no-store' })
+  const invalid = () => { throw new ApiError('Danh sách project không hợp lệ', 502) }
+  if (!shape(value, ['contract_version', 'state', 'projects']) || value.contract_version !== 'builder-projects-v1' ||
+    !['AVAILABLE', 'EMPTY', 'FORBIDDEN', 'NOT_CONFIGURED', 'UNAVAILABLE'].includes(value.state) || !Array.isArray(value.projects) || value.projects.length > 10000) invalid()
+  const ids = new Set<number>()
+  for (const row of value.projects) {
+    if (!shape(row, ['project_id', 'project_name', 'namespace', 'database', 'state']) || !count(row.project_id) || row.project_id < 1 || row.project_id > 2147483647 || ids.has(row.project_id) ||
+      typeof row.project_name !== 'string' || !row.project_name.trim() || row.project_name.length > 255 || !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(row.namespace) ||
+      row.database !== null && !/^[a-z][a-z0-9.-]{0,62}$/.test(row.database) || !['AVAILABLE', 'CONNECTION_NOT_CONFIGURED', 'SERVING_PROTECTED'].includes(row.state) || row.state === 'AVAILABLE' && row.database === null) invalid()
+    ids.add(row.project_id)
+  }
+  if ((value.state === 'AVAILABLE') !== (value.projects.length > 0)) invalid()
+  return value
+}
+export function builderNeo4jLink(links: BuilderConfiguration['links'], database: string | undefined): string | undefined {
+  if (!links || !database || !/^[a-z][a-z0-9.-]{0,62}$/.test(database)) return
+  const url = new URL(links.neo4j)
+  url.searchParams.set('connectURL', links.bolt)
+  url.searchParams.set('db', database)
+  return url.toString()
 }
 export const builderInputLabels = {
   c3_manifest: 'Manifest nguồn graph',
@@ -163,26 +398,27 @@ export const builderInputLabels = {
   provenance: 'Nguồn gốc vector',
   chunk_manifest: 'Manifest phân đoạn',
   source_checkpoint: 'Checkpoint nguồn',
+  selection: 'Phạm vi nguồn đã chốt',
 }
 export type BuilderInputs = {
-  contract_version: 'builder-inputs-v1'
+  contract_version: 'builder-inputs-v1' | 'builder-inputs-v2' | 'builder-inputs-v3'
   configuration: 'NOT_CONFIGURED' | 'INVALID' | 'CONFIGURED'
   error_code: 'CONFIG' | null
   scope: 'FRESH_SAMPLE' | 'PRODUCTION' | null
   target: BuilderStatus['target']
   inputs: { name: keyof typeof builderInputLabels; sha256: string; state: 'NOT_CHECKED' | 'MATCHED' | 'MISSING' | 'INVALID' | 'UNAVAILABLE' }[]
   preflight: 'NOT_RUN'
-  source_validation: { state: 'NOT_RUN' | 'CHECKING' | 'VALID' | 'INVALID' | 'UNAVAILABLE'; error_code: 'INTEGRITY' | 'RUNTIME' | null; plan_sha256: string | null; nodes: number | null; edges: number | null }
+  source_validation: { state: 'NOT_RUN' | 'CHECKING' | 'VALID' | 'INVALID' | 'UNAVAILABLE'; error_code: 'INTEGRITY' | 'RUNTIME' | null; plan_sha256: string | null; nodes: number | null; edges: number | null; summary?: SelectionSummary | null }
 }
 export async function loadBuilderInputs(signal?: AbortSignal, check = false): Promise<BuilderInputs> {
   const value = await api<BuilderInputs>('/admin/kag/builder/inputs', { signal, method: check ? 'POST' : 'GET', cache: 'no-store' })
   const invalid = () => { throw new ApiError('Thông tin đầu vào Builder không hợp lệ', 502) }
-  if (!shape(value, ['contract_version', 'configuration', 'error_code', 'scope', 'target', 'inputs', 'preflight', 'source_validation']) || value.contract_version !== 'builder-inputs-v1' ||
+  if (!shape(value, ['contract_version', 'configuration', 'error_code', 'scope', 'target', 'inputs', 'preflight', 'source_validation']) || !['builder-inputs-v1', 'builder-inputs-v2', 'builder-inputs-v3'].includes(value.contract_version) ||
     !['NOT_CONFIGURED', 'INVALID', 'CONFIGURED'].includes(value.configuration) || value.preflight !== 'NOT_RUN' ||
     (value.configuration === 'INVALID' ? value.error_code !== 'CONFIG' : value.error_code !== null)) invalid()
   const configured = value.configuration === 'CONFIGURED', target = value.target
   if (configured ? !shape(target, ['project_id', 'database', 'namespace']) || !Number.isInteger(target!.project_id) || target!.project_id < 1 ||
-    !(value.scope === 'PRODUCTION' ? /^[a-z][a-z0-9.-]{0,62}$/ : /^(?:neo4j|vietroadtraffic|freshsample[a-z0-9]{8,40})$/).test(target!.database) || target!.namespace !== 'VietRoadTraffic' || !['FRESH_SAMPLE', 'PRODUCTION'].includes(value.scope!)
+    !(value.scope === 'PRODUCTION' ? /^[a-z][a-z0-9.-]{0,62}$/ : /^(?:neo4j|vietroadtraffic|freshsample[a-z0-9]{8,40})$/).test(target!.database) || !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(target!.namespace) || !['FRESH_SAMPLE', 'PRODUCTION'].includes(value.scope!)
     : target !== null || value.scope !== null) invalid()
   if (!Array.isArray(value.inputs) || (configured ? value.inputs.length < 1 || value.inputs.length > Object.keys(builderInputLabels).length || value.scope === 'FRESH_SAMPLE' && value.inputs.length !== 6 : value.inputs.length !== 0)) invalid()
   const names = new Set<string>()
@@ -194,14 +430,17 @@ export async function loadBuilderInputs(signal?: AbortSignal, check = false): Pr
   if (configured && !names.has('c3_manifest')) invalid()
   const source = value.source_validation
   const sourceErrors: Record<string, string> = { INVALID: 'INTEGRITY', UNAVAILABLE: 'RUNTIME' }
-  if (!shape(source, ['state', 'error_code', 'plan_sha256', 'nodes', 'edges']) || !['NOT_RUN', 'CHECKING', 'VALID', 'INVALID', 'UNAVAILABLE'].includes(source.state) ||
+  const extended = value.contract_version === 'builder-inputs-v3'
+  if (!shape(source, ['state', 'error_code', 'plan_sha256', 'nodes', 'edges', ...(extended ? ['summary'] : [])]) || !['NOT_RUN', 'CHECKING', 'VALID', 'INVALID', 'UNAVAILABLE'].includes(source.state) ||
     source.error_code !== (sourceErrors[source.state] ?? null) ||
-    (source.state === 'VALID' ? !configured || !hash(source.plan_sha256) || !count(source.nodes) || !count(source.edges) : source.plan_sha256 !== null || source.nodes !== null || source.edges !== null)) invalid()
+    (source.state === 'VALID' ? value.contract_version === 'builder-inputs-v1' && !configured || !hash(source.plan_sha256) || !count(source.nodes) || !count(source.edges) : source.plan_sha256 !== null || source.nodes !== null || source.edges !== null)) invalid()
+  if (extended && (source.state === 'VALID' ? !validSelectionSummary(source.summary!) || source.summary!.nodes !== source.nodes || source.summary!.edges !== source.edges : source.summary !== null)) invalid()
   return value
 }
-export async function runBuilderAction(action: 'build' | 'stop' | 'resume', run_id: string): Promise<BuilderStatus> {
-  if (!['build', 'stop', 'resume'].includes(action) || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(run_id)) throw new ApiError('Yêu cầu Builder không hợp lệ', 422)
-  const result = validateBuilder(await api<BuilderStatus>(`/admin/kag/builder/${action}`, send('POST', { run_id })))
+export async function runBuilderAction(action: 'build' | 'stop' | 'resume' | 'abandon', run_id: string, revision?: number): Promise<BuilderStatus> {
+  if (!['build', 'stop', 'resume', 'abandon'].includes(action) || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(run_id)) throw new ApiError('Yêu cầu Builder không hợp lệ', 422)
+  if (revision !== undefined && (!count(revision) || revision < 1 || revision > 2147483647)) throw new ApiError('Revision Builder không hợp lệ', 422)
+  const result = validateBuilder(await api<BuilderStatus>(`/admin/kag/builder/${action}`, { ...send('POST', { run_id }), ...(revision === undefined ? {} : { headers: { 'If-Match': `"${revision}"` } }) }))
   if (result.run_id !== run_id) throw new ApiError('Run Builder không khớp', 502)
   return result
 }
@@ -342,6 +581,6 @@ export async function loadSampleInspection(signal?: AbortSignal): Promise<Sample
   const p = value.providers
   if (!shape(p,['state','attempts','receipt_window','configured_chat_model','configured_embedding_model','policy_response_version','exact_backend_identity_verified','upstream_attempts','proxy_retries']) || !['OBSERVED','NOT_CONFIGURED'].includes(p.state) || p.exact_backend_identity_verified !== false || p.upstream_attempts !== null || p.proxy_retries !== null) invalid()
   if (p.state === 'NOT_CONFIGURED') { if (p.attempts !== null || p.receipt_window !== null) invalid() }
-  else if (!p.attempts || !shape(p.attempts,['embedding','chat']) || !Object.values(p.attempts).every(v => count(v,Number.MAX_SAFE_INTEGER)) || p.configured_chat_model !== 'gemini-3.8-flash-high' || p.configured_embedding_model !== 'dg/text-embedding-3-large' || !p.receipt_window || !shape(p.receipt_window,['since','outcomes','recent']) || !Array.isArray(p.receipt_window.recent) || p.receipt_window.recent.length > 50) invalid()
+  else if (!p.attempts || !shape(p.attempts,['embedding','chat']) || !Object.values(p.attempts).every(v => count(v,Number.MAX_SAFE_INTEGER)) || [p.configured_chat_model,p.configured_embedding_model,...(p.policy_response_version === null ? [] : [p.policy_response_version])].some(v => typeof v !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(v)) || !p.receipt_window || !shape(p.receipt_window,['since','outcomes','recent']) || !Array.isArray(p.receipt_window.recent) || p.receipt_window.recent.length > 50) invalid()
   return value
 }

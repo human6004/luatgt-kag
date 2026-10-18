@@ -577,7 +577,8 @@ def _backend(reader, release):
             config = found[0].get('options',{}).get('indexConfig',{})
             if (found[0].get('state') != 'ONLINE' or type(config.get('vector.dimensions')) is not int
                     or config['vector.dimensions'] != 3072
-                    or str(config.get('vector.similarity_function','')).lower() != 'cosine'):
+                    or not isinstance(config.get('vector.similarity_function'), str)
+                    or config['vector.similarity_function'].lower() != 'cosine'):
                 _invalid('SOURCE_VALIDATION_FAILED')
 
 

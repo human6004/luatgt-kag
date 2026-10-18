@@ -106,7 +106,9 @@ API và HAProxy dùng chung [provider-hosts.lst](../docker/kag-ingress/provider-
 
 EvelProxy không bắt buộc. Proxy nội bộ chỉ được đăng ký rõ bằng `KAG_PROVIDER_PROXY_BASE_URL`; URL logic này ánh xạ tới `KAG_CHAT_PROXY_HOST:KAG_CHAT_PROXY_PORT` hiện có. Đặt `KAG_CHAT_PROXY_TEST_SAFE=1` khi đã xác minh proxy không retry, xoay credential hoặc fallback. Nếu operator chấp nhận chi phí và các lượt thử nội bộ của proxy, dùng `KAG_CHAT_PROXY_ALLOW_UPSTREAM_RETRIES=1`; cờ này không xác nhận proxy đã tắt retry. Chưa có một trong hai policy thì Test route proxy bị chặn; provider HTTPS khác vẫn độc lập. Các route/proof SAMPLE cũ giữ ràng buộc riêng.
 
-Test PASS gắn với revision của từng nhóm. Chat PASS khi API trả thành công và có nội dung; Embedding kiểm vector numeric và ghi số chiều thực đo. UI hiển thị tên model thực nhận nếu provider trả về, kể cả khi khác tên gửi. Test xác nhận API hoạt động, không tự xác nhận identity backend hoặc khả năng dùng vector với graph. Số retry nội bộ của proxy/provider ngoài KAG không quan sát được. Apply chỉ chạy khi runtime rảnh và endpoint/model yêu cầu khớp provenance, cache và serving release đã kiểm chứng; cùng số chiều không đủ để Apply, thiếu release thì báo BLOCKED. Chat consumer nhận tên phản hồi từ đúng bản Test đã Apply; phản hồi khác bản đã Test vẫn bị chặn. Restart khôi phục bản active, không tự áp dụng bản mới lưu. Builder hiện replay vector; cấu hình provider/OpenIE cho build chưa được hỗ trợ.
+Test PASS gắn với revision của từng nhóm. Chat PASS khi API trả thành công và có nội dung; Embedding kiểm vector numeric và ghi số chiều thực đo. UI hiển thị tên model thực nhận nếu provider trả về, kể cả khi khác tên gửi. Test xác nhận API hoạt động, không tự xác nhận identity backend hoặc khả năng dùng vector với graph. Số retry nội bộ của proxy/provider ngoài KAG không quan sát được. Apply chỉ chạy khi runtime rảnh và endpoint/model yêu cầu khớp provenance, cache và serving release đã kiểm chứng; cùng số chiều không đủ để Apply, thiếu release thì báo BLOCKED. Chat consumer nhận tên phản hồi từ đúng bản Test đã Apply; phản hồi khác bản đã Test vẫn bị chặn. Restart khôi phục bản active, không tự áp dụng bản mới lưu.
+
+Builder dùng cấu hình Embedding đã lưu và kiểm tra, không cần Apply cho Chat. Hạ tầng cấp kết nối private theo [Runner](runner.md#đích-builder-trong-deployment). Người dùng tạo Knowledge Base riêng trong OpenSPG; trong **Dựng đồ thị**, chuẩn bị nguồn → chọn project → **Xem thay đổi → Chuẩn bị cấu trúc LuậtGT → Xác nhận chuẩn bị** → lưu cấu hình → kiểm sẵn sàng → xác nhận Build → xem kết quả. Nguồn và schema đi kèm image; không cần graph plan, script ngoài project hoặc Cypher chuẩn bị index thông thường. Build gọi provider thật; đặt hạn mức request hoặc chủ động chọn **Không giới hạn**. Giới hạn nội dung để trống là toàn corpus, số 0 không hợp lệ. Không hỗ trợ upload corpus hay OpenIE tùy ý. Kết quả Build không tự kích hoạt Chat.
 
 Runner hoàn tất chưa tự phê duyệt phục vụ. Với graph `FRESH_SAMPLE/WRITE` đã xác minh, operator có thể chạy publisher trong môi trường backend có credential broker hiện hữu, mount run chỉ đọc và thư mục release mới ngoài source:
 
@@ -163,13 +165,15 @@ Kết quả: 12 services được khởi động; các service có healthcheck c
 
 ADMIN nhập và duyệt nội dung theo [USER-GUIDE](USER-GUIDE.md). Dữ liệu trong repo không tự nạp vào MySQL/graph. Chatbot cần [cấu hình riêng](../docker/README.md#cấu-hình-chatbot); cài mặc định chưa sẵn sàng để hỏi luật hoặc dựng graph production.
 
+Quản trị graph: [OpenSPG](http://127.0.0.1:8887/) và [Neo4j Browser](http://127.0.0.1:7474/browser/), chỉ từ localhost. Tài khoản OpenSPG, Neo4j và WebApp riêng nhau; nơi lấy credentials và cách chọn database nằm trong [hướng dẫn quản trị](../docker/README.md#truy-cập-quản-trị-openspg-và-neo4j). Tạo Knowledge Base và chuẩn bị cấu trúc trên UI theo [Runner](runner.md#chọn-project-và-nạp-schema), không tự tạo graph sau `compose up`.
+
 **Chưa xác minh trọn quy trình trên máy sạch.** Các bước trên được đối chiếu source local; khởi động container không xác nhận chất lượng chatbot.
 
 ## Lỗi thường gặp
 
 - Không kết nối Docker: mở Docker Desktop, kiểm Linux containers/WSL 2.
 - Thiếu cấu hình/token: kiểm Bước 3–4; có thể chạy `docker compose config -q` mà không khởi động.
-- Cổng bị dùng: đổi biến cổng tương ứng theo [Docker](../docker/README.md#cổng-và-mạng), rồi dùng địa chỉ mới.
+- Cổng bị dùng: đổi biến cổng WebApp tương ứng theo [Docker](../docker/README.md#cổng-và-mạng). Ba cổng quản trị 7474/7687/8887 nằm ở `kag-ingress` trong `docker-compose.kag.yml`; nếu đổi host port phải giữ `127.0.0.1` và cập nhật URL/Connect URL của Browser tương ứng.
 - WebApp lỗi `502`: xem log backend/frontend theo [vận hành Docker](../docker/README.md#vận-hành). Sai email/mật khẩu trả `401`.
 - Build không tải dependencies: kiểm thông báo mạng/registry; không đổi image pin tùy tiện.
 

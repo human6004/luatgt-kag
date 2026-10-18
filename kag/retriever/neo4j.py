@@ -77,7 +77,8 @@ class Neo4jRetrievalClient(Neo4jReadClient):
         config = index.get('options',{}).get('indexConfig',{})
         if (index.get('state')!='ONLINE' or type(config.get('vector.dimensions')) is not int
                 or config['vector.dimensions']!=3072
-                or str(config.get('vector.similarity_function','cosine')).lower()!='cosine'):
+                or not isinstance(config.get('vector.similarity_function'), str)
+                or config['vector.similarity_function'].lower()!='cosine'):
             raise ValueError('vector index not ONLINE/3072/cosine')
         rows = self._query('retrieval_vector',{'index':index['name'],'label':label,'k':k,'vector':vector})
         return [dict(row,index=index['name']) for row in rows]

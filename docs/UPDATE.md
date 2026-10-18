@@ -36,6 +36,8 @@ Lệnh đầu lấy code đã push; lệnh sau lấy đúng phiên bản KAG đ�
 
 Nếu phiên bản mới thêm biến cấu hình, đối chiếu `.env.example` và bổ sung vào `.env` đang có. Giữ project, `KAG_STATE_DIR`, mật khẩu/token và [mapping storage](../docker/README.md#storage-và-secrets). Đổi biến password không tự đổi password database/ADMIN.
 
+Giữ volume `kag-builder-state` cùng runs, locks và provider state. Builder lưu cấu hình và kế hoạch nguồn trong volume này; sau restart, kiểm lại nguồn và sẵn sàng trước khi Tiếp tục. Cập nhật Worker/API/backend/frontend đồng bộ để dùng tiến trình và kết quả mới.
+
 Nếu có thay đổi Compose, database image hoặc schema, đọc hướng dẫn migration của phiên bản đó; đối chiếu tên volume **và đường mount** với bản đã sao lưu. Không thay mapping bằng giá trị mặc định hoặc chạy hai databases trên cùng volume.
 
 ```powershell

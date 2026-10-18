@@ -98,6 +98,273 @@ class KagClientTest {
         }
     }
     KagClient client(Fixture f) { return client(f,Map.of(),null); }
+    @Test void projectCatalogForwardsOnlyNativeCookieAndPreservesProjectIds() throws Exception {
+        try(var f=new Fixture()) {
+            var builderSecret=temporary.resolve("builder.key");Files.writeString(builderSecret,"b".repeat(43));
+            var session=new AtomicReference<String>();var cookie=new AtomicReference<String>();
+            var response=json.readTree("""
+                {"contract_version":"builder-projects-v1","state":"AVAILABLE","projects":[
+                {"project_id":2,"project_name":"Road","namespace":"RoadOne","database":"roadone","state":"AVAILABLE"},
+                {"project_id":3,"project_name":"Road","namespace":"RoadOne","database":"roadone","state":"AVAILABLE"}]}
+                """);
+            f.server.createContext("/v1/builder/projects",exchange->{
+                f.calls.incrementAndGet();session.set(exchange.getRequestHeaders().getFirst("X-OpenSPG-Session"));
+                cookie.set(exchange.getRequestHeaders().getFirst("Cookie"));
+                byte[] bytes=response.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().set("Content-Type","application/json");exchange.getResponseHeaders().set("Cache-Control","no-store");
+                exchange.sendResponseHeaders(200,bytes.length);try(var out=exchange.getResponseBody()){out.write(bytes);}
+            });
+            var client=client(f,Map.of("app.kag-builder-url",f.url(),"app.kag-builder-token-file",builderSecret.toString()),null);
+            var request=new org.springframework.mock.web.MockHttpServletRequest();
+            request.setCookies(new jakarta.servlet.http.Cookie("unrelated","private"),new jakarta.servlet.http.Cookie("OPEN_SPG_TOKEN","native-session"));
+            request.addHeader("X-OpenSPG-Session","forged-session");
+            org.springframework.web.context.request.RequestContextHolder.setRequestAttributes(new org.springframework.web.context.request.ServletRequestAttributes(request));
+            try {
+                assertEquals(response,client.builderProjects());assertEquals("native-session",session.get());assertNull(cookie.get());
+                request.setCookies(new jakarta.servlet.http.Cookie("OPEN_SPG_TOKEN","one"),new jakarta.servlet.http.Cookie("OPEN_SPG_TOKEN","two"));
+                assertThrows(ResponseStatusException.class,client::builderProjects);assertEquals(1,f.calls.get());
+            } finally { org.springframework.web.context.request.RequestContextHolder.resetRequestAttributes(); }
+        }
+    }
+    @Test void builderStructureUsesNativeSessionAndRejectsFalseSuccess() throws Exception {
+        try(var f=new Fixture()) {
+            var builderSecret=temporary.resolve("builder.key");Files.writeString(builderSecret,"b".repeat(43));
+            var response=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree("""
+                {"contract_version":"builder-structure-v1","state":"NOT_RUN","revision":0,
+                 "preview_id":null,"checked_at":null,"can_apply":false,"report":null,"code":null}
+                """);
+            var session=new AtomicReference<String>();var authorization=new AtomicReference<String>();
+            f.server.createContext("/v1/builder/structure",exchange->{
+                f.calls.incrementAndGet();session.set(exchange.getRequestHeaders().getFirst("X-OpenSPG-Session"));
+                authorization.set(exchange.getRequestHeaders().getFirst("Authorization"));
+                f.received=exchange.getRequestMethod().equals("POST")?json.readTree(exchange.getRequestBody().readAllBytes()):null;
+                byte[] bytes=response.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().set("Content-Type","application/json");exchange.getResponseHeaders().set("Cache-Control","no-store");
+                exchange.sendResponseHeaders(exchange.getRequestMethod().equals("POST")?202:200,bytes.length);
+                try(var out=exchange.getResponseBody()){out.write(bytes);}
+            });
+            var client=client(f,Map.of("app.kag-builder-url",f.url(),"app.kag-builder-token-file",builderSecret.toString()),null);
+            var request=new org.springframework.mock.web.MockHttpServletRequest();
+            request.setCookies(new jakarta.servlet.http.Cookie("OPEN_SPG_TOKEN","native-session"));
+            org.springframework.web.context.request.RequestContextHolder.setRequestAttributes(new org.springframework.web.context.request.ServletRequestAttributes(request));
+            try {
+                assertEquals(response,client.builderStructure(null,null));
+                assertEquals("native-session",session.get());assertEquals("Bearer "+"b".repeat(43),authorization.get());
+                var change=json.readTree("{\"project_id\":2,\"revision\":0}");
+                assertEquals(response,client.builderStructure("preview",change));assertEquals(change,f.received);
+                assertThrows(ResponseStatusException.class,()->client.builderStructure("apply",change));assertEquals(2,f.calls.get());
+                response.put("state","COMPLETE");
+                assertEquals(503,assertThrows(ResponseStatusException.class,()->client.builderStructure(null,null)).getStatusCode().value());
+                response.put("state","PREVIEW").put("can_apply",true);
+                assertEquals(503,assertThrows(ResponseStatusException.class,()->client.builderStructure(null,null)).getStatusCode().value());
+                var report=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree("""
+                    {"target":{"project_id":2,"project_name":"Isolated","namespace":"Road","database":"road"},
+                     "database_id":"fixture","dimension":3072,"counts":{"nodes":0,"edges":0},
+                     "changes":[{"kind":"type","action":"REMOVE","name":"Road.Person"},{"kind":"type","action":"KEEP","name":"Road.LegalUnit"}],
+                     "indexes":[{"label":"Road.LegalDocument","property":"_title_vector","action":"REBUILD"},
+                        {"label":"Road.LegalUnit","property":"_text_vector","action":"REBUILD"},
+                        {"label":"Road.TrafficSign","property":"_ten_vector","action":"REBUILD"},
+                        {"label":"Road.TrafficSign","property":"_mo_ta_vector","action":"REBUILD"}],
+                     "conflicts":[],"native_rebuild":[],"code":null,"build_ready":true,"default_types":["Road.Person"],
+                     "index_changes":[{"name":"_road_person_name_vector_index","type":"VECTOR","labels":["Road.Person"],"properties":["_name_vector"],"action":"REMOVE"},
+                        {"name":"_road_legal_unit_name_vector_index","type":"VECTOR","labels":["Road.LegalUnit"],"properties":["_name_vector"],"action":"ADD"}]}
+                    """);
+                response.set("report",report);response.put("preview_id","a".repeat(64));
+                assertEquals(response,client.builderStructure(null,null));
+                response.put("state","COMPLETE");
+                assertEquals(503,assertThrows(ResponseStatusException.class,()->client.builderStructure(null,null)).getStatusCode().value());
+                report.putArray("default_types");report.putArray("index_changes");report.putArray("changes").addObject().put("kind","type").put("action","KEEP").put("name","Road.LegalUnit");
+                report.path("indexes").forEach(row->((com.fasterxml.jackson.databind.node.ObjectNode)row).put("action","KEEP"));
+                response.put("can_apply",false);
+                assertEquals(response,client.builderStructure(null,null));
+                var clear=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree("""
+                    {"contract_version":"builder-clear-v1","state":"PREVIEW","revision":1,"preview_id":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                     "checked_at":"2026-10-18T00:00:00Z","code":null,"deleted":{"nodes":0,"edges":0},
+                     "report":{"target":{"project_id":2,"project_name":"Isolated","namespace":"Road","database":"road"},"database_id":"fixture","counts":{"nodes":3,"edges":1},"batch_size":500}}
+                    """);
+                f.server.createContext("/v1/builder/clear",exchange->{
+                    assertEquals("native-session",exchange.getRequestHeaders().getFirst("X-OpenSPG-Session"));
+                    assertEquals("Bearer "+"b".repeat(43),exchange.getRequestHeaders().getFirst("Authorization"));
+                    f.received=exchange.getRequestMethod().equals("POST")?json.readTree(exchange.getRequestBody().readAllBytes()):null;
+                    byte[] bytes=clear.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                    exchange.getResponseHeaders().set("Content-Type","application/json");exchange.sendResponseHeaders(exchange.getRequestMethod().equals("POST")?202:200,bytes.length);
+                    try(var out=exchange.getResponseBody()){out.write(bytes);}
+                });
+                assertEquals(clear,client.builderClear(null,null));
+                var deletion=json.createObjectNode().put("revision",1).put("preview_id","a".repeat(64)).put("database","road");
+                assertEquals(clear,client.builderClear("apply",deletion));assertEquals(deletion,f.received);
+                deletion.put("database","../other");
+                assertEquals(400,assertThrows(ResponseStatusException.class,()->client.builderClear("apply",deletion)).getStatusCode().value());
+                clear.putNull("report");
+                assertEquals(503,assertThrows(ResponseStatusException.class,()->client.builderClear(null,null)).getStatusCode().value());
+            } finally {org.springframework.web.context.request.RequestContextHolder.resetRequestAttributes();}
+        }
+    }
+    @Test void modelMetadataAcceptsSeparateBuilderAndLegacyWorker() throws Exception {
+        try(var f=new Fixture()) {
+            var response=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree("""
+                {"contract_version":"llm-credentials-v3","revision":0,"saved":false,"chat":null,"embedding":null,
+                 "applied":false,"connection_tested":false,"save_allowed":true,"error_code":null,"roles":{},
+                 "build_config":{"state":"SEPARATE","reason":"BUILDER_CONFIGURATION_API"}}
+                """);
+            var role=json.readTree("""
+                {"saved_revision":null,"active_revision":null,"active":null,"test":null,"status":"NOT_CONFIGURED",
+                 "blocker":null,"actions":{"test":false,"apply":false}}
+                """);
+            ((com.fasterxml.jackson.databind.node.ObjectNode)response.path("roles")).set("chat",role);
+            ((com.fasterxml.jackson.databind.node.ObjectNode)response.path("roles")).set("embedding",role);
+            f.server.createContext("/v1/config/models",exchange->{
+                byte[] bytes=response.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().set("Cache-Control","no-store");
+                exchange.getResponseHeaders().set("Content-Type","application/json");exchange.sendResponseHeaders(200,bytes.length);
+                try(var out=exchange.getResponseBody()){out.write(bytes);}
+            });
+            var inspectionSecret=temporary.resolve("model-inspection.key");Files.writeString(inspectionSecret,"i".repeat(43));
+            var client=client(f,Map.of("app.kag-inspect-token-file",inspectionSecret.toString()),null);
+            assertEquals(response,client.llmCredentials(null));
+            response.set("build_config",json.valueToTree(Map.of("state","NOT_SUPPORTED","reason","BUILDER_REPLAY_ONLY")));
+            assertEquals(response,client.llmCredentials(null));
+            response.set("build_config",json.valueToTree(Map.of("state","SEPARATE","reason","BUILDER_REPLAY_ONLY")));
+            assertEquals(503,assertThrows(ResponseStatusException.class,()->client.llmCredentials(null)).getStatusCode().value());
+        }
+    }
+    @Test void builderV2ResultBindsRunTargetAndCompletedVerification() throws Exception {
+        try(var f=new Fixture()) {
+            var builderSecret=temporary.resolve("builder.key");Files.writeString(builderSecret,"b".repeat(43));
+            var response=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree("""
+                {"contract_version":"builder-control-v2","state":"COMPLETE","run_id":"run-1",
+                 "target":{"project_id":37,"database":"traffic-full","namespace":"VietRoadTraffic"},
+                 "progress":{"stage":"release","done":1,"total":1},"error_code":null,
+                 "actions":{"build":false,"stop":false,"resume":false,"delete":false},"delete_reason":"DELETE_NOT_AUTHORIZED","production_write":"CONFIGURED",
+                 "stages":[],"timing":{"started_at":"2026-10-17T00:00:00+00:00","updated_at":"2026-10-17T01:00:00+00:00"},
+                 "binding":{"run_id":"run-1","scope":"PRODUCTION","plan_sha256":"%s","config_sha256":"%s","model_identity":"https://embedding.invalid/v1|example-model","database_id":"physical-db","project_id":37,"database":"traffic-full","namespace":"VietRoadTraffic"},
+                 "result":{"nodes":3,"edges":1,"vectors":2,"dimension":3072,"indexes":4,"fingerprint":"%s","verified_at":"2026-10-17T01:00:00+00:00","chat_activation":"SEPARATE"}}
+                """.formatted("a".repeat(64),"d".repeat(64),"c".repeat(64)));
+            for(String name:List.of("preflight","plan","vectorize","export-artifact","write-nodes","verify-nodes","write-edges","verify","release"))
+                response.withArray("stages").addObject().put("name",name).put("state","COMPLETE").put("done",1).put("total",1).putNull("error_code");
+            var revision=new AtomicReference<String>();
+            for(String endpoint:List.of("status","build","abandon"))f.server.createContext("/v1/builder/"+endpoint,exchange->{
+                assertEquals("Bearer "+"b".repeat(43),exchange.getRequestHeaders().getFirst("Authorization"));
+                revision.set(exchange.getRequestHeaders().getFirst("If-Match"));
+                byte[] bytes=response.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().set("Content-Type","application/json");exchange.sendResponseHeaders(endpoint.equals("status")?200:202,bytes.length);
+                try(var out=exchange.getResponseBody()){out.write(bytes);}
+            });
+            var client=client(f,Map.of("app.kag-builder-url",f.url(),"app.kag-builder-token-file",builderSecret.toString()),null);
+            assertEquals(response,client.builderStatus());
+            assertEquals(response,client.builderAction("build","run-1","\"7\""));assertEquals("\"7\"",revision.get());
+            var original=response.deepCopy();
+            for(String invalid:List.of("run","target","stage","verification","dimension","secret","missing")) {
+                response.removeAll();response.setAll(original.deepCopy());
+                var binding=(com.fasterxml.jackson.databind.node.ObjectNode)response.path("binding");
+                switch(invalid) {
+                    case "run"->binding.put("run_id","foreign");case "target"->binding.put("database","foreign");
+                    case "stage"->((com.fasterxml.jackson.databind.node.ObjectNode)response.path("stages").get(1)).put("name","unknown");
+                    case "verification"->((com.fasterxml.jackson.databind.node.ObjectNode)response.path("stages").get(7)).put("state","RUNNING");
+                    case "dimension"->((com.fasterxml.jackson.databind.node.ObjectNode)response.path("result")).put("dimension","3072");
+                    case "secret"->binding.put("api_key","secret");case "missing"->response.putNull("result");
+                }
+                assertEquals(503,assertThrows(ResponseStatusException.class,client::builderStatus).getStatusCode().value(),invalid);
+            }
+            response.removeAll();response.setAll(original.deepCopy());
+            response.put("contract_version","builder-control-v3").put("state","ABANDONED").putNull("result");
+            ((com.fasterxml.jackson.databind.node.ObjectNode)response.path("actions")).put("abandon",false);
+            assertEquals(response,client.builderAction("abandon","run-1","\"7\""));
+            assertEquals("\"7\"",revision.get());
+            ((com.fasterxml.jackson.databind.node.ObjectNode)response.path("actions")).put("resume",true);
+            assertEquals(503,assertThrows(ResponseStatusException.class,client::builderStatus).getStatusCode().value());
+        }
+    }
+    @Test void builderConfigurationUsesDedicatedTokenAndStrictContracts() throws Exception {
+        try(var f=new Fixture()) {
+            var builderSecret=temporary.resolve("builder.key");Files.writeString(builderSecret,"b".repeat(43));
+            var response=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree("""
+                {"contract_version":"builder-configuration-v1","revision":1,"saved":true,"error_code":null,
+                 "target":{"project_id":37,"project_name":"TrafficFull","database":"traffic-full","namespace":"VietRoadTraffic"},
+                 "embedding":{"provider":"openai-compatible","base_url":"https://embedding.invalid/v1","model":"example-model","revision":5,"key_configured":true,"tested":true,"dimension":3072},
+                 "batch_size":64,"request_limit":null,"readiness":{"state":"NOT_RUN","checks":[],"checked_at":null}}
+                """);
+            var method=new AtomicReference<String>();var payload=new AtomicReference<String>();
+            var saveDelay=new AtomicInteger();
+            var calls=new AtomicInteger();
+            for(String path:List.of("configuration","preflight"))f.server.createContext("/v1/builder/"+path,exchange->{
+                calls.incrementAndGet();method.set(exchange.getRequestMethod());payload.set(new String(exchange.getRequestBody().readAllBytes(),java.nio.charset.StandardCharsets.UTF_8));
+                if(method.get().equals("POST")&&saveDelay.get()>0)try{Thread.sleep(saveDelay.get());}catch(InterruptedException e){Thread.currentThread().interrupt();}
+                assertEquals("Bearer "+"b".repeat(43),exchange.getRequestHeaders().getFirst("Authorization"));
+                byte[] bytes=response.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().set("Content-Type","application/json");
+                exchange.sendResponseHeaders(method.get().equals("POST")?202:200,bytes.length);
+                try(var out=exchange.getResponseBody()){out.write(bytes);}
+            });
+            var client=client(f,Map.of("app.kag-builder-url",f.url(),"app.kag-builder-token-file",builderSecret.toString()),null);
+            assertEquals(response,client.builderConfiguration());assertEquals("GET",method.get());
+            var change=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree("{\"revision\":0,\"embedding_revision\":5,\"batch_size\":64,\"request_limit\":null}");
+            assertEquals(response,client.saveBuilderConfiguration(change));assertEquals(change,json.readTree(payload.get()));
+            assertEquals(response,client.checkBuilderReadiness());assertEquals("{}",payload.get());
+            var readiness=(com.fasterxml.jackson.databind.node.ObjectNode)response.path("readiness");
+            readiness.put("state","BLOCKED");
+            var checks=readiness.putArray("checks");
+            checks.addObject().put("name","target").put("state","BLOCKED").put("code","INDEX");
+            var lock=checks.addObject().put("name","lock").put("state","NOT_CHECKED").put("code","WAIT_TARGET");
+            assertEquals(response,client.builderConfiguration());
+            lock.put("state","BLOCKED").put("code","LOCK");
+            assertEquals(response,client.builderConfiguration());
+            var owner=lock.putObject("owner").put("run_id","build-related").put("project_id",2);
+            assertEquals(response,client.builderConfiguration());
+            owner.put("owner_token","secret");
+            assertEquals(503,assertThrows(ResponseStatusException.class,client::builderConfiguration).getStatusCode().value());
+            owner.remove("owner_token");owner.put("project_id",-1);
+            assertEquals(503,assertThrows(ResponseStatusException.class,client::builderConfiguration).getStatusCode().value());
+            owner.put("project_id",2).put("run_id",123);
+            assertEquals(503,assertThrows(ResponseStatusException.class,client::builderConfiguration).getStatusCode().value());
+            lock.remove("owner");
+            lock.put("state","NOT_CHECKED").put("code","CONFIG");
+            assertEquals(503,assertThrows(ResponseStatusException.class,client::builderConfiguration).getStatusCode().value());
+            readiness.put("state","NOT_RUN");readiness.putArray("checks");
+            response.put("contract_version","builder-configuration-v2");
+            var selection=response.putObject("selection");selection.put("node_limit",32).put("nodes",32).put("edges",21);
+            change.put("node_limit",32);
+            saveDelay.set(3500);
+            assertEquals(response,client.saveBuilderConfiguration(change));assertEquals(change,json.readTree(payload.get()));
+            saveDelay.set(0);
+            change.put("node_limit",129);
+            assertEquals(400,assertThrows(ResponseStatusException.class,()->client.saveBuilderConfiguration(change)).getStatusCode().value());
+            change.put("node_limit",32);selection.put("nodes",33);
+            assertEquals(503,assertThrows(ResponseStatusException.class,client::builderConfiguration).getStatusCode().value());
+            selection.put("nodes",32);
+            response.put("contract_version","builder-configuration-v4").putNull("links");
+            selection.put("node_limit",151).put("nodes",151).put("edges",299);
+            var scopeRequest=selection.putObject("request").put("mode","PERCENT").put("value",50);
+            var summary=selection.putObject("summary").put("nodes",151).put("edges",299).put("excluded_edges",12);
+            summary.putObject("node_counts").put("LegalDocument",1).put("LegalUnit",149).put("TrafficSign",1);
+            summary.putObject("edge_counts").put("hasUnit",299);
+            assertEquals(response,client.builderConfiguration());
+            change.remove("node_limit");change.put("selection_preview_id","e".repeat(64));
+            assertEquals(response,client.saveBuilderConfiguration(change));
+            var preview=json.createObjectNode().put("contract_version","builder-selection-v1").put("revision",0).put("preview_id","e".repeat(64)).put("node_limit",151);
+            preview.set("request",scopeRequest);preview.set("summary",summary);
+            f.server.createContext("/v1/builder/selection",exchange->{
+                assertEquals("POST",exchange.getRequestMethod());
+                assertEquals("Bearer "+"b".repeat(43),exchange.getRequestHeaders().getFirst("Authorization"));
+                byte[] bytes=preview.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().set("Content-Type","application/json");exchange.sendResponseHeaders(202,bytes.length);
+                try(var out=exchange.getResponseBody()){out.write(bytes);}
+            });
+            var request=json.createObjectNode().put("revision",0).put("mode","PERCENT").put("value",50);
+            assertEquals(preview,client.previewBuilderSelection(request));
+            summary.put("nodes",150);
+            assertEquals(503,assertThrows(ResponseStatusException.class,()->client.previewBuilderSelection(request)).getStatusCode().value());
+            summary.put("nodes",151);request.put("value",101);
+            assertEquals(400,assertThrows(ResponseStatusException.class,()->client.previewBuilderSelection(request)).getStatusCode().value());
+            int before=calls.get();change.put("endpoint","http://localhost");
+            assertEquals(400,assertThrows(ResponseStatusException.class,()->client.saveBuilderConfiguration(change)).getStatusCode().value());
+            assertEquals(before,calls.get());
+            response.put("api_key","forbidden");
+            assertEquals(503,assertThrows(ResponseStatusException.class,client::builderConfiguration).getStatusCode().value());response.remove("api_key");
+            ((com.fasterxml.jackson.databind.node.ObjectNode)response.path("readiness")).put("state","READY");
+            assertEquals(503,assertThrows(ResponseStatusException.class,client::builderConfiguration).getStatusCode().value());
+        }
+    }
     @Test void fullBuilderSourceProofDoesNotBecomeTargetPreflight() throws Exception {
         try(var f=new Fixture()) {
             var builderSecret=temporary.resolve("builder.key");Files.writeString(builderSecret,"b".repeat(43));
@@ -120,6 +387,13 @@ class KagClientTest {
             var client=client(f,Map.of("app.kag-builder-url",f.url(),"app.kag-builder-token-file",builderSecret.toString()),null);
             assertEquals(response,client.builderInputs());
             assertEquals("GET",method.get());
+            var product=(com.fasterxml.jackson.databind.node.ObjectNode)response;
+            product.put("contract_version","builder-inputs-v2").put("configuration","NOT_CONFIGURED").putNull("scope").putNull("target");
+            product.putArray("inputs");
+            assertEquals(response,client.builderInputs());
+            product.put("contract_version","builder-inputs-v1");
+            assertEquals(503,assertThrows(ResponseStatusException.class,client::builderInputs).getStatusCode().value());
+            product.put("contract_version","builder-inputs-v2");
             ((com.fasterxml.jackson.databind.node.ObjectNode)response.path("source_validation")).put("state","CHECKING").putNull("plan_sha256").putNull("nodes").putNull("edges");
             assertEquals(response,client.checkBuilderInputs());
             assertEquals("POST",method.get());assertEquals("{}",payload.get());

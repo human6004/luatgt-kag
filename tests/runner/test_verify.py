@@ -83,7 +83,7 @@ class GraphReader:
                            **{'from': self.nodes[0], 'to': self.nodes[1]}) for i, e in enumerate(edges)]
         self.index_rows = [dict(name=vector, type='VECTOR', state='ONLINE',
             labelsOrTypes=['VietRoadTraffic.' + local], properties=[vector],
-            options={'indexConfig': {'vector.dimensions': 3072}})
+            options={'indexConfig': {'vector.dimensions': 3072, 'vector.similarity_function': 'cosine'}})
             for local, targets in TARGETS.items() for _, vector in targets]
         self.max_batch = 0
         self.scans = 0
@@ -227,6 +227,22 @@ class VerifyTests(unittest.TestCase):
                 if kind == 'name-only': index['properties'] = ['_name_vector']
                 if kind == 'foreign-label': index['labelsOrTypes'] = ['Foreign.LegalDocument']
                 with self.assertRaises(api.RunBlocked): self.verify()
+
+    def test_similarity_is_a_required_case_insensitive_string(self):
+        api = self.api()
+        for value in ('cosine', 'COSINE', 'Cosine'):
+            for row in self.reader.index_rows:
+                row['options']['indexConfig']['vector.similarity_function'] = value
+            self.assertEqual(len(api._indexes(self.reader, CONTRACT)), 4)
+        for value in (None, True, 3072, {}, [], 'euclidean', ''):
+            with self.subTest(value=value):
+                self.reader.index_rows[0]['options']['indexConfig']['vector.similarity_function'] = value
+                with self.assertRaises(api.RunBlocked): api._indexes(self.reader, CONTRACT)
+        del self.reader.index_rows[0]['options']['indexConfig']['vector.similarity_function']
+        with self.assertRaises(api.RunBlocked): api._indexes(self.reader, CONTRACT)
+        for value in (None, [], 'invalid'):
+            self.reader.index_rows[0]['options'] = value
+            with self.assertRaises(api.RunBlocked): api._indexes(self.reader, CONTRACT)
 
     def test_source_model_dimension_chunk_and_duplicate_provenance_block(self):
         api = self.api()

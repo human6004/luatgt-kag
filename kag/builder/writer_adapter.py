@@ -324,7 +324,7 @@ def discover_fresh_sample_project(project_client, host_addr, contract, manifest_
 def discover_production_project(project_client: Any, settings: ProductionSettings,
                                 contract: Mapping[str, Any], manifest_path: str | Path,
                                 *, project_root: str | Path | None = None, backend_session=None) -> WriterConfig:
-    """Validate offline first, resolve exact name+namespace, then independently verify ID."""
+    """Validate offline first, resolve exact ID, then verify its name and namespace."""
     scope = validate_production_scope(settings, contract, manifest_path, project_root=project_root)
     if getattr(project_client, '_host_addr', None) != settings.host_addr:
         raise WriterAdapterError('production project client belongs to a different OpenSPG host')
@@ -334,13 +334,13 @@ def discover_production_project(project_client: Any, settings: ProductionSetting
     try:
         # ProjectClient.get picks the first match; get_all collapses namespaces.
         records = project_client._rest_client.project_get()
-        matches = [fields(r) for r in records
-                   if fields(r)[1:] == (settings.project_name, settings.namespace)]
+        matches = [fields(r) for r in records if str(fields(r)[0]) == str(settings.expected_project_id)]
         if len(matches) != 1:
-            raise WriterAdapterError('production discovery requires exactly one name+namespace match')
+            raise WriterAdapterError('production discovery requires exactly one project ID match')
         actual_id, name, namespace = matches[0]
         if (type(actual_id) not in (int, str)
-                or str(actual_id) != str(settings.expected_project_id)):
+                or str(actual_id) != str(settings.expected_project_id)
+                or (name, namespace) != (settings.project_name, settings.namespace)):
             raise WriterAdapterError('resolved production project ID differs from explicit expected ID')
         verified = fields(project_client.get(id=settings.expected_project_id))
         if (type(verified[0]) not in (int, str)

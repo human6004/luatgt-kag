@@ -2,9 +2,9 @@
   "scope": "DENY",
   "runtime_location": "container",
   "endpoints": {
-    "openspg": "http://127.0.0.1:8887",
-    "neo4j_http": "http://openspg-neo4j:7474",
-    "neo4j_uri": "bolt://openspg-neo4j:7687"
+    "openspg": "http://builder-openspg:8887",
+    "neo4j_http": "http://builder-neo4j:7474",
+    "neo4j_uri": "bolt://builder-neo4j:7687"
   },
   "database": "vietroadtraffic",
   "project_id": null,

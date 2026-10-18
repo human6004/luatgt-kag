@@ -40,6 +40,8 @@ QUERIES = {
         'RETURN name,databaseID,serverID,currentStatus,toLower($database) AS requested'),
     'indexes': ('SHOW INDEXES YIELD name,type,state,labelsOrTypes,properties,options '
                 'RETURN name,type,state,labelsOrTypes,properties,options'),
+    'structure_counts': ('CALL { MATCH (n) RETURN count(n) AS nodes } '
+                         'CALL { MATCH ()-[r]->() RETURN count(r) AS edges } RETURN nodes,edges'),
 }
 
 
@@ -139,6 +141,13 @@ class Neo4jReadClient:
             raise RunBlocked('LOCK')
         return {key: row[key] for key in ('name', 'databaseID', 'serverID', 'currentStatus')}
 
+    def protected_database_identity(self, database):
+        rows = self._query('database_metadata', {'database': database})
+        matches = [row for row in rows if row.get('name') == database.lower()]
+        if len(matches) != 1 or not isinstance(matches[0].get('databaseID'), str):
+            raise RunBlocked('SCOPE')
+        return matches[0]['databaseID']
+
     def _scan(self, kind, namespace, batch_size):
         _batch_size(batch_size)
         if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', namespace):
@@ -194,7 +203,7 @@ def _identity(record, contract):
     return matching[0], props['id']
 
 
-def _node(record, contract):
+def _node(record, contract, dimension=3072):
     type_name, identity = _identity(record, contract)
     local = type_name.rsplit('.', 1)[-1]
     props = record['properties']
@@ -214,7 +223,7 @@ def _node(record, contract):
             raise RunBlocked('VECTORS')
         sources[prop] = text
         if text:
-            if not _valid_vector(props.get(field), 3072):
+            if not _valid_vector(props.get(field), dimension):
                 raise RunBlocked('VECTORS')
             # Neo4j JSON emits +0.0 for -0.0; both are the same numeric vector component.
             # No tolerance or rounding applies to any nonzero component.
@@ -225,12 +234,12 @@ def _node(record, contract):
     return key, _digest({'type': type_name, 'id': identity, 'properties': semantic, 'vectors': vectors}), sources
 
 
-def _expected_node(spec, contract):
+def _expected_node(spec, contract, dimension=3072):
     props = dict(spec['properties'])
     if spec['name'] != spec['id'] or any(k in props and props[k] != spec[k] for k in ('id', 'name')):
         raise RunBlocked('NODES')
     props.update(id=spec['id'], name=spec['name'])
-    return _node({'labels': [spec['type']], 'properties': props}, contract)
+    return _node({'labels': [spec['type']], 'properties': props}, contract, dimension)
 
 
 def _endpoint(record, contract):
@@ -325,7 +334,9 @@ def _job_fingerprint(db):
     return digest.hexdigest()
 
 
-def index_expected(db_path, nodes, edges, *, contract, provenance):
+def index_expected(db_path, nodes, edges, *, contract, provenance, dimension=3072):
+    if type(dimension) is not int or not 1 <= dimension <= 65536:
+        raise RunBlocked('CONFIG')
     db = sqlite3.connect(db_path)
     try:
         db.executescript('''
@@ -339,7 +350,7 @@ def index_expected(db_path, nodes, edges, *, contract, provenance):
             for table in ('expected_nodes', 'expected_edges', 'expected_jobs', 'expected_meta'):
                 db.execute('DELETE FROM ' + table)
             for spec in nodes:
-                key, payload, sources = _expected_node(spec, contract)
+                key, payload, sources = _expected_node(spec, contract, dimension)
                 db.execute('INSERT INTO expected_nodes VALUES (?,?,?)', (key, spec['type'], payload))
                 for prop, text in sources.items():
                     raw = text.encode()
@@ -359,7 +370,7 @@ def index_expected(db_path, nodes, edges, *, contract, provenance):
                 key = canonical_json([job['node_type'], job['node_id'], job['property']])
                 row = db.execute('SELECT source,source_sha256,source_chars,source_bytes,status '
                                  'FROM expected_jobs WHERE key=?', (key,)).fetchone()
-                if (row is None or row[4] is not None or type(job['dimension']) is not int or job['dimension'] != 3072
+                if (row is None or row[4] is not None or type(job['dimension']) is not int or job['dimension'] != dimension
                         or [job.get(k) for k in ('source_sha256', 'source_chars', 'source_bytes')] != list(row[1:4])
                         or not isinstance(job.get('model_identity'), str) or not job['model_identity']):
                     raise RunBlocked('PROVENANCE')
@@ -387,7 +398,7 @@ def index_expected(db_path, nodes, edges, *, contract, provenance):
                 'expected_jobs_fingerprint': _job_fingerprint(db),
                 'model_identity': model, 'provenance': {m: methods[m] for m in ('DIRECT', 'CHUNK_AGGREGATED')},
                 'vectors': {'candidates': sum(statuses.values()), 'nonempty': statuses['SUCCESS'],
-                            'skipped_empty': statuses['SKIPPED_EMPTY'], 'dimension': 3072}}
+                            'skipped_empty': statuses['SKIPPED_EMPTY'], 'dimension': dimension}}
             db.execute('INSERT INTO expected_meta VALUES (?,?)', ('summary', canonical_json(summary)))
         return summary
     except (BuilderContractError, sqlite3.IntegrityError, KeyError, TypeError, ValueError) as error:
@@ -397,22 +408,32 @@ def index_expected(db_path, nodes, edges, *, contract, provenance):
         db.close()
 
 
-def _indexes(reader, contract):
+def _valid_index(row, dimension):
+    options = row.get('options')
+    config = options.get('indexConfig') if isinstance(options, dict) else None
+    return (row.get('state') == 'ONLINE' and isinstance(config, dict)
+            and type(config.get('vector.dimensions')) is int and config['vector.dimensions'] == dimension
+            and isinstance(config.get('vector.similarity_function'), str)
+            and config['vector.similarity_function'].lower() == 'cosine')
+
+
+def _indexes(reader, contract, dimension=3072):
     rows, verified = reader.indexes(), []
     for local, targets in TARGETS.items():
         for _, vector in targets:
             label = contract['namespace'] + '.' + local
             candidates = [r for r in rows if r.get('type') == 'VECTOR'
                           and r.get('labelsOrTypes') == [label] and r.get('properties') == [vector]]
-            if not candidates or any(r.get('state') != 'ONLINE' or
-                    type(r.get('options', {}).get('indexConfig', {}).get('vector.dimensions')) is not int
-                    or r['options']['indexConfig']['vector.dimensions'] != 3072 for r in candidates):
+            if not candidates:
                 raise RunBlocked('INDEX')
-            verified.append({'label': label, 'property': vector, 'state': 'ONLINE', 'dimension': 3072})
+            for row in candidates:
+                if not _valid_index(row, dimension):
+                    raise RunBlocked('INDEX')
+            verified.append({'label': label, 'property': vector, 'state': 'ONLINE', 'dimension': dimension})
     return verified
 
 
-def _scan_graph(reader, db, contract, batch_size, nodes_only):
+def _scan_graph(reader, db, contract, batch_size, nodes_only, dimension=3072):
     db.executescript('''
         DROP TABLE IF EXISTS observed_nodes;
         DROP TABLE IF EXISTS observed_edges;
@@ -424,7 +445,7 @@ def _scan_graph(reader, db, contract, batch_size, nodes_only):
         if len(batch) > batch_size:
             raise RunBlocked('NODES')
         for record in batch:
-            key, payload, _ = _node(record, contract)
+            key, payload, _ = _node(record, contract, dimension)
             row = db.execute('SELECT payload_hash,type FROM expected_nodes WHERE key=?', (key,)).fetchone()
             if row is None or payload != row[0] or type(record.get('physical_id')) is not int:
                 raise RunBlocked('NODES')
@@ -475,10 +496,13 @@ def verify_graph(reader, *, db_path, contract, batch_size, nodes_only=False):
                 or summary['edge_fingerprint'] != _fingerprint(db, 'expected_edges')
                 or summary['expected_jobs_fingerprint'] != _job_fingerprint(db)):
             raise RunBlocked('INTEGRITY')
-        first = _scan_graph(reader, db, contract, batch_size, nodes_only)
-        indexes = _indexes(reader, contract)
-        second = _scan_graph(reader, db, contract, batch_size, nodes_only)
-        if first != second or indexes != _indexes(reader, contract):
+        dimension = summary['vectors']['dimension']
+        if type(dimension) is not int or not 1 <= dimension <= 65536:
+            raise RunBlocked('INTEGRITY')
+        first = _scan_graph(reader, db, contract, batch_size, nodes_only, dimension)
+        indexes = _indexes(reader, contract, dimension)
+        second = _scan_graph(reader, db, contract, batch_size, nodes_only, dimension)
+        if first != second or indexes != _indexes(reader, contract, dimension):
             raise RunBlocked('INTEGRITY')
         result = dict(summary, **first, indexes=indexes, nodes_only=nodes_only)
         result['fingerprint'] = _digest(result)
@@ -490,12 +514,12 @@ def verify_graph(reader, *, db_path, contract, batch_size, nodes_only=False):
         db.close()
 
 
-def verify_batch(reader, specs, *, kind, contract):
+def verify_batch(reader, specs, *, kind, contract, dimension=3072):
     try:
         if kind == 'nodes':
-            expected = [_expected_node(spec, contract)[:2] for spec in specs]
+            expected = [_expected_node(spec, contract, dimension)[:2] for spec in specs]
             records = reader.read_nodes([[spec['type'], spec['id']] for spec in specs])
-            actual = [_node(record, contract)[:2] for record in records]
+            actual = [_node(record, contract, dimension)[:2] for record in records]
         elif kind == 'edges':
             expected = [_expected_edge(spec, contract) for spec in specs]
             records = reader.read_edges([spec['tuple'] for spec in specs])

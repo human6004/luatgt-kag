@@ -11,5 +11,8 @@ kag/kag_config.yaml
 **/*.log
 tests/
 workspace/
-artifacts/
+artifacts/*
+!artifacts/inputs/
+artifacts/inputs/*
+!artifacts/inputs/xref-a3g2/
 logs/

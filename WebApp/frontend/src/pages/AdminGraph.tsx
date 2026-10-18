@@ -1,5 +1,6 @@
 import { Notice } from './server/shared'
-import { useInspection } from './server/KagManagement'
+import { BuilderGraph, useInspection } from './server/KagManagement'
+import { useSearchParams } from 'react-router-dom'
 import { loadSampleInspection } from './server/kag-inspection'
 import { useMemo, useState } from 'react'
 import { useAdmin } from '../admin/store'
@@ -48,6 +49,12 @@ function Bars({ data, unit }: { data: [string, number][]; unit: string }) {
 }
 
 export default function AdminGraph() {
+  const [parameters] = useSearchParams()
+  const runId = parameters.get('run_id')
+  return runId !== null ? <BuilderGraph runId={runId} /> : <GraphOverview />
+}
+
+function GraphOverview() {
   const { runTask, notify, jobs } = useAdmin()
   const data=useInspection(loadSampleInspection), sample=data.value
   const [nsId, setNsId] = useState('live')

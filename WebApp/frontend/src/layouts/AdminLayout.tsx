@@ -9,7 +9,7 @@ const groups = [
   { label: "Tổng quan", items: [["/admin/dashboard", "Tổng quan"]] },
   { label: "Ngân hàng câu hỏi", items: [["/admin/questions", "Ngân hàng câu hỏi"], ["/admin/imports", "Nhập dữ liệu hàng loạt"]] },
   { label: "Ngân hàng biển báo", items: [["/admin/signs", "Biển báo"]] },
-  { label: "Cấu hình server", items: [["/admin/infrastructure", "Hạ tầng & Retrieval"], ["/admin/pipeline", "Pipeline & tác vụ"], ["/admin/docker", "Đóng gói Docker"], ["/admin/config", "Cấu hình"]] },
+  { label: "Cấu hình server", items: [["/admin/infrastructure", "Hạ tầng & Retrieval"], ["/admin/pipeline", "Dựng đồ thị"], ["/admin/docker", "Đóng gói Docker"], ["/admin/config", "Cấu hình"]] },
   { label: "Đồ thị tri thức", items: [["/admin/knowledge", "Văn bản & tri thức KAG"], ["/admin/units", "Đơn vị pháp lý"], ["/admin/graph", "Đồ thị tri thức"], ["/admin/benchmark", "Benchmark"]] },
   { label: "Người dùng", items: [["/admin/users", "Người dùng"], ["/admin/chatlogs", "Nhật ký chat"]] },
 ]

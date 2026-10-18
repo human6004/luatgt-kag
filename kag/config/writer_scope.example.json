@@ -8,8 +8,8 @@
     },
     "container": {
       "runtime_location": "container",
-      "host_addr": "http://openspg-server:8887",
-      "neo4j_uri": "bolt://openspg-neo4j:7687"
+      "host_addr": "http://builder-openspg:8887",
+      "neo4j_uri": "bolt://builder-neo4j:7687"
     }
   },
   "production": {

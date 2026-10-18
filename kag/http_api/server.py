@@ -61,6 +61,34 @@ def server_options():
     return host,int(port)
 
 
+def provider_test_policy():
+    """Shared deployment egress policy; saved models cannot grant network access."""
+    test_enabled = os.environ.get('KAG_HTTP_PROVIDER_TEST_ENABLED','0') == '1'
+    hosts_file = os.environ.get('KAG_HTTP_PROVIDER_ALLOWED_HOSTS_FILE')
+    allowed_hosts = ()
+    if hosts_file:
+        if not Path(hosts_file).is_absolute():raise ConfigurationError()
+        raw = Path(hosts_file).read_bytes()
+        if len(raw)>16384:raise ConfigurationError()
+        allowed_hosts = tuple(line.strip() for line in raw.decode('ascii').splitlines() if line.strip() and not line.lstrip().startswith('#'))
+        if len(allowed_hosts)>64 or any(len(host)>253 or not re.fullmatch(
+                r'(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z][a-z0-9-]*',host) for host in allowed_hosts):
+            raise ConfigurationError()
+    proxy_url = os.environ.get('KAG_HTTP_PROVIDER_PROXY_BASE_URL') or None
+    if proxy_url:
+        from urllib.parse import urlsplit
+        proxy = urlsplit(proxy_url)
+        if (proxy.scheme!='http' or not proxy.hostname or proxy.username or proxy.password or proxy.query or proxy.fragment
+                or not re.fullmatch(r'(?:/[A-Za-z0-9_-]+)*',proxy.path)
+                or (proxy.port or 80)!=int(os.environ.get('KAG_HTTP_CHAT_PROXY_PORT','0'))):
+            raise ConfigurationError()
+    return dict(enabled=test_enabled,
+        token=_secret('KAG_HTTP_PROVIDER_TEST_GATEWAY_TOKEN_FILE') if test_enabled else None,
+        allowed_hosts=allowed_hosts, proxy=dict(base_url=proxy_url,
+            safe=os.environ.get('KAG_HTTP_CHAT_PROXY_TEST_SAFE','0') == '1',
+            allow_upstream_retries=os.environ.get('KAG_HTTP_CHAT_PROXY_ALLOW_UPSTREAM_RETRIES','0') == '1') if proxy_url else None)
+
+
 def create_app():
     """Uvicorn factory: local artifact reads only; never instantiate remote clients."""
     server_options()
@@ -92,31 +120,7 @@ def create_app():
             raise ConfigurationError()
         provider_keys = {name:_secret('KAG_HTTP_'+name.upper()+'_KEY_FILE') for name in ('embedding','chat')}
         app = api_app(settings,enable_sample_routes=True)
-        # API and gateway read the same deployment allowlist; Save cannot grant egress.
-        test_enabled = os.environ.get('KAG_HTTP_PROVIDER_TEST_ENABLED','0') == '1'
-        hosts_file = os.environ.get('KAG_HTTP_PROVIDER_ALLOWED_HOSTS_FILE')
-        allowed_hosts = ()
-        if hosts_file:
-            if not Path(hosts_file).is_absolute():raise ConfigurationError()
-            raw = Path(hosts_file).read_bytes()
-            if len(raw)>16384:raise ConfigurationError()
-            allowed_hosts = tuple(line.strip() for line in raw.decode('ascii').splitlines() if line.strip() and not line.lstrip().startswith('#'))
-            if len(allowed_hosts)>64 or any(len(host)>253 or not re.fullmatch(
-                    r'(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z][a-z0-9-]*',host) for host in allowed_hosts):
-                raise ConfigurationError()
-        proxy_url = os.environ.get('KAG_HTTP_PROVIDER_PROXY_BASE_URL') or None
-        if proxy_url:
-            from urllib.parse import urlsplit
-            proxy = urlsplit(proxy_url)
-            if (proxy.scheme!='http' or not proxy.hostname or proxy.username or proxy.password or proxy.query or proxy.fragment
-                    or not re.fullmatch(r'(?:/[A-Za-z0-9_-]+)*',proxy.path)
-                    or (proxy.port or 80)!=int(os.environ.get('KAG_HTTP_CHAT_PROXY_PORT','0'))):
-                raise ConfigurationError()
-        app.state.provider_test_policy = dict(enabled=test_enabled,
-            token=_secret('KAG_HTTP_PROVIDER_TEST_GATEWAY_TOKEN_FILE') if test_enabled else None,
-            allowed_hosts=allowed_hosts, proxy=dict(base_url=proxy_url,
-                safe=os.environ.get('KAG_HTTP_CHAT_PROXY_TEST_SAFE','0') == '1',
-                allow_upstream_retries=os.environ.get('KAG_HTTP_CHAT_PROXY_ALLOW_UPSTREAM_RETRIES','0') == '1') if proxy_url else None)
+        app.state.provider_test_policy = provider_test_policy()
         evaluation_root = os.environ.get('KAG_HTTP_EVALUATION_ROOT')
         if evaluation_root:
             if not Path(evaluation_root).is_absolute():

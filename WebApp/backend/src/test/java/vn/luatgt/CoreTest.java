@@ -68,6 +68,26 @@ class CoreTest {
         verifyNoInteractions(kag);
     }
     @BeforeEach void admin() throws Exception { admin=token("admin@test.vn","TEST-only-admin-password"); }
+    @Test void builderConfigurationAndReadinessRequireAdminAndRejectNetworkParameters() throws Exception {
+        String user=register();
+        for(String path:List.of("configuration","preflight")) {
+            mvc.perform(post("/api/admin/kag/builder/"+path).contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isUnauthorized());
+            mvc.perform(post("/api/admin/kag/builder/"+path).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isForbidden());
+        }
+        var metadata=json.createObjectNode().put("fixture","CONFIGURATION");
+        when(kag.builderConfiguration()).thenReturn(metadata);when(kag.checkBuilderReadiness()).thenReturn(metadata);
+        mvc.perform(get("/api/admin/kag/builder/configuration").header("Authorization","Bearer "+admin))
+            .andExpect(status().isOk()).andExpect(header().string("Cache-Control","no-store"));
+        mvc.perform(post("/api/admin/kag/builder/preflight").header("Authorization","Bearer "+admin))
+            .andExpect(status().isAccepted()).andExpect(header().string("Cache-Control","no-store"));
+        clearInvocations(kag);
+        mvc.perform(get("/api/admin/kag/builder/configuration?target=http://localhost").header("Authorization","Bearer "+admin)).andExpect(status().isBadRequest());
+        mvc.perform(post("/api/admin/kag/builder/preflight").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{}"))
+            .andExpect(status().isBadRequest());
+        verifyNoInteractions(kag);
+    }
     String token(String email,String password) throws Exception {
         return body(mvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("email",email,"password",password)))).andExpect(status().isOk()).andReturn()).path("accessToken").asText();
     }

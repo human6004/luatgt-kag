@@ -149,15 +149,14 @@ class BackendIdentitySession:
             if any(a is not b for a, b in zip(route, self._project_route)):
                 raise BackendIdentityError()
             records = self._project_client._rest_client.project_get()
-            matches = [r for r in records if (_field(r, 'name'), _field(r, 'namespace')) == self._target[1:]]
             ids = [r for r in records if _target(r)[0] == self._target[0]]
-            if len(matches) != 1 or len(ids) != 1 or _target(matches[0]) != self._target:
+            if len(ids) != 1 or _target(ids[0]) != self._target:
                 raise BackendIdentityError()
             record = self._project_client.get(id=self._target[0])
             if _target(record) != self._target:
                 raise BackendIdentityError()
             store, endpoint = _store(record)
-            listed_store, _ = _store(matches[0])
+            listed_store, _ = _store(ids[0])
             if store != listed_store: raise BackendIdentityError()
             backend, runtime = self._transport.read(store, self._verifier)
             verified = self._verifier.database_metadata()

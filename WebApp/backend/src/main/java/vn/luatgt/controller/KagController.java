@@ -51,6 +51,54 @@ public class KagController {
     }
     @GetMapping("/admin/kag/pipeline") JsonNode pipeline() { return infrastructure.pipelineStatus(); }
     @GetMapping("/admin/kag/builder/status") JsonNode builderStatus() { return infrastructure.builderStatus(); }
+    @GetMapping("/admin/kag/builder/projects")
+    org.springframework.http.ResponseEntity<JsonNode> builderProjects(@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)
+            throw vn.luatgt.exception.ApiErrors.bad("Danh sách project không nhận tham số tùy ý");
+        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderProjects());
+    }
+    @GetMapping("/admin/kag/builder/configuration")
+    org.springframework.http.ResponseEntity<JsonNode> builderConfiguration(@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)
+            throw vn.luatgt.exception.ApiErrors.bad("Cấu hình Builder không nhận tham số tùy ý");
+        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderConfiguration());
+    }
+    @GetMapping("/admin/kag/builder/structure")
+    org.springframework.http.ResponseEntity<JsonNode> builderStructure(@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Trạng thái cấu trúc không nhận tham số");
+        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderStructure(null,null));
+    }
+    @PostMapping("/admin/kag/builder/structure/{action:preview|apply}")
+    org.springframework.http.ResponseEntity<JsonNode> builderStructureAction(@PathVariable String action,@RequestBody JsonNode change,@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Chuẩn bị cấu trúc không nhận tham số tùy ý");
+        return org.springframework.http.ResponseEntity.accepted().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderStructure(action,change));
+    }
+    @PostMapping("/admin/kag/builder/configuration")
+    org.springframework.http.ResponseEntity<JsonNode> saveBuilderConfiguration(@RequestBody JsonNode change,@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Cấu hình Builder không nhận tham số tùy ý");
+        return org.springframework.http.ResponseEntity.accepted().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.saveBuilderConfiguration(change));
+    }
+    @PostMapping("/admin/kag/builder/selection")
+    org.springframework.http.ResponseEntity<JsonNode> previewBuilderSelection(@RequestBody JsonNode change,@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Xem trước phạm vi không nhận tham số tùy ý");
+        return org.springframework.http.ResponseEntity.accepted().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.previewBuilderSelection(change));
+    }
+    @GetMapping("/admin/kag/builder/clear")
+    org.springframework.http.ResponseEntity<JsonNode> builderClear(@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Trạng thái xóa không nhận tham số");
+        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderClear(null,null));
+    }
+    @PostMapping("/admin/kag/builder/clear/{action:preview|apply}")
+    org.springframework.http.ResponseEntity<JsonNode> builderClearAction(@PathVariable String action,@RequestBody JsonNode change,@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Xóa dữ liệu không nhận tham số tùy ý");
+        return org.springframework.http.ResponseEntity.accepted().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderClear(action,change));
+    }
+    @PostMapping("/admin/kag/builder/preflight")
+    org.springframework.http.ResponseEntity<JsonNode> checkBuilderReadiness(@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)
+            throw vn.luatgt.exception.ApiErrors.bad("Kiểm sẵn sàng không nhận nội dung hoặc tham số tùy ý");
+        return org.springframework.http.ResponseEntity.accepted().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.checkBuilderReadiness());
+    }
     @GetMapping("/admin/kag/builder/inputs") JsonNode builderInputs(@RequestParam Map<String,String> parameters) {
         if(!parameters.isEmpty())throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST,"Đầu vào Builder không nhận đường dẫn hoặc tham số tùy ý");
         return infrastructure.builderInputs();
@@ -62,11 +110,13 @@ public class KagController {
         return org.springframework.http.ResponseEntity.accepted().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.checkBuilderInputs());
     }
     @PostMapping("/admin/kag/builder/build") @ResponseStatus(org.springframework.http.HttpStatus.ACCEPTED)
-    JsonNode build(@Valid @RequestBody BuilderRunRequest request) { return infrastructure.builderAction("build",request.runId()); }
+    JsonNode build(@Valid @RequestBody BuilderRunRequest request,@RequestHeader(value="If-Match",required=false) String revision) { return infrastructure.builderAction("build",request.runId(),revision); }
     @PostMapping("/admin/kag/builder/stop") @ResponseStatus(org.springframework.http.HttpStatus.ACCEPTED)
     JsonNode stop(@Valid @RequestBody BuilderRunRequest request) { return infrastructure.builderAction("stop",request.runId()); }
     @PostMapping("/admin/kag/builder/resume") @ResponseStatus(org.springframework.http.HttpStatus.ACCEPTED)
-    JsonNode resume(@Valid @RequestBody BuilderRunRequest request) { return infrastructure.builderAction("resume",request.runId()); }
+    JsonNode resume(@Valid @RequestBody BuilderRunRequest request,@RequestHeader(value="If-Match",required=false) String revision) { return infrastructure.builderAction("resume",request.runId(),revision); }
+    @PostMapping("/admin/kag/builder/abandon") @ResponseStatus(org.springframework.http.HttpStatus.ACCEPTED)
+    JsonNode abandon(@Valid @RequestBody BuilderRunRequest request,@RequestHeader(value="If-Match",required=false) String revision) { return infrastructure.builderAction("abandon",request.runId(),revision); }
     @GetMapping("/admin/kag/benchmark/datasets") JsonNode datasets() { return infrastructure.benchmarkDatasets(); }
     @PostMapping("/admin/kag/retrieve") JsonNode retrieve(@Valid @RequestBody KagRetrieveRequest request) { return infrastructure.retrieve(request); }
     @GetMapping("/admin/kag/schema") Map<String,Object> schema() { return Map.of("identity",schema.identity(),"contract",schema.contract()); }

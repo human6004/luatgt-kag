@@ -138,7 +138,7 @@ export default function AdminConfig() {
   return (
     <Page title="Cấu hình" subtitle="Cấu hình đã nạp và giới hạn của phiên bản KAG đang triển khai."
       actions={<Button disabled={config.loading || schema.loading || builder.loading || retrieval.loading || models.loading || modelsSaving || modelRunning || copying || changing} onClick={reload}>Tải lại</Button>}>
-      <div className="grid gap-5 xl:grid-cols-2 items-start">
+      <div className="grid gap-5 lg:grid-cols-2 items-start">
         <Card title="Dự án & Schema">
           <div className="px-5 pb-5 text-sm space-y-3">
             <Notice {...schema} />
@@ -201,7 +201,7 @@ export default function AdminConfig() {
                 </form>)}
               </div>
               <p className="text-muted">Test có thể phát sinh phí, chỉ chạy sau xác nhận; không đổi active. Apply chỉ đổi consumer khi runtime rảnh và release tương thích.</p>
-              <p>Build config / OpenIE: NOT_SUPPORTED — Builder hiện chỉ replay vector đã có, chưa dùng provider hoặc OpenIE từ Admin.</p>
+              <p>{models.value.build_config.state === 'SEPARATE' ? 'Builder dùng Embedding đã lưu và kiểm tra. Cấu hình đích, chuẩn bị nguồn và dựng graph tại ' : 'Worker hiện tại chưa hỗ trợ cấu hình Builder qua WebApp. Kiểm tra khả năng tại '}<Link className="underline" to="/admin/pipeline">Dựng đồ thị</Link>. Không hỗ trợ OpenIE tùy ý.</p>
             </>}
             {modelsMessage && <p role="status">{modelsMessage}</p>}
             {modelsError && <p role="alert" className="text-red-700">{modelsError}</p>}

@@ -13,6 +13,8 @@ RUN python -m pip check \
     && python -c "from importlib.metadata import version; from pathlib import Path; rows=[s.split('==') for s in Path('requirements.txt').read_text().splitlines() if s and not s.startswith('#')]; assert all(version(n)==v for n,v in rows)"
 COPY --chown=10001:10001 docker/openspg-server.sh ./docker/openspg-server.sh
 COPY --chown=10001:10001 kag/ ./kag/
+COPY --chown=10001:10001 data/processed/ ./data/processed/
+COPY --chown=10001:10001 artifacts/inputs/xref-a3g2/ ./artifacts/inputs/xref-a3g2/
 COPY --chown=10001:10001 vendor/KAG/ ./vendor/KAG/
 # Verify the copied SDK against its upstream commit without host Git metadata.
 USER 10001:10001
@@ -26,9 +28,9 @@ RUN git init -q vendor/KAG \
 # Operators may use a different UID; this immutable path still gets full source validation.
 USER 0
 RUN git config --system --add safe.directory /workspace/vendor/KAG
-RUN mkdir -p /run/kag-locks /builder-runs /provider-state \
+RUN mkdir -p /run/kag-locks /builder-runs /provider-state /builder-state \
     && chmod 1777 /run/kag-locks /builder-runs \
-    && chown 10001:10001 /provider-state && chmod 700 /provider-state
+    && chown 10001:10001 /provider-state /builder-state && chmod 700 /provider-state /builder-state
 USER 10001:10001
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 KAG_DEBUG_DUMP_CONFIG=0 \
     MPLCONFIGDIR=/tmp/matplotlib HOME=/tmp \

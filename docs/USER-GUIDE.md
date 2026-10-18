@@ -72,11 +72,15 @@ Nhập đơn vị pháp lý dùng `/admin/content-imports?type=units`, preview r
 
 **Bước 2 — Graph/schema:** ở Graph chọn **VietRoadTraffic · SAMPLE thật** để tìm node/quan hệ. Ở Cấu hình, mở **Xem bảng schema và tải contract**. Các khối thật chỉ đọc, không sửa graph/runtime.
 
-**Bước 3 — Builder:** tại Pipeline đọc **Dựng đồ thị & vector · Builder thật**. Build/Stop/Resume chỉ khả dụng khi Worker cho phép; Stop đợi batch/checkpoint, Resume tiếp tục run cũ sau dừng sạch. Mặc định Builder bị chặn, ghi production chưa mở, Delete vô hiệu hóa. Crash/khóa tồn đọng/ghi chưa rõ kết quả cần người vận hành xử lý theo [runner](runner.md#resume-trạng-thái-và-lock); không xóa khóa. Chưa có stream log/lịch sử job thật đầy đủ.
+**Bước 3 — Builder:** mở **Dựng đồ thị**, theo [5 bước sử dụng](runner.md#dựng-đồ-thị-qua-5-bước): Dữ liệu → Cấu hình → Sẵn sàng → Đang dựng → Kết quả. Tạo Knowledge Base riêng trong OpenSPG, chọn project trên LuậtGT, **Xem thay đổi → Chuẩn bị cấu trúc LuậtGT → Xác nhận chuẩn bị**. Lưu Embedding/phạm vi/batch/hạn mức, kiểm sẵn sàng rồi chủ động xác nhận dựng. Bảng tiến trình đọc ledger; **Dừng an toàn** đợi batch/checkpoint, **Tiếp tục dựng** giữ phiên cũ. Refresh không gửi lại Build. **Xem đồ thị** mở số đã xác minh đúng run/target, kèm **Mở Neo4j** đúng database và truy vấn chỉ đọc có giới hạn. Chưa tự kích hoạt Chat. Worker chưa đủ hạ tầng vẫn chặn; khóa hoặc lần ghi chưa rõ kết quả xử lý theo [runner](runner.md#resume-trạng-thái-và-lock).
 
 **Bước 4 — Truy xuất:** ở Hạ tầng, nhập **Nội dung truy xuất**, chọn 1–10 kết quả và tùy chọn mở rộng graph rồi **Chạy thử truy xuất**. Văn bản cũng có **Thử truy vấn · Retrieval thật**. Kết quả chỉ là nguồn/điểm/quan hệ, chưa phải kết luận luật; có thể tốn phí embedding, chỉ chạy trong phạm vi được cấp.
 
 **Bước 5 — Đánh giá:** ở Benchmark đọc **Artifact KAG · API thật** và metrics đã đo; chưa đo hiển thị **Chưa đo**. Benchmark chính thức chưa hoàn thành.
+
+Builder hỗ trợ **Toàn bộ dữ liệu** hoặc **Một phần dữ liệu** theo số lượng/tỷ lệ; **Xem trước phạm vi** hiển thị counts theo loại trước khi lưu. Hạn mức request không thay thế phạm vi nguồn. Chuyển sang toàn corpus giữ nguyên hạn mức người dùng đã đặt.
+
+Muốn dựng lại: **Dừng an toàn → Đã dừng an toàn → Bỏ phiên** chấm dứt Resume và giữ graph/checkpoint. **Xóa dữ liệu để dựng lại** là thao tác riêng, xóa toàn database chuyên dụng được deployment cấp quyền sau preview và nhập đúng tên xác nhận. Giữ schema/index và lịch sử; không có rollback nguyên tử. Đích dùng chung/serving hoặc chưa được cấp quyền bị chặn. Xóa xong phải cấu hình và kiểm sẵn sàng cho phiên mới; không tự Build. Chi tiết: [Dừng, bỏ phiên và dựng lại](runner.md#dừng-bỏ-phiên-và-dựng-lại).
 
 ## Phần Demo
 
@@ -88,6 +92,6 @@ Các khối/nút ghi **Demo** dùng dữ liệu hoặc thao tác mô phỏng, kh
 - Người dùng: mời, đổi vai trò, đặt lại mật khẩu, xóa.
 - Graph: namespace khác SAMPLE thật, Cypher, export/restore/checksum.
 - Cấu hình/Docker: form model, YAML, Build/Pack/ZIP; không cấu hình provider hay triển khai hệ thống.
-- Pipeline: catalog CLI, chạy toàn bộ, log/lịch sử mẫu; Benchmark: Run/Smoke và cột HybridRAG/NativeRAG.
+- Benchmark: Run/Smoke và cột HybridRAG/NativeRAG.
 
 Cài mới cần dữ liệu được duyệt và [graph/provider đã chuẩn bị](../docker/README.md#cấu-hình-chatbot); container healthy không đủ để dùng chatbot.

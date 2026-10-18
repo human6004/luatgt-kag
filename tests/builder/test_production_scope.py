@@ -138,19 +138,21 @@ class ProductionScopeTests(unittest.TestCase):
     def test_ambiguous_project_blocks(self):
         record = Projects().records[0]
         with self.assertRaisesRegex(ValueError, 'exactly one'):
-            self.discover(client=Projects([record, dict(record, id='38')]))
+            self.discover(client=Projects([record, dict(record)]))
+        self.assertEqual(self.discover(client=Projects([record, dict(record, id='38')])).project_id,37)
 
     def test_returned_id_is_verified(self):
         record = dict(Projects().records[0], id='38')
         with self.assertRaisesRegex(ValueError, 'ID'): self.discover(client=Projects(returned=record))
 
-    def test_sample_project_id_cannot_be_relabelled_as_production(self):
+    def test_project_id_two_requires_same_identity_proof_as_every_other_id(self):
         settings = replace(self.settings, expected_project_id=2,
                            confirmation=self.settings.confirmation.replace(':37:', ':2:'))
         record = dict(Projects().records[0], id='2')
-        with self.assertRaisesRegex(ValueError, 'sample'): settings.validate()
-        with self.assertRaisesRegex(ValueError, 'sample'):
-            self.discover(settings=settings, client=Projects([record]))
+        settings.validate()
+        self.assertEqual(self.discover(settings=settings,client=Projects([record])).project_id,2)
+        with self.assertRaises(ValueError):
+            self.discover(settings=settings,client=Projects([dict(record,namespace='Foreign')]))
 
     def test_expected_project_id_mismatch_blocks(self):
         with self.assertRaisesRegex(ValueError, 'ID'):
@@ -185,7 +187,7 @@ class ProductionScopeTests(unittest.TestCase):
         with self.assertRaises(ADAPTER.WriterAdapterError): replace(good, scope='unknown')
 
     def test_missing_confirmation_or_wrong_dimension_blocks(self):
-        for change in ({'confirmation': None}, {'confirmation': 'yes'}, {'vector_dimensions': 1536},
+        for change in ({'confirmation': None}, {'confirmation': 'yes'}, {'vector_dimensions': 0}, {'vector_dimensions':65537},
                        {'vector_dimensions': True}, {'expected_project_id': True}):
             with self.subTest(change=change), self.assertRaises(ValueError):
                 self.discover(settings=replace(self.settings, **change))

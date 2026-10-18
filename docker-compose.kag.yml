@@ -80,6 +80,13 @@ services:
       LANG: C.UTF-8
       PYTHONPATH: /workspace
       PYTHONDONTWRITEBYTECODE: "1"
+      KAG_HTTP_PROVIDER_TEST_ENABLED: ${KAG_PROVIDER_ENABLED:-0}
+      KAG_HTTP_PROVIDER_TEST_GATEWAY_TOKEN_FILE: ${KAG_PROVIDER_ENABLED:+/run/secrets/egress_token}
+      KAG_HTTP_PROVIDER_ALLOWED_HOSTS_FILE: /run/provider-hosts.lst
+      KAG_HTTP_PROVIDER_PROXY_BASE_URL: ${KAG_PROVIDER_PROXY_BASE_URL:-}
+      KAG_HTTP_CHAT_PROXY_TEST_SAFE: ${KAG_CHAT_PROXY_TEST_SAFE:-0}
+      KAG_HTTP_CHAT_PROXY_ALLOW_UPSTREAM_RETRIES: ${KAG_CHAT_PROXY_ALLOW_UPSTREAM_RETRIES:-0}
+      KAG_HTTP_CHAT_PROXY_PORT: ${KAG_CHAT_PROXY_PORT:-8317}
       KAG_BROKER_HOST: 0.0.0.0
       KAG_BROKER_PORT: "8899"
       KAG_BROKER_DATABASE: vietroadtraffic
@@ -96,16 +103,26 @@ services:
       - -Xmx768m
       - -jar
       - arks-sofaboot-0.0.1-SNAPSHOT-executable.jar
-      - --server.address=127.0.0.1
+      - --server.address=0.0.0.0
       - --server.repository.impl.jdbc.host=openspg-mysql
       - --server.repository.impl.jdbc.password=${KAG_MYSQL_PASSWORD:?Set independent credentials in .env}
       - --builder.model.execute.num=1
+      # Pemja uses the pinned base interpreter/library with product dependencies first.
+      - --python.paths=/workspace;/opt/kag-venv/lib/python3.10/site-packages
+      # Pemja INFO logs contain full model configuration, including the provider key.
+      - --logging.level.com.antgroup.openspg.common.util.pemja.PemjaUtils=OFF
       - --cloudext.graphstore.url=neo4j://openspg-neo4j:7687?user=neo4j&password=${KAG_NEO4J_PASSWORD:?Set independent credentials in .env}&database=${KAG_DATABASE:-neo4j}
       - --cloudext.searchengine.url=neo4j://openspg-neo4j:7687?user=neo4j&password=${KAG_NEO4J_PASSWORD:?Set independent credentials in .env}&database=${KAG_DATABASE:-neo4j}
     networks:
       private: {aliases: [server]}
       readbus: {}
+    secrets: [egress_token]
     volumes:
+      - type: bind
+        source: ${KAG_PROVIDER_HOSTS_FILE:-./docker/kag-ingress/provider-hosts.lst}
+        target: /run/provider-hosts.lst
+        read_only: true
+        bind: {create_host_path: false}
       - type: bind
         source: ${KAG_STATE_DIR:-../luatgt-state}/broker-credentials
         target: /run/broker-credentials
@@ -225,14 +242,51 @@ services:
     environment:
       KAG_GRAPH_LOCK_VOLUME: ${KAG_GRAPH_LOCK_VOLUME:-${COMPOSE_PROJECT_NAME:-luatgt}_kag-builder-graph-locks}
       KAG_BUILDER_CONFIG: /builder-input/runner.json
+      KAG_BUILDER_STATE_DIR: /builder-state
+      KAG_BUILDER_RUN_ROOT: /builder-runs
       KAG_BUILDER_TOKEN_FILE: /run/secrets/builder_token
+      KAG_BUILDER_PROJECT_ID: ${KAG_BUILDER_PROJECT_ID:-}
+      KAG_BUILDER_PROJECT_NAME: ${KAG_BUILDER_PROJECT_NAME:-}
+      KAG_BUILDER_DATABASE: ${KAG_BUILDER_DATABASE:-}
+      KAG_BUILDER_OPENSPG_URL: ${KAG_BUILDER_OPENSPG_URL:-http://openspg-server:8887}
+      KAG_BUILDER_NEO4J_HTTP: ${KAG_BUILDER_NEO4J_HTTP:-http://openspg-neo4j:7474}
+      KAG_BUILDER_NEO4J_URI: ${KAG_BUILDER_NEO4J_URI:-bolt://openspg-neo4j:7687}
+      KAG_BUILDER_SERVING_DATABASE: ${KAG_DATABASE:-neo4j}
+      KAG_BUILDER_CLEAR_TARGETS: ${KAG_BUILDER_CLEAR_TARGETS:-[]}
+      KAG_HTTP_RELEASE_ID: ${KAG_RELEASE_ID:-}
+      KAG_HTTP_RELEASE_ROOT: ${KAG_RELEASE_ID:+/release}
+      KAG_OPENSPG_PUBLIC_URL: ${KAG_OPENSPG_PUBLIC_URL:-http://127.0.0.1:8887/}
+      KAG_NEO4J_BROWSER_URL: ${KAG_NEO4J_BROWSER_URL:-http://127.0.0.1:7474/browser/}
+      KAG_NEO4J_PUBLIC_BOLT_URL: ${KAG_NEO4J_PUBLIC_BOLT_URL:-bolt://127.0.0.1:7687}
+      KAG_HTTP_CHAT_PROXY_ALLOW_UPSTREAM_RETRIES: ${KAG_CHAT_PROXY_ALLOW_UPSTREAM_RETRIES:-0}
+      KAG_HTTP_PROVIDER_TEST_ENABLED: ${KAG_PROVIDER_ENABLED:-0}
+      KAG_HTTP_PROVIDER_TEST_GATEWAY_TOKEN_FILE: ${KAG_PROVIDER_ENABLED:+/run/secrets/egress_token}
+      KAG_HTTP_PROVIDER_ALLOWED_HOSTS_FILE: /run/provider-hosts.lst
+      KAG_HTTP_PROVIDER_PROXY_BASE_URL: ${KAG_PROVIDER_PROXY_BASE_URL:-}
+      KAG_HTTP_CHAT_PROXY_TEST_SAFE: ${KAG_CHAT_PROXY_TEST_SAFE:-0}
+      KAG_HTTP_CHAT_PROXY_PORT: ${KAG_CHAT_PROXY_PORT:-8317}
       KAG_NEO4J_USERNAME: neo4j
       KAG_NEO4J_PASSWORD: ${KAG_NEO4J_PASSWORD:?Set independent credentials in .env}
-      KAG_OPERATIONAL_PROOF: DENY
-      KAG_PRODUCTION_WRITE: BLOCKED
-      KAG_PROVIDER_EGRESS: DENY
+      # Runner config, target identity and GraphLock enforce Worker write admission.
       KAG_DEBUG_DUMP_CONFIG: "0"
     volumes:
+      - type: volume
+        source: kag-builder-state
+        target: /builder-state
+      - type: bind
+        source: ${KAG_STATE_DIR:-../luatgt-state}/release
+        target: /release
+        read_only: true
+        bind: {create_host_path: true}
+      - type: volume
+        source: kag-provider-state
+        target: /provider-state
+        read_only: true
+      - type: bind
+        source: ${KAG_PROVIDER_HOSTS_FILE:-./docker/kag-ingress/provider-hosts.lst}
+        target: /run/provider-hosts.lst
+        read_only: true
+        bind: {create_host_path: false}
       - type: bind
         source: ${KAG_STATE_DIR:-../luatgt-state}/builder-input
         target: /builder-input
@@ -245,7 +299,7 @@ services:
         source: kag-builder-graph-locks
         target: /run/kag-locks
     tmpfs: ["/tmp:rw,noexec,nosuid,size=512m,mode=1777"]
-    secrets: [builder_token]
+    secrets: [builder_token, egress_token]
     network_mode: service:openspg-server
     depends_on:
       openspg-server: {condition: service_started, restart: true}
@@ -269,6 +323,11 @@ services:
     memswap_limit: 128m
     cpus: 0.25
     pids_limit: 64
+    # Internal-only storage networks cannot publish host ports directly.
+    ports:
+      - "127.0.0.1:7474:7474"
+      - "127.0.0.1:7687:7687"
+      - "127.0.0.1:8887:8887"
     init: true
     stop_grace_period: 10s
     depends_on:
@@ -299,7 +358,7 @@ services:
     secrets:
       - source: egress_token
         target: /run/egress-credentials/egress.token
-    networks: [readbus, ingress]
+    networks: [readbus, ingress, private]
 
 networks:
   private:
@@ -309,6 +368,7 @@ networks:
   ingress:
     internal: false
 volumes:
+  kag-builder-state:
   kag-builder-graph-locks:
     name: ${KAG_GRAPH_LOCK_VOLUME:-${COMPOSE_PROJECT_NAME:-luatgt}_kag-builder-graph-locks}
   kag-builder-runs:
