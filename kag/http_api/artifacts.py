@@ -117,6 +117,19 @@ _FILES = {'source_catalog_sha256':'source-catalog.json', 'graph_receipt_sha256':
     'backend_receipt_sha256':'backend-receipt.json',
     'serving_authority_receipt_sha256':'serving-authority.json',
     'webapp_publication_sha256':'webapp-publication.json'}
+_PRODUCTION = ('model_identity','dimension','run_id','partial','expected_graph_sha256','provenance_sha256')
+
+
+def release_contract(namespace, *, production=False):
+    root = Path(__file__).resolve().parents[1]/'schema'
+    raw = _read(root,'schema_contract.json')
+    if production:
+        from kag.builder.production_scope import target_contract
+        raw = canonical_json(target_contract(namespace)).encode('utf-8')
+    contract = _json(raw)
+    if namespace != contract['namespace']:
+        _invalid()
+    return raw, SchemaIdentity(namespace,_sha(_read(root,'VietRoadTraffic.schema')),_sha(raw))
 
 
 @dataclass(frozen=True)
@@ -162,6 +175,8 @@ class VerifiedSource:
     java_eligible: bool
     source_sha256: str
     physical_field: str
+    metadata: MappingProxyType | None = None
+    document_metadata: MappingProxyType | None = None
 
 
 @dataclass(frozen=True)
@@ -175,6 +190,12 @@ class VerifiedSources:
     webapp_snapshot_id: str | None
     publication_state: VerificationState
     state: VerificationState = VerificationState.VERIFIED
+    source_mode: str = 'webapp-publication-v1'
+
+
+def dataset_sources(release):
+    return (release.release_kind == 'PRODUCTION' and release.descriptor.get('schema') == 'h1-release-1.1'
+            and release.descriptor.get('source_mode') == 'dataset-snapshot-v1')
 
 
 def _binding(receipt, descriptor):
@@ -269,12 +290,12 @@ def _catalog(value, descriptor, contract):
         records.append(record)
     for record in records:
         if (descriptor['namespace']+'.LegalDocument',record.doc_id) not in entities:
-            _invalid()
+            _invalid('SOURCE_VALIDATION_FAILED')
         linked_unit = record.unit_id if record.sign_id else record.metadata.get('parent_id')
         if linked_unit:
             unit = entities.get((descriptor['namespace']+'.LegalUnit',linked_unit))
             # Bounded SAMPLE may retain external metadata parents; actual edges stay closed below.
-            if ((unit is None and descriptor['release_kind'] != 'SAMPLE')
+            if ((unit is None and descriptor['release_kind'] != 'SAMPLE' and descriptor.get('partial') is not True)
                     or (unit is not None and unit[0].get('doc_id') != record.doc_id)):
                 _invalid()
         for relation in record.graph_context:
@@ -289,7 +310,9 @@ def _publication(value, descriptor, records):
     window = value.get('schema') == 'h1-webapp-publication-2.0' if type(value) is dict else False
     _keys(value, ('schema','snapshot_id','schema_contract','source_snapshot_id','as_of',
                   'timezone','documents','units',*(('serving_until',) if window else ())))
-    if (value['schema'] not in ('h1-webapp-publication-1.0','h1-webapp-publication-2.0') or value['timezone'] != 'Asia/Saigon'
+    if (value['schema'] not in ('h1-webapp-publication-1.0','h1-webapp-publication-2.0','h1-webapp-publication-3.0')
+            or value['schema']=='h1-webapp-publication-3.0' and descriptor['release_kind']!='PRODUCTION'
+            or value['timezone'] != 'Asia/Saigon'
             or value['snapshot_id'] != descriptor['webapp_snapshot_id']
             or value['schema_contract'] != descriptor['schema_contract']
             or value['source_snapshot_id'] != descriptor['source_snapshot_id']):
@@ -338,8 +361,47 @@ def publication_covers(publication, as_of):
     """Snapshot date bounds sealed SAMPLE serving authority, never legal effectivity."""
     if publication is None or type(as_of) is not date:return False
     start=publication['as_of']
+    if publication['schema']=='h1-webapp-publication-3.0':
+        return start<=as_of.isoformat()
     end=publication['serving_until'] if publication['schema']=='h1-webapp-publication-2.0' else start
     return start<=as_of.isoformat()<=end
+
+
+def bind_publication(source, binding, records):
+    """Select actual WebApp approvals; missing/draft/changed sources stay unavailable to Chat."""
+    _keys(source,('as_of','documents','units'))
+    _date(source['as_of'])
+    wanted = {'documents':{r.entity_id:r for r in records if r.entity_type.endswith('.LegalDocument')},
+              'units':{r.entity_id:r for r in records if r.entity_type.endswith('.LegalUnit') and r.field=='text'}}
+    selected, issues = {}, set()
+    for group in ('documents','units'):
+        rows=source[group]
+        if type(rows) is not list: _invalid()
+        key='doc_id' if group=='documents' else 'unit_id'
+        found={}
+        for row in rows:
+            if type(row) is not dict or not isinstance(row.get(key),str) or row[key] in found: _invalid()
+            found[row[key]]=row
+        selected[group]=[]
+        for identity,record in wanted[group].items():
+            row=found.get(identity)
+            if row is None:
+                issues.add('SOURCE_MISSING');continue
+            if row.get('doc_id')!=record.doc_id:
+                issues.add('SOURCE_TEXT_MISMATCH');continue
+            if group=='units' and row.get('text_sha256')!=record.source_sha256:
+                issues.add('SOURCE_TEXT_MISMATCH');continue
+            if group=='documents' and any(row.get(f)!=record.metadata.get(f) for f in ('effective_from','effective_to')):
+                issues.add('SOURCE_TEXT_MISMATCH');continue
+            selected[group].append(dict(row))
+            if row.get('published') is not True: issues.add('SOURCE_NOT_PUBLISHED')
+            if group=='documents' and (row.get('current_effective') is not True or row.get('replaces_eligible') is not True):
+                issues.add('SOURCE_NOT_EFFECTIVE')
+    if not wanted['units']: issues.add('SOURCE_MISSING')
+    value=dict(schema='h1-webapp-publication-3.0',**binding,as_of=source['as_of'],timezone='Asia/Saigon',**selected)
+    value={key:value[key] for key in ('schema','schema_contract','source_snapshot_id','as_of','timezone','documents','units')}
+    value['snapshot_id']='webapp-'+_sha(canonical_json(value).encode())
+    return value,sorted(issues)
 
 
 def load_release(root: Path, expected_release_id: str) -> ServingRelease:
@@ -350,8 +412,13 @@ def load_release(root: Path, expected_release_id: str) -> ServingRelease:
         _identity(expected_release_id)
         raw = _read(root,'release.json')
         descriptor = _json(raw)
-        _keys(descriptor, ('schema',*_BINDING,'release_kind',*_FILES,'serving_mode','sealed_at','webapp_snapshot_id'))
-        if descriptor['schema'] != 'h1-release-1.0' or descriptor['release_id'] != expected_release_id:
+        production=descriptor.get('release_kind')=='PRODUCTION'
+        dataset=descriptor.get('schema')=='h1-release-1.1'
+        _keys(descriptor, ('schema',*_BINDING,'release_kind',*_FILES,'serving_mode','sealed_at','webapp_snapshot_id',
+                          *(_PRODUCTION if production else ()), *(('source_mode',) if dataset else ())))
+        if (descriptor['schema'] not in ('h1-release-1.0','h1-release-1.1') or descriptor['release_id'] != expected_release_id
+                or dataset and (not production or descriptor['source_mode']!='dataset-snapshot-v1'
+                    or descriptor['webapp_snapshot_id'] is not None or descriptor['webapp_publication_sha256'] is not None)):
             _invalid()
         for field in (*_BINDING,'release_kind'):
             if field != 'schema_contract':
@@ -359,15 +426,17 @@ def load_release(root: Path, expected_release_id: str) -> ServingRelease:
         if not re.fullmatch(r'[0-9a-f]{64}',descriptor['graph_fingerprint']):
             _invalid()
         schema_root = Path(__file__).resolve().parents[1]/'schema'
-        schema_bytes = _read(schema_root,'VietRoadTraffic.schema')
-        contract_bytes = _read(schema_root,'schema_contract.json')
+        contract_bytes,identity=release_contract(descriptor['namespace'],production=production)
         contract = _json(contract_bytes)
-        identity = SchemaIdentity(contract['namespace'],_sha(schema_bytes),_sha(contract_bytes))
         if (descriptor['schema_contract'] != identity.__dict__ or descriptor['namespace'] != identity.namespace
                 or contract['runtime_contract']['schema_sha256'] != identity.schema_sha256):
             _invalid()
-        if descriptor['serving_mode'] != 'sealed_read_only':
+        if descriptor['serving_mode'] != ('guarded_worker' if production else 'sealed_read_only'):
             raise ArtifactFailure(VerificationState.UNVERIFIED)
+        if production and (type(descriptor['dimension']) is not int or not 1<=descriptor['dimension']<=65536
+                or type(descriptor['partial']) is not bool): _invalid()
+        if production:
+            _identity(descriptor['model_identity']);_identity(descriptor['run_id'])
         if not _text(descriptor['sealed_at']) or not re.fullmatch(
                 r'[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z',descriptor['sealed_at']):
             _invalid()
@@ -375,6 +444,11 @@ def load_release(root: Path, expected_release_id: str) -> ServingRelease:
         if (descriptor['webapp_snapshot_id'] is None) != (descriptor['webapp_publication_sha256'] is None):
             _invalid()
         loaded, artifacts = {}, [('release.json',raw)]
+        if production:
+            for key,filename in (('expected_graph_sha256','expected.sqlite3'),('provenance_sha256','provenance.jsonl')):
+                data=_read(root,filename)
+                if _sha(data)!=descriptor[key]: _invalid()
+                artifacts.append((filename,data))
         for field, filename in _FILES.items():
             expected = descriptor[field]
             if field == 'webapp_publication_sha256' and expected is None:
@@ -406,7 +480,8 @@ def load_release(root: Path, expected_release_id: str) -> ServingRelease:
         _endpoint(backend['reader_endpoint'])
         _identity(backend['project_id'])
         if (graph['graph_verified'] is not True or backend['identity_attested'] is not True
-                or any(authority[k] is not True for k in ('graph_frozen','schema_frozen','read_only','catalog_complete'))):
+                or authority['catalog_complete'] is not True
+                or any(authority[k] is not (not production) for k in ('graph_frozen','schema_frozen','read_only'))):
             raise ArtifactFailure(VerificationState.UNVERIFIED)
         records = _catalog(loaded['source-catalog.json'],descriptor,contract)
         publication = _publication(loaded.get('webapp-publication.json'),descriptor,records)
@@ -422,7 +497,8 @@ def load_release(root: Path, expected_release_id: str) -> ServingRelease:
         raise ArtifactFailure(VerificationState.INVALID) from None
 
 
-def publish_sample(root, run_directory, reader, *, release_id, source_snapshot_id, approve=False, publication=None):
+def publish_run(root, run_directory, reader, *, release_id, source_snapshot_id, approve=False, publication=None,
+                release_kind='SAMPLE', source_mode='webapp-publication-v1'):
     """Preview by default; explicit operator approval publishes a frozen SAMPLE.
 
     This does not activate serving or attest network isolation/reader privileges.
@@ -439,12 +515,19 @@ def publish_sample(root, run_directory, reader, *, release_id, source_snapshot_i
     _identity(release_id); _identity(source_snapshot_id)
     receipt = _json(_read(run_directory,'receipt.json'))
     identity, stages = receipt['identity'], receipt['stages']
+    status=_json(_read(run_directory,'status.json'))
     metadata = reader.database_metadata()
     contract_root = Path(__file__).resolve().parents[1]/'schema'
-    contract_bytes = _read(contract_root,'schema_contract.json')
+    production=release_kind=='PRODUCTION'
+    if release_kind not in ('SAMPLE','PRODUCTION'): _invalid()
+    dataset=source_mode=='dataset-snapshot-v1'
+    if source_mode not in ('webapp-publication-v1','dataset-snapshot-v1') or dataset and (not production or publication is not None):_invalid()
+    contract_bytes,schema_identity=release_contract(identity['namespace'],production=production)
     contract = _json(contract_bytes)
-    if (identity['scope'] != 'FRESH_SAMPLE' or identity['write_mode'] != 'WRITE'
-            or stages['release']['kind'] != 'FRESH_SAMPLE/WRITE'
+    scope='PRODUCTION' if production else 'FRESH_SAMPLE'
+    if (identity['scope'] != scope or identity['write_mode'] != 'WRITE'
+            or stages['release']['kind'] != scope+'/WRITE'
+            or status['state']!='PASS' or status['stage']!='release' or status['run_id']!=identity['run_id']
             or identity['database'] != reader.database or identity['database_id'] != metadata['databaseID']
             or identity['namespace'] != contract['namespace']
             or identity['backend_identity']['runtime_identity'][0] != metadata['serverID']
@@ -452,24 +535,23 @@ def publish_sample(root, run_directory, reader, *, release_id, source_snapshot_i
         _invalid()
     readonly = {'catalog':[{'name':reader.database,'access':'read-only','currentStatus':'online'}],
                 'settings':[{'name':'server.databases.read_only','value':reader.database}]}
-    if reader.readonly_state() != readonly:
+    if not production and reader.readonly_state() != readonly:
         raise ArtifactFailure(VerificationState.UNVERIFIED)
     for suffix in ('-wal','-shm','-journal'):
         if (run_directory/('expected.sqlite3'+suffix)).exists():
             _invalid()
     expected = _read(run_directory,'expected.sqlite3')
     provenance = _read(run_directory,'provenance.jsonl')
-    _verify_sample_provenance(run_directory)
+    _verify_sample_provenance(run_directory,model_identity=identity['model_identity'])
     verified = verify_graph(reader,db_path=run_directory/'expected.sqlite3',contract=contract,batch_size=32)
     counts = {'nodes':verified['nodes']['total'],'edges':verified['edges']['total'],
               'vectors':verified['vectors']['nonempty']}
     if (verified != stages['verify'] or verified['fingerprint'] != stages['release']['fingerprint']
             or verified['model_identity'] != identity['model_identity']
-            or not 1 <= counts['nodes'] <= 32 or not 0 <= counts['edges'] <= 22
-            or not 1 <= counts['vectors'] <= 42):
+            or counts['nodes']<1 or counts['vectors']<1
+            or not production and (counts['nodes']>32 or counts['edges']>22 or counts['vectors']>42)):
         _invalid()
-    binding = dict(release_id=release_id,schema_contract=dict(namespace=contract['namespace'],
-        schema_sha256=_sha(_read(contract_root,'VietRoadTraffic.schema')),contract_sha256=_sha(contract_bytes)),
+    binding = dict(release_id=release_id,schema_contract=schema_identity.__dict__,
         source_snapshot_id=source_snapshot_id,graph_fingerprint=verified['fingerprint'],
         database_id=metadata['databaseID'],server_id=metadata['serverID'],database=reader.database,
         namespace=contract['namespace'])
@@ -499,20 +581,29 @@ def publish_sample(root, run_directory, reader, *, release_id, source_snapshot_i
                         field=logical,physical_field=field,source_text=text,source_sha256=_sha(text.encode()),
                         metadata=properties,graph_context=[r for r in relations if key in (r['from'],r['to'])]))
     catalog = dict(schema='h1-source-catalog-1.0',**binding,records=records)
-    source_records = _catalog(catalog,binding,contract)
+    partial='selection' in identity.get('input_hashes',{})
+    descriptor_kind=dict(binding,release_kind=release_kind,partial=partial)
+    source_records = _catalog(catalog,descriptor_kind,contract)
+    issues=[]
+    if production and publication is not None:
+        publication,issues=bind_publication(publication,binding,source_records)
     webapp_id = publication.get('snapshot_id') if type(publication) is dict else None
-    _publication(publication,dict(binding,release_kind='SAMPLE',webapp_snapshot_id=webapp_id),source_records)
+    _publication(publication,dict(descriptor_kind,webapp_snapshot_id=webapp_id),source_records)
     if len(records) != counts['vectors']:
         _invalid()
     proposal = dict(status='AWAITING_OPERATOR_APPROVAL',**binding,project_id=str(identity['project_id']),
         counts=counts,model_identity=verified['model_identity'],release_root=str(root),
         operational_proof='REQUIRED_SEPARATELY')
+    if production:
+        proposal.update(dimension=verified['vectors']['dimension'],run_id=identity['run_id'],partial=partial,
+                        chat_blockers=[] if dataset and source_records else issues if publication is not None else ['SOURCE_MISSING'])
+    if dataset:proposal['source_mode']=source_mode
     if publication is not None:
         proposal['webapp_snapshot_id'] = webapp_id
     # A preview cannot turn measured evidence into operator publication authority.
     if approve is not True:
         return proposal
-    with tempfile.TemporaryDirectory(prefix='.sample-release-',dir=root.parent) as temporary:
+    with tempfile.TemporaryDirectory(prefix='.release-',dir=root.parent) as temporary:
         staging = Path(temporary)/'release'; staging.mkdir()
         def write(name, value):
             atomic_json(staging/name,value)
@@ -525,31 +616,38 @@ def publish_sample(root, run_directory, reader, *, release_id, source_snapshot_i
         graph_hash = write('graph-receipt.json',dict(schema='h1-graph-receipt-1.0',**binding,
             graph_verified=True,source_catalog_sha256=catalog_hash))
         authority_hash = write('serving-authority.json',dict(schema='h1-serving-authority-1.0',**binding,
-            reader_endpoint=reader.endpoint,project_id=str(identity['project_id']),graph_frozen=True,
-            schema_frozen=True,read_only=True,catalog_complete=True,source_catalog_sha256=catalog_hash,
+            reader_endpoint=reader.endpoint,project_id=str(identity['project_id']),graph_frozen=not production,
+            schema_frozen=not production,read_only=not production,catalog_complete=True,source_catalog_sha256=catalog_hash,
             backend_receipt_sha256=backend_hash))
         publication_hash = write('webapp-publication.json',publication) if publication is not None else None
-        write('release.json',dict(schema='h1-release-1.0',**binding,release_kind='SAMPLE',
+        extra=dict(model_identity=verified['model_identity'],dimension=verified['vectors']['dimension'],
+            run_id=identity['run_id'],partial=partial,expected_graph_sha256=_sha(expected),provenance_sha256=_sha(provenance)) if production else {}
+        if dataset:extra['source_mode']=source_mode
+        write('release.json',dict(schema='h1-release-1.1' if dataset else 'h1-release-1.0',**binding,release_kind=release_kind,**extra,
             source_catalog_sha256=catalog_hash,backend_receipt_sha256=backend_hash,graph_receipt_sha256=graph_hash,
             serving_authority_receipt_sha256=authority_hash,webapp_publication_sha256=publication_hash,
-            webapp_snapshot_id=webapp_id,serving_mode='sealed_read_only',
+            webapp_snapshot_id=webapp_id,serving_mode='guarded_worker' if production else 'sealed_read_only',
             sealed_at=datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')))
         release = load_release(staging,release_id)
         _backend(reader,release)
-        _verify_sample_graph(release,dict(counts=counts),reader)
+        if production:
+            if verify_graph(reader,db_path=staging/'expected.sqlite3',contract=contract,batch_size=32)!=verified: _invalid()
+        else: _verify_sample_graph(release,dict(counts=counts),reader)
         _readback(reader,release.records,contract)
-        if reader.readonly_state()!=readonly or reader.database_metadata()!=metadata:
+        if (not production and reader.readonly_state()!=readonly) or reader.database_metadata()!=metadata:
             _invalid()
         staging.rename(root)
     return dict(proposal,status='PUBLISHED')
 
 
+publish_sample=publish_run
+
+
 def _unchanged(release):
     if any(_read(release.root,name) != raw for name,raw in release.artifacts):
         _invalid()
-    schema_root = Path(__file__).resolve().parents[1]/'schema'
-    if (_read(schema_root,'schema_contract.json') != release.contract_bytes
-            or _sha(_read(schema_root,'VietRoadTraffic.schema')) != release.schema_contract.schema_sha256):
+    raw,identity=release_contract(release.schema_contract.namespace,production=release.descriptor['release_kind']=='PRODUCTION')
+    if raw != release.contract_bytes or identity!=release.schema_contract:
         _invalid()
 
 
@@ -576,7 +674,7 @@ def _backend(reader, release):
                 _invalid('SOURCE_VALIDATION_FAILED')
             config = found[0].get('options',{}).get('indexConfig',{})
             if (found[0].get('state') != 'ONLINE' or type(config.get('vector.dimensions')) is not int
-                    or config['vector.dimensions'] != 3072
+                    or config['vector.dimensions'] != descriptor.get('dimension',3072)
                     or not isinstance(config.get('vector.similarity_function'), str)
                     or config['vector.similarity_function'].lower() != 'cosine'):
                 _invalid('SOURCE_VALIDATION_FAILED')
@@ -586,7 +684,8 @@ def _readback(reader, records, contract):
     selected = {(r.entity_type,r.entity_id):r for r in records}
     keys = sorted(selected)
     try:
-        nodes = reader.read_nodes([list(k) for k in keys]) if keys else []
+        nodes = [node for start in range(0,len(keys),32)
+                 for node in reader.read_nodes([list(k) for k in keys[start:start+32]])]
     except Exception:
         raise ArtifactFailure(VerificationState.UNAVAILABLE) from None
     seen = set()
@@ -618,7 +717,9 @@ def _readback(reader, records, contract):
                 _invalid('SOURCE_VALIDATION_FAILED')
             relations[key] = relation
     try:
-        edges = reader.read_edges([list(k) for k in sorted(relations)]) if relations else []
+        keys=sorted(relations)
+        edges = [edge for start in range(0,len(keys),32)
+                 for edge in reader.read_edges([list(k) for k in keys[start:start+32]])]
     except Exception:
         raise ArtifactFailure(VerificationState.UNAVAILABLE) from None
     seen = set()
@@ -661,6 +762,7 @@ def verify_native_sources(result: AnswerResult, release: ServingRelease, reader,
     try:
         if type(release) is not ServingRelease or type(as_of) is not date:
             _invalid()
+        if release.release_kind!=release.descriptor['release_kind']:_invalid('SOURCE_VALIDATION_FAILED')
         if reader is None:
             raise ArtifactFailure(VerificationState.UNAVAILABLE)
         _unchanged(release)
@@ -675,7 +777,7 @@ def verify_native_sources(result: AnswerResult, release: ServingRelease, reader,
         lookup = {r.evidence_id:r for r in release.records}
         documents = {r.entity_id:r for r in release.records if r.entity_type.endswith('.LegalDocument')}
         content_question=document_content_question(question)
-        if content_question and not result.abstained and (release.release_kind!='SAMPLE' or result.answer!=DOCUMENT_CONTENT_ANSWER+
+        if content_question and not result.abstained and (result.answer!=DOCUMENT_CONTENT_ANSWER+
                 '\n\n'.join(c.quote for c in result.citations)):_invalid('SOURCE_VALIDATION_FAILED')
         resolved = []
         for citation in result.citations:
@@ -687,7 +789,8 @@ def verify_native_sources(result: AnswerResult, release: ServingRelease, reader,
                     or not _text(citation.quote) or citation.quote != record.source_text):
                 _invalid('SOURCE_VALIDATION_FAILED')
             kind = record.entity_type.rsplit('.',1)[1]
-            allowed = {p for p,_ in TARGETS[kind]} | (_META[kind] if kind == 'LegalDocument' else set())
+            allowed = {p for p,_ in TARGETS[kind]} | {row['logical_name'] for row in contract['node_properties'][kind]
+                if row['schema_name'] in dict(TARGETS[kind])} | (_META[kind] if kind == 'LegalDocument' else set())
             if record.field not in allowed:
                 _invalid('SOURCE_VALIDATION_FAILED')
             item = {'doc_id':record.doc_id,'sign_id':record.sign_id,'metadata':record.metadata}
@@ -712,12 +815,15 @@ def verify_native_sources(result: AnswerResult, release: ServingRelease, reader,
                 eligible = bool(doc and unit and doc['published'] and doc['current_effective']
                     and doc['replaces_eligible'] and unit['published'])
             verified.append(VerifiedSource(citation,record.entity_type,record.entity_id,record.source_text,
-                                           eligible,record.source_sha256,record.physical_field))
+                eligible,record.source_sha256,record.physical_field,
+                record.metadata if dataset_sources(release) else None,
+                documents[record.doc_id].metadata if dataset_sources(release) else None))
         _backend(reader,release)
         _unchanged(release)
         return VerifiedSources(tuple(verified),release.release_id,release.descriptor['source_snapshot_id'],
             release.schema_contract,release.descriptor_sha256,as_of,webapp_snapshot_id,
-            VerificationState.VERIFIED if publication is not None else VerificationState.UNVERIFIED)
+            VerificationState.VERIFIED if publication is not None or dataset_sources(release) else VerificationState.UNVERIFIED,
+            source_mode='dataset-snapshot-v1' if dataset_sources(release) else 'webapp-publication-v1')
     except ArtifactFailure:
         raise
     except OSError:
@@ -728,7 +834,7 @@ def verify_native_sources(result: AnswerResult, release: ServingRelease, reader,
 
 def release_view(release: ServingRelease) -> dict:
     """Artifact integrity view only. Step4/5 own all actual runtime gates."""
-    return {'contract_version':'h1-read-v1.0','release_id':release.release_id,
+    value = {'contract_version':'h1-read-v1.0','release_id':release.release_id,
         'release_kind':release.release_kind,'schema_contract':dict(release.schema_contract.__dict__),
         'source_snapshot_id':release.descriptor['source_snapshot_id'],
         'source_catalog_sha256':release.descriptor['source_catalog_sha256'],
@@ -736,6 +842,29 @@ def release_view(release: ServingRelease) -> dict:
         'graph_fingerprint':release.descriptor['graph_fingerprint'],
         'backend_identity_verified':False,'source_identity_verified':False,'verified_at':None,
         'query_ready':False,'production_write':'blocked'}
+    if release.release_kind=='PRODUCTION':
+        value.update(contract_version='h1-read-v1.1',webapp_snapshot_id=release.descriptor['webapp_snapshot_id'])
+        if dataset_sources(release):value.update(contract_version='h1-read-v1.2',source_mode='dataset-snapshot-v1')
+    return value
+
+
+def verify_production_backend(release,reader):
+    from kag.verify import verify_graph
+    from .community import WorkerRetrievalClient
+    if release.release_kind!='PRODUCTION':_invalid()
+    _unchanged(release)
+    if isinstance(reader,WorkerRetrievalClient):
+        # Keep exact graph scans beside the database, without relaying every vector through the API.
+        rows=reader._query('verify_graph')
+        if len(rows)!=1 or type(rows[0]) is not dict:_invalid()
+        result=rows[0]
+    else:
+        _backend(reader,release)
+        result=verify_graph(reader,db_path=release.root/'expected.sqlite3',
+            contract=_json(release.contract_bytes),batch_size=32)
+        _backend(reader,release)
+    if result['fingerprint']!=release.descriptor['graph_fingerprint']:_invalid()
+    _unchanged(release)
 
 
 def load_sample_proof(release, expected_sha256, reader_username):

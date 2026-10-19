@@ -260,6 +260,7 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
             application.state.runtime_supervisor.load_chat_config({key: defaults[key] for key in ('top_k', 'expand')})
         else:
             application.state.runtime_supervisor._chat_error = 'CONFIG_INVALID'
+        restore_serving(application)
         application.state.runtime_settings = application.state.runtime_supervisor.restore_llm_runtime(
             application.state.runtime_settings, application.state.serving_release, application.state.provider_test_policy)
         try:
@@ -279,6 +280,44 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
     app.state.solver_defaults = None
     app.add_middleware(_SafeHTTP)
 
+    def restore_serving(application):
+        from .runtime import RuntimeSettings
+        from kag.builder.serving import release_root
+        supervisor=application.state.runtime_supervisor
+        selected=(supervisor._llm_config or {}).get('serving')
+        if selected is None:return
+        try:
+            release=artifacts.load_release(release_root(selected['release_id']),selected['release_id'])
+            application.state.serving_release=release
+            application.state.runtime_settings=RuntimeSettings(secrets=settings.secrets,production=True,
+                dimension=release.descriptor['dimension'],release_id=release.release_id,
+                source_snapshot_id=release.descriptor['source_snapshot_id'],webapp_snapshot_id=release.descriptor['webapp_snapshot_id'],
+                broker_url='http://openspg-server:8010',broker_token=settings.secrets.inspect_tokens[0])
+        except Exception:
+            application.state.serving_release=None;application.state.runtime_settings=None
+
+    def worker_request(path,request,body=None):
+        import json
+        from urllib.request import Request as Outgoing,build_opener,ProxyHandler
+        from urllib.error import HTTPError
+        from kag.verify import _NoRedirect
+        values=request.headers.getlist('x-openspg-session')
+        token=(settings.secrets.config_apply_tokens if body is not None and path!='/trial' else settings.secrets.inspect_tokens)
+        if not token:raise ApiFailure('SCOPE_DENIED')
+        outgoing=Outgoing('http://openspg-server:8010/v1/serving'+path,
+            data=artifacts.canonical_json(body).encode() if body is not None else None,
+            headers={'Authorization':'Bearer '+token[0],'Content-Type':'application/json',
+                'X-OpenSPG-Session':values[0] if len(values)==1 else ''})
+        try:
+            with build_opener(ProxyHandler({}),_NoRedirect()).open(outgoing,timeout=120) as response:
+                raw=response.read(245761)
+            if len(raw)>245760:raise ApiFailure('RESULT_LIMIT_EXCEEDED')
+            return artifacts._json(raw)
+        except HTTPError as error:
+            try:code=artifacts._json(error.read(65537)).get('error',{}).get('code')
+            except Exception:code=None
+            raise ApiFailure(code if code in ('CONFIG_BUSY','CONFIG_CONFLICT','SCOPE_DENIED','RELEASE_MISMATCH','NOT_READY') else 'NOT_READY') from None
+
     def sample_guard(request, release, runtime_settings):
         if (time.monotonic() >= request.state.request_deadline
                 or app.state.serving_release is not release or app.state.runtime_settings is not runtime_settings
@@ -286,7 +325,10 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
             raise ApiFailure('NOT_READY')
         if request.headers.getlist('x-kag-release-id') != [release.release_id]:
             raise ApiFailure('RELEASE_MISMATCH')
-        artifacts.load_sample_proof(release,runtime_settings.sample_proof_sha256,runtime_settings.reader_username)
+        if runtime_settings.production:
+            from kag.builder.serving import validate_active_release
+            validate_active_release(release)
+        else:artifacts.load_sample_proof(release,runtime_settings.sample_proof_sha256,runtime_settings.reader_username)
 
     @app.exception_handler(HTTPException)
     async def http_error(request, exc):
@@ -329,10 +371,11 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                     request.state.authority_guard = lambda:sample_guard(request,release,runtime_settings)
                     request.state.retrieve_verified = True
                     return JSONResponse(result)
-        if capability in ('query-v1','retrieve') and enable_sample_routes:
+        if capability in ('query-v1','retrieve'):
             release,runtime_settings=app.state.serving_release,app.state.runtime_settings
             if (type(release) is artifacts.ServingRelease and runtime_settings is not None
-                    and getattr(runtime_settings,'query_proof_sha256',None) and supervisor is not None):
+                    and (getattr(runtime_settings,'production',False) or enable_sample_routes and getattr(runtime_settings,'query_proof_sha256',None))
+                    and supervisor is not None):
                 try:
                     result=await supervisor.sample_ready(request,runtime_settings,release,
                         capability='query' if capability=='query-v1' else 'retrieve')
@@ -355,6 +398,95 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
     if not (settings.secrets.query_tokens or settings.secrets.inspect_tokens):
         return app
 
+    @app.get('/v1/serving')
+    async def serving_catalog(request: Request):
+        authorize(request_principal(request),'inspect',None)
+        if request.query_params:raise ApiFailure('INVALID_REQUEST')
+        supervisor=app.state.runtime_supervisor
+        value=await asyncio.to_thread(worker_request,'',request)
+        if getattr(supervisor,'_serving_uncertain',False) and not value['busy']:
+            supervisor.load_llm_config(settings.secrets);restore_serving(app)
+            app.state.runtime_settings=supervisor.restore_llm_runtime(app.state.runtime_settings,
+                app.state.serving_release,app.state.provider_test_policy)
+            supervisor.closed=False;supervisor._serving_action=False;supervisor._serving_uncertain=False
+        release=app.state.serving_release
+        from kag.builder.serving import chat_blockers
+        blockers=chat_blockers(release) if type(release) is artifacts.ServingRelease and release.release_kind=='PRODUCTION' else ['GRAPH_REQUIRED']
+        models=supervisor._llm_config or {}
+        if not models.get('active',{}).get('chat'):
+            tested=models.get('tested',{}).get('chat')
+            blockers.append('CHAT_MODEL_NOT_APPLIED' if models.get('chat') and tested and tested['status']=='PASS' else 'CHAT_MODEL_REQUIRED')
+        return dict(value,runtime_ready=app.state.runtime_settings is not None,chat_blockers=blockers)
+
+    @app.post('/v1/serving/{action}')
+    async def serving_action(action: str,request: Request):
+        authorize(request_principal(request),'config-apply',None)
+        if action not in ('preview','activate') or request.query_params:raise ApiFailure('INVALID_REQUEST')
+        body=artifacts._json(await bounded_body(request,limit=32*1024*1024))
+        supervisor=app.state.runtime_supervisor
+        if supervisor.busy or supervisor._provider_test_task or supervisor._serving_action:raise ApiFailure('CONFIG_BUSY')
+        supervisor._serving_action=True
+        async def operation():
+            try:
+                return await asyncio.to_thread(worker_request,'/'+action,request,body)
+            except ApiFailure:raise
+            except Exception:
+                supervisor._serving_uncertain=True;supervisor.closed=True
+                raise ApiFailure('BACKEND_UNAVAILABLE') from None
+            finally:
+                if not getattr(supervisor,'_serving_uncertain',False):
+                    supervisor.load_llm_config(settings.secrets);restore_serving(app)
+                    app.state.runtime_settings=supervisor.restore_llm_runtime(app.state.runtime_settings,
+                        app.state.serving_release,app.state.provider_test_policy)
+                    supervisor._serving_action=False
+        try:return await supervisor.supervise(operation,time.monotonic()+180)
+        except Exception:
+            if not supervisor.busy and not getattr(supervisor,'_serving_uncertain',False):supervisor._serving_action=False
+            raise
+
+    @app.post('/v1/serving/trial/{project_id}/{run_id}')
+    async def trial_graph(project_id: int,run_id: str,request: Request):
+        from copy import deepcopy
+        import re
+        from .runtime import RequestRuntime,RuntimeSettings,_new_embedding,initialize_runtime,REQUEST_SECONDS
+        authorize(request_principal(request),'inspect',None)
+        if (request.query_params or not 1<=project_id<=2147483647
+                or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,127}',run_id)):
+            raise ApiFailure('INVALID_REQUEST')
+        body=artifacts._json(await bounded_body(request))
+        artifacts._keys(body,('message','top_k','expand'))
+        contract.retrieval_options(dict(top_k=body['top_k'],expand=body['expand']))
+        if not contract._text(body['message']) or not body['message'].strip() or contract.utf16_units(body['message'])>4000:
+            raise ApiFailure('INVALID_REQUEST')
+        supervisor=app.state.runtime_supervisor
+        if supervisor._serving_action or supervisor._provider_test_task:raise ApiFailure('CONFIG_BUSY')
+        deadline=time.monotonic()+REQUEST_SECONDS
+        async def operation():
+            runtime=None
+            try:
+                catalog=await asyncio.to_thread(worker_request,'',request)
+                rows=[r for r in catalog['runs'] if r['project_id']==project_id and r['run_id']==run_id]
+                if len(rows)!=1:raise ApiFailure('SCOPE_DENIED')
+                model=deepcopy(supervisor._llm_config or {})
+                embedding=model.get('embedding');tested=model.get('tested',{}).get('embedding')
+                if not embedding or not tested or tested['status']!='PASS':raise ApiFailure('NOT_READY')
+                if (embedding['base_url'].rstrip('/')+'|'+embedding['model']!=rows[0]['model_identity']
+                        or tested['dimension']!=rows[0]['dimension']):raise ApiFailure('RELEASE_MISMATCH')
+                candidate=RuntimeSettings(secrets=settings.secrets,production=True,dimension=rows[0]['dimension'],
+                    embedding_url=embedding['base_url'],embedding_model=embedding['model'],embedding_key=embedding['api_key'])
+                initialize_runtime()
+                runtime=RequestRuntime(None,None,None,deadline,supervisor._budget,body['message'],None,capability='retrieve')
+                runtime.request_id=getattr(request.state,'request_id',None)
+                embed=await asyncio.to_thread(_new_embedding,candidate,runtime)
+                vector=await asyncio.to_thread(embed,body['message'])
+                result=await asyncio.to_thread(worker_request,'/trial',request,dict(project_id=project_id,run_id=run_id,
+                    model_identity=rows[0]['model_identity'],vector=vector,top_k=body['top_k'],expand=body['expand']))
+                runtime.budget.response_remaining()
+                return Response(contract.encode_retrieve(result),media_type='application/json',headers={'Cache-Control':'no-store'})
+            finally:
+                if runtime is not None:await runtime.close()
+        return await supervisor.supervise(operation,deadline)
+
     @app.get('/v1/config')
     async def configuration(request: Request):
         authorize(request_principal(request), 'inspect', None)
@@ -363,7 +495,8 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
         from .inspection import validate_config
         snapshot = app.state.config_snapshot
         project = dict(snapshot['project'])
-        if type(app.state.serving_release) is artifacts.ServingRelease:
+        if (type(app.state.serving_release) is artifacts.ServingRelease
+                and app.state.serving_release.release_id == project['release_id']):
             project['release_state'] = 'LOADED'
         return validate_config(dict(snapshot, project=project, solver=app.state.solver_defaults))
 
@@ -508,9 +641,8 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                         or app.state.runtime_settings != settings):
                     raise ApiFailure('RELEASE_MISMATCH')
                 try:
-                    schema_root = Path(__file__).resolve().parents[1]/'schema'
-                    if (artifacts._sha(artifacts._read(schema_root,'VietRoadTraffic.schema')) != release.schema_contract.schema_sha256
-                            or artifacts._read(schema_root,'schema_contract.json') != release.contract_bytes):
+                    raw,identity=artifacts.release_contract(release.schema_contract.namespace,production=release.release_kind=='PRODUCTION')
+                    if identity!=release.schema_contract or raw!=release.contract_bytes:
                         raise ApiFailure('SCHEMA_CONTRACT_MISMATCH')
                     if artifacts._read(release.root,'release.json') != dict(release.artifacts)['release.json']:
                         raise ApiFailure('RELEASE_MISMATCH')
@@ -546,7 +678,7 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
 
             def verified_bytes():
                 verified = sources()
-                payload = contract.project_v1(result,verified)
+                payload = contract.project_v1(result,verified,namespace=release.schema_contract.namespace)
                 try:
                     raw = contract.encode_v1(payload)
                 except ApiFailure as exc:
@@ -560,8 +692,10 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                 if sources() != verified:
                     raise ApiFailure('SOURCE_VALIDATION_FAILED')
                 request.state.authority_guard = identity
+                source_header=('X-KAG-Source-Snapshot-ID',settings.source_snapshot_id) if artifacts.dataset_sources(release) else (
+                    'X-WebApp-Snapshot-ID',settings.webapp_snapshot_id)
                 return raw, {'X-KAG-Release-ID':release.release_id,
-                    'X-WebApp-Snapshot-ID':settings.webapp_snapshot_id,'X-KAG-As-Of':instance.as_of.isoformat()},instance.as_of
+                    source_header[0]:source_header[1],'X-KAG-As-Of':instance.as_of.isoformat()},instance.as_of
             return await asyncio.to_thread(verified_bytes)
 
         watching = True

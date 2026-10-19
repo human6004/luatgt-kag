@@ -81,7 +81,7 @@ export default function ChatPage() {
     const view = chatView(row)
     return { id: row.id, title: row.question, group: 'Hôm nay', pinned: pinned.has(row.id), messages: [
       { role: 'user', text: row.question },
-      { role: 'bot', text: view.answer, status: view.status, rich: !!view.answer, citations: view.citations.map(c => ({title:c.doc_id, clause:c.unit_id, label:`${c.doc_id} · ${c.unit_id}`, raw:c})) },
+      { role: 'bot', text: view.answer, status: view.status, rich: !!view.answer, citations: view.citations.map(c => ({title:c.doc_id, clause:c.unit_id ?? c.sign_id ?? '', label:`${c.doc_id}${c.unit_id || c.sign_id ? ` · ${c.unit_id ?? c.sign_id}` : ''}`, raw:c})) },
     ] }
   })
   // Backend stores one question per record and exposes no session date/grouping.

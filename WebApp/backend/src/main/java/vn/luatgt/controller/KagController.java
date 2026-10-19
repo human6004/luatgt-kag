@@ -10,6 +10,15 @@ public class KagController {
     private final KagSchema schema; private final LegalUnitService units; private final InfrastructureService infrastructure;
     public KagController(KagSchema schema,LegalUnitService units,InfrastructureService infrastructure) { this.schema=schema; this.units=units; this.infrastructure=infrastructure; }
     @GetMapping("/admin/kag/status") Map<String,Object> status() { return infrastructure.kagStatus(); }
+    @GetMapping("/admin/kag/serving") org.springframework.http.ResponseEntity<JsonNode> serving(@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Danh sách đồ thị không nhận tham số");
+        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.serving());
+    }
+    @PostMapping("/admin/kag/serving/{action:preview|activate}") org.springframework.http.ResponseEntity<JsonNode> servingAction(
+            @PathVariable String action,@RequestBody JsonNode change,@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Kích hoạt đồ thị không nhận tham số tùy ý");
+        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.servingAction(action,change));
+    }
     @GetMapping("/admin/kag/config") org.springframework.http.ResponseEntity<JsonNode> configuration(
             @RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
         if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)
@@ -63,6 +72,19 @@ public class KagController {
             throw vn.luatgt.exception.ApiErrors.bad("Cấu hình Builder không nhận tham số tùy ý");
         return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderConfiguration());
     }
+    @GetMapping("/admin/kag/graph/{projectId}")
+    org.springframework.http.ResponseEntity<JsonNode> graphProject(@PathVariable int projectId,
+            @RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(projectId<1||!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)
+            throw vn.luatgt.exception.ApiErrors.bad("Xem graph chỉ nhận ID project");
+        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.graphProject(projectId));
+    }
+    @GetMapping("/admin/kag/sources/{projectId}/{runId}")
+    org.springframework.http.ResponseEntity<JsonNode> graphSources(@PathVariable int projectId,@PathVariable String runId,
+            @RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)throw vn.luatgt.exception.ApiErrors.bad("Nguồn đồ thị chỉ nhận project và phiên đã xác minh");
+        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.graphSources(projectId,runId));
+    }
     @GetMapping("/admin/kag/builder/structure")
     org.springframework.http.ResponseEntity<JsonNode> builderStructure(@RequestParam Map<String,String> parameters) {
         if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Trạng thái cấu trúc không nhận tham số");
@@ -103,6 +125,12 @@ public class KagController {
         if(!parameters.isEmpty())throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.BAD_REQUEST,"Đầu vào Builder không nhận đường dẫn hoặc tham số tùy ý");
         return infrastructure.builderInputs();
     }
+    @GetMapping("/admin/kag/dataset/{group}")
+    org.springframework.http.ResponseEntity<JsonNode> dataset(@PathVariable String group,
+            @RequestParam(defaultValue="0") int offset,@RequestParam(defaultValue="25") int limit,@RequestParam Map<String,String> parameters) {
+        if(!Set.of("offset","limit").containsAll(parameters.keySet()))throw vn.luatgt.exception.ApiErrors.bad("Xem nguồn chỉ nhận loại và phân trang");
+        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.dataset(group,offset,limit));
+    }
     @PostMapping("/admin/kag/builder/inputs")
     org.springframework.http.ResponseEntity<JsonNode> checkBuilderInputs(@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
         if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)
@@ -119,6 +147,12 @@ public class KagController {
     JsonNode abandon(@Valid @RequestBody BuilderRunRequest request,@RequestHeader(value="If-Match",required=false) String revision) { return infrastructure.builderAction("abandon",request.runId(),revision); }
     @GetMapping("/admin/kag/benchmark/datasets") JsonNode datasets() { return infrastructure.benchmarkDatasets(); }
     @PostMapping("/admin/kag/retrieve") JsonNode retrieve(@Valid @RequestBody KagRetrieveRequest request) { return infrastructure.retrieve(request); }
+    @PostMapping("/admin/kag/graph/{projectId}/{runId}/retrieve")
+    org.springframework.http.ResponseEntity<JsonNode> trialGraph(@PathVariable int projectId,@PathVariable String runId,
+            @Valid @RequestBody KagRetrieveRequest request,@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Thử đồ thị chỉ nhận project, phiên dựng và câu hỏi");
+        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.trialGraph(projectId,runId,request));
+    }
     @GetMapping("/admin/kag/schema") Map<String,Object> schema() { return Map.of("identity",schema.identity(),"contract",schema.contract()); }
     @GetMapping("/admin/units") List<Map<String,Object>> admin(@RequestParam(required=false) String docId) { return units.list(docId,true); }
     @GetMapping("/units") List<Map<String,Object>> list(@RequestParam String docId) { return units.list(docId,false); }

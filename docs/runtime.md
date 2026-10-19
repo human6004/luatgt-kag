@@ -45,6 +45,8 @@ C3/C4.3a là tên contract/artifact còn được consumers dùng, không phải
 
 Compose/Dockerfiles là nguồn chuẩn image pins; không duy trì danh sách digest thứ hai trong Markdown. KAG API/Builder/OpenSPG dùng cùng image source. Cấu hình runtime/serving: [Docker](../docker/README.md).
 
+Image sản phẩm còn chứa corpus và schema. Worker tạo kế hoạch nguồn qua **Kiểm tra và chuẩn bị**, lưu vào volume Builder state; không phụ thuộc kế hoạch/helper trong workspace phát triển. Python host và các lệnh phát triển bên trên không phải điều kiện để người dùng chạy Builder.
+
 ## Kiểm thử
 
 [Tests](../tests/README.md) hướng dẫn suite riêng, source read-only, network denied, output ngoài repo và shared lock mount. Offline/import checks không xác nhận graph live hoặc benchmark pháp lý.

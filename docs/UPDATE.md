@@ -1,66 +1,72 @@
 # Cập nhật LuậtGT, giữ dữ liệu
 
-Ví dụ: người phát triển push bản mới có thay đổi giao diện, Backend hoặc KAG. Máy đang chạy bản cũ làm đủ các bước dưới đây để lấy source mới và cập nhật toàn bộ ứng dụng, giữ dữ liệu đã có. Không cần tự chọn service để rebuild.
+Dùng trên máy đã cài LuậtGT. Các lệnh PowerShell chạy tại **root repository**, với đúng `.env` và Compose project đang dùng. Cần thời gian bảo trì.
 
-Chạy lệnh tại thư mục repository trên máy cần cập nhật, dùng đúng project và `.env` đang phục vụ. Cần thời gian bảo trì. Không tạo lại secrets, chép đè `.env`, dùng `down -v`, prune hoặc reset dữ liệu.
-
-## Bước 1 — Chuẩn bị và sao lưu
+## 1. Chuẩn bị và sao lưu
 
 ```powershell
 git status --short
 docker compose ps -a
 ```
 
-Nếu Git báo có code sửa riêng, giữ và xử lý các thay đổi đó trước khi pull; không reset hoặc tự stash.
+Nếu có thay đổi source riêng, bảo toàn và xử lý trước khi lấy bản mới; không reset hoặc tự stash. Ghi lại commit, image IDs, cấu hình và mapping storage theo [Sao lưu Docker](../docker/README.md#sao-lưu).
 
-Thực hiện [sao lưu Docker](../docker/README.md#sao-lưu): ngừng thao tác trên WebApp, dừng Builder an toàn rồi dừng services:
+Ngừng thao tác trên WebApp. Nếu Builder đang chạy, bấm **Dừng an toàn** và chờ **Đã dừng an toàn** trước khi dừng stack:
 
 ```powershell
 docker compose stop -t 120
 ```
 
-Sao lưu `.env`, Compose, state và **mọi volume đang mount** ra ngoài repo; ghi lại phiên bản source/image và mapping volume theo hướng dẫn trên. **Chỉ tiếp tục khi services đã dừng và sao lưu hoàn tất.** Nếu máy còn hai projects cũ hoặc mapping khác source, cần quy trình chuyển đổi riêng.
+Sao lưu `.env`, Compose, state/secrets và mọi volume/bind mount của installation ra ngoài repo. Chỉ tiếp tục khi các nơi ghi dữ liệu đã dừng và backup hoàn tất. Không tạo lại secrets, chép đè `.env`, dùng `down -v` hoặc prune.
 
-## Bước 2 — Lấy phiên bản mới
+## 2. Lấy phiên bản mới
 
-Giữ nhánh đang theo phiên bản cần cập nhật. Chạy từng lệnh:
+Giữ nhánh đang theo phiên bản cần cập nhật. Chạy từng lệnh; có lỗi thì dừng xử lý trước khi chạy tiếp:
 
 ```powershell
 git pull --ff-only
 git submodule update --init vendor/KAG
 ```
 
-Lệnh đầu lấy code đã push; lệnh sau lấy đúng phiên bản KAG được ghim. Nếu một lệnh lỗi, dừng xử lý trước khi chạy tiếp; không force/reset hoặc dùng `submodule update --remote`.
+Không dùng force/reset hoặc `submodule update --remote`: ứng dụng cần đúng phiên bản upstream đã pin.
 
-## Bước 3 — Giữ cấu hình và storage
+## 3. Đối chiếu cấu hình và migration
 
-Nếu phiên bản mới thêm biến cấu hình, đối chiếu `.env.example` và bổ sung vào `.env` đang có. Giữ project, `KAG_STATE_DIR`, mật khẩu/token và [mapping storage](../docker/README.md#storage-và-secrets). Đổi biến password không tự đổi password database/ADMIN.
+- Bổ sung biến mới từ `.env.example` vào `.env` đang có; giữ các giá trị riêng của installation.
+- Giữ Compose project, storage mappings, `KAG_STATE_DIR`, credentials và token. Đổi password trong `.env` không tự đổi password database hoặc tài khoản đã tạo.
+- Giữ Builder state, runs, locks và provider state. API/Worker/backend/frontend cần được cập nhật đồng bộ; không lấy cấu hình/target của môi trường thử sang.
+- Nếu bản mới đổi database image, schema hoặc Flyway migration, đọc tác động trước khi khởi động. Backend chạy migrations khi startup. Không chạy migration phá dữ liệu nếu chưa có phương án chuyển đổi được duyệt.
 
-Giữ volume `kag-builder-state` cùng runs, locks và provider state. Builder lưu cấu hình và kế hoạch nguồn trong volume này; sau restart, kiểm lại nguồn và sẵn sàng trước khi Tiếp tục. Cập nhật Worker/API/backend/frontend đồng bộ để dùng tiến trình và kết quả mới.
-
-Nếu có thay đổi Compose, database image hoặc schema, đọc hướng dẫn migration của phiên bản đó; đối chiếu tên volume **và đường mount** với bản đã sao lưu. Không thay mapping bằng giá trị mặc định hoặc chạy hai databases trên cùng volume.
+Đối chiếu **tên volume và đường mount** với bản sao lưu. Installation có mapping khác hoặc nhiều project dùng chung storage cần kế hoạch chuyển đổi riêng.
 
 ```powershell
 docker compose config -q
 ```
 
-Chỉ tiếp tục nếu cấu hình không báo lỗi. Lệnh này không kiểm tra tính tương thích của storage/migration. Không chia sẻ output đầy đủ của `compose config` vì có thể chứa secrets.
+Lệnh này kiểm cấu hình Compose, không kiểm tính tương thích của dữ liệu/migration. Không chia sẻ output đầy đủ `compose config` vì có thể chứa secrets.
 
-## Bước 4 — Chạy phiên bản mới
+## 4. Cập nhật ứng dụng
 
 ```powershell
 docker compose up -d --build
 docker compose ps -a
 ```
 
-`up -d --build` build lại phần thay đổi và cập nhật containers cần thiết, dùng lại volumes hiện có. Không cần build từng service riêng. Kiểm đủ 12 services đang chạy; những service có healthcheck cần chuyển sang `healthy`. Nếu `up` lỗi, kiểm log trước khi tiếp tục; không xóa volume để xử lý.
+Compose build lại images ứng dụng và cập nhật containers cần thiết, dùng lại storage hiện có. Không cần tự chọn từng service. Đợi đủ 12 services chạy; các service có healthcheck cần chuyển sang `healthy`.
 
-## Bước 5 — Kiểm dữ liệu cũ
+Nếu có lỗi, đọc log service liên quan theo [Docker](../docker/README.md#vận-hành); không xóa volume hoặc đổi credentials để thử lại. Builder không tự Resume sau cập nhật.
 
-Mở WebApp tại cổng đang dùng, nhấn **Ctrl+F5** để tải giao diện mới. Đăng nhập bằng tài khoản cũ; kiểm nội dung, ảnh/tệp và lịch sử chat/thi. ADMIN kiểm Hạ tầng, Graph SAMPLE và Builder theo [USER-GUIDE](USER-GUIDE.md#admin--kag-và-hạ-tầng).
+## 5. Kiểm dữ liệu và chức năng đã cấu hình
 
-Nếu chatbot đã được cấu hình, kiểm readiness và thử một câu trong phạm vi phục vụ; có thể phát sinh phí provider. Container `healthy` chưa chứng minh chatbot trả lời được. Nếu nguồn/identity không khớp, kiểm [cấu hình chatbot](../docker/README.md#cấu-hình-chatbot), không sửa hash để ép READY.
+1. Mở WebApp ở cổng đang dùng, nhấn **Ctrl+F5** để tải assets mới.
+2. Đăng nhập tài khoản cũ; kiểm nội dung, ảnh/tệp, lịch sử chat/thi và cấu hình đã lưu.
+3. ADMIN kiểm **Hạ tầng & Retrieval** và **Dựng đồ thị**. Phiên đã dừng phải giữ tiến độ; muốn tiếp tục, kiểm lại nguồn/sẵn sàng rồi tự bấm tiếp tục theo [runner](runner.md#dừng-và-tiếp-tục).
+4. Nếu Chat đã được cấu hình, kiểm readiness. Chỉ chủ động gửi câu hỏi thử khi chấp nhận phí provider; `healthy` chưa chứng minh Chat trả lời được.
 
-Giữ backup đến khi dữ liệu cũ và chức năng đã cấu hình được kiểm tra xong. Nếu cần phục hồi, dừng ghi và thử bản sao trên storage riêng; không import đè volume đang phục vụ. Hạ source/image không tự đảo ngược migration.
+Thiếu model/target/release ở một installation mới không phải lý do tự tạo graph, bỏ kiểm tra hoặc đổi serving binding. Xem [cấu hình chatbot](../docker/README.md#cấu-hình-chatbot) và [hướng dẫn sử dụng](USER-GUIDE.md).
 
-Quy trình giữ dữ liệu theo storage của Compose; **chưa xác minh cập nhật và phục hồi thực tế cho source hiện tại**.
+## Khi cần quay lại bản cũ
+
+Giữ backup và images cũ đến khi kiểm xong. Nếu ứng dụng mới không khởi động an toàn, dừng ghi và dùng lại image/config ứng dụng cũ **chỉ khi còn tương thích với dữ liệu hiện tại**. Hạ source/image không đảo ngược migration.
+
+Phục hồi database cần quy trình riêng: thử backup trên storage biệt lập, đối chiếu đúng source/image/schema rồi mới quyết định chuyển đổi. Không import đè database đang phục vụ và không chạy hai database trên cùng volume. Chi tiết: [Sao lưu và phục hồi](../docker/README.md#sao-lưu).

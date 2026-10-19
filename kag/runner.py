@@ -919,6 +919,8 @@ def _execute(config, run_id, resume, project_client, reader, vectorizer_factory,
             backend_proof=verified['backend_proof'], backend_session=verified['backend_session'])
         lock.acquire()
         if config['scope'] == 'PRODUCTION':
+            from kag.builder.serving import protect_active
+            protect_active(reader,verified['database_id'])
             _check_target_model(config, verified['contract'], reader, verified['database_id'])
         verified['writer_config'] = replace(verified['writer_config'], graph_lock=lock)
         state = RunState(directory, identity, resume=resume)

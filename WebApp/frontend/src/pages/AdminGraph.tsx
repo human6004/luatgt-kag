@@ -1,218 +1,119 @@
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
+import { Button, Field, Modal, Page, inputCls } from '../admin/ui'
+import { ApiError } from '../api'
 import { Notice } from './server/shared'
 import { BuilderGraph, useInspection } from './server/KagManagement'
-import { useSearchParams } from 'react-router-dom'
-import { loadSampleInspection } from './server/kag-inspection'
-import { useMemo, useState } from 'react'
-import { useAdmin } from '../admin/store'
-import { Badge, Button, Card, Page, Progress, Terminal, inputCls } from '../admin/ui'
-
-/* Fingerprint & schema mirror docs/HANDOFF.md of kag-legal-assistant */
-const namespaces = [
-  { id: 'legalfinalcand', ns: 'LegalFinalCand', project: 4, nodes: 15888, rels: 32655, note: 'Final candidate' },
-  { id: 'legalfullcand', ns: 'LegalFullCand', project: 3, nodes: 14061, rels: 29376, note: 'Full candidate' },
-  { id: 'legal', ns: 'Legal', project: 1, nodes: 7624, rels: 26029, note: 'Production cũ' },
-  { id: 'legalc3test', ns: 'LegalC3Test', project: 2, nodes: 93, rels: 245, note: 'Thử nghiệm' },
-]
-const reference = { nodes: 15888, rels: 32655, chunks: 1795, docs: 23 }
-
-const demoLabels: [string, number][] = [
-  ['Obligation', 3861], ['LegalTerm', 3417], ['RegulatedEntity', 2132], ['Chunk', 1795], ['Article', 1349],
-  ['Authority', 1342], ['ProhibitedAct', 983], ['Sanction', 588], ['LegalDocument', 336], ['Others', 85],
-]
-const demoRelations: [string, number][] = [
-  ['source', 18480], ['basedOn', 3306], ['obliges', 2779], ['boundEntity', 1519], ['forAct', 1412], ['belongsTo', 1286],
-  ['appliesTo', 894], ['prohibits', 874], ['imposes', 542], ['defines', 382], ['definedIn', 295], ['enforcedBy', 254],
-  ['OfficialName', 206], ['amends', 168], ['prohibitedBy', 130], ['sanctionedBy', 84], ['implementsDoc', 30], ['supersedes', 7], ['supersededBy', 7],
-]
-
-const demoNodes = [
-  { id: 'article:168-2024-ND-CP:7', label: 'Article', name: 'Điều 7. Xử phạt người điều khiển xe mô tô, xe gắn máy', edges: [['belongsTo', 'LegalDocument', 'Nghị định 168/2024/NĐ-CP'], ['source', 'Chunk', 'chunk e192bb…'], ['imposes', 'Sanction', 'Phạt tiền 4–6 triệu đồng'], ['prohibits', 'ProhibitedAct', 'Không chấp hành hiệu lệnh đèn tín hiệu']] },
-  { id: 'doc:168-2024-ND-CP', label: 'LegalDocument', name: 'Nghị định 168/2024/NĐ-CP', edges: [['supersedes', 'LegalDocument', 'Nghị định 100/2019/NĐ-CP'], ['basedOn', 'LegalDocument', 'Luật TTATGT đường bộ 2024'], ['OfficialName', 'LegalTerm', 'Nghị định quy định xử phạt VPHC về TTATGT']] },
-  { id: 'sanction:tru-diem-gplx', label: 'Sanction', name: 'Trừ điểm giấy phép lái xe', edges: [['sanctionedBy', 'Article', 'Điều 7 Khoản 13'], ['appliesTo', 'RegulatedEntity', 'Người điều khiển xe mô tô'], ['enforcedBy', 'Authority', 'Cảnh sát giao thông']] },
-]
-
-function Bars({ data, unit }: { data: [string, number][]; unit: string }) {
-  const max = Math.max(...data.map((d) => d[1]))
-  return (
-    <ul className="space-y-1.5" role="list">
-      {data.map(([k, v]) => (
-        <li key={k} className="group grid grid-cols-[120px_minmax(0,1fr)_56px] items-center gap-3" title={`${k}: ${v.toLocaleString('vi-VN')} ${unit}`}>
-          <span className="truncate font-mono text-[11.5px] text-text-secondary">{k}</span>
-          <span className="h-3.5 rounded-r bg-line/40">
-            <span className="block h-full rounded-r bg-accent group-hover:bg-accent-strong transition-colors" style={{ width: `${Math.max((v / max) * 100, 0.6)}%` }} />
-          </span>
-          <span className="text-right text-[12px] tabular-nums text-navy">{v.toLocaleString('vi-VN')}</span>
-        </li>
-      ))}
-    </ul>
-  )
-}
+import { builderNeo4jLink, loadBuilderConfiguration, loadBuilderProjects, loadGraphProject, loadServing, changeServing, servingReasons, runGraphRetrieval } from './server/kag-inspection'
+import type { BuilderConfiguration, ServingPreview, GraphRetrieval } from './server/kag-inspection'
 
 export default function AdminGraph() {
-  const [parameters] = useSearchParams()
-  const runId = parameters.get('run_id')
-  return runId !== null ? <BuilderGraph runId={runId} /> : <GraphOverview />
+  const [parameters, setParameters] = useSearchParams()
+  const catalog = useInspection(loadBuilderProjects), configuration = useInspection(loadBuilderConfiguration), serving = useInspection(loadServing)
+  const projectId = parameters.get('project_id') ?? '', requestedRun = parameters.get('run_id') ?? '', requestedTab = parameters.get('tab')
+  const tab = requestedTab === 'trial' || requestedTab === 'chat' ? requestedTab : 'overview'
+  const project = catalog.value?.projects.find(row => String(row.project_id) === projectId)
+  const runs = serving.value?.runs.filter(row => row.project_id === project?.project_id) ?? [], active = serving.value?.active
+  const runId = requestedRun || (active?.project_id === project?.project_id ? active?.run_id : runs.length === 1 ? runs[0].run_id : '') || ''
+  const run = runs.find(row => row.run_id === runId), using = !!run && active?.project_id === project?.project_id && active?.run_id === runId
+  const context = `/admin/graph?project_id=${projectId}${runId ? `&run_id=${encodeURIComponent(runId)}` : ''}`
+  const modelPath = `/admin/config?returnTo=${encodeURIComponent(context + '&tab=' + tab)}`
+  const [preview, setPreview] = useState<ServingPreview | null>(null), [busy, setBusy] = useState(false), [error, setError] = useState(''), [message, setMessage] = useState('')
+  const pending = useRef(false)
+  useEffect(() => { setPreview(null); setError(''); setMessage('') }, [projectId, runId])
+  async function change(action: 'preview' | 'activate') {
+    if (!project || !run || pending.current) return
+    pending.current = true; setBusy(true); setError(''); setMessage('')
+    try {
+      const result = await changeServing(action, project.project_id, run.run_id, preview?.preview_id)
+      if (action === 'preview') setPreview(result)
+      else { setPreview(null); setMessage('Đã dùng đồ thị này cho các câu hỏi mới.'); serving.reload() }
+    } catch (failure) {
+      setPreview(null); setError(failure instanceof ApiError ? failure.message : 'Chưa xác nhận được kết quả. Đang đọc lại trạng thái; kiểm trước khi thử tiếp.'); serving.reload()
+    } finally { pending.current = false; setBusy(false) }
+  }
+  if (requestedRun && !projectId) return <><Link className="underline" to="/admin/graph">Về Đồ thị của tôi</Link><BuilderGraph runId={requestedRun} /></>
+  return <Page title="Đồ thị của tôi" subtitle="Chọn đồ thị để xem, thử truy xuất hoặc dùng cho Chat."
+    actions={<div className="flex flex-wrap gap-3 items-center"><Button disabled={catalog.loading || busy} onClick={() => { catalog.reload(); serving.reload(); configuration.reload() }}>Tải lại</Button><Link className="underline text-sm" to={`/admin/pipeline${project ? `?project_id=${project.project_id}` : ''}`}>Dựng mới</Link></div>}>
+    <Notice {...catalog} retry={catalog.reload} /><Notice {...serving} retry={serving.reload} />
+    <p className="mb-5 text-sm">Chat đang dùng: {serving.loading ? 'Đang đọc trạng thái…' : serving.error ? 'Chưa đọc được trạng thái' : active ? active.project_name : 'Chưa chọn đồ thị'}. Xem hoặc thử đồ thị khác giữ nguyên lựa chọn này.</p>
+    {catalog.value?.state === 'FORBIDDEN' && <p role="alert" className="mb-4">Đăng nhập OpenSPG bằng cùng địa chỉ máy chủ, kiểm quyền sở hữu project rồi tải lại.</p>}
+    {catalog.value?.state === 'EMPTY' && <p className="mb-4">Chưa có project. Tạo project trong OpenSPG rồi bấm Dựng mới.</p>}
+    {configuration.value?.links && <a className="underline inline-block mb-4 text-sm" target="_blank" rel="noreferrer" href={configuration.value.links.openspg}>Mở OpenSPG</a>}
+    <div className="grid gap-4 sm:grid-cols-2 mb-5">
+      <Field label="Project đang xem"><select className={inputCls} value={projectId} disabled={busy || catalog.loading || catalog.value?.state !== 'AVAILABLE'} onChange={event => setParameters(event.target.value ? { project_id: event.target.value } : {})}>
+        <option value="">Chọn project</option>{projectId && !project && <option value={projectId}>{catalog.loading ? 'Đang đọc project…' : 'Project không còn trong danh sách'}</option>}
+        {catalog.value?.projects.map(row => <option key={row.project_id} value={row.project_id}>{row.project_name} · #{row.project_id}</option>)}
+      </select></Field>
+      {project && <Field label="Phiên dựng"><select className={inputCls} value={runId} disabled={busy || serving.loading} onChange={event => setParameters({ project_id: projectId, ...(event.target.value ? { run_id: event.target.value } : {}), tab })}>
+        <option value="">Chọn phiên dựng</option>{runs.map(row => <option key={row.run_id} value={row.run_id}>{row.partial ? 'Một phần dữ liệu' : 'Toàn bộ dữ liệu'} · {row.nodes.toLocaleString('vi-VN')} nội dung · {row.run_id}</option>)}
+      </select></Field>}
+    </div>
+    {projectId && !project && !catalog.loading && <p role="alert">Project đã bị xóa, mất quyền hoặc phiên OpenSPG hết hạn. Đăng nhập lại rồi tải lại danh sách.</p>}
+    {project && <>
+      {project.state === 'CONNECTION_NOT_CONFIGURED' && <p role="alert">Project chưa có kết nối nơi lưu graph. Kiểm cấu hình trong OpenSPG.</p>}
+      <nav aria-label="Công việc với đồ thị" className="flex flex-wrap gap-2 border-b border-line pb-3 mb-5">
+        {([['overview','Tổng quan'],['trial','Thử truy xuất'],['chat','Dùng cho Chat']] as const).map(([key,label]) => <Button key={key} disabled={busy} aria-current={tab === key ? 'page' : undefined} onClick={() => setParameters({ project_id: projectId, ...(runId ? { run_id: runId } : {}), tab: key })}>{label}</Button>)}
+      </nav>
+      <div hidden={tab !== 'overview'}>{project.state !== 'CONNECTION_NOT_CONFIGURED' && <SelectedGraph key={projectId} projectId={project.project_id} links={configuration.value?.links} />}</div>
+      {!run && tab !== 'overview' && <p>Chọn phiên dựng hoàn tất để tiếp tục. {runs.length === 0 && <Link className="underline" to={`/admin/pipeline?project_id=${project.project_id}`}>Mở Builder</Link>}</p>}
+      {run && <>
+        <p className="my-4 text-sm">{run.partial ? 'Một phần dữ liệu' : 'Toàn bộ dữ liệu của phiên'} · {run.nodes.toLocaleString('vi-VN')} nội dung · {run.edges.toLocaleString('vi-VN')} quan hệ. {using && <strong>Đang dùng cho Chat.</strong>}</p>
+        <div hidden={tab !== 'trial'}><TrialGraph key={`${projectId}-${runId}`} projectId={project.project_id} runId={runId} modelPath={modelPath} /></div>
+        <div hidden={tab !== 'chat'} className="space-y-4 text-sm">
+          <p>Chat dùng model phù hợp và bản nguồn đi cùng đồ thị. Không cần nhập lại nguồn vào Quản lý nội dung.</p>
+          <p>Thử truy xuất là tùy chọn. Hệ thống kiểm tương thích trước khi bạn xác nhận.</p>
+          {using && serving.value?.chat_blockers.map(code => <p key={code}>{servingReasons[code] ?? 'Chưa thể dùng Chat. Xem Chi tiết kỹ thuật.'}</p>)}
+          <div className="flex flex-wrap items-center gap-4"><Button disabled={busy || serving.loading || serving.value?.busy} onClick={() => void change('preview')}>{busy ? 'Đang kiểm tương thích…' : 'Dùng cho Chat'}</Button><Link className="underline" to={modelPath}>Chỉnh model</Link>{using && <Link className="underline" to="/chat">Mở Chat</Link>}</div>
+          <details><summary className="cursor-pointer underline">Chi tiết kỹ thuật</summary><p className="break-all mt-3">Phiên: {run.run_id} · namespace {run.namespace} · model {run.model_identity} · {run.dimension} chiều.</p><p>Mã điều kiện: {serving.value?.chat_blockers.join(', ') || 'Không có trong trạng thái đang đọc'}.</p></details>
+        </div>
+      </>}
+    </>}
+    {error && <p role="alert" className="mt-4">{error}</p>}{message && <p role="status" className="mt-4">{message} <Link className="underline" to="/chat">Mở Chat</Link></p>}
+    {preview && <Modal open title="Dùng đồ thị cho Chat" onClose={() => { if (!busy) setPreview(null) }}><div className="space-y-4 text-sm">
+      <p>Chuyển từ <strong>{preview.previous?.project_name ?? 'chưa chọn'}</strong> sang <strong>{preview.project_name}</strong>.</p>
+      <p>{preview.partial ? 'Một phần dữ liệu' : 'Toàn bộ dữ liệu của phiên'}: {preview.counts.nodes.toLocaleString('vi-VN')} nội dung, {preview.counts.edges.toLocaleString('vi-VN')} quan hệ.</p>
+      <p>Chat: {preview.chat?.model ?? 'Chưa cấu hình'}. Embedding: {preview.embedding.model}.</p>
+      {preview.chat_blockers.map(code => <p role="status" key={code}>{servingReasons[code] ?? 'Chưa thể áp dụng; xem Chi tiết kỹ thuật.'}</p>)}
+      <p>Các câu hỏi mới dùng đồ thị này. Lịch sử giữ nguồn cũ. Thao tác không gọi model.</p>
+      <details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><pre className="text-xs whitespace-pre-wrap break-all mt-2">{JSON.stringify(preview,null,2)}</pre></details>
+      <div className="flex flex-wrap gap-4 items-center"><Button disabled={busy || !preview.chat_ready} onClick={() => void change('activate')}>{busy ? 'Đang áp dụng…' : 'Xác nhận dùng cho Chat'}</Button>{!preview.chat_ready && <Link className="underline" to={modelPath}>Chỉnh model</Link>}</div>
+    </div></Modal>}
+  </Page>
 }
 
-function GraphOverview() {
-  const { runTask, notify, jobs } = useAdmin()
-  const data=useInspection(loadSampleInspection), sample=data.value
-  const [nsId, setNsId] = useState('live')
-  const live=nsId==='live'
-  const [verified, setVerified] = useState<null | 'run' | 'ok'>(null)
-  const [search, setSearch] = useState('')
-  const [nodeId, setNodeId] = useState('')
-  const [cypher, setCypher] = useState("MATCH (a:`LegalFinalCand.Article`)-[:belongsTo]->(d) RETURN d.name, count(a) ORDER BY count(a) DESC LIMIT 5")
-  const [cypherOut, setCypherOut] = useState<string[]>([])
-  const [restoreFile, setRestoreFile] = useState<string | null>(null)
-  const [shaOk, setShaOk] = useState<boolean | null>(null)
-  const ns = live ? {id:sample?.backend.database||'Chưa đọc được backend',ns:sample?.backend.namespace||'VietRoadTraffic',nodes:sample?.counts.nodes??0,rels:sample?.counts.edges??0,note:'Graph SAMPLE thật · chỉ đọc'} : namespaces.find(n=>n.id===nsId)!
-  const summarize=(values:string[]):[string,number][]=>Object.entries(values.reduce<Record<string,number>>((acc,k)=>({...acc,[k]:(acc[k]||0)+1}),{}))
-  const labels=live?summarize(sample?.nodes.map(n=>n.entity_type)||[]):demoLabels
-  const relations=live?summarize(sample?.edges.map(e=>e.predicate)||[]):demoRelations
-  const sampleNodes=live?(sample?.nodes.map(n=>({id:JSON.stringify([n.entity_type,n.entity_id]),label:n.entity_type,name:String(n.properties.title||n.properties.ten||n.entity_id),edges:sample.edges.filter(e=>JSON.stringify(e.from)===JSON.stringify([n.entity_type,n.entity_id])||JSON.stringify(e.to)===JSON.stringify([n.entity_type,n.entity_id])).map(e=>{const other=JSON.stringify(e.from)===JSON.stringify([n.entity_type,n.entity_id])?e.to:e.from;return [e.predicate,other[0],other[1]]})}))||[]):demoNodes
-  const node=sampleNodes.find(n=>n.id===nodeId)||sampleNodes[0]
-  const sourceNode=live?sample?.nodes.find(n=>JSON.stringify([n.entity_type,n.entity_id])===node?.id):undefined
-  const found=sampleNodes.filter(n=>(n.id+n.name).toLowerCase().includes(search.toLowerCase()))
-  const busy=(t:string)=>jobs.some(j=>j.taskId===t&&j.status==='running')
-  const fp=live?[{k:'Nodes',v:sample?.counts.nodes,ref:0},{k:'Relations',v:sample?.counts.edges,ref:0},{k:'Vectors',v:sample?.counts.vectors,ref:0},{k:'Văn bản',v:sample?.nodes.filter(n=>n.entity_type.endsWith('.LegalDocument')).length,ref:0}]:[
-    {k:'Nodes',v:ns.nodes,ref:reference.nodes},{k:'Relations',v:ns.rels,ref:reference.rels},{k:'Chunks',v:ns.id==='legalfinalcand'?1795:Math.round(ns.nodes*.11),ref:reference.chunks},{k:'Văn bản',v:ns.id==='legalfinalcand'?23:ns.id==='legalc3test'?2:21,ref:reference.docs},
-  ]
+function TrialGraph({ projectId, runId, modelPath }: { projectId: number; runId: string; modelPath: string }) {
+  const location = useLocation(), saved = location.state?.trialDraft
+  const draft = saved?.projectId === projectId && saved?.runId === runId ? saved : undefined
+  const [question,setQuestion] = useState(typeof draft?.question === 'string' ? draft.question.slice(0,4000) : ''), [topK,setTopK] = useState(Number.isInteger(draft?.topK) && draft.topK >= 1 && draft.topK <= 10 ? draft.topK : 5), [expand,setExpand] = useState(draft?.expand === true)
+  const [result,setResult] = useState<GraphRetrieval>(), [busy,setBusy] = useState(false), [error,setError] = useState('')
+  const pending=useRef(false)
+  async function retrieve() {
+    if(pending.current || !question.trim())return
+    pending.current=true;setBusy(true);setError('');setResult(undefined)
+    try {setResult(await runGraphRetrieval(projectId,runId,question,topK,expand))}
+    catch(failure){setError(failure instanceof Error ? failure.message : 'Chưa thử được đồ thị. Kiểm model và kết nối.')}
+    finally{pending.current=false;setBusy(false)}
+  }
+  return <section className="space-y-4 text-sm">
+    <p>Tìm nguồn trong đồ thị đang xem; không tạo câu trả lời và không đổi đồ thị Chat. Gửi câu thử có thể tính phí Embedding.</p>
+    <form className="space-y-4" onSubmit={event=>{event.preventDefault();void retrieve()}}>
+      <Field label="Câu hỏi thử"><textarea className={inputCls} maxLength={4000} required rows={3} value={question} onChange={event=>setQuestion(event.target.value)} /></Field>
+      <div className="flex flex-wrap gap-4 items-end"><Field label="Số kết quả nguồn"><input className={inputCls} type="number" min={1} max={10} value={topK} onChange={event=>setTopK(Number(event.target.value))}/></Field><label className="flex gap-2 items-center min-h-10"><input type="checkbox" checked={expand} onChange={event=>setExpand(event.target.checked)}/>Tìm thêm nội dung liên quan</label></div>
+      <Button type="submit" disabled={busy || !question.trim() || !Number.isInteger(topK) || topK<1 || topK>10}>{busy?'Đang tìm nguồn…':'Thử truy xuất'}</Button>
+    </form>
+    {error && <p role="alert">{error}</p>}
+    <Link className="underline inline-block" to={modelPath} state={{trialDraft:{projectId,runId,question,topK,expand}}}>Chỉnh model</Link>
+    {result && <><p role="status">Tìm thấy {result.items.length} kết quả trong đồ thị đang chọn.</p>{result.items.map(item=><article key={`${item.entity_type}-${item.entity_id}`} className="border-t border-line py-4 space-y-3"><h3 className="font-semibold break-words">{item.doc_id} · {item.unit_id ?? item.sign_id ?? 'Văn bản'}</h3>{Object.entries(item.source_texts).map(([field,text])=><p key={field} className="whitespace-pre-wrap break-words">{text}</p>)}<details><summary className="underline cursor-pointer">Chi tiết kỹ thuật và quan hệ</summary><pre className="whitespace-pre-wrap break-all text-xs mt-3">{JSON.stringify(item,null,2)}</pre></details></article>)}</>}
+  </section>
+}
 
-  return (
-    <Page
-      title="Đồ thị tri thức"
-      subtitle="Fingerprint, schema, tra cứu nút và sao lưu / khôi phục graph Neo4j của OpenSPG."
-      actions={
-        <select className={`${inputCls} w-auto`} value={nsId} onChange={(e) => { setNsId(e.target.value); setVerified(null); setNodeId('') }} aria-label="Namespace">
-          <option value="live">VietRoadTraffic · SAMPLE thật</option>
-          {namespaces.map((n) => <option key={n.id} value={n.id}>{n.ns} · project {n.project} · Demo</option>)}
-        </select>
-      }
-    >
-      {live?<Notice {...data} retry={data.reload}/>:<p className="mb-5 text-sm text-muted">Demo namespace · dữ liệu mẫu, không truy cập graph này.</p>}
-      <Card className="p-5 mb-5">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <div>
-            <p className="text-[11px] font-semibold uppercase tracking-[0.1em] text-muted">Fingerprint · database {ns.id}</p>
-            <p className="text-[13px] text-text-secondary mt-0.5">{ns.note} {live ? (sample?"· fingerprint xác minh bởi backend":"· chưa xác minh fingerprint") : "· Demo so với số liệu mẫu"}</p>
-          </div>
-          <div className="flex items-center gap-2">
-            {live && sample && <Badge tone="green">Fingerprint SAMPLE đã đọc</Badge>}
-            {!live && verified === 'ok' && (fp.every((f) => f.v === f.ref) ? <Badge tone="green">Khớp fingerprint</Badge> : <Badge tone="amber">Lệch fingerprint</Badge>)}
-            <Button size="sm" variant="dark" disabled={live?data.loading:verified==='run'} onClick={() => {if(live){data.reload();return}setVerified('run');window.setTimeout(()=>setVerified('ok'),1200)}}>
-              {verified === 'run' ? 'Đang đếm…' : 'Xác minh fingerprint'}
-            </Button>
-          </div>
-        </div>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {fp.map((f) => (
-            <div key={f.k} className="rounded-xl border border-line bg-bg px-4 py-3">
-              <p className="text-xs text-muted">{f.k}</p>
-              <p className="text-2xl font-semibold tabular-nums text-navy">{f.v?.toLocaleString('vi-VN')??'—'}</p>
-              {!live && verified === 'ok' && (
-                <p className={`text-[11.5px] ${f.v === f.ref ? 'text-emerald-700' : 'text-amber-700'}`}>
-                  {f.v === f.ref ? '✓ khớp chuẩn' : `chuẩn ${f.ref.toLocaleString('vi-VN')}`}
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
-      </Card>
-
-      {live&&sample&&<details className="mb-5 text-xs break-all"><summary>Danh tính và nguồn graph SAMPLE</summary><p>Database ID: {sample.backend.database_id} · Server ID: {sample.backend.server_id}</p><p>Fingerprint: {sample.graph_fingerprint}</p><p>Release: {sample.release_id} · {sample.verified_at}</p></details>}
-      <div className="grid gap-5 lg:grid-cols-2 mb-5">
-        <Card title="Số nút theo nhãn" right={<span className="text-[11.5px] text-muted">{live&&!sample?'—':labels.length} nhãn</span>}>
-          <div className="px-5 pb-5"><Bars data={labels} unit="nút" /></div>
-        </Card>
-        <Card title="Số cạnh theo quan hệ" right={<span className="text-[11.5px] text-muted">{live&&!sample?'—':relations.length} loại</span>}>
-          <div className="px-5 pb-5 max-h-[360px] overflow-y-auto"><Bars data={relations} unit="cạnh" /></div>
-        </Card>
-      </div>
-
-      <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] mb-5">
-        <Card title="Tra cứu nút">
-          <div className="px-5 pb-5">
-            <input className={inputCls} placeholder="Tìm id hoặc tên nút, VD: article:168-2024-ND-CP:7" value={search} onChange={(e) => setSearch(e.target.value)} />
-            <div className="mt-2 flex flex-wrap gap-1.5">
-              {found.map((n) => (
-                <button key={n.id} onClick={() => setNodeId(n.id)} className={`rounded-full border px-2.5 py-1 font-mono text-[11px] transition-colors ${n.id === nodeId ? 'border-accent bg-selected text-accent-strong' : 'border-line text-text-secondary hover:bg-selected'}`}>
-                  {n.id}
-                </button>
-              ))}
-            </div>
-            {node ? <div className="mt-4 rounded-xl border border-line bg-bg p-4">
-              <div className="flex items-center gap-2"><Badge tone="gold">{node.label}</Badge><span className="font-mono text-[11px] text-muted">{node.id}</span></div>
-              <p className="mt-2 text-[14px] font-semibold text-navy">{node.name}</p>
-              {sourceNode&&<div className="mt-3 text-xs"><dl>{Object.entries(sourceNode.properties).map(([k,v])=><div key={k} className="py-1 break-words"><dt>{k}</dt><dd className="whitespace-pre-wrap">{typeof v==='string'?v:JSON.stringify(v)}</dd></div>)}</dl><h3 className="font-semibold mt-2">Nguồn đã xác minh</h3>{sourceNode.sources.map(s=><details key={s.evidence_id} className="mt-2 break-all"><summary>{s.field} · Evidence {s.evidence_id}</summary><p>SHA-256 nguồn: {s.source_sha256}</p></details>)}</div>}
-              <ul className="mt-3 space-y-2">
-                {node.edges.map(([rel, lbl, target]) => (
-                  <li key={rel+lbl+target} className="flex items-center gap-2 text-[12.5px]">
-                    <span className="shrink-0 rounded-md bg-navy px-1.5 py-0.5 font-mono text-[10.5px] text-bg">─{rel}→</span>
-                    <span className="shrink-0 text-[11px] text-muted">{lbl}</span>
-                    {live?<button className="underline truncate text-left text-navy" onClick={()=>setNodeId(JSON.stringify([lbl,target]))}>{target}</button>:<span className="truncate text-navy">{target}</span>}
-                  </li>
-                ))}
-              </ul>
-            </div> : <p className="mt-4 text-sm text-muted">Chưa có node từ backend hoặc không tìm thấy.</p>}
-          </div>
-        </Card>
-
-        <Card title="Cypher console · Demo" right={<span className="text-[11.5px] text-muted">chỉ đọc</span>}>
-          <div className="px-5 pb-5">
-            <p className="mb-3 text-xs text-muted">Demo: chưa có API Cypher; kết quả dưới đây là mẫu, không truy vấn database.</p>
-            <textarea rows={3} className={`${inputCls} font-mono text-[12px]`} value={cypher} onChange={(e) => setCypher(e.target.value)} />
-            <div className="mt-2 flex items-center gap-2">
-              <Button
-                size="sm"
-                variant="dark"
-                onClick={() => {
-                  if (/\b(CREATE|MERGE|DELETE|SET|REMOVE|DROP)\b/i.test(cypher)) {
-                    setCypherOut(['✗ Truy vấn ghi bị chặn — console ở chế độ chỉ đọc để bảo vệ graph production.'])
-                    return
-                  }
-                  setCypherOut([`$ cypher-shell -d ${ns.id}`, 'Demo: d.name                             | count(a)', '─────────────────────────────────────────┼─────────', 'Luật TTATGT đường bộ 2024                |      89', 'Nghị định 168/2024/NĐ-CP                 |      54', 'Thông tư 35/2024/TT-BGTVT                |      41', 'Nghị định 160/2024/NĐ-CP                 |      38', 'QCVN 41:2024/BGTVT                       |      22', '✓ 5 dòng · 38 ms'])
-                }}
-              >
-                ▶ Chạy truy vấn
-              </Button>
-              <Button size="sm" variant="ghost" onClick={() => setCypher('MATCH (n) RETURN labels(n)[1] AS label, count(*) ORDER BY count(*) DESC')}>Mẫu: đếm nhãn</Button>
-            </div>
-            {cypherOut.length > 0 && <Terminal lines={cypherOut} className="mt-3 max-h-56" />}
-          </div>
-        </Card>
-      </div>
-
-      <div className="grid gap-5 lg:grid-cols-2">
-        <Card title="Xuất graph (máy nguồn) · Demo">
-          <div className="px-5 pb-5 space-y-3 text-[13px] text-text-secondary">
-            <p className="text-xs text-muted">Demo: mô phỏng; không xuất, kiểm checksum thật hoặc khôi phục database.</p>
-            <p>Dump portable <span className="font-mono text-navy">dist/{live?'legalfinalcand':ns.id}.dump</span> kèm tệp <span className="font-mono text-navy">.sha256</span>. Dump ~1.31 GiB, không đưa vào git.</p>
-            {busy('export') && <Progress value={jobs.find((j) => j.taskId === 'export' && j.status === 'running')!.progress} />}
-            <Button variant="primary" disabled={busy('export')} onClick={() => runTask('export', { label: `Demo -Database ${live?'legalfinalcand':ns.id}`, onDone: () => notify('Demo: mô phỏng xuất dump + .sha256; không tạo tệp') })}>
-              {busy('export') ? 'Đang xuất…' : 'Xuất dump + sha256'}
-            </Button>
-          </div>
-        </Card>
-        <Card title="Khôi phục graph (máy nhận) · Demo">
-          <div className="px-5 pb-5 space-y-3 text-[13px] text-text-secondary">
-            <p className="text-xs text-muted">Demo: mô phỏng; không xuất, kiểm checksum thật hoặc khôi phục database.</p>
-            <label className="flex cursor-pointer items-center justify-between gap-3 rounded-xl border-2 border-dashed border-line bg-bg px-4 py-3 hover:border-progress">
-              <span className="truncate">{restoreFile ?? 'Chọn tệp .dump (kèm .sha256)'}</span>
-              <span className="text-xs font-semibold text-accent-strong">Duyệt…</span>
-              <input type="file" accept=".dump,.sha256" multiple className="hidden" onChange={(e) => { const f = e.target.files?.[0]; setRestoreFile(f ? f.name : null); setShaOk(null) }} />
-            </label>
-            <div className="flex flex-wrap items-center gap-2">
-              <Button disabled={!restoreFile} onClick={() => { setShaOk(null); window.setTimeout(() => setShaOk(true), 900) }}>Kiểm tra sha256</Button>
-              {shaOk && <Badge tone="green">Checksum mẫu · Demo</Badge>}
-              <Button variant="dark" disabled={!shaOk || busy('restore')} onClick={() => runTask('restore', { onDone: () => notify('Demo: mô phỏng khôi phục; database không thay đổi') })}>
-                {busy('restore') ? 'Đang khôi phục…' : 'Khôi phục vào legalfinalcand'}
-              </Button>
-            </div>
-            <p className="text-[11.5px] text-muted">Database luôn phải là <span className="font-mono">legalfinalcand</span>; thiếu .sha256 sẽ không phát hiện được dump hỏng.</p>
-          </div>
-        </Card>
-      </div>
-    </Page>
-  )
+function SelectedGraph({ projectId, links }: { projectId: number; links: BuilderConfiguration['links'] }) {
+  const load=useCallback((signal?:AbortSignal)=>loadGraphProject(projectId,signal),[projectId])
+  const data=useInspection(load),value=data.value,neo4j=value && builderNeo4jLink(links,value.target.database)
+  return <section className="space-y-4 text-sm"><Notice {...data} retry={data.reload}/>
+    {value && <><h2 className="font-semibold text-lg break-words">{value.target.project_name}</h2><dl className="grid grid-cols-3 gap-3">{([['Nội dung',value.counts.nodes],['Quan hệ',value.counts.edges],['Vector',value.counts.vectors]] as const).map(([label,count])=><div key={label}><dt>{label}</dt><dd className="text-xl font-semibold">{count.toLocaleString('vi-VN')}</dd></div>)}</dl><p className="text-muted">Đọc từ nơi lưu lúc {new Date(value.measured_at).toLocaleString('vi-VN')}. Số liệu có thể thay đổi khi đang dựng.</p>
+      <details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><div className="mt-3 space-y-3"><p className="break-all">Project #{value.target.project_id} · database {value.target.database} · namespace {value.target.namespace} · {value.database_id}</p>{neo4j && <a className="underline" target="_blank" rel="noreferrer" href={neo4j}>Mở Neo4j</a>}<pre className="whitespace-pre-wrap break-all text-xs">{JSON.stringify({labels:value.labels,relations:value.relations,indexes:value.indexes},null,2)}</pre></div></details></>}
+    <Button disabled={data.loading} onClick={data.reload}>Tải lại số liệu</Button>
+  </section>
 }

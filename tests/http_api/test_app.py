@@ -706,11 +706,37 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
     async def test_only_step5_approved_public_routes_and_methods(self):
         paths = self.app.openapi()['paths']
         self.assertEqual(set(paths),{'/v1/health','/v1/graph/release','/v1/query',
-                                    '/v1/pipeline/status','/v1/benchmark/datasets'})
+                                    '/v1/pipeline/status','/v1/benchmark/datasets',
+                                    '/v1/config','/v1/config/retrieval','/v1/config/models',
+                                    '/v1/config/models/{role}/{action}',
+                                    '/v1/config/retrieval/{action}',
+                                    '/v1/serving','/v1/serving/{action}', '/v1/serving/trial/{project_id}/{run_id}'})
         self.assertEqual(set(paths['/v1/query']),{'post'})
         for path in ('/v1/pipeline/status','/v1/benchmark/datasets'):
             self.assertEqual(set(paths[path]),{'get'})
             self.assertEqual((await self.client.post(path)).status_code,405)
+        for path, methods in {
+                '/v1/config': {'get'}, '/v1/config/retrieval': {'get'},
+                '/v1/config/models': {'get','post'},
+                '/v1/config/models/{role}/{action}': {'post'},
+                '/v1/config/retrieval/{action}': {'post'},
+                '/v1/serving': {'get'}, '/v1/serving/{action}': {'post'}, '/v1/serving/trial/{project_id}/{run_id}': {'post'}}.items():
+            self.assertEqual(set(paths[path]),methods)
+        protected = [('get',path) for path in (
+            '/v1/config','/v1/config/retrieval','/v1/config/models','/v1/serving')]
+        protected += [('post','/v1/config/models')]
+        protected += [('post',f'/v1/config/models/{role}/{action}')
+                      for role in ('chat','embedding') for action in ('test','apply')]
+        protected += [('post','/v1/config/retrieval/'+action) for action in ('save','apply','restore')]
+        protected += [('post','/v1/serving/'+action) for action in ('preview','activate')]
+        protected += [('post','/v1/serving/trial/17/run-B')]
+        for method, path in protected:
+            with self.subTest(method=method,path=path):
+                self.error(await self.client.request(method,path),401,'AUTH_REQUIRED')
+                self.error(await self.client.request(method,path,headers=self.headers()),403,'SCOPE_DENIED')
+                self.assertEqual((await self.client.put(path)).status_code,405)
+        self.assertEqual(self.made,[])
+        self.assertEqual(self.fixture.events,[])
         for path in ('/v1/query/stream','/v1/retrieve','/v1/jobs','/v1/benchmarks','/v2/query','/write','/docs','/openapi.json'):
             self.assertEqual((await self.client.post(path)).status_code,404)
 

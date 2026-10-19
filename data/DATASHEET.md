@@ -12,9 +12,7 @@ Văn bản pháp luật lấy từ Công báo Chính phủ và CDN đi kèm. `ra
 
 [corpus.json](metadata/corpus.json) ghi `dataset_date=2026-10-02`; [checksums.json](metadata/checksums.json) giữ SHA-256.
 
-- 92 văn bản metadata; 91 văn bản production Markdown.
-- 55.597 units; 821 relations; 17.512 xrefs.
-- 1.966 penalties; 887 signs.
+Số lượng từng loại dữ liệu được trình bày tại [Thống kê corpus](README.md#thống-kê-corpus), đối chiếu với metadata của snapshot.
 
 `22_VBHN_BXD` được lưu trong `processed/out_of_scope/`, không thuộc corpus chính. `processed/eval/` giữ 71 câu đánh giá nguồn, không thuộc nguồn truy xuất và chưa là benchmark chính thức.
 

@@ -37,9 +37,15 @@ public class InfrastructureService {
     public JsonNode pipelineStatus() { return kag.pipelineStatus(); }
     public JsonNode builderStatus() { return kag.builderStatus(); }
     public JsonNode builderInputs() { return kag.builderInputs(); }
+    public JsonNode dataset(String group,int offset,int limit) {return kag.builderDataset(group,offset,limit);}
     public JsonNode checkBuilderInputs() { return kag.checkBuilderInputs(); }
     public JsonNode builderConfiguration() { return kag.builderConfiguration(); }
     public JsonNode builderProjects() { return kag.builderProjects(); }
+    public JsonNode graphProject(int projectId) { return kag.graphProject(projectId); }
+    public JsonNode graphSources(int projectId,String runId) {return legalUnits.sourceComparison(kag.builderSources(projectId,runId));}
+    @org.springframework.beans.factory.annotation.Autowired private LegalUnitService legalUnits;
+    public JsonNode serving() {return kag.serving(null,null,null);}
+    public JsonNode servingAction(String action,JsonNode change) {return kag.serving(action,change,null);}
     public JsonNode builderStructure(String action,JsonNode change) { return kag.builderStructure(action,change); }
     public JsonNode saveBuilderConfiguration(JsonNode change) { return kag.saveBuilderConfiguration(change); }
     public JsonNode previewBuilderSelection(JsonNode change) { return kag.previewBuilderSelection(change); }
@@ -50,6 +56,7 @@ public class InfrastructureService {
     public JsonNode benchmarkDatasets() { return kag.benchmarkDatasets(); }
     public JsonNode sampleInspection() { return kag.sampleInspection(); }
     public JsonNode retrieve(KagRetrieveRequest request) { return kag.retrieve(request.message(),request.top_k(),request.expand()); }
+    public JsonNode trialGraph(int projectId,String runId,KagRetrieveRequest request) {return kag.trialGraph(projectId,runId,request);}
     public Map<String,String> status() {
         var result=new LinkedHashMap<String,String>();
         try(var connection=database.getConnection()) { result.put("MySQL",connection.isValid(2)?"UP":"DOWN"); } catch(Exception e) { result.put("MySQL","DOWN"); }

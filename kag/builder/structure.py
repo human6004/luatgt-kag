@@ -102,13 +102,13 @@ def schema_changes(current, desired):
 
 
 @contextmanager
-def target_state(project_id, token):
+def target_state(project_id, token, *, for_write=True, check_structure=False):
     from kag.bootstrap import initialize
     initialize()
     from knext.project.client import ProjectClient
     from knext.schema.client import SchemaClient, SchemaSession
     from knext.schema.marklang.schema_ml import SPGSchemaMarkLang
-    target = selected_target(project_id, token)
+    target = selected_target(project_id, token, for_write=for_write)
     projects = ProjectClient(host_addr=target['endpoints']['openspg']); bound_sdk_requests(projects)
     reader = Neo4jReadClient(target['endpoints']['neo4j_http'], target['database'],
         username=os.environ['KAG_NEO4J_USERNAME'], password=os.environ['KAG_NEO4J_PASSWORD'], timeout=60)
@@ -117,10 +117,16 @@ def target_state(project_id, token):
         openspg_endpoint=target['endpoints']['openspg'])
     try:
         proof = identity.prove()
-        serving = Neo4jReadClient(reader.endpoint, os.environ.get('KAG_BUILDER_SERVING_DATABASE','neo4j'),
-            username=os.environ['KAG_NEO4J_USERNAME'], password=os.environ['KAG_NEO4J_PASSWORD'], timeout=60)
-        if serving.database_identity() == proof.physical_database_id:
-            raise RunBlocked('SCOPE')
+        if not for_write and not check_structure:
+            yield dict(target=target,reader=reader,identity=identity,proof=proof)
+            return
+        if for_write:
+            serving = Neo4jReadClient(reader.endpoint, os.environ.get('KAG_BUILDER_SERVING_DATABASE','neo4j'),
+                username=os.environ['KAG_NEO4J_USERNAME'], password=os.environ['KAG_NEO4J_PASSWORD'], timeout=60)
+            if serving.database_identity() == proof.physical_database_id:
+                raise RunBlocked('SCOPE')
+            from kag.builder.serving import protect_active
+            protect_active(reader,proof.physical_database_id)
         record = projects.get(id=project_id)
         config = record.config if not isinstance(record, dict) else record['config']
         config = json.loads(config) if isinstance(config,str) else config
@@ -268,6 +274,8 @@ def apply(project_id, token, expected, lock_root):
         lock.acquire()
         uncertain=False
         try:
+            from kag.builder.serving import protect_active
+            protect_active(state['reader'],proof.physical_database_id)
             from knext.schema.client import SchemaSession
             state['session']=SchemaSession(state['session']._rest_client,project_id)
             before,updates=inspect(state)
@@ -341,6 +349,9 @@ def clear_permissions(state):
     from kag.backend_identity import _field
     from kag.builder.projects import _project_client
     target=state['target'];physical=state['proof'].physical_database_id
+    from kag.builder.serving import protect_active
+    try:protect_active(state['reader'],physical)
+    except RunBlocked:raise RunBlocked('CLEAR_SERVING') from None
     try:
         grants=json.loads(os.environ.get('KAG_BUILDER_CLEAR_TARGETS','[]'))
         if (type(grants) is not list or len(grants)>256 or any(type(row) is not dict

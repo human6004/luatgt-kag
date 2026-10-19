@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 export function Page({ title, subtitle, actions, children }: { title: string; subtitle?: string; actions?: React.ReactNode; children: React.ReactNode }) {
   return (
@@ -65,16 +65,17 @@ export function Badge({ tone = 'gray', children }: { tone?: Tone; children: Reac
 }
 
 export function Modal({ open, title, onClose, children, footer }: { open: boolean; title: string; onClose: () => void; children: React.ReactNode; footer?: React.ReactNode }) {
+  const dialog = useRef<HTMLDialogElement>(null)
   useEffect(() => {
-    if (!open) return
-    const h = (e: KeyboardEvent) => e.key === 'Escape' && onClose()
-    document.addEventListener('keydown', h)
-    return () => document.removeEventListener('keydown', h)
-  }, [open, onClose])
+    if (!open || !dialog.current) return
+    const element = dialog.current, previous = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    element.showModal()
+    return () => { element.close(); if (previous?.isConnected) previous.focus() }
+  }, [open])
   if (!open) return null
   return (
-    <div className="fixed inset-0 z-[60] grid place-items-center p-4 bg-navy/30 backdrop-blur-[2px]" onMouseDown={onClose}>
-      <div role="dialog" aria-label={title} className="w-full max-w-lg max-h-[90vh] flex flex-col rounded-2xl bg-bg border border-line shadow-2xl" onMouseDown={(e) => e.stopPropagation()}>
+    <dialog ref={dialog} aria-label={title} className="fixed inset-0 m-0 w-screen h-screen max-w-none max-h-none border-0 grid place-items-center p-4 bg-navy/30 backdrop-blur-[2px] backdrop:bg-transparent text-inherit" onCancel={event => { event.preventDefault(); onClose() }} onMouseDown={event => { if (event.target === event.currentTarget) onClose() }}>
+      <div className="w-full max-w-lg max-h-[90vh] flex flex-col rounded-2xl bg-bg border border-line shadow-2xl" onMouseDown={(e) => e.stopPropagation()}>
         <div className="flex items-start justify-between gap-3 px-5 py-4 border-b border-line">
           <h3 className="min-w-0 break-words text-[15px] leading-6 font-semibold text-navy">{title}</h3>
           <button onClick={onClose} aria-label="Đóng" className="shrink-0 p-1.5 rounded-lg text-muted hover:bg-selected hover:text-navy">✕</button>
@@ -82,7 +83,7 @@ export function Modal({ open, title, onClose, children, footer }: { open: boolea
         <div className="min-w-0 p-5 overflow-y-auto [overflow-wrap:anywhere]">{children}</div>
         {footer && <div className="flex flex-wrap items-center justify-end gap-2 px-5 py-3 border-t border-line">{footer}</div>}
       </div>
-    </div>
+    </dialog>
   )
 }
 

@@ -9,8 +9,11 @@ const groups = [
   { label: "Tổng quan", items: [["/admin/dashboard", "Tổng quan"]] },
   { label: "Ngân hàng câu hỏi", items: [["/admin/questions", "Ngân hàng câu hỏi"], ["/admin/imports", "Nhập dữ liệu hàng loạt"]] },
   { label: "Ngân hàng biển báo", items: [["/admin/signs", "Biển báo"]] },
-  { label: "Cấu hình server", items: [["/admin/infrastructure", "Hạ tầng & Retrieval"], ["/admin/pipeline", "Dựng đồ thị"], ["/admin/docker", "Đóng gói Docker"], ["/admin/config", "Cấu hình"]] },
-  { label: "Đồ thị tri thức", items: [["/admin/knowledge", "Văn bản & tri thức KAG"], ["/admin/units", "Đơn vị pháp lý"], ["/admin/graph", "Đồ thị tri thức"], ["/admin/benchmark", "Benchmark"]] },
+  { label: "Dữ liệu nguồn", items: [["/admin/sources", "Bộ dữ liệu"], ["/admin/schema", "Schema & quan hệ"]] },
+  { label: "Đồ thị của tôi", items: [["/admin/graph", "Đồ thị của tôi"], ["/admin/pipeline", "Dựng mới / đang dựng"]] },
+  { label: "Cài đặt hệ thống", items: [["/admin/config", "Model & tìm kiếm"], ["/admin/infrastructure", "Kết nối & chẩn đoán"]] },
+  { label: "Quản lý nội dung", items: [["/admin/knowledge", "Văn bản"], ["/admin/units", "Đơn vị pháp lý"]] },
+  { label: "Công cụ nâng cao", items: [["/admin/docker", "Đóng gói Docker"], ["/admin/benchmark", "Benchmark"]] },
   { label: "Người dùng", items: [["/admin/users", "Người dùng"], ["/admin/chatlogs", "Nhật ký chat"]] },
 ]
 

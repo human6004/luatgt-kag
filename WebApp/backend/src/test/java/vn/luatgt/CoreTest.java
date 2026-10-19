@@ -348,6 +348,43 @@ class CoreTest {
         var items=body(mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andReturn());
         assertEquals(2,items.size()); for(var item:items) { assertEquals("UNAVAILABLE",item.path("state").asText()); assertEquals("",item.path("answer").asText()); }
     }
+    @Test void datasetGraphHistoryKeepsEachSnapshotWithoutWebappRecords() throws Exception {
+        String user=register(),docId="dataset-only-"+UUID.randomUUID();
+        assertTrue(contents.findByKindAndExternalId("documents",docId).isEmpty());
+        var expected=new HashMap<String,JsonNode>();
+        for(String graph:List.of("A","B")) {
+            String quote="Nguyên văn graph "+graph+" · tiếng Việt 😀";
+            var answer=json.createObjectNode().put("contract_version","graph-chat-v1").put("answer","Căn cứ "+graph);
+            var citation=answer.putArray("citations").addObject().put("doc_id",docId).putNull("unit_id").put("sign_id","sign-1").put("quote",quote);
+            citation.putObject("source").put("contract_version","graph-source-v1").put("release_id","release-"+graph).put("text",quote);
+            when(kag.query(any())).thenReturn(answer);
+            var saved=body(mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON)
+                .content("{\"message\":\"Căn cứ graph "+graph+"?\"}")).andExpect(status().isOk()).andExpect(jsonPath("$.state").value("ANSWERED")).andReturn());
+            expected.put(saved.path("id").asText(),answer.path("citations"));
+        }
+        assertTrue(contents.findByKindAndExternalId("documents",docId).isEmpty());
+        var history=body(mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn());
+        assertEquals(2,history.size());for(var row:history)assertEquals(expected.get(row.path("id").asText()),row.path("citations"));
+    }
+    @Test void datasetViewAndSelectedTrialRequireAdminAndKeepExplicitTargets() throws Exception {
+        String user=register();
+        for(String path:List.of("/api/admin/kag/dataset/units","/api/admin/kag/graph/17/run-B/retrieve")) {
+            if(path.endsWith("retrieve")) {
+                mvc.perform(post(path).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Câu thử\",\"top_k\":3,\"expand\":false}")).andExpect(status().isUnauthorized());
+                mvc.perform(post(path).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Câu thử\",\"top_k\":3,\"expand\":false}")).andExpect(status().isForbidden());
+            } else {
+                mvc.perform(get(path)).andExpect(status().isUnauthorized());mvc.perform(get(path).header("Authorization","Bearer "+user)).andExpect(status().isForbidden());
+            }
+        }
+        verifyNoInteractions(kag);
+        when(kag.builderDataset("units",25,25)).thenReturn(json.createObjectNode().put("fixture","page"));
+        mvc.perform(get("/api/admin/kag/dataset/units?offset=25&limit=25").header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andExpect(header().string("Cache-Control","no-store"));
+        verify(kag).builderDataset("units",25,25);
+        when(kag.trialGraph(eq(17),eq("run-B"),any())).thenReturn(json.createObjectNode().put("fixture","trial-B"));
+        mvc.perform(post("/api/admin/kag/graph/17/run-B/retrieve").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Câu thử\",\"top_k\":3,\"expand\":false}")).andExpect(status().isOk());
+        verify(kag).trialGraph(eq(17),eq("run-B"),any());
+        mvc.perform(get("/api/admin/kag/dataset/units?path=secret").header("Authorization","Bearer "+admin)).andExpect(status().isBadRequest());
+    }
     record StreamSource(Content document,LegalUnit unit,ObjectNode answer) {}
     StreamSource streamSource() throws Exception {
         var doc=new Content(); doc.kind="documents"; doc.externalId="P5::"+UUID.randomUUID(); doc.published=true;

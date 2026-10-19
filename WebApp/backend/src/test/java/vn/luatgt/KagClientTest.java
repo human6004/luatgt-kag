@@ -58,7 +58,7 @@ class KagClientTest {
                 onRequest.get().run();
                 if(closeBeforeHeaders) { exchange.close(); return; }
                 if(delay>0) try { Thread.sleep(delay); } catch(InterruptedException e) { Thread.currentThread().interrupt(); }
-                for(String name:List.of("X-KAG-Release-ID","X-WebApp-Snapshot-ID","X-KAG-As-Of")) {
+                for(String name:List.of("X-KAG-Release-ID",exchange.getRequestHeaders().containsKey("X-KAG-Source-Snapshot-ID")?"X-KAG-Source-Snapshot-ID":"X-WebApp-Snapshot-ID","X-KAG-As-Of")) {
                     if(!identityHeaders) continue;
                     String value=exchange.getRequestHeaders().getFirst(name);
                     if(value==null) value=name.equals("X-KAG-Release-ID")?RELEASE:name.equals("X-WebApp-Snapshot-ID")?SNAPSHOT:LocalDate.now(ZoneId.of("Asia/Saigon")).toString();
@@ -98,6 +98,47 @@ class KagClientTest {
         }
     }
     KagClient client(Fixture f) { return client(f,Map.of(),null); }
+    @Test void datasetSourcesValidatePinnedReleaseQuoteAndAllDomainTypesWithoutPublication() throws Exception {
+        try(var f=new Fixture()) {
+            var releaseView=json.createObjectNode().put("contract_version","h1-read-v1.2").put("release_kind","PRODUCTION")
+                .put("source_mode","dataset-snapshot-v1").put("release_id",RELEASE).put("source_snapshot_id","dataset-source")
+                .putNull("webapp_snapshot_id").put("source_catalog_sha256","a".repeat(64)).put("release_descriptor_sha256","b".repeat(64))
+                .put("graph_fingerprint","c".repeat(64)).put("backend_identity_verified",false).put("source_identity_verified",false)
+                .putNull("verified_at").put("query_ready",false).put("production_write","blocked");
+            releaseView.set("schema_contract",json.valueToTree(schema.identity()));
+            f.server.createContext("/v1/graph/release",exchange->{
+                byte[] bytes=releaseView.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().set("Content-Type","application/json");exchange.sendResponseHeaders(200,bytes.length);
+                try(var out=exchange.getResponseBody()){out.write(bytes);}
+            });
+            var client=client(f);
+            for(String kind:List.of("LegalDocument","LegalUnit","TrafficSign")) {
+                var result=(com.fasterxml.jackson.databind.node.ObjectNode)answer(); result.put("contract_version","graph-chat-v1");
+                var citation=(com.fasterxml.jackson.databind.node.ObjectNode)result.path("citations").get(0);
+                String field=kind.equals("LegalUnit")?"text":kind.equals("TrafficSign")?"ten":"title";
+                String id=kind.equals("LegalDocument")?"test":kind.equals("LegalUnit")?"test::1":"sign-1";
+                if(!kind.equals("LegalUnit"))citation.putNull("unit_id");
+                if(kind.equals("TrafficSign"))citation.put("sign_id",id);
+                citation.put("field",field);
+                String entity=schema.identity().get("namespace")+"."+kind;
+                citation.put("evidence_id",HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(json.writeValueAsBytes(List.of(entity,id,field)))));
+                var source=citation.putObject("source").put("contract_version","graph-source-v1").put("release_id",RELEASE)
+                    .put("source_snapshot_id","dataset-source").put("release_descriptor_sha256","b".repeat(64))
+                    .put("entity_type",entity).put("entity_id",id).put("text",citation.path("quote").asText())
+                    .put("as_of",LocalDate.now(ZoneId.of("Asia/Saigon")).toString())
+                    .put("source_sha256",HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(citation.path("quote").asText().getBytes(java.nio.charset.StandardCharsets.UTF_8))));
+                source.set("schema_contract",json.valueToTree(schema.identity()));
+                source.putObject("metadata").put("id",id).put("name",id).put("doc_id","test").put(field,citation.path("quote").asText());
+                source.putObject("document_metadata").put("id","test").put("name","test").put("title","Văn bản kiểm thử").put("effective_from","2020-01-01");
+                f.body=result.toString();assertEquals(result,client.query(request()));
+                assertEquals(List.of("dataset-source"),f.headers.get("X-KAG-Source-Snapshot-ID"));
+                for(String wrong:List.of("release_id","source_snapshot_id","release_descriptor_sha256","source_sha256","text")) {
+                    var bad=result.deepCopy();((com.fasterxml.jackson.databind.node.ObjectNode)bad.path("citations").get(0).path("source")).put(wrong,"wrong");
+                    f.body=bad.toString();unavailable(()->client(f).query(request()));
+                }
+            }
+        }
+    }
     @Test void projectCatalogForwardsOnlyNativeCookieAndPreservesProjectIds() throws Exception {
         try(var f=new Fixture()) {
             var builderSecret=temporary.resolve("builder.key");Files.writeString(builderSecret,"b".repeat(43));

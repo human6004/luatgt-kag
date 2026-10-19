@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { test, beforeEach } from 'node:test'
 import { loadKagStatus, runRetrieval, inspectionError, loadPipelineStatus, loadBenchmarkDatasets, loadSampleInspection, loadBuilderInputs, loadBuilderStatus, loadBuilderConfiguration, saveBuilderConfiguration, checkBuilderReadiness, runBuilderAction, builderStages, loadLLMCredentials, loadBuilderProjects, builderNeo4jLink, loadBuilderStructure, prepareBuilderStructure, previewBuilderSelection, loadBuilderClear, clearBuilderData } from '../src/pages/server/kag-inspection.ts'
 import { ApiError, tokenKey } from '../src/api.ts'
+import { runGraphRetrieval, loadDataset } from '../src/pages/server/kag-inspection.ts'
 
 let calls, tokens
 const failure = { state: 'NOT_READY', httpStatus: 503, code: 'NOT_READY' }
@@ -18,6 +19,23 @@ function wire(body, code = 200) {
     return new Response(JSON.stringify(body), { status: code })
   }
 }
+test('trial is bound to the selected project and run without switching active', async () => {
+  const trial={contract_version:'builder-retrieval-v1',project_id:17,run_id:'run-B',schema_contract:result.schema_contract,
+    model_identity:'https://provider.invalid/v1|model-B',dimension:3072,graph_fingerprint:'c'.repeat(64),items:result.items}
+  wire(trial);assert.deepEqual(await runGraphRetrieval(17,'run-B','Câu thử',3,false),trial)
+  assert.equal(calls.length,1);assert.equal(calls[0].url,'/api/admin/kag/graph/17/run-B/retrieve')
+  assert.deepEqual(JSON.parse(calls[0].body),{message:'Câu thử',top_k:3,expand:false})
+  wire({...trial,project_id:18});await assert.rejects(runGraphRetrieval(17,'run-B','Câu thử',3,false))
+  wire({...trial,run_id:'run-A'});await assert.rejects(runGraphRetrieval(17,'run-B','Câu thử',3,false))
+})
+test('dataset viewing only reads a bounded page and never prepares a plan', async () => {
+  const page={contract_version:'builder-dataset-v1',dataset:'LuậtGT',group:'units',source:'data/processed/units/units.jsonl',offset:25,limit:25,total:26,items:[{unit_id:'u26',text:'Nguồn Việt 😀'}]}
+  wire(page);assert.deepEqual(await loadDataset('units',25),page)
+  assert.equal(calls.length,1);assert.equal(calls[0].url,'/api/admin/kag/dataset/units?offset=25&limit=25');assert.equal(calls[0].method,undefined)
+  wire({...page,offset:0});await assert.rejects(loadDataset('units',25))
+  wire({...page,items:[]});await assert.rejects(loadDataset('units',25))
+  calls=[];await assert.rejects(loadDataset('../secrets'));assert.equal(calls.length,0)
+})
 test('structure preparation has explicit preview and confirmation with strict server readback', async () => {
   const value = { contract_version: 'builder-structure-v1', state: 'PREVIEW', revision: 1, preview_id: 'a'.repeat(64), checked_at: '2026-10-18T00:00:00Z', can_apply: true, code: null,
     report: { target: { project_id: 2, project_name: 'Private', namespace: 'Road', database: 'road' }, database_id: 'isolated', dimension: 3072,

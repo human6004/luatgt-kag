@@ -23,7 +23,7 @@ docker compose logs --tail 100 backend frontend kag-api kag-builder
 
 Kết quả chỉ ra service chưa chạy/lỗi. Chọn service liên quan để xem log; che secrets trước khi chia sẻ. `/v1/health` chỉ kiểm API còn phản hồi; ADMIN đọc readiness ở Hạ tầng.
 
-**Bước 2 — Dừng:** nếu Builder đang ghi, chọn Stop và đợi dừng sạch trước; trạng thái chưa rõ xử lý theo [runner](../docs/runner.md#resume-trạng-thái-và-lock).
+**Bước 2 — Dừng:** nếu Builder đang chạy, bấm **Dừng an toàn** và chờ **Đã dừng an toàn** trước. Kết quả chưa rõ thì giữ khóa và xử lý theo [runner](../docs/runner.md#resume-trạng-thái-và-lock).
 
 ```powershell
 docker compose stop -t 120
@@ -51,18 +51,20 @@ Mạng `private` chứa storage OpenSPG; `readbus` nối API/backend/broker; c�
 
 ## Truy cập quản trị OpenSPG và Neo4j
 
-- **OpenSPG:** [http://127.0.0.1:8887/](http://127.0.0.1:8887/), dùng tài khoản OpenSPG riêng. Tài khoản được lưu trong catalog OpenSPG MySQL, không phải `ADMIN_EMAIL`/`ADMIN_PASSWORD` của WebApp hay mật khẩu MySQL. Installation còn tài khoản seed xem mục Product mode trong [README upstream đã pin](../vendor/KAG/README.md); không chép mật khẩu vào URL, log hoặc tài liệu. Nếu xuất hiện **Reset Password**, chủ tài khoản phải tự đặt **New Password** và **Confirm Password** trước khi vào quản trị; không bỏ kiểm tra này hoặc reset bằng SQL.
+- **OpenSPG:** [http://127.0.0.1:8887/](http://127.0.0.1:8887/), dùng tài khoản OpenSPG do người vận hành cấp. Tài khoản nằm trong catalog OpenSPG MySQL, độc lập với WebApp và mật khẩu MySQL. Installation mới còn tài khoản seed xem mục **4.1.2 Use the product** trong [README upstream đã pin](../vendor/KAG/README.md#412-use-the-product). Nếu xuất hiện **Reset Password**, chủ tài khoản tự hoàn tất **New Password** và **Confirm Password**; không reset bằng SQL hoặc ghi mật khẩu vào URL/log.
 - **Neo4j Browser:** [mở kết nối trực tiếp localhost](http://127.0.0.1:7474/browser/?connectURL=bolt%3A%2F%2F127.0.0.1%3A7687&db=neo4j). Trong **Connect to Neo4j**, chọn `bolt://`, địa chỉ `127.0.0.1:7687`, nhập database cần xem và user `neo4j`. Lấy mật khẩu đã cấu hình từ `KAG_NEO4J_PASSWORD` trong `.env` của installation; đổi `.env` không đổi mật khẩu database đã có.
 
-Neo4j image pin hiện chứa Kernel 5.25.1/DozerDB. HTTP và Bolt nghe `0.0.0.0` trong container; địa chỉ advertised mặc định vẫn là `localhost:7474`/`localhost:7687`. Link Browser trên chỉ định `bolt://127.0.0.1:7687` để kết nối trực tiếp qua proxy; ứng dụng trong Docker vẫn dùng `openspg-neo4j`, không dùng localhost của máy người dùng. Cả đường Bolt trực tiếp và `neo4j://openspg-neo4j:7687` nội bộ phải hoạt động sau cập nhật.
+Browser dùng `bolt://127.0.0.1:7687` trực tiếp qua proxy. Ứng dụng trong Docker dùng `neo4j://openspg-neo4j:7687`, không dùng localhost của host. Listener HTTP/Bolt phải nhận kết nối trong mạng container; không mở thêm cổng hoặc đổi routing khi chưa xác định nguyên nhân lỗi.
 
-Trong Browser, chạy `SHOW DATABASES;`, rồi `:use <database>` trước khi xem. Dùng `MATCH (n) RETURN n LIMIT 25;` hoặc `MATCH (a)-[r]->(b) RETURN a,r,b LIMIT 25;` để xem graph. Database rỗng trả 0 kết quả; không tự nạp graph ví dụ của Browser. Project OpenSPG và database Neo4j là hai định danh khác nhau. [Hướng dẫn Builder](../docs/runner.md#chọn-project-và-nạp-schema) chỉ cách tạo Knowledge Base, chọn ID trên LuậtGT rồi **Xem thay đổi → Chuẩn bị cấu trúc LuậtGT**; không cần terminal hoặc sửa biến target cho mỗi project. Đăng nhập OpenSPG bằng cùng hostname với LuậtGT; ADMIN LuậtGT không thay quyền sở hữu project PRIVATE. Nút **Mở Neo4j** ở kết quả Builder dùng database của run đã xác minh.
+Link Browser mặc định mở database `neo4j`, không tự chọn graph Builder. Dùng **Mở Neo4j** từ kết quả Builder để chọn đúng database; hoặc chạy `SHOW DATABASES;` rồi `:use <database-của-bạn>`. [Kết quả Builder](../docs/runner.md#5-kết-quả) có truy vấn mẫu giới hạn 25 kết quả. Không tự nạp graph ví dụ của Browser.
+
+Tạo Knowledge Base và chuẩn bị cấu trúc theo [runner](../docs/runner.md#tạo-project-trong-openspg). Dùng cùng hostname cho OpenSPG/LuậtGT; ADMIN LuậtGT không thay quyền sở hữu project Private. Project và database là hai định danh khác nhau.
 
 Giữ ba cổng ở localhost. Không đổi mạng storage thành external, publish 8010/8899/8898 hoặc tắt xác thực để sửa lỗi truy cập. Khi đổi ports hoặc proxy config, cập nhật đúng service `kag-ingress`; khi đổi listener Java, dừng Builder sạch rồi recreate `openspg-server` và `kag-builder` cùng namespace theo [UPDATE](../docs/UPDATE.md).
 
 ## Provider cho OpenSPG
 
-UI tạo Knowledge Base chỉ cần model **Embedding**. Thêm model tại tên tài khoản góc phải → **Model Configuration → OpenAI → Add Model**, chọn `embedding`, **Private**, nhập base URL, API key và model ID của provider. [Hướng dẫn điền từng trường](../docs/runner.md#thêm-embedding-cho-openspg). Catalog OpenSPG độc lập với secret store LuậtGT; key không tự đồng bộ.
+UI tạo Knowledge Base chỉ cần **Embedding**. [Runner](../docs/runner.md#thêm-embedding-cho-openspg) giữ hướng dẫn điền từng trường; [USER-GUIDE](../docs/USER-GUIDE.md#cấu-hình-model) hướng dẫn model LuậtGT. Hai kho cấu hình độc lập, key không tự đồng bộ.
 
 Đường Embedding native dùng bridge của sản phẩm và transport/policy API/Builder hiện có. OpenSPG chỉ nhận token egress ở mount chỉ đọc, không nhận key model của LuậtGT. Gateway 8898 vẫn nội bộ; yêu cầu đúng token, endpoint và nguồn gọi. Không gỡ kiểm endpoint hoặc thêm mạng Internet cho OpenSPG.
 
@@ -86,6 +88,8 @@ Giữ các biến mapping khi cập nhật:
 
 `.env.example` đặt `KAG_STATE_DIR=./.secrets`: state nằm trong repo local, được loại khỏi Git và Docker build context. Giữ bốn token và các thư mục `release`, `api-credentials`, `broker-credentials`, `builder-input`. Cài đặt cũ vẫn dùng đường dẫn trong `.env`; khi không đặt biến này, Compose dùng `../luatgt-state` để giữ tương thích. Runs/locks/provider counters nằm trong named volumes. Windows dùng dấu `/` trong đường dẫn `.env`.
 
+Ba token lưu/kiểm/áp dụng model lấy từ các biến `KAG_*_SECRET_FILE` riêng theo [INSTALL](../docs/INSTALL.md#3-tạo-cấu-hình-và-secrets). Key lưu qua UI ở file riêng quyền `0600` trong provider state; không trả key qua API và không mã hóa tại chỗ. Bảo vệ cả volume và mọi bản sao.
+
 Biến shell có thể ghi đè `.env`; `.env` không tự truyền tất cả biến vào containers. Bảo vệ quyền đọc secrets/config/backup. Linux cần file cho UID 10001 đọc; Compose `uid/gid/mode` không thay quyền file nguồn bind mount.
 
 ## Sao lưu
@@ -108,6 +112,8 @@ Kết quả phải rỗng. Nếu service chưa dừng hoặc bị buộc dừng 
 $containers = @(docker compose ps -aq)
 if ($LASTEXITCODE -ne 0 -or $containers.Count -ne 12) { throw 'Cần xác định đủ containers của installation trước khi sao lưu.' }
 docker inspect --format '{{.Name}} {{range .Mounts}}{{.Type}}:{{.Name}} -> {{.Destination}}; {{end}}' $containers
+git rev-parse HEAD
+docker compose images
 ```
 
 Kết quả là mapping theo containers hiện có. Với bind mounts, xem **Inspect → Mounts → Source** của container trong Docker Desktop để xác định thư mục host.
@@ -116,32 +122,104 @@ Tạo thư mục backup mới **ngoài repo**, đủ dung lượng. Dùng File E
 
 ### Bước 3 — Export từng volume
 
-Đăng nhập Docker Desktop → **Volumes** → chọn từng tên trong mapping → **Exports → Quick export → Local file** → lưu vào thư mục backup. Làm đủ mọi named volume, gồm cả runs/locks/provider state. Đây là [chức năng export của Docker Desktop](https://docs.docker.com/desktop/use-desktop/volumes/#export-a-volume-now); không cần script sao lưu riêng.
+Đăng nhập Docker Desktop → **Volumes** → chọn từng tên trong mapping → **Exports → Quick export → Local or Hub storage → Local file** → chọn nơi lưu → **Save**. Làm đủ mọi named volume, gồm Builder state/runs/locks và provider state. Đây là [chức năng export của Docker Desktop](https://docs.docker.com/desktop/use-desktop/volumes/#export-a-volume-now). Không đưa backup chứa secrets lên Hub/cloud.
 
 Kết quả: mỗi volume có file export, cùng cấu hình/state/mapping. Chờ tất cả export hoàn tất, kiểm số file và trạng thái thành công trước UPDATE. Giữ quyền đọc backup hạn chế và một bản ở nơi lưu trữ an toàn khác.
 
 Export thành công chưa chứng minh phục hồi được. Thử import trên **volume riêng** trước khi cần phục hồi; import vào volume có dữ liệu sẽ ghi đè. Không restore đè storage đang phục vụ; cần đúng source/image/schema của bản sao.
 
+Trong Docker Desktop, tạo/chọn volume thử → **Import → Local file**, chọn bản export và xác nhận. Kiểm dữ liệu/tài khoản/lịch sử trên môi trường phục hồi riêng trước khi chuyển đổi. Hạ image không đảo ngược migration database; giữ images cũ cùng backup đến khi kiểm xong bản cập nhật.
+
 ## Cấu hình chatbot
 
 Dành cho người vận hành đã chuẩn bị graph và nguồn, không phải bước bắt buộc để mở WebApp:
 
+Với graph Builder đã xác minh, dùng [luồng trên UI](../docs/runner.md#chọn-graph-phục-vụ-truy-xuấtchat): lưu/kiểm model, mở **Đồ thị của tôi**, chọn project/phiên, thử truy xuất nếu muốn và **Dùng cho Chat**. Nhánh dataset đóng gói snapshot nguồn đã đọc/đối chiếu cùng graph, không cần publication MySQL. Lựa chọn lưu trong provider state; release bất biến nằm trong Builder state, API chỉ mount đọc. Worker giữ credentials Neo4j và chỉ cấp phép đọc cố định qua mạng private. Không cần chép graph, sửa `.env` hoặc đổi namespace mẫu mỗi lần chuyển project.
+
+Các cấu hình startup dưới đây dành cho release SAMPLE đóng gói sẵn; không thay lựa chọn Builder đã kích hoạt trên UI:
+
 - **Nguồn:** `KAG_RELEASE_ID`, `KAG_WEBAPP_SNAPSHOT_ID` khớp bộ tệp trong `state/release`; xuất bản WebApp không tự đồng bộ graph.
 - **Broker mặc định khi cấu hình serving:** `KAG_BROKER_URL=http://openspg-server:8899`; API cần `api-credentials/broker.token`, `sample-proof.sha256`; broker cần `broker-credentials/neo4j.password`, `broker.token` và `KAG_BROKER_DATABASE_ID`/`KAG_BROKER_SERVER_ID` đã được xác minh. Xem [backend identity](../docs/backend-identity.md).
 - **Reader thay thế:** `KAG_READER_USERNAME`, `api-credentials/reader.password`, `KAG_SAMPLE_PROOF_SHA256`, endpoint chỉ đọc và mạng tới graph. Topology mặc định không nối API vào storage. Không bật reader cùng broker.
-- **Mô hình:** `KAG_EMBEDDING_URL`, `KAG_EMBEDDING_MODEL`, `KAG_CHAT_URL`, `KAG_CHAT_MODEL`; keys ở `api-credentials/embedding.key`, `chat.key`. Embedding khớp model graph, 3072 chiều.
+- **Mô hình:** `KAG_EMBEDDING_URL`, `KAG_EMBEDDING_MODEL`, `KAG_CHAT_URL`, `KAG_CHAT_MODEL`; keys ở `api-credentials/embedding.key`, `chat.key`, hoặc bản lưu/kiểm/áp dụng qua UI khi release tương thích. SAMPLE giữ contract 3072 chiều; graph PRODUCTION dùng namespace và dimension của phiên Builder đã xác minh, cùng đúng endpoint/model Embedding đã tạo vector.
 - **Ngân sách query:** `KAG_QUERY_PROFILE=1`, `api-credentials/query-proof.sha256`, gateway và bộ đếm provider. Bật biến không tự cấp quyền provider.
 - **Gateway:** `KAG_PROVIDER_ENABLED`, `KAG_CHAT_PROXY_HOST`, `KAG_CHAT_PROXY_PORT`; mặc định tắt. Host/cổng mặc định là `host.docker.internal:8317`; operator phải cung cấp proxy, repo không tự chạy nó.
 - **Dataset đánh giá:** `KAG_EVALUATION_ENABLED=1`, dữ liệu đã chuẩn bị trong `release/evaluation`.
 
 Không sửa hash/identity để ép READY. Thiếu graph/provider/nguồn phù hợp thì query chưa khả dụng; healthcheck không thay readiness. Luồng và hợp đồng: [kiến trúc](../docs/architecture.md).
 
+Ngân sách kiểm sẵn sàng/truy xuất dùng biến hiện có `KAG_QUERY_TIMEOUT_SECONDS` cho backend, API và Worker, nhận số nguyên 30–180 giây (mặc định 30). Thêm hoặc sửa biến này trong `.env`, rồi cập nhật ba service theo UPDATE. API dành 5 giây cuối để trả kết quả qua backend. Khi hiện **Chưa kiểm tra xong**, đợi hệ thống bớt tải rồi thử lại; tăng thời gian chờ không thay việc kiểm graph và nguồn hiện tại.
+
+### Publisher nâng cao
+
+UI hỗ trợ graph `PRODUCTION/WRITE` đã xác minh, gồm phạm vi một phần: kiểm lại quyền, identity, graph, schema/index, model và source snapshot trước khi tạo release và đổi lựa chọn phục vụ. Release dataset mới dùng `h1-release-1.1` với `source_mode=dataset-snapshot-v1`; legacy `h1-release-1.0` vẫn giữ publication cũ. Nâng cấp không viết lại release hoặc đổi active. Database đang phục vụ được bảo vệ khỏi ghi/xóa qua Builder; tài khoản quản trị Neo4j bên ngoài vẫn phải tuân thủ bảo trì. Graph bị thay đổi ngoài luồng làm request kiểm nguồn/graph thất bại.
+
+Lệnh dưới chỉ dành cho SAMPLE, thực hiện trong runtime backend đã có credential broker, mount run chỉ đọc và thư mục release mới ngoài source.
+
+Ví dụ dưới dùng run `sample-run`, release mới `sample-release` và bộ nguồn `source-v1`; thay bằng các giá trị đã chuẩn bị trong runtime của bạn:
+
+```sh
+python -B -m kag.http_api.artifacts --run-directory /runs/sample-run --root /releases/sample-release --release-id sample-release --source-snapshot-id source-v1
+```
+
+Mặc định chỉ xem trước. Chỉ thêm `--approve-sample` sau khi duyệt database, dữ liệu/vector, model và phạm vi; xuất sang release mới, không ghi đè bản cũ. Tùy chọn `--webapp-publication` nhận đường dẫn bộ nguồn WebApp đã xuất bản và được kiểm; publisher không tự duyệt nội dung.
+
+Xuất release chưa kích hoạt API: còn cần mount chỉ đọc, release ID và policy/pins đúng deployment. Publisher không tạo quyền reader hoặc xác nhận chất lượng trả lời.
+
 ## Builder
 
-Worker chờ yêu cầu ADMIN; không tự chạy lúc startup. Trang **Dựng đồ thị** chuẩn bị corpus, lưu cấu hình, kiểm sẵn sàng và điều khiển Build/Stop/Resume. Đích graph lấy từ các biến deployment `KAG_BUILDER_*`; model/key từ Embedding đã lưu và kiểm tra trong Admin → Cấu hình, không cần Apply Chat.
+Worker chờ yêu cầu ADMIN; không tự chạy lúc startup. Người dùng chọn project theo ID và thao tác theo [runner](../docs/runner.md). Model/key lấy từ Embedding đã lưu/kiểm ở LuậtGT, không cần Apply Chat.
+
+Deployment cấp `KAG_BUILDER_OPENSPG_URL=http://openspg-server:8887`, `KAG_BUILDER_NEO4J_HTTP=http://openspg-neo4j:7474`, `KAG_BUILDER_NEO4J_URI=bolt://openspg-neo4j:7687`. UI không đổi endpoint/credentials. `KAG_BUILDER_PROJECT_ID`, `KAG_BUILDER_PROJECT_NAME`, `KAG_BUILDER_DATABASE` chỉ gợi ý cho cấu hình cũ khi chưa có lựa chọn lưu.
+
+`KAG_OPENSPG_PUBLIC_URL`, `KAG_NEO4J_BROWSER_URL`, `KAG_NEO4J_PUBLIC_BOLT_URL` là URL cho trình duyệt, mặc định localhost và không chứa credentials. `KAG_BUILDER_SERVING_DATABASE` lấy từ `KAG_DATABASE`; không đổi binding này để cho phép ghi vào graph đang phục vụ.
 
 Corpus/schema được đóng gói trong image. **Kiểm tra và chuẩn bị** dùng volume `kag-builder-state` tại `/builder-state` (`KAG_BUILDER_STATE_DIR`), tách khỏi run history và source checkout. Giữ volume này khi cập nhật/backup; không mount workspace phát triển vào sản phẩm.
 
 Config sản phẩm lưu tại `/builder-state/configuration.json`; mỗi revision giữ run root riêng dưới `/builder-runs`, khóa tại `/run/kag-locks`. `builder-input/runner.json` chỉ dành cho cấu hình Runner thủ công cũ khi chưa lưu cấu hình sản phẩm. Giữ cả Builder state, runs, locks và provider state khi backup/update. Sau restart, kiểm lại nguồn/sẵn sàng trước Resume; kết quả đã xác minh vẫn xem được khi cấu hình hiện tại thiếu hoặc đã đổi.
 
-Mặc định thiếu đích/model nên Build bị chặn. Xóa dữ liệu chỉ được cấp theo đúng project và physical database qua `KAG_BUILDER_CLEAR_TARGETS` (mặc định `[]` từ chối), vẫn chặn đích dùng chung/serving. Full Build cần đích riêng với listener/DNS, physical identity, schema và bốn vector indexes phù hợp. Không dùng graph serving làm đích Build hoặc mở listener để vượt kiểm tra. Chọn phạm vi, dừng/tiếp tục, bỏ phiên và xóa để dựng lại: [runner](../docs/runner.md). Dựng xong không tự chuyển Chat sang graph mới.
+Mặc định thiếu đích/model nên Builder chưa sẵn sàng và báo lý do; không lấy target thử thay thế. Đích cần identity vật lý, schema và bốn vector indexes phù hợp. Chọn phạm vi, dừng/tiếp tục, bỏ phiên và dựng lại theo runner; không dùng graph serving làm đích Build.
+
+### Cấp quyền xóa dữ liệu Builder
+
+**Người vận hành** cấp quyền qua `KAG_BUILDER_CLEAR_TARGETS` trong `.env` tại root repository. Mặc định `[]` từ chối xóa. Cấp quyền chưa xóa dữ liệu; người dùng vẫn phải xem trước và xác nhận trên UI.
+
+**Xóa tác động toàn bộ node, vector và quan hệ trong database chuyên dụng được cấp quyền, không chỉ một run. Phải [sao lưu](#sao-lưu) trước; không có hoàn tác nguyên tử. Không cấp quyền cho database dùng chung hoặc đang phục vụ Chat.**
+
+#### 1. Lấy và đối chiếu đúng ID
+
+1. Đăng nhập ADMIN LuậtGT và tài khoản sở hữu project OpenSPG, dùng cùng hostname. Tại **Dựng đồ thị → Cấu hình → Nơi lưu**, chọn **Project OpenSPG**; đọc database ở **Đích chọn**, mở **Chi tiết project** để lấy ID và namespace.
+2. Mở **Configuration** của đúng project trong OpenSPG. Đối chiếu namespace, database và kết nối lưu graph. Với Compose mặc định, URI trong Docker là `neo4j://openspg-neo4j:7687`; [Neo4j Browser trên localhost](#truy-cập-quản-trị-openspg-và-neo4j) trỏ tới cùng service. Nếu deployment dùng nơi lưu khác, phải kết nối đúng nơi đó trước khi lấy ID.
+3. Trong Neo4j Browser, đăng nhập bằng tài khoản quản trị đã cấu hình. Chạy từng lệnh chỉ đọc sau:
+
+```cypher
+:use system
+SHOW DATABASES YIELD name, databaseID, serverID, currentStatus
+RETURN name, databaseID, serverID, currentStatus;
+```
+
+4. Tìm dòng `name` khớp database ở bước 1, ví dụ `roadlaw`; cần đúng một dòng, `currentStatus=online` và `databaseID` không rỗng, không trùng database khác. Sao chép **`databaseID`**, không lấy `serverID`. Nếu thiếu quyền, thiếu cột hoặc kết quả không rõ, dừng và kiểm đúng kết nối/phiên bản; không dùng tên database thay ID.
+
+Phân biệt các giá trị: **project ID** là số định danh project OpenSPG; **namespace** là tên không gian kiểu dữ liệu; **database** là tên như `roadlaw`; **physical database ID** là giá trị `databaseID` của database thực trong Neo4j. Cấp quyền phải ghép đúng project ID với physical database ID. Không lấy ID từ báo cáo hoặc run cũ thay catalog hiện tại.
+
+Trước khi cấp quyền, kiểm inventory project OpenSPG và cấu hình Chat hiện có để xác nhận database này dành riêng cho project. Hai project có thể trỏ cùng database; tên hoặc namespace khác nhau chưa chứng minh cách ly. Preview chưa được cấp quyền trả `CLEAR_DENIED`, chưa hiển thị physical ID; dùng catalog Neo4j ở trên để lấy ID lần đầu.
+
+#### 2. Lưu và áp dụng quyền
+
+Trong `.env`, sửa dòng hiện có; không tạo hai dòng cùng tên. Ví dụ hoàn chỉnh sau dùng ID minh họa, **phải thay `123` bằng project ID vừa đối chiếu và `REPLACE_WITH_DATABASE_ID` bằng `databaseID` vừa đọc**:
+
+```dotenv
+KAG_BUILDER_CLEAR_TARGETS='[{"project_id":123,"database_id":"REPLACE_WITH_DATABASE_ID"}]'
+```
+
+Giá trị là một mảng JSON; `project_id` là số nguyên dương, `database_id` là chuỗi. Dấu nháy đơn ngoài cùng thuộc cú pháp `.env`. Nếu đã cấp quyền cho đích khác, giữ các đối tượng hiện có và thêm đối tượng mới, ngăn bằng dấu phẩy trong cùng mảng; không thay cả danh sách bằng ví dụ này.
+
+Áp dụng theo [UPDATE](../docs/UPDATE.md): nếu Builder đang chạy, **Dừng an toàn** và chờ **Đã dừng an toàn** trước; sao lưu, giữ mapping storage và secrets, kiểm `docker compose config -q`, rồi cập nhật containers theo hướng dẫn. Worker `kag-builder` cần được tạo lại để nhận biến mới; chỉ tải lại trang hoặc `docker compose restart` không nạp lại `.env`. Không Resume tự động.
+
+#### 3. Xem trước và xác nhận trên UI
+
+1. Quay lại **Dựng đồ thị**, tải lại trạng thái và đăng nhập lại OpenSPG nếu cần. Kiểm cấu hình đã lưu trỏ đúng project/database. Nếu còn phiên **Đã dừng an toàn**, chỉ **Bỏ phiên** khi quyết định chấm dứt phiên đó; không bỏ phiên chỉ để lấy ID.
+2. Mở **Xóa dữ liệu để dựng lại → Xem trước xóa dữ liệu**. Đọc số node/quan hệ của toàn database; mở **Danh tính đích** và đối chiếu project ID, namespace, physical database với các giá trị đã cấp.
+3. Chỉ sau khi đồng ý tác động và có backup, bấm **Xóa dữ liệu đồ thị**, nhập đúng tên database rồi **Xóa dữ liệu trong roadlaw** tương ứng đích của bạn. Đợi kết quả đọc lại database rỗng; schema/index và lịch sử vẫn được giữ.
+
+Worker vẫn kiểm quyền sở hữu, identity, database dùng chung/serving và GraphLock. Dữ liệu hoặc cấu hình thay đổi sau preview cần xem trước lại. Nếu bị chặn hoặc chưa rõ kết quả, giữ nguyên khóa và xử lý nguyên nhân; không bỏ kiểm tra để ép xóa. Chi tiết lỗi một phần và dựng lại: [runner](../docs/runner.md#xóa-dữ-liệu-đồ-thị).

@@ -170,30 +170,53 @@ def selection_summary(data, selection=None):
 
 
 def select_bounded_sources(data, node_limit, *, extended=False):
-    """Choose short real records deterministically, retaining types and closed relations."""
+    """Choose short records with their documents/parents inside the requested limit."""
     maximum = len(data['node_hashes']) if extended else min(128,len(data['node_hashes']))
     if type(node_limit) is not int or not 3 <= node_limit <= maximum:
         raise ProductionScopeError('node limit must be between 3 and the permitted source count')
-    costs = {(n['type'], n['id']): sum(len(n['properties'].get(prop) or '')
-             for prop, _ in TARGETS[n['type'].rsplit('.', 1)[-1]]) for n in data['nodes']}
+    nodes = {(n['type'], n['id']): n for n in data['nodes']}
+    costs = {key: sum(len(n['properties'].get(prop) or '')
+             for prop, _ in TARGETS[n['type'].rsplit('.', 1)[-1]]) for key,n in nodes.items()}
     edges = list(data['edge_hashes'])
     if not edges or not costs:
         raise ProductionScopeError('bounded selection requires nodes and relations')
-    ordered = sorted(edges, key=lambda key: (-len({key[0], key[3]}), costs[key[:2]] + costs[key[3:]], key))
-    chosen = {ordered[0][:2], ordered[0][3:]}
+    def sources(keys):
+        pending, group = list(keys), set()
+        while pending:
+            key = pending.pop()
+            if key in group: continue
+            if key not in nodes or len(group) >= node_limit: return None
+            group.add(key)
+            props = nodes[key]['properties']; namespace = key[0].rsplit('.',1)[0]
+            if not key[0].endswith('.LegalDocument'):
+                pending.append((namespace+'.LegalDocument',props.get('docId')))
+            parent = props.get('unitId') if key[0].endswith('.TrafficSign') else props.get('parentId')
+            if parent: pending.append((namespace+'.LegalUnit',parent))
+        return group
+    groups = {key: sources((key,)) for key in nodes}
+    edge_groups = {key: sources((key[:2],key[3:])) for key in edges}
+    ordered = sorted((key for key in edges if edge_groups[key]),
+        key=lambda key: (-len({k[0] for k in edge_groups[key]}),
+                         sum(costs[k] for k in edge_groups[key]),key))
+    if not ordered:
+        raise ProductionScopeError('selection is too small to retain a relation and its document/parent sources')
+    chosen = set(edge_groups[ordered[0]])
     for kind in sorted({key[0] for key in costs}):
         if not any(key[0] == kind for key in chosen):
-            chosen.add(min((key for key in costs if key[0] == kind), key=lambda key: (costs[key], key)))
-    if len(chosen)>node_limit:
-        raise ProductionScopeError('selection is too small to retain all source types and a relation')
+            candidates = [key for key in nodes if key[0] == kind and groups[key]
+                          and len(chosen | groups[key]) <= node_limit]
+            if not candidates:
+                raise ProductionScopeError('selection is too small to retain all source types and their document/parent sources')
+            chosen.update(groups[min(candidates,key=lambda key:(sum(costs[k] for k in groups[key]-chosen),key))])
     for key in ordered:
-        added = {key[:2], key[3:]} - chosen
+        added = edge_groups[key] - chosen
         if len(chosen) + len(added) <= node_limit:
             chosen.update(added)
     for key in sorted(costs, key=lambda key: (costs[key], key)):
         if len(chosen) >= node_limit:
             break
-        chosen.add(key)
+        if groups[key] and len(chosen | groups[key]) <= node_limit:
+            chosen.update(groups[key])
     selected_edges=[key for key in sorted(edges) if key[:2] in chosen and key[3:] in chosen]
     selection = dict(node_limit=node_limit, node_keys=sorted(chosen),edge_tuples=selected_edges if extended else selected_edges[:256])
     selected_hashes(data['node_hashes'], data['edge_hashes'], selection,

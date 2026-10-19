@@ -18,9 +18,11 @@ Nguồn + schema + quan hệ → kiểm input/plan → vectorize hoặc replay
   → ghi node → đọc lại node → ghi cạnh → verify graph/vector
 ```
 
-Runner chia batch, giữ tiến độ ngoài repo, kiểm provenance/identity trước ghi. Vectorizer không tự chuyển từ replay sang provider khi thiếu vector. Bốn vector nội dung và giới hạn truy hồi: [retrieval](retrieval-demo.md).
+Đường điều khiển: React → Spring Boot kiểm ADMIN → Worker xác thực control token/phiên OpenSPG → Runner. Worker lưu cấu hình/kế hoạch trong Builder state, tiến độ trong run volume. Chuẩn bị schema/index là thao tác preview/apply riêng trước Build, không gọi model. [Runner](runner.md) giữ hướng dẫn thao tác.
 
-WRITE chỉ được xét trong `FRESH_SAMPLE` biệt lập; production bị chặn, serving Compose mặc định không cấp quyền thử ghi. Điều kiện vận hành: [runner](runner.md#config), [backend identity](backend-identity.md#writer-và-lock).
+`PRODUCTION/WRITE` hỗ trợ corpus đã pin, chọn toàn bộ hoặc một phần, dùng model/dimension của phiên. Trước ghi phải khớp nguồn, confirmation, quyền project, identity vật lý và GraphLock; không dùng database serving. `FRESH_SAMPLE` là scope thử biệt lập có giới hạn riêng, không phải giới hạn chung của sản phẩm.
+
+Vectorizer không tự chuyển từ replay sang provider khi thiếu vector. Builder dùng dimension theo model đã kiểm. Release PRODUCTION giữ namespace/dimension/model của phiên đã xác minh; SAMPLE giữ contract 3072 chiều. Dựng xong không tự kích hoạt Chat: ADMIN chọn phiên, xem trước và xác nhận tại Đồ thị tri thức; publisher kiểm graph và nguồn WebApp trước khi đổi lựa chọn. Worker cấp phép đọc cố định cho API; graph đang phục vụ được chặn Build/xóa. Điều kiện: [chọn graph phục vụ](runner.md#chọn-graph-phục-vụ-truy-xuấtchat), [backend identity](backend-identity.md#writer-và-lock), [publisher](../docker/README.md#publisher-nâng-cao).
 
 ## Luồng câu hỏi
 
@@ -52,7 +54,7 @@ Nguồn chuẩn: [app.py](../kag/http_api/app.py), [contract.py](../kag/http_api
 - Python SSE phát terminal `done` sau validation; Java tương thích `delta/done`. UI hiện dùng REST.
 - `/v1/health` chỉ liveness. `/v1/operations/sample`, `/v1/pipeline/status`, `/v1/benchmark/datasets` phục vụ inspection, không chạy Builder/benchmark.
 
-Endpoint và secrets: [Docker](../docker/README.md#cấu-hình-chatbot). Control ADMIN: [runner](runner.md#điều-khiển-từ-pipeline-admin).
+Endpoint và secrets: [Docker](../docker/README.md#cấu-hình-chatbot). Control ADMIN, tiến trình và kết quả phiên: [runner](runner.md#dựng-đồ-thị-qua-5-bước). Builder v3 hỗ trợ Bỏ phiên/Xóa dữ liệu với quyền riêng; hai thao tác không tương đương và không tự kích hoạt Chat.
 
 ## Evaluation Framework
 

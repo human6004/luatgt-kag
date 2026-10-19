@@ -66,6 +66,7 @@ class BrokerRetrievalClient(Neo4jRetrievalClient):
         self.endpoint=release.backend['reader_endpoint']
         self.database=release.descriptor['database']
         self.namespace=release.schema_contract.namespace
+        self.dimension=release.descriptor.get('dimension',3072)
         self.timeout=timeout;self.read_requests=0
         self.proof=proof;self._token=token;self._descriptor=release.descriptor
         self._opener=build_opener(ProxyHandler({}),_NoRedirect())
@@ -104,6 +105,37 @@ class BrokerRetrievalClient(Neo4jRetrievalClient):
 
     def verify_controls(self):
         self._query('readonly_state')
+
+
+class WorkerRetrievalClient(Neo4jRetrievalClient):
+    """Approved read DTOs only; the private Worker retains database credentials."""
+    def __init__(self,release,token,*,timeout):
+        if not isinstance(token,str) or not re.fullmatch('[A-Za-z0-9_-]{43,128}',token):
+            raise ValueError('reader credential unavailable')
+        self.endpoint=release.backend['reader_endpoint'];self.database=release.descriptor['database']
+        self.namespace=release.schema_contract.namespace;self.dimension=release.descriptor['dimension']
+        self.timeout=timeout;self.read_requests=0;self._release_id=release.release_id;self._token=token
+        self._opener=build_opener(ProxyHandler({}),_NoRedirect())
+
+    def _query(self,name,parameters=None,*,database=None):
+        from kag.http_api.read_broker import _parameters
+        from kag.http_api.artifacts import ArtifactFailure,VerificationState
+        from kag.http_api.runtime import REQUEST_SECONDS
+        try:
+            _parameters(name,parameters or {},database=self.database,namespace=self.namespace,
+                dimension=self.dimension,production=True)
+            if database not in (None,'system' if name=='database_metadata' else self.database):raise ValueError()
+            request=Request('http://openspg-server:8010/v1/serving/read',method='POST',
+                headers={'Authorization':'Bearer '+self._token,'Content-Type':'application/json'},
+                data=json.dumps(dict(release_id=self._release_id,operation=name,parameters=parameters or {}),allow_nan=False).encode())
+            self.read_requests+=1
+            with self._opener.open(request,timeout=REQUEST_SECONDS if name=='verify_graph' else self.timeout) as response:
+                raw=response.read(8*1024*1024+1)
+            if len(raw)>8*1024*1024:raise ValueError()
+            value=json.loads(raw)
+            if set(value)!={'release_id','rows'} or value['release_id']!=self._release_id or type(value['rows']) is not list:raise ValueError()
+            return value['rows']
+        except Exception:raise ArtifactFailure(VerificationState.UNVERIFIED) from None
 
 def verify_backend(release,proof,reader):
     from . import artifacts as a

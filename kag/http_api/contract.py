@@ -263,7 +263,7 @@ class SampleVectorRequest(_Request):
             raise ApiFailure('INVALID_REQUEST')
 
 
-def project_v1(result: AnswerResult, verified_sources: VerifiedSources) -> dict:
+def project_v1(result: AnswerResult, verified_sources: VerifiedSources, *, namespace='VietRoadTraffic') -> dict:
     # Import real native classes only after callers have bootstrapped their runtime.
     from kag.legal_solver import AnswerResult, Citation
 
@@ -278,6 +278,7 @@ def project_v1(result: AnswerResult, verified_sources: VerifiedSources) -> dict:
     if not result.citations:
         raise ApiFailure('INVALID_NATIVE_RESULT')
 
+    dataset = getattr(verified_sources,'source_mode',None)=='dataset-snapshot-v1'
     representable = True
     try:
         sources = verified_sources.citations
@@ -285,9 +286,9 @@ def project_v1(result: AnswerResult, verified_sources: VerifiedSources) -> dict:
             raise ValueError('incomplete certificate')
         for citation, source in zip(result.citations, sources):
             kind = source.entity_type
-            identities = {'VietRoadTraffic.LegalUnit': citation.unit_id,
-                          'VietRoadTraffic.TrafficSign': citation.sign_id,
-                          'VietRoadTraffic.LegalDocument': citation.doc_id}
+            identities = {namespace+'.LegalUnit': citation.unit_id,
+                          namespace+'.TrafficSign': citation.sign_id,
+                          namespace+'.LegalDocument': citation.doc_id}
             if (source.citation != citation or type(source.citation) is not Citation or
                     not _text(citation.doc_id) or not citation.doc_id.strip() or
                     any(v is not None and (not _text(v) or not v.strip())
@@ -302,16 +303,32 @@ def project_v1(result: AnswerResult, verified_sources: VerifiedSources) -> dict:
                     citation.evidence_id != hashlib.sha256(canonical_json(
                         [kind, source.entity_id, citation.field]).encode('utf-8')).hexdigest()):
                 raise ValueError('invalid source binding')
-            representable &= (kind == 'VietRoadTraffic.LegalUnit' and citation.field == 'text' and
+            representable &= ((dataset or kind == namespace+'.LegalUnit' and citation.field == 'text' and
                               citation.sign_id is None and source.java_eligible and
-                              bool(citation.quote.strip()) and
-                              utf16_units(citation.quote) <= 20000)
+                              bool(citation.quote.strip())) and utf16_units(citation.quote) <= 20000)
     except (AttributeError, TypeError, ValueError):
         raise ApiFailure('SOURCE_VALIDATION_FAILED') from None
 
     if not representable or len(result.citations) > 20 or utf16_units(result.answer) > 20000:
         raise ApiFailure('V1_RESULT_UNREPRESENTABLE')
-    return {'answer': result.answer, 'citations': [asdict(c) for c in result.citations]}
+    citations = [asdict(c) for c in result.citations]
+    if dataset:
+        from collections.abc import Mapping
+        def plain(value):
+            if isinstance(value,Mapping):return {k:plain(v) for k,v in value.items()}
+            if isinstance(value,tuple):return [plain(v) for v in value]
+            return value
+        for citation,source in zip(citations,sources):
+            if source.metadata is None or source.document_metadata is None:
+                raise ApiFailure('SOURCE_VALIDATION_FAILED')
+            citation['source']=dict(contract_version='graph-source-v1',release_id=verified_sources.release_id,
+                source_snapshot_id=verified_sources.source_snapshot_id,
+                release_descriptor_sha256=verified_sources.release_descriptor_sha256,
+                schema_contract=asdict(verified_sources.schema_contract),entity_type=source.entity_type,
+                entity_id=source.entity_id,source_sha256=source.source_sha256,text=source.source_text,
+                metadata=plain(source.metadata),document_metadata=plain(source.document_metadata),as_of=verified_sources.as_of.isoformat())
+        return {'contract_version':'graph-chat-v1','answer':result.answer,'citations':citations}
+    return {'answer': result.answer, 'citations': citations}
 
 
 def encode_v1(payload: dict) -> bytes:

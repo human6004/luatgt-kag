@@ -33,6 +33,12 @@ public class ChatService {
         if(response==null||!response.path("answer").isTextual()||response.path("answer").asText().isBlank()||response.path("answer").asText().length()>20000||!response.path("citations").isArray()||response.path("citations").isEmpty()||response.path("citations").size()>20)
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"KAG trả về câu trả lời thiếu căn cứ");
         for(var citation:response.path("citations")) {
+            if(response.path("contract_version").asText().equals("graph-chat-v1")) {
+                if(!citation.path("source").path("contract_version").asText().equals("graph-source-v1")||
+                    !citation.path("source").path("text").equals(citation.path("quote")))
+                    throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"Trích dẫn không khớp bản nguồn của đồ thị");
+                continue;
+            }
             if(!citation.path("doc_id").isTextual()||!citation.path("unit_id").isTextual()||citation.path("unit_id").asText().isBlank()) throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"Trích dẫn KAG không hợp lệ");
             var source=contents.findByKindAndExternalId("documents",citation.path("doc_id").asText());
             if(source.isEmpty()||!source.get().published||!data.isEffective(source.get())) throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"KAG dẫn văn bản chưa xuất bản hoặc hết hiệu lực");

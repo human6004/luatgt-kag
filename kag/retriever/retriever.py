@@ -17,6 +17,9 @@ class Retriever:
         self.reader,self.embed,self.contract = reader,embed,contract
         self.search_k,self.expansion_limit = search_k,expansion_limit
         self.namespace = contract['namespace']
+        self.dimension = getattr(reader,'dimension',3072)
+        if type(self.dimension) is not int or not 1<=self.dimension<=65536:
+            raise ValueError('invalid vector dimension')
 
     def _hydrate(self,keys):
         records = self.reader.read_nodes([list(key) for key in sorted(keys)])
@@ -54,8 +57,8 @@ class Retriever:
         positive_limit(top_k,self.search_k)
         if type(expand) is not bool:
             raise ValueError('boolean expansion required')
-        if not _valid_vector(vector,3072):
-            raise ValueError('query embedding must be finite nonzero 3072-vector')
+        if not _valid_vector(vector,self.dimension):
+            raise ValueError('query embedding dimension or values invalid')
         hits = {}
         for kind,targets in TARGETS.items():
             for prop,_ in targets:

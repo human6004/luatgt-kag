@@ -54,6 +54,32 @@ def inspect_inputs(value):
     return result
 
 
+def read_dataset(root,group,offset,limit):
+    """Page through the packaged corpus; viewing never constructs or validates a plan."""
+    from kag.builder.inputs import SOURCE_FILES
+    from kag.http_api.contract import encode_retrieve
+    files=dict(SOURCE_FILES)
+    if group not in files or type(offset) is not int or not 0<=offset<=2147483647 or type(limit) is not int or not 1<=limit<=50:
+        raise ApiFailure('INVALID_REQUEST')
+    path=Path(root)/files[group]
+    try:
+        version=_input_version(path);items=[];total=0
+        with path.open('rb') as stream:
+            for line in stream:
+                if not line.strip():continue
+                if offset<=total<offset+limit:
+                    value=json.loads(line)
+                    if type(value) is not dict:raise ValueError
+                    items.append(value)
+                total+=1
+        if _input_version(path)!=version:raise ValueError
+        result=dict(contract_version='builder-dataset-v1',dataset='LuậtGT',group=group,source=files[group],
+            offset=offset,limit=limit,total=total,items=items)
+        encode_retrieve(result)
+        return result
+    except (OSError,ValueError,UnicodeError):raise ApiFailure('BACKEND_UNAVAILABLE') from None
+
+
 def check_source_inputs(value):
     config = _config(value)
     contract = json.loads((Path(__file__).resolve().parents[1]/'schema/schema_contract.json').read_bytes())
@@ -661,10 +687,77 @@ def create_app(*, control=None, token=None, state_dir=None):
         values = request.headers.getlist('x-openspg-session')
         return values[0] if len(values)==1 else ''
 
+    def serving_auth(request,*,write=False):
+        from kag.http_api.security import authorize
+        from kag.http_api.server import _secret
+        name='CONFIG_APPLY' if write else 'INSPECT'
+        value=_secret('KAG_HTTP_'+name+'_SECRET_FILE')
+        if not value:raise ApiFailure('SCOPE_DENIED')
+        scope='config-apply' if write else 'inspect'
+        scoped=ServiceSecrets(**{('config_apply_tokens' if write else 'inspect_tokens'):(value,)})
+        headers=request.headers.getlist('authorization')
+        if len(headers)>1:raise ApiFailure('AUTH_INVALID')
+        authorize(authenticate(headers[0] if headers else None,scoped),scope,None)
+        if request.query_params:raise ApiFailure('INVALID_REQUEST')
+
+    serving_busy=False
+
+    @app.get('/v1/serving')
+    async def serving_catalog(request: Request):
+        serving_auth(request)
+        from kag.builder.serving import runs,active_selection
+        try:
+            return dict(contract_version='builder-serving-v1',active=await asyncio.to_thread(active_selection),busy=serving_busy,
+                runs=await asyncio.to_thread(runs,session_token(request)))
+        except (ProjectCatalogError,RunBlocked) as error:
+            raise HTTPException(409,error.code) from None
+
+    @app.post('/v1/serving/{action}')
+    async def serving_action(action: str,request: Request):
+        nonlocal serving_busy
+        if action not in ('preview','activate','read','trial'):raise ApiFailure('INVALID_REQUEST')
+        serving_auth(request,write=action in ('preview','activate'))
+        from kag.builder.serving import prepare,fixed_read,trial
+        if action!='read' and serving_busy:raise ApiFailure('CONFIG_BUSY')
+        if action!='read':serving_busy=True
+        try:
+            body=json.loads(await bounded_body(request,limit=32*1024*1024 if action!='read' else 256*1024))
+            value=(await asyncio.to_thread(trial,body,session_token(request)) if action=='trial' else
+                await asyncio.to_thread(fixed_read,body) if action=='read' else
+                await asyncio.to_thread(prepare,body,session_token(request),activate=action=='activate'))
+            return value
+        except (ProjectCatalogError,RunBlocked) as error:
+            raise HTTPException(409,error.code) from None
+        except ApiFailure:raise
+        except Exception:raise ApiFailure('NOT_READY') from None
+        finally:
+            if action!='read':serving_busy=False
+
     @app.get('/v1/builder/projects')
     async def projects(request: Request):
         authenticate_request(request)
         return await asyncio.to_thread(read_projects,session_token(request))
+
+    @app.get('/v1/builder/graph/{project_id}')
+    async def graph_project(project_id: int, request: Request):
+        authenticate_request(request)
+        from kag.builder.projects import inspect_graph, ProjectCatalogError
+        try:
+            return await asyncio.to_thread(inspect_graph,project_id,session_token(request))
+        except ProjectCatalogError as error:
+            status=403 if error.code=='FORBIDDEN' else 404 if error.code=='NOT_FOUND' else 503
+            raise HTTPException(status,'GRAPH_'+error.code) from None
+        except (OSError,ValueError,KeyError,TypeError,RuntimeError):
+            raise HTTPException(503,'GRAPH_UNAVAILABLE') from None
+
+    @app.get('/v1/builder/sources/{project_id}/{run_id}')
+    async def run_sources(project_id: int,run_id: str,request: Request):
+        authenticate_request(request)
+        from kag.builder.serving import sources
+        try:
+            return await asyncio.to_thread(sources,project_id,run_id,session_token(request))
+        except ProjectCatalogError as error:
+            raise HTTPException(403 if error.code=='FORBIDDEN' else 404 if error.code=='NOT_FOUND' else 503,'SOURCES_'+error.code) from None
 
     @app.get('/v1/builder/structure')
     async def structure_status(request: Request):
@@ -820,6 +913,11 @@ def create_app(*, control=None, token=None, state_dir=None):
             for row in result['inputs']:
                 if row['name']=='c3_manifest':row['state']='MATCHED'
         return result
+
+    @app.get('/v1/builder/dataset/{group}/{offset}/{limit}')
+    async def dataset(group: str,offset: int,limit: int,request: Request):
+        authenticate_request(request)
+        return await asyncio.to_thread(read_dataset,Path(__file__).resolve().parents[2],group,offset,limit)
 
     @app.post('/v1/builder/inputs',status_code=202)
     async def check_inputs(request: Request):

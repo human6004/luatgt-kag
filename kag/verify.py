@@ -42,6 +42,15 @@ QUERIES = {
                 'RETURN name,type,state,labelsOrTypes,properties,options'),
     'structure_counts': ('CALL { MATCH (n) RETURN count(n) AS nodes } '
                          'CALL { MATCH ()-[r]->() RETURN count(r) AS edges } RETURN nodes,edges'),
+    'graph_counts': ('CALL { MATCH (n) WHERE any(l IN labels(n) WHERE l STARTS WITH $namespace) '
+        'RETURN count(n) AS nodes } CALL { UNWIND $targets AS target MATCH (n) '
+        'WHERE target.label IN labels(n) AND n[target.field] IS NOT NULL '
+        'RETURN sum(CASE WHEN size(n[target.field])>0 THEN 1 ELSE 0 END) AS vectors } RETURN nodes,vectors'),
+    'graph_labels': ('MATCH (n) UNWIND labels(n) AS label WITH label WHERE label STARTS WITH $namespace '
+        'RETURN label AS name,count(*) AS count ORDER BY name'),
+    'graph_relations': ('MATCH (a)-[r]->(b) WHERE any(l IN labels(a) WHERE l STARTS WITH $namespace) '
+        'OR any(l IN labels(b) WHERE l STARTS WITH $namespace) '
+        'RETURN type(r) AS name,count(*) AS count ORDER BY name'),
 }
 
 

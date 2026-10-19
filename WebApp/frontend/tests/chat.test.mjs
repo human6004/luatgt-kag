@@ -6,6 +6,18 @@ import { tokenKey } from '../src/api.ts'
 const citation = { doc_id: 'fixture-doc', unit_id: 'fixture-unit', quote: 'TEST ONLY — trích đoạn kiểm thử.\nKhông phải căn cứ pháp luật.' }
 const answered = { id: 'fixture-chat', question: 'Câu hỏi tiếng Việt\nDòng thứ hai', answer: 'TEST ONLY — nội dung từ HTTP fixture.', citations: [citation], state: 'ANSWERED', createdAt: '2026-10-10T00:00:00Z' }
 const unavailable = { ...answered, answer: '', citations: [], state: 'UNAVAILABLE' }
+test('graph snapshot citations keep their original source after graph changes without MySQL reads', async () => {
+  for (const [kind,id,unit,sign] of [['LegalDocument','fixture-doc',null,null],['LegalUnit','fixture-unit','fixture-unit',null],['TrafficSign','sign-1',null,'sign-1']]) {
+    const source={contract_version:'graph-source-v1',release_id:'graph-A',source_snapshot_id:'source-A',entity_type:`RoadAlpha.${kind}`,entity_id:id,
+      text:citation.quote,metadata:{id,doc_id:'fixture-doc',unit_type:'Dieu',ten:'Biển báo'},document_metadata:{id:'fixture-doc',title:'Nguồn A',so_hieu:'A'}}
+    const row={...citation,unit_id:unit,sign_id:sign,source}
+    assert.equal(chatView({...answered,citations:[row]}).answer,answered.answer)
+    const result=await loadCitationSource(row)
+    assert.equal(result.title,'Nguồn A');assert.equal(result.text,citation.quote)
+    await assert.rejects(loadCitationSource({...row,quote:'Nguồn B'}))
+    assert.equal(chatView({...answered,citations:[{...row,source:{...source,entity_type:17}}]}).answer,'')
+  }
+})
 const abstained = { ...unavailable, id: 'fixture-abstained', state: 'KAG_ABSTAINED' }
 const abstainedMessage = 'Hiện tôi chưa tìm được đủ căn cứ pháp lý được xác minh để trả lời chính xác câu hỏi này.'
 const unavailableMessage = 'Dịch vụ tra cứu pháp luật hiện đang gặp sự cố hoặc chưa sẵn sàng. Vui lòng thử lại sau.'

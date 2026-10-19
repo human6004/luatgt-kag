@@ -1,6 +1,9 @@
 import { api, send, ApiError, type ContentRecord } from '../../api.ts'
 
-type Citation = { doc_id: string; unit_id: string; quote: string }
+type Citation = { doc_id: string; unit_id: string | null; sign_id?: string | null; quote: string; source?: {
+  contract_version: string; release_id: string; source_snapshot_id: string; entity_type: string; entity_id: string;
+  text: string; metadata: Record<string, unknown>; document_metadata: Record<string, unknown>
+} }
 type ChatRecord = { id: string; question: string; answer: string; state: string; citations: Citation[] }
 type ChatState = { rows: ChatRecord[]; loading: boolean; error: string; busy: boolean; requestError: string; observed: 'idle' | 'answered' | 'abstained' | 'unavailable' | 'offline' | 'error' | 'cancelled' }
 const unavailableMessage = 'Dịch vụ tra cứu pháp luật hiện đang gặp sự cố hoặc chưa sẵn sàng. Vui lòng thử lại sau.'
@@ -16,17 +19,35 @@ export function chatView(row: ChatRecord) {
   if (row.state === 'KAG_ABSTAINED') return { status: 'Hiện tôi chưa tìm được đủ căn cứ pháp lý được xác minh để trả lời chính xác câu hỏi này.', ...empty }
   if (row.state === 'UNAVAILABLE') return { status: unavailableMessage, ...empty }
   if (row.state === 'PROCESSING') return { status: 'Đang xử lý — chưa có câu trả lời.', ...empty }
-  const citationsValid = row.citations.length > 0 && row.citations.length <= 20 && row.citations.every(c => c && ['doc_id', 'unit_id', 'quote'].every(key => typeof c[key as keyof Citation] === 'string' && c[key as keyof Citation].trim()))
+  const citationsValid = row.citations.length > 0 && row.citations.length <= 20 && row.citations.every(c => c &&
+    typeof c.doc_id === 'string' && !!c.doc_id.trim() && typeof c.quote === 'string' && !!c.quote.trim() &&
+    (c.source ? snapshotMatches(c) : typeof c.unit_id === 'string' && !!c.unit_id.trim()))
   if (row.state !== 'ANSWERED' || !row.answer.trim() || !citationsValid) return { status: 'Chưa có câu trả lời đủ căn cứ.', ...empty }
   return { status: 'Đã trả lời', answer: row.answer, citations: row.citations }
 }
 
 export async function loadCitationSource(citation: Citation) {
+  if (citation.source) {
+    if (!snapshotMatches(citation)) throw new ApiError('Source snapshot mismatch', 502)
+    const { metadata, document_metadata: doc, entity_type: kind } = citation.source
+    return { title: String(doc.title ?? citation.doc_id), number: String(doc.so_hieu ?? citation.doc_id),
+      unitType: kind.endsWith('.LegalUnit') ? String(metadata.unit_type ?? 'Đơn vị pháp lý') : kind.endsWith('.TrafficSign') ? 'Biển báo' : 'Văn bản', text: citation.source.text }
+  }
   const [documents, units] = await Promise.all([api<ContentRecord[]>('/documents'), api<ContentRecord[]>(`/units?docId=${encodeURIComponent(citation.doc_id)}`)])
   if (!Array.isArray(documents) || !Array.isArray(units)) throw new ApiError('Invalid source', 502)
   const doc = documents.find(d => d.externalId === citation.doc_id), unit = units.find(u => u.externalId === citation.unit_id)
   if (!doc?.data || !unit?.data || unit.data.doc_id !== citation.doc_id || typeof unit.data.text !== 'string' || !citation.quote.trim() || !unit.data.text.includes(citation.quote) || typeof doc.data.title !== 'string' || typeof doc.data.so_hieu !== 'string' || typeof unit.data.unit_type !== 'string') throw new ApiError('Source not available', 502)
   return { title: doc.data.title, number: doc.data.so_hieu, unitType: unit.data.unit_type, text: unit.data.text }
+}
+
+function snapshotMatches(citation: Citation) {
+  const source = citation.source
+  if (!source || source.contract_version !== 'graph-source-v1' || typeof source.release_id !== 'string' || !source.release_id ||
+    typeof source.source_snapshot_id !== 'string' || !source.source_snapshot_id || typeof source.entity_type !== 'string' || typeof source.entity_id !== 'string' || source.text !== citation.quote ||
+    !source.metadata || !source.document_metadata || source.document_metadata.id !== citation.doc_id || source.metadata.id !== source.entity_id) return false
+  return source.entity_type.endsWith('.LegalDocument') ? source.entity_id === citation.doc_id :
+    source.entity_type.endsWith('.LegalUnit') ? source.entity_id === citation.unit_id && source.metadata.doc_id === citation.doc_id :
+    source.entity_type.endsWith('.TrafficSign') && source.entity_id === citation.sign_id && source.metadata.doc_id === citation.doc_id
 }
 
 export function createChat() {

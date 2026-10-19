@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useSearchParams } from "react-router-dom"
 import { Page, Button, Card, Progress, Field, inputCls } from "../../admin/ui"
 import { Notice, inputClass } from "./shared"
 import {
@@ -188,7 +188,7 @@ export function Graph() {
     : []
   return (
     <Page
-      title="Đồ thị tri thức"
+      title="Đồ thị của tôi"
       subtitle="Đọc graph SAMPLE thực qua broker; kiểm tra fingerprint trước và sau. Không có quyền ghi."
       actions={
         <Button disabled={data.loading} onClick={data.reload}>
@@ -419,8 +419,8 @@ function BuilderResult({ status, link = true, links }: { status: BuilderStatus; 
         <div key={label}><dt className="text-muted">{label}</dt><dd className="text-xl font-semibold tabular-nums mt-1">{count.toLocaleString('vi-VN')}</dd></div>)}
     </dl>
     <p>Xác minh lúc {builderTime(result.verified_at)} · {result.indexes} chỉ mục, {result.dimension} chiều.</p>
-    <p>Graph này chưa được kích hoạt cho Chat.</p>
-    {link && <Link className="underline inline-block" to={`/admin/graph?run_id=${encodeURIComponent(binding.run_id)}`}>Xem đồ thị</Link>}
+    <p>Build không tự kích hoạt Chat. Chọn phiên và dùng cho Chat tại Đồ thị của tôi.</p>
+    {link && <Link className="underline inline-block" to={`/admin/graph?project_id=${binding.project_id}&run_id=${encodeURIComponent(binding.run_id)}`}>Xem đồ thị và kiểm tra để dùng cho Chat</Link>}
     {links && <a className="underline block" target="_blank" rel="noreferrer" href={builderNeo4jLink(links, binding.database)}>Mở Neo4j · {binding.database}</a>}
     <p>Nếu Browser chưa chọn đúng database, chạy <code>:use {binding.database}</code>.</p>
     <p>Xem tối đa 25 node hoặc quan hệ bằng truy vấn chỉ đọc:</p>
@@ -462,6 +462,7 @@ function ScopeCounts({ summary }: { summary: SelectionSummary }) {
 }
 
 export function BuilderControls() {
+  const [parameters]=useSearchParams()
   const [snapshot, setSnapshot] = useState<BuilderSnapshot>(), [connectionError, setConnectionError] = useState(''),
     [actionError, setActionError] = useState(''), [busy, setBusy] = useState(false), [version, setVersion] = useState(0),
     [selected, setSelected] = useState<number | null>(null), [batch, setBatch] = useState('64'), [limit, setLimit] = useState(''),
@@ -492,7 +493,7 @@ export function BuilderControls() {
     refresh()
     return () => { controller.abort(); clearTimeout(timer) }
   }, [version, busy])
-  useEffect(() => { if (config) { setBatch(String(config.batch_size)); setLimit(config.request_limit === null ? '' : String(config.request_limit)); setUnlimited(config.request_limit === null); const request = config.selection?.request ?? { mode: config.selection?.node_limit == null ? 'ALL' : 'COUNT', value: config.selection?.node_limit ?? null }; setScopeMode(request.mode); setNodeLimit(request.value == null ? '' : String(request.value)); setScopePreview(undefined); setProjectId(config.target ? String(config.target.project_id) : '') } }, [config?.revision])
+  useEffect(() => { if (config) { setBatch(String(config.batch_size)); setLimit(config.request_limit === null ? '' : String(config.request_limit)); setUnlimited(config.request_limit === null); const request = config.selection?.request ?? { mode: config.selection?.node_limit == null ? 'ALL' : 'COUNT', value: config.selection?.node_limit ?? null }; setScopeMode(request.mode); setNodeLimit(request.value == null ? '' : String(request.value)); setScopePreview(undefined); setProjectId(!status || ['RUNNING','STOPPING','STOPPED'].includes(status.state) ? String(config.target?.project_id ?? '') : parameters.get('project_id') ?? String(config.target?.project_id ?? '')) } }, [config?.revision])
   useEffect(() => {
     if (confirmation && !dialog.current?.open) dialog.current?.showModal()
     if (!confirmation && dialog.current?.open) dialog.current.close()
@@ -653,7 +654,7 @@ export function BuilderControls() {
             <Field label="Dữ liệu sẽ dựng"><select className={inputCls} value={scopeMode === 'ALL' ? 'ALL' : 'PARTIAL'} onChange={event => { setScopeMode(event.target.value === 'ALL' ? 'ALL' : 'COUNT'); setScopePreview(undefined) }}><option value="ALL">Toàn bộ dữ liệu</option><option value="PARTIAL">Một phần dữ liệu</option></select></Field>
             {scopeMode !== 'ALL' && <div className="grid sm:grid-cols-2 gap-3"><Field label="Cách chọn"><select className={inputCls} value={scopeMode} onChange={event => { setScopeMode(event.target.value as 'COUNT' | 'PERCENT'); setNodeLimit(''); setScopePreview(undefined) }}><option value="COUNT">Số lượng nội dung</option><option value="PERCENT">Tỷ lệ nội dung (%)</option></select></Field>
               <Field label={scopeMode === 'COUNT' ? 'Số nội dung' : 'Tỷ lệ (%)'} hint={scopeMode === 'COUNT' ? `Từ 3 đến ${source?.nodes?.toLocaleString('vi-VN') ?? 'tổng nguồn'}.` : '1–100%. Số nội dung làm tròn lên; quá nhỏ sẽ bị từ chối.'}><input className={inputCls} type="number" min={scopeMode === 'COUNT' ? 3 : 1} max={scopeMode === 'COUNT' ? source?.nodes ?? undefined : 100} step={1} required value={nodeLimit} onChange={event => { setNodeLimit(event.target.value); setScopePreview(undefined) }} /></Field></div>}
-            <p className="text-muted">Một phần: chọn cố định, ưu tiên nội dung ngắn, giữ đủ loại và quan hệ đủ hai đầu mút. Không phải mẫu ngẫu nhiên hay đại diện thống kê. Yêu cầu quá nhỏ để giữ các loại sẽ bị từ chối.</p>
+            <p className="text-muted">Một phần: chọn cố định, ưu tiên nội dung ngắn, giữ văn bản nguồn, đơn vị cha và hai đầu quan hệ trong giới hạn. Không phải mẫu ngẫu nhiên hay đại diện thống kê. Mức quá nhỏ để giữ đủ nguồn và các loại sẽ bị từ chối.</p>
             <Button type="button" disabled={disabled || !validNumbers || !sourceReady} onClick={() => mutate('preview')}>Xem trước phạm vi</Button>
             {previewMatches && scopePreview && <div role="status" className="space-y-2"><p className="font-medium">{scopeMode === 'PERCENT' ? `${nodeLimit}% → ${scopePreview.summary.nodes.toLocaleString('vi-VN')} nội dung (làm tròn lên)` : scopeMode === 'ALL' ? 'Toàn bộ nguồn đã xác thực' : 'Phạm vi đã chọn'}</p><ScopeCounts summary={scopePreview.summary} /></div>}
             {!previewMatches && <p className="text-muted">Xem trước phạm vi trước khi lưu. Hạn mức request không thay đổi tập dữ liệu được chọn.</p>}

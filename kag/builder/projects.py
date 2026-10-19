@@ -134,6 +134,11 @@ def read_projects(token):
         records = _project_client(endpoints['openspg'])._rest_client.project_get() if owned else []
         projects = project_metadata(records, owned, endpoints['neo4j_uri'],
             os.environ.get('KAG_BUILDER_SERVING_DATABASE', 'neo4j'))
+        from kag.builder.serving import active_selection
+        active=active_selection()
+        if active:
+            for row in projects:
+                if row['database']==active['database'] and row['state']=='AVAILABLE':row['state']='SERVING_PROTECTED'
         return dict(contract_version='builder-projects-v1', state='AVAILABLE' if projects else 'EMPTY', projects=projects)
     except ProjectCatalogError as error:
         return dict(contract_version='builder-projects-v1', state=error.code, projects=[])
@@ -141,7 +146,7 @@ def read_projects(token):
         return dict(contract_version='builder-projects-v1', state='UNAVAILABLE', projects=[])
 
 
-def selected_target(project_id, token):
+def selected_target(project_id, token, *, for_write=True):
     if type(project_id) is not int or not 1 <= project_id <= 2147483647:
         raise ProjectCatalogError('NOT_FOUND')
     catalog = read_projects(token)
@@ -151,8 +156,43 @@ def selected_target(project_id, token):
     if len(matches) != 1:
         raise ProjectCatalogError('NOT_FOUND')
     row = matches[0]
-    if row['state'] != 'AVAILABLE':
+    if row['state'] not in (('AVAILABLE',) if for_write else ('AVAILABLE','SERVING_PROTECTED')):
         raise ProjectCatalogError(row['state'])
     endpoints, location = deployment_endpoints()
     return dict({key: row[key] for key in ('project_id','project_name','namespace','database')},
         runtime_location=location, endpoints=endpoints)
+
+
+def inspect_graph(project_id, token):
+    """Live, read-only statistics; these do not verify a historical Builder run."""
+    from datetime import datetime, timezone
+    from kag.builder.structure import target_state
+    from kag.vector_contract import TARGETS
+    with target_state(project_id, token, for_write=False) as state:
+        target, reader = state['target'], state['reader']
+        started = datetime.now(timezone.utc).isoformat()
+        parameters = dict(namespace=target['namespace']+'.', targets=[
+            dict(label=target['namespace']+'.'+kind, field=field)
+            for kind, fields in TARGETS.items() for _, field in fields])
+        counts = reader._query('graph_counts', parameters)
+        labels = reader._query('graph_labels', parameters)
+        relations = reader._query('graph_relations', parameters)
+        indexes = [dict(name=row['name'], state=row['state'], type=row['type'],
+            labels=row['labelsOrTypes'], properties=row['properties'],
+            dimension=row.get('options',{}).get('indexConfig',{}).get('vector.dimensions'))
+            for row in reader.indexes() if any(label.startswith(target['namespace']+'.')
+                for label in (row.get('labelsOrTypes') or []))]
+        if (len(counts)!=1 or set(counts[0])!={'nodes','vectors'}
+                or any(type(v) is not int or v<0 for v in counts[0].values())
+                or any(set(row)!={'name','count'} or not isinstance(row['name'],str)
+                    or type(row['count']) is not int or row['count']<0 for row in labels+relations)):
+            raise ProjectCatalogError('UNAVAILABLE')
+        state['identity'].validate(state['proof'])
+        if selected_target(project_id,token,for_write=False)!=target:
+            raise ProjectCatalogError('UNAVAILABLE')
+        return dict(contract_version='graph-project-v1', target={key:target[key] for key in
+            ('project_id','project_name','namespace','database')},
+            database_id=state['proof'].physical_database_id, measured_from=started,
+            measured_at=datetime.now(timezone.utc).isoformat(),
+            counts=dict(counts[0],edges=sum(row['count'] for row in relations)),
+            labels=labels,relations=relations,indexes=indexes,vector_count_kind='NONEMPTY')

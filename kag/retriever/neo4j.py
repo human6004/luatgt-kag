@@ -35,11 +35,13 @@ def positive_limit(value, maximum=100):
 
 class Neo4jRetrievalClient(Neo4jReadClient):
     """No custom-query interface. Inherited verifier statements are read-only."""
-    def __init__(self,*args,namespace='VietRoadTraffic',**kwargs):
+    def __init__(self,*args,namespace='VietRoadTraffic',dimension=3072,**kwargs):
         super().__init__(*args,**kwargs)
         if not isinstance(namespace,str) or not re.fullmatch('[A-Za-z][A-Za-z0-9_]*',namespace):
             raise ValueError('invalid schema namespace')
-        self.namespace = namespace
+        if type(dimension) is not int or not 1<=dimension<=65536:
+            raise ValueError('invalid vector dimension')
+        self.namespace,self.dimension = namespace,dimension
 
     def _query(self,name,parameters=None,*,database=None):
         if name in QUERIES:
@@ -66,7 +68,7 @@ class Neo4jRetrievalClient(Neo4jReadClient):
 
     def vector_search(self,kind,prop,vector,k):
         positive_limit(k)
-        if kind not in TARGETS or prop not in dict(TARGETS[kind]) or not _valid_vector(vector,3072):
+        if kind not in TARGETS or prop not in dict(TARGETS[kind]) or not _valid_vector(vector,self.dimension):
             raise ValueError('unsupported schema vector target or vector')
         label,field = self.namespace+'.'+kind,dict(TARGETS[kind])[prop]
         indexes = [r for r in self.indexes() if r.get('type')=='VECTOR'
@@ -76,10 +78,10 @@ class Neo4jRetrievalClient(Neo4jReadClient):
         index = indexes[0]
         config = index.get('options',{}).get('indexConfig',{})
         if (index.get('state')!='ONLINE' or type(config.get('vector.dimensions')) is not int
-                or config['vector.dimensions']!=3072
+                or config['vector.dimensions']!=self.dimension
                 or not isinstance(config.get('vector.similarity_function'), str)
                 or config['vector.similarity_function'].lower()!='cosine'):
-            raise ValueError('vector index not ONLINE/3072/cosine')
+            raise ValueError('vector index not ONLINE or dimension/cosine mismatch')
         rows = self._query('retrieval_vector',{'index':index['name'],'label':label,'k':k,'vector':vector})
         return [dict(row,index=index['name']) for row in rows]
 

@@ -1,14 +1,24 @@
 # Schema và codec
 
-Namespace **VietRoadTraffic**, ba EntityType `LegalDocument`, `LegalUnit`, `TrafficSign`. [VietRoadTraffic.schema](../kag/schema/VietRoadTraffic.schema) là schema; [schema_contract.json](../kag/schema/schema_contract.json) là nguồn chuẩn mappings/properties/relations/identity/inclusion policy/runtime requirements. Không chép số lượng/hash sang tài liệu để duy trì lần hai.
+Schema mẫu dùng namespace **VietRoadTraffic**, ba EntityType `LegalDocument`, `LegalUnit`, `TrafficSign`. Builder `PRODUCTION` ánh xạ namespace sang project đã chọn trong RAM; không sửa file nguồn. [VietRoadTraffic.schema](../kag/schema/VietRoadTraffic.schema) và [schema_contract.json](../kag/schema/schema_contract.json) là nguồn chuẩn cấu trúc, mappings, codec và ràng buộc; không duy trì bản schema Java riêng.
 
 `id/name` kế thừa OpenSPG Thing, `name=id`; built-in `description` không thuộc contract miền. Ngữ nghĩa nguồn/ID/cây pháp luật: [domain model](domain_model.md). SDK: [runtime](runtime.md).
 
 ## Index nội dung
 
-VECTOR chỉ cho `LegalDocument.title`, `LegalUnit.text`, `TrafficSign.ten`, `TrafficSign.moTa`; vectorizer tạo `_title_vector`, `_text_vector`, `_ten_vector`, `_mo_ta_vector` riêng. Không tạo retrieval field gộp, Text/Sparse index hoặc property miền mới.
+VECTOR nội dung chỉ cho `LegalDocument.title`, `LegalUnit.text`, `TrafficSign.ten`, `TrafficSign.moTa`; vectorizer tạo `_title_vector`, `_text_vector`, `_ten_vector`, `_mo_ta_vector` riêng. Không tạo retrieval field gộp hoặc property miền mới. Index fulltext/hệ thống do SDK native quản lý được xem riêng trong preview, không thay bốn vector index này.
 
 Tắt name generation cho ba EntityType và fallback `Entity.name`; không vector hóa ID/provenance/ngày/penalty, không tạo `_name_vector` giả. Null/rỗng không tạo vector; tên biển rỗng vẫn giữ mô tả. Không tự cắt text dài để qua model limit. Runtime kiểm provider/dimension/index, metadata schema không chứng minh vector đã tồn tại.
+
+Builder lấy dimension từ model đã kiểm và đối chiếu index của project; SAMPLE giữ contract 3072 chiều/cosine. Query/retrieval của release PRODUCTION dùng namespace, dimension và model của phiên đã xác minh. Không suy tương thích model chỉ từ cùng số chiều.
+
+## Chuẩn bị cấu trúc trên UI
+
+Luồng thông thường là **Xem thay đổi → Chuẩn bị cấu trúc LuậtGT → Xác nhận chuẩn bị** tại Builder, theo [runner](runner.md#chọn-nơi-lưu-và-chuẩn-bị-cấu-trúc). Không yêu cầu người dùng sync schema bằng CLI hoặc tạo index thủ công.
+
+[`structure.py`](../kag/builder/structure.py) nhận diện schema mặc định OpenSPG từ định nghĩa thực, không chỉ tên. Trên database rỗng, preview liệt kê phần xóa/giữ/thêm và index bị tác động. Có dữ liệu, loại tùy chỉnh hoặc phụ thuộc chưa rõ thì chặn thay mặc định. Apply kiểm lại quyền, physical identity, schema/dữ liệu và GraphLock; sau đó đọc lại OpenSPG/Neo4j và trạng thái ONLINE của indexes.
+
+Đủ cấu trúc để Build và đã loại bỏ mặc định là hai kết quả khác nhau. Label tokens cũ ở sidebar Neo4j là metadata lịch sử, không chứng minh còn schema hoặc dữ liệu và không cần xóa.
 
 ## Tên và quan hệ
 
@@ -46,7 +56,7 @@ Thiếu ledger/mismatch/conflict chặn xref; không thêm downstream_use vào n
 
 ## Identity cạnh và ghi graph
 
-Application edge key = SHA-256 canonical JSON list `[fully_qualified_from_type, from_id, physical_predicate, fully_qualified_to_type, to_id]`, types `VietRoadTraffic.<EntityType>`, IDs nguyên trạng. Evidence ngoài identity; citation/exclusion khác predicate. Key dùng dedup/tái lập, không điều khiển uniqueness server.
+Application edge key = SHA-256 canonical JSON list `[fully_qualified_from_type, from_id, physical_predicate, fully_qualified_to_type, to_id]`, type đầy đủ theo namespace của kế hoạch (ví dụ `VietRoadTraffic.<EntityType>`), IDs nguyên trạng. Evidence ngoài identity; citation/exclusion khác predicate. Key dùng dedup/tái lập, không điều khiển uniqueness server.
 
 Server identity là **(node nguồn, predicate, node đích)**, properties **LAST_WRITE_WINS**. Builder gộp provenance trước rồi ghi đầy đủ properties cuối; ghi từng evidence sẽ mất records. Ghi mọi node thật trước cạnh, không dựa implicit endpoint creation.
 
