@@ -462,15 +462,17 @@ class SafetyTests(unittest.TestCase):
 
     def test_forged_identity_and_offsets_abstain(self):
         module, _, _, ctx, question = self.prepare()
-        for override in ({'evidence_id': 'invented'}, {'field': 'missing'}, {'start': True},
+        for override in ({'evidence_id': 'invented'}, {'field': 'missing'},
                          {'start': -1}, {'end': 99999}, {'start': 20, 'end': 1}, {'end': 0}):
             with self.subTest(override=override):
                 result, _, _ = self.render(module, ctx, question, candidate([self.selected(ctx, **override)]))
                 self.assertTrue(result.abstained)
                 self.assertEqual(result.to_dict()['citations'], [])
+        with self.assertRaises(RuntimeError):
+            self.render(module, ctx, question, candidate([self.selected(ctx, start=True)]))
         for extra in ({'quote': '3.000.000 đồng'}, {'doc_id': 'invented'}, {'answer': 'được phép'}):
-            result, _, _ = self.render(module, ctx, question, candidate([self.selected(ctx)], **extra))
-            self.assertTrue(result.abstained)
+            with self.assertRaises(RuntimeError):
+                self.render(module, ctx, question, candidate([self.selected(ctx)], **extra))
 
     def test_server_spans_preserve_numbers_negation_and_context(self):
         for left, right in PAIRS:

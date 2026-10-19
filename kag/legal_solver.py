@@ -14,7 +14,8 @@ initialize()
 from kag.builder.codec import canonical_json, decode_properties
 from kag.interface import ExecutorABC, GeneratorABC, LLMClient, PromptABC, SolverPipelineABC
 from kag.interface.solver.executor_abc import ExecutorResponse
-from kag.legal_prompts import validate_subquery, material_constraints, query_content_terms, CandidateError, LegalDeducePrompt
+from kag.legal_prompts import (validate_subquery, material_constraints, query_content_terms, CandidateError,
+                               LegalDeducePrompt, legal_trace, document_title_question, DOCUMENT_CONTENT_PREFIX)
 from kag.solver.executor.deduce.kag_deduce_executor import KagDeduceExecutor
 from kag.solver.planner.kag_iterative_planner import KAGIterativePlanner
 from kag.solver.pipeline.kag_iterative_pipeline import KAGIterativePipeline
@@ -188,7 +189,10 @@ class LegalRetrieverExecutor(ExecutorABC):
 
     def invoke(self, query, task, context, **kwargs):
         subquery = _task_query(query, task, context)
-        evidence = self.retriever.retrieve(subquery, top_k=self.top_k, expand=self.expand)
+        retrieval_query = query if document_title_question(query) else subquery
+        legal_trace('retrieval.input', query=retrieval_query, subquery=subquery, top_k=self.top_k, expand=self.expand)
+        evidence = self.retriever.retrieve(retrieval_query, top_k=self.top_k, expand=self.expand)
+        legal_trace('retrieval.output', evidence=evidence)
         incoming, documents = self._metadata(evidence)
         previous = context.kwargs.get('legal_evidence')
         old = previous.payload() if isinstance(previous, LegalEvidenceResponse) else {'items': [], 'documents': {}}
@@ -209,6 +213,7 @@ class LegalRetrieverExecutor(ExecutorABC):
                    'items': list(merged.values()), 'documents': prior_docs}
         characters = sum(map(len, _source_texts(payload)))
         payload.update(source_characters=characters, budget_exceeded=characters > self.max_evidence_chars)
+        legal_trace('retrieval.ledger', **payload)
         response = LegalEvidenceResponse(canonical_json(payload))
         context.kwargs['legal_evidence'] = response
         context.kwargs.pop('legal_candidate', None)
@@ -276,21 +281,23 @@ class LegalDeduceExecutor(KagDeduceExecutor):
         evidence = context.kwargs.get('legal_evidence')
         payload = evidence.payload() if isinstance(evidence, LegalEvidenceResponse) else None
         if not payload or not payload['items'] or payload['budget_exceeded']:
+            legal_trace('deduce.skipped', reason='missing evidence or evidence budget exceeded')
             value = {'abstained': True, 'applicability': 'insufficient', 'effectivity': 'uncertain',
                      'conflict': 'none', 'selections': [], 'support_selections': []}
         else:
             if payload['original_question'] != query:
                 raise ValueError('request evidence belongs to another question')
             prompt_evidence = dict(payload, subquery=subquery,
-                authority_scope='DOCUMENT_CONTENT' if document_content_question(query) else 'CURRENT_LAW')
+                authority_scope='DOCUMENT_TITLE' if document_title_question(query) else
+                                'DOCUMENT_CONTENT' if document_content_question(query) else 'CURRENT_LAW')
             try:
                 value = self.llm_module.invoke({'question': query, 'evidence': prompt_evidence, 'as_of': as_of.isoformat()},
                                                self.deduce_prompt, with_except=True, reporter=None)
             except RuntimeError as exc:
-                if not isinstance(exc.__context__, CandidateError):
-                    raise
-                value = {'abstained': True, 'applicability': 'insufficient', 'effectivity': 'uncertain',
-                         'conflict': 'none', 'selections': [], 'support_selections': []}
+                if isinstance(exc.__context__, CandidateError):
+                    legal_trace('deduce.rejected', error=str(exc.__context__))
+                raise
+        legal_trace('deduce.candidate', candidate=value)
         result = LegalCandidateResponse(canonical_json({'candidate': value,
                     'evidence_fingerprint': evidence.fingerprint if payload else None,
                     'original_question': query, 'as_of': as_of.isoformat(), 'deduce_task': task.id}))
@@ -370,6 +377,10 @@ def _current(item, documents, as_of):
 
 
 def _applicable(query, item, support, payload):
+    title_number = document_title_question(query)
+    if title_number:
+        return (item['entity_type'].endswith('.LegalDocument')
+                and (payload['documents'].get(item['doc_id'], {}).get('so_hieu') or '').casefold() == title_number.casefold())
     text = '\n'.join(item['source_texts'].values())
     parent = item['metadata'].get('parent_id')
     parents = [(source, citation) for source, citation in support if citation.field == 'text'
@@ -487,12 +498,13 @@ def _conflict_resolved(query, value, facts, support, payload, as_of):
     return targets <= proven
 
 
-DOCUMENT_CONTENT_PREFIX = 'Trích nội dung văn bản: '
 DOCUMENT_CONTENT_ANSWER = 'Trích nội dung nguồn (không xác nhận hiệu lực hiện hành):\n'
 
 
 def document_content_question(query):
     """Explicit document lookup intent never asserts applicability at as_of."""
+    if document_title_question(query):
+        return query.removeprefix(DOCUMENT_CONTENT_PREFIX).strip()
     if type(query) is not str or not query.startswith(DOCUMENT_CONTENT_PREFIX):return None
     question=query[len(DOCUMENT_CONTENT_PREFIX):].strip()
     if (not question or len(material_constraints(question)['documents'])!=1
@@ -529,7 +541,8 @@ class SafeLegalGenerator(GeneratorABC):
                 return _abstain('unverified support applicability/effectivity')
             for item, citation in facts:
                 factual = (item['entity_type'].endswith('.LegalUnit') and citation.field == 'text'
-                           or item['entity_type'].endswith('.TrafficSign') and citation.field == 'moTa')
+                           or item['entity_type'].endswith('.TrafficSign') and citation.field == 'moTa'
+                           or document_title_question(query) and item['entity_type'].endswith('.LegalDocument') and citation.field == 'title')
                 if (not factual or (not content_question and not _current(item, payload['documents'], as_of))
                         or not _applicable(content_question or query, item, support, payload)):
                     return _abstain('unverified source applicability/effectivity')
@@ -553,6 +566,7 @@ class _ThreadedPlannerClient(LLMClient):
         self.model = delegate.model
 
     def invoke(self, variables, prompt_op, **kwargs):
+        legal_trace('planner.input', query=variables.get('query'), executors=variables.get('executors'))
         return self.delegate.invoke(variables, prompt_op, **kwargs)
 
     async def ainvoke(self, variables, prompt_op, **kwargs):

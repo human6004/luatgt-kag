@@ -379,6 +379,12 @@ def _configure_production_model(settings,model,role,runtime):
             response.read()
             if response.is_success and response.json().get('model')!=settings.chat_response_model:
                 raise BudgetError('PROVIDER_RESPONSE_MODEL_MISMATCH')
+            if response.is_success:
+                from kag.legal_prompts import legal_trace
+                body=response.json()
+                for choice in body.get('choices', []):
+                    legal_trace('model.output', content=choice.get('message', {}).get('content'),
+                                finish_reason=choice.get('finish_reason'), model=body.get('model'))
         async def acheck(response):
             await response.aread();check(response)
         model.client._client.event_hooks['response'].append(check)
@@ -554,7 +560,7 @@ def make_runtime(settings: ApiSettings, release: ServingRelease, deadline: float
         from kag.legal_solver import build_pipeline
         llm = _new_llm(settings,runtime)
         runtime.budget.remaining()
-    runtime.retriever = Retriever(runtime.reader,embed,_json(release.contract_bytes))
+    runtime.retriever = Retriever(runtime.reader,embed,_json(release.contract_bytes),source_records=release.records)
     if runtime.capability=='query':
         runtime.pipeline = build_pipeline(runtime.retriever,llm,retrieval=runtime.chat_retrieval)
         if settings.query_proof_sha256 or settings.production:
@@ -597,18 +603,59 @@ def _query_failure_diagnostic(exc):
     return value
 
 
+def _diagnostic_sink(runtime):
+    import json
+    secrets_to_hide = [getattr(getattr(model, 'client', None), 'api_key', None)
+                       for model in runtime.sdk_models]
+    used = 0
+
+    def clean(value):
+        if isinstance(value, dict):
+            return {key: clean(item) for key, item in value.items()
+                    if not re.search(r'key|token|password|secret|authorization|reasoning_content|signature', str(key), re.I)}
+        if isinstance(value, (tuple, list)):
+            return [clean(item) for item in value]
+        if isinstance(value, str):
+            for secret in secrets_to_hide:
+                if isinstance(secret, str) and secret:
+                    value = value.replace(secret, '[REDACTED]')
+            return re.sub(r'(?i)Bearer\s+\S+', 'Bearer [REDACTED]', value)
+        return value
+
+    def emit(stage, data):
+        nonlocal used
+        if used >= 4 * 1024 * 1024 - 1024:
+            return
+        raw = json.dumps(clean(data), ensure_ascii=False, default=str)
+        limit = min(1024 * 1024, 4 * 1024 * 1024 - used) - 1024
+        encoded = raw.encode('utf-8')
+        truncated = len(encoded) > limit
+        payload = {'prefix': encoded[:limit//2].decode('utf-8', errors='ignore')} if truncated else json.loads(raw)
+        line = json.dumps(dict(request_id=runtime.request_id, stage=stage, data=payload,
+                               truncated=truncated), ensure_ascii=False)
+        used += len(line.encode('utf-8'))
+        print('LEGAL_TRACE ' + line, flush=True)
+    return emit
+
+
 async def run_query(runtime: RequestRuntime, question: str, as_of):
     runtime.budget.remaining()
     if runtime.closed or question != runtime.question or as_of != runtime.as_of:
         raise ApiFailure('NOT_READY')
     from kag.legal_solver import aanswer
+    from kag.legal_prompts import _LEGAL_TRACE, legal_trace
+    selected = os.environ.get('KAG_CHAT_TRACE_QUESTION', '')
+    token = _LEGAL_TRACE.set(_diagnostic_sink(runtime) if selected and selected == question else None)
     try:
         result = await aanswer(question,pipeline=runtime.pipeline,as_of=as_of)
+        legal_trace('generator.result', **result.to_dict(), reason=result.reason)
     except Exception as exc:
         import json
         print('SAMPLE_QUERY_FAILURE '+json.dumps(_query_failure_diagnostic(exc)),flush=True)
         runtime.budget.remaining()
         raise RuntimeFailure('PROVIDER_ERROR') from None
+    finally:
+        _LEGAL_TRACE.reset(token)
     runtime.budget.remaining()
     return result
 
