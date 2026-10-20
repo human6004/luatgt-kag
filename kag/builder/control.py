@@ -663,6 +663,14 @@ def create_app(*, control=None, token=None, state_dir=None):
 
     @asynccontextmanager
     async def lifespan(app):
+        from kag.builder.serving import active_selection,fixed_read
+        try:
+            selected=await asyncio.to_thread(active_selection)
+            if selected is not None:
+                await asyncio.to_thread(fixed_read,dict(release_id=selected['release_id'],operation='verify_graph',parameters={}))
+        except Exception:
+            # A failed warm-up retains full verification on the first serving request.
+            print('SERVING_STARTUP verification=unavailable',flush=True)
         yield
         if source_task is not None:
             await source_task

@@ -9,5 +9,6 @@ TARGETS = {'LegalDocument': (('title', '_title_vector'),),
 
 def valid_vector(vector, dimension):
     return (isinstance(vector, list) and len(vector) == dimension
-            and all(type(v) in (float, int) and math.isfinite(v) for v in vector)
+            and set(map(type, vector)) <= {float, int}
+            and all(map(math.isfinite, vector))
             and any(v != 0 for v in vector))

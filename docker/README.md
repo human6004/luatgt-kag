@@ -136,6 +136,10 @@ Dành cho người vận hành đã chuẩn bị graph và nguồn, không phả
 
 Với graph Builder đã xác minh, dùng [luồng trên UI](../docs/runner.md#chọn-graph-phục-vụ-truy-xuấtchat): lưu/kiểm model, mở **Đồ thị của tôi**, chọn project/phiên, thử truy xuất nếu muốn và **Dùng cho Chat**. Nhánh dataset đóng gói snapshot nguồn đã đọc/đối chiếu cùng graph, không cần publication MySQL. Lựa chọn lưu trong provider state; release bất biến nằm trong Builder state, API chỉ mount đọc. Worker giữ credentials Neo4j và chỉ cấp phép đọc cố định qua mạng private. Không cần chép graph, sửa `.env` hoặc đổi namespace mẫu mỗi lần chuyển project.
 
+Với database phục vụ bất biến, operator có thể dùng `KAG_READ_ONLY_DATABASES` hiện có để đặt đúng tên database sang native read-only của Neo4j. Sau cập nhật cấu hình phải recreate `neo4j`, rồi khởi động lại `kag-api` và `kag-builder` theo UPDATE; không đổi image pin hoặc volumes. Worker kiểm đầy đủ graph khi khởi động/kích hoạt; chỉ tái sử dụng kết quả cho cùng release còn read-only. Mỗi lần đọc vẫn kiểm identity, index, artifact nguồn và access trước/sau; citation vẫn đọc lại nguồn. Database read-write tiếp tục kiểm đầy đủ mỗi query. Lần khởi động đầu có thể lâu hơn các câu tiếp theo.
+
+Trước khi mở ghi hoặc sửa graph ngoài Builder, dừng phục vụ `kag-api` và `kag-builder`; quản trị viên host/Neo4j phải tuân thủ ranh giới này. Sau bảo trì, đặt lại read-only và khởi động/kích hoạt để kiểm đầy đủ lại trước khi phục vụ. Không mở ghi rồi đóng lại trong lúc Chat chạy: kiểm access không phát hiện được mọi thay đổi tạm thời của superuser. Chọn database khác vẫn qua UI; cấu hình read-only không tự chuyển graph đang phục vụ.
+
 Các cấu hình startup dưới đây dành cho release SAMPLE đóng gói sẵn; không thay lựa chọn Builder đã kích hoạt trên UI:
 
 - **Nguồn:** `KAG_RELEASE_ID`, `KAG_WEBAPP_SNAPSHOT_ID` khớp bộ tệp trong `state/release`; xuất bản WebApp không tự đồng bộ graph.

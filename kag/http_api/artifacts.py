@@ -651,12 +651,15 @@ def _unchanged(release):
         _invalid()
 
 
-def _backend(reader, release):
+def _backend(reader, release, *, include_access=False):
     try:
-        metadata = reader.database_metadata()
+        metadata = reader.database_metadata(include_access=True) if include_access else reader.database_metadata()
         indexes = reader.indexes()
     except Exception:
         raise ArtifactFailure(VerificationState.UNAVAILABLE) from None
+    access = metadata.pop('access', None) if include_access else None
+    if include_access and access not in ('read-only','read-write'):
+        _invalid('SOURCE_VALIDATION_FAILED')
     descriptor = release.descriptor
     expected = {'name':descriptor['database'],'databaseID':descriptor['database_id'],
                 'serverID':descriptor['server_id'],'currentStatus':'online'}
@@ -678,6 +681,7 @@ def _backend(reader, release):
                     or not isinstance(config.get('vector.similarity_function'), str)
                     or config['vector.similarity_function'].lower() != 'cosine'):
                 _invalid('SOURCE_VALIDATION_FAILED')
+    return access
 
 
 def _readback(reader, records, contract):
@@ -861,7 +865,7 @@ def verify_production_backend(release,reader):
     else:
         _backend(reader,release)
         result=verify_graph(reader,db_path=release.root/'expected.sqlite3',
-            contract=_json(release.contract_bytes),batch_size=32)
+            contract=_json(release.contract_bytes),batch_size=64)
         _backend(reader,release)
     if result['fingerprint']!=release.descriptor['graph_fingerprint']:_invalid()
     _unchanged(release)

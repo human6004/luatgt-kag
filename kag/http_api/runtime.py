@@ -143,7 +143,21 @@ class _DeadlineTransport(httpx.BaseTransport):
 
     def handle_request(self, request):
         _timeout(request,self.budget)
-        return self.transport.handle_request(request)
+        response = self.transport.handle_request(request)
+        stream, budget = response.stream, self.budget
+        class Stream(httpx.SyncByteStream):
+            def __iter__(self):
+                try:
+                    budget.remaining()
+                    for chunk in stream:
+                        budget.remaining()
+                        yield chunk
+                finally:
+                    stream.close()
+            def close(self):
+                stream.close()
+        response.stream = Stream()
+        return response
 
     def close(self):
         self.transport.close()
@@ -155,7 +169,21 @@ class _AsyncDeadlineTransport(httpx.AsyncBaseTransport):
 
     async def handle_async_request(self, request):
         _timeout(request,self.budget)
-        return await self.transport.handle_async_request(request)
+        response = await self.transport.handle_async_request(request)
+        stream, budget = response.stream, self.budget
+        class Stream(httpx.AsyncByteStream):
+            async def __aiter__(self):
+                try:
+                    budget.remaining()
+                    async for chunk in stream:
+                        budget.remaining()
+                        yield chunk
+                finally:
+                    await stream.aclose()
+            async def aclose(self):
+                await stream.aclose()
+        response.stream = Stream()
+        return response
 
     async def aclose(self):
         await self.transport.aclose()
@@ -367,6 +395,8 @@ def _configure_production_model(settings,model,role,runtime):
             chat_model=settings.chat_model or settings.embedding_model,limits=dict(embedding=3,chat=7))
         runtime.provider_budget.source_component='kag.'+runtime.capability
         runtime.provider_budget.request_id=runtime.request_id
+        from kag.legal_prompts import _LEGAL_TRACE
+        runtime.provider_budget.trace_id = runtime.request_id if _LEGAL_TRACE.get() is not None else None
     upstream=config['base_url']+('/embeddings' if role=='embedding' else '/chat/completions')
     for name,wrapper,transport in (('client',GatewayTransport,httpx.HTTPTransport(retries=0)),
             ('aclient',AsyncGatewayTransport,httpx.AsyncHTTPTransport(retries=0))):
@@ -605,9 +635,9 @@ def _query_failure_diagnostic(exc):
 
 def _diagnostic_sink(runtime):
     import json
-    secrets_to_hide = [getattr(getattr(model, 'client', None), 'api_key', None)
-                       for model in runtime.sdk_models]
+    started = time.monotonic()
     used = 0
+    timing_only = os.environ.get('KAG_CHAT_TRACE_QUESTION') == '*timings*'
 
     def clean(value):
         if isinstance(value, dict):
@@ -616,7 +646,8 @@ def _diagnostic_sink(runtime):
         if isinstance(value, (tuple, list)):
             return [clean(item) for item in value]
         if isinstance(value, str):
-            for secret in secrets_to_hide:
+            for model in runtime.sdk_models:
+                secret = getattr(getattr(model, 'client', None), 'api_key', None)
                 if isinstance(secret, str) and secret:
                     value = value.replace(secret, '[REDACTED]')
             return re.sub(r'(?i)Bearer\s+\S+', 'Bearer [REDACTED]', value)
@@ -624,6 +655,13 @@ def _diagnostic_sink(runtime):
 
     def emit(stage, data):
         nonlocal used
+        if timing_only:
+            if stage == 'request.closed':
+                data = {}
+            elif (set(data) != {'duration_ms', 'outcome'}
+                  or type(data['duration_ms']) not in (int, float)
+                  or data['outcome'] not in ('ok', 'error')):
+                return
         if used >= 4 * 1024 * 1024 - 1024:
             return
         raw = json.dumps(clean(data), ensure_ascii=False, default=str)
@@ -632,6 +670,7 @@ def _diagnostic_sink(runtime):
         truncated = len(encoded) > limit
         payload = {'prefix': encoded[:limit//2].decode('utf-8', errors='ignore')} if truncated else json.loads(raw)
         line = json.dumps(dict(request_id=runtime.request_id, stage=stage, data=payload,
+                               elapsed_ms=round((time.monotonic()-started)*1000, 3),
                                truncated=truncated), ensure_ascii=False)
         used += len(line.encode('utf-8'))
         print('LEGAL_TRACE ' + line, flush=True)
@@ -645,7 +684,8 @@ async def run_query(runtime: RequestRuntime, question: str, as_of):
     from kag.legal_solver import aanswer
     from kag.legal_prompts import _LEGAL_TRACE, legal_trace
     selected = os.environ.get('KAG_CHAT_TRACE_QUESTION', '')
-    token = _LEGAL_TRACE.set(_diagnostic_sink(runtime) if selected and selected == question else None)
+    token = None if _LEGAL_TRACE.get() is not None else _LEGAL_TRACE.set(
+        _diagnostic_sink(runtime) if selected and selected in (question, '*timings*') else None)
     try:
         result = await aanswer(question,pipeline=runtime.pipeline,as_of=as_of)
         legal_trace('generator.result', **result.to_dict(), reason=result.reason)
@@ -655,7 +695,8 @@ async def run_query(runtime: RequestRuntime, question: str, as_of):
         runtime.budget.remaining()
         raise RuntimeFailure('PROVIDER_ERROR') from None
     finally:
-        _LEGAL_TRACE.reset(token)
+        if token is not None:
+            _LEGAL_TRACE.reset(token)
     runtime.budget.remaining()
     return result
 
@@ -1194,8 +1235,12 @@ class RuntimeSupervisor:
             runtime.request_id=getattr(request.state,'request_id',None)
             token = None
             meter_context = None
+            from kag.legal_prompts import _LEGAL_TRACE, legal_trace, legal_timing
+            trace_token = _LEGAL_TRACE.set(_diagnostic_sink(runtime) if
+                os.environ.get('KAG_CHAT_TRACE_QUESTION') in (parsed.message, '*timings*') else None)
             try:
-                as_of = await asyncio.to_thread(_identity,request,settings,release,parsed,received_date)
+                with legal_timing('request.identity'):
+                    as_of = await asyncio.to_thread(_identity,request,settings,release,parsed,received_date)
                 runtime.as_of = as_of
                 if settings.query_proof_sha256:runtime.budget.transport_seconds=60.0
                 if settings.production:runtime.budget.transport_seconds=min(60.0,REQUEST_SECONDS)
@@ -1221,26 +1266,42 @@ class RuntimeSupervisor:
                     # Dataset graphs were checked in full above; citations are read back again before response.
                     if not (settings.production and dataset_sources(release)):
                         _readback(runtime.reader,release.records,_json(release.contract_bytes))
-                    _backend(runtime.reader,release)
+                        _backend(runtime.reader,release)
                     _unchanged(release)
                     runtime.budget.remaining()
-                await asyncio.to_thread(preflight)
+                with legal_timing('request.preflight'):
+                    await asyncio.to_thread(preflight)
                 if _today() != as_of:
                     raise ApiFailure('DATE_BOUNDARY_CHANGED')
                 token = _CURRENT.set((settings,release,runtime))
-                runtime = await asyncio.to_thread(factory or make_runtime,settings,release,deadline)
+                from kag.legal_solver import exact_source_answer
+                with legal_timing('request.exact'):
+                    try:
+                        result=await asyncio.to_thread(exact_source_answer,parsed.message,
+                            source_records=release.records,contract=_json(release.contract_bytes),
+                            partial=release.descriptor.get('partial',False))
+                    except (ValueError,TypeError,KeyError):
+                        raise ApiFailure('SOURCE_VALIDATION_FAILED') from None
+                runtime.budget.remaining()
+                if result is None:
+                    with legal_timing('request.runtime'):
+                        runtime = await asyncio.to_thread(factory or make_runtime,settings,release,deadline)
                 if _today() != as_of:
                     raise ApiFailure('DATE_BOUNDARY_CHANGED')
-                result = await run_query(runtime,parsed.message,as_of)
+                if result is None:
+                    with legal_timing('request.solver'):
+                        result = await run_query(runtime,parsed.message,as_of)
                 if settings.production:
                     from .artifacts import verify_production_backend
-                    await asyncio.to_thread(verify_production_backend,release,runtime.reader)
+                    with legal_timing('request.postflight'):
+                        await asyncio.to_thread(verify_production_backend,release,runtime.reader)
                 if settings.query_proof_sha256:
                     await asyncio.to_thread(verify_sample_backend,release,settings.sample_proof_sha256,None,runtime.reader)
                     from dataclasses import asdict
                     import json
                     Path('/tmp/sample-answer.json').write_text(json.dumps(asdict(result),ensure_ascii=False),encoding='utf-8')
-                return result if finalize is None else await finalize(runtime,result,parsed)
+                with legal_timing('request.finalize'):
+                    return result if finalize is None else await finalize(runtime,result,parsed)
             finally:
                 if token is not None:
                     _CURRENT.reset(token)
@@ -1256,6 +1317,9 @@ class RuntimeSupervisor:
                 except Exception:
                     self.closed = True
                     raise ApiFailure('INTERNAL_ERROR') from None
+                finally:
+                    legal_trace('request.closed')
+                    _LEGAL_TRACE.reset(trace_token)
 
         return await self.supervise(operation,deadline)
 

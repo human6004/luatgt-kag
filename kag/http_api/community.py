@@ -121,6 +121,9 @@ class WorkerRetrievalClient(Neo4jRetrievalClient):
         from kag.http_api.read_broker import _parameters
         from kag.http_api.artifacts import ArtifactFailure,VerificationState
         from kag.http_api.runtime import REQUEST_SECONDS
+        from kag.legal_prompts import legal_trace
+        from time import perf_counter
+        started = perf_counter()
         try:
             _parameters(name,parameters or {},database=self.database,namespace=self.namespace,
                 dimension=self.dimension,production=True)
@@ -136,6 +139,8 @@ class WorkerRetrievalClient(Neo4jRetrievalClient):
             if set(value)!={'release_id','rows'} or value['release_id']!=self._release_id or type(value['rows']) is not list:raise ValueError()
             return value['rows']
         except Exception:raise ArtifactFailure(VerificationState.UNVERIFIED) from None
+        finally:
+            legal_trace('reader.'+str(name), duration_ms=round((perf_counter()-started)*1000, 3))
 
 def verify_backend(release,proof,reader):
     from . import artifacts as a

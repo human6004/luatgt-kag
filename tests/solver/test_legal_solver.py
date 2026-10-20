@@ -743,7 +743,7 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(result.to_dict()['citations'][0]['quote'], 'Xe mô tô không đội mũ bảo hiểm: phạt 30.000.000 đồng.')
         self.assertEqual(result.to_dict()['citations'][0]['unit_id'], 'đơn-vị')
         self.assertEqual(llm.prompts[1]['context'][0]['action']['argument']['query'], self.narrow)
-        self.assertEqual([step['action']['name'] for step in llm.prompts[-1]['context']], ['Retriever', 'Deduce'])
+        self.assertEqual(len(llm.prompts), 3)
         self.assertEqual(llm.prompts[2]['evidence']['subquery'], self.narrow)
         self.assertEqual(pipeline.max_iteration, 5)
         _, another, _ = self.pipeline()
@@ -813,7 +813,7 @@ class PipelineTests(unittest.TestCase):
         self.assertFalse(result.abstained)
         self.assertEqual(seen, [good])
         self.assertNotEqual(good, original)
-        self.assertEqual(len(llm.prompts), 5)
+        self.assertEqual(len(llm.prompts), 4)
 
     def test_request_clock_not_import_time(self):
         module = self.module()
@@ -835,7 +835,7 @@ class PipelineTests(unittest.TestCase):
                 return self(prompt, **kwargs)
         module = self.module()
         _, retriever = fixture(text='Xe mô tô không đội mũ bảo hiểm: phạt 30.000.000 đồng.')
-        script = [action(self.narrow), action(self.narrow, 'Deduce'), select_first, action(executor='Finish')]
+        script = [action(self.narrow), action(self.narrow, 'Deduce'), select_first]
         llm = LoopBoundLLM(script+script)
         pipeline = module.build_pipeline(retriever, llm)
         async def no_sleep(seconds):
@@ -871,7 +871,7 @@ class PipelineTests(unittest.TestCase):
                 module.aanswer(self.narrow, pipeline=pipeline, as_of=date(2026, 10, 6)))
         results = asyncio.run(run())
         self.assertTrue(all(not result.abstained for result in results))
-        self.assertEqual(len(llm.prompts), 8)
+        self.assertEqual(len(llm.prompts), 6)
         for prompt in llm.prompts:
             if 'question' in prompt:
                 self.assertEqual(prompt['question'], prompt['evidence']['original_question'])

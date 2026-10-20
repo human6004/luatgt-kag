@@ -36,8 +36,8 @@ QUERIES = {
                     + EDGE_RETURN + ' ORDER BY physical_id LIMIT $limit'),
     'databases': ('SHOW DATABASES YIELD name,databaseID,currentStatus WHERE name=$database '
                   'RETURN name,databaseID,currentStatus'),
-    'database_metadata': ('SHOW DATABASES YIELD name,databaseID,serverID,currentStatus '
-        'RETURN name,databaseID,serverID,currentStatus,toLower($database) AS requested'),
+    'database_metadata': ('SHOW DATABASES YIELD name,databaseID,serverID,currentStatus,access '
+        'RETURN name,databaseID,serverID,currentStatus,access,toLower($database) AS requested'),
     'indexes': ('SHOW INDEXES YIELD name,type,state,labelsOrTypes,properties,options '
                 'RETURN name,type,state,labelsOrTypes,properties,options'),
     'structure_counts': ('CALL { MATCH (n) RETURN count(n) AS nodes } '
@@ -57,6 +57,10 @@ QUERIES = {
 class _NoRedirect(HTTPRedirectHandler):
     def redirect_request(self, req, fp, code, msg, headers, newurl):
         return None
+
+
+class GraphResponseTooLarge(RuntimeError):
+    """A bounded graph page exceeds the transport limit without yielding records."""
 
 
 def _storage_record(record, *, edge=False):
@@ -122,6 +126,8 @@ class Neo4jReadClient:
                     record['from'] = record.pop('from_node')
                     record['to'] = record.pop('to_node')
                 rows.append(record)
+        except GraphResponseTooLarge:
+            raise
         except Exception:
             raise RuntimeError(MESSAGES['TRANSPORT']) from None
         if name in ('nodes', 'batch_nodes', 'edges', 'batch_edges'):
@@ -136,7 +142,7 @@ class Neo4jReadClient:
             raise RunBlocked('LOCK')
         return rows[0]['databaseID']
 
-    def database_metadata(self):
+    def database_metadata(self, *, include_access=False):
         """Resolve only a unique ONLINE catalog entry and unique physical ID."""
         rows = self._query('database_metadata', {'database': self.database})
         matches = [r for r in rows if r.get('name') == self.database.lower()]
@@ -148,7 +154,12 @@ class Neo4jReadClient:
                        for k in ('name', 'databaseID', 'serverID'))
                 or sum(r.get('databaseID') == row['databaseID'] for r in rows) != 1):
             raise RunBlocked('LOCK')
-        return {key: row[key] for key in ('name', 'databaseID', 'serverID', 'currentStatus')}
+        keys = ('name', 'databaseID', 'serverID', 'currentStatus')
+        if include_access:
+            if row.get('access') not in ('read-only', 'read-write'):
+                raise RunBlocked('LOCK')
+            keys += ('access',)
+        return {key: row[key] for key in keys}
 
     def protected_database_identity(self, database):
         rows = self._query('database_metadata', {'database': database})
@@ -162,11 +173,18 @@ class Neo4jReadClient:
         if not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*', namespace):
             raise RunBlocked('CONFIG')
         cursor = -1
+        limit = batch_size
         while True:
-            rows = self._query(kind, {'namespace': namespace + '.', 'cursor': cursor, 'limit': batch_size})
+            try:
+                rows = self._query(kind, {'namespace': namespace + '.', 'cursor': cursor, 'limit': limit})
+            except GraphResponseTooLarge:
+                if limit == 1:
+                    raise
+                limit = max(1, limit // 2)
+                continue
             if not rows:
                 return
-            if len(rows) > batch_size or any(type(r.get('physical_id')) is not int for r in rows):
+            if len(rows) > limit or any(type(r.get('physical_id')) is not int for r in rows):
                 raise RunBlocked('INTEGRITY')
             positions = [r['physical_id'] for r in rows]
             if positions != sorted(set(positions)) or positions[0] <= cursor:

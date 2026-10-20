@@ -2,6 +2,8 @@
 import json
 import re
 from contextvars import ContextVar
+from contextlib import contextmanager
+from time import perf_counter
 
 _LEGAL_TRACE = ContextVar('legal_trace', default=None)
 
@@ -11,6 +13,16 @@ def legal_trace(stage, **data):
     if sink is not None:
         sink(stage, data)
 
+
+@contextmanager
+def legal_timing(stage):
+    started, outcome = perf_counter(), 'error'
+    try:
+        yield
+        outcome = 'ok'
+    finally:
+        legal_trace(stage, duration_ms=round((perf_counter()-started)*1000, 3), outcome=outcome)
+
 from kag.bootstrap import initialize
 initialize()
 from kag.interface import PromptABC
@@ -19,6 +31,13 @@ from kag.solver.prompt.thought_iterative_planning_prompt import DefaultIterative
 
 class CandidateError(ValueError):
     """Invalid model output, distinct from a model transport error."""
+
+
+class UnsafeSubqueryError(CandidateError):
+    """A valid planner action whose proposed query failed the legal guard."""
+    def __init__(self, executor, reason):
+        super().__init__(reason)
+        self.executor = executor
 
 
 _DOCUMENT = re.compile(r'\b\d+/\d{4}/[\wĐđ-]+', re.UNICODE)
@@ -38,6 +57,33 @@ def document_title_question(query):
     pattern = (r'(?:tên(?: đầy đủ)?(?: của)?\s+'+document+r'(?:\s+là gì)?|'
                +document+r'\s+(?:có )?tên(?: gọi)? là gì)\s*[?.]?')
     return number if re.fullmatch(pattern, question.casefold()) else None
+
+
+def exact_source_question(query):
+    """Only a document name or an explicit, single-coordinate quotation."""
+    if document_title_question(query):
+        return True
+    if not isinstance(query,str):
+        return False
+    question=query.strip()
+    if question.startswith(DOCUMENT_CONTENT_PREFIX):
+        question=question[len(DOCUMENT_CONTENT_PREFIX):].strip()
+    elif question.casefold().startswith('trích nguyên văn '):
+        question=question[len('trích nguyên văn '):].strip()
+    else:
+        return False
+    numbers=set(_DOCUMENT.findall(question))
+    if len(numbers)!=1:
+        return False
+    article=r'điều\s+\d+[a-zđ]?'
+    clause=r'khoản\s+\d+[a-zđ]?'
+    point=r'điểm\s+[a-zđ]'
+    unit=r'(?:'+point+r'\s+'+clause+r'\s+'+article+r'|'+clause+r'\s+'+article+r'|'+article+r')'
+    document=r'(?:văn bản|nghị định|thông tư|luật|nghị quyết|quyết định)(?: số)?\s+'
+    return bool(re.fullmatch(unit+r'\s+(?:(?:của|thuộc)\s+)?'+document+
+                            re.escape(next(iter(numbers)).casefold())+r'\s*[?.]?',question.casefold()))
+
+
 _NUMBER = re.compile(r'(?<!\w)[+−-]?\d+(?:[.,/:–-]\d+)*(?:\s*%)?', re.UNICODE)
 _IDENTIFIER = re.compile(r'\b(?=[\w:/@.-]*[^\W\d_])\w+(?:(?:::|[_:@./-])\w+)+\b')
 _REFERENCE = re.compile(r'\b(?:Điều\s+\d+[a-zđ]?|khoản\s+\d+[a-zđ]?|điểm\s+[a-zđ])\b', re.I)
@@ -237,7 +283,17 @@ class LegalPlanningPrompt(DefaultIterativePlanningPrompt):
             if kwargs.get('context'):
                 from kag.legal_solver import confirmed_context_sources
                 sources = confirmed_context_sources(kwargs['context'], kwargs.get('query'))
-            validate_subquery(kwargs.get('query'), arguments['query'], sources)
+            if not isinstance(arguments['query'], str) or not arguments['query'].strip():
+                raise ValueError('nonempty subquery required')
+            try:
+                validate_subquery(kwargs.get('query'), arguments['query'], sources)
+            except ValueError as exc:
+                original = material_constraints(kwargs.get('query', ''))
+                proposed = material_constraints(arguments['query'])
+                grounded = material_constraints('\n'.join(sources))
+                if any(proposed[kind] - original[kind] - grounded[kind] for kind in original):
+                    raise
+                raise UnsafeSubqueryError(name, str(exc)) from exc
         return super().parse_response(value, **kwargs)
 
 

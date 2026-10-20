@@ -14,6 +14,9 @@ from kag.http_api.contract import ApiFailure
 from kag.http_api.security import ServiceSecrets
 from kag.run_state import GraphLock, RunBlocked, validate_run_directory
 
+_READ_RELEASE = None
+_READ_VERIFICATION = None
+
 
 def validate_selection(value):
     a._keys(value,('release_id','project_id','project_name','database','database_id','namespace','run_id','preview_id'))
@@ -248,13 +251,24 @@ def prepare(change,token,*,activate=False):
 
 
 def fixed_read(change):
+    global _READ_RELEASE, _READ_VERIFICATION
     from kag.http_api.read_broker import _parameters,_BoundedOpener
     from kag.retriever.neo4j import Neo4jRetrievalClient
     a._keys(change,('release_id','operation','parameters'))
     selected=active_selection()
     if selected is None or selected['release_id']!=change['release_id']:raise ApiFailure('RELEASE_MISMATCH')
-    release=a.load_release(release_root(selected['release_id']),selected['release_id'])
-    validate_active_release(release)
+    root=release_root(selected['release_id'])
+    release=_READ_RELEASE
+    if release is None or (release.root,release.release_id)!=(root,selected['release_id']):
+        release=a.load_release(root,selected['release_id'])
+        _READ_VERIFICATION=None
+    # Reuse parsing only; validation rereads every artifact byte before and after each read.
+    try:
+        validate_active_release(release)
+    except Exception:
+        _READ_VERIFICATION=None
+        raise
+    _READ_RELEASE=release
     descriptor=release.descriptor
     _parameters(change['operation'],change['parameters'],database=descriptor['database'],
         namespace=descriptor['namespace'],dimension=descriptor['dimension'],production=True)
@@ -268,22 +282,33 @@ def fixed_read(change):
         budget=_Budget(time.monotonic()+REQUEST_SECONDS)
         reader._opener=_ReaderBoundary(reader._opener,budget)
     try:
-        a._backend(reader,release)
+        access=a._backend(reader,release,include_access=True)
+        if access!='read-only':_READ_VERIFICATION=None
         if change['operation']=='retrieval_vector':
             parameters=change['parameters'];found=[row for row in reader.indexes() if row['name']==parameters['index']]
             if (len(found)!=1 or found[0]['labelsOrTypes']!=[parameters['label']]
                     or found[0]['properties'] not in [[field] for _,field in a.TARGETS[parameters['label'].rsplit('.',1)[1]]]): a._invalid()
         if change['operation']=='verify_graph':
             from kag.verify import verify_graph
-            result=verify_graph(reader,db_path=release.root/'expected.sqlite3',
-                contract=a._json(release.contract_bytes),batch_size=32)
+            if access=='read-only' and _READ_VERIFICATION is not None and _READ_VERIFICATION[0] is release:
+                result=deepcopy(_READ_VERIFICATION[1])
+            else:
+                result=verify_graph(reader,db_path=release.root/'expected.sqlite3',
+                    contract=a._json(release.contract_bytes),batch_size=64)
             if result['fingerprint']!=descriptor['graph_fingerprint']:a._invalid()
             budget.remaining()
             rows=[result]
         else:
             rows=reader._query(change['operation'],change['parameters'])
-        a._backend(reader,release);validate_active_release(release)
+        if a._backend(reader,release,include_access=True)!=access:a._invalid('SOURCE_VALIDATION_FAILED')
+        validate_active_release(release)
+        if change['operation']=='verify_graph' and access=='read-only':
+            # Native read-only protects this lifetime; maintenance must stop serving before reopening writes.
+            _READ_VERIFICATION=(release,deepcopy(result))
         return dict(release_id=release.release_id,rows=rows)
+    except Exception:
+        _READ_VERIFICATION=None
+        raise
     finally:
         close=getattr(reader._opener,'close',None)
         if callable(close):close()

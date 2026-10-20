@@ -66,6 +66,10 @@ def _forward(request, gateway, token, upstream, route=None):
         raise BudgetError('PROVIDER_REQUEST_DENIED')
     suffix = '/embeddings' if request.url.path.endswith('/embeddings') else '/chat/completions'
     headers = request.headers.copy()
+    headers.pop('X-KAG-Trace-ID', None)
+    trace_id = request.extensions.get('kag_trace_id')
+    if isinstance(trace_id, str) and re.fullmatch(r'[a-f0-9-]{36}\.[a-f0-9]{32}', trace_id):
+        headers['X-KAG-Trace-ID'] = trace_id
     for name in ('host','X-KAG-Provider-Token','X-KAG-Provider-Route','X-KAG-Provider-Host','X-KAG-Provider-Path','X-KAG-Provider-Base'):
         headers.pop(name,None)
     headers['X-KAG-Provider-Token'] = token
@@ -335,6 +339,8 @@ class _SyncTransport(httpx.BaseTransport):
 
     def handle_request(self, request):
         attempt=self.budget._admit(self.kind,request);started=time.monotonic();outbound_id=uuid4().hex
+        if getattr(self.budget, 'trace_id', None):
+            request.extensions['kag_trace_id'] = self.budget.trace_id+'.'+outbound_id
         self.budget._receipt(self.kind,attempt,outbound_id,'attempted',started)
         try:response = self.transport.handle_request(request)
         except Exception:
@@ -356,6 +362,8 @@ class _AsyncTransport(httpx.AsyncBaseTransport):
 
     async def handle_async_request(self, request):
         attempt=self.budget._admit(self.kind,request);started=time.monotonic();outbound_id=uuid4().hex
+        if getattr(self.budget, 'trace_id', None):
+            request.extensions['kag_trace_id'] = self.budget.trace_id+'.'+outbound_id
         self.budget._receipt(self.kind,attempt,outbound_id,'attempted',started)
         try:response = await self.transport.handle_async_request(request)
         except (Exception,asyncio.CancelledError) as exc:

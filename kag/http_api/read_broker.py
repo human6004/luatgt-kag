@@ -21,7 +21,7 @@ from urllib.request import ProxyHandler, Request, build_opener
 from kag.builder.codec import canonical_json
 from kag.retriever.neo4j import APPROVED, READS, Neo4jRetrievalClient
 from kag.vector_contract import TARGETS, valid_vector
-from kag.verify import QUERIES, _NoRedirect
+from kag.verify import QUERIES, _NoRedirect, GraphResponseTooLarge
 
 DATABASE = 'vietroadtraffic'
 NAMESPACE = 'VietRoadTraffic'
@@ -41,6 +41,10 @@ class BrokerFailure(Exception):
     def __init__(self,status=400):
         self.status = status
         super().__init__('Sample read denied.')
+
+
+class _OversizedResponse(BrokerFailure, GraphResponseTooLarge):
+    pass
 
 
 def _exact(value,keys):
@@ -220,7 +224,7 @@ class _BoundedOpener:
     def open(self,request,*,timeout):
         with self._opener.open(request,timeout=timeout) as response:
             raw = response.read(RESPONSE_LIMIT+1)
-        if len(raw)>RESPONSE_LIMIT: raise BrokerFailure(503)
+        if len(raw)>RESPONSE_LIMIT: raise _OversizedResponse(503)
         with io.BytesIO(raw) as result: yield result
 
     def close(self):
