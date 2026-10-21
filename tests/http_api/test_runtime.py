@@ -663,7 +663,8 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         with patch.object(module,'_Budget',budget),self.assertRaises(ApiFailure) as caught:
             await supervisor.supervise(operation,125.0)
         self.assertEqual(caught.exception.code,'QUERY_TIMEOUT')
-        self.assertEqual(module.REQUEST_SECONDS,25)
+        with patch.dict('os.environ',{'KAG_QUERY_TIMEOUT_SECONDS':'30'}):
+            self.assertEqual(module._request_seconds(),25)
         self.assertFalse(supervisor.busy)
         await supervisor.close()
 

@@ -21,7 +21,9 @@ USER vào trang chat; ADMIN vào tổng quan. Khi phiên hết hạn, đăng nh�
 
 Mỗi lượt hỏi độc lập; lịch sử chưa tự trở thành ngữ cảnh cho lượt sau. **Tạo lại** chỉ điền câu hỏi vào ô nhập, cần **Gửi** để hỏi lại. **Cuộc trò chuyện mới** không xóa lịch sử; ghim chỉ giữ trong phiên giao diện.
 
-**Dừng chờ** có thể chỉ ngừng đợi trên trình duyệt. Tải lại lịch sử trước khi gửi lại để tránh hỏi trùng.
+Trong lúc **Đang trả lời**, bấm **Dừng**. Giao diện chờ server xác nhận rồi hiện **Đã dừng trả lời**; lịch sử giữ trạng thái đã dừng, không thêm đáp án hoặc trích dẫn muộn. Nếu lượt hỏi đã hoàn tất trước thao tác Dừng, kết quả đã hoàn tất được giữ.
+
+Tải lại trang hoặc mất mạng không xác nhận bạn đã bấm Dừng. Tải lại lịch sử để kiểm tra trước khi hỏi lại. Việc hủy kết nối không bảo đảm provider ngừng xử lý hoặc ngừng tính phí cho request đã nhận.
 
 - Chatbot từ chối vì thiếu căn cứ: chưa đủ nguồn để kết luận, không có nghĩa quy định không tồn tại.
 - Dịch vụ lỗi/chưa sẵn sàng: nhờ người vận hành kiểm hệ thống; không coi là kết luận pháp lý.
@@ -91,10 +93,12 @@ Mở **Cài đặt hệ thống → Model & tìm kiếm → Kết nối model**.
 
 1. Chọn **Provider / API type**, điền **Base URL**, **Tên model** và **API key**. Hiện hỗ trợ OpenAI-compatible; provider/proxy do Base URL quyết định, không bắt buộc EvelProxy.
 2. Bấm **Lưu Chat** hoặc **Lưu Embedding**. Sau lần đầu, để trống API key để giữ key đã lưu; nhập key mới để thay. Lưu không gọi model hoặc tự áp dụng vào Chat.
-3. Bấm **Kiểm tra Chat/Embedding**, đọc hộp xác nhận rồi **Xác nhận** nếu chấp nhận phí. Ứng dụng gửi tối đa một request kiểm ngắn, không tự retry/fallback; proxy/provider có thể thử lại nội bộ theo chính sách của hệ thống đang dùng.
+3. Bấm **Kiểm tra Chat/Embedding**, đọc hộp xác nhận rồi **Xác nhận** nếu chấp nhận phí. Ứng dụng gửi tối đa một request kiểm ngắn, chờ trong ngân sách cấu hình; không tự retry/fallback. Proxy/provider có thể thử lại nội bộ theo chính sách của hệ thống đang dùng.
 4. Nếu cần đổi model phục vụ Chat, dùng **Áp dụng Chat/Embedding** sau khi kiểm thành công. Thao tác chỉ được phép khi hệ thống không bận và graph tương thích với bộ dữ liệu đã đóng gói để phục vụ Chat (release). Thiếu release hoặc vector không khớp thì bị chặn, không tự dựng lại graph.
 
 Builder chỉ cần Embedding đã **lưu và kiểm thành công**, không cần áp dụng cho Chat. Catalog model OpenSPG vẫn độc lập; [runner](runner.md#thêm-embedding-cho-openspg) hướng dẫn điền cho việc tạo Knowledge Base.
+
+Base URL là địa chỉ gốc của API OpenAI-compatible, thường kết thúc bằng `/v1`. Ứng dụng gọi Chat Completions với `messages`, nhận nội dung chữ từ `choices[].message.content`; Embedding dùng `/embeddings` và phải khớp model/chiều vector của graph. API có giao thức riêng cần tích hợp riêng. LuậtGT không quản lý hay chuyển tài khoản bên trong proxy, không cần EvelProxy hoặc binary đã vá; có thể dùng API trực tiếp được mạng triển khai cho phép hoặc proxy tùy chọn.
 
 Lưu lỗi thì đọc thông báo và giữ bản đang soạn; chỉ coi là đã lưu khi UI xác nhận. Model/endpoint chưa được mạng triển khai cho phép cần người vận hành kiểm [chính sách kết nối model](../docker/README.md#provider-cho-openspg). Test thành công chưa chứng minh model phù hợp graph hoặc chất lượng trả lời luật.
 

@@ -68,7 +68,7 @@ services:
       KAG_BUILDER_TOKEN_FILE: /run/secrets/builder_token
       KAG_RELEASE_ID: ${KAG_RELEASE_ID:-}
       KAG_WEBAPP_SNAPSHOT_ID: ${KAG_WEBAPP_SNAPSHOT_ID:-}
-      KAG_QUERY_TIMEOUT_SECONDS: ${KAG_QUERY_TIMEOUT_SECONDS:-30}
+      KAG_QUERY_TIMEOUT_SECONDS: ${KAG_QUERY_TIMEOUT_SECONDS:-180}
       KAG_INSPECTION_TIMEOUT_SECONDS: ${KAG_INSPECTION_TIMEOUT_SECONDS:-2}
       TZ: Asia/Ho_Chi_Minh
     secrets: [kag_query_token, kag_inspect_token, builder_token, credentials_write_token, provider_test_token, config_apply_token]

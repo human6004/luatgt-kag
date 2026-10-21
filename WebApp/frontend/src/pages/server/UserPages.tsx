@@ -31,12 +31,12 @@ export function Chat() {
       <div className="flex flex-col sm:flex-row gap-3 items-start">
         <textarea id="chat-question" required maxLength={4000} rows={3} value={message} disabled={data.busy || task.busy} onChange={e => setMessage(e.target.value)} onKeyDown={e => { if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) { e.preventDefault(); e.currentTarget.form?.requestSubmit() } }} className={`${inputClass} resize-y min-w-0`} aria-describedby="chat-help" />
         <Button disabled={blocked || !message.trim()} type="submit">{data.busy ? 'Đang gửi…' : 'Gửi'}</Button>
-        {data.busy&&<Button type="button" onClick={chat.cancel}>Dừng chờ</Button>}
+        {data.busy&&<Button type="button" disabled={data.stopping} onClick={()=>void chat.cancel()}>{data.stopping?'Đang dừng…':'Dừng'}</Button>}
       </div>
       <p id="chat-help" className="text-xs text-muted mt-2">Enter để gửi · Shift+Enter xuống dòng · Tối đa 4.000 ký tự.</p>
     </form>
-    <p role="status" aria-live="polite" className="text-sm text-muted mt-4">{data.busy ? 'Đang chờ backend xử lý…' : data.observed === 'idle' ? 'Chưa có trạng thái KAG từ lần gửi hiện tại.' : data.observed === 'answered' ? 'Lần gửi gần nhất: backend đã trả câu trả lời kèm căn cứ.' : data.observed === 'abstained' ? 'Lần gửi gần nhất: KAG đã xử lý nhưng chưa đủ căn cứ pháp lý được xác minh.' : data.observed === 'unavailable' ? 'Lần gửi gần nhất: dịch vụ gặp sự cố hoặc chưa sẵn sàng.' : data.observed === 'offline' ? 'Lần gửi gần nhất: không kết nối được backend.' : 'Lần gửi gần nhất chưa có câu trả lời đủ căn cứ.'}</p>
-    {data.observed==='cancelled'&&<p className="text-sm mt-2">Đã dừng chờ; trạng thái hoàn tất của backend chưa xác nhận.</p>}
+    <p role="status" aria-live="polite" className="text-sm text-muted mt-4">{data.busy ? 'Đang trả lời…' : data.observed === 'idle' ? 'Chưa có trạng thái KAG từ lần gửi hiện tại.' : data.observed === 'answered' ? 'Lần gửi gần nhất: backend đã trả câu trả lời kèm căn cứ.' : data.observed === 'abstained' ? 'Lần gửi gần nhất: KAG đã xử lý nhưng chưa đủ căn cứ pháp lý được xác minh.' : data.observed === 'unavailable' ? 'Lần gửi gần nhất: dịch vụ gặp sự cố hoặc chưa sẵn sàng.' : data.observed === 'offline' ? 'Lần gửi gần nhất: không kết nối được backend.' : data.observed === 'cancelled' ? 'Đã dừng trả lời.' : 'Lần gửi gần nhất chưa có câu trả lời đủ căn cứ.'}</p>
+    {data.observed==='cancelled'&&<p className="text-sm mt-2">Đã dừng trả lời.</p>}
     <Notice error={data.requestError || task.error}/>
     <Button className="mt-3" size="sm" disabled={data.busy||data.loading} onClick={chat.load}>Tải lại lịch sử</Button>
     <Notice loading={data.loading} error={data.error} retry={data.busy ? undefined : chat.load} empty={!data.rows.length}/>

@@ -40,13 +40,13 @@ public class KagClient {
     private static final ZoneId LEGAL_ZONE=ZoneId.of("Asia/Saigon");
     private static final Set<String> REQUEST_FIELDS=Set.of("user_id","message","context_id","schema_contract");
     private static final Set<String> CITATION_FIELDS=Set.of("doc_id","unit_id","sign_id","evidence_id","field","start","end","quote");
-    private final CircuitBreaker breaker=CircuitBreaker.of("kag",CircuitBreakerConfig.custom().minimumNumberOfCalls(3).slidingWindowSize(6).waitDurationInOpenState(Duration.ofSeconds(30)).build());
+    private final CircuitBreaker breaker=CircuitBreaker.of("kag",CircuitBreakerConfig.custom().minimumNumberOfCalls(3).slidingWindowSize(6).waitDurationInOpenState(Duration.ofSeconds(30)).ignoreException(error->Thread.currentThread().isInterrupted()).build());
     public KagClient(@Value("${app.kag-url}") String url,ObjectMapper json,KagSchema schema,
         @Value("${app.kag-token-file:}") String tokenFile,@Value("${app.kag-release-id:}") String release,
         @Value("${app.kag-webapp-snapshot-id:}") String snapshot,ObjectProvider<Clock> clocks,
         @Value("${app.kag-inspect-token-file:}") String inspectTokenFile) {
         var factory=new JdkClientHttpRequestFactory(HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build());
-        factory.setReadTimeout(Duration.ofSeconds(30));
+        factory.setReadTimeout(Duration.ofSeconds(180));
         this.queryFactory=factory;
         this.client=RestClient.builder().baseUrl(url).requestFactory(factory).build(); this.json=json;
         this.schema=schema; this.tokenFile=tokenFile; this.release=release; this.snapshot=snapshot;
@@ -60,7 +60,7 @@ public class KagClient {
         servingFactory.setReadTimeout(Duration.ofSeconds(150));
         this.servingClient=RestClient.builder().baseUrl(url).requestFactory(servingFactory).build();
     }
-    @Value("${app.kag-query-timeout-seconds:30}")
+    @Value("${app.kag-query-timeout-seconds:180}")
     public void queryTimeout(int seconds) {
         if(seconds<30||seconds>180) throw new IllegalArgumentException("Bounded KAG query timeout required");
         queryFactory.setReadTimeout(Duration.ofSeconds(seconds));

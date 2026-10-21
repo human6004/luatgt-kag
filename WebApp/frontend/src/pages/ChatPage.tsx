@@ -85,7 +85,8 @@ export default function ChatPage() {
     ] }
   })
   // Backend stores one question per record and exposes no session date/grouping.
-  useEffect(() => { void chat.load(); return () => chat.cancel() }, [chat])
+  useEffect(() => { void chat.load(); return () => chat.dispose() }, [chat])
+  useEffect(() => { if (data.currentId) setActiveId(data.currentId) }, [data.currentId])
   useEffect(() => { const q=location.state?.initialQuery; if(typeof q==='string') setInput(q) }, [location.state])
   const [activeId, setActiveId] = useState<string | null>(null)
   const [input, setInput] = useState('')
@@ -194,7 +195,7 @@ export default function ChatPage() {
             Hạng B
           </span>
         </div>
-        {thinking && <button onClick={chat.cancel} className="border border-line rounded-lg px-3 py-2 text-xs">Dừng chờ</button>}
+        {thinking && <button onClick={() => void chat.cancel()} disabled={data.stopping} className="border border-line rounded-lg px-3 py-2 text-xs disabled:opacity-50">{data.stopping ? 'Đang dừng…' : 'Dừng'}</button>}
         <button
           onClick={() => void send()}
           disabled={!input.trim() || blocked}

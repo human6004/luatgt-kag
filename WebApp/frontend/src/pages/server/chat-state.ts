@@ -1,11 +1,11 @@
-import { api, send, ApiError, type ContentRecord } from '../../api.ts'
+import { api, apiResponse, send, ApiError, type ContentRecord } from '../../api.ts'
 
 type Citation = { doc_id: string; unit_id: string | null; sign_id?: string | null; quote: string; source?: {
   contract_version: string; release_id: string; source_snapshot_id: string; entity_type: string; entity_id: string;
   text: string; metadata: Record<string, unknown>; document_metadata: Record<string, unknown>
 } }
 type ChatRecord = { id: string; question: string; answer: string; state: string; citations: Citation[] }
-type ChatState = { rows: ChatRecord[]; loading: boolean; error: string; busy: boolean; requestError: string; observed: 'idle' | 'answered' | 'abstained' | 'unavailable' | 'offline' | 'error' | 'cancelled' }
+type ChatState = { rows: ChatRecord[]; loading: boolean; error: string; busy: boolean; stopping: boolean; currentId?: string; requestError: string; observed: 'idle' | 'answered' | 'abstained' | 'unavailable' | 'offline' | 'error' | 'cancelled' }
 const unavailableMessage = 'Dịch vụ tra cứu pháp luật hiện đang gặp sự cố hoặc chưa sẵn sàng. Vui lòng thử lại sau.'
 
 function record(value: unknown): value is ChatRecord {
@@ -18,7 +18,8 @@ export function chatView(row: ChatRecord) {
   const empty = { answer: '', citations: [] as Citation[] }
   if (row.state === 'KAG_ABSTAINED') return { status: 'Hiện tôi chưa tìm được đủ căn cứ pháp lý được xác minh để trả lời chính xác câu hỏi này.', ...empty }
   if (row.state === 'UNAVAILABLE') return { status: unavailableMessage, ...empty }
-  if (row.state === 'PROCESSING') return { status: 'Đang xử lý — chưa có câu trả lời.', ...empty }
+  if (row.state === 'CANCELLED') return { status: 'Đã dừng trả lời', ...empty }
+  if (row.state === 'PROCESSING') return { status: 'Đang trả lời…', ...empty }
   const citationsValid = row.citations.length > 0 && row.citations.length <= 20 && row.citations.every(c => c &&
     typeof c.doc_id === 'string' && !!c.doc_id.trim() && typeof c.quote === 'string' && !!c.quote.trim() &&
     (c.source ? snapshotMatches(c) : typeof c.unit_id === 'string' && !!c.unit_id.trim()))
@@ -51,11 +52,34 @@ function snapshotMatches(citation: Citation) {
 }
 
 export function createChat() {
-  let state: ChatState = { rows: [], loading: true, error: '', busy: false, requestError: '', observed: 'idle' }
+  let state: ChatState = { rows: [], loading: true, error: '', busy: false, stopping: false, requestError: '', observed: 'idle' }
   const listeners = new Set<() => void>()
   let history: Promise<void> | undefined
-  let controller: AbortController | undefined
+  type Pending = { controller: AbortController; id?: string; stopRequested: boolean; stopTask?: Promise<void>; terminal?: ChatRecord; disposed: boolean }
+  let current: Pending | undefined
   function update(change: Partial<ChatState>) { state = { ...state, ...change }; listeners.forEach(listener => listener()) }
+  function receive(row: ChatRecord, operation: Pending) {
+    if (current !== operation) return
+    const view = chatView(row)
+    if (row.state === 'ANSWERED' && !view.answer) throw new ApiError('Invalid chat response', 502)
+    update({ rows: [row, ...state.rows.filter(old => old.id !== row.id)].slice(0, 50), currentId: row.id,
+      ...(row.state === 'PROCESSING' ? {} : { observed: view.answer ? 'answered' : row.state === 'KAG_ABSTAINED' ? 'abstained' : row.state === 'CANCELLED' ? 'cancelled' : 'unavailable', requestError: row.state === 'UNAVAILABLE' ? unavailableMessage : '' }) })
+  }
+  async function stop(operation: Pending) {
+    if (current !== operation || !operation.id || operation.stopTask) return operation.stopTask
+    operation.stopTask = (async () => {
+      try {
+        const row = await api<unknown>(`/chat/${operation.id}/stop`, { ...send('POST'), signal: operation.controller.signal })
+        if (current !== operation || operation.terminal) return
+        if (!record(row) || row.id !== operation.id || !['CANCELLED', 'ANSWERED', 'KAG_ABSTAINED', 'UNAVAILABLE'].includes(row.state)) throw new ApiError('Stop not confirmed', 502)
+        receive(row, operation); operation.terminal = row; operation.controller.abort()
+      } catch {
+        if (current === operation && !operation.terminal) update({ stopping: false, requestError: 'Chưa xác nhận được việc dừng. Kiểm tra kết nối và tải lại lịch sử.' })
+        operation.stopTask = undefined
+      }
+    })()
+    return operation.stopTask
+  }
   function load(): Promise<void> {
     if (history) return history
     update({ loading: true, error: '' })
@@ -70,27 +94,63 @@ export function createChat() {
   }
   async function submit(message: string) {
     if (state.busy || state.loading || !message.trim() || message.length > 4000) return false
-    update({ busy: true, requestError: '' })
-    controller = new AbortController()
+    update({ busy: true, stopping: false, currentId: undefined, observed: 'idle', requestError: '' })
+    const operation: Pending = { controller: new AbortController(), stopRequested: false, disposed: false }
+    current = operation
+    let reader: ReadableStreamDefaultReader<Uint8Array> | undefined
     try {
-      const row = await api<unknown>('/chat', { ...send('POST', { message }), signal: controller.signal })
-      if (controller.signal.aborted) throw new ApiError('Cancelled')
-      if (!record(row)) throw new ApiError('Invalid chat response', 502)
-      const view = chatView(row)
-      update({ rows: [row, ...state.rows.filter(old => old.id !== row.id)].slice(0, 50), observed: view.answer ? 'answered' : row.state === 'KAG_ABSTAINED' ? 'abstained' : row.state === 'UNAVAILABLE' ? 'unavailable' : 'error' })
-      return true
-    } catch (error) {
-      if (controller.signal.aborted) {
-        update({ observed: 'cancelled', requestError: 'Đã dừng chờ phản hồi. Backend có thể đang hoàn tất; tải lại lịch sử để kiểm tra trước khi gửi lại.' })
-        return false
+      const response = await apiResponse('/chat/stream?progress=true', { ...send('POST', { message }), signal: operation.controller.signal })
+      if (!response.ok) throw new ApiError('Chat unavailable', response.status)
+      if (!response.headers.get('Content-Type')?.toLowerCase().startsWith('text/event-stream') || !response.body) throw new ApiError('Invalid chat response', 502)
+      reader = response.body.getReader()
+      const decoder = new TextDecoder('utf-8', { fatal: true })
+      let buffer = '', event = '', payload = '', bytes = 0
+      while (current === operation) {
+        let chunk: ReadableStreamReadResult<Uint8Array>
+        try { chunk = await reader.read() } catch { throw new ApiError('Chat connection lost', 0) }
+        if (chunk.done) break
+        bytes += chunk.value.byteLength
+        if (bytes > 512 * 1024) throw new ApiError('Chat response too large', 502)
+        try { buffer += decoder.decode(chunk.value, { stream: true }) } catch { throw new ApiError('Invalid chat encoding', 502) }
+        let end: number
+        while ((end = buffer.indexOf('\n')) >= 0) {
+          const line = buffer.slice(0, end).replace(/\r$/, ''); buffer = buffer.slice(end + 1)
+          if (line.startsWith(':')) continue
+          if (line.startsWith('event:')) event = line.slice(6).trim()
+          else if (line.startsWith('data:')) payload += line.slice(5).trimStart()
+          else if (line === '' && payload) {
+            let row: unknown
+            try { row = JSON.parse(payload) } catch { throw new ApiError('Invalid chat JSON', 502) }
+            if (!record(row) || row.question !== message || (operation.id && row.id !== operation.id)) throw new ApiError('Invalid chat response', 502)
+            if (event === 'started' && !operation.id && row.state === 'PROCESSING') {
+              operation.id = row.id; receive(row, operation)
+              if (operation.stopRequested) void stop(operation)
+            } else if (operation.id && ((event === 'done' && ['ANSWERED', 'KAG_ABSTAINED', 'CANCELLED'].includes(row.state)) || (event === 'error' && row.state === 'UNAVAILABLE'))) {
+              if (!operation.terminal) { receive(row, operation); operation.terminal = row }
+              return operation.terminal.state !== 'CANCELLED'
+            } else throw new ApiError('Invalid chat event', 502)
+            event = ''; payload = ''
+          } else if (line !== '') throw new ApiError('Invalid chat event', 502)
+        }
       }
+      if (operation.terminal) return operation.terminal.state !== 'CANCELLED'
+      throw new ApiError('Incomplete chat response', 502)
+    } catch (error) {
+      if (operation.disposed || current !== operation) return false
+      if (operation.terminal) return operation.terminal.state !== 'CANCELLED'
       const status = error instanceof ApiError ? error.status : -1
       const unavailable = status >= 500 && status <= 599
-      update({ observed: unavailable ? 'unavailable' : status === 0 ? 'offline' : 'error', requestError: unavailable ? unavailableMessage : status === 429 ? 'KAG đang bận. Chờ request trước kết thúc rồi kiểm tra lịch sử.' : status === 0 ? 'Không kết nối được backend. Câu hỏi chưa được xác nhận; hãy thử lại.' : status === 401 ? 'Phiên đã hết hạn. Vui lòng đăng nhập lại.' : status === 403 ? 'Bạn không có quyền gửi câu hỏi.' : status === 422 || status === 400 ? 'Câu hỏi không hợp lệ. Hãy kiểm tra nội dung.' : 'Không gửi được câu hỏi. Hãy thử lại.', ...(status === 401 ? { rows: [] } : {}) })
+      update({ observed: unavailable ? 'unavailable' : status === 0 ? 'offline' : 'error', requestError: unavailable ? unavailableMessage : status === 429 ? 'KAG đang bận. Chờ lượt trước kết thúc rồi kiểm tra lịch sử.' : status === 0 ? 'Mất kết nối backend. Tải lại lịch sử để kiểm tra kết quả trước khi gửi lại.' : status === 401 ? 'Phiên đã hết hạn. Vui lòng đăng nhập lại.' : status === 403 ? 'Bạn không có quyền gửi câu hỏi.' : status === 422 || status === 400 ? 'Câu hỏi không hợp lệ. Hãy kiểm tra nội dung.' : 'Không gửi được câu hỏi. Hãy thử lại.', ...(status === 401 ? { rows: [] } : {}) })
       // Read persisted outcome once after processing errors; never resend inference.
       if (unavailable) await load()
       return false
-    } finally { controller = undefined; update({ busy: false }) }
+    } finally {
+      operation.controller.abort()
+      await reader?.cancel().catch(() => {})
+      if (current === operation) { current = undefined; update({ busy: false, stopping: false }) }
+    }
   }
-  return { getSnapshot: () => state, subscribe: (listener: () => void) => { listeners.add(listener); return () => { listeners.delete(listener) } }, load, submit, cancel: () => controller?.abort() }
+  return { getSnapshot: () => state, subscribe: (listener: () => void) => { listeners.add(listener); return () => { listeners.delete(listener) } }, load, submit,
+    cancel: async () => { if (current) { current.stopRequested = true; update({ stopping: true, requestError: '' }); await stop(current) } },
+    dispose: () => { if (current) { current.disposed = true; current.controller.abort(); current = undefined; update({ busy: false, stopping: false }) } } }
 }

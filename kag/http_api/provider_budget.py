@@ -1,5 +1,6 @@
 """Persistent, provider-specific attempt limits for an authorized direct runner."""
 from contextlib import contextmanager
+from concurrent.futures import CancelledError as TransportCancelled
 from collections import Counter, deque
 from datetime import datetime, timezone
 import asyncio
@@ -98,20 +99,22 @@ class AsyncGatewayTransport(httpx.AsyncBaseTransport):
 def test_provider(config, role, policy):
     """One client request; upstream proxy retries require explicit operator acceptance."""
     from kag.vector_contract import valid_vector
+    from .runtime import _Budget, _CancellableTransport, REQUEST_SECONDS
     result = dict(status='FAIL', code=None, dimension=None, observed_model=None,
                   client_attempts=0, output_chars=0)
     try:
         route = provider_route(config, role, policy)
         suffix = '/chat/completions' if role == 'chat' else '/embeddings'
         upstream = config['base_url'] + suffix
-        transport = GatewayTransport(httpx.HTTPTransport(retries=0), GATEWAY, policy['token'], upstream, route)
+        deadline = time.monotonic() + REQUEST_SECONDS
+        transport = GatewayTransport(_CancellableTransport(_Budget(deadline), response_limit=262144),
+            GATEWAY, policy['token'], upstream, route)
         payload = dict(model=config['model'])
         if role == 'chat':
             payload.update(messages=[dict(role='user', content='Reply with OK.')], max_tokens=32, stream=False)
         else:
             payload.update(input=['Kiểm tra kết nối.'], encoding_format='float')
-        deadline = time.monotonic() + 20
-        with httpx.Client(transport=transport, timeout=httpx.Timeout(15, connect=3),
+        with httpx.Client(transport=transport, timeout=httpx.Timeout(REQUEST_SECONDS, connect=3),
                           trust_env=False, follow_redirects=False) as client:
             result['client_attempts'] = 1
             with client.stream('POST', upstream, json=payload,
@@ -152,6 +155,8 @@ def test_provider(config, role, policy):
         result.update(status='BLOCKED' if error.code in ('BLOCKED','PROXY_POLICY_UNVERIFIED') else 'FAIL', code=error.code)
     except httpx.TimeoutException:
         result['code'] = 'TIMEOUT'
+    except httpx.ProtocolError:
+        result['code'] = 'INVALID_RESPONSE'
     except httpx.RequestError:
         result['code'] = 'NETWORK_ERROR'
     except (ValueError, TypeError, KeyError, IndexError, AttributeError):
@@ -343,8 +348,9 @@ class _SyncTransport(httpx.BaseTransport):
             request.extensions['kag_trace_id'] = self.budget.trace_id+'.'+outbound_id
         self.budget._receipt(self.kind,attempt,outbound_id,'attempted',started)
         try:response = self.transport.handle_request(request)
-        except Exception:
-            self.budget._receipt(self.kind,attempt,outbound_id,'transport_error',started)
+        except Exception as exc:
+            self.budget._receipt(self.kind,attempt,outbound_id,
+                'cancelled' if isinstance(exc,TransportCancelled) else 'transport_error',started)
             raise
         self.budget._receipt(self.kind,attempt,outbound_id,'http_success' if response.is_success else 'http_error',started,response)
         if 300<=response.status_code<400:
@@ -367,7 +373,7 @@ class _AsyncTransport(httpx.AsyncBaseTransport):
         self.budget._receipt(self.kind,attempt,outbound_id,'attempted',started)
         try:response = await self.transport.handle_async_request(request)
         except (Exception,asyncio.CancelledError) as exc:
-            self.budget._receipt(self.kind,attempt,outbound_id,'cancelled' if isinstance(exc,asyncio.CancelledError) else 'transport_error',started)
+            self.budget._receipt(self.kind,attempt,outbound_id,'cancelled' if isinstance(exc,(asyncio.CancelledError,TransportCancelled)) else 'transport_error',started)
             raise
         self.budget._receipt(self.kind,attempt,outbound_id,'http_success' if response.is_success else 'http_error',started,response)
         if 300<=response.status_code<400:

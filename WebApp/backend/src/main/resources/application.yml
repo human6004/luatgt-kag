@@ -1,5 +1,5 @@
 spring:
-  mvc.async.request-timeout: ${KAG_QUERY_TIMEOUT_SECONDS:30}s
+  mvc.async.request-timeout: ${KAG_QUERY_TIMEOUT_SECONDS:180}s
   jackson.deserialization.fail-on-unknown-properties: true
   datasource:
     url: ${DB_URL:jdbc:mysql://localhost:3306/luatgt?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true}
@@ -36,7 +36,7 @@ app:
   kag-builder-token-file: ${KAG_BUILDER_TOKEN_FILE:}
   kag-release-id: ${KAG_RELEASE_ID:}
   kag-webapp-snapshot-id: ${KAG_WEBAPP_SNAPSHOT_ID:}
-  kag-query-timeout-seconds: ${KAG_QUERY_TIMEOUT_SECONDS:30}
+  kag-query-timeout-seconds: ${KAG_QUERY_TIMEOUT_SECONDS:180}
   kag-inspection-timeout-seconds: ${KAG_INSPECTION_TIMEOUT_SECONDS:2}
   minio-url: ${MINIO_URL:http://localhost:9000}
   minio-user: ${MINIO_USER}

@@ -672,8 +672,8 @@ class KagClientTest {
         try(var f=new Fixture()) { f.closeBeforeHeaders=true; unavailable(()->client(f).query(request())); assertEquals(1,f.calls.get()); }
     }
     @ParameterizedTest @ValueSource(booleans={false,true})
-    void realReadTimeoutRemains30Seconds(boolean streaming) throws Exception {
-        try(var f=new Fixture()) { f.delay=31000; long start=System.nanoTime(); var client=client(f); var events=new ArrayList<String>();
+    void configuredReadTimeoutIs30Seconds(boolean streaming) throws Exception {
+        try(var f=new Fixture()) { f.delay=31000; long start=System.nanoTime(); var client=client(f); client.queryTimeout(30); var events=new ArrayList<String>();
             unavailable(()->{ if(streaming) client.stream(request(),(event,data)->events.add(event)); else client.query(request()); });
             assertTrue(events.isEmpty());
             long seconds=Duration.ofNanos(System.nanoTime()-start).toSeconds(); assertTrue(seconds>=29&&seconds<36); assertEquals(1,f.calls.get()); }

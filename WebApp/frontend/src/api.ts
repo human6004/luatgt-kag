@@ -3,7 +3,7 @@ export class ApiError extends Error {
   status: number
   constructor(message: string, status = 0) { super(message); this.name = 'ApiError'; this.status = status }
 }
-export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
+export async function apiResponse(path: string, init: RequestInit = {}): Promise<Response> {
   const headers = new Headers(init.headers)
   const token = sessionStorage.getItem(tokenKey)
   if (token) headers.set('Authorization', `Bearer ${token}`)
@@ -14,6 +14,10 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
     sessionStorage.removeItem(tokenKey); window.dispatchEvent(new Event('luatgt-session-expired'))
     throw new ApiError('Phiên đã hết hạn. Vui lòng đăng nhập lại.', 401)
   }
+  return response
+}
+export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
+  const response = await apiResponse(path, init)
   let text: string
   try { text = await response.text() } catch { throw new ApiError('Không đọc được phản hồi backend. Vui lòng thử lại.', response.status) }
   let data: unknown

@@ -178,8 +178,8 @@ export default function AdminConfig() {
                     <legend className="font-semibold mb-2">{role === 'chat' ? 'Chat model' : 'Embedding model'}</legend>
                     <div className="space-y-1">
                       <p>Bản lưu: {models.value?.[role] ? 'Đã lưu' : 'Chưa lưu model'}.{modelsDirty[role] && ' Có thay đổi chưa lưu.'}</p>
-                      <p>Kết nối bản đã lưu: {models.value?.roles[role].test?.status === 'PASS' ? 'Đã kiểm tra thành công.' : models.value?.roles[role].test?.status === 'FAIL' ? 'Lỗi kết nối.' : models.value?.roles[role].test?.status === 'BLOCKED' ? 'Chưa thể kiểm tra; xem điều kiện bên dưới.' : 'Chưa kiểm tra.'}</p>
-                      <p>Áp dụng bản đã lưu: {models.value?.roles[role].status === 'APPLIED' ? 'Đang áp dụng.' : 'Chưa áp dụng.'}</p>
+                      <p>Kết nối bản đã lưu: {models.value?.roles[role].test?.status === 'PASS' ? 'Kết nối thành công.' : models.value?.roles[role].test?.status === 'FAIL' ? 'Lỗi kết nối.' : models.value?.roles[role].test?.status === 'BLOCKED' ? 'Chưa thể kiểm tra; xem điều kiện bên dưới.' : 'Chưa kiểm tra.'}</p>
+                      <p>Áp dụng bản đã lưu: {models.value?.roles[role].status === 'APPLIED' ? 'Đang dùng.' : 'Chưa áp dụng.'}</p>
                       {models.value?.roles[role].active && models.value.roles[role].status !== 'APPLIED' && <p className="text-muted break-words">Đang dùng bản trước: {models.value.roles[role].active?.model}.</p>}
                     </div>
                     <Field label="Giao thức API"><select name={`${role}_provider`} className={inputCls} defaultValue="openai-compatible"><option value="openai-compatible">OpenAI-compatible</option></select></Field>

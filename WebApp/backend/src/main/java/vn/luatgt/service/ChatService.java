@@ -3,7 +3,7 @@ package vn.luatgt.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,6 +21,12 @@ public class ChatService {
     private final KagSchema schema; private final LegalUnitService units;
     // ponytail: one monolith instance admits 8 concurrent streams; use a shared admission limit when running multiple replicas.
     private final Semaphore streams=new Semaphore(8);
+    private final ConcurrentHashMap<UUID,Pending> pending=new ConcurrentHashMap<>();
+    private static final class Pending {
+        final ChatMessage chat; final FutureTask<JsonNode> call; final CountDownLatch drained=new CountDownLatch(1);
+        boolean responseClosed;
+        Pending(ChatMessage chat,Callable<JsonNode> call) {this.chat=chat;this.call=new FutureTask<>(call);}
+    }
     public ChatService(ChatRepository chats,ContentRepository contents,ContentService data,KagClient kag,RateLimit rate,KagSchema schema,LegalUnitService units) { this.chats=chats; this.contents=contents; this.data=data; this.kag=kag; this.rate=rate; this.schema=schema; this.units=units; }
     private ChatMessage start(UUID owner,ChatRequest input) {
         rate.check("chat:"+owner,20,60); var chat=new ChatMessage(); chat.ownerId=owner; chat.question=input.message(); chat.state="PROCESSING"; return chats.save(chat);
@@ -73,6 +79,74 @@ public class ChatService {
                 emit(output,"error",Map.of("message","Dịch vụ KAG chưa khả dụng hoặc câu trả lời chưa đủ căn cứ","id",chat.id));
             } finally { streams.release(); }
         };
+    }
+    public StreamingResponseBody progress(UUID owner,ChatRequest input) {
+        if(!streams.tryAcquire()) throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,"Đang có nhiều truy vấn, vui lòng thử lại");
+        Pending job;
+        try {
+            var chat=start(owner,input); var payload=request(owner,input);
+            job=new Pending(chat,()->kag.query(payload)); pending.put(chat.id,job);
+        } catch(RuntimeException e) {streams.release();throw e;}
+        return output -> {
+            Thread.startVirtualThread(()->{
+                try {job.call.run();}
+                finally {job.drained.countDown();release(job);}
+            });
+            try {
+                emit(output,"started",view(job.chat));
+                while(true) {
+                    try {
+                        var result=job.call.get(1,TimeUnit.SECONDS);
+                        synchronized(job) {if(job.chat.state.equals("PROCESSING")) complete(job.chat,result);}
+                        break;
+                    } catch(TimeoutException e) {
+                        output.write(": waiting\n\n".getBytes(java.nio.charset.StandardCharsets.UTF_8));output.flush();
+                    }
+                }
+                synchronized(job) {emit(output,"done",view(job.chat));}
+            } catch(CancellationException e) {
+                synchronized(job) {emit(output,job.chat.state.equals("CANCELLED")?"done":"error",view(job.chat));}
+            } catch(UncheckedIOException e) {
+                synchronized(job) {unavailable(job);job.call.cancel(true);}
+                throw e;
+            } catch(ExecutionException|RuntimeException e) {
+                synchronized(job) {unavailable(job);emit(output,job.chat.state.equals("CANCELLED")?"done":"error",view(job.chat));}
+            } catch(InterruptedException e) {
+                Thread.currentThread().interrupt();
+                synchronized(job) {unavailable(job);job.call.cancel(true);}
+            } catch(IOException e) {
+                synchronized(job) {unavailable(job);job.call.cancel(true);}
+                throw new UncheckedIOException(e);
+            } finally {
+                synchronized(job) {job.responseClosed=true;release(job);}
+            }
+        };
+    }
+    private void unavailable(Pending job) {
+        if(job.chat.state.equals("PROCESSING")) {job.chat.state="UNAVAILABLE";chats.save(job.chat);}
+    }
+    private void release(Pending job) {
+        synchronized(job) {
+            // Cancellation completes a Future before its interrupted HTTP worker has actually drained.
+            if(job.responseClosed&&job.drained.getCount()==0&&pending.remove(job.chat.id,job)) streams.release();
+        }
+    }
+    public Map<String,Object> stop(UUID owner,UUID id) {
+        rate.check("chat-stop:"+owner,60,60);
+        var job=pending.get(id);
+        if(job==null) {
+            var chat=chats.findById(id).filter(row->row.ownerId.equals(owner)).orElseThrow(ApiErrors::missing);
+            if(chat.state.equals("PROCESSING")) throw new ResponseStatusException(HttpStatus.CONFLICT,"Chưa xác nhận được lượt đang xử lý. Tải lại lịch sử để kiểm tra.");
+            return view(chat);
+        }
+        synchronized(job) {
+            if(!job.chat.ownerId.equals(owner)) throw ApiErrors.missing();
+            if(job.chat.state.equals("PROCESSING")) {
+                job.chat.state="CANCELLED";job.chat.answer=null;job.chat.citations="[]";chats.save(job.chat);
+                job.call.cancel(true);
+            }
+            return view(job.chat);
+        }
     }
     private void emit(OutputStream output,String event,Object value) {
         try { output.write(("event: "+event+"\ndata: "+data.mapper().writeValueAsString(value)+"\n\n").getBytes(java.nio.charset.StandardCharsets.UTF_8)); output.flush(); }

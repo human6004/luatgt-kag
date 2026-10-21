@@ -31,9 +31,13 @@ beforeEach(() => {
 function wire(handler) {
   globalThis.fetch = async (url, options) => {
     requests.push({ url, ...options })
-    assert.equal(url, '/api/chat')
+    assert.equal(url, options.method === 'POST' ? '/api/chat/stream?progress=true' : '/api/chat')
     assert.equal(options.headers.get('Authorization'), 'Bearer webapp-jwt-fixture')
-    return handler(options.method || 'GET')
+    const response = await handler(options.method || 'GET')
+    if (options.method !== 'POST' || !response.ok) return response
+    const row = await response.json(), question = JSON.parse(options.body).message
+    const initial = { ...row, question, state: 'PROCESSING', answer: '', citations: [] }
+    return new Response(`event: started\ndata: ${JSON.stringify(initial)}\n\nevent: ${row.state === 'UNAVAILABLE' ? 'error' : 'done'}\ndata: ${JSON.stringify({ ...row, question })}\n\n`, { headers: { 'Content-Type': 'text/event-stream' } })
   }
 }
 async function loaded(handler = () => response([])) { wire(handler); const chat = createChat(); await chat.load(); return chat }
@@ -74,7 +78,7 @@ test('503 refreshes persisted UNAVAILABLE once and never exposes backend error d
 test('offline POST retains history and emits no answer or automatic retry', async () => {
   const chat = await loaded(method => { if (method === 'POST') throw new Error('offline'); return response([unavailable]) })
   assert.equal(await chat.submit(answered.question), false); assert.equal(requests.length, 2)
-  assert.deepEqual(chat.getSnapshot().rows, [unavailable]); assert.equal(chat.getSnapshot().observed, 'offline'); assert.match(chat.getSnapshot().requestError, /Không kết nối/)
+  assert.deepEqual(chat.getSnapshot().rows, [unavailable]); assert.equal(chat.getSnapshot().observed, 'offline'); assert.match(chat.getSnapshot().requestError, /Mất kết nối.*Tải lại lịch sử/)
 })
 test('expired JWT clears session and chat without refreshing unauthenticated history', async () => {
   const chat = await loaded(method => response(method === 'POST' ? { message: 'Unauthorized' } : [unavailable], method === 'POST' ? 401 : 200))
@@ -117,7 +121,7 @@ test('reload preserves abstention and old answered, unavailable and processing r
   assert.equal(chatView(chat.getSnapshot().rows[0]).status, abstainedMessage)
   assert.equal(chatView(chat.getSnapshot().rows[1]).answer, answered.answer)
   assert.equal(chatView(chat.getSnapshot().rows[2]).status, unavailableMessage)
-  assert.match(chatView(chat.getSnapshot().rows[3]).status, /Đang xử lý/)
+  assert.match(chatView(chat.getSnapshot().rows[3]).status, /Đang trả lời/)
   assert.equal(chat.getSnapshot().observed, 'idle'); assert.equal(requests.length, 1)
 })
 test('raw or malformed 503 cannot make the browser classify native abstention', async () => {
@@ -132,7 +136,7 @@ test('missing citation fields or unknown state do not become verified answers', 
   for (const row of [{ ...answered, citations: [] }, { ...answered, citations: [{ doc_id: 'fixture-doc' }] }, { ...answered, state: 'UNKNOWN' }]) {
     const view = chatView(row); assert.equal(view.answer, ''); assert.deepEqual(view.citations, []); assert.notEqual(view.status, 'Đã trả lời')
   }
-  assert.match(chatView({ ...unavailable, state: 'PROCESSING' }).status, /Đang xử lý/)
+  assert.match(chatView({ ...unavailable, state: 'PROCESSING' }).status, /Đang trả lời/)
 })
 test('invalid history body fails closed without showing backend content', async () => {
   const chat = await loaded(() => response({ answer: 'not a history list' })); assert.deepEqual(chat.getSnapshot().rows, []); assert.ok(chat.getSnapshot().error)
@@ -166,20 +170,28 @@ test('HTTP success with UNAVAILABLE does not promote it to ANSWERED or show stra
   assert.equal(chatView(row).answer, ''); assert.deepEqual(chatView(row).citations, [])
 })
 
-test('cancel aborts one request, preserves draft/history, and a later load recovers persisted rows', async () => {
+test('explicit stop is confirmed by the server and survives history reload', async () => {
   const chat = await loaded()
-  globalThis.fetch = (_url, options) => new Promise((_resolve, reject) => {
-    requests.push(options)
-    options.signal.addEventListener('abort', () => reject(new Error('aborted')), { once: true })
-  })
+  const stopped = { ...unavailable, state: 'CANCELLED' }
+  globalThis.fetch = async (url, options) => {
+    requests.push({ url, ...options })
+    if (url === `/api/chat/${answered.id}/stop`) return response(stopped)
+    assert.equal(url, '/api/chat/stream?progress=true')
+    const body = new ReadableStream({ start(controller) {
+      controller.enqueue(new TextEncoder().encode(`event: started\ndata: ${JSON.stringify({ ...unavailable, state: 'PROCESSING' })}\n\n`))
+      options.signal.addEventListener('abort', () => controller.error(new Error('aborted')), { once: true })
+    } })
+    return new Response(body, { headers: { 'Content-Type': 'text/event-stream' } })
+  }
   const pending = chat.submit(answered.question)
-  chat.cancel()
+  await new Promise(resolve => setTimeout(resolve, 0))
+  await chat.cancel()
   assert.equal(await pending, false)
-  assert.equal(requests.length, 2); assert.equal(chat.getSnapshot().busy, false)
-  assert.deepEqual(chat.getSnapshot().rows, []); assert.equal(chat.getSnapshot().observed, 'cancelled')
-  assert.match(chat.getSnapshot().requestError, /lịch sử/)
-  wire(() => response([answered])); await chat.load()
-  assert.deepEqual(chat.getSnapshot().rows, [answered]); assert.equal(requests.length, 3)
+  assert.equal(requests.length, 3); assert.equal(chat.getSnapshot().busy, false)
+  assert.deepEqual(chat.getSnapshot().rows, [stopped]); assert.equal(chat.getSnapshot().observed, 'cancelled')
+  assert.equal(chatView(stopped).status, 'Đã dừng trả lời')
+  wire(() => response([stopped])); await chat.load()
+  assert.deepEqual(chat.getSnapshot().rows, [stopped]); assert.equal(requests.length, 4)
 })
 
 test('429 shows a busy error without inference retry', async () => {

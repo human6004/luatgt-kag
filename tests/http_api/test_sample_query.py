@@ -327,7 +327,7 @@ class SampleQueryProofTests(unittest.TestCase):
              patch.object(self.module.httpx,'AsyncHTTPTransport',side_effect=lambda **kw:httpx.MockTransport(reply)), \
              patch.object(runtime,'_new_embedding',side_effect=AssertionError('Exact cached query must not embed')):
             asyncio.run(exercise())
-        self.assertEqual(seen,[1,2,3,4,5]);self.assertEqual(self.budget().counts(),{'embedding':0,'chat':5})
+        self.assertEqual(seen,[1,2,3,4]);self.assertEqual(self.budget().counts(),{'embedding':0,'chat':4})
         metadata=json.loads(Path('/tmp/sample-provider-responses.json').read_bytes())
         self.assertTrue(metadata)
         self.assertTrue(all('content' not in row for row in metadata))

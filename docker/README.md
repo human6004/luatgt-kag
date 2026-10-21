@@ -134,6 +134,8 @@ Trong Docker Desktop, tạo/chọn volume thử → **Import → Local file**, c
 
 Dành cho người vận hành đã chuẩn bị graph và nguồn, không phải bước bắt buộc để mở WebApp:
 
+Chat và Embedding dùng kết nối được lưu/kiểm/áp dụng riêng tại **Cài đặt hệ thống → Kết nối model**. Phạm vi hiện hỗ trợ OpenAI-compatible: POST `<Base URL>/chat/completions` cho nội dung chữ và POST `<Base URL>/embeddings` cho vector. Base URL có thể mang prefix như `/v1`; không nhận query, fragment hay credentials trong URL. Public HTTPS phải nằm trong danh sách host cho phép; proxy HTTP riêng phải đăng ký đúng Base URL theo [chính sách provider](#provider-cho-openspg). Không cần EvelProxy, binary đã vá hoặc chức năng chuyển tài khoản của một proxy cụ thể.
+
 Với graph Builder đã xác minh, dùng [luồng trên UI](../docs/runner.md#chọn-graph-phục-vụ-truy-xuấtchat): lưu/kiểm model, mở **Đồ thị của tôi**, chọn project/phiên, thử truy xuất nếu muốn và **Dùng cho Chat**. Nhánh dataset đóng gói snapshot nguồn đã đọc/đối chiếu cùng graph, không cần publication MySQL. Lựa chọn lưu trong provider state; release bất biến nằm trong Builder state, API chỉ mount đọc. Worker giữ credentials Neo4j và chỉ cấp phép đọc cố định qua mạng private. Không cần chép graph, sửa `.env` hoặc đổi namespace mẫu mỗi lần chuyển project.
 
 Với database phục vụ bất biến, operator có thể dùng `KAG_READ_ONLY_DATABASES` hiện có để đặt đúng tên database sang native read-only của Neo4j. Sau cập nhật cấu hình phải recreate `neo4j`, rồi khởi động lại `kag-api` và `kag-builder` theo UPDATE; không đổi image pin hoặc volumes. Worker kiểm đầy đủ graph khi khởi động/kích hoạt; chỉ tái sử dụng kết quả cho cùng release còn read-only. Mỗi lần đọc vẫn kiểm identity, index, artifact nguồn và access trước/sau; citation vẫn đọc lại nguồn. Database read-write tiếp tục kiểm đầy đủ mỗi query. Lần khởi động đầu có thể lâu hơn các câu tiếp theo.
@@ -152,7 +154,11 @@ Các cấu hình startup dưới đây dành cho release SAMPLE đóng gói sẵ
 
 Không sửa hash/identity để ép READY. Thiếu graph/provider/nguồn phù hợp thì query chưa khả dụng; healthcheck không thay readiness. Luồng và hợp đồng: [kiến trúc](../docs/architecture.md).
 
-Ngân sách kiểm sẵn sàng/truy xuất dùng biến hiện có `KAG_QUERY_TIMEOUT_SECONDS` cho backend, API và Worker, nhận số nguyên 30–180 giây (mặc định 30). Thêm hoặc sửa biến này trong `.env`, rồi cập nhật ba service theo UPDATE. API dành 5 giây cuối để trả kết quả qua backend. Khi hiện **Chưa kiểm tra xong**, đợi hệ thống bớt tải rồi thử lại; tăng thời gian chờ không thay việc kiểm graph và nguồn hiện tại.
+Ngân sách Chat/kiểm kết nối/kiểm sẵn sàng/truy xuất dùng biến hiện có `KAG_QUERY_TIMEOUT_SECONDS` cho backend, API, Worker và gateway, nhận số nguyên 30–180 giây (mặc định 180). Thêm hoặc sửa biến này trong `.env`, rồi cập nhật `backend`, `kag-api`, `kag-builder`, `kag-ingress` theo UPDATE. API dành 5 giây cuối để trả kết quả qua backend; ví dụ cấu hình 180 cho tối đa 175 giây xử lý bên trong. Nginx chờ 190 giây, lớn hơn mọi giá trị được hỗ trợ. Mặc định này dành chỗ cho nhiều pha model cùng kiểm graph/citation trong một câu hỏi, không ép mỗi model về 25 giây. Hết ngân sách vẫn trả lỗi dịch vụ; tăng thời gian chờ không thay việc kiểm graph và nguồn.
+
+SDK và gateway không tự retry/fallback; không tự gửi lại toàn câu hỏi. Một câu hỏi giữ giới hạn hiện có: tối đa 7 call Chat và 3 call Embedding, có thể dùng ít hơn hoặc không gọi model ở nhánh trích trực tiếp. Kết nối SDK tới gateway tối đa 2 giây (kiểm kết nối 3 giây); gateway nối endpoint tối đa 5 giây. Chờ phản hồi và đọc body cùng chịu deadline của câu hỏi. Timeout/retry nội bộ tại proxy/provider do người vận hành hệ thống đó quản lý, có thể cắt sớm hơn ngân sách LuậtGT; ứng dụng không bảo đảm hủy được việc tính phí của request đã gửi.
+
+UI dùng kênh kết quả hiện có để nhận ID lượt hỏi sớm và gửi Dừng rõ ràng tới backend. Chỉ Dừng được server xác nhận mới lưu trạng thái đã dừng; mất kết nối được xử lý riêng. Backend ngắt HTTP xuống KAG, KAG dừng phát call mới và hủy I/O provider đang chờ khi transport hỗ trợ. Đáp án muộn không ghi đè lượt đã dừng.
 
 ### Publisher nâng cao
 

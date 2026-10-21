@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import asyncio
 from contextvars import ContextVar
+from concurrent.futures import CancelledError as TransportCancelled
 from dataclasses import dataclass, field, replace
 from copy import deepcopy
 from datetime import datetime
@@ -36,7 +37,7 @@ TRANSPORT_SECONDS = 5.0
 
 
 def _request_seconds():
-    try: seconds=int(os.environ.get('KAG_QUERY_TIMEOUT_SECONDS','30'))
+    try: seconds=int(os.environ.get('KAG_QUERY_TIMEOUT_SECONDS','180'))
     except ValueError: raise ValueError('KAG_QUERY_TIMEOUT_SECONDS must be an integer from 30 to 180') from None
     if not 30<=seconds<=180:raise ValueError('KAG_QUERY_TIMEOUT_SECONDS must be an integer from 30 to 180')
     return seconds-TRANSPORT_SECONDS
@@ -137,6 +138,48 @@ def _timeout(request, budget):
         'read':remaining,'write':remaining,'pool':remaining}
 
 
+async def _await_budget(awaitable, budget):
+    operation = asyncio.ensure_future(awaitable)
+    try:
+        while not operation.done():
+            left = budget.deadline-budget.clock()
+            if left <= 0:
+                raise httpx.ReadTimeout('Request deadline exceeded.')
+            if budget.stopped.is_set():
+                raise TransportCancelled()
+            budget.remaining()
+            await asyncio.wait({operation}, timeout=min(.05, left))
+        return operation.result()
+    finally:
+        if not operation.done():
+            operation.cancel()
+        await asyncio.gather(operation, return_exceptions=True)
+
+
+class _CancellableTransport(httpx.BaseTransport):
+    """Keep the pinned sync SDK; cancel its actual HTTP I/O through HTTPX async transport."""
+    def __init__(self, budget, *, response_limit=None):
+        self.budget, self.response_limit = budget, response_limit
+
+    def handle_request(self, request):
+        async def exchange():
+            async with httpx.AsyncHTTPTransport(retries=0) as transport:
+                outgoing = httpx.Request(request.method, request.url, headers=request.headers,
+                    content=request.content, extensions=request.extensions)
+                response = await transport.handle_async_request(outgoing)
+                try:
+                    body = bytearray()
+                    async for chunk in response.aiter_raw():
+                        body.extend(chunk)
+                        if self.response_limit is not None and len(body) > self.response_limit:
+                            raise httpx.ProtocolError('Provider response exceeds limit.')
+                    return httpx.Response(response.status_code, headers=response.headers,
+                        stream=httpx.ByteStream(bytes(body)), extensions=response.extensions)
+                finally:
+                    await response.aclose()
+        return asyncio.run(_await_budget(exchange(), self.budget))
+
+
 class _DeadlineTransport(httpx.BaseTransport):
     def __init__(self, transport, budget):
         self.transport, self.budget = transport, budget
@@ -169,13 +212,18 @@ class _AsyncDeadlineTransport(httpx.AsyncBaseTransport):
 
     async def handle_async_request(self, request):
         _timeout(request,self.budget)
-        response = await self.transport.handle_async_request(request)
+        response = await _await_budget(self.transport.handle_async_request(request), self.budget)
         stream, budget = response.stream, self.budget
         class Stream(httpx.AsyncByteStream):
             async def __aiter__(self):
                 try:
                     budget.remaining()
-                    async for chunk in stream:
+                    iterator = stream.__aiter__()
+                    while True:
+                        try:
+                            chunk = await _await_budget(iterator.__anext__(), budget)
+                        except StopAsyncIteration:
+                            break
                         budget.remaining()
                         yield chunk
                 finally:
@@ -398,7 +446,7 @@ def _configure_production_model(settings,model,role,runtime):
         from kag.legal_prompts import _LEGAL_TRACE
         runtime.provider_budget.trace_id = runtime.request_id if _LEGAL_TRACE.get() is not None else None
     upstream=config['base_url']+('/embeddings' if role=='embedding' else '/chat/completions')
-    for name,wrapper,transport in (('client',GatewayTransport,httpx.HTTPTransport(retries=0)),
+    for name,wrapper,transport in (('client',GatewayTransport,_CancellableTransport(runtime.budget)),
             ('aclient',AsyncGatewayTransport,httpx.AsyncHTTPTransport(retries=0))):
         client=getattr(model,name)._client
         client._transport=wrapper(transport,GATEWAY,policy['token'],upstream,route);client._mounts={}
@@ -1023,7 +1071,7 @@ class RuntimeSupervisor:
             self._provider_test_task = None
         task.add_done_callback(done)
         try:
-            await asyncio.wait_for(asyncio.shield(task), timeout=22)
+            await asyncio.wait_for(asyncio.shield(task), timeout=REQUEST_SECONDS+1)
             return self.llm_config_view()
         except asyncio.TimeoutError:
             raise ApiFailure('QUERY_TIMEOUT') from None
@@ -1243,7 +1291,7 @@ class RuntimeSupervisor:
                     as_of = await asyncio.to_thread(_identity,request,settings,release,parsed,received_date)
                 runtime.as_of = as_of
                 if settings.query_proof_sha256:runtime.budget.transport_seconds=60.0
-                if settings.production:runtime.budget.transport_seconds=min(60.0,REQUEST_SECONDS)
+                if settings.production:runtime.budget.transport_seconds=REQUEST_SECONDS
                 runtime.budget.remaining()
                 _require_operational_proof(settings,release)
                 initialize_runtime()
