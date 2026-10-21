@@ -14,7 +14,7 @@ initialize()
 from kag.builder.codec import canonical_json, decode_properties
 from kag.interface import ExecutorABC, GeneratorABC, LLMClient, PromptABC, SolverPipelineABC
 from kag.interface.solver.executor_abc import ExecutorResponse
-from kag.legal_prompts import (validate_subquery, material_constraints, query_content_terms, CandidateError, UnsafeSubqueryError,
+from kag.legal_prompts import (validate_subquery, material_constraints, query_content_terms, _reference_bindings, _clauses, CandidateError, UnsafeSubqueryError,
                                LegalDeducePrompt, legal_trace, legal_timing, document_title_question, DOCUMENT_CONTENT_PREFIX)
 from kag.solver.executor.deduce.kag_deduce_executor import KagDeduceExecutor
 from kag.solver.planner.kag_iterative_planner import KAGIterativePlanner
@@ -47,13 +47,19 @@ def _source_texts(payload):
     return tuple(texts)
 
 
-def _unit_references(metadata):
+def _unit_references(metadata, source_text=''):
     references=[]
     for field,label,pattern in (('dieu_number','Điều',r'\d+[a-zđ]?'),
                                 ('khoan_number','khoản',r'\d+[a-zđ]?'),
                                 ('diem_letter','điểm',r'[a-zđ]')):
         value=metadata.get(field)
         if isinstance(value,str) and re.fullmatch(pattern,value,re.I):references.append(label+' '+value)
+    article = metadata.get('dieu_number')
+    if (metadata.get('unit_type') == 'Dieu' and isinstance(article, str)
+            and re.match(r'\s*Điều\s+'+re.escape(article)+r'[.]\s+', source_text, re.I)):
+        # Coordinates come from numbered paragraphs inside this verified whole article.
+        references.extend('khoản '+number for number in re.findall(
+            r'(?m)^\s*(\d+[a-zđ]?)[.)]\s+\S', source_text, re.I))
     return ' '.join(references)
 
 
@@ -67,7 +73,7 @@ def _grounding_sources(payload):
         texts.extend(item[key] for key in ('entity_id','doc_id','unit_id','sign_id')
                      if isinstance(item.get(key),str))
         metadata = item['metadata']
-        references = _unit_references(metadata)
+        references = _unit_references(metadata, item['source_texts'].get('text', ''))
         if references:
             number = payload['documents'].get(item['doc_id'],{}).get('so_hieu') or ''
             texts.append(number+' '+references)
@@ -405,14 +411,34 @@ def _applicable(query, item, support, payload):
     if requested_vehicles and vehicle_scopes - requested_vehicles:
         return False
     document_number = payload['documents'].get(item['doc_id'], {}).get('so_hieu') or ''
+    if requested['documents'] and {v.casefold() for v in requested['documents']} != {document_number.casefold()}:
+        return False  # Mentioning another document in the source does not change its owner.
+    coordinates = _unit_references(item['metadata'], text)
+    bindings = _reference_bindings(query)
+    if item['entity_type'].endswith('.LegalUnit') and any(b[1] for b in bindings):
+        own_bindings = _reference_bindings(document_number+' '+coordinates)
+        # A verified amendment parent can locate its child in the amended article.
+        for source, citation in parents:
+            if (source['metadata'].get('unit_type') == 'Dieu'
+                    and source['metadata'].get('dieu_number') == item['metadata'].get('dieu_number')
+                    and re.match(r'\s*Điều\s+'+re.escape(str(source['metadata']['dieu_number']))+r'[.]\s+', citation.quote, re.I)):
+                for statement in re.split(r'(?<!\d)[;.!?\n](?!\d)', citation.quote):
+                    if re.search(r'\b(?:không|chưa|nếu|khi|trừ|sẽ)\b', statement, re.I):
+                        continue
+                    for target in re.findall(r'\b(?:sửa(?: đổi)?(?:, bổ sung)?|bổ sung)\s+(?:tại\s+)?Điều\s+(\d+[a-zđ]?)\b', statement, re.I):
+                        own_bindings.update((doc, 'điều '+target.casefold(), clause, point)
+                                            for doc, _, clause, point in tuple(own_bindings))
+        if not all(any(all(expected is None or expected.casefold() == (actual or '').casefold() for expected, actual in zip(binding, own))
+                       for own in own_bindings) for binding in bindings):
+            return False
     # Numbered source paragraphs need their verified typed coordinates, as in planner grounding.
-    authority = text+'\n'+canonical_json(item['metadata'])+'\n'+document_number+'\n'+context_text+'\n'+_unit_references(item['metadata'])
+    authority = text+'\n'+canonical_json(item['metadata'])+'\n'+document_number+'\n'+context_text+'\n'+coordinates
     if not query_content_terms(query) <= {word.casefold() for word in re.findall(r'[^\W\d_]+', authority)}:
         return False
     provided = material_constraints(authority)
     for kind in ('documents', 'references', 'negation'):
-        required={v.casefold() for v in requested[kind]} if kind=='references' else requested[kind]
-        available={v.casefold() for v in provided[kind]} if kind=='references' else provided[kind]
+        required={v.casefold() for v in requested[kind]} if kind in ('references', 'documents') else requested[kind]
+        available={v.casefold() for v in provided[kind]} if kind in ('references', 'documents') else provided[kind]
         if not required <= available:
             return False
     if parent and not parents:
@@ -422,6 +448,20 @@ def _applicable(query, item, support, payload):
     if re.search(r'\bphạt\b|\bđồng\b', text, re.I) and not own_scope:
         return False
     return True
+
+
+def _question_parts(query):
+    parts = [part.strip() for part in _clauses(query) if query_content_terms(part)]
+    documents = material_constraints(query)['documents']
+    articles = {v.casefold() for v in material_constraints(query)['references'] if v.casefold().startswith('điều ')}
+    for i, part in enumerate(parts):
+        # A single explicit document remains context for the following question clauses.
+        if len(documents) == 1 and not material_constraints(part)['documents']:
+            parts[i] += ' '+next(iter(documents))
+        if len(documents) <= 1 and len(articles) == 1 and not any(
+                v.casefold().startswith('điều ') for v in material_constraints(part)['references']):
+            parts[i] += ' '+next(iter(articles))
+    return parts
 
 
 def _support_linked(item, citation, facts, payload, value):
@@ -463,7 +503,7 @@ def _conflict_resolved(query, value, facts, support, payload, as_of):
         field = 'text' if item['entity_type'].endswith('.LegalUnit') else 'moTa' if item['sign_id'] else None
         if not field or (item['doc_id'], item['unit_id']) in linked_parents:
             continue
-        if not _applicable(query, item, support, payload):
+        if not any(_applicable(part, item, support, payload) for part in _question_parts(query)):
             continue
         if not _current(item, payload['documents'], as_of):
             props = payload['documents'].get(item['doc_id'], {})
@@ -649,6 +689,8 @@ class SafeLegalGenerator(GeneratorABC):
             index = _span_index(payload)
             facts = [_resolve(span, index) for span in value['selections']]
             support = [_resolve(span, index) for span in value['support_selections']]
+            parts = _question_parts(content_question or query)
+            covered = set()
             if any((not content_question and not _current(item, payload['documents'], as_of))
                    or not _support_linked(item, citation, facts, payload, value) for item, citation in support):
                 return _abstain('unverified support applicability/effectivity')
@@ -656,9 +698,13 @@ class SafeLegalGenerator(GeneratorABC):
                 factual = (item['entity_type'].endswith('.LegalUnit') and citation.field == 'text'
                            or item['entity_type'].endswith('.TrafficSign') and citation.field == 'moTa'
                            or document_title_question(query) and item['entity_type'].endswith('.LegalDocument') and citation.field == 'title')
+                matched = {i for i, part in enumerate(parts) if _applicable(part, item, support, payload)}
                 if (not factual or (not content_question and not _current(item, payload['documents'], as_of))
-                        or not _applicable(content_question or query, item, support, payload)):
+                        or not matched):
                     return _abstain('unverified source applicability/effectivity')
+                covered.update(matched)
+            if not parts or covered != set(range(len(parts))):
+                return _abstain('incomplete question coverage')
             if not content_question and not _conflict_resolved(query, value, facts, support, payload, as_of):
                 return _abstain('unresolved legal conflict')
         except (CandidateError, KeyError, TypeError, ValueError):
@@ -686,9 +732,7 @@ class _ThreadedPlannerClient(LLMClient):
                 and isinstance(response, LegalCandidateResponse) and last.result is response
                 and response.payload()['deduce_task'] == last.id):
             result = SafeLegalGenerator().invoke(variables['query'], context, as_of=kwargs.get('as_of'))
-            bound = response.payload()
-            if (not result.abstained or result.reason == 'insufficient legal authority'
-                    and bound['candidate']['abstained'] is True):
+            if not result.abstained:
                 # Finish needs no inference once the current candidate has passed the server checks.
                 legal_trace('planner.finish', reason=result.reason or 'verified candidate')
                 return prompt_op.parse_response({'executor': {'name': 'Finish', 'arguments': {}}},
@@ -696,15 +740,32 @@ class _ThreadedPlannerClient(LLMClient):
         legal_trace('planner.input', query=variables.get('query'), executors=variables.get('executors'))
         with legal_timing('planner.total'):
             try:
-                return self.delegate.invoke(variables, prompt_op, **kwargs)
+                tasks = self.delegate.invoke(variables, prompt_op, **kwargs)
             except RuntimeError as exc:
                 rejected = exc.__context__
                 if not isinstance(rejected, UnsafeSubqueryError):
                     raise
                 # Discard the unsafe proposal; the original question must pass the same guard.
                 legal_trace('planner.query_fallback', reason=str(rejected))
-                return prompt_op.parse_response({'executor': {'name': rejected.executor,
+                tasks = prompt_op.parse_response({'executor': {'name': rejected.executor,
                     'arguments': {'query': variables['query']}}}, **variables)
+        tried = {t.arguments.get('query') for t in context.gen_task() if t.executor == 'Retriever'} if context is not None else set()
+        if (last is not None and last.executor == 'Retriever' and isinstance(last.result, LegalEvidenceResponse)
+                and last.result is context.kwargs.get('legal_evidence')
+                and last.result.payload()['original_question'] == variables['query']
+                and tasks[0].executor == 'Retriever' and tasks[0].arguments.get('query') in tried):
+            legal_trace('planner.assess', reason='repeated retrieval with unassessed evidence')
+            return prompt_op.parse_response({'executor': {'name': 'Deduce',
+                'arguments': {'query': variables['query']}}}, query=variables['query'], context=variables.get('context'))
+        if (last is not None and isinstance(response, LegalCandidateResponse)
+                and last.executor == 'Deduce' and last.result is response
+                and response.payload()['deduce_task'] == last.id):
+            task = tasks[0]
+            if task.executor == 'Deduce' or task.executor == 'Retriever' and task.arguments.get('query') in tried:
+                legal_trace('planner.finish', reason='no new retrieval direction after checked candidate')
+                return prompt_op.parse_response({'executor': {'name': 'Finish', 'arguments': {}}},
+                                                query=variables['query'], context=variables.get('context'))
+        return tasks
 
     async def ainvoke(self, variables, prompt_op, **kwargs):
         return await asyncio.to_thread(self.invoke, variables, prompt_op, **kwargs)

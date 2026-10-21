@@ -58,7 +58,7 @@ public class ChatService {
     private JsonNode parse(String value) { try { return data.mapper().readTree(value); } catch(Exception e) { throw new IllegalStateException(e); } }
     public Map<String,Object> ask(UUID owner,ChatRequest input) {
         var chat=start(owner,input);
-        try { complete(chat,kag.query(request(owner,input))); return view(chat); }
+        try { complete(chat,kag.query(request(owner,input),chat.id)); return view(chat); }
         catch(RuntimeException e) { chat.state="UNAVAILABLE"; chats.save(chat); throw e; }
     }
     public StreamingResponseBody stream(UUID owner,ChatRequest input) {
@@ -85,7 +85,7 @@ public class ChatService {
         Pending job;
         try {
             var chat=start(owner,input); var payload=request(owner,input);
-            job=new Pending(chat,()->kag.query(payload)); pending.put(chat.id,job);
+            job=new Pending(chat,()->kag.query(payload,chat.id)); pending.put(chat.id,job);
         } catch(RuntimeException e) {streams.release();throw e;}
         return output -> {
             Thread.startVirtualThread(()->{

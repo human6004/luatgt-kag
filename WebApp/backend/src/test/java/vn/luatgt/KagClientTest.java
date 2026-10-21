@@ -98,6 +98,53 @@ class KagClientTest {
         }
     }
     KagClient client(Fixture f) { return client(f,Map.of(),null); }
+    @Test void failedQueryReportsSafeRemoteIdentityAndStage(CapturedOutput output) throws Exception {
+        try(var f=new Fixture()) {
+            f.status=503;
+            f.body="{\"request_id\":\""+f.requestId+"\",\"error\":{\"code\":\"BACKEND_UNAVAILABLE\",\"message\":\"Unavailable\",\"retryable\":false},\"native_state\":null}";
+            UUID chatId=UUID.randomUUID();
+            assertThrows(ResponseStatusException.class,()->client(f).query(request(),chatId));
+            assertEquals(1,f.calls.get());
+            assertTrue(output.getAll().contains("KAG_QUERY_FAILURE"));
+            assertTrue(output.getAll().contains("stage=upstream"));
+            assertTrue(output.getAll().contains("status=503"));
+            assertTrue(output.getAll().contains("remote_id="+f.requestId));
+            assertTrue(output.getAll().contains("request_id="+chatId));
+            assertFalse(output.getAll().contains(TOKEN));
+        }
+    }
+    @Test void failedAdmissionReportsStageWithoutDumpingCredentials(CapturedOutput output) throws Exception {
+        try(var f=new Fixture()) {
+            var client=client(f,Map.of("app.kag-token-file",temporary.resolve("missing").toString()),null);
+            assertThrows(ResponseStatusException.class,()->client.query(request()));
+            assertEquals(0,f.calls.get());
+            assertTrue(output.getAll().contains("stage=admission"));
+            assertFalse(output.getAll().contains(TOKEN));
+        }
+    }
+    @Test void releaseAdmissionFailureIsCorrelatedAndRecoversWithoutQueryRetry(CapturedOutput output) throws Exception {
+        try(var f=new Fixture()) {
+            var status=new AtomicInteger(503);
+            String remote="00000000-0000-4000-8000-000000000003";
+            f.server.createContext("/v1/graph/release",exchange->{
+                byte[] bytes=("{\"error\":{\"code\":\"NOT_READY\",\"message\":\""+TOKEN+"\"}}").getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().set("Content-Type","application/json");
+                exchange.getResponseHeaders().set("X-Request-ID",remote);
+                exchange.sendResponseHeaders(status.get(),bytes.length);
+                try(var out=exchange.getResponseBody()) {out.write(bytes);}
+            });
+            var client=client(f);
+            for(int i=0;i<3;i++) unavailable(()->client.query(request()));
+            assertEquals(0,f.calls.get(),"release admission must precede query/provider");
+            assertTrue(output.getAll().contains("stage=release"));
+            assertTrue(output.getAll().contains("status=503"));
+            assertTrue(output.getAll().contains("remote_id="+remote));
+            assertFalse(output.getAll().contains(TOKEN));
+            status.set(404);
+            assertEquals(answer(),client.query(request()));
+            assertEquals(1,f.calls.get(),"admission failures must not poison the query circuit");
+        }
+    }
     @Test void datasetSourcesValidatePinnedReleaseQuoteAndAllDomainTypesWithoutPublication() throws Exception {
         try(var f=new Fixture()) {
             var releaseView=json.createObjectNode().put("contract_version","h1-read-v1.2").put("release_kind","PRODUCTION")

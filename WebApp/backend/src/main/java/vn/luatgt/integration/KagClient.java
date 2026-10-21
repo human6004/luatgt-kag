@@ -26,6 +26,7 @@ import vn.luatgt.dto.ModelConfigActionRequest;
 
 @Component
 public class KagClient {
+    private static final org.slf4j.Logger LOG=org.slf4j.LoggerFactory.getLogger(KagClient.class);
     private final RestClient client,inspectionClient; private final ObjectMapper json;
     private final JdkClientHttpRequestFactory queryFactory,inspectionFactory;
     private final RestClient servingClient;
@@ -1212,9 +1213,22 @@ public class KagClient {
         catch(Exception e){throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Chưa đọc được kết quả thử đồ thị; lựa chọn Chat được giữ nguyên");}
     }
     public JsonNode query(Object request) {
+        return query(request,UUID.randomUUID());
+    }
+    public JsonNode query(Object request,UUID requestId) {
+        long started=System.nanoTime();
+        String localId=Objects.requireNonNull(requestId).toString();
+        var diagnostic=new HashMap<String,Object>();
+        diagnostic.put("stage","admission"); diagnostic.put("status",0); diagnostic.put("remote_id","none");
         try {
-            var admitted=admit(request);
+            var admitted=admit(request,diagnostic);
+            diagnostic.put("stage","transport");
+            diagnostic.put("status",0); diagnostic.put("remote_id","none");
             return breaker.executeSupplier(() -> post("/v1/query",admitted).exchange((req,res) -> {
+                diagnostic.put("status",res.getStatusCode().value());
+                String remoteId=res.getHeaders().getFirst("X-Request-ID");
+                if(remoteId!=null&&remoteId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))diagnostic.put("remote_id",remoteId);
+                diagnostic.put("stage",res.getStatusCode().is2xxSuccessful()?"validation":"upstream");
                 if(!res.getStatusCode().is2xxSuccessful()) return abstained(res,admitted);
                 verifyHeaders(res.getHeaders(),admitted,MediaType.APPLICATION_JSON);
                 byte[] bytes=res.getBody().readNBytes(256*1024+1);
@@ -1222,7 +1236,12 @@ public class KagClient {
                 var result=parse(StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(bytes)).toString(),admitted.token());
                 validateResult(result,admitted); currentDate(admitted.date()); return result;
             }));
-        } catch(Exception e) { throw unavailable(); }
+        } catch(Exception e) {
+            if(!Thread.currentThread().isInterrupted()) LOG.warn(
+                "KAG_QUERY_FAILURE request_id={} remote_id={} stage={} status={} error_type={} elapsed_ms={}",
+                localId,diagnostic.get("remote_id"),diagnostic.get("stage"),diagnostic.get("status"),e.getClass().getSimpleName(),Long.toString((System.nanoTime()-started)/1_000_000));
+            throw unavailable();
+        }
     }
     public void stream(Object request,BiConsumer<String,JsonNode> consumer) {
         try {
@@ -1261,11 +1280,20 @@ public class KagClient {
             !value.path("contract_sha256").asText().matches("[0-9a-f]{64}"))throw new IOException("Invalid graph schema");
     }
     private Pins activePins() throws IOException {
+        return activePins(null);
+    }
+    private Pins activePins(Map<String,Object> diagnostic) throws IOException {
         String token;
         try {token=inspectionToken();}catch(IOException e) {token=readToken(tokenFile);}
         String sent=token;
+        if(diagnostic!=null) diagnostic.put("stage","release");
         return inspectionClient.get().uri("/v1/graph/release").header(HttpHeaders.AUTHORIZATION,"Bearer "+sent).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
             int status=res.getStatusCode().value();
+            if(diagnostic!=null) {
+                diagnostic.put("status",status);
+                String remoteId=res.getHeaders().getFirst("X-Request-ID");
+                if(remoteId!=null&&remoteId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) diagnostic.put("remote_id",remoteId);
+            }
             if(!release.isBlank()&&(status==404||status==503&&errorCode(inspectionBody(res,sent)).equals("RELEASE_UNAVAILABLE"))) {
                 headerIdentity(release);return new Pins(release,snapshot,json.valueToTree(schema.identity()),false,false,"");
             }
@@ -1301,13 +1329,19 @@ public class KagClient {
         currentDate(admitted.date()); return json.createObjectNode().put("state","KAG_ABSTAINED");
     }
     private Admitted admit(Object request) throws IOException {
+        return admit(request,null);
+    }
+    private Admitted admit(Object request,Map<String,Object> diagnostic) throws IOException {
         currentDate(LocalDate.now(clock));
         if(!(request instanceof Map<?,?> input)||!input.keySet().equals(REQUEST_FIELDS)||!(input.get("user_id") instanceof UUID owner)) throw new IOException("Invalid request");
         var body=json.valueToTree(request);
         if(!fields(body).equals(REQUEST_FIELDS)||!body.path("user_id").isTextual()||!owner.toString().equals(body.path("user_id").asText())||
             !text(body.path("message"),4000,true)||!body.path("context_id").isTextual()||!body.path("context_id").asText().isEmpty()||
             !body.path("schema_contract").equals(json.valueToTree(schema.identity()))) throw new IOException("Invalid request");
-        var pins=activePins();headerIdentity(pins.snapshot());
+        var pins=activePins(diagnostic);headerIdentity(pins.snapshot());
+        if(diagnostic!=null) {
+            diagnostic.put("stage","admission");diagnostic.put("status",0);diagnostic.put("remote_id","none");
+        }
         ((com.fasterxml.jackson.databind.node.ObjectNode)body).set("schema_contract",pins.schema());
         byte[] bytes=json.writeValueAsBytes(body);
         if(bytes.length>64*1024) throw new IOException("Request too large");

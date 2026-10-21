@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 from contextlib import asynccontextmanager
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timedelta
@@ -65,6 +66,11 @@ def _failure(request: Request, code: str, *, status=None, extra=None):
     if extra:
         body.update(extra)
     response_status = failure.status if status is None else status
+    if request.method == 'POST' and request.scope['path'] in ('/v1/query', '/v1/query/stream'):
+        print('KAG_QUERY_FAILURE '+json.dumps({
+            'request_id': request.state.request_id, 'code': failure.code, 'status': response_status,
+            'elapsed_ms': round(max(0, time.monotonic()-getattr(request.state, 'request_started', time.monotonic()))*1000, 3)
+        }), flush=True)
     headers = {'WWW-Authenticate':'Bearer'} if response_status == 401 else (
         {'Retry-After':'1'} if failure.code == 'CONCURRENCY_LIMIT' else None)
     return JSONResponse(body,status_code=response_status,headers=headers)
@@ -80,6 +86,7 @@ class _SafeHTTP:
             return
         from .runtime import RuntimeFailure
         scope.setdefault('state', {})['request_id'] = str(uuid4())
+        scope['state']['request_started'] = time.monotonic()
         started = False
 
         async def authority():

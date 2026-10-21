@@ -276,9 +276,20 @@ class CoreTest {
         mvc.perform(get("/api/exams/"+expiredId).header("Authorization","Bearer "+user)).andExpect(jsonPath("$.score").value(0));
     }
     @Test void unavailableKagNeverFabricatesAnAnswer() throws Exception {
-        when(kag.query(any())).thenThrow(new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Dịch vụ KAG chưa khả dụng")); String user=register();
+        when(kag.query(any(),any(UUID.class))).thenThrow(new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Dịch vụ KAG chưa khả dụng")); String user=register();
         mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Mức phạt là gì?\"}")).andExpect(status().isServiceUnavailable());
         mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andExpect(status().isOk()).andExpect(jsonPath("$[0].state").value("UNAVAILABLE")).andExpect(jsonPath("$[0].answer").value(""));
+    }
+    @Test void unsupportedChatContextRejectedBeforeHistoryAndKag() throws Exception {
+        String user=register();
+        for(String path:List.of("/api/chat","/api/chat/stream?progress=true")) {
+            mvc.perform(post(path).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON)
+                .content("{\"message\":\"Căn cứ?\",\"contextId\":\"unsupported-session\"}"))
+                .andExpect(status().isBadRequest());
+        }
+        verifyNoInteractions(kag);
+        mvc.perform(get("/api/chat").header("Authorization","Bearer "+user))
+            .andExpect(status().isOk()).andExpect(jsonPath("$").isEmpty());
     }
     @Test @Transactional void verifiedNativeAbstentionPersistsRestSseAndHistoryWithoutReclassifyingLegacyRows() throws Exception {
         String user=register(); UUID owner=UUID.fromString(body(mvc.perform(get("/api/auth/me").header("Authorization","Bearer "+user)).andReturn()).path("id").asText());
@@ -286,7 +297,7 @@ class CoreTest {
         var wire=streamWire();
         try(var fixture=wire.new Fixture()) {
             fixture.status=503; fixture.body=KagClientTest.nativeAbstention(); fixture.identityHeaders=false; var actual=wire.client(fixture);
-            when(kag.query(any())).thenAnswer(call->actual.query(call.getArgument(0))); bridge(wire,fixture);
+            when(kag.query(any(),any(UUID.class))).thenAnswer(call->actual.query(call.getArgument(0),call.getArgument(1))); bridge(wire,fixture);
             var rest=body(mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Graph thiếu căn cứ?\"}"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.state").value("KAG_ABSTAINED")).andExpect(jsonPath("$.answer").value("")).andExpect(jsonPath("$.citations").isEmpty()).andReturn());
             var output=new ByteArrayOutputStream(); chat.stream(owner,new ChatRequest("Câu hỏi ngoài phạm vi chưa được phân loại","")).writeTo(output);
@@ -309,7 +320,7 @@ class CoreTest {
         var owner=streamOwner(); var wire=streamWire();
         try(var fixture=wire.new Fixture()) {
             fixture.status=status; fixture.body=KagClientTest.h1Failure(status); var actual=wire.client(fixture);
-            when(kag.query(any())).thenAnswer(call->actual.query(call.getArgument(0)));
+            when(kag.query(any(),any(UUID.class))).thenAnswer(call->actual.query(call.getArgument(0),call.getArgument(1)));
             doAnswer(call->{ actual.stream(call.getArgument(0),call.getArgument(1)); return null; }).when(kag).stream(any(),any());
             var error=assertThrows(ResponseStatusException.class,()->chat.ask(owner,new ChatRequest("Offline H1 integration","")));
             assertEquals(503,error.getStatusCode().value());
@@ -324,9 +335,11 @@ class CoreTest {
     @Test void chatDelegatesOnlyAuthenticatedOwnerAndRejectsBrowserIdentity() throws Exception {
         String user=register();
         UUID owner=UUID.fromString(body(mvc.perform(get("/api/auth/me").header("Authorization","Bearer "+user)).andReturn()).path("id").asText());
-        when(kag.query(any())).thenAnswer(invocation->{
+        when(kag.query(any(),any(UUID.class))).thenAnswer(invocation->{
             Map<?,?> request=invocation.getArgument(0);
             assertEquals(owner,request.get("user_id")); assertInstanceOf(UUID.class,request.get("user_id"));
+            UUID chatId=invocation.getArgument(1);
+            assertEquals(owner,chats.findById(chatId).orElseThrow().ownerId);
             assertEquals(Set.of("user_id","message","context_id","schema_contract"),request.keySet());
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Dịch vụ KAG chưa khả dụng");
         });
@@ -336,13 +349,13 @@ class CoreTest {
         verifyNoInteractions(kag);
         mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).header("X-User-ID",UUID.randomUUID().toString())
             .header("X-KAG-Token","forged-browser-token").contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Căn cứ?\"}")).andExpect(status().isServiceUnavailable());
-        verify(kag,times(1)).query(any());
+        verify(kag,times(1)).query(any(),any(UUID.class));
     }
     @Test void nativeAbstentionAndMixedInvalidCitationsCannotBecomeAnswers() throws Exception {
         String user=register();
         for(String response:List.of("{\"answer\":\"Không đủ căn cứ\",\"citations\":[]}",
             "{\"answer\":\"Nội dung thử\",\"citations\":[{\"doc_id\":\"missing\",\"unit_id\":\"missing::1\",\"quote\":\"Nguồn\"},{\"sign_id\":\"P.1\"}]}")) {
-            when(kag.query(any())).thenReturn(json.readTree(response));
+            when(kag.query(any(),any(UUID.class))).thenReturn(json.readTree(response));
             mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Căn cứ?\"}")).andExpect(status().isBadGateway());
         }
         var items=body(mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andReturn());
@@ -357,7 +370,7 @@ class CoreTest {
             var answer=json.createObjectNode().put("contract_version","graph-chat-v1").put("answer","Căn cứ "+graph);
             var citation=answer.putArray("citations").addObject().put("doc_id",docId).putNull("unit_id").put("sign_id","sign-1").put("quote",quote);
             citation.putObject("source").put("contract_version","graph-source-v1").put("release_id","release-"+graph).put("text",quote);
-            when(kag.query(any())).thenReturn(answer);
+            when(kag.query(any(),any(UUID.class))).thenReturn(answer);
             var saved=body(mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON)
                 .content("{\"message\":\"Căn cứ graph "+graph+"?\"}")).andExpect(status().isOk()).andExpect(jsonPath("$.state").value("ANSWERED")).andReturn());
             expected.put(saved.path("id").asText(),answer.path("citations"));

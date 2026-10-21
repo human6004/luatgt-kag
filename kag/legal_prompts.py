@@ -113,8 +113,14 @@ def material_constraints(text):
 
 
 def query_content_terms(text):
-    frames = {'nghị', 'luật', 'bộ', 'số', 'văn', 'bản', 'hiện', 'nay', 'phải', 'ra', 'sao', 'này', 'đó', 'ý', 'nghĩa'}
-    return {word.casefold() for word in _WORDS.findall(text)} - _CONNECTIVES - frames
+    text = text.removeprefix(DOCUMENT_CONTENT_PREFIX)
+    # Only a complete trailing presentation instruction is outside the legal question.
+    presentation = (r'(?:giải thích|trình bày|diễn đạt|tóm tắt)'
+                    r'(?:\s+(?:ngắn(?: gọn)?|dễ hiểu|bằng gạch đầu dòng|theo gạch đầu dòng|từ nguồn|dựa trên nguồn|kèm trích dẫn))*'
+                    r'|trích dẫn nguồn')
+    text = re.sub(r'(?:^|(?<=[?.!;]))\s*(?:'+presentation+r')\s*[.!]?\s*$', '', text, flags=re.I)
+    frames = {'nghị', 'luật', 'bộ', 'số', 'văn', 'bản', 'hiện', 'nay', 'phải', 'ra', 'sao', 'này', 'đó', 'ý', 'nghĩa', 'ở', 'đâu'}
+    return {word.casefold() for word in _WORDS.findall(text)} - (_CONNECTIVES - {'phạt', 'trừ', 'điểm'}) - frames
 
 
 def _clauses(text):
@@ -235,9 +241,10 @@ class LegalPlanningPrompt(DefaultIterativePlanningPrompt):
             'Thoughts và candidate của model không phải luật. '
             'Giữ binding Điều–khoản–điểm và đối tượng/hành vi trong từng mệnh đề/số hiệu; '
             'không đảo gán các ràng buộc dù vẫn giữ đủ các từ và số. '
-            'Nguồn thiếu/không đủ/xung đột chưa giải quyết: Deduce phải abstain rồi Finish. '
-            'Nếu Deduce cuối đã abstained=true và chưa có retrieval mới, bước tiếp theo phải Finish; '
-            'không tạo truy vấn hiệu lực mới làm mất số hiệu/Điều/khoản của câu hỏi gốc. '
+            'Nguồn thiếu/không đủ/xung đột chưa giải quyết: Deduce phải abstain. '
+            'Nếu Deduce còn thiếu một phần, chỉ tiếp tục bằng hướng Retriever mới hợp lệ; '
+            'không lặp cùng truy vấn hoặc Deduce trên cùng ledger. Không có hướng mới thì Finish. '
+            'Không tạo truy vấn hiệu lực mới làm mất số hiệu/Điều/khoản của câu hỏi gốc. '
             'Sau mỗi retrieval mới cần Deduce lại. Dùng nhiều Retriever khi cần tìm thêm '
             'điều kiện/hiệu lực; không quá năm iterations. Chỉ nguồn được cấp là authority, '
             'không kiến thức nội bộ, không suy hiệu lực từ số hiệu mới hơn. '
