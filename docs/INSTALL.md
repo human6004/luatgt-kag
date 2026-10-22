@@ -2,6 +2,8 @@
 
 Dùng cho lần cài đầu. Máy đã có dữ liệu làm theo [UPDATE](UPDATE.md); giữ `.env`, secrets và storage đang dùng.
 
+Muốn chuyển cả dữ liệu từ máy/thư mục cũ, dùng [chuyển installation và phục hồi](../docker/README.md#chuyển-cả-installation-sang-máy-hoặc-thư-mục-khác), không sinh lại secrets theo bước cài mới.
+
 ## 1. Chuẩn bị công cụ
 
 Cài [Git for Windows](https://git-scm.com/install/windows) và [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/). Bật ảo hóa/WSL 2 theo yêu cầu Docker, chọn Linux containers và chờ Docker Engine chạy.
@@ -13,7 +15,7 @@ docker version
 docker compose version
 ```
 
-Cần thấy cả Docker Client/Server. Compose từ **2.20.3** để hỗ trợ `include`. Không cần Python, Java hoặc Node trên host. Build cần mạng để tải source/images/dependencies; dự án chưa công bố cấu hình RAM/disk tối thiểu đã đo.
+Cần thấy cả Docker Client/Server. Compose từ **2.20.3** để hỗ trợ `include`. Runtime KAG đã pin cho **Linux/amd64**; hướng dẫn này dành cho Windows x64 chạy Linux containers. Không cần Python, Java hoặc Node trên host. Build cần mạng để tải source/images/dependencies; dự án chưa công bố cấu hình RAM/disk tối thiểu đã đo.
 
 ## 2. Lấy source
 
@@ -41,14 +43,14 @@ $stateSetting = [regex]::Match($content, '(?m)^KAG_STATE_DIR=([^\r\n]+)')
 if (-not $stateSetting.Success) { throw 'Cần đặt KAG_STATE_DIR trong .env hoặc .env.example.' }
 $statePath = $stateSetting.Groups[1].Value.Trim().Trim([char]34, [char]39)
 if ([string]::IsNullOrWhiteSpace($statePath)) { throw 'KAG_STATE_DIR không được để trống.' }
-$state = [IO.Path]::GetFullPath((Join-Path $PWD.Path $statePath))
+$state = if ([IO.Path]::IsPathRooted($statePath)) { [IO.Path]::GetFullPath($statePath) } else { [IO.Path]::GetFullPath((Join-Path $PWD.Path $statePath)) }
 $tokenNames = @('query', 'inspect', 'builder', 'egress')
 $tokenFiles = @($tokenNames | ForEach-Object { Join-Path $state "$_.token" })
 foreach ($entry in @(@('KAG_CREDENTIALS_WRITE_SECRET_FILE', 'credentials-write'),
                      @('KAG_PROVIDER_TEST_SECRET_FILE', 'provider-test'), @('KAG_CONFIG_APPLY_SECRET_FILE', 'config-apply'))) {
     $setting = [regex]::Match($content, "(?m)^$($entry[0])=([^\r\n]+)")
     $path = if ($setting.Success) { $setting.Groups[1].Value.Trim().Trim([char]34, [char]39) } else { "../luatgt-state/$($entry[1]).token" }
-    $tokenFiles += [IO.Path]::GetFullPath((Join-Path $PWD.Path $path))
+    $tokenFiles += if ([IO.Path]::IsPathRooted($path)) { [IO.Path]::GetFullPath($path) } else { [IO.Path]::GetFullPath((Join-Path $PWD.Path $path)) }
 }
 
 $keys = @('ADMIN_PASSWORD', 'DB_PASSWORD', 'MYSQL_ROOT_PASSWORD', 'REDIS_PASSWORD',
@@ -89,10 +91,9 @@ Write-Host 'Đã chuẩn bị .env và token; giữ nguyên các file đã có. 
 Kết quả mặc định:
 
 - `.env`: mật khẩu và biến triển khai; xem `ADMIN_EMAIL`/`ADMIN_PASSWORD` để đăng nhập.
-- `.secrets/`: bốn file `query.token`, `inspect.token`, `builder.token`, `egress.token`.
-- `../luatgt-state/`: ba file `credentials-write.token`, `provider-test.token`, `config-apply.token` cho lưu/kiểm/áp dụng model.
+- `.secrets/`: bảy file `query.token`, `inspect.token`, `builder.token`, `egress.token`, `credentials-write.token`, `provider-test.token`, `config-apply.token`.
 
-Đường dẫn thực tế lấy từ `KAG_STATE_DIR` và ba biến `KAG_*_SECRET_FILE` trong `.env`. Không commit `.env`, token hoặc backup; giới hạn quyền đọc cho người vận hành và Docker Desktop. Giữ chúng khi cập nhật.
+Đường dẫn thực tế lấy từ `KAG_STATE_DIR` và ba biến `KAG_*_SECRET_FILE` trong `.env`. Dùng đường dẫn tương đối với root repository hoặc tuyệt đối, dùng dấu `/` trên Windows. Nếu đổi thư mục secrets cho cài mới, sửa cả bốn biến trước khi chạy đoạn lệnh; không dùng cú pháp tham chiếu biến trong các đường dẫn của đoạn PowerShell này. Cài đặt cũ giữ nguyên đường dẫn và fallback `../luatgt-state`, không tự chuyển file. Không commit `.env`, token hoặc backup; giới hạn quyền đọc cho người vận hành và Docker Desktop. Giữ chúng khi cập nhật.
 
 Có thể mở cấu hình tại máy riêng:
 
@@ -101,6 +102,8 @@ notepad .env
 ```
 
 Đổi email Admin trước lần khởi động đầu nếu muốn. Mặc định project là `luatgt`, state là `./.secrets`. Không đổi mật khẩu trong `.env` để đặt lại tài khoản/database đã tồn tại.
+
+Nếu máy đang có installation khác, đặt `COMPOSE_PROJECT_NAME` mới và các cổng chưa dùng trong `.env` **trước khi khởi động**; tên project riêng không tự tách cổng host. Xem [cổng và mạng](../docker/README.md#cổng-và-mạng). Không đặt các biến storage về volumes của installation kia.
 
 ## 4. Khởi động
 
@@ -143,7 +146,6 @@ Các thao tác kiểm model, lưu model/Knowledge Base trong OpenSPG và dựng 
 | WebApp lỗi 502 | Xem log backend/frontend, không tạo lại mật khẩu hoặc xóa dữ liệu |
 | Đăng nhập trả 401 | Kiểm đúng tài khoản của hệ thống đang dùng; đổi `.env` không đặt lại mật khẩu cũ |
 | Build không tải dependency/image | Kiểm mạng và registry; không tự đổi image pin để vượt lỗi |
+| Docker báo `all predefined address pools have been fully subnetted` | Host hết dải mạng Docker; nhờ người vận hành đối chiếu networks. Chỉ gỡ containers/networks thử đã dừng và xác định đúng chủ sở hữu; giữ volumes. Không prune hoặc thay cấu hình mạng toàn Docker để thử vượt lỗi |
 
 Dừng/chạy lại theo [Docker](../docker/README.md#vận-hành). Không dùng `down -v`, prune hoặc xóa volumes để sửa lỗi.
-
-Hướng dẫn đã được đối chiếu source; chưa xác minh trọn quy trình cài trên máy sạch.

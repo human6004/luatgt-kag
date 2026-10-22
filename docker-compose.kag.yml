@@ -333,9 +333,9 @@ services:
     pids_limit: 64
     # Internal-only storage networks cannot publish host ports directly.
     ports:
-      - "127.0.0.1:7474:7474"
-      - "127.0.0.1:7687:7687"
-      - "127.0.0.1:8887:8887"
+      - "127.0.0.1:${KAG_NEO4J_HTTP_PORT:-7474}:7474"
+      - "127.0.0.1:${KAG_NEO4J_BOLT_PORT:-7687}:7687"
+      - "127.0.0.1:${KAG_OPENSPG_PORT:-8887}:8887"
     init: true
     stop_grace_period: 10s
     depends_on:

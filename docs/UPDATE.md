@@ -34,6 +34,7 @@ Không dùng force/reset hoặc `submodule update --remote`: ứng dụng cần 
 
 - Bổ sung biến mới từ `.env.example` vào `.env` đang có; giữ các giá trị riêng của installation.
 - Giữ Compose project, storage mappings, `KAG_STATE_DIR`, credentials và token. Đổi password trong `.env` không tự đổi password database hoặc tài khoản đã tạo.
+- Template cài mới có thể đổi mặc định thư mục token; không chép các đường dẫn mới đó vào installation cũ. Giữ ba biến `KAG_*_SECRET_FILE` hoặc fallback đang dùng, không tự chuyển state.
 - Giữ Builder state, runs, locks và provider state. API/Worker/backend/frontend cần được cập nhật đồng bộ; không lấy cấu hình/target của môi trường thử sang.
 - Nếu bản mới đổi database image, schema hoặc Flyway migration, đọc tác động trước khi khởi động. Backend chạy migrations khi startup. Không chạy migration phá dữ liệu nếu chưa có phương án chuyển đổi được duyệt.
 

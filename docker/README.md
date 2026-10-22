@@ -45,6 +45,8 @@ Cổng publish mặc định chỉ ở `127.0.0.1`: WebApp 8081 (`WEBAPP_PORT`),
 
 Quản trị OpenSPG/Neo4j đi qua HAProxy `kag-ingress`, chỉ publish `127.0.0.1:8887`, `127.0.0.1:7474` và `127.0.0.1:7687`. Proxy chuyển TCP tới đúng service/port, gồm WebSocket của Neo4j Browser; không thêm đường outbound cho storage. Containers chỉ nối mạng `internal` không publish host port trực tiếp được trên Docker đang dùng.
 
+Đổi cổng host bằng các biến `.env`: `WEBAPP_PORT` (8081), `BACKEND_PORT` (8080), `MYSQL_PORT` (3306), `REDIS_PORT` (6379), `MINIO_PORT` (9000), `MINIO_CONSOLE_PORT` (9001), `KAG_OPENSPG_PORT` (8887), `KAG_NEO4J_HTTP_PORT` (7474), `KAG_NEO4J_BOLT_PORT` (7687). Các số trong ngoặc là mặc định. Khi đổi ba cổng quản trị, sửa tương ứng `KAG_OPENSPG_PUBLIC_URL`, `KAG_NEO4J_BROWSER_URL`, `KAG_NEO4J_PUBLIC_BOLT_URL` cho trình duyệt; giữ hostname nhất quán. Cổng/DNS bên trong Docker giữ nguyên. Cài nhiều installation trên cùng host cần project, cổng, state và volumes riêng.
+
 KAG API, Worker 8010, broker 8899 và gateway provider 8898 không publish ra host. Backend gọi `kag-api:8000`, control `openspg-server:8010`. Builder chung namespace mạng OpenSPG Server; Java OpenSPG nghe `0.0.0.0:8887` trong mạng container. Dùng DNS service, không dùng IP/container ID động.
 
 Mạng `private` chứa storage OpenSPG; `readbus` nối API/backend/broker; cả hai internal. `kag-ingress` nối hai mạng này với `ingress` để chuyển tiếp cổng quản trị và kiểm soát provider. API/Worker/OpenSPG/Neo4j vẫn chỉ nối mạng internal. Backend không có Docker Socket hoặc mật khẩu graph.
@@ -81,12 +83,13 @@ Mặc định có **11 named volumes**: 3 WebApp (MySQL/Redis/MinIO), 4 OpenSPG 
 
 Giữ các biến mapping khi cập nhật:
 
-- `COMPOSE_PROJECT_NAME`, `WEBAPP_STORAGE_PROJECT`, `KAG_STORAGE_PROJECT`: namespace tên volume.
-- `WEBAPP_STORAGE_EXTERNAL`, `KAG_STORAGE_EXTERNAL`: `true` yêu cầu volumes hiện hữu.
+- `WEBAPP_STORAGE_PROJECT`: namespace ba volumes WebApp; `KAG_STORAGE_PROJECT`: namespace bốn volumes OpenSPG. Khi bỏ trống, dùng `COMPOSE_PROJECT_NAME`.
+- Bốn volumes KAG (Builder state/runs/locks và provider state) theo `COMPOSE_PROJECT_NAME`; riêng locks có thể dùng `KAG_GRAPH_LOCK_VOLUME`. Đổi hai biến storage không đổi bốn volumes này.
+- `WEBAPP_STORAGE_EXTERNAL`, `KAG_STORAGE_EXTERNAL`: `true` yêu cầu tương ứng ba volumes WebApp/bốn volumes OpenSPG hiện hữu. Không áp dụng cho bốn volumes KAG; cần đối chiếu đủ mapping trước startup để không tạo nhầm state rỗng.
 - `KAG_NEO4J_STORAGE_REVISION`: hậu tố volume Neo4j data.
 - `KAG_GRAPH_LOCK_VOLUME`: volume khóa chung cho mọi writer cùng physical database, không đổi để né khóa.
 
-`.env.example` đặt `KAG_STATE_DIR=./.secrets`: state nằm trong repo local, được loại khỏi Git và Docker build context. Giữ bốn token và các thư mục `release`, `api-credentials`, `broker-credentials`, `builder-input`. Cài đặt cũ vẫn dùng đường dẫn trong `.env`; khi không đặt biến này, Compose dùng `../luatgt-state` để giữ tương thích. Runs/locks/provider counters nằm trong named volumes. Windows dùng dấu `/` trong đường dẫn `.env`.
+`.env.example` đặt `KAG_STATE_DIR=./.secrets` và ba đường token riêng cùng thư mục: state nằm trong repo local, được loại khỏi Git và Docker build context. Giữ bảy token và các thư mục `release`, `api-credentials`, `broker-credentials`, `builder-input`. Cài đặt cũ vẫn dùng đường dẫn trong `.env`; khi không đặt biến này, Compose dùng `../luatgt-state` để giữ tương thích. Runs/locks/provider counters nằm trong named volumes. Windows dùng dấu `/` trong đường dẫn `.env`.
 
 Ba token lưu/kiểm/áp dụng model lấy từ các biến `KAG_*_SECRET_FILE` riêng theo [INSTALL](../docs/INSTALL.md#3-tạo-cấu-hình-và-secrets). Key lưu qua UI ở file riêng quyền `0600` trong provider state; không trả key qua API và không mã hóa tại chỗ. Bảo vệ cả volume và mọi bản sao.
 
@@ -129,6 +132,44 @@ Kết quả: mỗi volume có file export, cùng cấu hình/state/mapping. Ch�
 Export thành công chưa chứng minh phục hồi được. Thử import trên **volume riêng** trước khi cần phục hồi; import vào volume có dữ liệu sẽ ghi đè. Không restore đè storage đang phục vụ; cần đúng source/image/schema của bản sao.
 
 Trong Docker Desktop, tạo/chọn volume thử → **Import → Local file**, chọn bản export và xác nhận. Kiểm dữ liệu/tài khoản/lịch sử trên môi trường phục hồi riêng trước khi chuyển đổi. Hạ image không đảo ngược migration database; giữ images cũ cùng backup đến khi kiểm xong bản cập nhật.
+
+Có thể dùng CLI Docker thay cho giao diện export/import. Chạy tại root installation đã dừng; thay tên volume và thư mục bằng mapping thực tế. Dùng image MySQL của installation làm môi trường chạy `tar`, không khởi động MySQL trong container tạm:
+
+```powershell
+$volume = 'TEN_VOLUME_NGUON_TRONG_MAPPING'
+$backup = (Resolve-Path 'THU_MUC_BACKUP_DA_TAO').Path
+$backupImage = docker compose images -q mysql
+docker volume inspect $volume | Out-Null
+if ($LASTEXITCODE -ne 0) { throw 'Không tìm thấy volume nguồn; dừng sao lưu.' }
+if (Test-Path -LiteralPath (Join-Path $backup "$volume.tgz")) { throw 'Archive đã tồn tại; chọn thư mục backup mới.' }
+docker run --rm --network none --read-only --user 0 --entrypoint tar --mount "type=volume,src=$volume,dst=/source,readonly" --mount "type=bind,src=$backup,dst=/backup" $backupImage -czf "/backup/$volume.tgz" -C /source .
+```
+
+Kiểm exit code 0 và file archive trước khi làm volume tiếp theo. Tên mỗi archive gắn đúng volume; không ghi đè backup đã có. Phục hồi archive CLI vào một **tên volume mới chưa tồn tại**, không dùng tên nguồn hay volume đang phục vụ:
+
+```powershell
+$restoredVolume = 'TEN_VOLUME_MOI_TRONG_MAPPING_DICH'
+$existingVolumes = @(docker volume ls --format '{{.Name}}')
+if ($LASTEXITCODE -ne 0) { throw 'Không đọc được danh sách volumes; dừng phục hồi.' }
+if ($existingVolumes -contains $restoredVolume) { throw 'Volume đích đã tồn tại; không phục hồi đè.' }
+docker volume create $restoredVolume
+if ($LASTEXITCODE -ne 0) { throw 'Không tạo được volume đích; dừng phục hồi.' }
+docker run --rm --network none --read-only --user 0 --entrypoint tar --mount "type=volume,src=$restoredVolume,dst=/destination" --mount "type=bind,src=$backup,dst=/backup,readonly" $backupImage -xzf "/backup/$volume.tgz" --numeric-owner -C /destination
+```
+
+Làm đủ mapping, kiểm từng exit code rồi cấu hình deployment đích dùng các volumes vừa phục hồi. Hai lệnh `tar` chỉ đọc nguồn và ghi archive/volume đích; không thay secrets, startup hoặc dữ liệu nguồn.
+
+### Chuyển cả installation sang máy hoặc thư mục khác
+
+Đây là phục hồi dữ liệu đã có, khác [cài mới](../docs/INSTALL.md): **không sinh lại secrets, không Build/Resume để thay dữ liệu đã sao lưu**.
+
+1. Hoàn tất sao lưu khi mọi nơi ghi đã dừng. Trên máy đích lấy đúng commit/submodule của backup; chuẩn bị Docker và đủ dung lượng. Build lại images từ source hoặc chuyển images đã lưu đúng phiên bản. Chưa chạy ứng dụng.
+2. Chép `.env` và tất cả bind sources trong mapping sang nơi được bảo vệ trên máy đích. Giữ nguyên nội dung token/credentials, release/source snapshot; sửa `KAG_STATE_DIR`, ba biến `KAG_*_SECRET_FILE` và các bind tùy chỉnh cho vị trí mới. Đường tương đối tính từ root repo mới. Không chép đè secrets của installation khác.
+3. Import mọi named volume trong mapping (mặc định 11) vào **volumes trống riêng**, ghi mapping tên cũ → tên mới. Giữ namespace cũ nếu máy đích chưa có installation đó. Nếu cần namespace mới, đối chiếu `COMPOSE_PROJECT_NAME` cho bốn volumes KAG, `WEBAPP_STORAGE_PROJECT`/`KAG_STORAGE_PROJECT` cho bảy volumes WebApp/OpenSPG, cùng `KAG_NEO4J_STORAGE_REVISION` và `KAG_GRAPH_LOCK_VOLUME`. Đặt `WEBAPP_STORAGE_EXTERNAL=true` và `KAG_STORAGE_EXTERNAL=true` để Compose báo thiếu bảy volumes storage đã import. Bốn volumes KAG vẫn do Compose quản lý: kiểm chúng đã tồn tại đúng tên, không chỉ kiểm hai biến external. Giữ volume khóa cùng các writer của cùng physical database.
+4. Sửa cổng và URL trình duyệt cho host đích; kết nối giữa services vẫn dùng DNS Docker. Endpoint provider ngoài Docker cần hợp lệ trên mạng mới. Đối chiếu mounts/tên volumes trước khi chạy `docker compose config -q`, rồi `docker compose up -d --build`. Không chạy hai database cùng volume hoặc phục hồi đè bản đang phục vụ.
+5. Đăng nhập bằng tài khoản cũ; kiểm nội dung/tệp, lịch sử/citation, model đã lưu, project và phiên Builder. Startup không tự Resume. Graph phục vụ chỉ được sẵn sàng khi identity/schema/index/nguồn/model còn khớp; di chuyển đường dẫn không cho phép bỏ kiểm identity. Nếu storage mới làm thay identity vật lý hoặc cấu hình project không còn khớp, giữ hệ thống chưa phục vụ, đối soát trước; không sửa release/receipt hoặc chọn graph khác để vượt lỗi.
+
+Giữ máy/backup cũ dừng ghi đến khi nghiệm thu bản phục hồi. Nếu thất bại, dừng bản mới và quay lại bản cũ còn nguyên; dữ liệu phát sinh mới cần đối soát riêng, không tự nhập đè. Chuyển dữ liệu và nâng phiên bản là hai việc riêng; phục hồi đúng phiên bản trước, sau đó theo [UPDATE](../docs/UPDATE.md).
 
 ## Cấu hình chatbot
 
