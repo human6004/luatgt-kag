@@ -5,19 +5,21 @@ are repository-relative for corpus files and artifact names for external ledger.
 No full-source runner or count-based production-plan verification lives here.
 """
 from collections.abc import Mapping
+from copy import deepcopy
 from dataclasses import dataclass
 import hashlib
 import json
 from pathlib import Path
+import re
 from typing import Any
 
 from .codec import BuilderContractError, canonical_json, validate_properties
 
 
 ARTIFACT_HASHES = (
-    ('xref_a3g2_final_ledger.jsonl', '0cb9bf4b792a76b30cfa101d70548f96a64678f36370378b835671688e88ce02'),
-    ('xref_a3g2_final_audit.json', 'e1400db9310cca36a9b4f5e73014fb33eee2e8712be86560aa9d70fb39e51d46'),
-    ('xref_a3g2_downstream_policy.json', 'aade9f2d13f4c6f3c2155c241d53018664372d26182b5a9321c2a7aa2cc19ee2'),
+    ('xref_a3g2_final_ledger.jsonl', 'cb2770aa99f04d07f111078ee859d91f3b65fe5ec8126b6221a75202a7cfa226'),
+    ('xref_a3g2_final_audit.json', 'f89db6fa09d3c3de1166837035e36965094d2e90127ee42d230c05bfcff38682'),
+    ('xref_a3g2_downstream_policy.json', 'ce4614236ff3018516a5aa31b5b1086622ac86e28881a82eedbbbeee28cbc2a8'),
 )
 SOURCE_FILES = (
     ('documents', 'data/processed/meta/documents.jsonl'),
@@ -29,10 +31,80 @@ SOURCE_FILES = (
 )
 CLASSIFICATIONS = ('SAFE_EDGE', 'EXTERNAL_REFERENCE_ONLY',
                    'KEEP_UNRESOLVED_NO_EDGE', 'EXCLUDE_FROM_GRAPH_EDGE')
+SIGN_RECORD_TYPES = ('family', 'variant', 'standalone', 'unverified_code')
+SIGN_DESCRIPTION_SCOPES = ('specific', 'family_shared', 'contextual', 'unverified')
+SIGN_VERIFICATION_STATES = ('verified_pdf', 'source_conflict', 'reference_only', 'review_required')
 
 
 class InputIntegrityError(BuilderContractError):
     """Invalid source identity, hierarchy, join or artifact integrity."""
+
+
+def convert_signs(records, units, documents):
+    """Convert the reviewed sign master without repairing identities or legal text."""
+    result, indexed = [], {}
+    for line, record in enumerate(records, 1):
+        context = f'sign master:{line}'
+        if not isinstance(record, dict):
+            raise InputIntegrityError(f'{context}: expected object')
+        for field in ('sign_id', 'sign_code', 'qcvn', 'category', 'name', 'unit_id'):
+            if not isinstance(record.get(field), str) or not record[field].strip():
+                raise InputIntegrityError(f'{context}: {field} missing/non-text/blank')
+        identity = record['sign_id']
+        if identity in indexed:
+            raise InputIntegrityError(f'{context}: duplicate sign_id {identity!r}')
+        if identity != record['qcvn'] + '::' + record['sign_code']:
+            raise InputIntegrityError(f'{context}: QCVN/code identity mismatch')
+        for field, allowed in (('record_type', SIGN_RECORD_TYPES),
+                               ('description_scope', SIGN_DESCRIPTION_SCOPES),
+                               ('verification_status', SIGN_VERIFICATION_STATES)):
+            if record.get(field) not in allowed:
+                raise InputIntegrityError(f'{context}: invalid {field}')
+        text = record.get('legal_description')
+        if not isinstance(text, str):
+            raise InputIntegrityError(f'{context}: legal_description must be Text')
+        if record['verification_status'] == 'verified_pdf' and (
+                not text.strip() or record['description_scope'] == 'unverified'
+                or not isinstance(record.get('source_evidence'), list) or not record['source_evidence']):
+            raise InputIntegrityError(f'{context}: verified legal source missing')
+        unit = units.get(record['unit_id'])
+        document = documents.get(unit.get('doc_id')) if unit else None
+        if not unit or not document or document.get('scope') == 'out_of_scope':
+            raise InputIntegrityError(f'{context}: production unit/document missing')
+        qcvn = unit.get('scope') or unit.get('qcvn_id')
+        if not isinstance(qcvn, str) or re.sub(r'\s+', '', qcvn) != re.sub(r'\s+', '', record['qcvn']):
+            raise InputIntegrityError(f'{context}: QCVN version differs from source unit')
+        parent = record.get('parent_code')
+        if parent is not None and (not isinstance(parent, str) or not parent.strip()):
+            raise InputIntegrityError(f'{context}: invalid parent_code')
+        children = record.get('children_codes')
+        if (not isinstance(children, list) or any(not isinstance(v, str) or not v for v in children)
+                or len(set(children)) != len(children)):
+            raise InputIntegrityError(f'{context}: invalid children_codes')
+        values = dict(sign_id=identity, doc_id=unit['doc_id'], unit_id=record['unit_id'],
+            so_hieu=document['so_hieu'], ma_bien=record['sign_code'], nhom=record['category'],
+            qcvn=record['qcvn'], ten=record['name'], bien_phu_variant=record.get('bien_phu_variant', ''),
+            mo_ta=text, ngay_hieu_luc=document.get('effective_from', document.get('ngay_hieu_luc')),
+            ngay_het_hieu_luc=document.get('effective_to', document.get('ngay_het_hieu_luc')),
+            record_type=record['record_type'], description_scope=record['description_scope'],
+            verification_status=record['verification_status'],
+            parent_sign_id=record['qcvn']+'::'+parent if parent else None,
+            source_evidence={'record': deepcopy(record)})
+        result.append(values)
+        indexed[identity] = record
+    for row in result:
+        record = indexed[row['sign_id']]
+        parent = indexed.get(row['parent_sign_id']) if row['parent_sign_id'] else None
+        if record['record_type'] == 'variant' and parent is None:
+            raise InputIntegrityError(f"{row['sign_id']}: missing source parent")
+        if row['parent_sign_id'] and (parent is None or parent['record_type'] not in ('family', 'standalone')
+                or record['record_type'] != 'variant' or record['sign_code'] not in parent['children_codes']):
+            raise InputIntegrityError(f"{row['sign_id']}: missing/inconsistent source parent")
+        for child in record['children_codes']:
+            target = indexed.get(record['qcvn']+'::'+child)
+            if not target or target.get('parent_code') != record['sign_code']:
+                raise InputIntegrityError(f"{row['sign_id']}: missing/inconsistent family child {child}")
+    return result
 
 
 @dataclass(frozen=True)
@@ -92,6 +164,8 @@ def _node_values(
     record = row.record
     id_field = {'LegalDocument': 'doc_id', 'LegalUnit': 'unit_id', 'TrafficSign': 'sign_id'}[node_type]
     values = dict(record, id=record[id_field], name=record[id_field], source_record=dict(row.locator))
+    if 'source_evidence' in record:
+        values['source_record']['origin'] = deepcopy(record['source_evidence'])
     if node_type == 'LegalDocument':
         values['markdown_path'] = f"data/processed/documents/{record['doc_id']}.md"
         for primary, alias in (('effective_from', 'ngay_hieu_luc'), ('effective_to', 'ngay_het_hieu_luc')):
@@ -190,6 +264,23 @@ def validate_input_integrity(inputs: BuilderInputs, contract: Mapping[str, Any])
         if row.record.get('doc_id') != units[target].record['doc_id']:
             raise _error(row, f'sign {identity!r}: document mismatch')
         _validate_node('TrafficSign', row, contract)
+        record = row.record
+        semantics = (('record_type', SIGN_RECORD_TYPES),
+                     ('description_scope', SIGN_DESCRIPTION_SCOPES),
+                     ('verification_status', SIGN_VERIFICATION_STATES))
+        if any(field in record for field, _ in semantics):
+            for field, allowed in semantics:
+                if record.get(field) not in allowed:
+                    raise _error(row, f'invalid sign {field}')
+            parent_id = record.get('parent_sign_id')
+            parent = signs.get(parent_id) if isinstance(parent_id, str) else None
+            if record['record_type'] == 'variant':
+                if (parent is None or parent.record.get('record_type') not in ('family', 'standalone')
+                        or parent.record.get('doc_id') != record['doc_id']
+                        or parent.record.get('qcvn') != record.get('qcvn')):
+                    raise _error(row, 'variant requires a source parent in the same QCVN')
+            elif parent_id is not None:
+                raise _error(row, 'only variants may have a source parent')
     source_by_hash = {}
     for row in inputs.xrefs:
         fingerprint = xref_fingerprint(row.record)

@@ -37,10 +37,7 @@ cho trẻ em.
 ##### Điều 1. Ban hành kèm theo Thông tư này: 
 1. Quy chuẩn kỹ thuật quốc gia về khí thải xe mô tô, xe gắn máy sản xuất, lắp 
 ráp và nhập khẩu mới, số hiệu QCVN 04:2024/BGTVT; 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 19.02.2025 16:28:16 +07:00
+
 
 3 
  
@@ -4171,10 +4168,7 @@ address of manufacturer's representative (If applicable)):......................
 1.7. Khối lượng toàn bộ lớn nhất của xe (Maximum mass of the vehicle):............... kg 
 1.8. Số chỗ ngồi (kể cả lái xe) (Number of seats (including the driver)):................ 
 1.9. Hệ thống truyền động (Transmission): 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 19.02.2025 16:27:58 +07:00
+
 
 3 
   
@@ -8818,10 +8812,7 @@ for new assembled, manufactured and imported automobiles
  
  
 Hà Nội - 2024
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 19.02.2025 16:27:39 +07:00
+
 
 3 
  
@@ -13068,10 +13059,7 @@ D.2.9.2.1. Nhãn hiệu (Make(s) or mark):......................................
 D.2.9.2.2. Kiểu (Type(s)):....................................................................................... 
 D.2.10. Thiết bị tăng áp (Supercharging equipment): Có/không (Yes/No).............  
 D.2.11. Bộ làm mát khí nạp trung gian (intercooler): Có/không (Yes/No).............. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 19.02.2025 16:27:18 +07:00
+
 
 3 
  
@@ -17524,10 +17512,7 @@ for disabled people
  
 Hà Nội - 2024 
 VĂN BẢN QUY PHẠM PHÁP LUẬT 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 19.02.2025 16:26:58 +07:00
+
 
 3 
   
@@ -20735,10 +20720,7 @@ Theo tài liệu kỹ thuật của đèn.
 2.1.4.2. Đường ranh giới nằm ngang của chùm sáng chiếu gần phải nằm phía 
 dưới cách đường H-H (Hình 1, 2, 3) là 250 mm. 
 VĂN BẢN QUY PHẠM PHÁP LUẬT 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 19.02.2025 16:26:39 +07:00
+
 
 3 
   
@@ -24801,10 +24783,7 @@ Không yêu cầu các đặc tính phụ khác.
 không hình thành trên vị trí cách mép không bị cắt 15 mm hoặc cách mép bị cắt của 
 mẫu thử 25 mm, hoặc cách các vết nứt xuất hiện trong quá trình thử trên 10 mm. 
 VĂN BẢN QUY PHẠM PHÁP LUẬT 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 19.02.2025 16:26:18 +07:00
+
 
 3 
   
@@ -27892,10 +27871,7 @@ lớn nhất.
 lớn nhất. 
 Hình 1 - Xác định chiều cao phân đoạn h 
 VĂN BẢN QUY PHẠM PHÁP LUẬT 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 19.02.2025 16:25:53 +07:00
+
 
 3 
   
@@ -30834,10 +30810,7 @@ o
 x 
 x: chỉnh đặt theo chỉ dẫn của nhà sản xuất. 
 o: không yêu cầu chỉnh đặt. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 20.02.2025 15:41:07 +07:00
+
 
 3 
  
@@ -34567,10 +34540,7 @@ on motor used for electric motorcycles, mopeds
   
 HÀ NỘI - 2024 
  
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 20.02.2025 15:41:29 +07:00
+
 
 3 
  
@@ -38061,10 +38031,7 @@ Kích thước lớn nhất của xe
  
  
 L: Chiều dài; W: Chiều rộng; H: Chiều cao.
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 21.02.2025 14:39:48 +07:00
+
 
 3 
  
@@ -41948,10 +41915,7 @@ xe cơ giới trong sản xuất, lắp ráp của Bộ trưởng Bộ Giao thô
 về trình tự, thủ tục chứng nhận chất lượng an toàn kỹ thuật và bảo vệ môi trường 
 xe cơ giới, xe máy chuyên dùng, phụ tùng xe cơ giới trong nhập khẩu của Bộ 
 trưởng Bộ Giao thông vận tải; 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 21.02.2025 14:38:52 +07:00
+
 
 3 
  
@@ -48578,10 +48542,7 @@ dùng; phụ tùng xe cơ giới; thiết bị an toàn cho trẻ em.
  
  
  
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 25.02.2025 11:06:46 +07:00
+
 
   
 VĂN BẢN QUY PHẠM PHÁP LUẬT 
@@ -48617,10 +48578,7 @@ On pneumatic tyres for motorcycles and mopeds
  
  
 Hà Nội - 2024 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 25.02.2025 11:07:07 +07:00
+
 
 3 
   
@@ -54086,10 +54044,7 @@ d) Cường độ sáng nhỏ hơn 10.000 cd.
 X 
   
 VĂN BẢN QUY PHẠM PHÁP LUẬT 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 21.02.2025 16:47:35 +07:00
+
 
   
 QCVN 122:2024/BGTVT 

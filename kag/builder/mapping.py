@@ -74,7 +74,7 @@ def map_relation_rows(inputs: ValidatedInputs, contract: Mapping[str, Any]) -> l
         invariants = {key: row.record[key] for key in ('doc_id', 'unit_id', 'sign_id')}
         rows.append(_relation_row(predicates['HAS_SIGN'], row.record['unit_id'], identity, row,
                     {'source_record': [row.locator]}, invariants, contract))
-    document_predicates = {predicates[name] for name in ('CITES', 'AMENDS', 'REPEALS', 'IMPLEMENTS', 'CONSOLIDATES')}
+    document_predicates = {predicates[name] for name in ('CITES', 'AMENDS', 'REPEALS', 'REPLACES', 'IMPLEMENTS', 'CONSOLIDATES')}
     for row in inputs.raw.relations:
         record = row.record
         if not (record.get('from_in_corpus') is True and record.get('to_in_corpus') is True

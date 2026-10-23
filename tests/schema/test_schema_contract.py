@@ -20,13 +20,13 @@ UPSTREAM = ROOT / 'vendor/KAG'
 SCHEMA = ROOT / 'kag/schema/VietRoadTraffic.schema'
 CONTRACT = ROOT / 'kag/schema/schema_contract.json'
 PIN = 'fdab15b3929d2ee40dfcdd388f90233096a6afc9'
-SCHEMA_SHA256 = '5c6c0f13b02203aad4155be3f9c6fadaee262c5379165d8717536c8bd9efaedb'
-NODE_COUNTS = {'LegalDocument': 29, 'LegalUnit': 32, 'TrafficSign': 14}
-DECLARED_COUNTS = {'LegalDocument': 27, 'LegalUnit': 30, 'TrafficSign': 12}
+SCHEMA_SHA256 = '86daeeb01be6a5d920b75cfe79a98ed9430613268bc8cdbe099663ee0d04c165'
+NODE_COUNTS = {'LegalDocument': 29, 'LegalUnit': 32, 'TrafficSign': 18}
+DECLARED_COUNTS = {'LegalDocument': 27, 'LegalUnit': 30, 'TrafficSign': 16}
 PREDICATES = {
     'HAS_UNIT': 'hasUnit', 'HAS_CHILD': 'hasChild', 'HAS_SIGN': 'hasSign',
     'CITES_UNIT': 'citesUnit', 'EXCLUDES_UNIT': 'excludesUnit', 'CITES': 'cites',
-    'AMENDS': 'amends', 'REPEALS': 'repeals', 'IMPLEMENTS': 'implements',
+    'AMENDS': 'amends', 'REPEALS': 'repeals', 'REPLACES': 'replaces', 'IMPLEMENTS': 'implements',
     'CONSOLIDATES': 'consolidates',
 }
 UNIT_TYPES = ['Dieu', 'Khoan', 'Diem', 'QCVN', 'QCVN_Muc', 'PhuLuc']
@@ -132,7 +132,7 @@ class SchemaContractTest(unittest.TestCase):
                     for t, properties in rows.items()}
         digest = hashlib.sha256(json.dumps(approved, ensure_ascii=False, sort_keys=True,
                                 separators=(',', ':')).encode('utf-8')).hexdigest()
-        self.assertEqual(digest, '7c0e8d0bfcd27a7cc24f8d74f5170b5a5fe1a83a138c62ff4a833ec505970ca7')
+        self.assertEqual(digest, '9837eaad1e00701178aace532bae24b6442089edfe07a70055dd79487484e7bd')
         for name, count in NODE_COUNTS.items():
             properties = self.parsed.types['VietRoadTraffic.' + name].properties
             declared = [p for p in rows[name] if p['logical_name'] not in ('id', 'name')]
@@ -173,12 +173,12 @@ class SchemaContractTest(unittest.TestCase):
         self.assertEqual(inherited_count, 6)
 
     def test_logical_and_declared_property_count_metadata(self):
-        self.assertEqual(self.contract['node_property_count'], 75)
-        self.assertEqual(self.contract.get('logical_property_count'), 75)
-        self.assertEqual(self.contract.get('declared_project_property_count'), 69)
+        self.assertEqual(self.contract['node_property_count'], 79)
+        self.assertEqual(self.contract.get('logical_property_count'), 79)
+        self.assertEqual(self.contract.get('declared_project_property_count'), 73)
         self.assertEqual(self.contract.get('built_in_properties_inherited'), ['id', 'name'])
-        self.assertEqual(sum(len(rows) for rows in self.contract['node_properties'].values()), 75)
-        self.assertEqual(sum(len(node.properties) for node in self.parsed.types.values()), 69)
+        self.assertEqual(sum(len(rows) for rows in self.contract['node_properties'].values()), 79)
+        self.assertEqual(sum(len(node.properties) for node in self.parsed.types.values()), 73)
 
     def test_domain_contract_invariants(self):
         # Golden digest covers the complete domain model, including Thing inheritance.
@@ -202,7 +202,7 @@ class SchemaContractTest(unittest.TestCase):
             k: approved['edge_application_key_contract'][k] for k in key_fields}
         digest = hashlib.sha256(json.dumps(approved, ensure_ascii=False, sort_keys=True,
                                 separators=(',', ':')).encode('utf-8')).hexdigest()
-        self.assertEqual(digest, '0b1e8fe052d18ccdb63dee0eed0e1ff8e8303d7633ffaa5d463c13348cc4ec9c')
+        self.assertEqual(digest, 'f3472bd82903286e9cd604f9bf292974b2fb4a10966ba1f9fec9f4fe7d6feb20')
 
     def test_exact_predicates_endpoints_and_relation_provenance(self):
         self.assertEqual(self.contract['logical_to_physical_predicates'], PREDICATES)
@@ -219,9 +219,9 @@ class SchemaContractTest(unittest.TestCase):
         self.assertEqual(set(actual), set(PREDICATES.values()))
         self.assertEqual(sum(len(relation.sub_properties)
                              for node in self.parsed.types.values()
-                             for relation in node.relations.values()), 24)
+                             for relation in node.relations.values()), 27)
         for name in PREDICATES.values():
-            owner = 'LegalDocument' if name in ('hasUnit', 'cites', 'amends', 'repeals', 'implements', 'consolidates') else 'LegalUnit'
+            owner = 'LegalDocument' if name in ('hasUnit', 'cites', 'amends', 'repeals', 'replaces', 'implements', 'consolidates') else 'LegalUnit'
             target = 'TrafficSign' if name == 'hasSign' else ('LegalDocument' if owner == 'LegalDocument' and name != 'hasUnit' else 'LegalUnit')
             self.assertEqual(actual[name], ('VietRoadTraffic.' + owner, 'VietRoadTraffic.' + target))
         for name in ('citesUnit', 'excludesUnit'):
@@ -230,7 +230,7 @@ class SchemaContractTest(unittest.TestCase):
         for name in ('hasUnit', 'hasChild', 'hasSign'):
             self.assertEqual({p['schema_name'] for p in self.contract['relation_properties'][name]},
                              {'sourceRecord'})
-        for name in ('cites', 'amends', 'repeals', 'implements', 'consolidates'):
+        for name in ('cites', 'amends', 'repeals', 'replaces', 'implements', 'consolidates'):
             self.assertEqual({p['schema_name'] for p in self.contract['relation_properties'][name]},
                              {'evidence', 'note', 'sourceRecord'})
 
@@ -242,11 +242,11 @@ class SchemaContractTest(unittest.TestCase):
     def test_xref_integrity_gate(self):
         xref = self.contract['xref_contract']
         expected = {
-            'xref_sha256': '69f4b0412993869f624eed95d11d0011a61436a6c9d3f0176a2523ea4e0653e9',
-            'required_safe_edge_ledger_sha256': '0cb9bf4b792a76b30cfa101d70548f96a64678f36370378b835671688e88ce02',
+            'xref_sha256': '94a80504779af660802469dd2f5ea2aa99ffb665bdf6f6cbfbb92b2e3350e770',
+            'required_safe_edge_ledger_sha256': 'cb2770aa99f04d07f111078ee859d91f3b65fe5ec8126b6221a75202a7cfa226',
             'join_contract': 'EXISTING_RECORD_FINGERPRINT_SHA256_CANONICAL_JSON',
-            'classification_total': 17512, 'safe_edge_total': 8143,
-            'safe_edge_affirmative': 7708, 'safe_edge_exclusion': 435,
+            'classification_total': 21357, 'safe_edge_total': 11988,
+            'safe_edge_affirmative': 10731, 'safe_edge_exclusion': 1257,
         }
         self.assertEqual({k:xref[k] for k in expected}, expected)
         self.assertEqual(xref['ledger_artifact_name'], 'xref_a3g2_final_ledger.jsonl')

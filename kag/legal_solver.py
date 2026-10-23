@@ -15,7 +15,7 @@ from kag.builder.codec import canonical_json, decode_properties
 from kag.interface import ExecutorABC, GeneratorABC, LLMClient, PromptABC, SolverPipelineABC
 from kag.interface.solver.executor_abc import ExecutorResponse
 from kag.legal_prompts import (validate_subquery, material_constraints, query_content_terms, _reference_bindings, _clauses, CandidateError, UnsafeSubqueryError,
-                               LegalDeducePrompt, legal_trace, legal_timing, document_title_question, DOCUMENT_CONTENT_PREFIX)
+                               LegalDeducePrompt, legal_trace, legal_timing, document_title_question, DOCUMENT_CONTENT_PREFIX, qcvn_matches)
 from kag.solver.executor.deduce.kag_deduce_executor import KagDeduceExecutor
 from kag.solver.planner.kag_iterative_planner import KAGIterativePlanner
 from kag.solver.pipeline.kag_iterative_pipeline import KAGIterativePipeline
@@ -30,8 +30,9 @@ _META = {
                       'consolidation_as_of', 'underlying_effective_from'},
     'LegalUnit': {'so_hieu', 'unit_type', 'scope', 'dieu_number', 'khoan_number', 'diem_letter',
                   'parent_id', 'penalty_doi_tuong', 'penalty_hanh_vi', 'penalty_phat_tien_min',
-                  'penalty_phat_tien_max', 'penalty_tru_diem_gplx'},
-    'TrafficSign': {'so_hieu', 'ma_bien', 'ngay_hieu_luc', 'ngay_het_hieu_luc'},
+                  'penalty_phat_tien_max', 'penalty_tru_diem_gplx', 'penalty_source_record', 'source_record'},
+    'TrafficSign': {'so_hieu', 'ma_bien', 'qcvn', 'ngay_hieu_luc', 'ngay_het_hieu_luc',
+                    'record_type', 'description_scope', 'verification_status', 'parent_sign_id'},
 }
 
 
@@ -385,6 +386,31 @@ def _current(item, documents, as_of):
     return True
 
 
+def _sign_applicable(query, metadata):
+    fields = ('record_type', 'description_scope', 'verification_status')
+    if not isinstance(query, str) or not query.strip():
+        return not any(field in metadata for field in fields)
+    if not qcvn_matches(query, metadata.get('qcvn')):
+        return False
+    if not any(field in metadata for field in fields):
+        return True  # Legacy evidence keeps its existing guards, without assigning new authority.
+    codes = {code.casefold() for code in re.findall(r'\b[A-ZĐ]{1,4}\.\d+[a-z]?(?:-\d+)?\b', query, re.I)}
+    if codes and codes != {str(metadata.get('ma_bien') or '').casefold()}:
+        return False
+    from kag.builder.inputs import SIGN_RECORD_TYPES, SIGN_DESCRIPTION_SCOPES
+    kind, scope = metadata.get('record_type'), metadata.get('description_scope')
+    if (metadata.get('verification_status') != 'verified_pdf' or kind not in SIGN_RECORD_TYPES
+            or kind == 'unverified_code' or scope not in SIGN_DESCRIPTION_SCOPES or scope == 'unverified'):
+        return False
+    group = bool(re.search(r'\b(?:nhóm|họ)\s+(?:biển\b|[A-ZĐ]{1,4}\.)', query, re.I))
+    common = bool(re.search(r'\b(?:quy định|ý nghĩa|nội dung|mô tả)\s+chung\b', query, re.I))
+    if kind == 'family':
+        return group or common
+    if group:
+        return False
+    return scope == 'specific' or common
+
+
 def _applicable(query, item, support, payload):
     title_number = document_title_question(query)
     if title_number:
@@ -397,10 +423,17 @@ def _applicable(query, item, support, payload):
     context_text = '\n'.join(citation.quote for _, citation in parents)
     own_scope = material_constraints(text+'\n'+canonical_json(item['metadata'])+'\n'+context_text)['scope']
     requested = material_constraints(query)
+    sign_context = ''
     if item['sign_id']:
-        codes = {code.casefold() for code in re.findall(r'\b[A-ZĐ]{1,4}\.\d+[a-z]?\b',query,re.I)}
+        if not _sign_applicable(query, item['metadata']):
+            return False
+        codes = {code.casefold() for code in re.findall(r'\b[A-ZĐ]{1,4}\.\d+[a-z]?(?:-\d+)?\b',query,re.I)}
         if codes and codes != {str(item['metadata'].get('ma_bien') or '').casefold()}:
             return False  # Cross-referenced codes do not identify the selected sign.
+        if item['metadata'].get('record_type') == 'family':
+            sign_context = 'nhóm biển'
+        if item['metadata'].get('description_scope') in ('family_shared', 'contextual'):
+            sign_context += ' quy định chung ý nghĩa chung nội dung chung mô tả chung'
     if not requested['scope'] <= own_scope:
         return False
     exclusive_person = {'tổ chức', 'doanh nghiệp', 'cá nhân', 'trẻ em', 'người chưa thành niên', 'người thành niên'}
@@ -432,7 +465,7 @@ def _applicable(query, item, support, payload):
                        for own in own_bindings) for binding in bindings):
             return False
     # Numbered source paragraphs need their verified typed coordinates, as in planner grounding.
-    authority = text+'\n'+canonical_json(item['metadata'])+'\n'+document_number+'\n'+context_text+'\n'+coordinates
+    authority = text+'\n'+canonical_json(item['metadata'])+'\n'+document_number+'\n'+context_text+'\n'+coordinates+'\n'+sign_context
     if not query_content_terms(query) <= {word.casefold() for word in re.findall(r'[^\W\d_]+', authority)}:
         return False
     provided = material_constraints(authority)
@@ -476,7 +509,7 @@ def _support_linked(item, citation, facts, payload, value):
             return True
         if value['conflict'] == 'resolved' and citation.field == 'text':
             relations = [rel for source in payload['items'] for rel in source['graph_context']]
-            if any(rel['predicate'] in ('amends', 'repeals') and rel['from'][1] == fact['doc_id']
+            if any(rel['predicate'] in ('amends', 'repeals', 'replaces') and rel['from'][1] == fact['doc_id']
                    and rel['to'][1] != fact['doc_id'] for rel in relations):
                 return True  # Resolution text/target/polarity are checked separately below.
     return False
@@ -532,7 +565,7 @@ def _conflict_resolved(query, value, facts, support, payload, as_of):
     proven = set()
     for relation in (rel for item in payload['items'] for rel in item['graph_context']):
         target_id = relation['to'][1]
-        if relation['predicate'] not in ('amends', 'repeals') or relation['from'][1] != winner or target_id not in targets:
+        if relation['predicate'] not in ('amends', 'repeals', 'replaces') or relation['from'][1] != winner or target_id not in targets:
             continue
         target = payload['documents'].get(target_id, {}).get('so_hieu')
         if target and any(item['doc_id'] == winner and citation.field == 'text'
@@ -689,6 +722,18 @@ class SafeLegalGenerator(GeneratorABC):
             index = _span_index(payload)
             facts = [_resolve(span, index) for span in value['selections']]
             support = [_resolve(span, index) for span in value['support_selections']]
+            for item, _ in (() if content_question else facts+support):
+                source = item['metadata'].get('source_record') or {}
+                if not isinstance(source, dict) or not isinstance(source.get('origin') or {}, dict):
+                    return _abstain('invalid source provenance')
+                if (source.get('origin') or {}).get('source_discrepancies'):
+                    return _abstain('unresolved source discrepancy')
+                penalty = item['metadata'].get('penalty_source_record') or {}
+                if not isinstance(penalty, dict) or not isinstance(penalty.get('record') or {}, dict):
+                    return _abstain('invalid penalty source record')
+                rule = (penalty.get('record') or {}).get('fine_rule') or {}
+                if not isinstance(rule, dict) or rule.get('source_discrepancy'):
+                    return _abstain('unresolved penalty source discrepancy')
             parts = _question_parts(content_question or query)
             covered = set()
             if any((not content_question and not _current(item, payload['documents'], as_of))

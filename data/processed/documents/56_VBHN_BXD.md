@@ -44,9 +44,7 @@ Căn cứ Luật Tổ chức chính quyền địa phương số 72/2025/QH15;
 Căn cứ Luật Đường sắt số 95/2025/QH15; 
 Theo đề nghị của Bộ trưởng Bộ Xây dựng; 
 Chính phủ ban hành Nghị định quy định chi tiết một số điều Luật Đường sắt.”.  
-Ký bởi: CÔNG BÁO NƯỚC CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Ngày ký: 2026-07-15 14:26:15 +07:00
+
 
 103
  

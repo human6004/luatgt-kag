@@ -41,10 +41,7 @@ THỨ TRƯỞNG
  
 Nguyễn Duy Lâm 
  
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 20.12.2024 16:23:44 +07:00
+
 
 3 
  
@@ -3366,10 +3363,7 @@ b) Trị số ghi trên biển là chỉ độ dài cho phép lớn nhất tính
 đơn chiếc nhằm ngăn ngừa khả năng gây ách tắc giao thông. 
 c) Biển được đặt ở những đoạn đường có bán kính đường cong nằm nhỏ, đèo 
 dốc quanh co hoặc ở những đoạn đường mà xe có chiều dài lớn, gây nguy hiểm.  
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 23.12.2024 08:44:43 +07:00
+
 
 3 
  
@@ -6049,10 +6043,7 @@ dòng xe dạng gạch chéo.
  
 Đơn vị: cm 
 Hình G.27 - Vạch 4.1 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 24.12.2024 08:37:35 +07:00
+
 
 3 
  
@@ -7843,10 +7834,7 @@ ban hành Quy chuẩn kỹ thuật quốc gia về báo hiệu đường bộ
  
  
  
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 24.12.2024 08:45:39 +07:00
+
 
 3 
 
@@ -8000,10 +7988,7 @@ ban hành Quy chuẩn kỹ thuật quốc gia về báo hiệu đường bộ
 (Tiếp theo Công báo số 1365 + 1366) 
  
  
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 24.12.2024 09:19:53 +07:00
+
 
 3 
 

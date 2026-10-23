@@ -912,6 +912,54 @@
         "required": false
       },
       {
+        "logical_name": "record_type",
+        "schema_name": "recordType",
+        "contract_type": "OPTIONAL_TEXT",
+        "physical_type": "Text",
+        "source_file": "S",
+        "source_field": "record_type",
+        "source_requirement": "Không; release legacy không có",
+        "notes": "Phân biệt nhóm/biến thể/biển riêng; thiếu ở release cũ không tự suy loại",
+        "intrinsic": false,
+        "required": false
+      },
+      {
+        "logical_name": "description_scope",
+        "schema_name": "descriptionScope",
+        "contract_type": "OPTIONAL_TEXT",
+        "physical_type": "Text",
+        "source_file": "S",
+        "source_field": "description_scope",
+        "source_requirement": "Không; release legacy không có",
+        "notes": "Phạm vi mô tả: specific/family_shared/contextual/unverified; không kế thừa luật theo nhóm",
+        "intrinsic": false,
+        "required": false
+      },
+      {
+        "logical_name": "verification_status",
+        "schema_name": "verificationStatus",
+        "contract_type": "OPTIONAL_TEXT",
+        "physical_type": "Text",
+        "source_file": "S",
+        "source_field": "verification_status",
+        "source_requirement": "Không; release legacy không có",
+        "notes": "verified_pdf/source_conflict/reference_only/review_required; trạng thái ảnh không phải xác minh luật",
+        "intrinsic": false,
+        "required": false
+      },
+      {
+        "logical_name": "parent_sign_id",
+        "schema_name": "parentSignId",
+        "contract_type": "OPTIONAL_TEXT",
+        "physical_type": "Text",
+        "source_file": "S",
+        "source_field": "parent_sign_id",
+        "source_requirement": "Không; release legacy không có",
+        "notes": "ID nhóm hoặc biển gốc cùng QCVN; liên kết danh mục không kế thừa luật, không phải parentId đơn vị pháp luật",
+        "intrinsic": false,
+        "required": false
+      },
+      {
         "logical_name": "source_record",
         "schema_name": "sourceRecord",
         "contract_type": "JSON_TEXT",
@@ -925,9 +973,9 @@
       }
     ]
   },
-  "node_property_count": 75,
-  "logical_property_count": 75,
-  "declared_project_property_count": 69,
+  "node_property_count": 79,
+  "logical_property_count": 79,
+  "declared_project_property_count": 73,
   "built_in_properties_inherited": [
     "id",
     "name"
@@ -941,6 +989,7 @@
     "CITES": "cites",
     "AMENDS": "amends",
     "REPEALS": "repeals",
+    "REPLACES": "replaces",
     "IMPLEMENTS": "implements",
     "CONSOLIDATES": "consolidates"
   },
@@ -1024,7 +1073,11 @@
       "mo_ta": "moTa",
       "ngay_hieu_luc": "ngayHieuLuc",
       "ngay_het_hieu_luc": "ngayHetHieuLuc",
-      "source_record": "sourceRecord"
+      "source_record": "sourceRecord",
+      "record_type": "recordType",
+      "description_scope": "descriptionScope",
+      "verification_status": "verificationStatus",
+      "parent_sign_id": "parentSignId"
     }
   },
   "property_codec_contract": {
@@ -1089,6 +1142,10 @@
       "to_type": "LegalDocument"
     },
     "repeals": {
+      "from_type": "LegalDocument",
+      "to_type": "LegalDocument"
+    },
+    "replaces": {
       "from_type": "LegalDocument",
       "to_type": "LegalDocument"
     },
@@ -1244,6 +1301,29 @@
         "required": false
       }
     ],
+    "replaces": [
+      {
+        "logical_name": "evidence",
+        "schema_name": "evidence",
+        "contract_type": "OPTIONAL_TEXT",
+        "physical_type": "Text",
+        "required": false
+      },
+      {
+        "logical_name": "note",
+        "schema_name": "note",
+        "contract_type": "OPTIONAL_TEXT",
+        "physical_type": "Text",
+        "required": false
+      },
+      {
+        "logical_name": "source_record",
+        "schema_name": "sourceRecord",
+        "contract_type": "JSON_TEXT",
+        "physical_type": "Text",
+        "required": false
+      }
+    ],
     "implements": [
       {
         "logical_name": "evidence",
@@ -1309,18 +1389,18 @@
     "normalization": "No Unicode normalization, trimming, UUID, or replacement by title/order/text hash."
   },
   "xref_contract": {
-    "xref_sha256": "69f4b0412993869f624eed95d11d0011a61436a6c9d3f0176a2523ea4e0653e9",
-    "required_safe_edge_ledger_sha256": "0cb9bf4b792a76b30cfa101d70548f96a64678f36370378b835671688e88ce02",
+    "xref_sha256": "94a80504779af660802469dd2f5ea2aa99ffb665bdf6f6cbfbb92b2e3350e770",
+    "required_safe_edge_ledger_sha256": "cb2770aa99f04d07f111078ee859d91f3b65fe5ec8126b6221a75202a7cfa226",
     "ledger_artifact_name": "xref_a3g2_final_ledger.jsonl",
     "runtime_path_source": "Runtime configuration; no absolute path dependency.",
     "join_contract": "EXISTING_RECORD_FINGERPRINT_SHA256_CANONICAL_JSON",
     "fingerprint_input": "Complete 13-field original xref record, including from_so_hieu; preserve missing/null/empty and string bytes.",
     "fingerprint_canonical_json": "json.dumps(source_record, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')",
     "fingerprint_algorithm": "SHA256",
-    "classification_total": 17512,
-    "safe_edge_total": 8143,
-    "safe_edge_affirmative": 7708,
-    "safe_edge_exclusion": 435,
+    "classification_total": 21357,
+    "safe_edge_total": 11988,
+    "safe_edge_affirmative": 10731,
+    "safe_edge_exclusion": 1257,
     "classification_field": "downstream_use",
     "allowed_classification": "SAFE_EDGE",
     "affirmative_predicate": "citesUnit",
@@ -1339,15 +1419,15 @@
     },
     "units": {
       "rule": "Source unit_id and doc_id belong to production whitelist; preserve source parent_id hierarchy",
-      "expected_count": 55573
+      "expected_count": 55572
     },
     "penalties": {
       "rule": "Merge by unit_id only, LegalUnit 1:0..1 source penalty; duplicate/join/document mismatch fails closed",
-      "expected_count": 1966
+      "expected_count": 1820
     },
     "signs": {
       "rule": "Version-specific sign_id; hasSign follows source unit_id, endpoint exists and doc_id matches; broad extraction anchor is provenance, not exclusive definition",
-      "expected_count": 887
+      "expected_count": 907
     },
     "hierarchy": {
       "hasUnit": "Document to root unit only (parent_id=null)",
@@ -1356,7 +1436,7 @@
     },
     "document_relations": {
       "rule": "Both corpus flags true and both IDs in production whitelist; original direction; no duplicate edges from document metadata arrays",
-      "expected_count": 238,
+      "expected_count": 251,
       "external_reference_only_count": 583
     },
     "unit_xrefs": "Only external ledger SAFE_EDGE plus xref validation gate; retain self-reference, separate affirmative/exclusion predicates; other classifications never create unit edges.",
@@ -1396,7 +1476,7 @@
     "controls_server_uniqueness": false
   },
   "runtime_contract": {
-    "schema_sha256": "5c6c0f13b02203aad4155be3f9c6fadaee262c5379165d8717536c8bd9efaedb",
+    "schema_sha256": "86daeeb01be6a5d920b75cfe79a98ed9430613268bc8cdbe099663ee0d04c165",
     "constraint_enforcement": "DECLARATIVE_ONLY",
     "builder_schema_validation_required": true,
     "builder_unit_type_validation_required": true,
@@ -1405,12 +1485,22 @@
     "integer_storage": "NATIVE_INTEGER",
     "integer_writer_transport": "PROJECT_NATIVE_INTEGER_KGWRITER",
     "vector_index_targets": {
-      "LegalDocument": {"title": "Vector"},
-      "LegalUnit": {"text": "Vector"},
-      "TrafficSign": {"ten": "Vector", "moTa": "Vector"}
+      "LegalDocument": {
+        "title": "Vector"
+      },
+      "LegalUnit": {
+        "text": "Vector"
+      },
+      "TrafficSign": {
+        "ten": "Vector",
+        "moTa": "Vector"
+      }
     },
     "vectorizer_disable_generation": [
-      "LegalDocument.name", "LegalUnit.name", "TrafficSign.name", "Entity.name"
+      "LegalDocument.name",
+      "LegalUnit.name",
+      "TrafficSign.name",
+      "Entity.name"
     ],
     "property_read_decoding": "JSON_DECODE_NON_ID_PROPERTIES",
     "json_text_read_decoding": "ADDITIONAL_SEMANTIC_JSON_DECODE",

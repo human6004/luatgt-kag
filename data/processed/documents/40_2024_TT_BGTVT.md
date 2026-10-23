@@ -40,10 +40,7 @@ lĩnh vực đường bộ.
 Thông tư này áp dụng đối với các tổ chức, cá nhân trong nước, nước ngoài trên 
 lãnh thổ Việt Nam có liên quan đến hoạt động phòng, chống, khắc phục hậu quả 
 thiên tai trong lĩnh vực đường bộ. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 20.12.2024 08:27:23 +07:00
+
 
 67 
  

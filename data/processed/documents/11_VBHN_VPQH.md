@@ -34,10 +34,7 @@ Quốc hội ban hành Luật sửa đổi, bổ sung một số điều của B
 Luật Tư pháp người chưa thành niên số 59/2024/QH15 có căn cứ ban hành như sau: 
 “Căn cứ Hiến pháp nước Cộng hòa xã hội chủ nghĩa Việt Nam; 
 Quốc hội ban hành Luật Tư pháp người chưa thành niên.”. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 08.04.2025 16:48:12 +07:00
+
 
   
 ## Phần thứ nhất 
@@ -1427,10 +1424,7 @@ nhân dân, thì bị phạt như sau:
 nghiêm trọng, thì bị phạt tù từ 12 năm đến 20 năm, tù chung thân hoặc tử hình; 
 2. Người đồng phạm khác, thì bị phạt tù từ 05 năm đến 12 năm; 
 3. Người chuẩn bị phạm tội này, thì bị phạt tù từ 01 năm đến 05 năm. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 09.04.2025 16:44:21 +07:00
+
 
 3 
  
@@ -4579,10 +4573,7 @@ thuận áp đặt cho doanh nghiệp khác điều kiện ký kết hợp đồ
 159 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 50 Điều 1 của Luật số 
 12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
 kể từ ngày 01 tháng 01 năm 2018. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 09.04.2025 16:44:46 +07:00
+
 
 3 
  
@@ -7943,10 +7934,7 @@ lực kể từ ngày 01 tháng 01 năm 2018.
 288 Từ “viễn thông” được thay thế bằng cụm từ “mạng viễn thông” theo quy định tại điểm p 
 khoản 2 Điều 2 của Luật số 12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 
 100/2015/QH13, có hiệu lực kể từ ngày 01 tháng 01 năm 2018. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 09.04.2025 16:24:36 +07:00
+
 
 3 
  

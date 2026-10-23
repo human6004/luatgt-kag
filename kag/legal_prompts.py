@@ -44,6 +44,16 @@ _DOCUMENT = re.compile(r'\b\d+/\d{4}/[\wĐđ-]+', re.UNICODE)
 DOCUMENT_CONTENT_PREFIX = 'Trích nội dung văn bản: '
 
 
+def qcvn_matches(query, qcvn):
+    """An explicit QCVN year must match even when its authority is omitted."""
+    actual = re.sub(r'\s+', '', str(qcvn or '')).casefold()
+    for version, authority in re.findall(r'\b(QCVN\s*\d+\s*:\s*\d{4})(?:\s*/\s*([\w-]+))?', query, re.I):
+        expected = re.sub(r'\s+', '', version).casefold()
+        if actual.split('/')[0] != expected or authority and actual != expected+'/'+authority.casefold():
+            return False
+    return True
+
+
 def document_title_question(query):
     """Only an explicit document-name lookup; mixed legal questions stay factual."""
     if not isinstance(query, str):
@@ -315,13 +325,23 @@ class LegalDeducePrompt(PromptABC):
             'hoặc chưa xác nhận hiệu lực tại as_of: abstained=true. Nguồn sai phương tiện, '
             'người/đối tượng hoặc penalty thiếu điều kiện không hỗ trợ factual answer. '
             'Xung đột chỉ giải quyết bằng explicit evidence đúng thời điểm/scope, amends/'
-            'repeals; không chọn văn bản mới nhất tùy ý. current_status chỉ snapshot. '
+            'repeals/replaces; không chọn văn bản mới nhất tùy ý. current_status chỉ snapshot. '
+            'metadata.penalty_source_record.record giữ fine_rule và sanction_rules: phải đọc nguyên văn '
+            'đối tượng, điều kiện, ngoại lệ và đúng unit_id của từng chế tài; null không có nghĩa 0 hoặc miễn phạt. '
+            'fine_rule.source_discrepancy chưa giải quyết: không khẳng định mức tiền, không lấy legacy_normalized làm căn cứ. '
+            'source_record.origin.source_discrepancies áp dụng cả Điều/Khoản chứa phần nguồn vướng; không xác nhận mức tiền từ text legacy. '
+            'Metadata không thay trích dẫn: thiếu text nguồn quy định chế tài trong evidence thì abstain. '
             'Chọn evidence_id và trọn source field start=0,end=source_lengths[field] '
             '(số ký tự Unicode do server cung cấp); không cắt mất '
             'phủ định/số/điều kiện. '
             'selections chỉ gồm trọn field factual: `text` của LegalUnit hoặc `moTa` của TrafficSign. '
             '`ten` (tên biển) và `title` (tên văn bản) chỉ để nhận diện, không phải factual evidence: '
             'không đưa vào selections hoặc support_selections; nếu field factual không đủ trả lời thì abstain. '
+            'Biển có metadata nhóm/biến thể phải đúng QCVN và verification_status=verified_pdf. '
+            'record_type=family chỉ trả câu hỏi nhóm hoặc quy định chung. Biến thể có '
+            'description_scope=family_shared/contextual chỉ hỗ trợ quy định chung; không suy '
+            'đặc điểm riêng hoặc kế thừa mọi luật của nhóm. Nguồn thiếu metadata là legacy, '
+            'không tự gắn trạng thái đã xác minh hoặc loại nhóm/biến thể. '
             'Nếu fact có metadata.parent_id, bắt buộc support_selections chứa trọn text '
             'của LegalUnit có unit_id=parent_id trong cùng doc_id, kể cả khi child tự đủ nghĩa. '
             'Không có parent trong evidence thì abstain. '
@@ -331,7 +351,7 @@ class LegalDeducePrompt(PromptABC):
             'Support gồm điều kiện/hiệu lực/quan hệ đã có, chỉ lấy từ chính văn bản chứa fact đã chọn. '
             'Phải xét mọi văn bản cạnh tranh trong evidence; nếu conflict=resolved, '
             'phải có support_selections chứa trọn nguồn bãi bỏ/thay thế explicit thuộc chính văn bản đó, đúng '
-            'quan hệ amends/repeals và nêu số hiệu từng văn bản cạnh tranh; nếu câu này nằm ngay trong fact đã chọn, '
+            'quan hệ amends/repeals/replaces và nêu số hiệu từng văn bản cạnh tranh; nếu câu này nằm ngay trong fact đã chọn, '
             'chọn lại chính span đó trong support_selections. Nội dung của văn bản bị bãi bỏ/thay thế chỉ dùng '
             'để xét xung đột: không đưa vào selections hoặc support_selections. Thiếu support thì abstain. '
             'Không answer/quote/doc_id tự sinh. '

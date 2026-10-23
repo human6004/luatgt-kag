@@ -10,7 +10,7 @@ from kag.verify import Neo4jReadClient, QUERIES
 
 
 APPROVED = ('hasUnit','hasChild','hasSign','citesUnit','excludesUnit',
-            'cites','amends','repeals','implements','consolidates')
+            'cites','amends','repeals','replaces','implements','consolidates')
 READS = {
     'reader_identity': ('SHOW CURRENT USER YIELD user,roles,passwordChangeRequired,suspended '
                         'RETURN user,roles,passwordChangeRequired,suspended'),

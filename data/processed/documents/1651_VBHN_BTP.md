@@ -36,10 +36,7 @@ một số điều của Luật Xử lý vi phạm hành chính ngày 13 tháng 
 Căn cứ Luật Giao dịch điện tử ngày 22 tháng 6 năm 2023; 
 Căn cứ Luật Căn cước ngày 27 tháng 11 năm 2023; 
 Theo đề nghị của Bộ trưởng Bộ Tư pháp; 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 26.04.2025 09:02:18 +07:00
+
 
   
 ### Chương I 
@@ -547,10 +544,7 @@ a) Hết thời hạn giao quyền ghi trong quyết định;
 b) Công việc được giao quyền đã hoàn thành; 
 c) Cấp trưởng chấm dứt việc giao quyền cho cấp phó. Trong trường hợp này, 
 việc chấm dứt giao quyền phải được thể hiện bằng quyết định; 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 26.04.2025 10:35:43 +07:00
+
 
 3 
  
@@ -4381,10 +4375,7 @@ cưỡng chế thi hành quyết định xử phạt vi phạm hành chính (n�
 Để <bảo đảm thi hành Quyết định số:..../QĐ-XPHC ngày..../..../........ xử phạt vi 
 phạm hành chính/hoàn trả kinh phí thực hiện biện pháp khắc phục hậu quả cho cơ 
 quan nhà nước>(*) (4). 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 26.04.2025 09:06:39 +07:00
+
 
 3 
   
@@ -8205,10 +8196,7 @@ Cơ quan: ......................................................................
 sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của 
 Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có 
 hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 26.04.2025 15:40:16 +07:00
+
 
 3 
  

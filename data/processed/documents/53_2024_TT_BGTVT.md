@@ -41,10 +41,7 @@ Trong Thông tư này, các cụm từ dưới đây được hiểu như sau:
 hoặc nhiều: thiết bị tích trữ điện năng (ắc quy, pin, bánh đà điện cơ hoặc siêu tụ); 
 thiết bị ổn định điện năng; thiết bị điện được sử dụng để chuyển đổi điện năng tích 
 trữ thành cơ năng truyền tới các bánh xe làm nguồn động lực cho xe chuyển động; 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 24.12.2024 09:20:05 +07:00
+
 
   
 2. Xe thuần điện (PEV - Pure electric vehicle hoặc BEV - Battery electric 

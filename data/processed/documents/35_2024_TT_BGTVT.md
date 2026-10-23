@@ -35,10 +35,7 @@ xe quốc tế; tiêu chuẩn đào tạo, kiểm tra, cấp, cấp lại chứn
 pháp luật về giao thông đường bộ và tiêu chuẩn của cơ sở đào tạo người điều khiển 
 xe máy chuyên dùng thực hiện bồi dưỡng, kiểm tra, cấp chứng chỉ bồi dưỡng kiến 
 thức pháp luật về giao thông đường bộ. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 07.01.2025 09:09:28 +07:00
+
 
 11 
  
@@ -3422,10 +3419,7 @@ vận tải)
  
  
  
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 07.01.2025 09:09:52 +07:00
+
 
 3 
  
@@ -9179,10 +9173,7 @@ trình sát hạch: không để người không có nhiệm vụ vào phòng s�
 để thí sinh mang điện thoại di động, thiết bị viễn thông liên lạc bằng hình ảnh, âm thanh 
 vào phòng sát hạch lý thuyết; không để thí sinh trao đổi, sử dụng tài liệu. Lập biên bản xử lý 
 thí sinh vi phạm và báo cáo Tổ trưởng sát hạch trong trường hợp thí sinh cố tình vi phạm. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 07.01.2025 09:10:25 +07:00
+
 
 3 
  

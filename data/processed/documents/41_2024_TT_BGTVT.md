@@ -35,10 +35,7 @@ công nút giao đấu nối vào đường quốc lộ đang khai thác;
 trên đường bộ đang khai thác; trách nhiệm cung cấp thông tin và cơ chế phối hợp 
 giữa các cơ quan, tổ chức, cá nhân có liên quan để bảo đảm trật tự, an toàn giao 
 thông, an toàn khi thi công;  
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 20.12.2024 14:32:25 +07:00
+
 
   
 3. Quản lý, vận hành, khai thác, bảo trì kết cấu hạ tầng đường bộ; 
@@ -4253,10 +4250,7 @@ báo về tồn tại
 trong công tác 
 này của cơ quan 
 ký hợp đồng. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 20.12.2024 14:33:04 +07:00
+
 
   
  

@@ -6,28 +6,35 @@
   "files": [
     {
       "name": "xref_a3g2_final_ledger.jsonl",
-      "sha256": "1dea69f2c2b3ac344478ef24b1844f06514c4150a069e1c6d5cc5f9ffe8fecb4",
-      "bytes": 23295330,
+      "sha256": "cb2770aa99f04d07f111078ee859d91f3b65fe5ec8126b6221a75202a7cfa226",
+      "bytes": 32412501,
       "historical_source": "D:\\study\\caoDATA-workspace\\reports\\xref_a3g2_final_ledger.jsonl"
     },
     {
       "name": "xref_a3g2_final_audit.json",
-      "sha256": "2a130da7f4c6ad0bb673366e9bb6e390f3e481cb5381003933f3195eb23e1fb3",
-      "bytes": 93884,
+      "sha256": "f89db6fa09d3c3de1166837035e36965094d2e90127ee42d230c05bfcff38682",
+      "bytes": 96891,
       "historical_source": "D:\\study\\caoDATA-workspace\\reports\\xref_a3g2_final_audit.json"
     },
     {
       "name": "xref_a3g2_downstream_policy.json",
-      "sha256": "dcd12c131a9033efaf8f93703cf5423d59e3827f242249a5727759cb49d42b0e",
-      "bytes": 10897,
+      "sha256": "ce4614236ff3018516a5aa31b5b1086622ac86e28881a82eedbbbeee28cbc2a8",
+      "bytes": 23639,
       "historical_source": "D:\\study\\caoDATA-workspace\\reports\\xref_a3g2_downstream_policy.json"
     }
   ],
   "reference_artifacts": {
-    "C3_nodes_sha256": "9a19e7e79a03c0ce339bf3da20d11db395c5662821178e5013d1f026fc8bea86",
-    "C3_edges_sha256": "d419eca20055fac50d82dd872f489e8b514fba1befd5e19a848cae38f57b715b",
-    "C3_plan_hash": "ee8b3709e89060b446c508f2c87bdcae7f401530976a30beecdd92935cdca917",
+    "C3_nodes_sha256": "7a2c8574143ee6e59ee2ba0ef4b45d5c4427e2c730f90a73df7bd68328f998b4",
+    "C3_edges_sha256": "8eaedc54db85601208460e2a489b0086ae5a5cd904f7505442a127255a0d813c",
+    "C3_plan_hash": "1a3376a1bbfb586837fe0518b5ea9a07ab1ca2783463f9c2f5eeb0b7c336260a",
     "C43a_manifest_sha256": "02d57f3a3eb0669954ce794740708214c783c51822909cac4484951282b52522",
     "historical_workspace": "D:/study/caoDATA-workspace; reference artifacts are evidence, not alternative inputs."
+  },
+  "offline_repair_20261023": {
+    "date": "2026-10-23",
+    "mode": "OFFLINE_ONLY",
+    "xref_sha256": "94a80504779af660802469dd2f5ea2aa99ffb665bdf6f6cbfbb92b2e3350e770",
+    "current_rows": 21357,
+    "historical_reference_artifacts_unchanged": true
   }
 }

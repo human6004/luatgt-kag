@@ -405,6 +405,17 @@ class SafetyTests(unittest.TestCase):
         result, _, _ = self.render(module,ctx,question,candidate([self.selected(ctx)]))
         self.assertTrue(result.abstained)
 
+    def test_reviewed_sign_authority_rejects_another_primary_code(self):
+        module = self.module()
+        metadata = dict(ma_bien='P.101', qcvn='QCVN 41:2024/BGTVT',
+                        record_type='standalone', description_scope='specific',
+                        verification_status='verified_pdf')
+        self.assertTrue(module._sign_applicable('Biển P.101 có ý nghĩa gì?', metadata))
+        for question in ('Biển P.102 có ý nghĩa gì?', 'Biển P.101-80 có ý nghĩa gì?',
+                         'Biển P.101 theo QCVN 41:2019 có ý nghĩa gì?'):
+            with self.subTest(question=question):
+                self.assertFalse(module._sign_applicable(question, metadata))
+
     def module(self):
         module = importlib.import_module('kag.legal_solver')
         self.assertTrue(hasattr(module, 'LegalDeduceExecutor'), 'evidence-only LegalDeduce missing')

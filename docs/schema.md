@@ -30,11 +30,33 @@ HAS_CHILD → hasChild             LegalUnit → LegalUnit
 HAS_SIGN → hasSign               LegalUnit → TrafficSign
 CITES_UNIT → citesUnit           LegalUnit → LegalUnit
 EXCLUDES_UNIT → excludesUnit     LegalUnit → LegalUnit
-CITES/AMENDS/REPEALS/IMPLEMENTS/CONSOLIDATES → lowerCamelCase
+CITES/AMENDS/REPEALS/REPLACES/IMPLEMENTS/CONSOLIDATES → lowerCamelCase
                                 LegalDocument → LegalDocument
 ```
 
 Không inverse hoặc node Penalty/Evidence/QCVN riêng.
+
+`replaces` biểu diễn văn bản thay thế văn bản khác theo nguồn, ví dụ `89_2026_ND_CP → 166_2024_ND_CP`; không đổi thành `repeals` hoặc suy bãi bỏ từng unit. Schema hiện hành có ba EntityType và mười một predicate.
+
+## Ngữ cảnh chế tài và nguồn
+
+Chế tài vẫn join vào LegalUnit theo exact `unit_id`. JSON_TEXT `penalty_source_record → penaltySourceRecord` giữ toàn record và locator: `record.fine_rule` chứa khoản nguồn, nguyên văn/phạm vi mức tiền; `record.sanction_rules` giữ nguồn và điều kiện của từng chế tài. Scalar chỉ dùng khi diễn đạt được đúng phạm vi, không đổi null thành 0 hoặc mặc định mọi chế tài cùng áp dụng. `fine_rule.source_discrepancy` chưa giải quyết không cho phép suy số tiền từ giá trị chuẩn hóa cũ.
+
+`sourceRecord.origin.source_discrepancies` giữ cờ nguồn vướng ở cả đơn vị trực tiếp và Điều/Khoản chứa. Solver đọc metadata này và abstain câu trả lời áp dụng luật; yêu cầu trích nội dung văn bản vẫn có thể trả nguyên nguồn với nhãn chưa xác nhận hiệu lực. Không sửa text legacy thành một mức tiền tự đính chính.
+
+`source_evidence` của record nguồn được giữ trong `source_record.origin → sourceRecord.origin`, bên cạnh locator Builder. Annotation này không thay ID, text luật hoặc căn cứ trích dẫn. Giữ metadata nguồn không tự chứng minh Solver đã có đủ toàn văn các khoản chế tài liên quan.
+
+## Nhóm và biến thể biển báo
+
+`TrafficSign` có bốn thuộc tính Text optional: `record_type → recordType`, `description_scope → descriptionScope`, `verification_status → verificationStatus`, `parent_sign_id → parentSignId`. Schema giữ ba EntityType, mười một predicate và `PhuLuc`; không thêm cạnh để suy luật từ nhóm.
+
+`family` là bản ghi danh mục nhóm, `variant` là biến thể có cha đã ghi rõ cùng QCVN, `standalone` có quy định độc lập, `unverified_code` chưa xác định được mã độc lập. Cha có thể là nhóm hoặc biển gốc có quy định riêng như P.127; liên kết danh mục không truyền điều kiện pháp lý xuống con. Chọn tập nhỏ giữ cả bản ghi cha trong giới hạn đã chọn.
+
+`specific` có nội dung riêng cho mã; `family_shared` chỉ có quy định chung; `contextual` chỉ cung cấp ngữ cảnh; `unverified` chưa đủ căn cứ. Solver và bước xác minh citation chỉ dùng hàng mới có `verified_pdf`, đúng QCVN và đúng phạm vi câu hỏi. Câu hỏi nhóm dùng nguồn nhóm; mô tả chung không đủ để trả chi tiết riêng của biến thể. Retrieval neo theo mã/QCVN trong snapshot và theo `parent_sign_id` đã lưu, không tự đoán cha từ hậu tố.
+
+Master và nguồn gốc giữ trong [`signs_app.json`](../data/processed/signs/signs_app.json); `sourceRecord.origin.record` mang metadata, locator PDF, quyết định rà, mô tả hình, `image_path`, trạng thái và provenance ảnh tới graph/release. Đường dẫn ảnh chính tương đối với repo, trỏ SVG trong `data/processed/signs/dataset_signs/` theo bảy nhóm. `signs.jsonl` sinh từ master bằng converter hiện có; thiếu SVG phù hợp để `image_path=null` và `image_status=missing`. `image_provenance` giữ nguồn hình, attribution/license và phạm vi ví dụ; ảnh xác minh đúng phiên bản không tự nâng `verificationStatus` pháp lý. `legal_description` là text dẫn xuất từ PDF có ghi cách chuẩn hóa và đoạn nguồn; `visual_description` hoặc SVG chưa được xác minh không trở thành quote pháp luật. WebApp giữ metadata khi nhập nội dung, nhưng ảnh thư viện dùng media PNG/JPEG được tải riêng. Xem [giới hạn dataset](../data/DATASHEET.md).
+
+Release legacy thiếu bốn thuộc tính giữ ngữ nghĩa legacy, không tự gắn loại hoặc trạng thái đã xác minh. Thuộc tính optional không làm schema hash mới tương thích với release cũ: không apply schema này lên graph đang phục vụ; xem [chuyển phiên bản](runner.md#bộ-biển-báo-và-chuyển-phiên-bản).
 
 ## Codec
 

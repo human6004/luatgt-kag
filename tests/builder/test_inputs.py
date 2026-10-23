@@ -276,6 +276,34 @@ class InputsTest(unittest.TestCase):
             (root / PATHS['xrefs']).read_bytes()).hexdigest()
         return contract, hashes
 
+    def test_reviewed_sign_master_reproduces_builder_input(self):
+        root = Path(__file__).resolve().parents[2]
+        def records(relative):
+            return [json.loads(line) for line in (root/relative).read_text(encoding='utf-8').split('\n') if line]
+        master = json.loads((root/'data/processed/signs/signs_app.json').read_text(encoding='utf-8'))
+        self.assertTrue(all(r['image_status'] in ('not_checked', 'not_applicable', 'needs_review',
+                            'verified', 'missing', 'mismatch') for r in master))
+        units = {r['unit_id']: r for r in records('data/processed/units/units.jsonl')}
+        documents = {r['doc_id']: r for r in records('data/processed/meta/documents.jsonl')}
+        self.assertEqual(self.m.convert_signs(master, units, documents),
+                         records('data/processed/signs/signs.jsonl'))
+
+    def test_sign_review_retains_specific_later_clauses_and_source_conflicts(self):
+        root = Path(__file__).resolve().parents[2]
+        master = json.loads((root/'data/processed/signs/signs_app.json').read_text(encoding='utf-8'))
+        indexed = {r['sign_id']: r for r in master}
+        for year, article in ((2019, 51), (2024, 47)):
+            row = indexed[f'QCVN 41:{year}/BGTVT::IE.453c']
+            self.assertEqual(row['description_scope'], 'specific')
+            self.assertIn(f'{article}.4.2.', row['legal_description'])
+            self.assertIn('IE.453c', row['legal_description'])
+            self.assertNotIn('IE.453a', row['legal_description'])
+            for code in ('IE.456a', 'IE.456b', 'IE.456c', 'W.242a', 'W.242b'):
+                self.assertEqual(indexed[f'QCVN 41:{year}/BGTVT::{code}']['description_scope'], 'specific')
+        for code in ('P.103', 'P.103a', 'W.239', 'W.239a'):
+            self.assertEqual(indexed[f'QCVN 41:2019/BGTVT::{code}']['verification_status'], 'source_conflict')
+            self.assertEqual(indexed[f'QCVN 41:2024/BGTVT::{code}']['verification_status'], 'verified_pdf')
+
     def test_load_inputs_relative_locator_and_whitelist(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -317,9 +345,9 @@ class InputsTest(unittest.TestCase):
 
     def test_default_sha_pins_and_no_old_ledger_fallback(self):
         self.assertEqual(dict(self.m.ARTIFACT_HASHES), {
-            'xref_a3g2_final_ledger.jsonl': '0cb9bf4b792a76b30cfa101d70548f96a64678f36370378b835671688e88ce02',
-            'xref_a3g2_final_audit.json': 'e1400db9310cca36a9b4f5e73014fb33eee2e8712be86560aa9d70fb39e51d46',
-            'xref_a3g2_downstream_policy.json': 'aade9f2d13f4c6f3c2155c241d53018664372d26182b5a9321c2a7aa2cc19ee2'})
+            'xref_a3g2_final_ledger.jsonl': 'cb2770aa99f04d07f111078ee859d91f3b65fe5ec8126b6221a75202a7cfa226',
+            'xref_a3g2_final_audit.json': 'f89db6fa09d3c3de1166837035e36965094d2e90127ee42d230c05bfcff38682',
+            'xref_a3g2_downstream_policy.json': 'ce4614236ff3018516a5aa31b5b1086622ac86e28881a82eedbbbeee28cbc2a8'})
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             contract, _ = self.disk_fixture(root)

@@ -1,5 +1,6 @@
 """Question embedding -> vector targets -> exact graph evidence, no Solver."""
 import math
+import re
 
 from kag.builder.codec import canonical_json, decode_properties
 from kag.vector_contract import TARGETS, valid_vector as _valid_vector
@@ -11,7 +12,7 @@ class Retriever:
         positive_limit(search_k)
         positive_limit(expansion_limit)
         if set(contract['relations'])!=set(APPROVED) or set(contract['node_types'])!=set(TARGETS):
-            raise ValueError('retriever requires current three-entity ten-predicate schema')
+            raise ValueError('retriever requires the current entity and predicate schema')
         if embed is not None and not callable(embed):
             raise ValueError('query embedding callable required')
         self.reader,self.embed,self.contract = reader,embed,contract
@@ -49,12 +50,36 @@ class Retriever:
     def _exact_keys(self, question, top_k):
         if not self.source_records:
             return []
-        from kag.legal_prompts import _reference_bindings, document_title_question
+        from kag.legal_prompts import _reference_bindings, document_title_question, qcvn_matches
         title_number = document_title_question(question)
         if title_number:
             documents = {r.entity_id:r for r in self.source_records if r.entity_type == self.namespace+'.LegalDocument'
                          and r.field == 'title' and (r.metadata.get('so_hieu') or '').casefold() == title_number.casefold()}
             return [(r.entity_type,r.entity_id) for r in documents.values()] if len(documents) == 1 else []
+        codes = {v.casefold() for v in re.findall(r'\b[A-ZĐ]{1,4}\.\d+[a-z]?(?:-\d+)?\b',question,re.I)}
+        if len(codes) == 1:
+            signs = {r.entity_id:r for r in self.source_records
+                     if r.entity_type == self.namespace+'.TrafficSign' and r.field in ('moTa','mo_ta')}
+            matches = [r for r in signs.values() if (r.metadata.get('ma_bien') or '').casefold() in codes
+                       and qcvn_matches(question,r.metadata.get('qcvn'))]
+            keys = []
+            for record in sorted(matches,key=lambda r:r.entity_id):
+                while record is not None:
+                    key = record.entity_type,record.entity_id
+                    if key in keys:
+                        break
+                    if len(keys) >= top_k:
+                        return []
+                    keys.append(key)
+                    parent = record.metadata.get('parent_sign_id')
+                    if not parent:
+                        break
+                    source = signs.get(parent)
+                    if source is None or source.metadata.get('qcvn') != record.metadata.get('qcvn'):
+                        return []
+                    record = source
+            if keys:
+                return keys
         bindings = _reference_bindings(question)
         # shortcut: only unambiguous typed references; multi-target questions retain semantic retrieval.
         if not bindings or any(len({b[i] for b in bindings if b[i] is not None}) > 1 for i in range(4)):
@@ -93,6 +118,10 @@ class Retriever:
         exact = self._exact_keys(question, top_k)
         if exact and all(k[0].endswith('.LegalDocument') for k in exact):
             return self._read_evidence(exact, {}, False)
+        if exact and all(k[0].endswith('.TrafficSign') for k in exact):
+            # Exact sign definitions include every matching version and its real parent.
+            # Whole appendices belong to explicitly requested graph expansion.
+            return self._read_evidence(exact, {}, expand)
         if self.embed is None:
             raise ValueError('query embedding callable required')
         evidence = self.retrieve_vector(self.embed(question),top_k=top_k,expand=expand)

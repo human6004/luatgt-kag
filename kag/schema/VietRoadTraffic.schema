@@ -60,6 +60,11 @@ LegalDocument(LegalDocument): EntityType
         evidence(evidence): Text
         note(note): Text
         sourceRecord(sourceRecord): Text
+    replaces(replaces): LegalDocument
+      properties:
+        evidence(evidence): Text
+        note(note): Text
+        sourceRecord(sourceRecord): Text
     implements(implements): LegalDocument
       properties:
         evidence(evidence): Text
@@ -153,5 +158,9 @@ TrafficSign(TrafficSign): EntityType
     ngayHieuLuc(ngayHieuLuc): Text
       constraint: NotNull
     ngayHetHieuLuc(ngayHetHieuLuc): Text
+    recordType(recordType): Text
+    descriptionScope(descriptionScope): Text
+    verificationStatus(verificationStatus): Text
+    parentSignId(parentSignId): Text
     sourceRecord(sourceRecord): Text
       constraint: NotNull

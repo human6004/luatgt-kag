@@ -756,7 +756,7 @@ def _readback(reader, records, contract):
 def verify_native_sources(result: AnswerResult, release: ServingRelease, reader,
                           as_of: date, webapp_snapshot_id: str | None, *, question=None) -> VerifiedSources:
     """Verify all actual citation types; never repair or classify native roles."""
-    from kag.legal_solver import AnswerResult, Citation, _META, _current, document_content_question, DOCUMENT_CONTENT_ANSWER
+    from kag.legal_solver import AnswerResult, Citation, _META, _current, _sign_applicable, document_content_question, DOCUMENT_CONTENT_ANSWER
 
     if (type(result) is not AnswerResult or type(result.abstained) is not bool
             or not _text(result.answer) or not result.answer.strip()
@@ -778,7 +778,8 @@ def verify_native_sources(result: AnswerResult, release: ServingRelease, reader,
             _invalid()
         _backend(reader,release)
         contract = _json(release.contract_bytes)
-        lookup = {r.evidence_id:r for r in release.records}
+        lookup = {_sha(canonical_json([r.entity_type,r.entity_id,field]).encode('utf-8')):r
+                  for r in release.records for field in (r.field,r.physical_field)}
         documents = {r.entity_id:r for r in release.records if r.entity_type.endswith('.LegalDocument')}
         content_question=document_content_question(question)
         if content_question and not result.abstained and (result.answer!=DOCUMENT_CONTENT_ANSWER+
@@ -787,7 +788,7 @@ def verify_native_sources(result: AnswerResult, release: ServingRelease, reader,
         for citation in result.citations:
             record = lookup.get(citation.evidence_id)
             if (record is None or citation.doc_id != record.doc_id or citation.unit_id != record.unit_id
-                    or citation.sign_id != record.sign_id or citation.field != record.field
+                    or citation.sign_id != record.sign_id or citation.field not in (record.field,record.physical_field)
                     or type(citation.start) is not int or type(citation.end) is not int
                     or citation.start != 0 or citation.end != len(record.source_text)
                     or not _text(citation.quote) or citation.quote != record.source_text):
@@ -798,6 +799,8 @@ def verify_native_sources(result: AnswerResult, release: ServingRelease, reader,
             if record.field not in allowed:
                 _invalid('SOURCE_VALIDATION_FAILED')
             item = {'doc_id':record.doc_id,'sign_id':record.sign_id,'metadata':record.metadata}
+            if record.sign_id and not _sign_applicable(question, record.metadata):
+                _invalid('SOURCE_VALIDATION_FAILED')
             if content_question:
                 from kag.legal_prompts import material_constraints
                 requested=material_constraints(content_question)['documents']

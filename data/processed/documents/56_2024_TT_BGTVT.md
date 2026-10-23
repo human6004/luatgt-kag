@@ -38,10 +38,7 @@ trình kiểm soát tải trọng xe trên đường bộ.
 xe khách, Quy chuẩn kỹ thuật quốc gia về bến xe hàng, Quy chuẩn kỹ thuật quốc 
 gia về trạm dừng nghỉ, Quy chuẩn kỹ thuật quốc gia về công trình kiểm soát tải 
 trọng xe trên đường bộ. Cụ thể như sau: 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 08.01.2025 16:32:47 +07:00
+
 
 39 
  

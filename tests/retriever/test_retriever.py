@@ -149,7 +149,7 @@ class RetrieverTests(unittest.TestCase):
         self.assertEqual(result[1]['graph_context'],[relation])
         self.assertEqual(result[1]['vector_sources'],[])
         self.assertEqual(set(reader.expansion_args[1]),
-            {'hasUnit','hasChild','hasSign','citesUnit','excludesUnit','cites','amends','repeals','implements','consolidates'})
+            {'hasUnit','hasChild','hasSign','citesUnit','excludesUnit','cites','amends','repeals','replaces','implements','consolidates'})
 
     def test_expansion_unapproved_or_disconnected_relation_refused(self):
         for relation in ({'from':[LABEL+'LegalUnit','a'],'predicate':'evil','to':[LABEL+'LegalUnit','b']},

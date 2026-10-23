@@ -37,10 +37,7 @@ chứng nhận chất lượng an toàn kỹ thuật và bảo vệ môi trườ
 gia giao thông đường bộ để đánh giá về độ bền, khả năng thích nghi của xe đối với 
 các yếu tố thời tiết, môi trường, điều kiện giao thông tại Việt Nam hoặc nhằm mục 
 đích cải tiến chất lượng an toàn kỹ thuật và bảo vệ môi trường của sản phẩm. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 20.12.2024 14:33:16 +07:00
+
 
 85 
  

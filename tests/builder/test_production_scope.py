@@ -18,7 +18,7 @@ CONTRACT = sample.CONTRACT
 PINS = {
     'nodes_jsonl_sha256': '03e929392b2b75d6ba8a381de94a3c0688e8ccc60dd59cb5bd048e9eeacff8e7',
     'edges_jsonl_sha256': '2e904697369d2e5d90e694cd5692041e83cfcb455ee529afcc1bf7a22d0bdb0f',
-    'plan_sha256': '70a9d7883380f0add946a541975ee54ffc6588fb55c2261772abda5fa7900b7c',
+    'plan_sha256': '144a50be5705920628ae6ad826d77a81110782c8f605c6ba32d7aa28d27daca0',
 }
 INPUT_SHA = 'f16d05ec6b29248d2c61adb1e9263f78e4f7bace1b955014a2d17872cfe4064d'
 
@@ -61,8 +61,8 @@ class ProductionScopeTests(unittest.TestCase):
         (self.root / 'fixture.txt').write_bytes(b'fixture')
         (self.root / 'plan.sha256').write_bytes((PINS['plan_sha256'] + '\n').encode('ascii'))
         self.manifest = dict(PINS,
-            schema_sha256='5c6c0f13b02203aad4155be3f9c6fadaee262c5379165d8717536c8bd9efaedb',
-            contract_sha256='815cbbc7866fdc0801951e1a3e28577c1eeecf3a033fa1b476d37b90f6bfb73a',
+            schema_sha256=self.code.C3_IDENTITY['schema_sha256'],
+            contract_sha256=self.code.C3_IDENTITY['contract_sha256'],
             input_manifest=[{'name': 'fixture.txt', 'sha256': INPUT_SHA}],
             node_counts={'LegalUnit': 2}, edge_unique_counts={'hasChild': 1})
         self.path = self.root / 'manifest.json'

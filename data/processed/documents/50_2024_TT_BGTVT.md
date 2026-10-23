@@ -36,10 +36,7 @@ kiểm xe cơ giới, cơ sở kiểm định khí thải xe mô tô, xe gắn m
 Mã số: QCVN 103:2024/BGTVT. 
 2. Quy chuẩn kỹ thuật quốc gia về cơ sở bảo hành, bảo dưỡng xe cơ giới.  
 Mã số: QCVN 121:2024/BGTVT. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 23.01.2025 09:12:44 +07:00
+
 
 25 
  

@@ -37,10 +37,7 @@ Căn cứ Nghị định số 56/2022/NĐ-CP ngày 24 tháng 8 năm 2022 của
 Chính phủ quy định chức năng, nhiệm vụ, quyền hạn và cơ cấu tổ chức của Bộ 
 Giao thông vận tải; 
 Theo đề nghị của Vụ trưởng Vụ Vận tải và Cục trưởng Cục Đường bộ Việt Nam, 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 26.04.2024 14:05:19 +07:00
+
 
 3 
  
@@ -4106,10 +4103,7 @@ của Bộ trưởng Bộ Giao thông vận tải
  
 Phụ lục 33 
 QUY TRÌNH SÁT HẠCH LÁI XE HẠNG A1 VÀ A2 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 26.04.2024 10:54:07 +07:00
+
 
 3 
  

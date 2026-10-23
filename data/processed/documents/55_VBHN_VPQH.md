@@ -43,9 +43,7 @@ số 36/2024/QH15, Luật Đường bộ số 35/2024/QH15 đã được sửa �
 112/2025/QH15, Luật Quản lý, sử dụng vũ khí, vật liệu nổ và công cụ hỗ trợ số 42/2024/QH15, 
 Luật Phòng cháy, chữa cháy và cứu nạn, cứu hộ số 55/2024/QH15 đã được sửa đổi, bổ sung 
 theo Luật số 135/2025/QH15.”. 
-Ký bởi: CÔNG BÁO NƯỚC CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Ngày ký: 2026-04-09 08:11:05 +07:00
+
 
 3
  

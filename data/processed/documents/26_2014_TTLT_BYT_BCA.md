@@ -39,10 +39,7 @@ thông cơ giới đường bộ.
 bị tai nạn giao thông được sĩ quan, hạ sĩ quan Công an nhân dân (sau đây viết tắt là 
 cán bộ Công an) đang làm nhiệm vụ điều tra, giải quyết tai nạn giao thông yêu cầu 
 kiểm tra nồng độ cồn trong máu.  
-Ký bởi: Cổng Thông tin điện tử Chính phủ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: Văn phòng Chính phủ
-Thời gian ký: 12.09.2014 09:35:04 +07:00
+
 
 51 
  

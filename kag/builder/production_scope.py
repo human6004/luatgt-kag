@@ -19,11 +19,11 @@ from kag.vector_contract import TARGETS, valid_vector as _valid_vector
 
 
 C3_IDENTITY = {
-    'nodes_jsonl_sha256': '574552e8675e555f25c9627825db918b29f5362a0592b437cd23b88c2806c08e',
-    'edges_jsonl_sha256': '159107dfa95ab859f0532f283a682e4064541be2578d8b0d097647f7e579d924',
-    'plan_sha256': 'ebc80a11a3962e1f448cfea2db087f65135c73aadc74506a046362ac2588e365',
-    'schema_sha256': '5c6c0f13b02203aad4155be3f9c6fadaee262c5379165d8717536c8bd9efaedb',
-    'contract_sha256': '815cbbc7866fdc0801951e1a3e28577c1eeecf3a033fa1b476d37b90f6bfb73a',
+    'nodes_jsonl_sha256': 'cd14b2328af9cf20a3cf7c820c2be473a9d52a2d0e5d5186edc58b708d8f3cae',
+    'edges_jsonl_sha256': '40527fbc9f7b69ae56522c26e56193b2112999eae239f59420008ccb329be84a',
+    'plan_sha256': 'ea1a7a7cffebaa764015b73baffa7aeee55504ecd88a3d499abb83785dcc6818',
+    'schema_sha256': '86daeeb01be6a5d920b75cfe79a98ed9430613268bc8cdbe099663ee0d04c165',
+    'contract_sha256': '4f23b269b63abf67c4ebaea96231bc4cc794575b81aa5c8110ddeb1f3b6008a6',
 }
 ROOT = Path(__file__).resolve().parents[2]
 SAMPLE_PROJECT_ID = 2
@@ -192,6 +192,8 @@ def select_bounded_sources(data, node_limit, *, extended=False):
                 pending.append((namespace+'.LegalDocument',props.get('docId')))
             parent = props.get('unitId') if key[0].endswith('.TrafficSign') else props.get('parentId')
             if parent: pending.append((namespace+'.LegalUnit',parent))
+            if key[0].endswith('.TrafficSign') and props.get('parentSignId'):
+                pending.append((namespace+'.TrafficSign',props['parentSignId']))
         return group
     groups = {key: sources((key,)) for key in nodes}
     edge_groups = {key: sources((key[:2],key[3:])) for key in edges}

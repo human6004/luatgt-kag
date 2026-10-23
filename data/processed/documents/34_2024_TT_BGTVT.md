@@ -43,10 +43,7 @@ trong quản lý hoạt động thu phí đường bộ.
 trạm thu phí và hệ thống thu phí. 
 3. Hạ tầng trạm thu phí bao gồm: nhà điều hành; giá long môn và cổng trạm 
 thu phí (nếu có); mặt đường và hệ thống điện chiếu sáng trong phạm vi trạm thu 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 04.12.2024 14:27:33 +07:00
+
 
  
 phí; đảo phân làn (nếu có); cabin thu phí (nếu có); các trang bị an toàn và hệ thống 

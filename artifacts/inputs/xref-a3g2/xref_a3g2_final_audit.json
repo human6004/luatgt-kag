@@ -4970,5 +4970,46 @@
     },
     "scope": "Approved D33 boundary correction only; original A3 audit retained as historical evidence.",
     "updated_at": "2026-10-17"
+  },
+  "offline_repair_20261023": {
+    "date": "2026-10-23",
+    "mode": "OFFLINE_ONLY",
+    "relations_before": 821,
+    "relations_after": 834,
+    "relation_changes": 13,
+    "xref_before": 17512,
+    "xref_after": 21357,
+    "xref_added": 3845,
+    "xref_polarity_corrections": 135,
+    "downstream_use_counts": {
+      "KEEP_UNRESOLVED_NO_EDGE": 7374,
+      "SAFE_EDGE": 11988,
+      "EXCLUDE_FROM_GRAPH_EDGE": 146,
+      "EXTERNAL_REFERENCE_ONLY": 1849
+    },
+    "primary_disposition_counts": {
+      "ALIAS_OR_VERSION_AMBIGUOUS_KEEP": 568,
+      "VALIDATED_CLEAN": 8128,
+      "AMBIGUOUS_OCCURRENCE_KEEP": 1266,
+      "MANUAL_CONTEXT_REVIEW_DEFERRED": 5003,
+      "WITHHELD_HEADING_ARTIFACT_KEEP": 126,
+      "UNRESOLVED_BY_DESIGN_KEEP": 14,
+      "LEGIT_EXTERNAL_KEEP": 1808,
+      "OFFICIAL_SOURCE_INCONSISTENCY_KEEP": 4,
+      "TABLE_VALUE_NOT_LEGAL_CITATION": 1,
+      "EVIDENCE_LOCATION_AMBIGUOUS_KEEP": 248,
+      "QCVN_AMBIGUOUS_KEEP": 275,
+      "VALIDATED_SEMANTIC_EXCEPTION": 56,
+      "SOURCE_TEXT_ANNOTATION_KEEP": 11,
+      "TARGET_IDENTITY_AMBIGUOUS_KEEP": 4,
+      "OFFLINE_CONTEXT_REVIEWED": 3845
+    },
+    "safe_edge_exclusion_total": 1257,
+    "safe_edge_affirmative_total": 10731,
+    "xref_sha256": "94a80504779af660802469dd2f5ea2aa99ffb665bdf6f6cbfbb92b2e3350e770",
+    "ledger_sha256": "cb2770aa99f04d07f111078ee859d91f3b65fe5ec8126b6221a75202a7cfa226",
+    "units_sha256": "91a827f9db3f19e4eeb9b53c3b2c11b4fda153504577db56a782f7f83bf6e766",
+    "scope": "Source context and list grammar supported by exact raw PDF article ownership. Ambiguous, quoted amendment, absent targets and unlocated source remain unpromoted. Historical audit sections retained.",
+    "review_occurrences": 2014
   }
 }

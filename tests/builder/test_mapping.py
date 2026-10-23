@@ -176,14 +176,14 @@ class MappingTest(unittest.TestCase):
     def test_document_gate_five_predicates_and_exact_direction(self):
         records = tuple(wrap(self.i, {'from_doc_id': 'E', 'to_doc_id': 'D', 'rel_type': p,
                          'from_in_corpus': True, 'to_in_corpus': True, 'evidence': '', 'note': None},
-                         'relations', i+1) for i,p in enumerate(('cites', 'amends', 'repeals', 'implements', 'consolidates')))
+                         'relations', i+1) for i,p in enumerate(('cites', 'amends', 'repeals', 'replaces', 'implements', 'consolidates')))
         exclusion = xref_record(is_exclusion=True)
         ledger = self.i.SourceRecord(ledger_record(self.i, exclusion), dict(self.raw.ledger[0].locator, line=2))
         rows = self.relations(relations=records,
                 xrefs=self.raw.xrefs+(wrap(self.i, exclusion, 'xrefs', 2),), ledger=self.raw.ledger+(ledger,))
         self.assertEqual({r['tuple'][2] for r in rows}, set(CONTRACT['relations']))
         for r in rows:
-            if r['tuple'][2] in ('cites', 'amends', 'repeals', 'implements', 'consolidates'):
+            if r['tuple'][2] in ('cites', 'amends', 'repeals', 'replaces', 'implements', 'consolidates'):
                 self.assertEqual(r['tuple'][1::3], ('E', 'D'))
                 spec = self.m.aggregate_relations([r], CONTRACT)[0]
                 self.assertEqual(spec['properties']['evidence'], '')

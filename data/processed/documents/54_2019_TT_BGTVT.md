@@ -36,10 +36,7 @@ hiệu đường bộ”.
 Mã số đăng ký: QCVN 41:2019/BGTVT. 
 ##### Điều 2. Hiệu lực thi hành 
 1. Thông tư này có hiệu lực thi hành kể từ ngày 01 tháng 7 năm 2020. 
-Ký bởi: Cổng Thông tin điện tử Chính phủ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: Văn phòng Chính phủ
-Thời gian ký: 04.03.2020 16:53:31 +07:00
+
 
 3 
  
@@ -3275,10 +3272,7 @@ d) Nếu đường cấm vì những lý do khác nhưng cầu, đường vẫn 
 thì biển đặt ở giữa đường nhưng không đặt hàng rào chắn. 
 e) Nếu phần xe chạy quá hẹp, biển đặt ở giữa phần xe chạy sẽ làm cản trở 
 những xe được phép ra vào đường cấm thì đặt biển ở mép phần xe chạy. 
-Ký bởi: Cổng Thông tin điện tử Chính phủ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: Văn phòng Chính phủ
-Thời gian ký: 04.03.2020 16:54:24 +07:00
+
 
 3 
  
@@ -6047,10 +6041,7 @@ khiển xe thận trọng hơn, vòng tránh chướng ngại vật trên mặt 
  
 Hình G.24 - Bố trí vạch sơn cho đường hai làn xe, hai chiều xe chạy                  
 khi có chướng ngại vật nằm ở giữa đường 
-Ký bởi: Cổng Thông tin điện tử Chính phủ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: Văn phòng Chính phủ
-Thời gian ký: 12.03.2020 14:57:43 +07:00
+
 
 3 
  

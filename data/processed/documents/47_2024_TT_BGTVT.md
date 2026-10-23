@@ -40,10 +40,7 @@ Thông tư này quy định về trình tự, thủ tục:
 2. Chứng nhận an toàn kỹ thuật và bảo vệ môi trường đối với xe cơ giới cải tạo, 
 xe máy chuyên dùng cải tạo; 
 3. Kiểm định khí thải xe mô tô, xe gắn máy. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 13.01.2025 16:23:42 +07:00
+
 
 3 
  

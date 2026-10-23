@@ -43,9 +43,7 @@ số 36/2024/QH15, Luật Đường bộ số 35/2024/QH15 đã được sửa �
 112/2025/QH15, Luật Quản lý, sử dụng vũ khí, vật liệu nổ và công cụ hỗ trợ số 42/2024/QH15, 
 Luật Phòng cháy, chữa cháy và cứu nạn, cứu hộ số 55/2024/QH15 đã được sửa đổi, bổ sung 
 theo Luật số 135/2025/QH15.”. 
-Ký bởi: CÔNG BÁO NƯỚC CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Ngày ký: 2026-04-01 08:15:39 +07:00
+
 
 36
  
@@ -2631,11 +2629,11 @@ có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 
 40 Điều này được bãi bỏ theo quy định tại khoản 10 Điều 8 của Luật số 118/2025/QH15 
 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 
 01 tháng 7 năm 2026. 
-41 Khoản 1 Điều 11 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật 
-có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026 quy định như sau: 
-“Điều 11. Điều khoản thi hành 
-1. Luật này có hiệu lực thi hành từ ngày 01 tháng 7 năm 2026, trừ quy định tại 
-khoản 2 Điều này.”. 
+> 41 Khoản 1 Điều 11 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật
+> có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026 quy định như sau:
+> “Điều 11. Điều khoản thi hành
+> 1. Luật này có hiệu lực thi hành từ ngày 01 tháng 7 năm 2026, trừ quy định tại
+> khoản 2 Điều này.”.
 
 98
  
