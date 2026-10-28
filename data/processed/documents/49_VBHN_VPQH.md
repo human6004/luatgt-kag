@@ -296,9 +296,6 @@ b) Đường cấp I, II, III, IV, V, VI;
 c) Đường đô thị; 
 d) Đường cấp A, B, C, D, đường khác.  
 
-42
- 
- 
 3. Cấp kỹ thuật của đường bộ quy định tại 6khoản 2 Điều này thực hiện theo 
 quy chuẩn kỹ thuật quốc gia do Bộ trưởng Bộ Xây dựng7 ban hành và tiêu chuẩn 
 kỹ thuật do cấp có thẩm quyền công bố. 
@@ -1121,18 +1118,11 @@ công tư và Điều 48 của Luật này.
 hạn khai thác, không đáp ứng lưu lượng vận tải phải từng bước đầu tư, xây dựng, 
 nâng cấp, cải tạo để bảo đảm yêu cầu kỹ thuật theo tiêu chuẩn đường bộ. 
 ##### Điều 29. Thẩm tra, thẩm định an toàn giao thông đường bộ 
-1. Đường bộ được thẩm tra, thẩm định về an toàn giao thông trong giai 
+1. [^vbhn49-15] Đường bộ được thẩm tra, thẩm định về an toàn giao thông trong giai 
 đoạn lập dự án đầu tư xây dựng công trình; thiết kế triển khai sau thiết kế cơ sở; 
 trước khi đưa công trình đường bộ vào khai thác và trong quá trình khai thác công 
 trình đường bộ, trừ đường bộ có cấp kỹ thuật theo quy định tại điểm d khoản 2 
 Điều 10 của Luật này, đường phố gom, đường nội bộ đô thị. 
- 
-15 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 5 Điều 8 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-
-62
- 
  
 Trong giai đoạn lập dự án đầu tư, thiết kế triển khai sau thiết kế cơ sở, việc 
 thẩm tra, thẩm định an toàn giao thông được thực hiện cùng với công tác thẩm tra, 
@@ -2751,5 +2741,8 @@ XÁC THỰC VĂN BẢN HỢP NHẤT
 Hà Nội, ngày 17 tháng 3 năm 2026 
 CHỦ NHIỆM 
  
-Lê Quang Mạnh 
- 
+Lê Quang Mạnh
+
+[^vbhn49-15]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 5 Điều 8 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.

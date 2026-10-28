@@ -2,3 +2,4 @@ kag/schema/VietRoadTraffic.schema text eol=lf
 kag/schema/schema_contract.json text eol=lf
 artifacts/inputs/xref-a3g2/xref_* -text
 docker/openspg-server.sh text eol=lf
+artifacts/inputs/xref-a3g2/xref_a3g2_final_ledger.jsonl filter=lfs diff=lfs merge=lfs -text

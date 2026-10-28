@@ -1629,22 +1629,7 @@ b) Điều 1 Thông tư số 25/2024/TT-BGTVT ngày 28 tháng 06 năm 2024
 sửa đổi, bổ sung một số điều của Thông tư số 50/2015/TT-BGTVT ngày 23 tháng 
 9 năm 2015 của Bộ trưởng Bộ giao thông vận tải hướng dẫn thực hiện một số điều 
  
-46 Điều 23 Thông tư số 72/TT-BGTVT ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, 
-bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm 
-dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, 
-Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về 
-công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo 
-trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao 
-thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một 
-lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025 quy định như sau: 
-“Điều 23. Hiệu lực thi hành  
-1. Thông tư này có hiệu lực thi hành kể từ ngày ký ban hành.  
-2. Bãi bỏ Điều 27 và Điều 28 Thông tư số 09/2025/TT-BXD ngày 13 tháng 6 năm 2025 của Bộ trưởng 
-Bộ Xây dựng về sửa đổi, bổ sung một số điều của các Thông tư thuộc lĩnh vực quản lý nhà nước của Bộ Xây dựng 
-liên quan đến sắp xếp tổ chức bộ máy, thực hiện chính quyền địa phương hai cấp và phân cấp cho chính quyền 
-địa phương.”. 
+ 
 
 35
  
@@ -1708,6 +1693,25 @@ Lê Anh Tuấn
 37
  
  
+> **Chú thích 46 của nguồn** (PDF trang 33, số trang in 34; nội dung trích dẫn văn bản khác):
+> 
+> 46 Điều 23 Thông tư số 72/TT-BGTVT ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, 
+> bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+> thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm 
+> dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, 
+> Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về 
+> công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT 
+> ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo 
+> trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao 
+> thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một 
+> lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025 quy định như sau: 
+> “Điều 23. Hiệu lực thi hành  
+> 1. Thông tư này có hiệu lực thi hành kể từ ngày ký ban hành.  
+> 2. Bãi bỏ Điều 27 và Điều 28 Thông tư số 09/2025/TT-BXD ngày 13 tháng 6 năm 2025 của Bộ trưởng 
+> Bộ Xây dựng về sửa đổi, bổ sung một số điều của các Thông tư thuộc lĩnh vực quản lý nhà nước của Bộ Xây dựng 
+> liên quan đến sắp xếp tổ chức bộ máy, thực hiện chính quyền địa phương hai cấp và phân cấp cho chính quyền 
+> địa phương.”.
+
 Phụ lục I 
 (Ban hành kèm theo Thông tư số 41/2024/TT-BGTVT ngày 15  tháng 11  năm 
 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai 

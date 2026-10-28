@@ -345,9 +345,9 @@ class InputsTest(unittest.TestCase):
 
     def test_default_sha_pins_and_no_old_ledger_fallback(self):
         self.assertEqual(dict(self.m.ARTIFACT_HASHES), {
-            'xref_a3g2_final_ledger.jsonl': 'cb2770aa99f04d07f111078ee859d91f3b65fe5ec8126b6221a75202a7cfa226',
-            'xref_a3g2_final_audit.json': 'f89db6fa09d3c3de1166837035e36965094d2e90127ee42d230c05bfcff38682',
-            'xref_a3g2_downstream_policy.json': 'ce4614236ff3018516a5aa31b5b1086622ac86e28881a82eedbbbeee28cbc2a8'})
+            'xref_a3g2_final_ledger.jsonl': 'd2a8a70f4f91d04cac4e935e063fb6f3077d0bbc845f1ddaa3d9905e11ec8c89',
+            'xref_a3g2_final_audit.json': 'f970e340351991112f6196719a94e692c1cad3328f30956b75011cec51e0d210',
+            'xref_a3g2_downstream_policy.json': 'f95528824d231363be684f68ab09b9df8e7a52379dc286e3448deaca20b39098'})
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             contract, _ = self.disk_fixture(root)

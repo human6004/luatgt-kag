@@ -41,7 +41,6 @@ cán bộ Công an) đang làm nhiệm vụ điều tra, giải quyết tai nạ
 kiểm tra nồng độ cồn trong máu.  
 
 
-51 
  
 2. Người điều khiển phương tiện giao thông cơ giới đường bộ có liên quan đến 
 vụ tai nạn giao thông được cán bộ Công an đang làm nhiệm vụ điều tra, giải quyết 
@@ -118,7 +117,6 @@ c) Phối hợp với cơ quan Bảo hiểm xã hội bảo đảm các quyền 
 điều khiển phương tiện giao thông cơ giới đường bộ xét nghiệm nồng độ cồn trong 
 máu theo quy định của pháp luật. 
 
-53 
  
 2. Trách nhiệm của cơ quan Công an:  
 a) Yêu cầu cơ sở xét nghiệm thực hiện việc xét nghiệm nồng độ cồn trong máu 
@@ -168,11 +166,9 @@ BỘ TRƯỞNG BỘ CÔNG AN
 Đại tướng Trần Đại Quang 
 BỘ TRƯỞNG BỘ Y TẾ 
  
-Nguyễn Thị Kim Tiến 
+Nguyễn Thị Kim Tiến
 
-55 
- 
-Mẫu số 01 
+### Mẫu số 01 
 (Ban hành kèm theo TTLT số 26/2014/TTLT-BYT-BCA ngày 23/7/2014) 
  
 BỘ Y TẾ 
@@ -200,16 +196,17 @@ Lưu ý:
 - Không sát trùng chỗ lấy máu bằng cồn; 
 - Dùng ống không có chất đông và có nút kín; 
 - Chuyển ngay mẫu đến cơ sở có điều kiện làm xét nghiệm cồn và phiếu trả kết 
-quả phải ghi rõ giờ làm xét nghiệm, sau đó lưu mẫu ở 4oC. 
+quả phải ghi rõ giờ làm xét nghiệm, sau đó lưu mẫu ở 4ᵒC. 
  
  
  
 Giờ......, ngày... tháng...... năm.... 
 BÁC SĨ CHỈ ĐỊNH XÉT NGHIỆM 
-(Ký, ghi rõ họ tên) 
+(Ký, ghi rõ họ tên)
 
-  
-Mẫu số 02 
+Nguồn hình và bố cục: data/raw/pdf/26_2014_TTLT_BYT_BCA_cb7992.pdf#page=6 (trang in 55). Markdown giữ nội dung trường, chú thích và vị trí cột; không tái hiện độ dài dòng trống, đường kẻ hoặc vị trí chữ ký; xem hình gốc.
+
+### Mẫu số 02 
 (Ban hành kèm theo TTLT số 26/2014/TTLT-BYT-BCA ngày 23/7/2014) 
  
 (1)........................................... 
@@ -252,11 +249,11 @@ NGƯỜI YÊU CẦU
 (3): Địa danh; 
 (4): Cơ quan được giao xét nghiệm nồng độ cồn; 
 (5): Họ và tên người được yêu cầu xét nghiệm; 
-(6): Địa chỉ nơi yêu cầu lấy mẫu máu để xét nghiệm; 
+(6): Địa chỉ nơi yêu cầu lấy mẫu máu để xét nghiệm;
 
-57 
- 
-Mẫu số 03 
+Nguồn hình và bố cục: data/raw/pdf/26_2014_TTLT_BYT_BCA_cb7992.pdf#page=7 (trang in 56). Markdown giữ nội dung trường, chú thích và vị trí cột; không tái hiện độ dài dòng trống, đường kẻ hoặc vị trí chữ ký; xem hình gốc.
+
+### Mẫu số 03 
 (Ban hành kèm theo TTLT số 26/2014/TTLT-BYT-BCA ngày 23/7/2014) 
  
 BỘ Y TẾ 
@@ -278,28 +275,12 @@ Người lấy mẫu:...........................................................
 Tình trạng mẫu: ........................................................................................................... 
 ..................................................................................................................................... 
  
-Yêu cầu 
-xét nghiệm 
-Kết quả 
-xét nghiệm 
-Đơn vị 
-Trị số 
-bình thường
-Máy 
-XN/PPXN 
-Ghi chú 
-Cồn 
- 
- 
-mmol/l 
- 
- 
- 
-  
- 
- 
- 
+| Yêu cầu xét nghiệm | Kết quả xét nghiệm | Đơn vị | Trị số bình thường | Máy XN/PPXN | Ghi chú |
+| --- | --- | --- | --- | --- | --- |
+| Cồn | | mmol/l | | | |
+
 Giờ......, ngày....... tháng......năm......... 
 NGƯỜI LÀM XÉT NGHIỆM 
-(Ký ghi rõ họ tên) 
- 
+(Ký ghi rõ họ tên)
+
+Nguồn hình và bố cục: data/raw/pdf/26_2014_TTLT_BYT_BCA_cb7992.pdf#page=8 (trang in 57). Markdown giữ nội dung trường, chú thích và vị trí cột; không tái hiện độ dài dòng trống, đường kẻ hoặc vị trí chữ ký; xem hình gốc.

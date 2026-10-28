@@ -10,7 +10,7 @@ Văn bản pháp luật lấy từ Công báo Chính phủ và CDN đi kèm. `ra
 
 ## Snapshot corpus
 
-[corpus.json](metadata/corpus.json) ghi `dataset_date=2026-10-23`; [checksums.json](metadata/checksums.json) giữ SHA-256. Ngày snapshot không phải kết luận hiệu lực pháp luật.
+[corpus.json](metadata/corpus.json) ghi `dataset_date=2026-10-24`; [checksums.json](metadata/checksums.json) giữ SHA-256. Ngày snapshot không phải kết luận hiệu lực pháp luật.
 
 Số lượng từng loại dữ liệu được trình bày tại [Thống kê corpus](README.md#thống-kê-corpus), đối chiếu với metadata của snapshot.
 
@@ -22,7 +22,9 @@ Snapshot mô tả dữ liệu đã lưu; không xác nhận mọi văn bản đa
 
 [`processed/signs/signs_app.json`](processed/signs/signs_app.json) là nguồn bảo trì chuẩn, hợp nhất 2.653 lần xuất hiện gốc thành 907 ID: giữ 887 ID main và thêm 20 ID; 24 ID vắng trong app tester vẫn được giữ. Mỗi hàng giữ các bản gốc, Git ref/path/vị trí, quyết định rà và locator nguồn. [`signs.jsonl`](processed/signs/signs.jsonl) là đầu vào Builder dẫn xuất bằng `kag.builder.inputs.convert_signs`; join unit/document để lấy văn bản và ngày, không suy hiệu lực từ năm QCVN. Counts và quan hệ hiện hành được ghi theo snapshot corpus, tách khỏi trạng thái kiểm chứng biển báo.
 
-Đối soát dùng [QCVN 41:2019 trên Công báo](https://congbao.chinhphu.vn/van-ban/thong-tu-so-54-2019-tt-bgtvt-30665/30015.htm) và [PDF QCVN 41:2024](https://datafiles.chinhphu.vn/cpp/files/vbpq/2024/11/51-bgtvt-kem.pdf), đúng từng phiên bản. Có 833 hàng `verified_pdf` về text/mã/locus, 44 hàng `source_conflict` và 30 hàng `reference_only`. Khớp text và đọc mẫu hình không phải chứng thực pháp lý toàn corpus. `source_evidence` giữ text trích và locator PDF; mô tả dùng các đoạn tương ứng, bỏ running header/caption và chuẩn hóa khoảng trắng, không tự đính chính từ ngữ nguồn. Các khoản quy định sau hình, như 51.4.2/47.4.2 của IE.453c, được giữ riêng; đoạn nêu rõ mã hoặc cặp mã có thể dùng làm mô tả riêng, không mặc định mọi biến thể chỉ có luật chung.
+Đối soát dùng [QCVN 41:2019 trên Công báo](https://congbao.chinhphu.vn/van-ban/thong-tu-so-54-2019-tt-bgtvt-30665/30015.htm) và [PDF QCVN 41:2024](https://datafiles.chinhphu.vn/cpp/files/vbpq/2024/11/51-bgtvt-kem.pdf), đúng từng phiên bản. Có 829 hàng `verified_pdf` về text/mã/locus, 48 hàng `source_conflict` và 30 hàng `reference_only`. Khớp text và đọc mẫu hình không phải chứng thực pháp lý toàn corpus. `source_evidence` giữ text trích và locator PDF; mô tả dùng các đoạn tương ứng, bỏ running header/caption và chuẩn hóa khoảng trắng, không tự đính chính từ ngữ nguồn. Các khoản quy định sau hình, như 51.4.2/47.4.2 của IE.453c, được giữ riêng; đoạn nêu rõ mã hoặc cặp mã có thể dùng làm mô tả riêng, không mặc định mọi biến thể chỉ có luật chung.
+
+Đối chiếu bổ sung đã khôi phục khoản .4.2 bị cắt của I.453c, phần g–i của P.127 và ngữ cảnh Bảng 7 của IE.469-1/2; bỏ caption lẫn trong mô tả DP.127. Bản Word chính thức năm 2019 ghi P.127(b,c) tại đoạn PDF ghi DP.127d; nhóm DP.127 và ba biến thể a/b/c năm 2019 giữ `source_conflict`, chưa xác nhận quy định riêng khi chưa có đính chính.
 
 Các điểm chưa giải quyết: D.15 có heading/caption R.412(i–p) khác văn xuôi R.413(i–p); E.50 có I.445c khác caption I.447c; caption I.453c khác IE.453c trong quy định. Bản 2019 còn có heading/caption P.103a và W.239a khác mã gốc không hậu tố trong văn xuôi B.3/C.39. Chưa có nguồn đính chính trong các nguồn đã tra; không hợp nhất hoặc đổi mã theo ghi chú không có căn cứ. DP.127d và một số mã trích từ tham chiếu không được coi là định nghĩa độc lập. Bản 2019 có W.211a/b; bản 2024 C.11 chỉ định W.211. Hai ID W.211a/b năm 2024 vẫn giữ với ngữ cảnh W.211 và trạng thái tham chiếu, không mượn mô tả năm 2019.
 
@@ -38,7 +40,7 @@ DP.127a/b/c đã thay bằng SVG có đúng gạch kết thúc theo B.27d của 
 
 I.448 dùng một ví dụ 2 km đã đối chiếu, không dùng SVG gốc thiếu chữ/QL1; ảnh này không đại diện đủ bốn ví dụ. IE.450a/b chọn một hướng trong các phương án; IE.465 chỉ minh họa hai địa điểm; IE.464a giữ đủ ba biển ví dụ. Phạm vi được ghi trong `image_provenance.scope`. W.211 năm 2024 dùng hình đầu máy từ SVG có tên W.211a, giữ nguyên ID/caption W.211. R.412p năm 2019 để thiếu ảnh do phụ lục M khác D.17/Word; vẫn giữ `source_conflict`, chưa kết luận khác hình theo năm.
 
-70 hàng thiếu ảnh gồm các SVG sai trị số/chữ, lề hoặc tỷ lệ chưa chốt, mã chưa có hình riêng đúng phiên bản và trường hợp chưa có SVG thay thế. Có I.414c/d, I.417b, I.502, IE.456a/b/c, IE.460a/b/c, IE.470, IE.471 năm 2024, P.121, các trị số P.127 ngoài ví dụ 50, P.133/134/135, R.301a–h, R.302a/b, R.310a/b/c, R.412p năm 2019, W.211a năm 2024, W.211b cả hai năm và W.220. Xem từng hàng `image_status`, `image_provenance.limitations` và `image_review` trong master; thiếu căn cứ không đồng nghĩa hình hoặc mã chắc chắn sai.
+70 hàng chưa có ảnh phù hợp tương ứng 44 mã độc lập: 68 hàng chưa có filename phù hợp; 2 hàng có file nhưng chưa phù hợp nguồn/phạm vi. Gồm các SVG sai trị số/chữ, lề hoặc tỷ lệ chưa chốt, mã chưa có hình riêng đúng phiên bản và trường hợp chưa có SVG thay thế. Có I.414c/d, I.417b, I.502, IE.456a/b/c, IE.460a/b/c, IE.470, IE.471 năm 2024, P.121, các trị số P.127 ngoài ví dụ 50, P.133/134/135, R.301a–h, R.302a/b, R.310a/b/c, R.412p năm 2019, W.211a năm 2024, W.211b cả hai năm và W.220. Xem từng hàng `image_status`, `image_provenance.limitations` và `image_review` trong master; thiếu căn cứ không đồng nghĩa hình hoặc mã chắc chắn sai.
 
 Builder giữ `image_path` tương đối và provenance trong `sourceRecord.origin.record`. Thư viện nội dung WebApp là luồng nhập bản nháp riêng: giữ nhóm/QCVN/metadata nguồn, nhưng không tự tải file từ đường dẫn repo. Dùng chức năng tải PNG/JPEG lên media để hiển thị ảnh; SVG dataset không tự được tải lên hoặc xuất bản; luồng media hiện tại chưa nhận SVG native. Dataset đổi ảnh không tự làm UI hiển thị SVG. Nhập nội dung hoặc tải ảnh không đổi graph hay release đang phục vụ.
 
@@ -65,17 +67,19 @@ converted = convert_signs(master, units, documents)
 
 `penalties.jsonl` có 1.820 chế tài theo hành vi: bỏ 164 record chỉ quy định thẩm quyền khỏi lớp penalty, giữ nguyên đơn vị luật nguồn; bổ sung 18 chế tài tịch thu chính không kèm tiền trước đây bị bỏ sót. `fine_rule` giữ khoản nguồn, phạm vi và nguyên văn mức tiền; `sanction_rules` giữ nguồn và điều kiện áp dụng các chế tài. Điều kiện, trường hợp lựa chọn và nhiều nhóm đối tượng không được gộp thành mức chung. `null` không đồng nghĩa 0, không phạt hoặc không áp dụng chế tài.
 
-Ba record `100_2019_ND_CP::D37::K6`, `100_2019_ND_CP::D50::K1::Pa` và `100_2019_ND_CP::D50::K1::Pb` có lỗi in số tiền trong bản Công báo đã đối chiếu. `fine_rule.source_discrepancy` giữ nguyên văn, giá trị chuẩn hóa cũ và trạng thái chưa giải quyết; scalar tiền để null, không tự đính chính theo suy đoán.
+Ba record `100_2019_ND_CP::D37::K6`, `100_2019_ND_CP::D50::K1::Pa` và `100_2019_ND_CP::D50::K1::Pb` có lỗi in số tiền trong bản Công báo đã đối chiếu. [Bản ký chính thức, phần 2](https://datafiles.chinhphu.vn/cpp/files/vbpq/2019/12/100_2.pdf) cũng in `12.0000.0000` tại trang PDF 11/trang in 87 và `20.000.0000` tại trang PDF 27/trang in 103. Chưa tìm được đính chính trong phạm vi tra cứu. `fine_rule.source_discrepancy` giữ nguyên văn, giá trị chuẩn hóa cũ và trạng thái chưa giải quyết; scalar tiền để null, không tự đính chính theo suy đoán.
 
-Sáu LegalUnit trực tiếp hoặc chứa các record trên giữ `source_evidence.source_discrepancies`, được chuyển qua `sourceRecord.origin` để Solver không xác nhận số tiền từ text legacy của Điều/Khoản cha.
+Nghị định 123/2021/NĐ-CP còn in `12.000.0000 đồng` tại Điều 2 khoản 12 điểm c và khoản 13 điểm c: Công báo PDF 26–27/trang in 27–28, bản ký PDF 55–56. Giữ literal, locator và trạng thái chưa đính chính; không suy số tiền.
 
-71 câu đánh giá đã được rà câu hỏi, căn cứ và gold theo đúng bản văn nguồn: 64 câu `verified`, 7 câu biển báo giữ `verified=false` vì unit gold cũ là điều tổ chức thực hiện, chưa chứng minh quy định riêng của biển. Câu theo văn bản lịch sử ghi rõ phiên bản, không lấy luật mới ghi đè ID cũ. Đây là rà dữ liệu offline, chưa chứng minh chất lượng Retrieval/Solver hoặc kết quả benchmark chính thức.
+13 LegalUnit (6 thuộc Nghị định 100, 7 thuộc Nghị định 123) trực tiếp hoặc chứa các đoạn trên giữ `source_evidence.source_discrepancies`, được chuyển qua `sourceRecord.origin` để Solver không xác nhận số tiền từ text legacy của Điều/Khoản cha.
+
+71 câu đánh giá có `gold_verified=true` sau rà câu hỏi, căn cứ và gold theo đúng bản văn nguồn. Q051 dùng Điều 47 chứa 47.4.2 của QCVN 41:2024; sáu câu biển báo còn lại trong Q048–Q054 đã có unit nguồn hợp lệ cho định nghĩa và locator đã đối chiếu. Câu theo văn bản lịch sử ghi rõ phiên bản, không lấy luật mới ghi đè ID cũ. Đây là rà dữ liệu offline, chưa chứng minh chất lượng Retrieval/Solver hoặc kết quả benchmark chính thức.
 
 ## Giới hạn và điều kiện sử dụng
 
 - Text trích tự động có thể sai ở OCR, ký tự, bảng biểu và phụ lục; bản Công báo cũng có thể có lỗi nguồn.
 - Chế tài đã được đối chiếu nguồn và kiểm nhất quán offline trong phạm vi sửa; chưa phải xác nhận pháp lý toàn bộ corpus hoặc mọi tình huống áp dụng. Ngày hiệu lực có thể áp dụng theo từng phần.
-- Dẫn chiếu có thể ngoài corpus, thiếu endpoint hoặc chưa rõ ngữ nghĩa; chỉ dùng policy `SAFE_EDGE` đã kiểm.
+- Dẫn chiếu có thể ngoài corpus, thiếu endpoint hoặc chưa rõ ngữ nghĩa; chỉ các dòng policy `SAFE_EDGE` được mapping thành cạnh. Rà sâu toàn corpus vẫn đang thực hiện; policy và tests không phải chứng nhận ngữ nghĩa pháp lý mọi occurrence.
 - Dữ liệu cấu trúc và câu hỏi đánh giá là phần pipeline tạo ra, cần phân biệt với luật gốc.
 
 Đối chiếu văn bản gốc tại `source_url` trước khi trích dẫn. Dataset không thay thế văn bản pháp luật chính thức hoặc tư vấn pháp lý. Điều kiện sử dụng và căn cứ nguồn: [LICENSE.md](LICENSE.md).

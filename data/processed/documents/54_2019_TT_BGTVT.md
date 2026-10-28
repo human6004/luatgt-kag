@@ -704,62 +704,31 @@ C
 C 
 
   
-Bảng 1 - Kích thước cơ bản của biển báo hệ số 1 
-Đơn vị tính: cm 
-Loại biển 
-Kích thước 
-Độ lớn 
-Đường kính ngoài của biển báo, D 
-70 
-Chiều rộng của mép viền đỏ, B 
-10 
-Biển tròn 
-Chiều rộng của vạch đỏ, A 
-5 
-Đường kính ngoài biển báo, D 
-60 
-Biển 
-bát 
-giác 
-Độ rộng viền trắng xung quanh, B 
-3 
-Chiều dài cạnh của hình tam giác, L 
-70 
-Chiều rộng của viền mép đỏ, B 
-5 
-Bán kính lượn tròn của viền mép đỏ, R 
-3,5 
-Biển tam giác 
-Khoảng cách đỉnh cung tròn đến đỉnh tam giác cơ bản, C 
-3 
-Biển 
-vuông, 
-chữ nhật 
-Khoảng cách đỉnh cung tròn đến đỉnh chữ nhật cơ bản, C 
-2-3 
-Bảng 2 - Hệ số kích thước biển báo 
-Loại đường 
-Đường 
-cao tốc 
-Đường đôi 
-ngoài đô thị
-Đường ô tô 
-thông thường (*) 
-Đường đô 
-thị (***) 
-Biển báo cấm, biển 
-hiệu lệnh, biển báo 
-nguy hiểm và cảnh báo 
-2 
- 
-1,8 
-1,25 
-1 
-Biển chỉ dẫn 
-(**) 
-2,0 
-1,5 
-1 
+Bảng 1 - Kích thước cơ bản của biển báo hệ số 1
+Đơn vị tính: cm
+| Loại biển | Kích thước | Độ lớn |
+| --- | --- | --- |
+| Biển tròn | Đường kính ngoài của biển báo, D | 70 |
+| Biển tròn | Chiều rộng của mép viền đỏ, B | 10 |
+| Biển tròn | Chiều rộng của vạch đỏ, A | 5 |
+| Biển bát giác | Đường kính ngoài biển báo, D | 60 |
+| Biển bát giác | Độ rộng viền trắng xung quanh, B | 3 |
+| Biển tam giác | Chiều dài cạnh của hình tam giác, L | 70 |
+| Biển tam giác | Chiều rộng của viền mép đỏ, B | 5 |
+| Biển tam giác | Bán kính lượn tròn của viền mép đỏ, R | 3,5 |
+| Biển tam giác | Khoảng cách đỉnh cung tròn đến đỉnh tam giác cơ bản, C | 3 |
+| Biển vuông, chữ nhật | Khoảng cách đỉnh cung tròn đến đỉnh chữ nhật cơ bản, C | 2-3 |
+
+Nguồn bảng: [PDF phần 1, trang 21; trang in 22](../../raw/pdf/54_2019_TT_BGTVT_cb29884.pdf#page=21).
+
+Bảng 2 - Hệ số kích thước biển báo
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường ô tô thông thường (*) | Đường đô thị (***) |
+| --- | --- | --- | --- | --- |
+| Biển báo cấm, biển hiệu lệnh, biển báo nguy hiểm và cảnh báo | 2 | 1,8 | 1,25 | 1 |
+| Biển chỉ dẫn | (**) | 2,0 | 1,5 | 1 |
+
+Nguồn bảng: [PDF phần 1, trang 21; trang in 22](../../raw/pdf/54_2019_TT_BGTVT_cb29884.pdf#page=21).
+
 Ghi chú:  
 (*) Đường ô tô thông thường là các đường ô tô không phải là đường ô tô cao tốc, 
 đường đôi, đường đô thị. 
@@ -1596,23 +1565,15 @@ phù hợp quy mô phân mặt cắt ngang đường và tiết kiệm chi phí 
 không nhỏ hơn kích cỡ tối thiểu trong Bảng 4. 
 
   
-Bảng 4. Quy định về chiều cao chữ viết tối thiểu  
-Loại biển chỉ dẫn 
-Loại B 
-Loại A 
-Tốc độ thiết kế, km/h 
-60; 80 
-100; 120 
-Chiều cao chữ tiếng Việt, cm 
-30,0 
-36,0 
-33,0 
-40,0 
-Chiều cao chữ tiếng Anh, cm 
-20,0 
-24,0 
-25,0 
-30,0 
+Bảng 4 - Quy định về chiều cao chữ viết tối thiểu
+| Loại biển chỉ dẫn | Loại B - cột 1 | Loại B - cột 2 | Loại A - cột 1 | Loại A - cột 2 |
+| --- | --- | --- | --- | --- |
+| Tốc độ thiết kế, km/h (ô gộp theo loại) | 60; 80 | 60; 80 | 100; 120 | 100; 120 |
+| Chiều cao chữ tiếng Việt, cm | 30,0 | 36,0 | 33,0 | 40,0 |
+| Chiều cao chữ tiếng Anh, cm | 20,0 | 24,0 | 25,0 | 30,0 |
+
+Tốc độ thiết kế ở bản gốc là ô gộp cho hai cột của mỗi loại biển; hai giá trị được giữ cùng ô gộp, không suy thêm quan hệ một tốc độ với một cột. Nguồn: [PDF phần 1, trang 45; trang in 46](../../raw/pdf/54_2019_TT_BGTVT_cb29884.pdf#page=45).
+
 50.2. Bố trí chữ viết và kích thước chữ viết trên biển chỉ dẫn trên đường cao tốc 
 50.2.1. Nguyên tắc bố trí chữ viết trên biển chỉ dẫn trên đường cao tốc quy định như sau: 
 a) Khoảng cách giữa dòng chữ tiếng Việt và dòng chữ tiếng Anh bằng chiều 
@@ -1652,182 +1613,41 @@ hiện bằng màu trắng trên nền màu xanh lá cây và đường viền m
 50.3.2. Chi tiết cụ thể về màu nền, màu chữ và đường viền được quy định cụ 
 thể cho từng biển chỉ dẫn tại Phụ lục P của Quy chuẩn này. Kiểu chữ viết, màu chữ 
 viết và màu nền của biển chỉ dẫn trên đường cao tốc được quy định trong Bảng 5. 
-Bảng 5. Quy định về kiểu chữ, màu sắc của biển chỉ dẫn 
-TT 
-Mô tả biển chỉ dẫn 
-Kiểu 
-chữ 
-Màu 
-chữ, 
-số 
-Màu nền 
-Màu 
-viền 
-1 
-Ký hiệu đường cao tốc 
-gt2 
-đen vàng huỳnh 
-quang 
-đen 
-2 
-Ký hiệu quốc lộ, đường tỉnh, đường huyện 
-gt2 
-đen 
-trắng 
-đen 
-3 
-Biển số IE.450 (a,b) chỉ dẫn sơ đồ, khoảng 
-cách đến nút giao với đường dẫn vào đường 
-cao tốc 
-gt2 
-trắng xanh lam Trắng
-4 
-Biển số IE.451 (a,b) chỉ dẫn lối vào, khoảng 
-cách đến lối vào đường cao tốc 
-gt2 
-trắng xanh lam trắng
-5 
-Biển số IE.452 chỉ dẫn bắt đầu đường cao tốc 
-gt2 
-trắng xanh lá cây trắng
-6 
-Biển số IE.453 (a,b) chỉ dẫn điểm kết thúc, 
-khoảng cách đến điểm kết thúc đường cao tốc 
-gt2 
-trắng xanh lá cây trắng
-7 
-Biển số IE.454 chỉ dẫn khoảng cách đến lối 
-ra phía trước 
-gt2 
-trắng xanh lá cây trắng
-8 
-Biển số IE.455 (a,b) chỉ dẫn khoảng cách 
-đến các lối ra tiếp theo 
-gt2 
-trắng xanh lá cây trắng
-9 
-Biển số IE.456 (a,b,c) chỉ dẫn khoảng cách, 
-hướng rẽ đến trạm dừng nghỉ 
-gt2 
-trắng xanh lá cây trắng
+Bảng 5 - Quy định về kiểu chữ, màu sắc của biển chỉ dẫn
+| TT | Mô tả biển chỉ dẫn | Kiểu chữ | Màu chữ, số | Màu nền | Màu viền |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Ký hiệu đường cao tốc | gt2 | đen | vàng huỳnh quang | đen |
+| 2 | Ký hiệu quốc lộ, đường tỉnh, đường huyện | gt2 | đen | trắng | đen |
+| 3 | Biển số IE.450 (a,b) chỉ dẫn sơ đồ, khoảng cách đến nút giao với đường dẫn vào đường cao tốc | gt2 | trắng | xanh lam | Trắng |
+| 4 | Biển số IE.451 (a,b) chỉ dẫn lối vào, khoảng cách đến lối vào đường cao tốc | gt2 | trắng | xanh lam | trắng |
+| 5 | Biển số IE.452 chỉ dẫn bắt đầu đường cao tốc | gt2 | trắng | xanh lá cây | trắng |
+| 6 | Biển số IE.453 (a,b) chỉ dẫn điểm kết thúc, khoảng cách đến điểm kết thúc đường cao tốc | gt2 | trắng | xanh lá cây | trắng |
+| 7 | Biển số IE.454 chỉ dẫn khoảng cách đến lối ra phía trước | gt2 | trắng | xanh lá cây | trắng |
+| 8 | Biển số IE.455 (a,b) chỉ dẫn khoảng cách đến các lối ra tiếp theo | gt2 | trắng | xanh lá cây | trắng |
+| 9 | Biển số IE.456 (a,b,c) chỉ dẫn khoảng cách, hướng rẽ đến trạm dừng nghỉ | gt2 | trắng | xanh lá cây | trắng |
+| 10 | Biển số IE.457 (a,b) chỉ dẫn nơi đỗ xe trong trạm dừng nghỉ | gt2 | trắng | xanh lá cây | trắng |
+| 11 | Biển số IE.458 chỉ dẫn khoảng cách đến các trạm dừng nghỉ tiếp theo | gt2 | trắng | xanh lá cây | trắng |
+| 12 | Biển số IE.459 (a,b) chỉ dẫn khoảng cách đến khu tham quan, du lịch | gt2 | trắng | xanh lá cây | trắng |
+| 13 | Biển số IE.460 chỉ dẫn cột lý trình kilômét | gt2 | trắng | xanh lá cây | trắng |
+| 14 | Biển số IE.461 (a,b,c) chỉ dẫn khoảng cách đến khu dịch vụ công cộng, giải trí | gt2 | trắng | xanh lá cây | trắng |
+| 15 | Biển số IE.461d chỉ dẫn hướng rẽ vào khu giải trí | gt2 | trắng | nâu | trắng |
+| 16 | Biển số IE.462 chỉ dẫn tần số trên sóng radio | gt2 | trắng | xanh lá cây | trắng |
+| 17 | Biển số IE.463 (a,b,c) chỉ dẫn khoảng cách, hướng rẽ vào trạm kiểm tra tải trọng xe | gt2 | trắng | xanh lá cây | trắng |
+| 18 | Biển số IE.464 (a,b) chỉ dẫn địa điểm và phương hướng | gt2 | trắng | xanh lá cây | trắng |
+| 19 | Biển số IE.465 (a,b) chỉ dẫn địa điểm và khoảng cách | gt2 | trắng | xanh lá cây | trắng |
+| 20 | Biển số IE.466 chỉ dẫn sơ đồ lối ra một chiều | gt2 | trắng | xanh lá cây | trắng |
+| 21 | Biển số IE.467 (a,b) chỉ dẫn vị trí nhập làn, khoảng cách đến vị trí nhập làn | gt2 | trắng | xanh lá cây | trắng |
+| 22 | Biển số IE.468 (a,b,c) chỉ dẫn chướng ngại vật phía trước | - | - | vàng huỳnh quang | đen |
+| 23 | Biển số IE.469 chỉ dẫn hướng rẽ | - | - | vàng huỳnh quang | đen |
+| 24 | Biển số IE.470 chỉ dẫn số điện thoại khẩn cấp | gt2 | trắng | xanh lá cây | trắng |
+| 25 | Biển số IE.471 chỉ dẫn giữ khoảng cách lái xe an toàn | gt2 | đen | vàng huỳnh quang | đen |
+| 26 | Biển số IE.472 (a,b,c,d,e) chỉ dẫn khoảng cách đến trạm thu phí, trạm thu phí, thu phí không dừng, rút thẻ, thu phí | gt2 | trắng | xanh lá cây | trắng |
+| 27 | Biển số IE.473 chỉ dẫn giảm tốc độ | gt2 | đen | vàng huỳnh quang | đen |
+| 28 | Biển số IE.474 chỉ dẫn lối ra | gt2 | trắng | xanh lá cây | trắng |
+| 29 | Các biển chỉ dẫn khác: biển chỉ dẫn địa danh; địa phận hành chính cấp tỉnh, thành phố; biển tên cầu, tên công trình lớn. (Thiết kế chi tiết các biển chỉ dẫn khác có thể vận dụng các quy định về biển chỉ dẫn cho đường ô tô không phải là đường cao tốc ngoại trừ các quy định nêu trong Bảng này) | gt2 | trắng | xanh lá cây | trắng |
 
-  
-TT 
-Mô tả biển chỉ dẫn 
-Kiểu 
-chữ 
-Màu 
-chữ, 
-số 
-Màu nền 
-Màu 
-viền 
-10 Biển số IE.457 (a,b) chỉ dẫn nơi đỗ xe trong 
-trạm dừng nghỉ 
-gt2 
-trắng xanh lá cây trắng
-11 Biển số IE.458 chỉ dẫn khoảng cách đến các 
-trạm dừng nghỉ tiếp theo 
-gt2 
-trắng xanh lá cây trắng
-12 Biển số IE.459 (a,b) chỉ dẫn khoảng cách 
-đến khu tham quan, du lịch 
-gt2 
-trắng xanh lá cây trắng
-13 Biển số IE.460 chỉ dẫn cột lý trình kilômét 
-gt2 
-trắng xanh lá cây trắng
-14 Biển số IE.461 (a,b,c) chỉ dẫn khoảng cách 
-đến khu dịch vụ công cộng, giải trí 
-gt2 
-trắng xanh lá cây trắng
-15 Biển số IE.461d chỉ dẫn hướng rẽ vào khu 
-giải trí 
-gt2 
-trắng 
-nâu 
-trắng
-16 Biển số IE.462 chỉ dẫn tần số trên sóng radio 
-gt2 
-trắng xanh lá cây trắng
-17 Biển số IE.463 (a,b,c) chỉ dẫn khoảng cách, 
-hướng rẽ vào trạm kiểm tra tải trọng xe 
-gt2 
-trắng xanh lá cây trắng
-18 Biển số IE.464 (a,b) chỉ dẫn địa điểm và 
-phương hướng  
-gt2 
-trắng xanh lá cây trắng
-19 Biển số IE.465 (a,b) chỉ dẫn địa điểm và 
-khoảng cách 
-gt2 
-trắng xanh lá cây trắng
-20 Biển số IE.466 chỉ dẫn sơ đồ lối ra một chiều 
-gt2 
-trắng xanh lá cây trắng
-21 Biển số IE.467 (a,b) chỉ dẫn vị trí nhập làn, 
-khoảng cách đến vị trí nhập làn 
-gt2 
-trắng xanh lá cây trắng
-22 Biển số IE.468 (a,b,c) chỉ dẫn chướng ngại 
-vật phía trước 
-- 
-- 
-vàng huỳnh 
-quang 
-đen 
-23 Biển số IE.469 chỉ dẫn hướng rẽ 
-- 
-- 
-vàng huỳnh 
-quang  
-đen 
-24 Biển số IE.470 chỉ dẫn số điện thoại khẩn cấp 
-gt2 
-trắng xanh lá cây trắng
-25 Biển số IE.471 chỉ dẫn giữ khoảng cách lái 
-xe an toàn 
-gt2 
-đen vàng huỳnh 
-quang 
-đen 
+Nguồn bảng (đủ 29 hàng): [PDF phần 1, trang 46; trang in 47](../../raw/pdf/54_2019_TT_BGTVT_cb29884.pdf#page=46), [PDF phần 1, trang 47; trang in 48](../../raw/pdf/54_2019_TT_BGTVT_cb29884.pdf#page=47), [PDF phần 1, trang 48; trang in 49](../../raw/pdf/54_2019_TT_BGTVT_cb29884.pdf#page=48).
 
-49 
- 
-TT 
-Mô tả biển chỉ dẫn 
-Kiểu 
-chữ 
-Màu 
-chữ, 
-số 
-Màu nền 
-Màu 
-viền 
-26 
-Biển số IE.472 (a,b,c,d,e) chỉ dẫn khoảng 
-cách đến trạm thu phí, trạm thu phí, thu phí 
-không dừng, rút thẻ, thu phí 
-gt2 
-trắng xanh lá cây trắng
-27 Biển số IE.473 chỉ dẫn giảm tốc độ 
-gt2 
-đen vàng huỳnh 
-quang 
-đen 
-28 Biển số IE.474 chỉ dẫn lối ra 
-gt2 
-trắng xanh lá cây trắng
-29 
-Các biển chỉ dẫn khác: biển chỉ dẫn địa 
-danh; địa phận hành chính cấp tỉnh, thành 
-phố; biển tên cầu, tên công trình lớn. 
-(Thiết kế chi tiết các biển chỉ dẫn khác có thể 
-vận dụng các quy định về biển chỉ dẫn cho 
-đường ô tô không phải là đường cao tốc 
-ngoại trừ các quy định nêu trong Bảng này) 
-gt2 
-trắng xanh lá cây trắng
 50.4. Đường viền của biển chỉ dẫn trên đường cao tốc 
 50.4.1. Chiều rộng đường viền xung quanh biển chỉ dẫn được quy định như sau: 
 a) Lấy bằng 5,0 cm đối với biển chỉ dẫn có kích thước ≥ 300,0 x 100,0 cm;  
@@ -1845,21 +1665,14 @@ a) Mũi tên chỉ làn:
 
   
  
-Kích thước mũi tên 
- 
-Đơn vị: cm 
-A 
-B 
-C 
-D 
-E 
-R 
-80,0 
-40,0 
-16,25 
-7,5 
-55,0 
-2,5 
+Kích thước mũi tên
+Đơn vị: cm
+| A | B | C | D | E | R |
+| --- | --- | --- | --- | --- | --- |
+| 80,0 | 40,0 | 16,25 | 7,5 | 55,0 | 2,5 |
+
+Nguồn hình/bảng: [PDF phần 1, trang 49; trang in 50](../../raw/pdf/54_2019_TT_BGTVT_cb29884.pdf#page=49).
+
 b) Mũi tên chỉ hướng: 
  
 C 
@@ -1870,20 +1683,14 @@ E
 B 
 A 
  
-Kích thước mũi tên 
-Đơn vị: cm 
-A 
-B 
-C 
-D 
-E 
-R 
-48,0 
-40,0 
-18,0 
-4,0 
-80,0 
-3,0 
+Kích thước mũi tên
+Đơn vị: cm
+| A | B | C | D | E | R |
+| --- | --- | --- | --- | --- | --- |
+| 48,0 | 40,0 | 18,0 | 4,0 | 80,0 | 3,0 |
+
+Nguồn hình/bảng: [PDF phần 1, trang 49; trang in 50](../../raw/pdf/54_2019_TT_BGTVT_cb29884.pdf#page=49).
+
 Mũi tên chỉ hướng phải có hướng trùng với hướng cần chỉ dẫn. 
 50.6. Mã hiệu đường bộ trong biển chỉ dẫn trên đường cao tốc 
 50.6.1. Mã hiệu đường bộ được đặt trong một khuôn hình chữ nhật có kích 
@@ -2077,21 +1884,12 @@ Hình 7. Biển số IE.450 chỉ dẫn sơ đồ và khoảng cách đến nút
 dẫn vào đường cao tốc 
  
 Bảng 6. Tầm nhìn tối thiểu trên đường nhánh 
-Tốc độ thiết kế trên 
-đường nhánh, km/h 
-80 
-60 
-50 
-40 
-35 
-30 
-Tầm nhìn, m 
-110 
-75 
-65 
-45 
-35 
-30 
+| Tốc độ thiết kế trên đường nhánh, km/h | 80 | 60 | 50 | 40 | 35 | 30 |
+| --- | --- | --- | --- | --- | --- | --- |
+| Tầm nhìn, m | 110 | 75 | 65 | 45 | 35 | 30 |
+
+Nguồn bảng: [PDF phần 1, trang 55; trang in 56](../../raw/pdf/54_2019_TT_BGTVT_cb29884.pdf#page=55).
+
 51.2. Lối vào và khoảng cách đến lối vào đường cao tốc 
 51.2.1. Biển số IE.451a chỉ dẫn khoảng cách đến lối vào đường cao tốc, được 
 đặt trên đường dẫn vào đường cao tốc (Hình 8a); dùng để báo trước khoảng cách 
@@ -2382,21 +2180,15 @@ Hình 28. Biển số IE.469 chỉ dẫn hướng rẽ
 
   
 Bảng 7. Quy định về khoảng cách đặt Biển số IE.469 
-Tốc độ (km/h) 
-Bán kính cong (m) 
-Khoảng cách biển (m) 
-< 30 
-< 60 
-12 
-30 - 50 
-60 - 120 
-24 
-50 - 70 
-120 - 220 
-36 
-70 - 100 
-220 - 380 
-48 
+| Tốc độ (km/h) | Bán kính cong (m) | Khoảng cách biển (m) |
+| --- | --- | --- |
+| < 30 | < 60 | 12 |
+| 30 - 50 | 60 - 120 | 24 |
+| 50 - 70 | 120 - 220 | 36 |
+| 70 - 100 | 220 - 380 | 48 |
+
+Nguồn bảng: [PDF phần 1, trang 69; trang in 70](../../raw/pdf/54_2019_TT_BGTVT_cb29884.pdf#page=69).
+
 51.21. Số điện thoại khẩn cấp 
 Biển số IE.470 sử dụng chữ màu trắng trên nền màu xanh lá cây, cung cấp số 
 điện thoại khẩn cấp cho người điều khiển phương tiện giao thông trong trường hợp 
@@ -2678,37 +2470,14 @@ Hình 34b. Tiêu phản quang dạng mũi tên (bên trái) cho đường 2 chi�
 61.3.2. Kích thước tiêu phản quang dạng mũi tên được quy định như sau: 
  
  
-Kích thước (mm) 
-A 
-B 
-C 
-D 
-E 
-F 
-Đường có tốc độ 
-thiết kế < 60 km/h 
-220 
-400 
-110 
-200 
-10 
-10 
-Đường có tốc độ 
-thiết kế 60 - 80 km/h
-300 
-500 
-150 
-250 
-15 
-15 
-Đường có tốc độ 
-thiết kế > 80 km/h 
-600 
-800 
-300 
-400 
-20 
-20 
+| Kích thước (mm) | A | B | C | D | E | F |
+| --- | --- | --- | --- | --- | --- | --- |
+| Đường có tốc độ thiết kế < 60 km/h | 220 | 400 | 110 | 200 | 10 | 10 |
+| Đường có tốc độ thiết kế 60 - 80 km/h | 300 | 500 | 150 | 250 | 15 | 15 |
+| Đường có tốc độ thiết kế > 80 km/h | 600 | 800 | 300 | 400 | 20 | 20 |
+
+Nguồn bảng: [PDF phần 1, trang 78; trang in 79](../../raw/pdf/54_2019_TT_BGTVT_cb29884.pdf#page=78).
+
 * Trong trường hợp cần thiết ở các đoạn đường đèo dốc, sương mù có thể tăng 
 kích thước lên 1 cấp nâng cao ATGT. 
 
@@ -3140,6 +2909,9 @@ cáo Bộ Giao thông vận tải xem xét, hướng dẫn hoặc sửa đổi, 
   
 Phụ lục A 
 ĐÈN TÍN HIỆU 
+
+Nguồn toàn phụ lục, gồm hình và chú dẫn: [PDF phần 1, trang 91; trang in 92](../../raw/pdf/54_2019_TT_BGTVT_cb29884.pdf#page=91) đến trang PDF 94. Các hình được giữ tại bản PDF gốc; Markdown không thay thế hình học và vị trí các đường kích thước.
+
 A.1 Các dạng đèn tín hiệu 
  
 Hình A.1. Các dạng đèn tín hiệu 
@@ -3209,25 +2981,19 @@ trở lên và ở nơi thường xuyên không có người điều khiển gia
 người già tham gia giao thông; 
 - Đèn tín hiệu phải nhìn thấy từ xa và không nhỏ hơn khoảng cách quy định 
 trong bảng A.1: 
-Bảng A.1. Khoảng cách tối thiểu nhìn thấy đèn tín hiệu 
-Tốc độ V85 (km/h) 
-Khoảng cách nhìn thấy nhỏ nhất (m) 
-30 
-50 
-40 
-65 
-50 
+Bảng A.1 - Khoảng cách tối thiểu nhìn thấy đèn tín hiệu
+| Tốc độ V85 (km/h) | Khoảng cách nhìn thấy nhỏ nhất (m) |
+| --- | --- |
+| 30 | 50 |
+| 40 | 65 |
+| 50 | 85 |
+| 60 | 110 |
+| 70 | 140 |
+| 80 | 165 |
+| 90 | 195 |
 
-95 
- 
-60 
-110 
-70 
-140 
-80 
-165 
-90 
-195 
+Nguồn bảng: [PDF phần 1, trang 93; trang in 94](../../raw/pdf/54_2019_TT_BGTVT_cb29884.pdf#page=93), [PDF phần 1, trang 94; trang in 95](../../raw/pdf/54_2019_TT_BGTVT_cb29884.pdf#page=94).
+
 - Những nơi đặt đèn có độ sáng của thiên nhiên sau đèn gây rối nhận biết của 
 người điều khiển phương tiện thì cần nghiên cứu tạo nền sau đèn để trợ giúp nhận 
 biết cho người điều khiển phương tiện; 
@@ -3258,6 +3024,9 @@ National Technical Regulation on Traffic Signs and Signals
  
 Phụ lục B 
 Ý NGHĨA - SỬ DỤNG BIỂN BÁO CẤM 
+
+Nguồn toàn phụ lục, gồm hình và chú dẫn: [PDF phần 2, trang 1; trang in 2](../../raw/pdf/54_2019_TT_BGTVT_cb30010.pdf#page=1) đến trang PDF 19. Các hình được giữ tại bản PDF gốc; Markdown không thay thế hình học và vị trí các đường kích thước.
+
  
 B.1 Biển số P.101 "Đường cấm" 
 a) Để báo đường cấm các loại phương tiện đi lại cả hai hướng, trừ các xe được 
@@ -3806,6 +3575,9 @@ Hình B.40 - Biển số P.140
  
 Phụ lục C 
 Ý NGHĨA - SỬ DỤNG BIỂN BÁO NGUY HIỂM VÀ CẢNH BÁO 
+
+Nguồn toàn phụ lục, gồm hình và chú dẫn: [PDF phần 2, trang 20; trang in 21](../../raw/pdf/54_2019_TT_BGTVT_cb30010.pdf#page=20) đến trang PDF 37. Các hình được giữ tại bản PDF gốc; Markdown không thay thế hình học và vị trí các đường kích thước.
+
  
 C.1 Biển số W.201 (a,b) "Chỗ ngoặt nguy hiểm" 
 a) Để báo trước sắp đến một chỗ ngoặt nguy hiểm, đặt biển số W.201 (a,b): 
@@ -4367,6 +4139,9 @@ Hình C.49 - Biển số W.247
  
 Phụ lục D 
 Ý NGHĨA - SỬ DỤNG BIỂN HIỆU LỆNH 
+
+Nguồn toàn phụ lục, gồm hình và chú dẫn: [PDF phần 2, trang 38; trang in 39](../../raw/pdf/54_2019_TT_BGTVT_cb30010.pdf#page=38) đến trang PDF 52. Các hình được giữ tại bản PDF gốc; Markdown không thay thế hình học và vị trí các đường kích thước.
+
  
 D.1 Biển số R.122 "Dừng lại" 
 a) Để báo các xe (cơ giới và thô sơ) dừng lại, đặt biển số R.122 "Dừng lại". Đây 
@@ -4808,6 +4583,9 @@ Hình D.23 - Biển báo hiệu hầm chui
   
 Phụ lục E 
 Ý NGHĨA - SỬ DỤNG BIỂN CHỈ DẪN 
+
+Nguồn toàn phụ lục, gồm hình và chú dẫn: [PDF phần 2, trang 53; trang in 54](../../raw/pdf/54_2019_TT_BGTVT_cb30010.pdf#page=53) đến trang PDF 71. Các hình được giữ tại bản PDF gốc; Markdown không thay thế hình học và vị trí các đường kích thước.
+
  
 E.1 Biển số I.401 "Bắt đầu đường ưu tiên" 
 a) Để biểu thị ưu tiên cho các phương tiện trên đường có đặt biển này được đi 
@@ -5360,6 +5138,9 @@ Hình E.59 - Biển số I.449
  
 Phụ lục F 
 Ý NGHĨA - SỬ DỤNG CÁC BIỂN PHỤ 
+
+Nguồn toàn phụ lục, gồm hình và chú dẫn: [PDF phần 2, trang 72; trang in 73](../../raw/pdf/54_2019_TT_BGTVT_cb30010.pdf#page=72) đến trang PDF 78. Các hình được giữ tại bản PDF gốc; Markdown không thay thế hình học và vị trí các đường kích thước.
+
  
 F.1 Biển số S.501. "Phạm vi tác dụng của biển" 
 a) Biển số S.501 "Phạm vi tác dụng của biển" để thông báo chiều dài đoạn 
@@ -5547,6 +5328,9 @@ Hình F.17 - Biển số S.H,6
   
 Phụ lục G 
 Ý NGHĨA - SỬ DỤNG VẠCH KẺ ĐƯỜNG 
+
+Nguồn toàn phụ lục, gồm hình và chú dẫn: [PDF phần 2, trang 79; trang in 80](../../raw/pdf/54_2019_TT_BGTVT_cb30010.pdf#page=79) đến trang PDF 94; [PDF phần 3, trang 1; trang in 2](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=1) đến trang PDF 34. Các hình được giữ tại bản PDF gốc; Markdown không thay thế hình học và vị trí các đường kích thước.
+
  
 G1. Vạch dọc đường 
 G1.1. Nhóm vạch phân chia hai chiều xe chạy ngược chiều 
@@ -5709,44 +5493,17 @@ nhìn vượt xe tối thiểu tương ứng với tốc độ xe chạy tốc �
 tốc độ V85. Tốc độ V85 là giá trị tốc độ mà 85% số xe trong dòng xe có tốc độ nhỏ 
 hơn hoặc bằng giá trị này. Chiều dài tầm nhìn vượt xe tối thiểu được lấy theo Bảng 
 G.1 dưới đây. 
-Bảng G.1 - Chiều dài tầm nhìn vượt xe tối thiểu dùng để xác định 
-vùng cấm vượt 
-Tốc độ hạn 
-chế lớn nhất 
-hoặc tốc độ 
-V85 (km/h) 
-Tầm nhìn vượt xe tối 
-thiểu (m) 
-(chỉ dùng để xác định 
-vùng cấm vượt) 
-Tốc độ hạn 
-chế lớn nhất 
-hoặc tốc độ V85 
-(km/h) 
-Tầm nhìn vượt xe   
-tối thiểu (m) 
-(chỉ dùng để xác định 
-vùng cấm vượt) 
-30 
-120 
-80 
-245 
-40 
-140 
-90 
-280 
-50 
-160 
-100 
-320 
-60 
-180 
-110 
-355 
-70 
-210 
-120 
-395 
+Bảng G.1 - Chiều dài tầm nhìn vượt xe tối thiểu dùng để xác định vùng cấm vượt
+| Tốc độ hạn chế lớn nhất hoặc V85 (km/h), nhóm trái | Tầm nhìn vượt xe tối thiểu (m), chỉ dùng xác định vùng cấm vượt, nhóm trái | Tốc độ hạn chế lớn nhất hoặc V85 (km/h), nhóm phải | Tầm nhìn vượt xe tối thiểu (m), chỉ dùng xác định vùng cấm vượt, nhóm phải |
+| --- | --- | --- | --- |
+| 30 | 120 | 80 | 245 |
+| 40 | 140 | 90 | 280 |
+| 50 | 160 | 100 | 320 |
+| 60 | 180 | 110 | 355 |
+| 70 | 210 | 120 | 395 |
+
+Nguồn bảng: [PDF phần 2, trang 84; trang in 85](../../raw/pdf/54_2019_TT_BGTVT_cb30010.pdf#page=84).
+
 + Điểm kết thúc vùng cấm vượt (điểm b và b’ trên Hình G.6 và Hình G.7) là 
 điểm mà tầm nhìn thực tế bắt đầu lớn hơn chiều dài tầm nhìn vượt xe tối thiểu 
 tương ứng tốc độ xe chạy V85 hoặc tốc độ thiết kế (sau khi xe đã đi qua đoạn không 
@@ -5995,21 +5752,19 @@ G.21, G.22, và G.23.
 phân chia hai chiều xe chạy. Đối với hướng xe chạy có bề rộng mặt đường bị thu 
 hẹp trong khu vực phần xe chạy bị thay đổi phải bố trí vạch giới hạn mép phần xe 
 chạy (vạch 3.1) kết hợp với đặt biển số W.203 (b,c) “Đường bị thu hẹp”.  
-- Chiều dài đoạn biến đổi bề rộng mặt đường L(m) được xác định như sau: 
- 
-L=                  (khi V ≤ 60 km/h)               (1) 
- 
-hoặc L = 0.625V.W (khi V > 60 km/h)       (2) 
+- Chiều dài đoạn biến đổi bề rộng mặt đường L(m) được xác định như sau:
+
+L = (V² × W) / 155 (khi V ≤ 60 km/h) (1)
+
+hoặc L = 0.625V.W (khi V > 60 km/h) (2)
+
+Nguồn biểu thức: [PDF phần 2, trang 94; trang in 95](../../raw/pdf/54_2019_TT_BGTVT_cb30010.pdf#page=94).
 Trong đó; V: Tốc độ hạn chế lớn nhất hoặc tốc độ V85, km/h; W: Chiều rộng 
 giảm đi, m; D: chiều dài tầm nhìn dừng xe an toàn, m. 
 - Đoạn kéo dài của vạch ở điểm cuối cùng giảm chiều rộng (d) được lựa chọn 
 như sau: Đường có tốc độ hạn chế lớn nhất hoặc tốc độ V85 > 60 km/h là 40 m, các 
 loại đường khác là 20 m. 
 
-V2W
-155
-
-  
 VĂN BẢN QUY PHẠM PHÁP LUẬT 
  
 BỘ GIAO THÔNG VẬN TẢI 
@@ -6684,193 +6439,14 @@ mũi tên thể hiện trên Hình G.73 áp dụng cho các đường có tốc 
 Kích thước mũi tên ghi ngoài ngoặc đơn thể hiện trên Hình G.74 áp dụng cho 
 các đường có tốc độ xe chạy cao. Kích thước mũi trên ghi trong ngoặc đơn thể 
 hiện trên Hình G.74 áp dụng cho đường ô tô cao tốc và các đường có tốc độ 
-thiết kế ≥ 100 km/h. 
+thiết kế ≥ 100 km/h.
 
-  
-15
-15
-15
-180
-300
-15
-135
-60
-300
-40 20
-30
-50
-30
-40
-15
-40
-60
-30
-50
-30
-40
-45°
-200
-320
-15
-135
-60
-300
-40
-20
-30
-50
-30
-40
-15
-40
-60
-30
-50
-30
-40
-45°
-200
-320
-30
-50
-30
-40
-30
-50
-30
-40
-40 20
-40
-20
-320
-170
-15
-45
-20
-300
-202020
-100
-120
-90
-§¬n vÞ: cm 
-Hình G.73 - Kích thước mũi tên chỉ đường áp dụng                                           
-cho đường có tốc độ xe chạy thấp 
-30
-30
-30
-360(540)
-600(900)
-30
-270(405)
-120(180)
-600(900)
-80 40
-60 100
-60
-90
-30
-40
-120
-60 100
-60
-80
-45°
-60 100
-60
-80
-80 40
-80
-40
-600(900)
-300
-30
-90
-40
-600(900)
-404040
-200(300)
-240(360)
-180(270)
-§¬n vÞ: cm
-(45)
-(45)
-(45)
-(45)
-(120)(60)
-(150)
-(90)
-(90)
-(135)
-30
-270(405)
-120(180)
-600(900)
-80
-40
-60 100
-60
-90
-(45)
-(120)
-(60)
-(150)
-(90)
-(90)
-(135)
-(60)
-(60)
-(60)
-(60)
-(135)
-360(540)
-600(900)
-(180)
-(60)
-(45)
-(150)
-(90)
-(90)
-(135)
-30
-40
-120
-45°
-360(540)
-600(900)
-(180)
-(60)
-(45)
-60 100
-60
-90
-(150)
-(90)
-(90)
-(135)
-(120)(60)
-(120)
-(60)
-(45)
-(150)
-(90)
-(90)
-(135)
-60 100
-60
-90
-(150)
-(90)
-(90)
-(135)
-(450)
- 
-Hình G.74 - Kích thước của mũi tên chỉ đường áp dụng                                   
-cho đường có tốc độ xe chạy cao 
-Đơn vị: cm 
-Đơn vị: cm 
+Hình G.73 - Kích thước mũi tên chỉ đường áp dụng cho đường có tốc độ xe chạy thấp. Đơn vị: cm. Nguồn hình và toàn bộ đường kích thước: [PDF phần 3, trang 31; trang in 32](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=31).
 
-33 
- 
+Hình G.74 - Kích thước của mũi tên chỉ đường áp dụng cho đường có tốc độ xe chạy cao. Đơn vị: cm. Nguồn hình và toàn bộ đường kích thước: [PDF phần 3, trang 31; trang in 32](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=31).
+
+Markdown không tái tạo vị trí các số kích thước trên mũi tên; đọc trực tiếp hình nguồn. Không dùng chuỗi số rời của text layer làm bảng kích thước.
+
 d. Vạch 9.4: Vạch mũi tên báo số làn xe phía trước bị giảm 
 Ý nghĩa sử dụng: sử dụng vạch mũi tên báo số làn xe phía trước bị giảm để 
 báo cho người điều khiển phương tiện biết số làn xe theo hướng mũi tên bị giảm và 
@@ -6932,6 +6508,9 @@ mặt đường để cảnh báo giao thông.
   
 Phụ lục I 
 CỘT KILÔMÉT - CỌC TIÊU - CỌC H - MỐC LỘ GIỚI 
+
+Nguồn toàn phụ lục, gồm hình và chú dẫn: [PDF phần 3, trang 35; trang in 36](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=35) đến trang PDF 41. Các hình được giữ tại bản PDF gốc; Markdown không thay thế hình học và vị trí các đường kích thước.
+
  
 I.1 Quy định về hình dạng, kích thước và màu sắc đối với cột kilômét dạng 
 cột thấp và cột kilômét dạng cột cao 
@@ -7033,66 +6612,14 @@ lý trình
 Ghi chú: Nền màu xanh lá cây áp dụng cho đường ô tô cao tốc, nền màu xanh lam 
 áp dụng cho các đường ô tô khác 
 Hình I.3 - Biển báo hiệu cột kilômét dạng tấm hình chữ nhật đặt ở lề đường 
-Bảng các giá trị kích thước trên Hình I.3 
-Đơn vị: mm 
-Ký hiệu 
-A 
-B 
-C 
-D 
-E 
-F 
-G 
-H 
-J 
-Giá trị kích 
-thước (mm) 
-300 
-600 
-12 
-90 
-100 
-70 
-250 
-90 
-40 
- 
- 
-B 
-A 
-D 
-C 
-E 
-F 
-G 
-H 
-J 
-J 
-B 
-D 
-C 
-E 
-F 
-G 
-H 
-A 
-G 
-H 
-B 
-D 
-C 
-E 
-F 
-G 
-H 
-J 
-A 
-G 
-H 
-G 
-H 
+Bảng các giá trị kích thước trên Hình I.3
+Đơn vị: mm
+| Ký hiệu | A | B | C | D | E | F | G | H | J |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Giá trị kích thước (mm) | 300 | 600 | 12 | 90 | 100 | 70 | 250 | 90 | 40 |
 
-41 
+Hình I.3 và quan hệ vị trí kích thước: [PDF phần 3, trang 39; trang in 40](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=39). Các nhãn trong hình được giữ bằng locator, không suy quan hệ hình học từ thứ tự text layer.
+
  
  
 Ghi chú: Kích thước ghi trên hình vẽ là cm 
@@ -7117,333 +6644,51 @@ QCVN 41 : 2019/BGTVT
 QCVN 41 : 2019/BGTVT 
 Phụ lục K 
 KÍCH THƯỚC CHỮ VIẾT VÀ CON SỐ TRÊN BIỂN BÁO 
+
+Nguồn toàn phụ lục, gồm hình và chú dẫn: [PDF phần 3, trang 42; trang in 43](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=42) đến trang PDF 50. Các hình được giữ tại bản PDF gốc; Markdown không thay thế hình học và vị trí các đường kích thước.
+
  
 K.1 Kiểu chữ thường (gt2) 
-Bảng kê chi tiết kỹ thuật kiểu chữ thường (gt2) 
-Đơn vị tính: mm - Chiều cao chữ 100 mm 
-Chữ in hoa 
- 
-Chữ thường 
- 
-Lề trái 
-Giữa 
-Lề phải 
- 
- 
-Lề trái 
-Giữa 
-Lề phải 
-A 
-0,27 
-85,86 
-1,44 
- 
-a 
-4,80 
-56,01 
-6,73 
-Ă 
-0,27 
-85,86 
-1,44 
- 
-ă 
-4,80 
-56,01 
-6,73 
-Â 
-0,27 
-85,86 
-1,44 
- 
-â 
-4,80 
-56,01 
-6,73 
-B 
-10,02 
-70,49 
-5,22 
- 
-b 
-8,79 
-57,24 
-6,86 
-C 
-6,73 
-71,38 
-0,00 
- 
-c 
-3,36 
-58,27 
-0,75 
-D 
-10,02 
-71,31 
-7,21 
- 
-d 
-8,79 
-57,24 
-6,86 
-Đ 
-2,06 
-79,20 
-7,28 
- 
-đ 
-8,79 
-63,97 
-0,14 
-E 
-10,02 
-64,52 
-3,57 
- 
-e 
-5,01 
-58,96 
-5,97 
-Ê 
-10,02 
-64,52 
-3,57 
- 
-ê 
-5,01 
-58,96 
-5,97 
-F 
-10,02 
-64,52 
-0,89 
- 
-f 
-2,47 
-37,95 
-0,00 
-G 
-6,73 
-71,79 
-7,21 
- 
-g 
-6,31 
-57,17 
-9,40 
-H 
-10,02 
-70,49 
-10.57 
- 
-h 
-8,79 
-57,24 
-9,40 
-I 
-9,81 
-16,54 
-9,88 
- 
-i 
-8,99 
-15,58 
-9,13 
-J 
-0,34 
-58,68 
-8,58 
- 
-j 
-0,00 
-27,32 
-8,92 
-K 
-10,09 
-78,45 
-0,00 
- 
-k 
-8,85 
-62,87 
-1,17 
-L 
-10,02 
-64,52 
-3,57 
- 
-l 
-8,65 
-25,60 
-1,99 
-M 
-10,09 
-85,66 
-10,78 
- 
-m 
-9,88 
-98,83 
-10,98 
-N 
-10,02 
-75,50 
-10,57 
- 
-n 
-8,79 
-57,24 
-9,40 
-O 
-6,73 
-71,79 
-7,21 
- 
-o 
-5,35 
-58,96 
-5,97 
-Ô 
-6,73 
-71,79 
-7,21 
- 
-ô 
-5,35 
-58,96 
-5,97 
-Ơ 
-6,73 
-78,45 
-0,55 
- 
-ơ 
-5,35 
-68,15 
-0,00 
-P 
-10,02 
-70,08 
-3,23 
- 
-p 
-8,79 
-57,24 
-6,86 
-Q 
-3,98 
-81,33 
-0,41 
- 
-q 
-6,31 
-57,17 
-9,40 
-R 
-10,02 
-73,78 
-1,92 
- 
-r 
-6,11 
-48,52 
-0,00 
-S 
-1,37 
-73,78 
-5,49 
- 
-s 
-0,69 
-61,43 
-5,35 
-T 
-0,00 
-70,42 
-0,00 
- 
-t 
-2,40 
-32,81 
-3,84 
+Bảng kê chi tiết kỹ thuật kiểu chữ thường (gt2)
+Đơn vị tính: mm - Chiều cao chữ 100 mm
+| Chữ in hoa | Lề trái (mm) | Giữa (mm) | Lề phải (mm) | Chữ thường | Lề trái (mm) | Giữa (mm) | Lề phải (mm) |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| A | 0,27 | 85,86 | 1,44 | a | 4,80 | 56,01 | 6,73 |
+| Ă | 0,27 | 85,86 | 1,44 | ă | 4,80 | 56,01 | 6,73 |
+| Â | 0,27 | 85,86 | 1,44 | â | 4,80 | 56,01 | 6,73 |
+| B | 10,02 | 70,49 | 5,22 | b | 8,79 | 57,24 | 6,86 |
+| C | 6,73 | 71,38 | 0,00 | c | 3,36 | 58,27 | 0,75 |
+| D | 10,02 | 71,31 | 7,21 | d | 8,79 | 57,24 | 6,86 |
+| Đ | 2,06 | 79,20 | 7,28 | đ | 8,79 | 63,97 | 0,14 |
+| E | 10,02 | 64,52 | 3,57 | e | 5,01 | 58,96 | 5,97 |
+| Ê | 10,02 | 64,52 | 3,57 | ê | 5,01 | 58,96 | 5,97 |
+| F | 10,02 | 64,52 | 0,89 | f | 2,47 | 37,95 | 0,00 |
+| G | 6,73 | 71,79 | 7,21 | g | 6,31 | 57,17 | 9,40 |
+| H | 10,02 | 70,49 | 10.57 | h | 8,79 | 57,24 | 9,40 |
+| I | 9,81 | 16,54 | 9,88 | i | 8,99 | 15,58 | 9,13 |
+| J | 0,34 | 58,68 | 8,58 | j | 0,00 | 27,32 | 8,92 |
+| K | 10,09 | 78,45 | 0,00 | k | 8,85 | 62,87 | 1,17 |
+| L | 10,02 | 64,52 | 3,57 | l | 8,65 | 25,60 | 1,99 |
+| M | 10,09 | 85,66 | 10,78 | m | 9,88 | 98,83 | 10,98 |
+| N | 10,02 | 75,50 | 10,57 | n | 8,79 | 57,24 | 9,40 |
+| O | 6,73 | 71,79 | 7,21 | o | 5,35 | 58,96 | 5,97 |
+| Ô | 6,73 | 71,79 | 7,21 | ô | 5,35 | 58,96 | 5,97 |
+| Ơ | 6,73 | 78,45 | 0,55 | ơ | 5,35 | 68,15 | 0,00 |
+| P | 10,02 | 70,08 | 3,23 | p | 8,79 | 57,24 | 6,86 |
+| Q | 3,98 | 81,33 | 0,41 | q | 6,31 | 57,17 | 9,40 |
+| R | 10,02 | 73,78 | 1,92 | r | 6,11 | 48,52 | 0,00 |
+| S | 1,37 | 73,78 | 5,49 | s | 0,69 | 61,43 | 5,35 |
+| T | 0,00 | 70,42 | 0,00 | t | 2,40 | 32,81 | 3,84 |
+| U | 8,24 | 71,59 | 8,72 | u | 8,79 | 57,24 | 9,40 |
+| Ư | 4,80 | 87,92 | 0,00 | ư | 6,04 | 74,33 | 0,00 |
+| V | 0,00 | 78,31 | 0,00 | v | 0,00 | 64,31 | 0,00 |
+| W | 1,17 | 113,86 | 1,85 | w | 0,14 | 100,27 | 1,03 |
+| X | 0,00 | 78,72 | 0,00 | x | 0,89 | 65,13 | 1,44 |
+| Y | 0,00 | 75,09 | 0,00 | y | 0,00 | 64,58 | 0,00 |
+| Z | 3,98 | 64,58 | 4,32 | z | 4,19 | 53,53 | 4,67 |
 
-  
-Chữ in hoa 
- 
-Chữ thường 
- 
-Lề trái 
-Giữa 
-Lề phải 
- 
- 
-Lề trái 
-Giữa 
-Lề phải 
-U 
-8,24 
-71,59 
-8,72 
- 
-u 
-8,79 
-57,24 
-9,40 
-Ư 
-4,80 
-87,92 
-0,00 
- 
-ư 
-6,04 
-74,33 
-0,00 
-V 
-0,00 
-78,31 
-0,00 
- 
-v 
-0,00 
-64,31 
-0,00 
-W 
-1,17 
-113,86 
-1,85 
- 
-w 
-0,14 
-100,27 
-1,03 
-X 
-0,00 
-78,72 
-0,00 
- 
-x 
-0,89 
-65,13 
-1,44 
-Y 
-0,00 
-75,09 
-0,00 
- 
-y 
-0,00 
-64,58 
-0,00 
-Z 
-3,98 
-64,58 
-4,32 
- 
-z 
-4,19 
-53,53 
-4,67 
+Nguồn bảng: [PDF phần 3, trang 42; trang in 43](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=42), [PDF phần 3, trang 43; trang in 44](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=43).
+
 Ghi chú: Chữ viết và chữ số mẫu dùng để tham khảo khi thiết kế chi tiết biển chỉ 
 dẫn (kích thước mắt lưới = 10 x 10 mm) 
 
@@ -7455,17 +6700,13 @@ QCVN 41:2019/BGTVT
  
  
  
-Hình K.1 - Ký hiệu các chi tiết kích thước chữ 
-Lề trái 
-Lề phải 
-Giữa 
-10,02 
-3,57 
-64,52 
+Hình K.1 - Ký hiệu các chi tiết kích thước chữ
+| Chi tiết | Lề trái | Giữa | Lề phải |
+| --- | --- | --- | --- |
+| Kích thước (mm) | 10,02 | 64,52 | 3,57 |
 
-  
-QCVN 41:2019/BGTVT  
- 
+Nguồn hình: [PDF phần 3, trang 44; trang in 45](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=44).
+
 K.1.1 Chữ in hoa, kiểu chữ thường (gt2) 
  
  
@@ -7498,332 +6739,46 @@ kiểu chữ thường (gt2)
 QCVN 41 : 2019/BGTVT 
  
 K.2 Kiểu chữ nén (gt1) 
-Bảng kê chi tiết kỹ thuật kiểu chữ nén (gt1) 
-Đơn vị tính: mm - Chiều cao chữ 100 mm 
-Chữ in hoa 
- 
-Chữ thường 
- 
-Lề trái 
-Giữa 
-Lề phải 
- 
- 
-Lề trái 
-Giữa 
-Lề phải 
-A 
-0,15 
-57,10 
-0,29 
- 
-a 
-5,05 
-42,90 
-6,15 
-Ă 
-0,15 
-57,10 
-0,29 
- 
-ă 
-5,05 
-42,90 
-6,15 
-Â 
-0,15 
-57,10 
-0,29 
- 
-â 
-5,05 
-42,90 
-6,15 
-B 
-7,76 
-46,19 
-6,44 
- 
-b 
-6,44 
-42,90 
-5,64 
-C 
-6,88 
-46,19 
-4,61 
- 
-c 
-5,20 
-42,75 
-3,44 
-D 
-7,76 
-46,19 
-6,73 
- 
-d 
-5,78 
-42,90 
-6,15 
-Đ 
-0,59 
-54,90 
-5,20 
- 
-đ 
-5,78 
-49,05 
-0,00 
-E 
-7,76 
-42,75 
-5,34 
- 
-e 
-5,05 
-42,90 
-4,90 
-Ê 
-7,76 
-42,75 
-5,34 
- 
-ê 
-5,05 
-42,90 
-4,90 
-F 
-7,76 
-42,61 
-4,76 
- 
-f 
-2,34 
-31,92 
-0,95 
-G 
-6,73 
-47,95 
-6,44 
- 
-g 
-5,05 
-43,05 
-6,30 
-H 
-7,76 
-46,49 
-7,76 
- 
-h 
-6,30 
-42,90 
-6,37 
-I 
-7,76 
-14,13 
-7,91 
- 
-i 
-6,30 
-14,42 
-6,22 
-J 
-0,73 
-43,05 
-5,20 
- 
-j 
-0,15 
-22,77 
-4,17 
-K 
-8,05 
-53,22 
-2,12 
- 
-k 
-6,30 
-50,07 
-0,59 
-L 
-7,91 
-42,61 
-3,00 
- 
-l 
-6,30 
-21,45 
-2,49 
-M 
-7,76 
-64,20 
-7,76 
- 
-m 
-6,30 
-71,52 
-6,22 
-N 
-7,76 
-49,93 
-7,76 
- 
-n 
-6,08 
-42,90 
-6,44 
-O 
-6,73 
-48,10 
-6,73 
- 
-o 
-5,20 
-42,90 
-5,12 
-Ô 
-6,73 
-48,10 
-6,73 
- 
-ô 
-5,20 
-42,90 
-5,12 
-Ơ 
-6,00 
-55,42 
-0,15 
- 
-ơ 
-3,73 
-51,39 
-0,29 
-P 
-7,76 
-46,34 
-2,42 
- 
-p 
-6,44 
-42,90 
-5,05 
-Q 
-4,90 
-56,22 
-0,00 
- 
-q 
-5,64 
-42,90 
-6,30 
-R 
-7,61 
-51,90 
-2,20 
- 
-r 
-6,30 
-33,02 
-2,64 
-S 
-3,88 
-49,19 
-4,90 
- 
-s 
-3,29 
-42,90 
-3,22 
-T 
-2,34 
-48,83 
-2,27 
- 
-t 
-0,73 
-30,31 
-4,32 
-U 
-7,76 
-46,49 
-7,61 
- 
-u 
-6,44 
-42,90 
-6,22 
-Ư 
-4,83 
-59,52 
-0,37 
- 
-ư 
-4,25 
-56,00 
-0,00 
+Bảng kê chi tiết kỹ thuật kiểu chữ nén (gt1)
+Đơn vị tính: mm - Chiều cao chữ 100 mm
+| Chữ in hoa | Lề trái (mm) | Giữa (mm) | Lề phải (mm) | Chữ thường | Lề trái (mm) | Giữa (mm) | Lề phải (mm) |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| A | 0,15 | 57,10 | 0,29 | a | 5,05 | 42,90 | 6,15 |
+| Ă | 0,15 | 57,10 | 0,29 | ă | 5,05 | 42,90 | 6,15 |
+| Â | 0,15 | 57,10 | 0,29 | â | 5,05 | 42,90 | 6,15 |
+| B | 7,76 | 46,19 | 6,44 | b | 6,44 | 42,90 | 5,64 |
+| C | 6,88 | 46,19 | 4,61 | c | 5,20 | 42,75 | 3,44 |
+| D | 7,76 | 46,19 | 6,73 | d | 5,78 | 42,90 | 6,15 |
+| Đ | 0,59 | 54,90 | 5,20 | đ | 5,78 | 49,05 | 0,00 |
+| E | 7,76 | 42,75 | 5,34 | e | 5,05 | 42,90 | 4,90 |
+| Ê | 7,76 | 42,75 | 5,34 | ê | 5,05 | 42,90 | 4,90 |
+| F | 7,76 | 42,61 | 4,76 | f | 2,34 | 31,92 | 0,95 |
+| G | 6,73 | 47,95 | 6,44 | g | 5,05 | 43,05 | 6,30 |
+| H | 7,76 | 46,49 | 7,76 | h | 6,30 | 42,90 | 6,37 |
+| I | 7,76 | 14,13 | 7,91 | i | 6,30 | 14,42 | 6,22 |
+| J | 0,73 | 43,05 | 5,20 | j | 0,15 | 22,77 | 4,17 |
+| K | 8,05 | 53,22 | 2,12 | k | 6,30 | 50,07 | 0,59 |
+| L | 7,91 | 42,61 | 3,00 | l | 6,30 | 21,45 | 2,49 |
+| M | 7,76 | 64,20 | 7,76 | m | 6,30 | 71,52 | 6,22 |
+| N | 7,76 | 49,93 | 7,76 | n | 6,08 | 42,90 | 6,44 |
+| O | 6,73 | 48,10 | 6,73 | o | 5,20 | 42,90 | 5,12 |
+| Ô | 6,73 | 48,10 | 6,73 | ô | 5,20 | 42,90 | 5,12 |
+| Ơ | 6,00 | 55,42 | 0,15 | ơ | 3,73 | 51,39 | 0,29 |
+| P | 7,76 | 46,34 | 2,42 | p | 6,44 | 42,90 | 5,05 |
+| Q | 4,90 | 56,22 | 0,00 | q | 5,64 | 42,90 | 6,30 |
+| R | 7,61 | 51,90 | 2,20 | r | 6,30 | 33,02 | 2,64 |
+| S | 3,88 | 49,19 | 4,90 | s | 3,29 | 42,90 | 3,22 |
+| T | 2,34 | 48,83 | 2,27 | t | 0,73 | 30,31 | 4,32 |
+| U | 7,76 | 46,49 | 7,61 | u | 6,44 | 42,90 | 6,22 |
+| Ư | 4,83 | 59,52 | 0,37 | ư | 4,25 | 56,00 | 0,00 |
+| V | 0,88 | 53,51 | 0,88 | v | 0,00 | 49,93 | 0,00 |
+| W | 0,88 | 78,55 | 0,88 | w | 0,59 | 74,96 | 0,29 |
+| X | 1,32 | 55,34 | 0,88 | x | 0,00 | 49,78 | 0,00 |
+| Y | 0,00 | 53,37 | 0,00 | y | 0,00 | 49,93 | 0,00 |
+| Z | 4,76 | 42,90 | 4,03 | z | 3,29 | 38,95 | 3,44 |
 
-49 
- 
-Chữ in hoa 
- 
-Chữ thường 
- 
-Lề trái 
-Giữa 
-Lề phải 
- 
- 
-Lề trái 
-Giữa 
-Lề phải 
-V 
-0,88 
-53,51 
-0,88 
- 
-v 
-0,00 
-49,93 
-0,00 
-W 
-0,88 
-78,55 
-0,88 
- 
-w 
-0,59 
-74,96 
-0,29 
-X 
-1,32 
-55,34 
-0,88 
- 
-x 
-0,00 
-49,78 
-0,00 
-Y 
-0,00 
-53,37 
-0,00 
- 
-y 
-0,00 
-49,93 
-0,00 
-Z 
-4,76 
-42,90 
-4,03 
- 
-z 
-3,29 
-38,95 
-3,44 
+Nguồn bảng: [PDF phần 3, trang 47; trang in 48](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=47), [PDF phần 3, trang 48; trang in 49](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=48).
+
 Ghi chú: Chữ viết và chữ số mẫu dùng đề tham khảo khi thiết kế chi tiết biển 
 chỉ dẫn (kích thước mắt lưới = 10 x 10 mm) 
 
@@ -7854,82 +6809,1820 @@ K.2.2 Chữ thường, kiểu chữ nén (gt1)
  
  
  
-Hình K.5 - Chi tiết chữ viết dạng chữ thường, kiểu chữ nén (gt1) 
+Hình K.5 - Chi tiết chữ viết dạng chữ thường, kiểu chữ nén (gt1)
 
+Phụ lục M
+CHI TIẾT CÁC THÔNG SỐ THIẾT KẾ BIỂN BÁO
 
-53 
+Các bảng được chép theo ảnh trang nguồn dưới đây. Hình thiết kế và vị trí đường kích thước giữ tại PDF gốc; Markdown không thay thế hình học của bản gốc.
 
+Nguồn hình/bảng: [PDF phần 3, trang 51; trang in 52](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=51).
 
-55 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 52; trang in 53](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=52).
 
-57 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 53; trang in 54](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=53).
 
-59 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 54; trang in 55](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=54).
 
-61 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 55; trang in 56](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=55).
 
-63 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 56; trang in 57](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=56).
 
-65 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 57; trang in 58](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=57).
 
-67 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 58; trang in 59](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=58).
 
-69 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 59; trang in 60](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=59).
 
-71 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 60; trang in 61](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=60).
 
-73 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 61; trang in 62](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=61).
 
-75 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 62; trang in 63](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=62).
 
-77 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 63; trang in 64](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=63).
 
-79 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 64; trang in 65](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=64).
 
-81 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 65; trang in 66](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=65).
 
-83 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
+Nguồn hình/bảng: [PDF phần 3, trang 66; trang in 67](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=66).
 
-85 
+Bảng 1 (theo thứ tự từ trên xuống):
 
+| Loại đường | Đường cao tốc và đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 126 | 87,5 | 70 |
 
-87 
+Bảng 2 (theo thứ tự từ trên xuống):
 
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
 
-89 
+Nguồn hình/bảng: [PDF phần 3, trang 67; trang in 68](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=67).
 
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
 
-91 
+Nguồn hình/bảng: [PDF phần 3, trang 68; trang in 69](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=68).
 
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
 
-93 
+Nguồn hình/bảng: [PDF phần 3, trang 69; trang in 70](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=69).
 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
-95 
+Nguồn hình/bảng: [PDF phần 3, trang 70; trang in 71](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=70).
 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
-97 
+Nguồn hình/bảng: [PDF phần 3, trang 71; trang in 72](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=71).
 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
-99 
+Nguồn hình/bảng: [PDF phần 3, trang 72; trang in 73](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=72).
 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
-101 
+Nguồn hình/bảng: [PDF phần 3, trang 73; trang in 74](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=73).
 
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
 
-103 
+Nguồn hình/bảng: [PDF phần 3, trang 74; trang in 75](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=74).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 75; trang in 76](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=75).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 76; trang in 77](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=76).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 77; trang in 78](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=77).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 78; trang in 79](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=78).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 79; trang in 80](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=79).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 80; trang in 81](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=80).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 81; trang in 82](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=81).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 82; trang in 83](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=82).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 83; trang in 84](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=83).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 84; trang in 85](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=84).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 85; trang in 86](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=85).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 86; trang in 87](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=86).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 87; trang in 88](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=87).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 88; trang in 89](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=88).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 89; trang in 90](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=89).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 90; trang in 91](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=90).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 91; trang in 92](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=91).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 92; trang in 93](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=92).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 93; trang in 94](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=93).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 94; trang in 95](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=94).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 95; trang in 96](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=95).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 96; trang in 97](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=96).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 97; trang in 98](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=97).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 98; trang in 99](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=98).
+
+Bảng 1 (theo thứ tự từ trên xuống):
+
+| Loại đường | Đường cao tốc và đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 126 | 87,5 | 70 |
+
+Bảng 2 (theo thứ tự từ trên xuống):
+
+| Loại đường | Đường cao tốc và đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Bảng 3 (theo thứ tự từ trên xuống):
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 99; trang in 100](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=99).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 100; trang in 101](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=100).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 101; trang in 102](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=101).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 3, trang 102; trang in 103](../../raw/pdf/54_2019_TT_BGTVT_cb30013.pdf#page=102).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 2; trang in 2](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=2).
+
+Trang bìa nối tiếp Phụ lục M; không có bảng thông số.
+
+Nguồn hình/bảng: [PDF phần 4, trang 3; trang in 3](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=3).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 4; trang in 4](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=4).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 5; trang in 5](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=5).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 6; trang in 6](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=6).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 7; trang in 7](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=7).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 8; trang in 8](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=8).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 9; trang in 9](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=9).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 10; trang in 10](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=10).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 140 | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 11; trang in 11](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=11).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 100 | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 12; trang in 12](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=12).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 100 | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 13; trang in 13](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=13).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 100 | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 14; trang in 14](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=14).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 100 | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 15; trang in 15](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=15).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 100 | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 16; trang in 16](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=16).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 100 | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 17; trang in 17](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=17).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 100 | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 18; trang in 18](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=18).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 100 | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 19; trang in 19](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=19).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 100 | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 20; trang in 20](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=20).
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 100 | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 21; trang in 21](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=21).
+
+| Loại đường | Đường đôi ngoài đô thị thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 22; trang in 22](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=22).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 23; trang in 23](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=23).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 24; trang in 24](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=24).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 25; trang in 25](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=25).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 26; trang in 26](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=26).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 27; trang in 27](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=27).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 28; trang in 28](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=28).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 126 | 87,5 | 70 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 29; trang in 29](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=29).
+
+Bảng 1 (theo thứ tự từ trên xuống):
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 126 | 87,5 | 70 |
+
+Bảng 2 (theo thứ tự từ trên xuống):
+
+| Loại đường | Đường cao tốc | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- | --- |
+| z(mm) | 100 | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 30; trang in 30](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=30).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 31; trang in 31](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=31).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 32; trang in 32](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=32).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 33; trang in 33](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=33).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 34; trang in 34](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=34).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 35; trang in 35](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=35).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 36; trang in 36](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=36).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 37; trang in 37](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=37).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 140 | 105 | 70 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 38; trang in 38](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=38).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 39; trang in 39](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=39).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 40; trang in 40](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=40).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 41; trang in 41](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=41).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 42; trang in 42](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=42).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 43; trang in 43](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=43).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 44; trang in 44](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=44).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 45; trang in 45](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=45).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 46; trang in 46](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=46).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 47; trang in 47](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=47).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 48; trang in 48](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=48).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 49; trang in 49](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=49).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 50; trang in 50](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=50).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 51; trang in 51](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=51).
+
+Bảng 1 (theo thứ tự từ trên xuống):
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Bảng 2 (theo thứ tự từ trên xuống):
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 75 | 56,25 | 37,5 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 52; trang in 52](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=52).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 53; trang in 53](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=53).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 54; trang in 54](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=54).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 80 | 60 | 40 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 55; trang in 55](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=55).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 80 | 60 | 40 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 56; trang in 56](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=56).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 80 | 60 | 40 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 57; trang in 57](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=57).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 80 | 60 | 40 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 58; trang in 58](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=58).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 80 | 60 | 40 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 59; trang in 59](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=59).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 80 | 60 | 40 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 60; trang in 60](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=60).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 80 | 60 | 40 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 61; trang in 61](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=61).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 62; trang in 62](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=62).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 63; trang in 63](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=63).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 100 | 75 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 64; trang in 64](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=64).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 65; trang in 65](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=65).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 66; trang in 66](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=66).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 67; trang in 67](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=67).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 68; trang in 68](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=68).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 69; trang in 69](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=69).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 70; trang in 70](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=70).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 71; trang in 71](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=71).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 72; trang in 72](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=72).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 73; trang in 73](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=73).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 74; trang in 74](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=74).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Nguồn hình/bảng: [PDF phần 4, trang 75; trang in 75](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=75).
+
+| Loại đường | Đường đôi ngoài đô thị | Đường thông thường | Đường đô thị |
+| --- | --- | --- | --- |
+| z(mm) | 90 | 62,5 | 50 |
+
+Phụ lục N
+MÃ HIỆU ĐƯỜNG CAO TỐC
+
+| Mã đường cao tốc | Tên đường cao tốc | Ghi chú |
+| --- | --- | --- |
+| CT.01 | Đường cao tốc Bắc - Nam phía Đông; Hà Nội - Cần Thơ | Điểm đầu: tại nút giao Pháp Vân. Điểm cuối: TP. Cần Thơ. Tuyến đi qua các vị trí: Pháp Vân - Cầu Giẽ - Ninh Bình - Nghi Sơn (Thanh Hoá) - Vũng Áng (Hà Tĩnh) - Bùng (Quảng Bình) - Cam Lộ (Quảng Trị) - La Sơn (Thừa Thiên Huế) - Tuý Loan (Đà Nẵng) - Quảng Ngãi - An Nhơn (Bình Định) - Nha Trang - Phan Thiết (Bình Thuận) - Dầu Giây (Đồng Nai) - Long Thành (Đồng Nai) - Bến Lức (Long An) - Trung Lương (Tiền Giang) - Mỹ Thuận (Vĩnh Long) - Cần Thơ |
+| CT.02 | Đường cao tốc Bắc - Nam phía Tây; Đoạn Đoan Hùng - Khe Cò; Đoạn Ngọc Hồi - Rạch Giá | Đoạn Đoan Hùng - Khe Cò: Điểm đầu: Đoan Hùng (Phú Thọ). Điểm cuối: Khe Cò (Hà Tĩnh). Tuyến đi qua các vị trí: Đoan Hùng (Phú Thọ) - Chợ Bến (Hoà Bình) - Thạch Quảng (Thanh Hoá) - Tân Kỳ (Nghệ An) - Khe Cò (Hà Tĩnh). Đoạn Ngọc Hồi - Rạch Giá: Ngọc Hồi (Kon Tum) - Gia Lai - Đắk Lắk - Đắk Nông - Bình Phước - Chơn Thành (Đồng Nai) - Đức Hoà (Long An) - Mỹ An (Đồng Tháp) - Rạch Sỏi (Kiên Giang) |
+| CT.03 | Đường cao tốc Lạng Sơn - Bắc Giang - Bắc Ninh - Hà Nội | Điểm đầu: Cửa khẩu Hữu nghị (Lạng Sơn). Điểm cuối: Nam cầu Phù Đổng (Hà Nội) |
+| CT.04 | Đường cao tốc Hà Nội - Hải Phòng | Điểm đầu: Hà Nội. Điểm cuối: Hải Phòng |
+| CT.05 | Đường cao tốc Hà Nội - Việt Trì - Lào Cai | Điểm đầu: Hà Nội. Điểm cuối: Lào Cai |
+| CT.06 | Đường cao tốc Nội Bài - Hạ Long - Móng Cái | Điểm đầu: Nội Bài. Điểm cuối: Móng Cái |
+| CT.07 | Đường cao tốc Hà Nội - Thái Nguyên - Chợ Mới | Điểm đầu: Hà Nội. Điểm cuối: Chợ Mới (Bắc Kạn) |
+| CT.08 | Đường cao tốc Láng - Hoà Lạc - Hoà Bình | Điểm đầu: Láng (Hà Nội). Điểm cuối: Hoà Bình |
+| CT.09 | Đường cao tốc Ninh Bình - Hải Phòng - Quảng Ninh | Điểm đầu: Ninh Bình. Điểm cuối: Quảng Ninh |
+| CT.10 | Đường cao tốc Hồng Lĩnh - Hương Sơn | Điểm đầu: Hồng Lĩnh (Hà Tĩnh). Điểm cuối: Hương Sơn (Hà Tĩnh) |
+| CT.11 | Đường cao tốc Cam Lộ - Lao Bảo | Điểm đầu: Cam Lộ (Quảng Trị). Điểm cuối: Lao Bảo (Quảng Trị) |
+| CT.12 | Đường cao tốc Quy Nhơn - Pleiku | Điểm đầu: Quy Nhơn (Bình Định). Điểm cuối: Pleiku (Gia Lai) |
+| CT.13 | Đường cao tốc Biên Hoà - Vũng Tàu | Điểm đầu: Biên Hoà (Đồng Nai). Điểm cuối: Vũng Tàu |
+| CT.14 | Đường cao tốc Dầu Giây - Đà Lạt | Điểm đầu: Dầu Giây (Đồng Nai). Điểm cuối: Đà Lạt (Lâm Đồng) |
+| CT.15 | Đường cao tốc TP. Hồ Chí Minh - Thủ Dầu Một - Chơn Thành | Điểm đầu: TP. Hồ Chí Minh. Điểm cuối: Nhơn Thành (Bình Phước) |
+| CT.16 | Đường cao tốc TP. Hồ Chí Minh - Mộc Bài | Điểm đầu: TP. Hồ Chí Minh. Điểm cuối: Mộc Bài (Tây Ninh) |
+| CT.17 | Đường cao tốc Châu Đốc - Cần Thơ - Sóc Trăng | Điểm đầu: Châu Đốc (An Giang). Điểm cuối: Sóc Trăng |
+| CT.18 | Đường cao tốc Hà Tiên - Rạch Giá - Bạc Liêu | Điểm đầu: Hà Tiên (Kiên Giang). Điểm cuối: Bạc Liêu |
+| CT.19 | Đường cao tốc Cần Thơ - Cà Mau | Điểm đầu: Cần Thơ. Điểm cuối: Cà Mau |
+| CT.20 | Đường cao tốc vành đai 3 TP. Hà Nội | Trên địa phận thành phố Hà Nội |
+| CT.21 | Đường cao tốc vành đai 4 TP. Hà Nội | Trên địa phận thành phố Hà Nội |
+| CT.22 | Đường cao tốc vành đai 3 TP. Hồ Chí Minh | Trên địa phận thành phố Hồ Chí Minh |
+
+Ghi chú: Mã hiệu đường cao tốc chưa có trong Quy hoạch phát triển mạng đường bộ cao tốc Việt Nam đến năm 2020 và định hướng đến năm 2030 đã được phê duyệt, sẽ được Bộ Giao thông vận tải cập nhật, bổ sung trong quá trình điều chỉnh quy hoạch và công bố.
+
+Bảng được chép từ ảnh đúng phiên bản, giữ cả tên địa danh trong nguồn; không dùng bảng này để suy thay đổi địa giới hoặc quy hoạch sau ngày ban hành.
+
+- [PDF phần 4, trang 76; trang in 76](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=76).
+- [PDF phần 4, trang 77; trang in 77](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=77).
+- [PDF phần 4, trang 78; trang in 78](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=78).
+
+Phụ lục O
+KÍCH THƯỚC MÃ HIỆU ĐƯỜNG BỘ
+
+Các bảng được chép theo ảnh trang nguồn dưới đây. Hình thiết kế và vị trí đường kích thước giữ tại PDF gốc; Markdown không thay thế hình học của bản gốc.
+
+a) Kích thước mã hiệu đường cao tốc
+
+Kích thước cỡ chữ 40 cm; Kích thước cỡ chữ 33 cm; Kích thước cỡ chữ 30 cm.
+Ghi chú: a là khoảng cách căn giữa.
+
+Nguồn hình/bảng: [PDF phần 4, trang 79; trang in 79](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=79).
+
+| Hạng mục | Màu sắc | Vật liệu | Kiểu chữ | Ghi chú |
+| --- | --- | --- | --- | --- |
+| Chữ/Số/Khung | Đen | Màng phản quang loại VIII, IX, X cấu trúc kim cương | gt2 |  |
+| Nền | Vàng huỳnh quang |  |  |  |
+
+Ô Vật liệu và Kiểu chữ gộp chung cho hai hàng Chữ/Số/Khung và Nền.
+
+b) Kích thước mã hiệu quốc lộ
+
+Kích thước cỡ chữ 40 cm; Kích thước cỡ chữ 33 cm; Kích thước cỡ chữ 30 cm.
+Ghi chú: a là khoảng cách căn giữa.
+
+Nguồn hình/bảng: [PDF phần 4, trang 80; trang in 80](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=80).
+
+| Hạng mục | Màu sắc | Vật liệu | Kiểu chữ | Ghi chú |
+| --- | --- | --- | --- | --- |
+| Chữ/Số/Khung | Đen | Màng phản quang loại VIII, IX, X cấu trúc kim cương | gt2 |  |
+| Nền | Trắng |  |  |  |
+
+Ô Vật liệu và Kiểu chữ gộp chung cho hai hàng Chữ/Số/Khung và Nền.
+
+c) Kích thước ký hiệu đường tỉnh
+
+Kích thước cỡ chữ 40 cm; Kích thước cỡ chữ 33 cm; Kích thước cỡ chữ 30 cm.
+Ghi chú: a là khoảng cách căn giữa.
+
+Nguồn hình/bảng: [PDF phần 4, trang 81; trang in 81](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=81).
+
+| Hạng mục | Màu sắc | Vật liệu | Kiểu chữ | Ghi chú |
+| --- | --- | --- | --- | --- |
+| Chữ/Số/Khung | Đen | Màng phản quang loại VIII, IX, X cấu trúc kim cương | gt2 |  |
+| Nền | Trắng |  |  |  |
+
+Ô Vật liệu và Kiểu chữ gộp chung cho hai hàng Chữ/Số/Khung và Nền.
+
+d) Kích thước mã hiệu đường huyện
+
+Kích thước cỡ chữ 40 cm; Kích thước cỡ chữ 33 cm; Kích thước cỡ chữ 30 cm.
+Ghi chú: a là khoảng cách căn giữa.
+
+Nguồn hình/bảng: [PDF phần 4, trang 82; trang in 82](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=82).
+
+| Hạng mục | Màu sắc | Vật liệu | Kiểu chữ | Ghi chú |
+| --- | --- | --- | --- | --- |
+| Chữ/Số/Khung | Đen | Màng phản quang loại VIII, IX, X cấu trúc kim cương | gt2 |  |
+| Nền | Trắng |  |  |  |
+
+Ô Vật liệu và Kiểu chữ gộp chung cho hai hàng Chữ/Số/Khung và Nền.
+
+Phụ lục P
+CHI TIẾT CÁC THÔNG SỐ THIẾT KẾ BIỂN CHỈ DẪN TRÊN ĐƯỜNG CAO TỐC
+
+Các bảng giữ nguyên số liệu, đơn vị, ô vật liệu gộp và ô kích thước nối tiếp; ô trống giữ trống. Hình học và vị trí kích thước trong hình thiết kế được giữ tại PDF gốc theo từng trang.
+
+### P.1 Biển chỉ dẫn sơ đồ và khoảng cách đến nút giao với nhánh nối vào đường cao tốc — a) Biển số IE.450a
+
+[PDF phần 4, trang 83; trang in 83](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=83).
+
+Ghi chú nguồn: k₂ = H₂; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-4-83-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ/Số/Khung</td><td>Trắng</td><td rowspan="5">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td rowspan="2">gt2; H₁=40; k₂=H₂=33; h₂=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lam</td><td></td></tr>
+<tr><td>Biểu tượng đường cao tốc</td><td>Trắng, xanh lá cây</td><td>100 x 70</td><td></td></tr>
+<tr><td>Ký hiệu đường cao tốc</td><td>Nền vàng huỳnh quang, chữ số đen</td><td>55 x 120</td><td></td></tr>
+<tr><td>Ký hiệu đường tỉnh</td><td>Nền trắng, chữ số đen</td><td>55 x 120</td><td></td></tr>
+</table>
+
+### b) Biển số IE.450b
+
+[PDF phần 4, trang 84; trang in 84](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=84).
+
+Ghi chú nguồn: k₁ = H₁; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-4-84-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ/Số/Khung</td><td>Trắng</td><td rowspan="5">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td rowspan="2">gt2; k₁=H₁=33</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lam</td><td></td></tr>
+<tr><td>Biểu tượng đường cao tốc</td><td>Trắng, xanh lá cây</td><td>100 x 70</td><td></td></tr>
+<tr><td>Mã hiệu đường cao tốc</td><td>Nền vàng huỳnh quang, chữ số đen</td><td>55 x 120</td><td></td></tr>
+<tr><td>Mã hiệu đường tỉnh</td><td>Nền trắng, chữ số đen</td><td>55 x 120</td><td></td></tr>
+</table>
+
+### P.2 Biển chỉ dẫn lối vào đường cao tốc — a) Biển số IE.451a
+
+[PDF phần 4, trang 85; trang in 85](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=85).
+
+Ghi chú nguồn: a,b,c là khoảng cách căn giữa; k₁′=H₁′; k₂=H₂; k₂′=H₂′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-4-85-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ/Số/Khung</td><td>Trắng</td><td rowspan="4">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td rowspan="2">gt2; H₁=40; k₁′=H₁′=30; k₂=H₂=33; k₂′=H₂′=25; h₂=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lam</td><td></td></tr>
+<tr><td>Biểu tượng đường cao tốc</td><td>Nền xanh lá cây, hình vẽ trắng</td><td>100 x 70</td><td></td></tr>
+<tr><td>Mã hiệu đường cao tốc</td><td>Nền vàng huỳnh quang, chữ số đen</td><td>55 x 120</td><td></td></tr>
+</table>
+
+### b) Biển số IE.451b
+
+[PDF phần 4, trang 86; trang in 86](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=86).
+
+Ghi chú nguồn: a,b,c là khoảng cách căn giữa; k₁′=H₁′; k₂=H₂; k₂′=H₂′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-4-86-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ/Số/Khung</td><td>Trắng</td><td rowspan="4">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td rowspan="2">gt2; H₁=40; k₁′=H₁′=30; k₂=H₂=33; k₂′=H₂′=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lam</td><td></td></tr>
+<tr><td>Biểu tượng đường cao tốc</td><td>Nền xanh lá cây, hình vẽ trắng</td><td>100 x 70</td><td></td></tr>
+<tr><td>Mã hiệu đường cao tốc</td><td>Nền vàng huỳnh quang, chữ số đen</td><td>55 x 120</td><td></td></tr>
+</table>
+
+### P.3 Biển chỉ dẫn bắt đầu đường cao tốc — Biển số IE.452
+
+[PDF phần 4, trang 87; trang in 87](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=87).
+
+Ghi chú nguồn: a,b,c là khoảng cách căn giữa; k₁=H₁; k₁′=H₁′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-4-87-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ/Số/Khung</td><td>Trắng</td><td rowspan="6">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td rowspan="2">gt2; k₁=H₁=33; k₁=H₁′=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td></tr>
+<tr><td>Biểu tượng đường cao tốc</td><td>Nền xanh lá cây, hình vẽ trắng</td><td>100 x 70</td><td></td></tr>
+<tr><td>Mã hiệu đường cao tốc</td><td>Nền vàng huỳnh quang, chữ số đen</td><td>55 x 120</td><td></td></tr>
+<tr><td>Tốc độ tối đa</td><td>Nền trắng, viền đỏ, chữ số đen</td><td>Ø100</td><td></td></tr>
+<tr><td>Tốc độ tối thiểu</td><td>Nền xanh lam, chữ số trắng</td><td>Ø100</td><td></td></tr>
+</table>
+
+Sai biệt bản in được giữ nguyên: Bảng in k₁=H₁′=25, không tự thêm dấu phẩy trên k₁.
+
+### Biển chỉ dẫn bắt đầu đường cao tốc phân làn đường có tốc độ khác nhau
+
+[PDF phần 4, trang 88; trang in 88](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=88).
+
+Hình thiết kế và kích thước bố trí: xem bản gốc tại locator trên.
+
+### P.4 Biển chỉ dẫn kết thúc đường cao tốc — a) Biển số IE.453a
+
+[PDF phần 4, trang 89; trang in 89](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=89).
+
+Ghi chú nguồn: a,b,c là khoảng cách căn giữa; k₁′=H₁′; k₂=H₂; k₂′=H₂′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-4-89-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ/Số/Khung</td><td>Trắng</td><td rowspan="4">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td rowspan="2">gt2; H₁=40; k₁′=H₁′=30; k₂=H₂=33; k₂′=H₂′=25; h₂=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td></tr>
+<tr><td>Biểu tượng kết thúc đường cao tốc</td><td>Nền xanh lá cây, hình vẽ trắng, vạch đỏ</td><td>100 x 70</td><td></td></tr>
+<tr><td>Mã hiệu đường cao tốc</td><td>Nền vàng huỳnh quang, chữ số đen</td><td>55 x 120</td><td></td></tr>
+</table>
+
+### b) Biển số IE.453b
+
+[PDF phần 4, trang 90; trang in 90](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=90).
+
+Ghi chú nguồn: a,b,c là khoảng cách căn giữa; k₁′=H₁′; k₂=H₂; k₂′=H₂′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-4-90-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ/Số/Khung</td><td>Trắng</td><td rowspan="4">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td rowspan="2">gt2; H₁=40; k₁′=H₁′=30; k₂=H₂=33; k₂′=H₂′=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td></tr>
+<tr><td>Biểu tượng kết thúc đường cao tốc</td><td>Nền xanh lá cây, hình vẽ trắng, vạch đỏ</td><td>100 x 70</td><td></td></tr>
+<tr><td>Mã đường cao tốc</td><td>Nền vàng huỳnh quang, chữ số đen</td><td>55 x 120</td><td></td></tr>
+</table>
+
+### c) Biển số IE.453c “Hết đường cao tốc”
+
+[PDF phần 4, trang 91; trang in 91](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=91).
+
+Hình thiết kế và kích thước bố trí: xem bản gốc tại locator trên.
+
+### P.5 Biển chỉ dẫn khoảng cách đến lối ra phía trước — Biển số IE.454
+
+[PDF phần 4, trang 92; trang in 92](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=92).
+
+Ghi chú nguồn: a là khoảng cách căn giữa; k₁=H₁; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-4-92-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ/Số/Khung</td><td>Trắng</td><td rowspan="3">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td rowspan="2">gt2; k₁=H₁=40; H₂=33</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td></tr>
+<tr><td>Biểu tượng lối ra</td><td>Nền vàng huỳnh quang, chữ đen</td><td>gt1; H₁=33; H₁′=25</td><td></td></tr>
+</table>
+
+### P.6 Biển chỉ dẫn khoảng cách đến lối ra tiếp — a) Biển số IE.455a; b) Biển số IE.455b
+
+[PDF phần 4, trang 93; trang in 93](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=93).
+
+Ghi chú nguồn: a là khoảng cách căn giữa; k₁=H₁; L là chiều rộng biển; W là chiều cao biển. (Ghi chú xuất hiện dưới mỗi hình a và b.)
+
+Hình thiết kế và kích thước bố trí: xem bản gốc tại locator trên.
+
+### Thông số kỹ thuật yêu cầu (tiếp P.6)
+
+[PDF phần 4, trang 94; trang in 94](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=94).
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-4-94-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Tên nút giao</td><td>Trắng</td><td rowspan="4">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; H₂=33</td><td></td></tr>
+<tr><td>Số km</td><td>Trắng</td><td>gt2; k₁=H₁=40; H₂=33</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Biểu tượng lối ra</td><td>Nền vàng huỳnh quang, chữ đen</td><td>120 x 150; gt1; H₂=33; H₂′=25</td><td></td></tr>
+</table>
+
+### c) Biểu tượng lối ra
+
+[PDF phần 4, trang 95; trang in 95](../../raw/pdf/54_2019_TT_BGTVT_cb30015.pdf#page=95).
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-4-95-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Nội dung</td><td>Đen</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt1; H₁=33; H₁′=25</td><td></td></tr>
+<tr><td>Nền</td><td>Vàng huỳnh quang</td><td></td><td></td></tr>
+</table>
+
+### Phụ lục P — trang bìa nối tiếp
+
+[PDF phần 5, trang 1; trang in 3](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=1).
+
+Hình thiết kế và kích thước bố trí: xem bản gốc tại locator trên.
+
+### P.7 Biển chỉ dẫn trạm dừng nghỉ — a) Biển số IE.456a; Biển có ba dịch vụ; Biển có bốn dịch vụ
+
+[PDF phần 5, trang 2; trang in 4](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=2).
+
+Ghi chú nguồn: a,b,c,d,e là khoảng cách căn giữa, k₂=H₂; L là chiều rộng biển; W là chiều cao biển.
+
+Hình thiết kế và kích thước bố trí: xem bản gốc tại locator trên.
+
+### Thông số kỹ thuật yêu cầu (IE.456a); b) Biển số IE.456b — Biển có ba dịch vụ
+
+[PDF phần 5, trang 3; trang in 5](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=3).
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-3-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Tên trạm dừng nghỉ</td><td>Trắng</td><td rowspan="4">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₂=H₂=33</td><td></td></tr>
+<tr><td>Số m</td><td>Trắng</td><td>gt2; H₁=40; h₂=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Biểu tượng dịch vụ công cộng</td><td>Nền trắng, hình vẽ đen</td><td>75 x 75</td><td></td></tr>
+</table>
+
+### Biển số IE.456b — Biển có bốn dịch vụ
+
+[PDF phần 5, trang 4; trang in 6](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=4).
+
+Ghi chú nguồn: a,b,c,d,e là khoảng cách căn giữa; k₁=H₁; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-4-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Tên trạm dừng nghỉ</td><td>Trắng</td><td rowspan="3">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=33</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Biểu tượng dịch vụ công cộng</td><td>Nền trắng, hình vẽ đen</td><td>75 x 75</td><td></td></tr>
+</table>
+
+### c) Biển số IE.456c — Biển có ba dịch vụ; Biển có bốn dịch vụ
+
+[PDF phần 5, trang 5; trang in 7](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=5).
+
+Ghi chú nguồn: a,b,c,d là khoảng cách căn giữa; k₁=H₁; L là chiều rộng biển; W là chiều cao biển.
+
+Hình thiết kế và kích thước bố trí: xem bản gốc tại locator trên.
+
+### Thông số kỹ thuật yêu cầu (IE.456c); d) Biểu tượng trạm dừng nghỉ
+
+[PDF phần 5, trang 6; trang in 8](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=6).
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-6-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Tên trạm dừng nghỉ</td><td>Trắng</td><td rowspan="3">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=33</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Biểu tượng dịch vụ công cộng</td><td>Nền trắng, hình vẽ đen</td><td>75 x 75</td><td></td></tr>
+</table>
+
+d) Biểu tượng trạm dừng nghỉ — Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-6-extra-0">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Nội dung</td><td>Trắng</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt1; H₁=33; H₁′=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lam</td><td></td><td></td></tr>
+</table>
+
+### P.8 Biển chỉ dẫn nơi đỗ xe trong trạm dừng nghỉ — a) Biển số IE.457a; b) Biển số IE.457b
+
+[PDF phần 5, trang 7; trang in 9](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=7).
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-7-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>P</td><td>Trắng</td><td rowspan="4">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2</td><td></td></tr>
+<tr><td>Số/Chữ m</td><td>Trắng</td><td>gt2; H₁=40; h₂=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Mũi tên</td><td>Trắng</td><td></td><td></td></tr>
+</table>
+
+### P.9 Biểu tượng dịch vụ công cộng — 1. Điện thoại; 2. Trạm sửa chữa; 3. Cấp cứu
+
+[PDF phần 5, trang 8; trang in 10](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=8).
+
+1. Điện thoại — Đơn vị: cm
+
+<table data-source="2019-P-5-8-extra-0">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>5,0</td><td>50,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>6,2</td><td>62,6</td><td>5,0</td></tr>
+</table>
+
+2. Trạm sửa chữa — Đơn vị: cm
+
+<table data-source="2019-P-5-8-extra-1">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>5,0</td><td>50,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>6,2</td><td>62,6</td><td>5,0</td></tr>
+</table>
+
+3. Cấp cứu — Đơn vị: cm
+
+<table data-source="2019-P-5-8-extra-2">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>5,0</td><td>50,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>13,2</td><td>52,6</td><td>5,0</td></tr>
+</table>
+
+### 4. Nhà vệ sinh; 5. Nhà nghỉ
+
+[PDF phần 5, trang 9; trang in 11](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=9).
+
+4. Nhà vệ sinh — Đơn vị: cm
+
+<table data-source="2019-P-5-9-extra-0">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>5,0</td><td>50,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>6,2</td><td>62,6</td><td>5,0</td></tr>
+</table>
+
+5. Nhà nghỉ — Đơn vị: cm
+
+<table data-source="2019-P-5-9-extra-1">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>18,7</td><td>22,6</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>22,0</td><td>31,0</td><td>5,0</td></tr>
+</table>
+
+### 6. Phục vụ người khuyết tật; 7. Xăng dầu
+
+[PDF phần 5, trang 10; trang in 12](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=10).
+
+6. Phục vụ người khuyết tật — Đơn vị: cm
+
+<table data-source="2019-P-5-10-extra-0">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>6,0</td><td>48,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>7,8</td><td>59,4</td><td>5,0</td></tr>
+</table>
+
+7. Xăng dầu — Đơn vị: cm
+
+<table data-source="2019-P-5-10-extra-1">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>7,5</td><td>45,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>10,0</td><td>55,0</td><td>5,0</td></tr>
+</table>
+
+### 8. Ăn uống; 9. Cảnh sát giao thông
+
+[PDF phần 5, trang 11; trang in 13](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=11).
+
+8. Ăn uống — Đơn vị: cm
+
+<table data-source="2019-P-5-11-extra-0">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>7,5</td><td>45,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>6,2</td><td>62,6</td><td>5,0</td></tr>
+</table>
+
+9. Cảnh sát giao thông — Đơn vị: cm
+
+<table data-source="2019-P-5-11-extra-1">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>96,0</td><td>2,5</td><td>6,5</td><td>47,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>120,0</td><td>5,0</td><td>7,7</td><td>59,6</td><td>5,0</td></tr>
+</table>
+
+### 10. Nơi cung cấp thông tin; 11. Nơi rửa xe
+
+[PDF phần 5, trang 12; trang in 14](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=12).
+
+10. Nơi cung cấp thông tin — Đơn vị: cm
+
+<table data-source="2019-P-5-12-extra-0">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>7,5</td><td>45,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>10,0</td><td>55,0</td><td>5,0</td></tr>
+</table>
+
+11. Nơi rửa xe — Đơn vị: cm
+
+<table data-source="2019-P-5-12-extra-1">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>3,0</td><td>54,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>5,5</td><td>64,0</td><td>5,0</td></tr>
+</table>
+
+### Hình biểu tượng nơi rửa xe (tiếp)
+
+[PDF phần 5, trang 13; trang in 15](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=13).
+
+Hình thiết kế và kích thước bố trí: xem bản gốc tại locator trên.
+
+### P.10 Biển chỉ dẫn khoảng cách đế các trạm dừng nghỉ tiếp theo — a) Biển số IE.458
+
+[PDF phần 5, trang 14; trang in 16](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=14).
+
+Ghi chú nguồn: a,b là khoảng cách căn giữa; k₁=H₁; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-14-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Tên trạm dừng nghỉ</td><td>Trắng</td><td rowspan="4">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; H₂=33</td><td></td></tr>
+<tr><td>Số km</td><td>Trắng</td><td>gt2; k₁=H₁=40; H₂=33</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Biểu tượng trạm dừng nghỉ</td><td>Nền xanh lam, chữ trắng</td><td>100 x 250</td><td></td></tr>
+</table>
+
+### P.11 Biển chỉ dẫn khu tham quan du lịch — a) Biển số IE.459a
+
+[PDF phần 5, trang 15; trang in 17](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=15).
+
+Ghi chú nguồn: a,b là khoảng cách căn giữa; k₂=H₂; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-15-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Tên khu du lịch</td><td>Trắng</td><td rowspan="4">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₂=H₂=40</td><td></td></tr>
+<tr><td>Số m</td><td>Trắng</td><td>gt2; H₁=40; h₂=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Biểu tượng khu du lịch</td><td>Nền xanh lam, chữ trắng</td><td>100 x 180</td><td></td></tr>
+</table>
+
+### b) Biển số IE.459b
+
+[PDF phần 5, trang 16; trang in 18](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=16).
+
+Ghi chú nguồn: a,b là khoảng cách căn giữa; k₁=H₁; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: mm
+
+<table data-source="2019-P-5-16-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Tên khu du lịch</td><td>Trắng</td><td rowspan="3">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=400</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Biểu tượng khu du lịch</td><td>Nền xanh lam, chữ trắng</td><td>1 000 x 1 800</td><td></td></tr>
+<tr><td>Mũi tên</td><td>Trắng</td><td></td><td></td><td></td></tr>
+</table>
+
+### d) Biểu tượng khu du lịch
+
+[PDF phần 5, trang 17; trang in 19](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=17).
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-17-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Nội dung</td><td>Trắng</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt1; H₁=33; H₁′=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lam</td><td></td><td></td></tr>
+</table>
+
+### P.12 Biển chỉ dẫn khu du lịch công cộng và giải trí — a) Biển số IE.461a
+
+[PDF phần 5, trang 18; trang in 20](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=18).
+
+Ghi chú nguồn: a là khoảng cách căn giữa; u=0.5 x H₁; k₂=H₂; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: mm
+
+<table data-source="2019-P-5-18-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Trắng</td><td rowspan="3">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; H₁=400; k₂=H₂=330; h₂=250</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Biểu tượng</td><td>Nền trắng, hình vẽ đen</td><td>750 x 750</td><td></td></tr>
+</table>
+
+### b) Biển số IE.461b
+
+[PDF phần 5, trang 19; trang in 21](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=19).
+
+Ghi chú nguồn: a là khoảng cách căn giữa; u=0.5 x H₁; k₁=H₁; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: mm
+
+<table data-source="2019-P-5-19-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Trắng</td><td rowspan="3">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=330</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Biểu tượng</td><td>Nền trắng, hình vẽ đen</td><td>750 x 750</td><td></td></tr>
+<tr><td>Mũi tên</td><td>Trắng</td><td></td><td></td><td></td></tr>
+</table>
+
+### c) Biển số IE.461c; d) Biển số IE.461d
+
+[PDF phần 5, trang 20; trang in 22](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=20).
+
+Ghi chú nguồn: a là khoảng cách căn giữa; k₁=H₁; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: mm
+
+<table data-source="2019-P-5-20-main">
+<tr><th colspan="2">Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td colspan="2">Chữ</td><td>Trắng</td><td rowspan="4">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=330</td><td></td></tr>
+<tr><td rowspan="2">Nền</td><td>Biển số IE.461c</td><td>Xanh lá cây</td><td rowspan="2"></td><td></td></tr>
+<tr><td>Biển số IE.461d</td><td>Nâu</td><td></td></tr>
+<tr><td colspan="2">Biểu tượng</td><td>Nền trắng, hình vẽ đen</td><td>750 x 750</td><td></td></tr>
+</table>
+
+### P.13 Biểu tượng khu công nghiệp, dịch vụ công cộng và giải trí — 1. Sân bay; 2. Bến xe khách
+
+[PDF phần 5, trang 21; trang in 23](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=21).
+
+1. Sân bay — Đơn vị: cm
+
+<table data-source="2019-P-5-21-extra-0">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>5,0</td><td>50,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>6,2</td><td>62,6</td><td>5,0</td></tr>
+</table>
+
+2. Bến xe khách — Đơn vị: cm
+
+<table data-source="2019-P-5-21-extra-1">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>5,0</td><td>50,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>6,2</td><td>62,6</td><td>5,0</td></tr>
+</table>
+
+### 3. Bến tàu; 4. Bến tàu thủy
+
+[PDF phần 5, trang 22; trang in 24](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=22).
+
+3. Bến tàu — Đơn vị: cm
+
+<table data-source="2019-P-5-22-extra-0">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>5,0</td><td>50,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>6,2</td><td>62,6</td><td>5,0</td></tr>
+</table>
+
+4. Bến tàu thủy — Đơn vị: cm
+
+<table data-source="2019-P-5-22-extra-1">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>5,0</td><td>50,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>6,2</td><td>62,6</td><td>5,0</td></tr>
+</table>
+
+### 5. Khu công nghiệp; 6. Đập thủy điện
+
+[PDF phần 5, trang 23; trang in 25](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=23).
+
+5. Khu công nghiệp — Đơn vị: cm
+
+<table data-source="2019-P-5-23-extra-0">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>5,0</td><td>50,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>6,2</td><td>62,6</td><td>5,0</td></tr>
+</table>
+
+6. Đập thủy điện — Đơn vị: cm
+
+<table data-source="2019-P-5-23-extra-1">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>16,2</td><td>27,6</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>20,0</td><td>35,0</td><td>5,0</td></tr>
+</table>
+
+### 7. Sân gôn; 8. Khu câu cá
+
+[PDF phần 5, trang 24; trang in 26](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=24).
+
+7. Sân gôn — Đơn vị: cm
+
+<table data-source="2019-P-5-24-extra-0">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>5,0</td><td>50,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>6,0</td><td>63,0</td><td>5,0</td></tr>
+</table>
+
+8. Khu câu cá — Đơn vị: cm
+
+<table data-source="2019-P-5-24-extra-1">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>3,0</td><td>54,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>4,0</td><td>67,0</td><td>5,0</td></tr>
+</table>
+
+### 9) Bãi tắm biển, khu bơi lội; 10. Rừng sinh thái
+
+[PDF phần 5, trang 25; trang in 27](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=25).
+
+9) Bãi tắm biển, khu bơi lội — Đơn vị: cm
+
+<table data-source="2019-P-5-25-extra-0">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>17,5</td><td>25,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>21,5</td><td>32,0</td><td>50</td></tr>
+</table>
+
+10. Rừng sinh thái — Đơn vị: cm
+
+<table data-source="2019-P-5-25-extra-1">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th></tr>
+<tr><td>Loại B</td><td>60,0</td><td>1,5</td><td>7,0</td><td>46,0</td><td>5,0</td></tr>
+<tr><td>Loại A</td><td>75,0</td><td>2,0</td><td>8,5</td><td>58,0</td><td>5,0</td></tr>
+</table>
+
+### P.14 Biển chỉ dẫn tần số trên sóng Radio — 1. Biển số IE.462
+
+[PDF phần 5, trang 26; trang in 28](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=26).
+
+Ghi chú nguồn: k₁=H₁; k₂′=H₂′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-26-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Trắng</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=40; H₂=33; k₂′=H₂′=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+</table>
+
+### P.15 Biển chỉ dẫn trạm kiểm tra tải trọng xe — 1. Biển số IE.463a
+
+[PDF phần 5, trang 27; trang in 29](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=27).
+
+Ghi chú nguồn: k₂=H₂; k₂′=H₂′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: mm
+
+<table data-source="2019-P-5-27-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Trắng</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; H₁=400; k₂=H₂=330; k₂′=H₂′=250; h₂=250</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+</table>
+
+### 2. Biển số IE.463b
+
+[PDF phần 5, trang 28; trang in 30](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=28).
+
+Ghi chú nguồn: Ghi chú: k₁=H₁; k₁′=H₁′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-28-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Trắng</td><td rowspan="3">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=33; k₁′=H₁′=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Mũi tên</td><td>Trắng</td><td></td><td></td></tr>
+</table>
+
+### 3. Biển số IE.463c
+
+[PDF phần 5, trang 29; trang in 31](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=29).
+
+Ghi chú nguồn: Ghi chú: k₁=H₁; k₁′=H₁′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-29-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Trắng</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=33; k₁′=H₁′=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+</table>
+
+### P.16 Biển chỉ dẫn địa điểm và phương hướng. 1. Biển số IE.464a
+
+[PDF phần 5, trang 30; trang in 32](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=30).
+
+Ghi chú nguồn: Giữa làn; hình IE.464a tiếp trang sau.
+
+Hình thiết kế và kích thước bố trí: xem bản gốc tại locator trên.
+
+### Biển số IE.464a (tiếp)
+
+[PDF phần 5, trang 31; trang in 33](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=31).
+
+Ghi chú nguồn: Ghi chú: a, b là khoảng cách căn giữa; k₁=H₁. L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-31-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Tên địa điểm</td><td>Trắng</td><td rowspan="4">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=40</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Mũi tên</td><td>Trắng</td><td>Phụ lục</td><td></td></tr>
+<tr><td>Ký hiệu đường cao tốc</td><td>Nền vàng huỳnh quang, chữ số đen</td><td></td><td></td></tr>
+</table>
+
+### 2. Biển số IE.464b
+
+[PDF phần 5, trang 32; trang in 34](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=32).
+
+Ghi chú nguồn: Ghi chú: k₁=H₁; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: mm
+
+<table data-source="2019-P-5-32-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Tên địa điểm</td><td>Trắng</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=400</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+</table>
+
+Biển số IE.464a (tiếp bảng trang trước) — Đơn vị: cm
+
+<table data-source="2019-P-5-32-extra-0">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Ký hiệu quốc lộ</td><td>Nền trắng, chữ số đen</td><td></td><td></td><td></td></tr>
+</table>
+
+### P.17 Biển chỉ dẫn địa điểm và khoảng cách. 1. Biển số IE.465a
+
+[PDF phần 5, trang 33; trang in 35](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=33).
+
+Ghi chú nguồn: Ghi chú: k₁=H₁; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-33-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Tên địa điểm, số km</td><td>Trắng</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=40; H₂=33</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+</table>
+
+### 2. Biển số IE.465b
+
+[PDF phần 5, trang 34; trang in 36](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=34).
+
+Ghi chú nguồn: Ghi chú: k₁=H₁; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-34-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Tên địa điểm, số km</td><td>Trắng</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=40; H₂=33</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+</table>
+
+### P.18 Biển chỉ dẫn sơ đồ lối ra. Biển số IE.466
+
+[PDF phần 5, trang 35; trang in 37](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=35).
+
+Ghi chú nguồn: Ghi chú: k₁=H₁, u=½H₁. L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-35-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Trắng</td><td rowspan="5">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=40</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Ký hiệu đường cao tốc</td><td>Nền vàng huỳnh quang, chữ số đen</td><td>gt2; 70 x 150</td><td></td></tr>
+<tr><td>Ký hiệu đường tỉnh</td><td>Nền trắng, chữ số đen</td><td>gt2; 70 x 150</td><td></td></tr>
+<tr><td>Biểu tượng</td><td>Nền trắng, hình vẽ đen</td><td></td><td></td></tr>
+</table>
+
+### P.19 Biển chỉ dẫn nhập làn. a) Biển số IE.467a: chỉ dẫn vị trí nhập làn
+
+[PDF phần 5, trang 36; trang in 38](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=36).
+
+Ghi chú nguồn: Ghi chú: a là khoảng cách căn giữa; k₁=H₁, k₁′=H₁′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-36-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Trắng</td><td rowspan="3">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=33; k₁′=H₁′=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Biểu tượng nhập làn</td><td>Nền đen, mũi tên trắng, vàng huỳnh quang</td><td>200 x 200</td><td></td></tr>
+</table>
+
+### b) Biển số IE.467b: chỉ dẫn khoảng cách đến vị trí nhập làn
+
+[PDF phần 5, trang 37; trang in 39](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=37).
+
+Ghi chú nguồn: Ghi chú: a là khoảng cách căn giữa; k₂=H₂, k₂′=H₂′. L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-37-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Trắng</td><td rowspan="4">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₂=H₂=33; k₂′=H₂′=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Số</td><td>Trắng</td><td>gt2; H₁=40</td><td></td></tr>
+<tr><td>Chữ m</td><td>Trắng</td><td>gt2; h₂=25</td><td></td></tr>
+</table>
+
+### c) Kích thước biểu tượng vị trí nhập làn xe trên biển IE.467(a,b)
+
+[PDF phần 5, trang 38; trang in 40](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=38).
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-38-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Nền đường</td><td>Đen</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td></td><td></td></tr>
+<tr><td>Mũi tên</td><td>Trắng, vàng huỳnh quang</td><td>80 x 48</td><td></td></tr>
+</table>
+
+### P.20 Biển chỉ dẫn chướng ngại vật phía trước. Biển số IE.468a,b,c
+
+[PDF phần 5, trang 39; trang in 41](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=39).
+
+Đơn vị: cm
+
+<table data-source="2019-P-5-39-generic-0">
+<tr><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr>
+<tr><td>30</td><td>90</td><td>12,5</td><td>7,5</td><td>45°</td><td>1,6</td></tr>
+</table>
+
+### P.21 Tiêu phản quang. Biển số IE.469
+
+[PDF phần 5, trang 40; trang in 42](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=40).
+
+Biển số IE.469 — Đơn vị: cm
+
+<table data-source="2019-P-5-40-extra-0">
+<tr><th>Kích thước</th><th>A</th><th>B</th><th>C</th><th>D</th><th>E</th><th>F</th></tr>
+<tr><td>Loại B</td><td>30</td><td>50</td><td>15</td><td>25</td><td>1,5</td><td>1,5</td></tr>
+<tr><td>Loại A</td><td>60</td><td>80</td><td>30</td><td>40</td><td>2,0</td><td>2,0</td></tr>
+</table>
+
+### P.22 Biển chỉ dẫn số điện thoại khẩn cấp. Biển số IE.470
+
+[PDF phần 5, trang 41; trang in 43](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=41).
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-41-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th></th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Trắng</td><td rowspan="3">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td></td><td>gt2; Bề rộng 80% (spacing)</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td><td></td></tr>
+<tr><td>Biểu tượng</td><td>Nền trắng, hình vẽ đen</td><td></td><td>75 x 75</td><td></td></tr>
+</table>
+
+### P.23 Biển chỉ dẫn giữ khoảng cách an toàn. Biển số IE.471
+
+[PDF phần 5, trang 42; trang in 44](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=42).
+
+Ghi chú nguồn: Ghi chú: k₁=H₁; k₁′=H₁′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu của — Đơn vị: cm
+
+<table data-source="2019-P-5-42-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Đen</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=30; k₁′=H₁′=20</td><td></td></tr>
+<tr><td>Nền</td><td>Vàng huỳnh quang</td><td></td><td></td></tr>
+</table>
+
+### P.24 Biển chỉ dẫn trạm thu phí. a) Biển số IE.472a
+
+[PDF phần 5, trang 43; trang in 45](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=43).
+
+Ghi chú nguồn: Ghi chú: a là khoảng cách căn giữa; k₁=H₁; k₁′=H₁′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-43-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Trắng</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=40; k₁′=H₁′=30; h₂=25</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+</table>
+
+### b) Biển số IE.472b: Trạm thu phí
+
+[PDF phần 5, trang 44; trang in 46](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=44).
+
+Ghi chú nguồn: Ghi chú: k₁=H₁; k₁′=H₁′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-44-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Trắng</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=40; k₁′=H₁′=30</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+</table>
+
+### c) Biển số IE.472c: Thu phí không dừng
+
+[PDF phần 5, trang 45; trang in 47](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=45).
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-45-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Xanh lá cây</td><td rowspan="3">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt1; H₁=33; H₁′=25</td><td></td></tr>
+<tr><td>Viền</td><td>Đen</td><td></td><td></td></tr>
+<tr><td>Nền</td><td>Vàng huỳnh quang</td><td></td><td></td></tr>
+</table>
+
+d) Biển số IE.472d: Rút thẻ
+
+<table data-source="2019-P-5-45-extra-0">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Đen</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt1; H₁=33; H₁′=25</td><td>Đơn vị: mm</td></tr>
+<tr><td>Nền</td><td>Vàng huỳnh quang</td><td></td><td></td></tr>
+</table>
+
+### e) Biển số IE.472e: Thu phí
+
+[PDF phần 5, trang 46; trang in 48](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=46).
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-46-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Đen</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt1; H₁=33; H₁′=25</td><td></td></tr>
+<tr><td>Nền</td><td>Vàng huỳnh quang</td><td></td><td></td></tr>
+</table>
+
+### P.25 Biển chỉ dẫn giảm tốc độ. Biển số IE.473
+
+[PDF phần 5, trang 47; trang in 49](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=47).
+
+Ghi chú nguồn: Ghi chú: k₁=H₁; k₁′=H₁′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-47-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Đen</td><td rowspan="2">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=40; k₁′=H₁′=30</td><td></td></tr>
+<tr><td>Nền</td><td>Vàng huỳnh quang</td><td></td><td></td></tr>
+</table>
+
+### P.26 Biển chỉ dẫn lối ra. Biển số IE.474
+
+[PDF phần 5, trang 48; trang in 50](../../raw/pdf/54_2019_TT_BGTVT_cb30016.pdf#page=48).
+
+Ghi chú nguồn: Ghi chú: a là khoảng cách căn giữa, k₁=H₁; k₁′=H₁′; L là chiều rộng biển; W là chiều cao biển.
+
+Thông số kỹ thuật yêu cầu — Đơn vị: cm
+
+<table data-source="2019-P-5-48-main">
+<tr><th>Hạng mục</th><th>Màu sắc</th><th>Vật liệu</th><th>Kiểu chữ &amp; Kích thước</th><th>Ghi chú</th></tr>
+<tr><td>Chữ</td><td>Trắng</td><td rowspan="3">Màng phản quang loại VIII, IX, X cấu trúc kim cương</td><td>gt2; k₁=H₁=40; k₁′=H₁′=30</td><td></td></tr>
+<tr><td>Nền</td><td>Xanh lá cây</td><td></td><td></td></tr>
+<tr><td>Mũi tên</td><td>Trắng</td><td></td><td></td></tr>
+</table>
+

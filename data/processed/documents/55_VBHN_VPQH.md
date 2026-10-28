@@ -1,7 +1,4 @@
 
-2
- 
- 
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM 
 Độc lập - Tự do - Hạnh phúc 
  
@@ -16,7 +13,7 @@ bổ sung một số điều của 10 luật có liên quan đến an ninh, tr�
 từ ngày 01 tháng 7 năm 2026. 
  
 Căn cứ Hiến pháp nước Cộng hòa xã hội chủ nghĩa Việt Nam; 
-Quốc hội ban hành Luật Trật tự, an toàn giao thông đường bộ1. 
+Quốc hội ban hành Luật Trật tự, an toàn giao thông đường bộ[^vbhn55-01]. 
  
 ### Chương I 
 NHỮNG QUY ĐỊNH CHUNG 
@@ -26,28 +23,9 @@ bộ, chỉ huy, điều khiển, tuần tra, kiểm soát, giải quyết tai n
 bộ, trách nhiệm quản lý nhà nước và trách nhiệm của cơ quan, tổ chức, cá nhân 
 có liên quan đến trật tự, an toàn giao thông đường bộ. 
  
-1 Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an 
-ninh, trật tự có căn cứ ban hành như sau: 
-“Căn cứ Hiến pháp nước Cộng hòa xã hội chủ nghĩa Việt Nam đã được sửa đổi, bổ sung 
-một số điều theo Nghị quyết số 203/2025/QH15; 
-Quốc hội ban hành Luật sửa đổi, bổ sung một số điều của Luật Cảnh vệ số 13/2017/QH14 
-đã được sửa đổi, bổ sung một số điều theo Luật số 40/2024/QH15, Luật Nhập cảnh, xuất cảnh, 
-quá cảnh, cư trú của người nước ngoài tại Việt Nam số 47/2014/QH13 đã được sửa đổi, bổ 
-sung một số điều theo Luật số 51/2019/QH14, Luật số 23/2023/QH15 và Luật số 
-103/2025/QH15, Luật Xuất cảnh, nhập cảnh của công dân Việt Nam số 49/2019/QH14 đã được 
-sửa đổi, bổ sung một số điều theo Luật số 23/2023/QH15, Luật Cư trú số 68/2020/QH14 đã 
-được sửa đổi, bổ sung một số điều theo Luật số 59/2024/QH15, Luật Căn cước số 
-26/2023/QH15, Luật Lực lượng tham gia bảo vệ an ninh, trật tự ở cơ sở số 30/2023/QH15 đã 
-được sửa đổi, bổ sung theo Luật số 51/2024/QH15, Luật Trật tự, an toàn giao thông đường bộ 
-số 36/2024/QH15, Luật Đường bộ số 35/2024/QH15 đã được sửa đổi, bổ sung theo Luật số 
-112/2025/QH15, Luật Quản lý, sử dụng vũ khí, vật liệu nổ và công cụ hỗ trợ số 42/2024/QH15, 
-Luật Phòng cháy, chữa cháy và cứu nạn, cứu hộ số 55/2024/QH15 đã được sửa đổi, bổ sung 
-theo Luật số 135/2025/QH15.”. 
+ 
 
 
-3
- 
- 
 ##### Điều 2. Giải thích từ ngữ 
 1. Trật tự, an toàn giao thông đường bộ là trạng thái giao thông trên đường 
 bộ có trật tự, bảo đảm an toàn, thông suốt; được hình thành và điều chỉnh bởi các 
@@ -87,9 +65,6 @@ hoặc tài sản của cơ quan, tổ chức.
 13. Thiết bị an toàn cho trẻ em là thiết bị có đủ khả năng bảo đảm an toàn 
 cho trẻ em ở tư thế ngồi hoặc nằm trên xe ô tô, được thiết kế để giảm nguy cơ 
 
-4
- 
- 
 chấn thương cho người dùng trong trường hợp xảy ra va chạm hoặc xe ô tô giảm 
 tốc độ đột ngột, bằng cách hạn chế sự di chuyển của cơ thể trẻ em. 
 14. Thiết bị thông minh hỗ trợ chỉ huy, điều khiển giao thông đường bộ là 
@@ -129,9 +104,6 @@ hiện đại hóa cơ sở vật chất, phương tiện, thiết bị, phục 
 tự, an toàn giao thông theo quy định của Chính phủ. 
 2. Hiện đại hóa các trung tâm chỉ huy giao thông; bảo đảm kết nối, chia sẻ 
 
-5
- 
- 
 Cơ sở dữ liệu về trật tự, an toàn giao thông đường bộ giữa các cơ quan nhà nước 
 có liên quan. 
 3. Tạo điều kiện để cơ quan, tổ chức, cá nhân trong nước, nước ngoài nghiên 
@@ -173,9 +145,6 @@ phối hợp với các cơ quan, tổ chức, cá nhân có liên quan thực h
 phổ biến pháp luật về trật tự, an toàn giao thông đường bộ. 
 3. Cơ quan thông tin, truyền thông có trách nhiệm tổ chức tuyên truyền, phổ 
 
-6
- 
- 
 biến pháp luật về trật tự, an toàn giao thông đường bộ trên các phương tiện thông 
 tin, truyền thông đại chúng. 
 4. Mặt trận Tổ quốc Việt Nam và các tổ chức thành viên của Mặt trận có 
@@ -201,7 +170,7 @@ cơ sở giáo dục phổ thông, cơ sở giáo dục nghề nghiệp.
 2. Lực lượng Cảnh sát giao thông có trách nhiệm chủ trì, phối hợp với cơ 
 quan quản lý trường trung học phổ thông, cơ sở giáo dục nghề nghiệp tổ chức 
 hướng dẫn kỹ năng lái xe gắn máy an toàn cho học sinh tại cơ sở giáo dục đó. 
-3. Bộ Giáo dục và Đào tạo2 trong phạm vi nhiệm vụ, quyền hạn của mình, 
+3. Bộ Giáo dục và Đào tạo[^vbhn55-02] trong phạm vi nhiệm vụ, quyền hạn của mình, 
 chủ trì, phối hợp với Bộ Công an và Bộ, cơ quan ngang Bộ có liên quan xây dựng, 
 tích hợp, lồng ghép kiến thức pháp luật về trật tự, an toàn giao thông đường bộ 
 vào chương trình giảng dạy trong cơ sở giáo dục mầm non, cơ sở giáo dục phổ 
@@ -211,21 +180,16 @@ thông, cơ sở giáo dục nghề nghiệp phù hợp với từng cấp học
 a) Cơ sở dữ liệu về đăng ký, quản lý xe cơ giới, xe máy chuyên dùng;  
 b) Cơ sở dữ liệu về đăng kiểm xe cơ giới, xe máy chuyên dùng; 
  
-2 Cụm từ “, Bộ Lao động, Thương binh và Xã hội,” được bỏ theo quy định tại điểm a 
-khoản 22 Điều 7 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên 
-quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-7
- 
- 
-c)3 Cơ sở dữ liệu về đào tạo lái xe, chứng chỉ bồi dưỡng kiến thức pháp luật 
+c) [^vbhn55-03] Cơ sở dữ liệu về đào tạo lái xe, chứng chỉ bồi dưỡng kiến thức pháp luật 
 về giao thông đường bộ cho người điều khiển xe máy chuyên dùng; 
-d)4 Cơ sở dữ liệu về sát hạch, cấp giấy phép lái xe; 
+d) [^vbhn55-04] Cơ sở dữ liệu về sát hạch, cấp giấy phép lái xe; 
 đ) Cơ sở dữ liệu về bảo hiểm của chủ xe cơ giới, xe máy chuyên dùng; 
 e) Cơ sở dữ liệu về xử lý vi phạm hành chính về trật tự, an toàn giao thông 
 đường bộ; 
 g) Cơ sở dữ liệu về tai nạn giao thông đường bộ; 
-h)5 Cơ sở dữ liệu về hành trình của phương tiện giao thông đường bộ, hình 
+h) [^vbhn55-05] Cơ sở dữ liệu về hành trình của phương tiện giao thông đường bộ, hình 
 ảnh người lái xe, hình ảnh khoang chở khách theo quy định của Luật này; 
 i) Cơ sở dữ liệu về quản lý thời gian điều khiển phương tiện của người lái xe 
 theo quy định của Luật này; 
@@ -248,19 +212,10 @@ cá nhân.
 a) Ký kết điều ước quốc tế, thỏa thuận quốc tế có liên quan đến trật tự, an 
 toàn giao thông đường bộ; 
  
-3 Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 1 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-4 Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 1 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-5 Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 1 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
+ 
+ 
 
-8
- 
- 
 b) Trao đổi thông tin, chuyển giao công nghệ có liên quan đến trật tự, an toàn 
 giao thông đường bộ; 
 c) Đào tạo, tập huấn, nâng cao năng lực cho lực lượng bảo đảm trật tự, an 
@@ -299,9 +254,6 @@ quy định của pháp luật để điều khiển xe tham gia giao thông đ�
 luật về an toàn kỹ thuật và bảo vệ môi trường, phương tiện khác không đủ điều 
 kiện theo quy định của pháp luật để tham gia giao thông đường bộ. 
 
-9
- 
- 
 9. Nhập khẩu, sản xuất, lắp ráp xe cơ giới, xe máy chuyên dùng không bảo 
 đảm quy định của pháp luật về chất lượng an toàn kỹ thuật và bảo vệ môi trường. 
 10. Cải tạo xe ô tô loại khác thành xe ô tô chở người, trừ cải tạo thành xe ô 
@@ -331,21 +283,14 @@ chuyên dùng gây mất trật tự, an toàn giao thông đường bộ.
 xe máy chuyên dùng gắn biển số xe không do cơ quan nhà nước có thẩm quyền 
 cấp, gắn biển số xe không đúng vị trí; bẻ cong, che lấp biển số xe; làm thay đổi 
 chữ, số, màu sắc, hình dạng, kích thước của biển số xe. 
-18.6 Làm gián đoạn hoạt động hoặc làm sai lệch dữ liệu của thiết bị giám sát 
+18. [^vbhn55-06] Làm gián đoạn hoạt động hoặc làm sai lệch dữ liệu của thiết bị giám sát 
 hành trình, thiết bị ghi nhận hình ảnh người lái xe, thiết bị ghi nhận hình ảnh 
 khoang chở khách theo quy định của Luật này. 
-18a.7 Sử dụng dữ liệu thu được từ thiết bị ghi nhận hình ảnh người lái xe, 
+18a. [^vbhn55-07] Sử dụng dữ liệu thu được từ thiết bị ghi nhận hình ảnh người lái xe, 
  
-6 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 2 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-7 Khoản này được bổ sung theo quy định tại khoản 2 Điều 7 của Luật số 118/2025/QH15 
-sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 
-01 tháng 7 năm 2026. 
+ 
+ 
 
-10
- 
- 
 thiết bị ghi nhận hình ảnh khoang chở khách để xâm phạm nhân phẩm, danh dự, 
 đời sống riêng tư, bí mật cá nhân, các quyền và lợi ích hợp pháp khác của cá nhân 
 và tổ chức. 
@@ -384,9 +329,6 @@ người lái, phương tiện bay siêu nhẹ được cấp phép bay.
 28. Hành vi khác vi phạm quy tắc giao thông đường bộ quy định tại Chương II 
 của Luật này. 
 
-11
- 
- 
 ### Chương II 
 QUY TẮC GIAO THÔNG ĐƯỜNG BỘ 
 ##### Điều 10. Quy tắc chung 
@@ -395,7 +337,7 @@ mình, đi đúng làn đường, phần đường quy định, chấp hành bá
 các quy tắc giao thông đường bộ khác. 
 2. Người lái xe và người được chở trên xe ô tô phải thắt dây đai an toàn tại 
 những chỗ có trang bị dây đai an toàn khi tham gia giao thông đường bộ. 
-3.8 Khi chở trẻ em dưới 10 tuổi và chiều cao dưới 1,35 mét trên xe ô tô, người 
+3. [^vbhn55-08] Khi chở trẻ em dưới 10 tuổi và chiều cao dưới 1,35 mét trên xe ô tô, người 
 lái xe không được cho trẻ em ngồi cùng hàng ghế, trừ xe ô tô chỉ có một hàng ghế; 
 người lái xe phải sử dụng, hướng dẫn sử dụng thiết bị an toàn phù hợp cho trẻ em, 
 trừ xe ô tô kinh doanh vận tải hành khách. 
@@ -421,13 +363,8 @@ thông đường bộ ở phía trước và ở phía sau người điều khi�
 lại; người tham gia giao thông đường bộ ở phía bên phải và bên trái người điều 
 khiển giao thông được đi; 
  
-8 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 3 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-12
- 
- 
 c) Tay bên phải giơ về phía trước để báo hiệu cho người tham gia giao thông 
 đường bộ ở phía sau và bên phải người điều khiển giao thông phải dừng lại; người 
 tham gia giao thông đường bộ ở phía trước người điều khiển giao thông được rẽ 
@@ -467,13 +404,10 @@ các thông tin của đường bộ.
 11. Thiết bị âm thanh báo hiệu đường bộ để hỗ trợ cảnh báo nguy hiểm cho 
 người tham gia giao thông đường bộ. 
 
-13
- 
- 
 12. Khi ở một vị trí vừa có biển báo hiệu đặt cố định vừa có biển báo hiệu 
 tạm thời mà hai biển có ý nghĩa khác nhau, người tham gia giao thông đường bộ 
 phải chấp hành hiệu lệnh của biển báo hiệu tạm thời. 
-13. Bộ trưởng Bộ Xây dựng9 ban hành quy chuẩn kỹ thuật quốc gia về báo 
+13. Bộ trưởng Bộ Xây dựng[^vbhn55-09] ban hành quy chuẩn kỹ thuật quốc gia về báo 
 hiệu đường bộ, trừ hiệu lệnh của người điều khiển giao thông. 
 14. Bộ trưởng Bộ Công an quy định chi tiết khoản 3 Điều này. 
 ##### Điều 12. Chấp hành quy định về tốc độ và khoảng cách giữa các xe  
@@ -503,17 +437,12 @@ k) Gặp xe vận chuyển hàng siêu trường, siêu trọng, hàng hóa nguy
 đoàn người đi bộ;  
 l) Gặp xe ưu tiên; 
  
-9 Cụm từ “Bộ Giao thông vận tải” được thay thế bằng cụm từ “Bộ Xây dựng” theo quy 
-định tại khoản 21 Điều 7 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật 
-có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-14
- 
- 
 m) Điều kiện trời mưa, gió, sương, khói, bụi, mặt đường trơn trượt, lầy lội, 
 có nhiều đất đá, vật liệu rơi vãi ảnh hưởng đến an toàn giao thông đường bộ; 
 n) Khu vực đang tổ chức kiểm soát giao thông đường bộ.  
-4. Bộ trưởng Bộ Xây dựng10 quy định chi tiết về tốc độ và khoảng cách an 
+4. Bộ trưởng Bộ Xây dựng[^vbhn55-10] quy định chi tiết về tốc độ và khoảng cách an 
 toàn của xe cơ giới, xe máy chuyên dùng tham gia giao thông đường bộ. 
 ##### Điều 13. Sử dụng làn đường 
 1. Phương tiện tham gia giao thông đường bộ di chuyển với tốc độ thấp hơn 
@@ -545,13 +474,8 @@ có xe chạy ngược chiều trong đoạn đường định vượt, xe chạ
 hiệu vượt xe khác, đã có tín hiệu rẽ phải và tránh về bên phải. 
 4. Khi có xe xin vượt, người điều khiển phương tiện tham gia giao thông 
  
-10 Cụm từ “Bộ Giao thông vận tải” được thay thế bằng cụm từ “Bộ Xây dựng” theo quy 
-định tại khoản 21 Điều 7 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật 
-có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-15
- 
- 
 đường bộ phía trước phải quan sát phần đường phía trước, nếu đủ điều kiện an 
 toàn thì phải giảm tốc độ, có tín hiệu rẽ phải để báo hiệu cho người điều khiển 
 phương tiện tham gia giao thông đường bộ phía sau biết được vượt và đi sát về 
@@ -589,9 +513,6 @@ Tín hiệu báo hướng rẽ hoặc tín hiệu bằng tay phải sử dụng 
 chuyển hướng. Khi bảo đảm an toàn, không gây trở ngại cho người và phương 
 tiện khác mới được chuyển hướng. 
 
-16
- 
- 
 3. Khi chuyển hướng, người lái xe, người điều khiển xe máy chuyên dùng 
 phải nhường đường cho người đi bộ, xe thô sơ, xe đi ngược chiều và chỉ chuyển 
 hướng khi không gây trở ngại hoặc nguy hiểm cho người, phương tiện khác. 
@@ -631,9 +552,6 @@ khi đã sử dụng phanh đỗ xe hoặc thực hiện biện pháp an toàn k
 3. Người điều khiển phương tiện tham gia giao thông đường bộ khi dừng xe, 
 đỗ xe trên đường phải thực hiện các quy định sau đây: 
 
-17
- 
- 
 a) Có tín hiệu báo cho người điều khiển phương tiện tham gia giao thông 
 đường bộ khác biết khi ra, vào vị trí dừng xe, đỗ xe; 
 b) Không làm ảnh hưởng đến người đi bộ và các phương tiện tham gia giao 
@@ -670,9 +588,6 @@ không gây cản trở, nguy hiểm cho người và phương tiện tham gia g
 7. Trong trường hợp gặp sự cố kỹ thuật hoặc bất khả kháng khác buộc phải 
 đỗ xe, khi đỗ xe chiếm một phần đường xe chạy hoặc tại nơi không được phép đỗ, 
 
-18
- 
- 
 phải có báo hiệu bằng đèn khẩn cấp hoặc đặt biển cảnh báo về phía sau xe để 
 người điều khiển phương tiện tham gia giao thông đường bộ khác biết. 
 ##### Điều 19. Mở cửa xe 
@@ -710,9 +625,6 @@ Khi đến gần đường giao nhau, người điều khiển phương tiện t
 thông đường bộ phải quan sát, giảm tốc độ và nhường đường theo quy định sau đây: 
 1. Tại nơi đường giao nhau giữa đường không ưu tiên với đường ưu tiên hoặc 
 
-19
- 
- 
 giữa đường nhánh với đường chính thì xe đi từ đường không ưu tiên hoặc đường 
 nhánh phải nhường đường cho xe đi trên đường ưu tiên hoặc đường chính từ bất 
 kỳ hướng nào tới; 
@@ -750,9 +662,6 @@ hướng dẫn của người điều khiển giao thông.
 kêu, chắn đường bộ đang dịch chuyển hoặc đã đóng, người tham gia giao thông 
 đường bộ phải dừng lại về bên phải đường của mình, trước vạch dừng xe.  
 
-20
- 
- 
 2. Khi tới đường ngang không có người gác, chắn đường bộ, chuông, đèn tín 
 hiệu, người tham gia giao thông đường bộ phải dừng lại về bên phải đường của 
 mình, trước vạch dừng xe và quan sát hai phía, khi không có phương tiện giao 
@@ -793,9 +702,6 @@ phương tiện trong hầm đường bộ phải tuân thủ quy tắc giao th�
 1. Xe cơ giới, xe máy chuyên dùng phải bật đèn chiếu gần; xe thô sơ phải bật 
 đèn hoặc có vật phát sáng báo hiệu; 
 
-21
- 
- 
 2. Không dừng xe, đỗ xe trong hầm đường bộ; trường hợp gặp sự cố kỹ thuật 
 hoặc bất khả kháng khác buộc phải dừng xe, đỗ xe, người lái xe, người điều khiển 
 xe máy chuyên dùng phải đưa xe vào vị trí dừng xe, đỗ xe khẩn cấp, nếu không 
@@ -826,18 +732,13 @@ quy định của pháp luật;
 3. Xe ưu tiên quy định tại các điểm a, b, c và d khoản 2 Điều này phải có tín 
 hiệu ưu tiên theo quy định của pháp luật. Màu của tín hiệu đèn ưu tiên được quy 
 định như sau: 
-a)11 Xe chữa cháy của Cảnh sát phòng cháy, chữa cháy và cứu nạn, cứu hộ 
+a) [^vbhn55-11] Xe chữa cháy của Cảnh sát phòng cháy, chữa cháy và cứu nạn, cứu hộ 
 và xe chữa cháy của các lực lượng khác được huy động đi làm nhiệm vụ chữa 
 cháy, xe cứu thương đang làm nhiệm vụ cấp cứu có đèn nhấp nháy màu đỏ; 
  
-11 Điểm này được sửa đổi, bổ sung theo quy định tại khoản 4 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-22
- 
- 
-b)12 Xe của lực lượng công an, quân sự, kiểm sát đi làm nhiệm vụ khẩn cấp, 
+b) [^vbhn55-12] Xe của lực lượng công an, quân sự, kiểm sát đi làm nhiệm vụ khẩn cấp, 
 xe Cảnh sát giao thông dẫn đường có đèn nhấp nháy màu xanh và đỏ; 
 c) Xe hộ đê đi làm nhiệm vụ; xe đi làm nhiệm vụ cứu nạn, cứu hộ, khắc phục 
 sự cố thiên tai, dịch bệnh hoặc xe đi làm nhiệm vụ trong tình trạng khẩn cấp theo 
@@ -873,13 +774,8 @@ d) Chở người diễu hành theo đoàn khi được cơ quan có thẩm quy�
 ##### Điều 29. Xe kéo xe, xe kéo rơ moóc và xe ô tô đầu kéo kéo sơ mi rơ moóc 
 1. Một xe ô tô chỉ được kéo theo một xe ô tô hoặc xe máy chuyên dùng khác 
  
-12 Điểm này được sửa đổi, bổ sung theo quy định tại khoản 4 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-23
- 
- 
 khi xe được kéo không tự chạy được, trừ trường hợp quy định tại khoản 3 Điều 
 53 của Luật này và phải bảo đảm các quy định sau đây: 
 a) Xe được kéo phải có người điều khiển và hệ thống lái của xe đó phải còn 
@@ -919,9 +815,6 @@ cụ để báo hiệu cho người khác nhận biết là người khiếm th�
 d) Người mất năng lực hành vi dân sự khi đi trên đường bộ phải có người 
 dẫn dắt; 
 
-24
- 
- 
 đ) Mọi người có trách nhiệm giúp đỡ trẻ em dưới 07 tuổi, phụ nữ mang thai, 
 người già yếu, người khuyết tật, người mất năng lực hành vi dân sự khi đi qua đường. 
 ##### Điều 31. Người điều khiển, người được chở, hàng hóa xếp trên xe thô sơ 
@@ -960,9 +853,6 @@ b) Áp giải người có hành vi vi phạm pháp luật;
 c) Trẻ em dưới 12 tuổi; 
 d) Người già yếu hoặc người khuyết tật. 
 
-25
- 
- 
 2. Người lái xe, người được chở trên xe mô tô hai bánh, xe mô tô ba bánh, 
 xe gắn máy phải đội mũ bảo hiểm theo đúng quy chuẩn kỹ thuật quốc gia và cài 
 quai đúng quy cách. 
@@ -999,9 +889,6 @@ PHƯƠNG TIỆN THAM GIA GIAO THÔNG ĐƯỜNG BỘ
 1. Xe cơ giới bao gồm:  
 a) Xe ô tô gồm: xe có từ bốn bánh trở lên chạy bằng động cơ, được thiết kế, 
 
-26
- 
- 
 sản xuất để hoạt động trên đường bộ, không chạy trên đường ray, dùng để chở 
 người, hàng hóa, kéo rơ moóc, kéo sơ mi rơ moóc hoặc được kết cấu để thực hiện 
 chức năng, công dụng đặc biệt, có thể được nối với đường dây dẫn điện; xe ba 
@@ -1029,7 +916,7 @@ lượng bản thân không lớn hơn 400 kg;
 g) Xe gắn máy là xe có hai hoặc ba bánh chạy bằng động cơ, được thiết kế, 
 sản xuất để hoạt động trên đường bộ, có vận tốc thiết kế không lớn hơn 50 km/h; 
 nếu động cơ dẫn động là động cơ nhiệt thì dung tích làm việc hoặc dung tích tương 
-đương không lớn hơn 50 cm3; nếu động cơ dẫn động là động cơ điện thì công suất 
+đương không lớn hơn 50 cm³; nếu động cơ dẫn động là động cơ điện thì công suất 
 của động cơ không lớn hơn 04 kW; xe gắn máy không bao gồm xe đạp máy;  
 h) Xe tương tự các loại xe quy định tại khoản này. 
 2. Xe thô sơ bao gồm:  
@@ -1041,9 +928,6 @@ b) Xe đạp máy, gồm cả xe đạp điện, là xe đạp có trợ lực t
 c) Xe xích lô; 
 d) Xe lăn dùng cho người khuyết tật; 
 
-27
- 
- 
 đ) Xe vật nuôi kéo; 
 e) Xe tương tự các loại xe quy định tại khoản này. 
 3. Xe máy chuyên dùng bao gồm:  
@@ -1054,12 +938,12 @@ d) Rơ moóc, sơ mi rơ moóc được kéo bởi máy kéo;
 đ) Xe máy thực hiện chức năng, công dụng đặc biệt; 
 e) Các loại xe đặc chủng sử dụng vào mục đích quốc phòng, an ninh có tham 
 gia giao thông đường bộ. 
-4. Phương tiện giao thông thông minh là phương tiện giao thông đường bộ 
+4. [^vbhn55-13] Phương tiện giao thông thông minh là phương tiện giao thông đường bộ 
 mà toàn bộ việc điều khiển, duy trì hoạt động của phương tiện không cần có sự 
 điều khiển trực tiếp của người lái trên phương tiện đó. 
 5. Xe tương tự các loại xe cơ giới, xe thô sơ được quản lý, sử dụng theo quy 
 định đối với loại xe cơ giới, xe thô sơ đó.  
-6. Bộ trưởng Bộ Xây dựng quy định chi tiết Điều này. 
+6. [^vbhn55-14] Bộ trưởng Bộ Xây dựng quy định chi tiết Điều này. 
 ##### Điều 35. Điều kiện phương tiện tham gia giao thông đường bộ 
 1. Xe cơ giới, xe máy chuyên dùng tham gia giao thông đường bộ phải đáp 
 ứng các điều kiện sau đây:  
@@ -1067,30 +951,21 @@ a) Được cấp chứng nhận đăng ký xe và gắn biển số xe theo quy
 pháp luật; 
 b) Bảo đảm chất lượng an toàn kỹ thuật và bảo vệ môi trường theo quy định 
 của pháp luật.  
-2. Xe ô tô kinh doanh vận tải hàng hóa, xe ô tô kinh doanh vận tải hành 
+2. [^vbhn55-15] Xe ô tô kinh doanh vận tải hàng hóa, xe ô tô kinh doanh vận tải hành 
 khách dưới 08 chỗ (không kể chỗ của người lái xe), xe ô tô đầu kéo, xe cứu 
 thương, xe vận tải nội bộ phải lắp thiết bị giám sát hành trình, thiết bị ghi nhận 
 hình ảnh người lái xe. Xe ô tô kinh doanh vận tải hành khách từ 08 chỗ trở lên 
 (không kể chỗ của người lái xe) phải lắp thiết bị giám sát hành trình, thiết bị ghi 
 nhận hình ảnh người lái xe, thiết bị ghi nhận hình ảnh khoang chở khách. 
  
-13 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 5 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-14 Khoản này được sửa đổi, bổ sung theo quy định tại điểm b khoản 5 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-15 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 6 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
+ 
+ 
 
-28
- 
- 
 Việc xử lý dữ liệu thu được từ thiết bị ghi nhận hình ảnh người lái xe, thiết 
 bị ghi nhận hình ảnh khoang chở khách thực hiện theo quy định của pháp luật về 
 bảo vệ dữ liệu cá nhân và quy định khác của pháp luật có liên quan. 
-3. Phương tiện giao thông thông minh là xe cơ giới, xe máy chuyên dùng 
+3. [^vbhn55-16] Phương tiện giao thông thông minh là xe cơ giới, xe máy chuyên dùng 
 thì phải bảo đảm các điều kiện quy định tại khoản 1 Điều này và được cơ quan có 
 thẩm quyền cấp phép hoạt động. 
 4. Phương tiện gắn biển số xe nước ngoài hoạt động tại Việt Nam thực hiện 
@@ -1123,13 +998,8 @@ g) Biển số xe nền màu trắng, chữ và số màu đen, có ký hiệu �
 xe của các nhân viên hành chính kỹ thuật mang chứng minh thư công vụ của các 
 cơ quan đại diện ngoại giao, cơ quan lãnh sự, tổ chức quốc tế; 
  
-16 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 6 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-29
- 
- 
 h) Biển số xe nền màu trắng, chữ và số màu đen, có ký hiệu “NN” cấp cho 
 xe của tổ chức, văn phòng đại diện, cá nhân nước ngoài, trừ đối tượng quy định 
 tại điểm g khoản này; 
@@ -1169,9 +1039,6 @@ người trả giá ít nhất bằng giá khởi điểm của một biển s�
 người đó được xác định là người trúng đấu giá biển số xe. 
 5. Đăng ký xe và biển số xe trúng đấu giá sau khi chuyển nhượng, trao đổi, 
 
-30
- 
- 
 tặng cho, để thừa kế xe gắn biển số xe trúng đấu giá được quản lý, cấp, thu hồi 
 theo quy định tại Điều 39 của Luật này. 
 6. Số tiền thu được từ đấu giá biển số xe sau khi trừ các khoản chi phí tổ 
@@ -1211,9 +1078,6 @@ trường hợp sự kiện bất khả kháng hoặc trở ngại khách quan t
 kéo dài thêm nhưng tối đa không quá 06 tháng. Sau thời hạn quy định, người trúng 
 đấu giá biển số xe không thực hiện thủ tục đăng ký xe để gắn biển số xe trúng đấu 
 
-31
- 
- 
 giá thì biển số xe trúng đấu giá được đấu giá lại hoặc chuyển vào hệ thống đăng 
 ký, quản lý xe và người trúng đấu giá không được hoàn trả số tiền trúng đấu giá 
 đã nộp; 
@@ -1251,9 +1115,6 @@ kiểm tra chất lượng xuất xưởng xe cơ giới, xe máy chuyên dùng 
 nhà máy đến kho, cảng hoặc từ kho, cảng, nhà máy, đại lý bán xe đến nơi đăng 
 ký xe hoặc về các đại lý, kho lưu trữ khác;  
 
-32
- 
- 
 b) Xe làm thủ tục thu hồi để tái xuất hoặc chuyển quyền sở hữu; xe phục vụ 
 các sự kiện do Đảng, Nhà nước tổ chức; xe đăng ký ở nước ngoài được cơ quan 
 thẩm quyền cho phép bao gồm cả xe có tay lái bên phải (tay lái nghịch) vào Việt 
@@ -1293,9 +1154,6 @@ hết ngày 31 tháng 12 của năm hết niên hạn sử dụng.
 a) Xe có niên hạn sử dụng cải tạo thành xe không có niên hạn sử dụng thì áp 
 dụng quy định về niên hạn của xe trước khi cải tạo; 
 
-33
- 
- 
 b) Xe không có niên hạn sử dụng cải tạo thành xe có niên hạn sử dụng thì áp 
 dụng quy định về niên hạn của xe sau khi cải tạo; 
 c) Xe ô tô chở người có số người cho phép chở từ 09 người trở lên (không 
@@ -1334,9 +1192,6 @@ ráp do đăng kiểm viên thực hiện và được cơ quan có thẩm quy�
 Đăng kiểm viên là người được cấp chứng chỉ chuyên môn về chứng nhận, kiểm 
 định xe cơ giới, xe máy chuyên dùng.  
 
-34
- 
- 
 4. Việc thừa nhận chứng nhận chất lượng an toàn kỹ thuật và bảo vệ môi 
 trường của nước ngoài đối với xe cơ giới, phụ tùng xe cơ giới được thực hiện theo 
 quy định của điều ước quốc tế mà nước Cộng hòa xã hội chủ nghĩa Việt Nam là 
@@ -1349,7 +1204,7 @@ sản xuất, lắp ráp, việc bảo hành, bảo dưỡng xe cơ giới nhậ
 ráp và triệu hồi sản phẩm, hàng hóa theo quy định của Chính phủ. 
 6. Thủ tướng Chính phủ quy định lộ trình áp dụng mức tiêu chuẩn khí thải 
 đối với xe cơ giới nhập khẩu, sản xuất, lắp ráp. 
-7. Bộ trưởng Bộ Xây dựng ban hành quy chuẩn kỹ thuật quốc gia về chất 
+7. [^vbhn55-17] Bộ trưởng Bộ Xây dựng ban hành quy chuẩn kỹ thuật quốc gia về chất 
 lượng an toàn kỹ thuật và bảo vệ môi trường, tiêu thụ năng lượng xe cơ giới, xe 
 máy chuyên dùng, phụ tùng xe cơ giới trong nhập khẩu, sản xuất, lắp ráp; ban 
 hành quy chuẩn kỹ thuật quốc gia về cơ sở bảo hành, bảo dưỡng xe cơ giới; quy 
@@ -1374,19 +1229,14 @@ quốc gia.
 vệ môi trường của cơ sở đăng kiểm phương tiện hoặc chứng nhận về kiểm tra xuất 
 xưởng của nhà sản xuất thì không phải kiểm định trong trường hợp di chuyển từ 
  
-17 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 7 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-35
- 
- 
 cửa khẩu, nơi sản xuất, lắp ráp tới kho, cảng, cửa hàng hoặc ngược lại. 
-4. Việc kiểm định an toàn kỹ thuật và bảo vệ môi trường xe cơ giới, xe máy 
+4. [^vbhn55-18] Việc kiểm định an toàn kỹ thuật và bảo vệ môi trường xe cơ giới, xe máy 
 chuyên dùng; chứng nhận an toàn kỹ thuật và bảo vệ môi trường đối với xe cơ 
 giới cải tạo, xe máy chuyên dùng cải tạo do đăng kiểm viên của cơ sở đăng kiểm 
 thực hiện và được cơ sở đăng kiểm cấp giấy chứng nhận. 
-5. Bộ trưởng Bộ Xây dựng19 quy định nội dung sau đây: 
+5. Bộ trưởng Bộ Xây dựng[^vbhn55-19] quy định nội dung sau đây: 
 a) Trình tự, thủ tục cấp mới, cấp lại, tạm đình chỉ hoạt động, thu hồi giấy 
 chứng nhận đủ điều kiện hoạt động kiểm định xe cơ giới của cơ sở đăng kiểm xe 
 cơ giới;  
@@ -1398,7 +1248,7 @@ với xe cơ giới cải tạo, xe máy chuyên dùng cải tạo;
 d) Trình tự, thủ tục kiểm định, miễn kiểm định lần đầu cho xe cơ giới, xe 
 máy chuyên dùng;  
 đ) Trình tự, thủ tục kiểm định khí thải xe mô tô, xe gắn máy;  
-e)20 Quy chuẩn kỹ thuật quốc gia về cơ sở đăng kiểm xe cơ giới, cơ sở kiểm 
+e) [^vbhn55-20] Quy chuẩn kỹ thuật quốc gia về cơ sở đăng kiểm xe cơ giới, cơ sở kiểm 
 định khí thải xe mô tô, xe gắn máy; quy chuẩn kỹ thuật quốc gia về kiểm định xe 
 cơ giới, xe máy chuyên dùng tham gia giao thông đường bộ; 
 g) Giới hạn kích thước, giới hạn tải trọng đối với xe cơ giới, xe máy chuyên 
@@ -1411,22 +1261,13 @@ chuyên dùng, chứng nhận chất lượng an toàn kỹ thuật và bảo v�
 xe cơ giới cải tạo, xe máy chuyên dùng cải tạo thuộc phạm vi quản lý của Bộ 
 Quốc phòng, Bộ Công an. 
  
-18 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 8 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-19 Cụm từ “Bộ Giao thông vận tải” được thay thế bằng cụm từ “Bộ Xây dựng” theo quy 
-định tại khoản 21 Điều 7 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật 
-có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-20 Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 8 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
+ 
+ 
 
-36
- 
- 
 ##### Điều 43. Trách nhiệm của cơ sở đăng kiểm, chủ xe cơ giới, xe máy 
 chuyên dùng và người điều khiển xe cơ giới, xe máy chuyên dùng 
-1. Cơ sở đăng kiểm là tổ chức cung cấp dịch vụ công thực hiện kiểm định 
+1. [^vbhn55-21] Cơ sở đăng kiểm là tổ chức cung cấp dịch vụ công thực hiện kiểm định 
 an toàn kỹ thuật và bảo vệ môi trường đối với xe cơ giới, xe máy chuyên dùng 
 được tổ chức, hoạt động theo quy định của Chính phủ; chứng nhận an toàn kỹ 
 thuật và bảo vệ môi trường đối với xe cơ giới cải tạo, xe máy chuyên dùng cải tạo. 
@@ -1461,13 +1302,8 @@ quyết vụ việc vi phạm hành chính trong lĩnh vực trật tự, an to�
 bộ thì chưa được giải quyết việc đăng ký, đăng kiểm phương tiện vi phạm; 
 đ) Chấp hành quy định khác của pháp luật khi tham gia giao thông đường bộ. 
  
-21 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 9 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-37
- 
- 
 ##### Điều 44. Bảo đảm trật tự, an toàn giao thông đường bộ đối với phương 
 tiện vận tải đường bộ trong đô thị  
 1. Xe buýt, xe chở người bốn bánh có gắn động cơ phải hoạt động đúng 
@@ -1506,9 +1342,6 @@ b) Trước khi cho xe khởi hành phải kiểm tra các điều kiện bảo 
 của xe, hướng dẫn cho hành khách về an toàn giao thông đường bộ và thoát hiểm 
 khi gặp sự cố; 
 
-38
- 
- 
 c) Hướng dẫn, yêu cầu, kiểm tra người trên xe thực hiện quy định tại khoản 2 
 Điều 10 của Luật này; 
 d) Kiểm tra việc sắp xếp, chằng buộc hành lý, hàng hóa bảo đảm an toàn; 
@@ -1549,9 +1382,6 @@ học sinh nắm vững và thực hiện đúng quy trình; chịu trách nhi�
 an toàn giao thông đường bộ khi tổ chức đưa đón trẻ em mầm non, học sinh của 
 cơ sở giáo dục đó.  
 
-39
- 
- 
 6. Xe đưa đón trẻ em mầm non, học sinh được ưu tiên trong tổ chức phân 
 luồng, điều tiết giao thông, bố trí nơi dừng xe, đỗ xe tại khu vực trường học và tại 
 các điểm trên lộ trình đưa đón trẻ em mầm non, học sinh. 
@@ -1590,9 +1420,6 @@ niêm yết giá cước vận tải đối với vận chuyển hành khách;
 c) Bảo đảm đúng thời gian và phạm vi hoạt động. 
 2. Ủy ban nhân dân cấp tỉnh quy định thời gian, phạm vi hoạt động vận 
 
-40
- 
- 
 chuyển hành khách bằng xe bốn bánh có gắn động cơ và hoạt động vận chuyển 
 hàng hóa bằng xe chở hàng bốn bánh có gắn động cơ tại địa phương. 
 ##### Điều 49. Bảo đảm trật tự, an toàn giao thông đường bộ đối với xe ô tô 
@@ -1605,7 +1432,7 @@ thông đường bộ;
 c) Kiểm tra việc sắp xếp hàng hóa bảo đảm an toàn; không chở hàng hoá 
 vượt quá khối lượng cho phép hoặc vượt quá khổ giới hạn của xe; 
 d) Hàng hóa vận chuyển trên xe phải được sắp xếp gọn gàng, chằng buộc 
-chắc chắn, bảo đảm an toàn theo quy định của Bộ trưởng Bộ Xây dựng22; 
+chắc chắn, bảo đảm an toàn theo quy định của Bộ trưởng Bộ Xây dựng[^vbhn55-22]; 
 đ) Khi vận chuyển hàng rời, vật liệu xây dựng, phế thải phải che đậy kín, 
 không để rơi vãi xuống đường, gây ra tiếng ồn hoặc bụi bẩn trong suốt quá trình 
 vận chuyển trên đường và chiều cao tối đa của hàng hóa phải thấp hơn mép trên 
@@ -1628,13 +1455,8 @@ trật tự, an toàn giao thông đường bộ, vệ sinh dịch tễ, phòng 
 sinh môi trường. 
 2. Việc vận chuyển thực phẩm tươi sống phải bảo đảm các yêu cầu sau đây: 
  
-22 Cụm từ “Bộ Giao thông vận tải” được thay thế bằng cụm từ “Bộ Xây dựng” theo quy 
-định tại khoản 21 Điều 7 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật 
-có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-41
- 
- 
 a) Người lái xe phải mang đủ giấy tờ theo quy định của pháp luật; 
 b) Trong quá trình vận chuyển phải chấp hành các quy định của pháp luật về 
 trật tự, an toàn giao thông đường bộ, an toàn thực phẩm, vệ sinh dịch tễ, phòng 
@@ -1673,9 +1495,6 @@ a) Xe cơ giới, xe máy chuyên dùng có khối lượng toàn bộ vượt q
 lượng cho phép của xe hoặc vượt quá tải trọng của đường bộ; 
 b) Xe cơ giới, xe máy chuyên dùng có khối lượng toàn bộ phân bổ lên trục 
 
-42
- 
- 
 xe, cụm trục xe vượt quá tải trọng của trục xe, cụm trục xe hoặc vượt quá tải trọng 
 của đường bộ. 
 3. Xe quá khổ giới hạn, xe quá tải trọng, xe bánh xích được cấp giấy phép 
@@ -1715,9 +1534,6 @@ vệ mặt đường.
 khổ giới hạn, xe quá tải trọng, xe bánh xích lưu hành trên đường bộ; trường hợp 
 vận chuyển hàng siêu trường, siêu trọng thì việc cấp giấy phép thực hiện theo quy 
 
-43
- 
- 
 định tại Điều 53 của Luật này; cơ quan, tổ chức được giao trực tiếp quản lý công 
 trình đường bộ thuộc trường hợp phải gia cường quy định tại điểm a khoản 4 Điều 
 này thực hiện việc chấp thuận phương án khảo sát, thiết kế, gia cường công trình 
@@ -1735,7 +1551,7 @@ pháp luật, bảo đảm trật tự, an toàn giao thông đường bộ.
 8. Lực lượng Cảnh sát giao thông chịu trách nhiệm tổ chức tuần tra, kiểm 
 soát, điều khiển giao thông, xử lý vi phạm pháp luật đối với xe quá khổ giới hạn, 
 xe quá tải trọng, xe bánh xích lưu hành trên đường bộ. 
-9. Bộ trưởng Bộ Xây dựng quy định chi tiết điểm b khoản 3 và điểm a 
+9. [^vbhn55-23] Bộ trưởng Bộ Xây dựng quy định chi tiết điểm b khoản 3 và điểm a 
 khoản 4 Điều này; quy định về tải trọng, khổ giới hạn của đường bộ; quy định lưu 
 hành xe quá khổ giới hạn, xe quá tải trọng, xe bánh xích trên đường bộ; quy định 
 trình tự, thủ tục cấp giấy phép lưu hành cho xe quá tải trọng, xe quá khổ giới hạn, 
@@ -1755,13 +1571,8 @@ hợp nhiều xe gồm xe ô tô đầu kéo, xe ô tô kéo rơ moóc để ké
 trường hợp ghép nối thông qua hàng được chở. 
 4. Xe vận chuyển hàng siêu trường, siêu trọng phải chạy với tốc độ quy định 
  
-23 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 10 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-44
- 
- 
 trong giấy phép và phải có báo hiệu kích thước của hàng; trường hợp cần thiết, 
 phải có người, phương tiện hỗ trợ theo quy định tại điểm đ khoản 4 Điều 52 của 
 Luật này khi vận chuyển hàng siêu trường, siêu trọng trên đường bộ.  
@@ -1774,7 +1585,7 @@ toàn giao thông trên tuyến đường, đoạn đường mà phương tiện
 6. Lực lượng Cảnh sát giao thông chịu trách nhiệm tổ chức tuần tra, kiểm 
 soát, xử lý vi phạm pháp luật về trật tự, an toàn giao thông đường bộ đối với xe 
 vận chuyển hàng siêu trường, siêu trọng lưu hành trên đường bộ. 
-7. Bộ trưởng Bộ Xây dựng24 quy định cụ thể về hàng siêu trường, siêu trọng; 
+7. Bộ trưởng Bộ Xây dựng[^vbhn55-24] quy định cụ thể về hàng siêu trường, siêu trọng; 
 quy định việc vận chuyển hàng siêu trường, siêu trọng và việc cấp giấy phép lưu 
 hành xe vận chuyển hàng siêu trường, siêu trọng trên đường bộ. 
 ##### Điều 54. Bảo đảm trật tự, an toàn giao thông đường bộ đối với xe cứu 
@@ -1798,13 +1609,8 @@ vào Việt Nam du lịch phải được cơ quan có thẩm quyền cấp phé
 2. Cơ quan cấp phép cho xe ô tô của người nước ngoài đăng ký tại nước 
 ngoài có tay lái ở bên phải tham gia giao thông tại Việt Nam, xe cơ giới nước 
  
-24 Cụm từ “Bộ Giao thông vận tải” được thay thế bằng cụm từ “Bộ Xây dựng” theo quy 
-định tại khoản 21 Điều 7 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật 
-có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-45
- 
- 
 ngoài do người nước ngoài đưa vào Việt Nam du lịch thông báo ngay cho cơ quan 
 quản lý xuất nhập cảnh. 
 3. Việc lưu hành xe ô tô của người nước ngoài đăng ký tại nước ngoài có tay 
@@ -1843,9 +1649,6 @@ d) Chứng nhận bảo hiểm bắt buộc trách nhiệm dân sự của chủ
 2. Người điều khiển xe máy chuyên dùng tham gia giao thông đường bộ phải 
 đủ tuổi, sức khỏe theo quy định của pháp luật; có bằng hoặc chứng chỉ điều khiển 
 
-46
- 
- 
 xe máy chuyên dùng phù hợp loại xe máy chuyên dùng đang điều khiển; có giấy 
 phép lái xe đang còn điểm, còn hiệu lực hoặc chứng chỉ bồi dưỡng kiến thức pháp 
 luật về giao thông đường bộ. Khi tham gia giao thông đường bộ, người điều khiển 
@@ -1874,9 +1677,9 @@ dạy lái, sát hạch viên phải mang theo các loại giấy tờ quy đị
 ##### Điều 57. Giấy phép lái xe 
 1. Giấy phép lái xe bao gồm các hạng sau đây: 
 a) Hạng A1 cấp cho người lái xe mô tô hai bánh có dung tích xi-lanh  
-đến 125 cm3 hoặc có công suất động cơ điện đến 11 kW; 
+đến 125 cm³ hoặc có công suất động cơ điện đến 11 kW; 
 b) Hạng A cấp cho người lái xe mô tô hai bánh có dung tích xi-lanh  
-trên 125 cm3 hoặc có công suất động cơ điện trên 11 kW và các loại xe quy định 
+trên 125 cm³ hoặc có công suất động cơ điện trên 11 kW và các loại xe quy định 
 cho giấy phép lái xe hạng A1; 
 c) Hạng B1 cấp cho người lái xe mô tô ba bánh và các loại xe quy định cho 
 giấy phép lái xe hạng A1; 
@@ -1885,9 +1688,6 @@ người lái xe); xe ô tô tải và ô tô chuyên dùng có khối lượng 
 đến 3.500 kg; các loại xe ô tô quy định cho giấy phép lái xe hạng B kéo rơ moóc 
 có khối lượng toàn bộ theo thiết kế đến 750 kg;  
 
-47
- 
- 
 đ) Hạng C1 cấp cho người lái xe ô tô tải và ô tô chuyên dùng có khối lượng 
 toàn bộ theo thiết kế trên 3.500 kg đến 7.500 kg; các loại xe ô tô tải quy định cho 
 giấy phép lái xe hạng C1 kéo rơ moóc có khối lượng toàn bộ theo thiết kế đến 750 
@@ -1928,9 +1728,6 @@ khách nối toa.
 2. Người khuyết tật điều khiển xe mô tô ba bánh dùng cho người khuyết tật 
 được cấp giấy phép lái xe hạng A1. 
 
-48
- 
- 
 Người khuyết tật điều khiển xe ô tô số tự động có kết cấu phù hợp với tình 
 trạng khuyết tật thì được cấp giấy phép lái xe hạng B. 
 3. Người điều khiển xe chở hàng bốn bánh có gắn động cơ, xe chở người bốn 
@@ -1968,9 +1765,6 @@ b) Người có giấy phép lái xe quốc tế do quốc gia là thành viên 
 Viên cấp khi lái xe tham gia giao thông đường bộ trên lãnh thổ Việt Nam phải 
 mang theo giấy phép lái xe quốc tế và giấy phép lái xe quốc gia được cấp phù hợp 
 
-49
- 
- 
 với hạng xe điều khiển, còn thời hạn sử dụng; phải tuân thủ pháp luật về trật tự, 
 an toàn giao thông đường bộ của Việt Nam; 
 c) Người có giấy phép lái xe quốc tế vi phạm pháp luật về trật tự, an toàn 
@@ -1981,7 +1775,7 @@ d) Người Việt Nam hoặc người nước ngoài có thẻ thường trú h
 trú tại Việt Nam có giấy phép lái xe do Việt Nam hoặc quốc gia là thành viên của 
 điều ước quốc tế mà nước Cộng hòa xã hội chủ nghĩa Việt Nam là thành viên cấp, 
 còn giá trị sử dụng, nếu có nhu cầu được cấp giấy phép lái xe quốc tế. 
-9. Bộ trưởng Bộ Công an quy định mẫu giấy phép lái xe và giấy phép lái 
+9. [^vbhn55-25] Bộ trưởng Bộ Công an quy định mẫu giấy phép lái xe và giấy phép lái 
 xe quốc tế, trình tự, thủ tục cấp và việc sử dụng giấy phép lái xe, giấy phép lái xe 
 quốc tế; Bộ trưởng Bộ Quốc phòng, Bộ trưởng Bộ Công an quy định mẫu giấy 
 phép lái xe, trình tự, thủ tục cấp và việc sử dụng giấy phép lái xe của lực lượng 
@@ -2007,13 +1801,8 @@ của giấy phép lái xe trước khi đổi, cấp lại, nâng hạng.
 5. Người có thẩm quyền xử phạt vi phạm hành chính có thẩm quyền trừ điểm 
 giấy phép lái xe. 
  
-25 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 11 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-50
- 
- 
 6. Chính phủ quy định chi tiết khoản 1 Điều này; quy định trình tự, thủ tục, 
 thẩm quyền trừ điểm, phục hồi điểm giấy phép lái xe; quy định lộ trình thực hiện 
 Điều này. Bộ trưởng Bộ Công an quy định chi tiết khoản 3 Điều này. 
@@ -2052,14 +1841,11 @@ lên hạng D1 hoặc lên hạng D2;
 b) Nâng hạng giấy phép lái xe từ hạng C1 lên hạng C hoặc lên hạng D1 hoặc 
 lên hạng D2; 
 
-51
- 
- 
 c) Nâng hạng giấy phép lái xe từ hạng C lên hạng D1 hoặc lên hạng D2 hoặc 
 lên hạng D; 
 d) Nâng hạng giấy phép lái xe từ hạng D1 lên hạng D2 hoặc lên hạng D; 
 đ) Nâng hạng giấy phép lái xe từ hạng D2 lên hạng D; 
-e)26 Nâng hạng giấy phép lái xe từ hạng B lên hạng BE, từ hạng C1 lên hạng 
+e) [^vbhn55-26] Nâng hạng giấy phép lái xe từ hạng B lên hạng BE, từ hạng C1 lên hạng 
 C1E, từ hạng C, D1, D2, D lên hạng CE, từ hạng D1 lên hạng D1E, từ hạng D2 
 lên hạng D2E, từ hạng D lên hạng DE.  
 4. Người có nhu cầu được đào tạo nâng hạng giấy phép lái xe khi giấy phép 
@@ -2072,33 +1858,22 @@ tại khoản 3 và khoản 4 Điều này.
 6. Cơ sở đào tạo lái xe ô tô phải đáp ứng các điều kiện do Chính phủ quy 
 định; có giáo trình, giáo án; thực hiện đào tạo theo đúng hình thức, nội dung và 
 chương trình quy định cho từng hạng giấy phép lái xe. 
-7. Chính phủ quy định chi tiết các hình thức đào tạo lái xe khác quy định 
+7. [^vbhn55-27] Chính phủ quy định chi tiết các hình thức đào tạo lái xe khác quy định 
 tại khoản 2 Điều này; quy định trình tự, thủ tục kiểm tra, đánh giá để cấp, cấp lại, 
 thu hồi giấy phép xe tập lái; quy định tiêu chuẩn của giáo viên dạy lái xe; quy 
 định việc cấp, cấp lại, thu hồi giấy chứng nhận giáo viên dạy lái xe; quy định việc 
 cấp, cấp lại, thu hồi giấy phép đào tạo lái xe. 
-8. Bộ trưởng Bộ Xây dựng quy định hình thức, nội dung, chương trình đào 
+8. [^vbhn55-28] Bộ trưởng Bộ Xây dựng quy định hình thức, nội dung, chương trình đào 
 tạo lái xe; quy định thời gian lái xe an toàn cho từng hạng giấy phép lái xe quy 
 định tại khoản 4 Điều này; quy định tiêu chuẩn của cơ sở đào tạo lái xe mô tô.  
-9. Bộ trưởng Bộ Quốc phòng, Bộ trưởng Bộ Công an quy định việc đào tạo 
+9. [^vbhn55-29] Bộ trưởng Bộ Quốc phòng, Bộ trưởng Bộ Công an quy định việc đào tạo 
 lái xe cho lực lượng quân đội, công an làm nhiệm vụ quốc phòng, an ninh. 
  
-26 Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 12 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-27 Khoản này được sửa đổi, bổ sung theo quy định tại điểm b khoản 12 Điều 7 của Luật 
-số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, 
-có hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-28 Khoản này được sửa đổi, bổ sung theo quy định tại điểm b khoản 12 Điều 7 của Luật 
-số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, 
-có hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-29 Khoản này được bổ sung theo quy định tại điểm b khoản 12 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
+ 
+ 
+ 
 
-52
- 
- 
 ##### Điều 61. Sát hạch lái xe 
 1. Người đã hoàn thành chương trình đào tạo lái xe, có độ tuổi, sức khỏe theo 
 quy định tại Điều 59 của Luật này được đăng ký để tham dự kỳ sát hạch lái xe. 
@@ -2108,7 +1883,7 @@ trình đào tạo lái xe.
 xe; hoạt động sát hạch lái xe mô tô thực hiện tại các trung tâm sát hạch lái xe hoặc 
 tại sân tập lái đáp ứng điều kiện, tiêu chuẩn về cơ sở vật chất, kỹ thuật. Hoạt động 
 sát hạch lái xe do cơ quan nhà nước có thẩm quyền thực hiện. 
-4. Trung tâm sát hạch lái xe là đơn vị cung cấp dịch vụ sát hạch lái xe; phải 
+4. [^vbhn55-30] Trung tâm sát hạch lái xe là đơn vị cung cấp dịch vụ sát hạch lái xe; phải 
 đáp ứng các điều kiện do Chính phủ quy định và đáp ứng yêu cầu kỹ thuật theo 
 quy chuẩn kỹ thuật quốc gia về trung tâm sát hạch lái xe cơ giới đường bộ; phải 
 sử dụng thiết bị ứng dụng công nghệ thông tin và phải chia sẻ ngay kết quả và dữ 
@@ -2118,32 +1893,21 @@ nhiệm vụ quốc phòng, an ninh.
 5. Việc sát hạch lái xe do sát hạch viên thực hiện. Sát hạch viên phải có đủ 
 điều kiện, tiêu chuẩn, được cấp thẻ sát hạch viên và phải chịu trách nhiệm về kết 
 quả sát hạch của mình. 
-6. Chính phủ quy định điều kiện, trình tự, thủ tục kiểm tra, đánh giá để cấp, 
+6. [^vbhn55-31] Chính phủ quy định điều kiện, trình tự, thủ tục kiểm tra, đánh giá để cấp, 
 cấp lại, thu hồi giấy phép sát hạch cho trung tâm sát hạch lái xe; quy định điều 
 kiện sân tập lái để sát hạch lái xe mô tô. 
-7. Bộ trưởng Bộ Công an quy định hình thức, nội dung, quy trình sát hạch 
+7. [^vbhn55-32] Bộ trưởng Bộ Công an quy định hình thức, nội dung, quy trình sát hạch 
 để cấp giấy phép lái xe; điều kiện, tiêu chuẩn sát hạch viên, tổ chức tập huấn, cấp 
 thẻ sát hạch viên; tiêu chuẩn kỹ thuật sân tập lái để sát hạch lái xe mô tô, quy 
 chuẩn kỹ thuật quốc gia về trung tâm sát hạch lái xe cơ giới đường bộ. 
-8. Bộ trưởng Bộ Quốc phòng, Bộ trưởng Bộ Công an quy định việc sát 
+8. [^vbhn55-33] Bộ trưởng Bộ Quốc phòng, Bộ trưởng Bộ Công an quy định việc sát 
 hạch lái xe cho lực lượng quân đội, công an làm nhiệm vụ quốc phòng, an ninh. 
  
-30 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 13 Điều 7 của Luật 
-số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, 
-có hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-31 Khoản này được sửa đổi, bổ sung theo quy định tại điểm b khoản 13 Điều 7 của Luật 
-số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, 
-có hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-32 Khoản này được sửa đổi, bổ sung theo quy định tại điểm b khoản 13 Điều 7 của Luật 
-số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, 
-có hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-33 Khoản này được bổ sung theo quy định tại điểm b khoản 13 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
+ 
+ 
+ 
 
-53
- 
- 
 ##### Điều 62. Cấp, đổi, cấp lại và thu hồi giấy phép lái xe 
 1. Giấy phép lái xe được cấp cho người tham dự kỳ sát hạch lái xe có kết quả 
 đạt yêu cầu. 
@@ -2166,31 +1930,24 @@ trong lĩnh vực trật tự, an toàn giao thông đường bộ.
 5. Giấy phép lái xe bị thu hồi khi thuộc một trong các trường hợp sau đây: 
 a) Người được cấp giấy phép lái xe không đủ điều kiện sức khỏe theo kết 
 luận của cơ sở khám bệnh, chữa bệnh đối với từng hạng giấy phép lái xe; 
-b)34 Giấy phép lái xe cấp sai quy định hoặc người được cấp có hành vi gian 
+b) [^vbhn55-34] Giấy phép lái xe cấp sai quy định hoặc người được cấp có hành vi gian 
 dối để được cấp, đổi, cấp lại giấy phép lái xe; 
 c) Giấy phép lái xe đã quá thời hạn tạm giữ hoặc hết thời hiệu thi hành quyết 
 định xử phạt vi phạm hành chính theo quy định của pháp luật về xử lý vi phạm 
 hành chính nếu người vi phạm không đến nhận mà không có lý do chính đáng. 
-6. Bộ trưởng Bộ Công an quy định điều kiện, trình tự, thủ tục về cấp, đổi, 
+6. [^vbhn55-35] Bộ trưởng Bộ Công an quy định điều kiện, trình tự, thủ tục về cấp, đổi, 
 cấp lại và thu hồi giấy phép lái xe; Bộ trưởng Bộ Giáo dục và Đào tạo quy định 
 điều kiện, trình tự, thủ tục cấp, đổi, cấp lại, thu hồi chứng chỉ điều khiển xe máy 
 chuyên dùng cho người điều khiển máy kéo có giấy phép lái xe quy định tại 
 các điểm d, e, g, h, i, k, l, m và n khoản 3 Điều 89 của Luật này.  
  
-34 Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 14 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-35 Khoản này được sửa đổi, bổ sung theo quy định tại điểm b khoản 14 Điều 7 của Luật 
-số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, 
-có hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
+ 
 
-54
- 
- 
 Bộ trưởng Bộ Quốc phòng, Bộ trưởng Bộ Công an quy định việc cấp, đổi, 
 cấp lại, thu hồi giấy phép lái xe cho lực lượng quân đội, công an làm nhiệm vụ 
 quốc phòng, an ninh. 
-7. (được bãi bỏ)  
+7. [^vbhn55-36] (được bãi bỏ)  
 ##### Điều 63. Đào tạo, kiểm tra cấp chứng chỉ bồi dưỡng kiến thức pháp luật 
 về giao thông đường bộ cho người điều khiển xe máy chuyên dùng 
 1. Chứng chỉ bồi dưỡng kiến thức pháp luật về giao thông đường bộ là giấy 
@@ -2205,7 +1962,7 @@ dùng đủ tiêu chuẩn được thực hiện bồi dưỡng kiến thức ph
 đường bộ phải theo đúng hình thức, nội dung, chương trình bồi dưỡng; kiểm tra 
 và cấp chứng chỉ bồi dưỡng kiến thức pháp luật về giao thông đường bộ cho người 
 có kết quả kiểm tra đạt yêu cầu. 
-4. Bộ trưởng Bộ Xây dựng37 quy định hình thức, nội dung, chương trình bồi 
+4. Bộ trưởng Bộ Xây dựng[^vbhn55-37] quy định hình thức, nội dung, chương trình bồi 
 dưỡng kiến thức pháp luật về giao thông đường bộ; việc kiểm tra và thủ tục cấp, 
 cấp lại chứng chỉ bồi dưỡng kiến thức pháp luật về giao thông đường bộ; tiêu 
 chuẩn của cơ sở đào tạo người điều khiển xe máy chuyên dùng thực hiện bồi 
@@ -2218,21 +1975,12 @@ dưỡng, kiểm tra, cấp chứng chỉ bồi dưỡng kiến thức pháp lu�
 bộ cho lực lượng quân đội, công an làm nhiệm vụ quốc phòng, an ninh. 
 ##### Điều 64. Thời gian làm việc của người lái xe ô tô kinh doanh vận tải và 
 vận tải nội bộ 
-1. Thời gian lái xe liên tục của người lái xe không quá 04 giờ, trừ trường 
+1. [^vbhn55-38] Thời gian lái xe liên tục của người lái xe không quá 04 giờ, trừ trường 
  
-36 Khoản này được bãi bỏ theo quy định tại khoản 23 Điều 7 của Luật số 118/2025/QH15 
-sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 
-01 tháng 7 năm 2026. 
-37 Cụm từ “Bộ Giao thông vận tải” được thay thế bằng cụm từ “Bộ Xây dựng” theo quy 
-định tại khoản 21 Điều 7 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật 
-có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-38 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 15 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
+ 
+ 
 
-55
- 
- 
 hợp bất khả kháng hoặc trở ngại khách quan. Thời gian làm việc của người lái xe 
 trong một ngày, một tuần thực hiện theo quy định của Bộ luật Lao động. 
 2. Đơn vị kinh doanh vận tải, đơn vị hoạt động vận tải nội bộ và người lái xe 
@@ -2269,9 +2017,6 @@ b) Thực hiện quy định tại điểm b và điểm c khoản 1 Điều nà
 c) Hướng dẫn, tuyên truyền, vận động người tham gia giao thông đường bộ 
 chấp hành pháp luật về trật tự, an toàn giao thông đường bộ; 
 
-56
- 
- 
 d) Giúp đỡ, hỗ trợ người, phương tiện tham gia giao thông đường bộ khi cần thiết; 
 đ) Chỉ huy, điều khiển giao thông đường bộ; 
 e) Điều tra, giải quyết tai nạn giao thông đường bộ theo quy định của pháp luật; 
@@ -2310,9 +2055,6 @@ khác của pháp luật có liên quan.
 6. Khi thực hiện nhiệm vụ, lực lượng thực hiện tuần tra, kiểm soát phải tuân 
 thủ các nguyên tắc sau đây: 
 
-57
- 
- 
 a) Chấp hành quy định của pháp luật và mệnh lệnh, kế hoạch tuần tra, kiểm 
 soát của cấp có thẩm quyền; 
 b) Tôn trọng và bảo vệ quyền, lợi ích hợp pháp của cơ quan, tổ chức, cá nhân;  
@@ -2351,12 +2093,9 @@ thông đường bộ
 thông đường bộ; hệ thống camera trên tuyến giao thông, trong đô thị; công trình, 
 hệ thống thiết bị kỹ thuật nghiệp vụ kiểm tra, kiểm soát tải trọng xe cơ giới. 
 
-58
- 
- 
 2. Sử dụng phương tiện, thiết bị kỹ thuật nghiệp vụ, thiết bị thông minh hỗ 
 trợ chỉ huy, điều khiển giao thông đường bộ. 
-3. Khai thác dữ liệu từ thiết bị giám sát hành trình, thiết bị ghi nhận hình 
+3. [^vbhn55-39] Khai thác dữ liệu từ thiết bị giám sát hành trình, thiết bị ghi nhận hình 
 ảnh người lái xe, thiết bị ghi nhận hình ảnh khoang chở khách; tiếp nhận dữ liệu 
 thu thập từ công trình kiểm soát tải trọng xe. 
 4. Khai thác, sử dụng thông tin trong Cơ sở dữ liệu về trật tự, an toàn giao 
@@ -2390,13 +2129,8 @@ thành viên.
 ##### Điều 69. Di chuyển phương tiện vi phạm dừng, đỗ trên đường bộ gây 
 cản trở, ùn tắc giao thông hoặc nguy cơ dẫn đến tai nạn giao thông đường bộ 
  
-39 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 16 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-59
- 
- 
 1. Khi phát hiện phương tiện giao thông đường bộ vi phạm quy định dừng, 
 đỗ trên đường bộ gây cản trở, ùn tắc giao thông hoặc nguy cơ dẫn đến tai nạn giao 
 thông đường bộ nhưng người điều khiển phương tiện tham gia giao thông đường 
@@ -2438,16 +2172,13 @@ và các vi phạm pháp luật khác theo quy định của pháp luật.
 3. Vũ khí, công cụ hỗ trợ trang bị được quản lý theo quy định của pháp luật 
 về quản lý, sử dụng vũ khí, vật liệu nổ và công cụ hỗ trợ; phương tiện, thiết bị kỹ 
 
-60
- 
- 
 thuật nghiệp vụ, thiết bị thông minh hỗ trợ chỉ huy, điều khiển giao thông đường 
 bộ được quản lý theo quy định của Luật này, pháp luật về xử lý vi phạm hành 
 chính và các quy định khác của pháp luật có liên quan. 
 ##### Điều 71. Hệ thống giám sát bảo đảm an ninh, trật tự, an toàn giao thông 
 đường bộ; hệ thống quản lý dữ liệu thiết bị giám sát hành trình, thiết bị ghi 
 nhận hình ảnh người lái xe, thiết bị ghi nhận hình ảnh khoang chở khách; hệ 
-thống thiết bị kỹ thuật nghiệp vụ kiểm tra tải trọng xe cơ giới40 
+thống thiết bị kỹ thuật nghiệp vụ kiểm tra tải trọng xe cơ giới[^vbhn55-40] 
 1. Hệ thống giám sát bảo đảm an ninh, trật tự, an toàn giao thông đường bộ 
 được quy định như sau: 
 a) Hệ thống giám sát bảo đảm an ninh, trật tự, an toàn giao thông đường bộ 
@@ -2478,13 +2209,8 @@ trang bị cho lực lượng Cảnh sát giao thông để phục vụ kiểm t
 lý hành vi vi phạm quy định của pháp luật về tải trọng xe trên đường bộ. 
 4. Bộ trưởng Bộ Công an ban hành quy chuẩn kỹ thuật quốc gia về hệ thống 
  
-40 Điều này được sửa đổi, bổ sung theo quy định tại khoản 17 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
 
-61
- 
- 
 giám sát bảo đảm an ninh, trật tự, an toàn giao thông đường bộ và quy chuẩn kỹ 
 thuật quốc gia về thiết bị giám sát hành trình, thiết bị ghi nhận hình ảnh người lái 
 xe, thiết bị ghi nhận hình ảnh khoang chở khách; quy định việc xây dựng, quản 
@@ -2523,9 +2249,6 @@ công vụ thực hiện các biện pháp sau đây:
 a) Giải thích cho người vi phạm biết rõ về hành vi không chấp hành yêu cầu 
 kiểm tra, kiểm soát, có hành vi cản trở, chống người thi hành công vụ; quyền và 
 
-62
- 
- 
 trách nhiệm của người vi phạm; thuyết phục, yêu cầu chấm dứt ngay hành vi vi 
 phạm, chấp hành yêu cầu kiểm tra, kiểm soát; 
 b) Áp dụng các biện pháp ngăn chặn theo quy định của pháp luật trong trường 
@@ -2564,19 +2287,16 @@ lý dữ liệu về tình hình trật tự, an toàn giao thông đường b�
 khiển giao thông đường bộ, giải quyết tai nạn giao thông đường bộ, tuần tra, kiểm 
 soát về trật tự, an toàn giao thông đường bộ, đấu tranh phòng, chống tội phạm và 
 
-63
- 
- 
 các vi phạm pháp luật khác trên đường bộ; cung cấp thông tin về tình trạng giao 
 thông cho người tham gia giao thông đường bộ; phục vụ điều hành hoạt động giao 
 thông đường bộ trật tự, an toàn, thông suốt. 
 3. Trung tâm chỉ huy giao thông bao gồm: trung tâm chỉ huy giao thông quốc 
-gia, trung tâm chỉ huy giao thông tỉnh, thành phố41.  
+gia, trung tâm chỉ huy giao thông tỉnh, thành phố[^vbhn55-41].  
 4. Trung tâm chỉ huy giao thông được kết nối, chia sẻ dữ liệu với các Bộ, 
 ngành và các hệ thống, cơ sở dữ liệu sau đây:  
 a) Hệ thống đèn tín hiệu giao thông đường bộ;  
 b) Hệ thống giám sát bảo đảm an ninh, trật tự, an toàn giao thông đường bộ; 
-c)42 Hệ thống quản lý dữ liệu thiết bị giám sát hành trình, thiết bị ghi nhận 
+c) [^vbhn55-42] Hệ thống quản lý dữ liệu thiết bị giám sát hành trình, thiết bị ghi nhận 
 hình ảnh người lái xe, thiết bị ghi nhận hình ảnh khoang chở khách; 
 d) Hệ thống camera trên tuyến giao thông, trong đô thị;  
 đ) Thiết bị thông minh hỗ trợ chỉ huy, điều khiển giao thông đường bộ; thiết 
@@ -2600,16 +2320,9 @@ huống phức tạp về an ninh, trật tự trên đường bộ.
 đường bộ; trường hợp phát hiện vụ tai nạn giao thông đường bộ phải báo ngay 
 cho cơ quan, tổ chức quy định tại khoản 1 Điều 81 của Luật này; trường hợp tình 
  
-41 Cụm từ “trực thuộc trung ương” được bỏ theo quy định tại điểm b khoản 22 Điều 7 của 
-Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật 
-tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-42 Điểm này được sửa đổi, bổ sung theo quy định tại khoản 18 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
+ 
 
-64
- 
- 
 huống đột xuất có thể gây mất an toàn cho người, phương tiện tham gia giao thông 
 đường bộ phải thực hiện biện pháp cảnh báo an toàn ngay cho người tham gia 
 giao thông đường bộ biết. 
@@ -2649,9 +2362,6 @@ nghị cơ quan có thẩm quyền điều chỉnh phương án sử dụng cho 
 ##### Điều 78. Giải quyết, khắc phục ùn tắc giao thông 
 1. Khi xảy ra tình huống đột xuất ùn tắc giao thông, Cảnh sát giao thông 
 
-65
- 
- 
 phải tiến hành các biện pháp giải quyết theo quy định tại khoản 3 Điều 76 của 
 Luật này. 
 2. Khi xuất hiện ùn tắc giao thông, phải tiến hành các biện pháp sau đây:  
@@ -2690,9 +2400,6 @@ thông đường bộ gây ra tai nạn giao thông đường bộ, người li�
 có mặt tại hiện trường vụ tai nạn giao thông đường bộ  
 1. Người điều khiển phương tiện tham gia giao thông đường bộ gây ra tai 
 
-66
- 
- 
 nạn giao thông đường bộ, người liên quan đến vụ tai nạn giao thông đường bộ có 
 trách nhiệm sau đây: 
 a) Dừng ngay phương tiện, cảnh báo nguy hiểm, giữ nguyên hiện trường, trợ 
@@ -2731,9 +2438,6 @@ nhân dân nơi gần nhất.
 2. Cơ quan Công an khi nhận được tin báo vụ tai nạn giao thông đường bộ 
 phải tổ chức ngay lực lượng đến hiện trường thực hiện các biện pháp quy định tại 
 
-67
- 
- 
 khoản 3 Điều 76 của Luật này và các biện pháp khác để giải quyết vụ tai nạn giao 
 thông đường bộ theo quy định của pháp luật. 
 3. Cơ sở khám bệnh, chữa bệnh cấp cứu ban đầu người bị tai nạn do tai nạn 
@@ -2774,9 +2478,6 @@ việc phải thông báo ngay cho đơn vị chức năng về giải quyết h
 liệu cháy, nổ; phong tỏa hiện trường nơi xảy ra tai nạn giao thông đường bộ; tổ 
 chức phân luồng giao thông, cấm người, phương tiện đi vào khu vực tai nạn. 
 
-68
- 
- 
 ##### Điều 83. Điều tra, giải quyết tai nạn giao thông đường bộ  
 1. Nguyên tắc điều tra, giải quyết tai nạn giao thông đường bộ được quy định 
 như sau: 
@@ -2816,9 +2517,6 @@ kiểm tra hành khách, hàng hóa vận chuyển và các loại giấy tờ k
 e) Truy tìm phương tiện, người điều khiển phương tiện tham gia giao thông 
 đường bộ gây tai nạn; 
 
-69
- 
- 
 g) Giám định chuyên môn; dựng lại hiện trường; 
 h) Các hoạt động khác theo quy định của pháp luật. 
 3. Kết luận vụ tai nạn giao thông đường bộ phải xác định diễn biến, hậu quả 
@@ -2857,9 +2555,6 @@ a) Hỗ trợ nạn nhân, gia đình nạn nhân do tai nạn giao thông đư�
 ra; tổ chức, cá nhân giúp đỡ, cứu chữa, đưa người bị tai nạn giao thông đường bộ 
 đi cấp cứu; 
 
-70
- 
- 
 b) Hỗ trợ cho tổ chức, cá nhân tham gia tuyên truyền giảm thiểu thiệt hại tai 
 nạn giao thông đường bộ mà không được Nhà nước bảo đảm kinh phí. 
 4. Nguyên tắc hoạt động của Quỹ giảm thiểu thiệt hại tai nạn giao thông 
@@ -2896,9 +2591,6 @@ giao thông đường bộ.
 11. Thống kê, tổng hợp, xây dựng Cơ sở dữ liệu về trật tự, an toàn giao thông 
 đường bộ. 
 
-71
- 
- 
 12. Kiểm tra, thanh tra, giải quyết khiếu nại, tố cáo về trật tự, an toàn giao 
 thông đường bộ.  
 13. Hợp tác quốc tế về trật tự, an toàn giao thông đường bộ. 
@@ -2906,11 +2598,11 @@ thông đường bộ.
 đường bộ 
 1. Chính phủ thống nhất quản lý nhà nước về trật tự, an toàn giao thông 
 đường bộ.  
-2. Bộ Công an là cơ quan đầu mối giúp Chính phủ thực hiện thống nhất 
+2. [^vbhn55-43] Bộ Công an là cơ quan đầu mối giúp Chính phủ thực hiện thống nhất 
 quản lý nhà nước về trật tự, an toàn giao thông đường bộ; sát hạch, cấp giấy phép 
 lái xe; xây dựng lực lượng Cảnh sát giao thông chính quy, tinh nhuệ, hiện đại đáp 
 ứng yêu cầu nhiệm vụ bảo đảm trật tự, an toàn giao thông đường bộ. 
-3. Bộ Xây dựng thực hiện quản lý nhà nước về đào tạo lái xe; chất lượng 
+3. [^vbhn55-44] Bộ Xây dựng thực hiện quản lý nhà nước về đào tạo lái xe; chất lượng 
 an toàn kỹ thuật và bảo vệ môi trường của xe cơ giới, xe máy chuyên dùng, phụ 
 tùng xe cơ giới và nhiệm vụ quản lý khác theo quy định của Luật này; ban hành 
 quy chuẩn kỹ thuật quốc gia về thiết bị an toàn cho trẻ em quy định tại khoản 3 
@@ -2930,24 +2622,17 @@ toàn giao thông đường bộ.
 thực hiện quản lý nhà nước về trật tự, an toàn giao thông đường bộ tại địa phương. 
  
  
-43 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 19 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-44 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 19 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
+ 
+ 
 
-72
- 
- 
 ### Chương IX 
-ĐIỀU KHOẢN THI HÀNH45 
+ĐIỀU KHOẢN THI HÀNH [^vbhn55-45] 
 ##### Điều 88. Hiệu lực thi hành 
 1. Luật này có hiệu lực thi hành từ ngày 01 tháng 01 năm 2025, trừ trường 
 hợp quy định tại khoản 2 Điều này. 
-2. Khoản 3 Điều 10 của Luật này có hiệu lực thi hành từ ngày 01 tháng 7 
+2. [^vbhn55-46] Khoản 3 Điều 10 của Luật này có hiệu lực thi hành từ ngày 01 tháng 7 
 năm 2026. 
-2a.47 Quy định lắp thiết bị ghi nhận hình ảnh người lái xe đối với xe ô tô kinh 
+2a. [^vbhn55-47] Quy định lắp thiết bị ghi nhận hình ảnh người lái xe đối với xe ô tô kinh 
 doanh vận tải hành khách dưới 08 chỗ (không kể chỗ của người lái xe), xe ô tô 
 kinh doanh vận tải hàng hóa (trừ xe ô tô đầu kéo), xe vận tải nội bộ tại khoản 2 
 Điều 35 của Luật này có hiệu lực thi hành từ ngày 01 tháng 01 năm 2028. Quy 
@@ -2968,29 +2653,11 @@ tiếp tục sử dụng theo thời hạn ghi trên giấy phép lái xe.
 2. Giấy phép lái xe được cấp trước ngày Luật này có hiệu lực thi hành nếu chưa 
 thực hiện đổi, cấp lại theo quy định của Luật này có hiệu lực sử dụng như sau: 
  
-45 Khoản 1 và khoản 2 Điều 11 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều 
-của 10 Luật có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026 quy 
-định như sau: 
-“Điều 11. Điều khoản thi hành 
-1. Luật này có hiệu lực thi hành từ ngày 01 tháng 7 năm 2026, trừ quy định tại khoản 2 
-Điều này. 
-2. Quy định tại điểm a khoản 20 Điều 7 của Luật này có hiệu lực thi hành từ ngày 01 
-tháng 01 năm 2026.”. 
-46 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 20 Điều 7 của Luật 
-số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, 
-có hiệu lực kể từ ngày 01 tháng 01 năm 2026. 
-47 Khoản này được bổ sung theo quy định tại điểm b khoản 20 Điều 7 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-
-73
- 
- 
 a) Giấy phép lái xe hạng A1 được tiếp tục điều khiển xe mô tô hai bánh có 
-dung tích xi-lanh từ 50 cm3 đến dưới 175 cm3 hoặc có công suất động cơ điện từ 
+dung tích xi-lanh từ 50 cm³ đến dưới 175 cm³ hoặc có công suất động cơ điện từ 
 04 kW đến dưới 14 kW; 
 b) Giấy phép lái xe hạng A2 được tiếp tục điều khiển xe mô tô hai bánh có 
-dung tích xi-lanh từ 175 cm3 trở lên hoặc có công suất động cơ điện từ 14 kW trở 
+dung tích xi-lanh từ 175 cm³ trở lên hoặc có công suất động cơ điện từ 14 kW trở 
 lên và các loại xe quy định cho giấy phép lái xe hạng A1 quy định tại điểm a 
 khoản này; 
 c) Giấy phép lái xe hạng A3 được tiếp tục điều khiển xe mô tô ba bánh, các 
@@ -3026,14 +2693,11 @@ kéo rơ moóc; giấy phép lái xe hạng FC được tiếp tục điều khi
 loại xe quy định cho giấy phép lái xe hạng E quy định tại điểm k khoản này khi 
 kéo rơ moóc hoặc xe ô tô chở khách nối toa. 
 
-74
- 
- 
 3. Trường hợp người có giấy phép lái xe đã được cấp trước ngày Luật này 
 có hiệu lực thi hành có nhu cầu đổi, cấp lại giấy phép lái xe thì thực hiện như sau: 
 a) Giấy phép lái xe hạng A1 được đổi, cấp lại sang giấy phép lái xe hạng A 
 với điều kiện hạn chế là chỉ được điều khiển xe mô tô hai bánh có dung tích 
-xi-lanh đến dưới 175 cm3 hoặc có công suất động cơ điện đến dưới 14 kW; 
+xi-lanh đến dưới 175 cm³ hoặc có công suất động cơ điện đến dưới 14 kW; 
 b) Giấy phép lái xe hạng A2 được đổi, cấp lại sang giấy phép lái xe hạng A; 
 c) Giấy phép lái xe hạng A3 được đổi, cấp lại sang giấy phép lái xe hạng B1; 
 d) Giấy phép lái xe hạng A4 được đổi, cấp lại sang chứng chỉ điều khiển xe 
@@ -3067,9 +2731,6 @@ n) Giấy phép lái xe hạng FE được đổi, cấp lại sang giấy phép
 chứng chỉ điều khiển xe máy chuyên dùng cho người điều khiển máy kéo có trọng 
 tải trên 3.500 kg. 
 
-75
- 
- 
 4. Người học lái xe đã được đào tạo lái xe trước ngày Luật này có hiệu lực 
 thi hành hoặc đang được đào tạo lái xe tại ngày Luật này có hiệu lực thi hành chưa 
 được sát hạch, cấp giấy phép lái xe thì được sát hạch, cấp giấy phép lái xe theo 
@@ -3087,6 +2748,7 @@ xác nhận biển số xe ô tô trúng đấu giá thì tiếp tục thực hi
 quyết số 73/2022/QH15 của Quốc hội về thí điểm đấu giá biển số xe ô tô và quy 
 định tại điểm d khoản 1 Điều 38 của Luật này. 
  
+### Xác thực văn bản hợp nhất
 VĂN PHÒNG QUỐC HỘI 
 Số: 55/VBHN-VPQH 
  
@@ -3095,5 +2757,211 @@ XÁC THỰC VĂN BẢN HỢP NHẤT
 Hà Nội, ngày 23 tháng 3 năm 2026 
 CHỦ NHIỆM 
  
-Lê Quang Mạnh 
- 
+Lê Quang Mạnh
+
+[^vbhn55-45]: Khoản 1 và khoản 2 Điều 11 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều 
+    của 10 Luật có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026 quy 
+    định như sau: 
+    “Điều 11. Điều khoản thi hành 
+    1. Luật này có hiệu lực thi hành từ ngày 01 tháng 7 năm 2026, trừ quy định tại khoản 2 
+    Điều này. 
+    2. Quy định tại điểm a khoản 20 Điều 7 của Luật này có hiệu lực thi hành từ ngày 01 
+    tháng 01 năm 2026.”.
+
+[^vbhn55-46]: Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 20 Điều 7 của Luật 
+    số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, 
+    có hiệu lực kể từ ngày 01 tháng 01 năm 2026.
+
+[^vbhn55-47]: Khoản này được bổ sung theo quy định tại điểm b khoản 20 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-08]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 3 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-13]: Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 5 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-14]: Khoản này được sửa đổi, bổ sung theo quy định tại điểm b khoản 5 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-15]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 6 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-16]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 6 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-01]: Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an 
+    ninh, trật tự có căn cứ ban hành như sau: 
+    “Căn cứ Hiến pháp nước Cộng hòa xã hội chủ nghĩa Việt Nam đã được sửa đổi, bổ sung 
+    một số điều theo Nghị quyết số 203/2025/QH15; 
+    Quốc hội ban hành Luật sửa đổi, bổ sung một số điều của Luật Cảnh vệ số 13/2017/QH14 
+    đã được sửa đổi, bổ sung một số điều theo Luật số 40/2024/QH15, Luật Nhập cảnh, xuất cảnh, 
+    quá cảnh, cư trú của người nước ngoài tại Việt Nam số 47/2014/QH13 đã được sửa đổi, bổ 
+    sung một số điều theo Luật số 51/2019/QH14, Luật số 23/2023/QH15 và Luật số 
+    103/2025/QH15, Luật Xuất cảnh, nhập cảnh của công dân Việt Nam số 49/2019/QH14 đã được 
+    sửa đổi, bổ sung một số điều theo Luật số 23/2023/QH15, Luật Cư trú số 68/2020/QH14 đã 
+    được sửa đổi, bổ sung một số điều theo Luật số 59/2024/QH15, Luật Căn cước số 
+    26/2023/QH15, Luật Lực lượng tham gia bảo vệ an ninh, trật tự ở cơ sở số 30/2023/QH15 đã 
+    được sửa đổi, bổ sung theo Luật số 51/2024/QH15, Luật Trật tự, an toàn giao thông đường bộ 
+    số 36/2024/QH15, Luật Đường bộ số 35/2024/QH15 đã được sửa đổi, bổ sung theo Luật số 
+    112/2025/QH15, Luật Quản lý, sử dụng vũ khí, vật liệu nổ và công cụ hỗ trợ số 42/2024/QH15, 
+    Luật Phòng cháy, chữa cháy và cứu nạn, cứu hộ số 55/2024/QH15 đã được sửa đổi, bổ sung 
+    theo Luật số 135/2025/QH15.”.
+
+[^vbhn55-02]: Cụm từ “, Bộ Lao động, Thương binh và Xã hội,” được bỏ theo quy định tại điểm a 
+    khoản 22 Điều 7 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên 
+    quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-03]: Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 1 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-04]: Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 1 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-05]: Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 1 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-06]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 2 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-07]: Khoản này được bổ sung theo quy định tại khoản 2 Điều 7 của Luật số 118/2025/QH15 
+    sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 
+    01 tháng 7 năm 2026.
+
+[^vbhn55-09]: Cụm từ “Bộ Giao thông vận tải” được thay thế bằng cụm từ “Bộ Xây dựng” theo quy 
+    định tại khoản 21 Điều 7 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật 
+    có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-10]: Cụm từ “Bộ Giao thông vận tải” được thay thế bằng cụm từ “Bộ Xây dựng” theo quy 
+    định tại khoản 21 Điều 7 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật 
+    có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-11]: Điểm này được sửa đổi, bổ sung theo quy định tại khoản 4 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-12]: Điểm này được sửa đổi, bổ sung theo quy định tại khoản 4 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-17]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 7 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-18]: Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 8 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-19]: Cụm từ “Bộ Giao thông vận tải” được thay thế bằng cụm từ “Bộ Xây dựng” theo quy 
+    định tại khoản 21 Điều 7 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật 
+    có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-20]: Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 8 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-21]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 9 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-22]: Cụm từ “Bộ Giao thông vận tải” được thay thế bằng cụm từ “Bộ Xây dựng” theo quy 
+    định tại khoản 21 Điều 7 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật 
+    có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-23]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 10 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-24]: Cụm từ “Bộ Giao thông vận tải” được thay thế bằng cụm từ “Bộ Xây dựng” theo quy 
+    định tại khoản 21 Điều 7 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật 
+    có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-25]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 11 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-26]: Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 12 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-27]: Khoản này được sửa đổi, bổ sung theo quy định tại điểm b khoản 12 Điều 7 của Luật 
+    số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, 
+    có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-28]: Khoản này được sửa đổi, bổ sung theo quy định tại điểm b khoản 12 Điều 7 của Luật 
+    số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, 
+    có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-29]: Khoản này được bổ sung theo quy định tại điểm b khoản 12 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-30]: Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 13 Điều 7 của Luật 
+    số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, 
+    có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-31]: Khoản này được sửa đổi, bổ sung theo quy định tại điểm b khoản 13 Điều 7 của Luật 
+    số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, 
+    có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-32]: Khoản này được sửa đổi, bổ sung theo quy định tại điểm b khoản 13 Điều 7 của Luật 
+    số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, 
+    có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-33]: Khoản này được bổ sung theo quy định tại điểm b khoản 13 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-34]: Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 14 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-35]: Khoản này được sửa đổi, bổ sung theo quy định tại điểm b khoản 14 Điều 7 của Luật 
+    số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, 
+    có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-36]: Khoản này được bãi bỏ theo quy định tại khoản 23 Điều 7 của Luật số 118/2025/QH15 
+    sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 
+    01 tháng 7 năm 2026.
+
+[^vbhn55-37]: Cụm từ “Bộ Giao thông vận tải” được thay thế bằng cụm từ “Bộ Xây dựng” theo quy 
+    định tại khoản 21 Điều 7 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật 
+    có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-38]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 15 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-39]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 16 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-40]: Điều này được sửa đổi, bổ sung theo quy định tại khoản 17 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-41]: Cụm từ “trực thuộc trung ương” được bỏ theo quy định tại điểm b khoản 22 Điều 7 của 
+    Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật 
+    tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-42]: Điểm này được sửa đổi, bổ sung theo quy định tại khoản 18 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-43]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 19 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.
+
+[^vbhn55-44]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 19 Điều 7 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.

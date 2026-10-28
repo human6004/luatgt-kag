@@ -1165,7 +1165,9 @@ BGTVT ngày 29 tháng 5 năm 2020 của Bộ trưởng Bộ Giao thông vận t�
 
                                                    Nguyễn Duy Lâm
 
-                                  Phụ lục I
+## Phụ lục I
+Nguồn Phụ lục I: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=37 (PDF 37–37; trang in 56–56). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
      Đơn vị vận tải:……………………………
@@ -1176,43 +1178,29 @@ BGTVT ngày 29 tháng 5 năm 2020 của Bộ trưởng Bộ Giao thông vận t�
   Thuộc sở hữu (hoặc quản lý, sử dụng) từ ngày:     /    /
 BẢNG THEO DÕI QUÁ TRÌNH HOẠT ĐỘNG VÀ BẢO DƯỠNG, SỬA CHỮA
                                Năm…………
-                                       Tháng                   T/g
-                                                                     Địa điểm
-                                                        Tổng BDSC,
-TT         Nội dung                                                   BDSC,
-                                                        cộng cải tạo
-                             1 2 3 4 5 6 7 8 9 10 11 12               cải tạo
-                                                             thực tế
-
-     Km xe chạy trong
-     tháng
- 1
-     Km xe chạy lũy kế
-
-     Số chuyến trong tháng
- 2
-     Số chuyến xe lũy kế
-
-     Bảo dưỡng
- 3
-     - ……
-
-   Sửa chữa
-   - Hệ thống phanh
- 4
-   - Sơn lại xe
-   - vv ………
-
-   Cải tạo
-   - Thay đổi công năng
- 5
-   - Thùng xe
-   - vv ……….
+                                       <table data-source="36-P37-T1">
+<tr><td rowspan="2">TT</td><td rowspan="2">Nội dung</td><td colspan="12">Tháng</td><td rowspan="2">Tổng<br>cộng</td><td rowspan="2">T/g<br>BDSC,<br>cải tạo<br>thực tế</td><td rowspan="2">Địa điểm<br>BDSC,<br>cải tạo</td></tr>
+<tr><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td><td>11</td><td>12</td></tr>
+<tr><td rowspan="2">1</td><td>Km xe chạy trong<br>tháng</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Km xe chạy lũy kế</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="2">2</td><td>Số chuyến trong tháng</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Số chuyến xe lũy kế</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="2">3</td><td rowspan="2">Bảo dưỡng<br>- ……</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="3">4</td><td rowspan="3">Sửa chữa<br>- Hệ thống phanh<br>- Sơn lại xe<br>- vv ………</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="3">5</td><td rowspan="3">Cải tạo<br>- Thay đổi công năng<br>- Thùng xe<br>- vv ……….</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
 
     * Hướng dẫn: Ngoài các nội dung nêu trên, đơn vị kinh doanh vận tải bổ sung các
 nội dung khác để phục vụ công tác quản lý điều hành của đơn vị
 
-                                 Phụ lục II
+## Phụ lục II
+Nguồn Phụ lục II: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=38 (PDF 38–40; trang in 57–59). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -1230,22 +1218,56 @@ Trang 1:
 
                                        QUÁ TRÌNH LÀM VIỆC
 
-                                                         Điều khiển xe
-                                                                                                 Hình thức hợp
- Thời gian           Hạng GPLX                                           Sức chứa
-                                                  Loại xe                                        đồng lao động
-                                                                         (trọng tải)
+                                                         <table data-source="36-P38-T1">
+<tr><td rowspan="2">Thời gian</td><td rowspan="2">Hạng GPLX</td><td colspan="2">Điều khiển xe</td><td rowspan="2">Hình thức hợp<br>đồng lao động</td></tr>
+<tr><td>Loại xe</td><td>Sức chứa<br>(trọng tải)</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
 
                             THEO DÕI SỨC KHỎE
-     Thời gian kiểm    Tên cơ sở y tế thực hiện
-                                                  Kết quả kiểm tra sức khỏe
-      tra sức khỏe       kiểm tra sức khỏe
+     <table data-source="36-P39-T1">
+<tr><td>Thời gian kiểm<br>tra sức khỏe</td><td>Tên cơ sở y tế thực hiện<br>kiểm tra sức khỏe</td><td>Kết quả kiểm tra sức khỏe</td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+</table>
 
                  THEO DÕI VI PHẠM QUY ĐỊNH VỀ ATGT
- Thời gian            Lỗi vi phạm             Hình thức xử lý      Ghi chú
+ <table data-source="36-P39-T2">
+<tr><td>Thời gian</td><td>Lỗi vi phạm</td><td>Hình thức xử lý</td><td>Ghi chú</td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+</table>
 
                       THEO DÕI TAI NẠN GIAO THÔNG
- Thời gian      Địa điểm     Thiệt hại về người, phương tiện    Nguyên nhân
+ <table data-source="36-P39-T3">
+<tr><td>Thời gian</td><td>Địa điểm</td><td>Thiệt hại về người, phương tiện</td><td>Nguyên nhân</td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+</table>
 
                                     KHEN THƯỞNG, KỶ LUẬT
    Khen thưởng: ......................................................................................................
@@ -1257,55 +1279,54 @@ Trang 1:
    ...............................................................................................................................
    ...............................................................................................................................
                                 THEO DÕI ĐÀO TẠO, TẬP HUẤN
- Chương trình đào tạo,                   Thời gian                                        Thời hạn Giấy chứng
-                                                   Đơn vị tổ chức
-  tập huấn nghiệp vụ                      tổ chức                                           nhận tập huấn
+ <table data-source="36-P40-T1">
+<tr><td>Chương trình đào tạo,<br>tập huấn nghiệp vụ</td><td>Thời gian<br>tổ chức</td><td>Đơn vị tổ chức</td><td>Thời hạn Giấy chứng<br>nhận tập huấn</td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+</table>
 
     * Hướng dẫn: Ngoài các nội dung nêu trên, đơn vị kinh doanh vận tải bổ sung
 các nội dung khác để phục vụ công tác quản lý điều hành của đơn vị.
 
-                                Phụ lục III
+## Phụ lục III
+Nguồn Phụ lục III: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=41 (PDF 41–42; trang in 60–61). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
              MẪU THÔNG TIN NIÊM YẾT GIÁ VÉ (GIÁ CƯỚC)
      1. Mẫu Bảng niêm yết giá vé (giá cước) đối với tuyến cố định:
 
-                                      GIÁ VÉ
-             Tên tuyến:…………………………………………..........
-             Bến đi…………………………., Bến đến:.……………..
-
-             Giá vé 1 lượt: ……………… đồng/ HK
-
-             Giá vé chặng (nếu có): từ.... đến....: đồng/HK.
-
-             Giá vé đã bao gồm thuế GTGT và Bảo hiểm hành khách.
+                                      <table data-source="36-P41-T1">
+<tr><td>GIÁ VÉ<br>Tên tuyến:…………………………………………..........<br>Bến đi…………………………., Bến đến:.……………..</td></tr>
+<tr><td>Giá vé 1 lượt: ……………… đồng/ HK</td></tr>
+<tr><td>Giá vé chặng (nếu có): từ.... đến....: đồng/HK.</td></tr>
+<tr><td>Giá vé đã bao gồm thuế GTGT và Bảo hiểm hành khách.</td></tr>
+</table>
 
      2. Mẫu Bảng niêm yết giá vé (giá cước) đối với xe buýt:
 
-                                      GIÁ VÉ
-             Số hiệu tuyến:…………………………………………....
-
-             Giá vé 1 lượt: ……………… đồng/ HK
-
-             Giá vé tháng (nếu có):……………… đồng/ HK
-
-             Ghi chú: giá vé trên bao gồm thuế GTGT và Bảo hiểm
-             hành khách.
+                                      <table data-source="36-P41-T2">
+<tr><td>GIÁ VÉ<br>Số hiệu tuyến:…………………………………………....</td></tr>
+<tr><td>Giá vé 1 lượt: ……………… đồng/ HK</td></tr>
+<tr><td>Giá vé tháng (nếu có):……………… đồng/ HK</td></tr>
+<tr><td>Ghi chú: giá vé trên bao gồm thuế GTGT và Bảo hiểm<br>hành khách.</td></tr>
+</table>
 
      3. Mẫu Bảng niêm yết giá cước xe taxi:
 
-                               Giá cước - Taxi Fare
-                        (Giá cước đã bao gồm thuế GTGT)
-
-             ……………….. (đồng)/…             (Đơn vị tính)
-
-             ……………….. (đồng)/…             (Đơn vị tính)
-
-             ……………….. (đồng)/…giờ chờ đợi (nếu có).
-
-             Ghi chú: giá cước trên bao gồm thuế GTGT và Bảo hiểm
-             hành khách.
+                               <table data-source="36-P41-T3">
+<tr><td colspan="2">Giá cước - Taxi Fare<br>(Giá cước đã bao gồm thuế GTGT)</td></tr>
+<tr><td>……………….. (đồng)/…</td><td>(Đơn vị tính)</td></tr>
+<tr><td>……………….. (đồng)/…</td><td>(Đơn vị tính)</td></tr>
+<tr><td colspan="2">……………….. (đồng)/…giờ chờ đợi (nếu có).</td></tr>
+<tr><td colspan="2">Ghi chú: giá cước trên bao gồm thuế GTGT và Bảo hiểm<br>hành khách.</td></tr>
+</table>
 
    Hướng dẫn:
     - Bảng niêm yết giá cước vận tải hành khách bằng xe taxi ở mặt ngoài cánh
@@ -1315,7 +1336,9 @@ mặt ngoài thành xe có kích thước tối thiểu là 250 cm2.
    - Ngoài những thông tin nêu trên, doanh nghiệp, hợp tác xã kinh doanh vận tải
 được bổ sung các thông tin khác theo yêu cầu quản lý của đơn vị./.
 
-                                Phụ lục IV
+## Phụ lục IV
+Nguồn Phụ lục IV: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=43 (PDF 43–44; trang in 62–63). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 TÊN ĐƠN VỊ:……………..                CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1328,37 +1351,15 @@ Số:………………………….
 Dùng cho xe ô tô vận chuyển hành khách .... tuyến cố định (hoặc xe buýt) ……
        Có giá trị từ ngày ……………….. đến ngày ……………………….
 
-Cấp cho Lái xe 1:.……………………… hạng GPLX: ……………... Thủ trưởng đơn vị
-Lái xe 2:.…………………………......….hạng GPLX: ……………... (Ký tên và đóng
-                                                       dấu)
-Nhân viên phục vụ trên xe:.…………………………………………..
-Biển số đăng ký:…… Số ghế (giường nằm):……. Loại xe:....……....
-Bến đi, bến đến:……………………. Mã số tuyến:...………………..
-Hành trình tuyến:………… (áp dụng đối với tuyến cố định)………..
-                                                                       Bến xe
- Lượt xe
-              Bến xe đi, đến      Giờ xe chạy     Số khách         (Ký tên và đóng
-thực hiện
-                                                                         dấu)
-                                    xuất bến
-            Bến xe đi:………….        ……… giờ
-                                  ngày……….
-Lượt đi
-                                    đến bến
-            Bến xe nơi đến:…….     ……… giờ
-                                  ngày……….
-                                    xuất bến
-            Bến xe đi:…………         ……… giờ
-                                  ngày……….
-Lượt về
-                                    đến bến
-            Bến xe nơi đến:……      ……… giờ
-                                  ngày……….
-                                    LÁI XE 2
-          LÁI XE 1                                NHÂN VIÊN PHỤC VỤ TRÊN XE
-                                 (Ký và ghi rõ họ
-     (Ký và ghi rõ họ tên)                             (Ký và ghi rõ họ tên)
-                                       tên)
+<table data-source="36-P43-T1">
+<tr><td colspan="4">Cấp cho Lái xe 1:.……………………… hạng GPLX: ……………...<br>Lái xe 2:.…………………………......….hạng GPLX: ……………...<br>Nhân viên phục vụ trên xe:.…………………………………………..<br>Biển số đăng ký:…… Số ghế (giường nằm):……. Loại xe:....……....<br>Bến đi, bến đến:……………………. Mã số tuyến:...………………..<br>Hành trình tuyến:………… (áp dụng đối với tuyến cố định)………..</td><td>Thủ trưởng đơn vị<br>(Ký tên và đóng<br>dấu)</td></tr>
+<tr><td>Lượt xe<br>thực hiện</td><td>Bến xe đi, đến</td><td>Giờ xe chạy</td><td>Số khách</td><td>Bến xe<br>(Ký tên và đóng<br>dấu)</td></tr>
+<tr><td rowspan="2">Lượt đi</td><td>Bến xe đi:………….</td><td>xuất bến<br>……… giờ<br>ngày……….</td><td></td><td></td></tr>
+<tr><td>Bến xe nơi đến:…….</td><td>đến bến<br>……… giờ<br>ngày……….</td><td></td><td></td></tr>
+<tr><td rowspan="2">Lượt về</td><td>Bến xe đi:…………</td><td>xuất bến<br>……… giờ<br>ngày……….</td><td></td><td></td></tr>
+<tr><td>Bến xe nơi đến:……</td><td>đến bến<br>……… giờ<br>ngày……….</td><td></td><td></td></tr>
+<tr><td colspan="2">LÁI XE 1<br>(Ký và ghi rõ họ tên)</td><td>LÁI XE 2<br>(Ký và ghi rõ họ<br>tên)</td><td colspan="2">NHÂN VIÊN PHỤC VỤ TRÊN XE<br>(Ký và ghi rõ họ tên)</td></tr>
+</table>
 
     * Hướng dẫn:
     - Bến xe ghi vào ô ngày giờ đi đến, đóng dấu.
@@ -1368,7 +1369,9 @@ về. Riêng Lệnh vận chuyển dành cho xe buýt bỏ nội dung “số kh
     - Ngoài các nội dung nêu trên, đơn vị kinh doanh vận tải bổ sung các nội dung
 khác để phục vụ công tác quản lý điều hành của đơn vị.
 
-                                        Phụ lục V
+## Phụ lục V
+Nguồn Phụ lục V: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=45 (PDF 45–45; trang in 64–64). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
            Đơn vị kinh doanh:         CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1379,17 +1382,23 @@ khác để phục vụ công tác quản lý điều hành của đơn vị.
 
                             DANH SÁCH HÀNH KHÁCH
  (Kèm theo Hợp đồng vận chuyển số …/……….. ngày….. tháng.… năm……….)
- STT              Họ tên hành khách             Năm sinh                   Ghi chú
-
- .......
-                Tổng số:……… người
+ <table data-source="36-P45-T1">
+<tr><td>STT</td><td>Họ tên hành khách</td><td>Năm sinh</td><td>Ghi chú</td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td></tr>
+<tr><td>.......</td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Tổng số:……… người</td><td></td><td></td></tr>
+</table>
       Đơn vị kinh doanh vận tải          Đại diện tổ chức, cá nhân bên thuê vận tải
       (Ký tên, đóng dấu (nếu có))                (Ký tên, đóng dấu (nếu có))
 
     * Hướng dẫn: Trường hợp có nhiều trang, đơn vị kinh doanh đóng dấu treo
 vào tất cả các trang của danh sách.
 
-                                  Phụ lục VI
+## Phụ lục VI
+Nguồn Phụ lục VI: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=46 (PDF 46–47; trang in 65–66). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -1400,10 +1409,32 @@ vào tất cả các trang của danh sách.
    a) Vị trí: Trên cánh cửa xe
    b) Nội dung:
 
+
+Nhãn trong hình niêm yết — mục I (PDF 46, trang in 65):
+
+- TÊN ĐƠN VỊ VẬN TẢI (chữ in hoa)
+- Số điện thoại:
+Khối lượng hàng chuyên chở cho phép tham gia giao thông (tấn)
+Khối lượng bản thân (tấn)
+Khối lượng toàn bộ cho phép tham gia giao thông (tấn)
+
+Hình gốc: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=46. Các dòng khối lượng xếp theo chiều dọc, ngăn bằng vạch; đây là bố trí nhãn, không phải công thức chia. Hình học đọc tại nguồn.
+
    (khung bao ngoài có thể bố trí dạng hình chữ nhật, hình tròn hoặc bán nguyệt)
    II. Xe ô tô đầu kéo
    a) Vị trí: Trên cánh cửa xe
    b) Nội dung:
+
+
+Nhãn trong hình niêm yết — mục II (PDF 46, trang in 65):
+
+- TÊN ĐƠN VỊ VẬN TẢI (chữ in hoa)
+- Số điện thoại:
+Khối lượng hàng chuyên chở cho phép tham gia giao thông (tấn)⁽¹⁾
+Khối lượng bản thân (tấn)
+Khối lượng toàn bộ cho phép kéo theo (tấn)
+
+Hình gốc: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=46. Các dòng khối lượng xếp theo chiều dọc, ngăn bằng vạch; đây là bố trí nhãn, không phải công thức chia. Hình học đọc tại nguồn.
 
    (khung bao ngoài có thể bố trí dạng hình chữ nhật, hình tròn hoặc bán nguyệt)
    (1): Khối lượng toàn bộ của sơ mi rơ moóc phân bố lên cơ cấu kéo (mâm xoay).
@@ -1417,10 +1448,23 @@ quan sát bên cạnh hoặc phía sau.
 
      b) Nội dung, hình thức:
      - Kích thước:
-     Chiều dài: Ddài = 400 mm ± 50 mm
-     Chiều rộng: Crộng = 300 mm ± 50 mm
+     Chiều dài: D<sub>dài</sub> = 400 mm ± 50 mm
+     Chiều rộng: C<sub>rộng</sub> = 300 mm ± 50 mm
 
-                                                    Phụ lục VII
+
+Nhãn trong hình niêm yết — mục III (PDF 47, trang in 66):
+
+- TÊN ĐƠN VỊ VẬN TẢI (chữ in hoa)
+- Số điện thoại:
+Khối lượng hàng chuyên chở cho phép tham gia giao thông (tấn)
+Khối lượng bản thân (tấn)
+Khối lượng toàn bộ cho phép tham gia giao thông (tấn)
+
+Hình gốc: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=47. Các dòng khối lượng xếp theo chiều dọc, ngăn bằng vạch; đây là bố trí nhãn, không phải công thức chia. Hình học đọc tại nguồn.
+
+## Phụ lục VII
+Nguồn Phụ lục VII: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=48 (PDF 48–49; trang in 67–68). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
        ........... (2)..........               CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1460,7 +1504,9 @@ Nơi nhận:                                                                    
      (5) Ghi diện tích đất hợp pháp được sử dụng để xây dựng bến xe khách.
      (6) Ghi loại bến xe khách đề nghị công bố.
 
-                                                      Phụ lục VIII
+## Phụ lục VIII
+Nguồn Phụ lục VIII: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=50 (PDF 50–51; trang in 69–70). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
            .........(2)........                  CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1479,49 +1525,29 @@ Nơi nhận:                                                                    
     Kết quả đối chiếu các quy định kỹ thuật theo quy chuẩn đối với các công trình
 của bến xe khách............(3)............ như sau:
 
-                                                                                   Quy định kỹ
-                                                                          Đơn vị thuật của Bến xe Theo
- TT                      Tiêu chí phân loại
-                                                                           tính     khách loại   thực tế
-                                                                                     ....(4)....
-  1      Tổng diện tích (tối thiểu)                                          m2
-         Diện tích bãi đỗ xe ôtô chờ vào vị trí
-  2                                                                          m2
-         đón khách (tối thiểu)
-         Diện tích bãi đỗ xe dành cho phương
-  3                                                                          m2
-         tiện khác (tối thiểu)
-         Diện tích tối thiểu phòng chờ cho hành
-  4      khách (có thể phân thành nhiều khu vực                              m2
-         trong bến)
-  5      Số vị trí đón, trả khách (tối thiểu)                               vị trí
-         Số chỗ ngồi tối thiểu khu vực phòng chờ
-  6                                                                          chỗ
-         cho hành khách (tối thiểu)
+                                                                                   <table data-source="36-P50-T1">
+<tr><td>TT</td><td>Tiêu chí phân loại</td><td>Đơn vị<br>tính</td><td>Quy định kỹ<br>thuật của Bến xe<br>khách loại<br>....(4)....</td><td>Theo<br>thực tế</td></tr>
+<tr><td>1</td><td>Tổng diện tích (tối thiểu)</td><td>m2</td><td></td><td></td></tr>
+<tr><td>2</td><td>Diện tích bãi đỗ xe ôtô chờ vào vị trí<br>đón khách (tối thiểu)</td><td>m2</td><td></td><td></td></tr>
+<tr><td>3</td><td>Diện tích bãi đỗ xe dành cho phương<br>tiện khác (tối thiểu)</td><td>m2</td><td></td><td></td></tr>
+<tr><td>4</td><td>Diện tích tối thiểu phòng chờ cho hành<br>khách (có thể phân thành nhiều khu vực<br>trong bến)</td><td>m2</td><td></td><td></td></tr>
+<tr><td>5</td><td>Số vị trí đón, trả khách (tối thiểu)</td><td>vị trí</td><td></td><td></td></tr>
+<tr><td>6</td><td>Số chỗ ngồi tối thiểu khu vực phòng chờ<br>cho hành khách (tối thiểu)</td><td>chỗ</td><td></td><td></td></tr>
+</table>
 
-                                                             Quy định kỹ
-                                                    Đơn vị thuật của Bến xe Theo
- TT                Tiêu chí phân loại
-                                                     tính     khách loại   thực tế
-                                                               ....(4)....
-        Hệ thống điều hòa, quạt điện khu vực
-  7
-        phòng chờ cho hành khách (tối thiểu)
-        Diện tích khu vực làm việc của bộ máy
-  8
-        quản lý
-  9     Diện tích văn phòng dành cho Y tế
- 10 Diện tích khu vệ sinh
- 11 Diện tích dành cho cây xanh, thảm cỏ
- 12 Đường xe ra, vào bến
-        Đường dẫn từ phòng chờ cho hành khách
- 13
-        đến các vị trí đón, trả khách
-        Kết cấu mặt đường ra, vào bến xe và sân
- 14
-        bến
- 15 Hệ thống cung cấp thông tin
- 16 Hệ thống kiểm soát xe ra vào bến
+                                                             <table data-source="36-P51-T1">
+<tr><td>TT</td><td>Tiêu chí phân loại</td><td>Đơn vị<br>tính</td><td>Quy định kỹ<br>thuật của Bến xe<br>khách loại<br>....(4)....</td><td>Theo<br>thực tế</td></tr>
+<tr><td>7</td><td>Hệ thống điều hòa, quạt điện khu vực<br>phòng chờ cho hành khách (tối thiểu)</td><td></td><td></td><td></td></tr>
+<tr><td>8</td><td>Diện tích khu vực làm việc của bộ máy<br>quản lý</td><td></td><td></td><td></td></tr>
+<tr><td>9</td><td>Diện tích văn phòng dành cho Y tế</td><td></td><td></td><td></td></tr>
+<tr><td>10</td><td>Diện tích khu vệ sinh</td><td></td><td></td><td></td></tr>
+<tr><td>11</td><td>Diện tích dành cho cây xanh, thảm cỏ</td><td></td><td></td><td></td></tr>
+<tr><td>12</td><td>Đường xe ra, vào bến</td><td></td><td></td><td></td></tr>
+<tr><td>13</td><td>Đường dẫn từ phòng chờ cho hành khách<br>đến các vị trí đón, trả khách</td><td></td><td></td><td></td></tr>
+<tr><td>14</td><td>Kết cấu mặt đường ra, vào bến xe và sân<br>bến</td><td></td><td></td><td></td></tr>
+<tr><td>15</td><td>Hệ thống cung cấp thông tin</td><td></td><td></td><td></td></tr>
+<tr><td>16</td><td>Hệ thống kiểm soát xe ra vào bến</td><td></td><td></td><td></td></tr>
+</table>
     Các tiêu chí phân loại tại bảng trên áp dụng phù hợp theo quy định đối với
 bến xe khách được quy định tại Quy chuẩn kỹ thuật quốc gia về bến xe khách.
       ....(2).... cam kết những nội dung trên là đúng thực tế.
@@ -1536,7 +1562,9 @@ Nơi nhận:                                            Đại diện đơn vị
       (3) Ghi tên bến xe.
       (4) Ghi loại bến xe đề nghị công bố.
 
-                                                       Phụ lục IX
+## Phụ lục IX
+Nguồn Phụ lục IX: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=52 (PDF 52–53; trang in 71–72). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
            .........(2)........                  CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1555,29 +1583,23 @@ Nơi nhận:                                            Đại diện đơn vị
     Kết quả đối chiếu các quy định kỹ thuật theo quy chuẩn đối với các công trình
 tương ứng với từng loại bến xe hàng ............(3)............ như sau:
 
-                                                                                          Quy định kỹ
-                                                                          Đơn vị         thuật của Bến Theo
- TT                      Tiêu chí phân loại
-                                                                           tính           xe hàng loại thực tế
-                                                                                            ....(4)....
-  1      Tổng diện tích (tối thiểu)                                          m2
-  2      Trang thiết bị bốc, xếp bằng cơ giới
-         Văn phòng làm việc và các công trình
-  3                                                                         Chỗ
-         phụ trợ (tối thiểu)
-  4      Diện tích khu vệ sinh                                               m2
-  5      Diện tích dành cho cây xanh, thảm cỏ                                m2
-  6      Đường xe ra, vào bến
-  7      Mặt sân bến
-  8      Hệ thống cung cấp thông tin
+                                                                                          <table data-source="36-P52-T1">
+<tr><td>TT</td><td>Tiêu chí phân loại</td><td>Đơn vị<br>tính</td><td>Quy định kỹ<br>thuật của Bến<br>xe hàng loại<br>....(4)....</td><td>Theo<br>thực tế</td></tr>
+<tr><td>1</td><td>Tổng diện tích (tối thiểu)</td><td>m2</td><td></td><td></td></tr>
+<tr><td>2</td><td>Trang thiết bị bốc, xếp bằng cơ giới</td><td></td><td></td><td></td></tr>
+<tr><td>3</td><td>Văn phòng làm việc và các công trình<br>phụ trợ (tối thiểu)</td><td>Chỗ</td><td></td><td></td></tr>
+<tr><td>4</td><td>Diện tích khu vệ sinh</td><td>m2</td><td></td><td></td></tr>
+<tr><td>5</td><td>Diện tích dành cho cây xanh, thảm cỏ</td><td>m2</td><td></td><td></td></tr>
+<tr><td>6</td><td>Đường xe ra, vào bến</td><td></td><td></td><td></td></tr>
+<tr><td>7</td><td>Mặt sân bến</td><td></td><td></td><td></td></tr>
+<tr><td>8</td><td>Hệ thống cung cấp thông tin</td><td></td><td></td><td></td></tr>
+</table>
 
-                                                                  Quy định kỹ
-                                                    Đơn vị       thuật của Bến Theo
- TT                Tiêu chí phân loại
-                                                     tính         xe hàng loại thực tế
-                                                                    ....(4)....
-  9     Hệ thống thoát nước
- 10 Hệ thống phòng cháy và chữa cháy
+                                                                  <table data-source="36-P53-T1">
+<tr><td>TT</td><td>Tiêu chí phân loại</td><td>Đơn vị<br>tính</td><td>Quy định kỹ<br>thuật của Bến<br>xe hàng loại<br>....(4)....</td><td>Theo<br>thực tế</td></tr>
+<tr><td>9</td><td>Hệ thống thoát nước</td><td></td><td></td><td></td></tr>
+<tr><td>10</td><td>Hệ thống phòng cháy và chữa cháy</td><td></td><td></td><td></td></tr>
+</table>
     Các tiêu chí phân loại tại bảng trên áp dụng phù hợp theo quy định đối với
 bến xe hàng được quy định tại Quy chuẩn kỹ thuật quốc gia về bến xe hàng.
       ....(2).... cam kết những nội dung trên là đúng thực tế.
@@ -1592,7 +1614,9 @@ bến xe hàng được quy định tại Quy chuẩn kỹ thuật quốc gia v�
       (3) Ghi tên bến xe.
       (4) Ghi loại bến xe công bố.
 
-                                                    Phụ lục X
+## Phụ lục X
+Nguồn Phụ lục X: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=54 (PDF 54–55; trang in 73–74). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
  (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                      của Bộ trưởng Bộ Giao thông vận tải)
            ...... (2) .......                CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1642,7 +1666,9 @@ Thủ trưởng các đơn vị có liên quan chịu trách nhiệm thi hành q
      (3) Ghi tên vị trí, lý trình, địa chỉ của bến xe khách/bến xe hàng.
      (4) Ghi diện tích đất hợp pháp được sử dụng để xây dựng bến xe khách/bến xe hàng.
 
-                                                     Phụ lục XI
+## Phụ lục XI
+Nguồn Phụ lục XI: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=56 (PDF 56–57; trang in 75–76). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
           ......(2).......                  CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1682,7 +1708,9 @@ là đúng thực tế.
      (3) Ghi tên bến xe khách.
      (4) Ghi loại bến xe khách đề nghị công bố.
 
-                                                     Phụ lục XII
+## Phụ lục XII
+Nguồn Phụ lục XII: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=58 (PDF 58–59; trang in 77–78). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
           …… (2) …….                           CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1702,53 +1730,36 @@ là đúng thực tế.
     Kết quả tự kiểm tra, đánh giá, đối chiếu các quy định kỹ thuật của quy chuẩn
 với các hạng mục công trình của trạm dừng nghỉ …..….. như sau:
 
-                                                                                     Yêu cầu kỹ
-                                                                                       thuật của               Số liệu
- TT                 Tiêu chí phân loại                        Đơn vị tính
-                                                                                      trạm dừng                thực tế
-                                                                                     nghỉ loại….
-  1        Tổng diện tích mặt bằng trạm                             m2
-           dừng nghỉ
-  2        Khu vực đỗ xe                                            m2
-  3        Số vị trí đỗ xe tối thiểu có thể
-           bố trí xe ô tô vào sạc điện
-           chiếm 10% tổng vị trí đỗ xe;
-           việc đầu tư hạ tầng dành để
-           lắp đặt trụ sạc, thiết bị sạc phụ
-           thuộc vào nhu cầu sử dụng và
-           từng giai đoạn đầu tư.
-  4        Đường xe ra, vào
+                                                                                     <table data-source="36-P58-T1">
+<tr><td>TT</td><td>Tiêu chí phân loại</td><td>Đơn vị tính</td><td>Yêu cầu kỹ<br>thuật của<br>trạm dừng<br>nghỉ loại….</td><td>Số liệu<br>thực tế</td></tr>
+<tr><td>1</td><td>Tổng diện tích mặt bằng trạm<br>dừng nghỉ</td><td>m2</td><td></td><td></td></tr>
+<tr><td>2</td><td>Khu vực đỗ xe</td><td>m2</td><td></td><td></td></tr>
+<tr><td>3</td><td>Số vị trí đỗ xe tối thiểu có thể<br>bố trí xe ô tô vào sạc điện<br>chiếm 10% tổng vị trí đỗ xe;<br>việc đầu tư hạ tầng dành để<br>lắp đặt trụ sạc, thiết bị sạc phụ<br>thuộc vào nhu cầu sử dụng và<br>từng giai đoạn đầu tư.</td><td></td><td></td><td></td></tr>
+<tr><td>4</td><td>Đường xe ra, vào</td><td></td><td></td><td></td></tr>
+</table>
 
-                                                       Yêu cầu kỹ
-                                                         thuật của    Số liệu
- TT           Tiêu chí phân loại       Đơn vị tính
-                                                        trạm dừng     thực tế
-                                                       nghỉ loại….
-  5    Khu kiểm tra, bảo dưỡng, sửa
-       chữa phương tiện hoặc khu
-       vực rửa xe
-  6    Trạm cấp nhiên liệu
-  7    Kết cấu mặt sân khu vực đỗ
-       xe
-  8    Khu vệ sinh
-  9    Phòng nghỉ tạm thời cho lái         m2
-       xe (diện tích tối thiểu)
- 10    Không gian nghỉ ngơi (Khu
-       vực có mái che và khu vực
-       trồng cây xanh có ghế ngồi
- 11    Nơi cung cấp thông tin
- 12    Khu vực ăn uống, giải khát
- 13    Khu vực giới thiệu và bán
-       hàng hóa
- 14    Phòng trực cứu hộ, sơ cứu tai
-       nạn giao thông
+                                                       <table data-source="36-P59-T1">
+<tr><td>TT</td><td>Tiêu chí phân loại</td><td>Đơn vị tính</td><td>Yêu cầu kỹ<br>thuật của<br>trạm dừng<br>nghỉ loại….</td><td>Số liệu<br>thực tế</td></tr>
+<tr><td>5</td><td>Khu kiểm tra, bảo dưỡng, sửa<br>chữa phương tiện hoặc khu<br>vực rửa xe</td><td></td><td></td><td></td></tr>
+<tr><td>6</td><td>Trạm cấp nhiên liệu</td><td></td><td></td><td></td></tr>
+<tr><td>7</td><td>Kết cấu mặt sân khu vực đỗ<br>xe</td><td></td><td></td><td></td></tr>
+<tr><td>8</td><td>Khu vệ sinh</td><td></td><td></td><td></td></tr>
+<tr><td>9</td><td>Phòng nghỉ tạm thời cho lái<br>xe (diện tích tối thiểu)</td><td>m2</td><td></td><td></td></tr>
+<tr><td>10</td><td>Không gian nghỉ ngơi (Khu<br>vực có mái che và khu vực<br>trồng cây xanh có ghế ngồi</td><td></td><td></td><td></td></tr>
+<tr><td>11</td><td>Nơi cung cấp thông tin</td><td></td><td></td><td></td></tr>
+<tr><td>12</td><td>Khu vực ăn uống, giải khát</td><td></td><td></td><td></td></tr>
+<tr><td>13</td><td>Khu vực giới thiệu và bán<br>hàng hóa</td><td></td><td></td><td></td></tr>
+<tr><td>14</td><td>Phòng trực cứu hộ, sơ cứu tai<br>nạn giao thông</td><td></td><td></td><td></td></tr>
+</table>
     Đơn vị xin cam kết những nội dung trên là đúng thực tế và xin chịu hoàn toàn
 trách nhiệm về tính chính xác của các thông tin nêu trên.
  Nơi nhận:                                       Đại diện đơn vị
 - Như trên;                                     (Ký tên, đóng dấu)
 - Lưu...
 
-                                Phụ lục XIII
+## Phụ lục XIII
+Nguồn Phụ lục XIII: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=60 (PDF 60–62; trang in 79–81). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
        …… (2) …….                          CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1818,7 +1829,9 @@ nghỉ theo tuyến đường cao tốc);
 doanh có sử dụng đất để xây dựng trạm dừng nghỉ
    (5) Ghi loại trạm dừng nghỉ công bố đưa vào khai thác.
 
-                                     Phụ lục XIV
+## Phụ lục XIV
+Nguồn Phụ lục XIV: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=63 (PDF 63–64; trang in 82–83). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
  Tên Đơn vị kinh doanh vận tải: CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1841,46 +1854,54 @@ xe, trạm dừng nghỉ vào khai thác,…… (tên đơn vị vận tải)…
 hoạt động vận tải của đơn vị trong tháng….. năm……… như sau:
      1. Kết quả hoạt động vận chuyển hành khách theo tuyến cố định:
 
-TT                    Chỉ tiêu                     Đơn vị               Kết quả
- 1     Số tuyến tham gia khai thác                  tuyến
-       - Tuyến nội tỉnh                              -nt-
-       - Tuyến liên tỉnh                             -nt-
- 2     Số lượng phương tiện                          Xe
-       - Tuyến nội tỉnh                              -nt-
-       - Tuyến liên tỉnh                             -nt-
- 3     Tổng số chuyến xe thực hiện                 chuyến
-       - Tuyến nội tỉnh                            chuyến
-       Tỷ lệ thực hiện/kế hoạch                       %
-       - Tuyến liên tỉnh                           chuyến
-       Tỷ lệ thực hiện/kế hoạch                       %
+<table data-source="36-P63-T1">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Kết quả</td></tr>
+<tr><td>1</td><td>Số tuyến tham gia khai thác</td><td>tuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td>2</td><td>Số lượng phương tiện</td><td>Xe</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td>3</td><td>Tổng số chuyến xe thực hiện</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+</table>
 
     2. Kết quả hoạt động vận chuyển hành khách bằng xe buýt:
 
-TT                      Chỉ tiêu                  Đơn vị          Kết quả
-1    Số tuyến tham gia khai thác                   tuyến
-     - Số tuyến có trợ giá                          -nt-
-2    Số lượng phương tiện                           Xe
-3    Tổng số chuyến xe thực hiện                  chuyến
-4    Tỷ lệ thực hiện/kế hoạch                        %
-5    Sản lượng khách vận chuyển                  lượt khách
-6    Trợ giá (nếu có)                              1000đ
+<table data-source="36-P64-T1">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Kết quả</td></tr>
+<tr><td>1</td><td>Số tuyến tham gia khai thác</td><td>tuyến</td><td></td></tr>
+<tr><td></td><td>- Số tuyến có trợ giá</td><td>-nt-</td><td></td></tr>
+<tr><td>2</td><td>Số lượng phương tiện</td><td>Xe</td><td></td></tr>
+<tr><td>3</td><td>Tổng số chuyến xe thực hiện</td><td>chuyến</td><td></td></tr>
+<tr><td>4</td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+<tr><td>5</td><td>Sản lượng khách vận chuyển</td><td>lượt khách</td><td></td></tr>
+<tr><td>6</td><td>Trợ giá (nếu có)</td><td>1000đ</td><td></td></tr>
+</table>
 
     3. Kết quả hoạt động vận chuyển hành khách bằng xe taxi:
 
-TT                      Chỉ tiêu                  Đơn vị          Kết quả
-1    Số lượng phương tiện                           Xe
-2    Lượt xe thực hiện                              lượt
-3    Sản lượng khách vận chuyển                  lượt khách
+<table data-source="36-P64-T2">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Kết quả</td></tr>
+<tr><td>1</td><td>Số lượng phương tiện</td><td>Xe</td><td></td></tr>
+<tr><td>2</td><td>Lượt xe thực hiện</td><td>lượt</td><td></td></tr>
+<tr><td>3</td><td>Sản lượng khách vận chuyển</td><td>lượt khách</td><td></td></tr>
+</table>
 
     4. Kết quả hoạt động vận chuyển hành khách theo hợp đồng:
 
-TT                      Chỉ tiêu                  Đơn vị          Kết quả
-1     Số lượng phương tiện                           xe
-      - Sức chứa dưới 9 chỗ                         -nt-
-      - Sức chứa từ 9 - 25 chỗ                      -nt-
-      - Sức chứa từ trên 25 chỗ                     -nt-
-2     Số chuyến xe thực hiện                      chuyến
-3     Sản lượng khách vận chuyển                Lượt khách
+<table data-source="36-P64-T3">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Kết quả</td></tr>
+<tr><td>1</td><td>Số lượng phương tiện</td><td>xe</td><td></td></tr>
+<tr><td rowspan="3"></td><td>- Sức chứa dưới 9 chỗ</td><td>-nt-</td><td></td></tr>
+<tr><td>- Sức chứa từ 9 - 25 chỗ</td><td>-nt-</td><td></td></tr>
+<tr><td>- Sức chứa từ trên 25 chỗ</td><td>-nt-</td><td></td></tr>
+<tr><td>2</td><td>Số chuyến xe thực hiện</td><td>chuyến</td><td></td></tr>
+<tr><td>3</td><td>Sản lượng khách vận chuyển</td><td>Lượt khách</td><td></td></tr>
+</table>
 
     5. Thuận lợi, khó khăn:………..
     6. Đề xuất, kiến nghị:…………..
@@ -1888,7 +1909,9 @@ TT                      Chỉ tiêu                  Đơn vị          Kết q
                                           Đại diện đơn vị kinh doanh vận tải
                                                   (Ký tên, đóng dấu)
 
-                                     Phụ lục XV
+## Phụ lục XV
+Nguồn Phụ lục XV: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=65 (PDF 65–66; trang in 84–85). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
       Tên đơn vị kinh doanh         CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1908,30 +1931,36 @@ xe, trạm dừng nghỉ vào khai thác, ………… (tên đơn vị vận t�
 hoạt động vận tải của đơn vị trong tháng năm như sau:
      1. Kết quả hoạt động vận chuyển hàng hóa
 
-TT                       Chỉ tiêu                  Đơn vị              Số lượng
- 1     Số lượng phương tiện                          xe
-       - Xe công-ten-nơ                             -nt-
-       - Xe đầu kéo                                 -nt-
-       - Xe taxi tải                                -nt-
-       - Xe tải khác                                -nt-
- 2     Sản lượng hàng hóa vận chuyển                 tấn
-       - Xe công-ten-nơ                             -nt-
-       - Xe đầu kéo                                 -nt-
-       - Xe taxi tải                                -nt-
-       - Xe tải khác                                -nt-
- 3     Sản lượng luân chuyển hàng hóa              tấn.km
-       - Xe công-ten-nơ                             -nt-
-       - Xe đầu kéo                                 -nt-
+<table data-source="36-P65-T1">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Số lượng</td></tr>
+<tr><td>1</td><td>Số lượng phương tiện</td><td>xe</td><td></td></tr>
+<tr><td></td><td>- Xe công-ten-nơ</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe đầu kéo</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe taxi tải</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe tải khác</td><td>-nt-</td><td></td></tr>
+<tr><td>2</td><td>Sản lượng hàng hóa vận chuyển</td><td>tấn</td><td></td></tr>
+<tr><td></td><td>- Xe công-ten-nơ</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe đầu kéo</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe taxi tải</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe tải khác</td><td>-nt-</td><td></td></tr>
+<tr><td>3</td><td>Sản lượng luân chuyển hàng hóa</td><td>tấn.km</td><td></td></tr>
+<tr><td></td><td>- Xe công-ten-nơ</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe đầu kéo</td><td>-nt-</td><td></td></tr>
+</table>
 
-TT                   Chỉ tiêu                Đơn vị         Số lượng
-     - Xe taxi tải                             -nt-
-     - Xe tải khác                             -nt-
+<table data-source="36-P66-T1">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Số lượng</td></tr>
+<tr><td></td><td>- Xe taxi tải</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe tải khác</td><td>-nt-</td><td></td></tr>
+</table>
  2. Thuận lợi, khó khăn: ……………………………
  3. Đề xuất, kiến nghị: ………………………………
                                          Đại diện đơn vị kinh doanh
                                               (Ký tên, đóng dấu)
 
-                                     Phụ lục XVI
+## Phụ lục XVI
+Nguồn Phụ lục XVI: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=67 (PDF 67–68; trang in 86–87). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
      Tên đơn vị Bến xe ……..        CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -1952,43 +1981,50 @@ xe, trạm dừng nghỉ vào khai thác,……… (tên đơn vị bến xe)...
 hoạt động vận tải của đơn vị trong tháng….. năm…… như sau:
       1. Kết quả hoạt động của bến xe khách
 
-TT                            Chỉ tiêu                     Đơn vị          Kết quả
- 1      Tổng số đơn vị đăng ký khai thác tại bến            Đơn vị
- 2      Tổng số tuyến xe xuất phát tại bến                  Tuyến
-        - Tuyến nội tỉnh                                      -nt-
-        - Tuyến liên tỉnh                                     -nt-
-        - Tuyến xe buýt                                     Tuyến
- 3      Số lượng phương tiện                                  xe
-        - Tuyến nội tỉnh                                      -nt-
-        - Tuyến liên tỉnh                                     -nt-
-        - Tuyến xe buýt                                       -nt-
- 4      Tổng số chuyến xe thực hiện                        chuyến
-        - Tuyến nội tỉnh                                   chuyến
+<table data-source="36-P67-T1">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Kết quả</td></tr>
+<tr><td>1</td><td>Tổng số đơn vị đăng ký khai thác tại bến</td><td>Đơn vị</td><td></td></tr>
+<tr><td>2</td><td>Tổng số tuyến xe xuất phát tại bến</td><td>Tuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến xe buýt</td><td>Tuyến</td><td></td></tr>
+<tr><td>3</td><td>Số lượng phương tiện</td><td>xe</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến xe buýt</td><td>-nt-</td><td></td></tr>
+<tr><td>4</td><td>Tổng số chuyến xe thực hiện</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>chuyến</td><td></td></tr>
+</table>
 
-TT                        Chỉ tiêu                        Đơn vị     Kết quả
-      Tỷ lệ thực hiện/kế hoạch                              %
-      - Tuyến liên tỉnh                                   chuyến
-      Tỷ lệ thực hiện/kế hoạch                              %
-5     Tổng số chuyến xe buýt                              Chuyến
-6     Tổng số chuyến xe không thực hiện                   Chuyến
-      - Tuyến nội tỉnh                                      -nt-
-      - Tuyến liên tỉnh                                     -nt-
-7     Tổng hành khách vận chuyển thông qua bến              HK
-8     Công suất bến xe (công suất thực tế/công suất đã
-      công bố)
+<table data-source="36-P68-T1">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Kết quả</td></tr>
+<tr><td></td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+<tr><td>5</td><td>Tổng số chuyến xe buýt</td><td>Chuyến</td><td></td></tr>
+<tr><td>6</td><td>Tổng số chuyến xe không thực hiện</td><td>Chuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td>7</td><td>Tổng hành khách vận chuyển thông qua bến</td><td>HK</td><td></td></tr>
+<tr><td>8</td><td>Công suất bến xe (công suất thực tế/công suất đã<br>công bố)</td><td></td><td></td></tr>
+</table>
 
     2. Kết quả hoạt động của bến xe hàng
 
-TT                        Chỉ tiêu                        Đơn vị     Kết quả
-1     Tổng số đơn vị đăng ký hoạt động tại bến            Đơn vị
-2     Tổng số lượt phương tiện ra, vào bến                Lượt xe
-3     Tổng khối lượng hàng hoá thông qua tại bến         1000 tấn
+<table data-source="36-P68-T2">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Kết quả</td></tr>
+<tr><td>1</td><td>Tổng số đơn vị đăng ký hoạt động tại bến</td><td>Đơn vị</td><td></td></tr>
+<tr><td>2</td><td>Tổng số lượt phương tiện ra, vào bến</td><td>Lượt xe</td><td></td></tr>
+<tr><td>3</td><td>Tổng khối lượng hàng hoá thông qua tại bến</td><td>1000 tấn</td><td></td></tr>
+</table>
     3. Thuận lợi, khó khăn: ………………….
     4. Đề xuất, kiến nghị: ……………………
                                                  Đại diện đơn vị bến xe
                                                    (Ký tên, đóng dấu)
 
-                                    Phụ lục XVII
+## Phụ lục XVII
+Nguồn Phụ lục XVII: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=69 (PDF 69–72; trang in 88–91). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 SỞ GIAO THÔNG VẬN TẢI              CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -2009,108 +2045,117 @@ quả hoạt động vận tải trên địa bàn địa phương trong năm �
      1. Kết quả hoạt động vận chuyển hành khách
      a) Vận chuyển hành khách liên tỉnh theo tuyến cố định
 
-TT                      Chỉ tiêu                    Đơn vị               Số lượng
- 1     Tổng số đơn vị vận tải trên địa bàn          Đơn vị
-       - Doanh nghiệp                                 -nt-
-       - Hợp tác xã                                   -nt-
- 2     Tổng số tuyến                                 tuyến
-       - Tuyến nội tỉnh                               -nt-
-       - Tuyến liên tỉnh                              -nt-
- 3     Tổng số phương tiện                            xe
-       - Tuyến nội tỉnh                               -nt-
-       - Tuyến liên tỉnh                              -nt-
- 4     Tổng chuyến xe thực hiện                     chuyến
-       - Tuyến nội tỉnh                               -nt-
+<table data-source="36-P69-T1">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Số lượng</td></tr>
+<tr><td>1</td><td>Tổng số đơn vị vận tải trên địa bàn</td><td>Đơn vị</td><td></td></tr>
+<tr><td></td><td>- Doanh nghiệp</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Hợp tác xã</td><td>-nt-</td><td></td></tr>
+<tr><td>2</td><td>Tổng số tuyến</td><td>tuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td>3</td><td>Tổng số phương tiện</td><td>xe</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td>4</td><td>Tổng chuyến xe thực hiện</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+</table>
 
-TT                    Chỉ tiêu                    Đơn vị          Số lượng
-      Tỷ lệ thực hiện/kế hoạch                      %
-      - Tuyến liên tỉnh                           chuyến
-      Tỷ lệ thực hiện/kế hoạch                      %
+<table data-source="36-P70-T1">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Số lượng</td></tr>
+<tr><td></td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+</table>
 
     * Ghi chú: Chỉ tổng hợp số liệu báo cáo của các doanh nghiệp, HTX có trụ sở
 chính hoặc trụ sở chi nhánh tại địa phương.
      b) Vận chuyển hành khách theo hợp đồng
 
-TT                      Chỉ tiêu                  Đơn vị          Ghi chú
- 1     Tổng số đơn vị tham gia                    đơn vị
-       - Doanh nghiệp                               -nt-
-       - Hợp tác xã                                 -nt-
-       - Hộ kinh doanh                              -nt-
- 2     Tổng số phương tiện                          xe
-       - Sức chứa dưới 9 chỗ                        -nt-
-       - Sức chứa từ 9 - 25 chỗ                     -nt-
-       - Sức chứa từ trên 25 chỗ                    -nt-
- 3     Số chuyến xe thực hiện                     chuyến
- 4     Sản lượng khách vận chuyển               lượt khách
+<table data-source="36-P70-T2">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Ghi chú</td></tr>
+<tr><td>1</td><td>Tổng số đơn vị tham gia</td><td>đơn vị</td><td></td></tr>
+<tr><td></td><td>- Doanh nghiệp</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Hợp tác xã</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Hộ kinh doanh</td><td>-nt-</td><td></td></tr>
+<tr><td>2</td><td>Tổng số phương tiện</td><td>xe</td><td></td></tr>
+<tr><td></td><td>- Sức chứa dưới 9 chỗ</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Sức chứa từ 9 - 25 chỗ</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Sức chứa từ trên 25 chỗ</td><td>-nt-</td><td></td></tr>
+<tr><td>3</td><td>Số chuyến xe thực hiện</td><td>chuyến</td><td></td></tr>
+<tr><td>4</td><td>Sản lượng khách vận chuyển</td><td>lượt khách</td><td></td></tr>
+</table>
 
      c) Vận chuyển hành khách bằng xe buýt
 
-TT                      Chỉ tiêu                  Đơn vị          Số lượng
- 1    Tổng số tuyến                                tuyến
-      - Số tuyến có trợ giá (nếu có)                -nt-
- 2    Tổng phương tiện                              xe
- 3    Tổng số chuyến xe thực hiện                 chuyến
- 4    Tỷ lệ thực hiện/kế hoạch                      %
- 5    Tổng trợ giá (nếu có)                        Tr.đ
+<table data-source="36-P70-T3">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Số lượng</td></tr>
+<tr><td>1</td><td>Tổng số tuyến</td><td>tuyến</td><td></td></tr>
+<tr><td></td><td>- Số tuyến có trợ giá (nếu có)</td><td>-nt-</td><td></td></tr>
+<tr><td>2</td><td>Tổng phương tiện</td><td>xe</td><td></td></tr>
+<tr><td>3</td><td>Tổng số chuyến xe thực hiện</td><td>chuyến</td><td></td></tr>
+<tr><td>4</td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+<tr><td>5</td><td>Tổng trợ giá (nếu có)</td><td>Tr.đ</td><td></td></tr>
+</table>
 
      2. Kết quả hoạt động vận tải hàng hóa
 
-TT                        Chỉ tiêu                      Đơn vị   Số lượng
- 1     Tổng phương tiện                                   xe
-       - Xe Công ten nơ                                  -nt-
-       - Xe đầu kéo                                      -nt-
-       - Xe taxi tải                                     -nt-
-       - Xe tải khác                                     -nt-
- 2     Tổng sản lượng hàng hóa vận chuyển                Tấn
-       - Xe Công ten nơ                                  -nt-
-       - Xe đầu kéo                                      -nt-
-       - Xe taxi tải                                     -nt-
-       - Xe tải khác                                     -nt-
- 3     Tổng sản lượng luân chuyển hàng hóa              tấn.km
-       - Xe Công ten nơ                                  -nt-
-       - Xe đầu kéo                                      -nt-
-       - Xe taxi tải                                     -nt-
-       - Xe tải khác                                     -nt-
+<table data-source="36-P71-T1">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Số lượng</td></tr>
+<tr><td>1</td><td>Tổng phương tiện</td><td>xe</td><td></td></tr>
+<tr><td></td><td>- Xe Công ten nơ</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe đầu kéo</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe taxi tải</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe tải khác</td><td>-nt-</td><td></td></tr>
+<tr><td>2</td><td>Tổng sản lượng hàng hóa vận chuyển</td><td>Tấn</td><td></td></tr>
+<tr><td></td><td>- Xe Công ten nơ</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe đầu kéo</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe taxi tải</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe tải khác</td><td>-nt-</td><td></td></tr>
+<tr><td>3</td><td>Tổng sản lượng luân chuyển hàng hóa</td><td>tấn.km</td><td></td></tr>
+<tr><td></td><td>- Xe Công ten nơ</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe đầu kéo</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe taxi tải</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe tải khác</td><td>-nt-</td><td></td></tr>
+</table>
 
      3. Kết quả hoạt động của các bến xe trên địa bàn
      a) Bến xe khách
 
-TT                         Chỉ tiêu                     Đơn vị   Kết quả
- 1     Tổng số bến xe khách                             Đơn vị
- 2     Tổng số tuyến xe xuất phát tại các bến xe         Tuyến
-       - Tuyến nội tỉnh                                   -nt-
-       - Tuyến liên tỉnh                                  -nt-
-       - Tuyến xe buýt                                   Tuyến
- 3     Tổng số lượng phương tiện                          xe
-       - Tuyến nội tỉnh                                   -nt-
+<table data-source="36-P71-T2">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Kết quả</td></tr>
+<tr><td>1</td><td>Tổng số bến xe khách</td><td>Đơn vị</td><td></td></tr>
+<tr><td>2</td><td>Tổng số tuyến xe xuất phát tại các bến xe</td><td>Tuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến xe buýt</td><td>Tuyến</td><td></td></tr>
+<tr><td>3</td><td>Tổng số lượng phương tiện</td><td>xe</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+</table>
 
-TT                        Chỉ tiêu                Đơn vị         Kết quả
-      - Tuyến liên tỉnh                             -nt-
-      - Tuyến xe buýt                               -nt-
- 4    Tổng số chuyến xe thực hiện                 chuyến
-      - Tuyến nội tỉnh                            chuyến
-      Tỷ lệ thực hiện/kế hoạch                       %
-      - Tuyến liên tỉnh                           chuyến
-      Tỷ lệ thực hiện/kế hoạch                       %
- 5    Tổng số chuyến xe buýt                      Chuyến
- 6    Tổng số chuyến xe không thực hiện           Chuyến
-      - Tuyến nội tỉnh                              -nt-
-      - Tuyến liên tỉnh                             -nt-
- 7    Tổng hành khách vận chuyển thông qua
-                                                    HK
-      bến
+<table data-source="36-P72-T1">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Kết quả</td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến xe buýt</td><td>-nt-</td><td></td></tr>
+<tr><td>4</td><td>Tổng số chuyến xe thực hiện</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+<tr><td>5</td><td>Tổng số chuyến xe buýt</td><td>Chuyến</td><td></td></tr>
+<tr><td>6</td><td>Tổng số chuyến xe không thực hiện</td><td>Chuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td>7</td><td>Tổng hành khách vận chuyển thông qua<br>bến</td><td>HK</td><td></td></tr>
+</table>
 
      b) Bến xe hàng
 
-TT                        Chỉ tiêu                Đơn vị         Kết quả
-
- 1     Tổng số bến xe hàng trên địa bàn           Đơn vị
-
- 2     Tổng số lượt phương tiện ra, vào các bến   Lượt xe
-
- 3     Tổng khối lượng hàng hoá thông qua tại
-                                                  1000 tấn
-       các bến
+<table data-source="36-P72-T2">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Kết quả</td></tr>
+<tr><td>1</td><td>Tổng số bến xe hàng trên địa bàn</td><td>Đơn vị</td><td></td></tr>
+<tr><td>2</td><td>Tổng số lượt phương tiện ra, vào các bến</td><td>Lượt xe</td><td></td></tr>
+<tr><td>3</td><td>Tổng khối lượng hàng hoá thông qua tại<br>các bến</td><td>1000 tấn</td><td></td></tr>
+</table>
      4. Thuận lợi, khó khăn:………….
      5. Đề xuất, kiến nghị:…………….Bổ sung
 Nơi nhận:                                             GIÁM ĐỐC
@@ -2118,7 +2163,9 @@ Nơi nhận:                                             GIÁM ĐỐC
 - Bộ GTVT (để báo cáo);
 - ……..
 
-                                   Phụ lục XVIII
+## Phụ lục XVIII
+Nguồn Phụ lục XVIII: data/raw/pdf/36_2024_TT_BGTVT.pdf#page=73 (PDF 73–76; trang in 92–95). Hình học và vị trí ký của biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
  BỘ GIAO THÔNG VẬN TẢI             CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -2140,107 +2187,116 @@ xe, trạm dừng nghỉ vào khai thác, Cục Đường bộ Việt Nam báo c
      1. Kết quả hoạt động vận chuyển hành khách
      a) Vận chuyển hành khách liên tỉnh theo tuyến cố định
 
-TT                      Chỉ tiêu                     Đơn vị              Số lượng
- 1     Tổng số đơn vị vận tải trên địa bàn           Đơn vị
-       - Doanh nghiệp                                  -nt-
-       - Hợp tác xã                                    -nt-
- 2     Tổng số tuyến                                  tuyến
-       - Tuyến nội tỉnh                                -nt-
-       - Tuyến liên tỉnh                               -nt-
- 3     Tổng số phương tiện                             xe
-       - Tuyến nội tỉnh                                -nt-
-       - Tuyến liên tỉnh                               -nt-
- 4     Tổng chuyến xe thực hiện                      chuyến
-       - Tuyến nội tỉnh                                -nt-
+<table data-source="36-P73-T1">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Số lượng</td></tr>
+<tr><td>1</td><td>Tổng số đơn vị vận tải trên địa bàn</td><td>Đơn vị</td><td></td></tr>
+<tr><td></td><td>- Doanh nghiệp</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Hợp tác xã</td><td>-nt-</td><td></td></tr>
+<tr><td>2</td><td>Tổng số tuyến</td><td>tuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td>3</td><td>Tổng số phương tiện</td><td>xe</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td>4</td><td>Tổng chuyến xe thực hiện</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+</table>
 
-TT                     Chỉ tiêu                   Đơn vị          Số lượng
-      Tỷ lệ thực hiện/kế hoạch                      %
-      - Tuyến liên tỉnh                           chuyến
-      Tỷ lệ thực hiện/kế hoạch                      %
+<table data-source="36-P74-T1">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Số lượng</td></tr>
+<tr><td></td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+</table>
     * Ghi chú: Chỉ tổng hợp số liệu báo cáo của các doanh nghiệp, HTX có trụ sở
 chính hoặc trụ sở chi nhánh tại địa phương.
      b) Vận chuyển hành khách theo hợp đồng
 
-TT                      Chỉ tiêu                  Đơn vị          Ghi chú
- 1     Tổng số đơn vị tham gia                    đơn vị
-       - Doanh nghiệp                               -nt-
-       - Hợp tác xã                                 -nt-
-       - Hộ kinh doanh                              -nt-
- 2     Tổng số phương tiện                          xe
-       - Sức chứa dưới 9 chỗ                        -nt-
-       - Sức chứa từ 9 - 25 chỗ                     -nt-
-       - Sức chứa từ trên 25 chỗ                    -nt-
- 3     Số chuyến xe thực hiện                     chuyến
- 4     Sản lượng khách vận chuyển               lượt khách
+<table data-source="36-P74-T2">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Ghi chú</td></tr>
+<tr><td>1</td><td>Tổng số đơn vị tham gia</td><td>đơn vị</td><td></td></tr>
+<tr><td></td><td>- Doanh nghiệp</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Hợp tác xã</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Hộ kinh doanh</td><td>-nt-</td><td></td></tr>
+<tr><td>2</td><td>Tổng số phương tiện</td><td>xe</td><td></td></tr>
+<tr><td></td><td>- Sức chứa dưới 9 chỗ</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Sức chứa từ 9 - 25 chỗ</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Sức chứa từ trên 25 chỗ</td><td>-nt-</td><td></td></tr>
+<tr><td>3</td><td>Số chuyến xe thực hiện</td><td>chuyến</td><td></td></tr>
+<tr><td>4</td><td>Sản lượng khách vận chuyển</td><td>lượt khách</td><td></td></tr>
+</table>
 
      c) Vận chuyển hành khách bằng xe buýt
 
-TT                      Chỉ tiêu                  Đơn vị          Số lượng
- 1     Tổng số tuyến                               tuyến
-       - Số tuyến có trợ giá (nếu có)               -nt-
- 2     Tổng phương tiện                             xe
- 3     Tổng số chuyến xe thực hiện                chuyến
- 4     Tỷ lệ thực hiện/kế hoạch                     %
- 5     Tổng trợ giá (nếu có)                       Tr.đ
+<table data-source="36-P74-T3">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Số lượng</td></tr>
+<tr><td>1</td><td>Tổng số tuyến</td><td>tuyến</td><td></td></tr>
+<tr><td></td><td>- Số tuyến có trợ giá (nếu có)</td><td>-nt-</td><td></td></tr>
+<tr><td>2</td><td>Tổng phương tiện</td><td>xe</td><td></td></tr>
+<tr><td>3</td><td>Tổng số chuyến xe thực hiện</td><td>chuyến</td><td></td></tr>
+<tr><td>4</td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+<tr><td>5</td><td>Tổng trợ giá (nếu có)</td><td>Tr.đ</td><td></td></tr>
+</table>
 
      2. Kết quả hoạt động vận tải hàng hóa
 
-TT                     Chỉ tiêu                         Đơn vị   Số lượng
- 1     Tổng phương tiện                                   xe
-       - Xe Công ten nơ                                  -nt-
-       - Xe đầu kéo                                      -nt-
-       - Xe taxi tải                                     -nt-
-       - Xe tải khác                                     -nt-
- 2     Tổng sản lượng hàng hóa vận chuyển                Tấn
-       - Xe Công ten nơ                                  -nt-
-       - Xe đầu kéo                                      -nt-
-       - Xe taxi tải                                     -nt-
-       - Xe tải khác                                     -nt-
- 3     Tổng sản lượng luân chuyển hàng hóa              tấn.km
-       - Xe Công ten nơ                                  -nt-
-       - Xe đầu kéo                                      -nt-
-       - Xe taxi tải                                     -nt-
-       - Xe tải khác                                     -nt-
+<table data-source="36-P75-T1">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Số lượng</td></tr>
+<tr><td>1</td><td>Tổng phương tiện</td><td>xe</td><td></td></tr>
+<tr><td></td><td>- Xe Công ten nơ</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe đầu kéo</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe taxi tải</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe tải khác</td><td>-nt-</td><td></td></tr>
+<tr><td>2</td><td>Tổng sản lượng hàng hóa vận chuyển</td><td>Tấn</td><td></td></tr>
+<tr><td></td><td>- Xe Công ten nơ</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe đầu kéo</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe taxi tải</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe tải khác</td><td>-nt-</td><td></td></tr>
+<tr><td>3</td><td>Tổng sản lượng luân chuyển hàng hóa</td><td>tấn.km</td><td></td></tr>
+<tr><td></td><td>- Xe Công ten nơ</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe đầu kéo</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe taxi tải</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Xe tải khác</td><td>-nt-</td><td></td></tr>
+</table>
 
      3. Kết quả hoạt động của các bến xe trên địa bàn
      a) Bến xe khách
 
-TT                        Chỉ tiêu                      Đơn vị   Kết quả
- 1     Tổng số bến xe khách                             Đơn vị
- 2     Tổng số tuyến xe xuất phát tại các bến xe         Tuyến
-       - Tuyến nội tỉnh                                   -nt-
-       - Tuyến liên tỉnh                                  -nt-
-       - Tuyến xe buýt                                   Tuyến
- 3     Tổng số lượng phương tiện                          xe
-       - Tuyến nội tỉnh                                   -nt-
+<table data-source="36-P75-T2">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Kết quả</td></tr>
+<tr><td>1</td><td>Tổng số bến xe khách</td><td>Đơn vị</td><td></td></tr>
+<tr><td>2</td><td>Tổng số tuyến xe xuất phát tại các bến xe</td><td>Tuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến xe buýt</td><td>Tuyến</td><td></td></tr>
+<tr><td>3</td><td>Tổng số lượng phương tiện</td><td>xe</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+</table>
 
-TT                         Chỉ tiêu               Đơn vị         Kết quả
-        - Tuyến liên tỉnh                           -nt-
-        - Tuyến xe buýt                             -nt-
-  4     Tổng số chuyến xe thực hiện               chuyến
-        - Tuyến nội tỉnh                          chuyến
-        Tỷ lệ thực hiện/kế hoạch                     %
-        - Tuyến liên tỉnh                         chuyến
-        Tỷ lệ thực hiện/kế hoạch                     %
-  5     Tổng số chuyến xe buýt                    Chuyến
-  6     Tổng số chuyến xe không thực hiện         Chuyến
-        - Tuyến nội tỉnh                            -nt-
-        - Tuyến liên tỉnh                           -nt-
-  7     Tổng hành khách vận chuyển thông qua
-                                                    HK
-        bến
+<table data-source="36-P76-T1">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Kết quả</td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến xe buýt</td><td>-nt-</td><td></td></tr>
+<tr><td>4</td><td>Tổng số chuyến xe thực hiện</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>chuyến</td><td></td></tr>
+<tr><td></td><td>Tỷ lệ thực hiện/kế hoạch</td><td>%</td><td></td></tr>
+<tr><td>5</td><td>Tổng số chuyến xe buýt</td><td>Chuyến</td><td></td></tr>
+<tr><td>6</td><td>Tổng số chuyến xe không thực hiện</td><td>Chuyến</td><td></td></tr>
+<tr><td></td><td>- Tuyến nội tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td></td><td>- Tuyến liên tỉnh</td><td>-nt-</td><td></td></tr>
+<tr><td>7</td><td>Tổng hành khách vận chuyển thông qua<br>bến</td><td>HK</td><td></td></tr>
+</table>
 
       b) Bến xe hàng
 
-TT                         Chỉ tiêu               Đơn vị         Kết quả
-
-  1    Tổng số bến xe hàng trên địa bàn           Đơn vị
-
-  2    Tổng số lượt phương tiện ra, vào các bến   Lượt xe
-
-  3    Tổng khối lượng hàng hoá thông qua tại
-                                                  1000 tấn
-       các bến
+<table data-source="36-P76-T2">
+<tr><td>TT</td><td>Chỉ tiêu</td><td>Đơn vị</td><td>Kết quả</td></tr>
+<tr><td>1</td><td>Tổng số bến xe hàng trên địa bàn</td><td>Đơn vị</td><td></td></tr>
+<tr><td>2</td><td>Tổng số lượt phương tiện ra, vào các bến</td><td>Lượt xe</td><td></td></tr>
+<tr><td>3</td><td>Tổng khối lượng hàng hoá thông qua tại<br>các bến</td><td>1000 tấn</td><td></td></tr>
+</table>
       4. Thuận lợi, khó khăn:………….
       5. Đề xuất, kiến nghị:…………….. Bổ sung
 Nơi nhận:                                            CỤC TRƯỞNG

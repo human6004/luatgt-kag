@@ -683,105 +683,44 @@ Nguyễn Duy Lâm
 
 29 
  
-Phụ lục I 
+## Phụ lục I 
+Bảng/hình gốc của Phụ lục I: data/raw/pdf/34_2024_TT_BGTVT_cb52836.pdf#page=19 (PDF 19–29; trang in 29–39). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
+
 DANH MỤC HỒ SƠ, MẪU BIỂU BÁO CÁO ĐỊNH KỲ VỀ DOANH THU 
 TIỀN SỬ DỤNG ĐƯỜNG BỘ VÀ LƯU LƯỢNG PHƯƠNG TIỆN 
 (Ban hành kèm theo Thông tư số 34/2024/TT-BGTVT ngày 14/11/2024 của Bộ 
 trưởng Bộ Giao thông vận tải quy định về hoạt động trạm thu phí đường bộ) 
  
-TT 
-Nội dung 
-Báo cáo 
-tháng 
-Báo cáo năm 
-1 
-Mẫu số 01-A: chi tiết thu phí sử dụng đường cao 
-tốc 
-X 
-X 
-2 
-Mẫu số 01-B: chi tiết thu tiền dịch vụ sử dụng 
-đường bộ 
-X 
-X 
-3 
-Mẫu số 02-A: tổng hợp lưu lượng xe thu phí sử 
-dụng đường cao tốc 
-X 
-X 
-4 
-Mẫu số 02-B: tổng hợp lưu lượng xe thu tiền dịch 
-vụ sử dụng đường bộ 
-X 
-X 
-5 
-Mẫu số 03: chi tiết các khoản thu khác từ hoạt 
-động thu tiền sử dụng đường bộ 
- 
-X 
-6 
-Mẫu số 04: chi tiết các khoản chi vận hành, bảo trì 
-dự án 
- 
-X 
-7 
-Mẫu số 05: chi tiết lãi suất tiền vay giai đoạn kinh 
-doanh khai thác 
- 
-X 
-8 
-Mẫu số 06: các chỉ tiêu tài chính khác giai đoạn 
-kinh doanh khai thác 
- 
-X 
-9 
-Mẫu số 07: thuyết minh báo cáo 
- 
-X 
-10 
-Mẫu số 08: báo cáo tình hình quản lý, sử dụng tài 
-sản nhận bàn giao từ cơ quan có thẩm quyền 
- 
-X 
+<table data-source="34-PLI-INDEX">
+<tr><th>TT</th><th>Nội dung</th><th>Báo cáo<br>tháng</th><th>Báo cáo năm</th></tr>
+<tr><td>1</td><td>Mẫu số 01-A: chi tiết thu phí sử dụng đường cao<br>tốc</td><td>X</td><td>X</td></tr>
+<tr><td>2</td><td>Mẫu số 01-B: chi tiết thu tiền dịch vụ sử dụng<br>đường bộ</td><td>X</td><td>X</td></tr>
+<tr><td>3</td><td>Mẫu số 02-A: tổng hợp lưu lượng xe thu phí sử<br>dụng đường cao tốc</td><td>X</td><td>X</td></tr>
+<tr><td>4</td><td>Mẫu số 02-B: tổng hợp lưu lượng xe thu tiền dịch<br>vụ sử dụng đường bộ</td><td>X</td><td>X</td></tr>
+<tr><td>5</td><td>Mẫu số 03: chi tiết các khoản thu khác từ hoạt<br>động thu tiền sử dụng đường bộ</td><td></td><td>X</td></tr>
+<tr><td>6</td><td>Mẫu số 04: chi tiết các khoản chi vận hành, bảo trì<br>dự án</td><td></td><td>X</td></tr>
+<tr><td>7</td><td>Mẫu số 05: chi tiết lãi suất tiền vay giai đoạn kinh<br>doanh khai thác</td><td></td><td>X</td></tr>
+<tr><td>8</td><td>Mẫu số 06: các chỉ tiêu tài chính khác giai đoạn<br>kinh doanh khai thác</td><td></td><td>X</td></tr>
+<tr><td>9</td><td>Mẫu số 07: thuyết minh báo cáo</td><td></td><td>X</td></tr>
+<tr><td>10</td><td>Mẫu số 08: báo cáo tình hình quản lý, sử dụng tài<br>sản nhận bàn giao từ cơ quan có thẩm quyền</td><td></td><td>X</td></tr>
+</table> 
 
  
-Mẫu số 01-A 
+### Mẫu số 01-A 
 CHI TIẾT THU PHÍ SỬ DỤNG ĐƯỜNG CAO TỐC 
 Giai đoạn:.................... 
 Dự án:......................... 
 Trạm thu phí:.............. 
  
 Đơn vị tính (đồng) 
-TT 
-Tên vé 
-(chi tiết cho từng loại 
-phương tiện) 
-Đơn 
-giá 
-Số lượt xe 
-Thành tiền 
-A 
-1 
-2 
- 
- 
- 
-Xe … 
- 
- 
- 
- 
-.... 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-Tổng cộng 
+<table data-source="34-PLI-MAU01-A">
+<tr><th>TT</th><th>Tên vé<br>(chi tiết cho từng loại<br>phương tiện)</th><th>Đơn<br>giá</th><th>Số lượt xe</th><th>Thành tiền</th></tr>
+<tr><td>A</td><td>1</td><td>2</td><td></td><td></td></tr>
+<tr><td></td><td>Xe …</td><td></td><td></td><td></td></tr>
+<tr><td></td><td>....</td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Tổng cộng</td><td></td><td></td><td></td></tr>
+</table> 
  
  
  
@@ -795,136 +734,28 @@ Người đại diện theo pháp luật của doanh nghiệp
  
  
  
-Mẫu số 01-B 
+### Mẫu số 01-B 
 CHI TIẾT THU TIỀN DỊCH VỤ SỬ DỤNG ĐƯỜNG BỘ 
 Giai đoạn:............... 
 Dự án:..................... 
 Trạm thu phí:.......... 
  
 Đơn vị tính (đồng) 
-TT 
-Tên vé 
-(chi tiết cho 
-từng loại 
-phương 
-tiện) 
-Đơn 
-giá 
-Số vé sử dụng 
-Thành tiền 
-Tổng 
-Số 
-Hình thức 
-thu điện tử 
-không 
-dừng 
-(ETC) 
-Hình thức 
-thu một 
-dừng 
-(MTC) 
-Tổng số 
-Hình thức 
-thu điện tử 
-không dừng 
-(ETC) 
-Hình thức 
-thu một 
-dừng 
-(MTC) 
-A 
-1 
-2 
-3=4+5 
-4 
-5 
-6=7+8 
-8=4x2 
-9=5x2 
-I 
-Vé lượt 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-Xe … 
- 
- 
- 
- 
- 
- 
- 
- 
-.... 
- 
- 
- 
- 
- 
- 
- 
-II 
-Vé tháng 
- 
- 
- 
- 
- 
- 
- 
- 
-Xe.... 
- 
- 
- 
- 
- 
- 
- 
- 
-… 
- 
- 
- 
- 
- 
- 
- 
-III 
-Vé quý 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-Tổng cộng 
+<table data-source="34-PLI-MAU01-B">
+<tr><th rowspan="2">TT</th><th rowspan="2">Tên vé<br>(chi tiết cho<br>từng loại<br>phương<br>tiện)</th><th rowspan="2">Đơn<br>giá</th><th colspan="3">Số vé sử dụng</th><th colspan="3">Thành tiền</th></tr>
+<tr><td>Tổng<br>Số</td><td>Hình thức<br>thu điện tử<br>không<br>dừng<br>(ETC)</td><td>Hình thức<br>thu một<br>dừng<br>(MTC)</td><td>Tổng số</td><td>Hình thức<br>thu điện tử<br>không dừng<br>(ETC)</td><td>Hình thức<br>thu một<br>dừng<br>(MTC)</td></tr>
+<tr><td>A</td><td>1</td><td>2</td><td>3=4+5</td><td>4</td><td>5</td><td>6=7+8</td><td>8=4x2</td><td>9=5x2</td></tr>
+<tr><td>I</td><td>Vé lượt</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Xe …</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>....</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>II</td><td>Vé tháng</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Xe....</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>…</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>III</td><td>Vé quý</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Tổng cộng</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table> 
  
  
  
@@ -945,92 +776,20 @@ Người đại diện theo pháp luật của doanh nghiệp
  
 32
 
-Mẫu số 02-A 
+### Mẫu số 02-A 
 TỔNG HỢP LƯU LƯỢNG XE THU PHÍ SỬ DỤNG ĐƯỜNG CAO TỐC 
 Giai đoạn:..................... 
  
 Tên trạm thu phí, lý trình: .... 
-Ngày 
-Hình 
-thức thu 
-Lưu lượng xe theo hợp đồng (xe/ngày đêm) 
-(phân loại xe theo hợp đồng dự án) 
-Lưu lượng xe theo thực tế (xe/ngày đêm) (phân loại 
-xe theo hợp đồng dự án) 
-Ghi chú 
-Loại xe 
-.... 
- 
- 
- 
-Cộng Loại xe... 
- 
- 
- 
- 
-Cộng 
-(1) 
- 
-(2) 
-(3) 
-(4) 
-(5) 
-(6) 
-…. 
- 
- 
- 
- 
- 
- 
- 
-…. 
-ETC 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-... 
-ETC 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-... 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-Cộng 
+<table data-source="34-PLI-MAU02-A">
+<tr><th rowspan="2">Ngày</th><th rowspan="2">Hình<br>thức thu</th><th colspan="6">Lưu lượng xe theo hợp đồng (xe/ngày đêm)<br>(phân loại xe theo hợp đồng dự án)</th><th colspan="6">Lưu lượng xe theo thực tế (xe/ngày đêm) (phân loại<br>xe theo hợp đồng dự án)</th><th rowspan="2">Ghi chú</th></tr>
+<tr><td>Loại xe<br>….</td><td>....</td><td></td><td></td><td></td><td>Cộng</td><td>Loại xe...</td><td></td><td></td><td></td><td></td><td>Cộng</td></tr>
+<tr><td>(1)</td><td></td><td>(2)</td><td>(3)</td><td>(4)</td><td>(5)</td><td>(6)</td><td>….</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>….</td><td>ETC</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>...</td><td>ETC</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>...</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Cộng</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table> 
  
  
  
@@ -1051,163 +810,25 @@ Người đại diện theo pháp luật của doanh nghiệp
 
    33
  
-Mẫu số 02-B 
+### Mẫu số 02-B 
 TỔNG HỢP LƯU LƯỢNG XE THU TIỀN DỊCH VỤ SỬ DỤNG ĐƯỜNG BỘ 
 Giai đoạn:..................... 
  
 Tên trạm thu phí, lý trình: .... 
-Ngày 
-Hình 
-thức thu 
-Lưu lượng xe theo hợp đồng (xe/ngày đêm) 
-(phân loại xe theo hợp đồng dự án) 
-Lưu lượng xe theo thực tế (xe/ngày đêm) (phân loại 
-xe theo hợp đồng dự án) 
-Ghi chú 
-Loại xe 
-.... 
- 
- 
- 
-Cộng Loại xe... 
- 
- 
- 
- 
-Cộng 
-(1) 
- 
-(2) 
-(3) 
-(4) 
-(5) 
-(6) 
-…. 
- 
- 
- 
- 
- 
- 
- 
-1 
-ETC 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-MTC 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-2 
-ETC 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-MTC 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-... 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-... 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-Cộng 
-ETC 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-MTC 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-Cộng 
+<table data-source="34-PLI-MAU02-B">
+<tr><th rowspan="2">Ngày</th><th rowspan="2">Hình<br>thức thu</th><th colspan="6">Lưu lượng xe theo hợp đồng (xe/ngày đêm)<br>(phân loại xe theo hợp đồng dự án)</th><th colspan="6">Lưu lượng xe theo thực tế (xe/ngày đêm) (phân loại<br>xe theo hợp đồng dự án)</th><th rowspan="2">Ghi chú</th></tr>
+<tr><td>Loại xe<br>….</td><td>....</td><td></td><td></td><td></td><td>Cộng</td><td>Loại xe...</td><td></td><td></td><td></td><td></td><td>Cộng</td></tr>
+<tr><td>(1)</td><td></td><td>(2)</td><td>(3)</td><td>(4)</td><td>(5)</td><td>(6)</td><td>….</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="2">1</td><td>ETC</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>MTC</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="2">2</td><td>ETC</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>MTC</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>...</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>...</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td rowspan="3">Cộng</td><td>ETC</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>MTC</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Cộng</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table> 
  
  
  
@@ -1227,31 +848,20 @@ Người lập biểu
 Người đại diện theo pháp luật của doanh nghiệp 
 
  
-Mẫu số 03 
+### Mẫu số 03 
 CHI TIẾT CÁC KHOẢN THU KHÁC TỪ HOẠT ĐỘNG  
 THU TIỀN SỬ DỤNG ĐƯỜNG BỘ 
 Giai đoạn: ………….. 
  
-TT 
-Nội dung các khoản thu 
-Số tiền 
-1 
- 
- 
-2 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-Cộng 
+<table data-source="34-PLI-MAU03">
+<tr><th>TT</th><th>Nội dung các khoản thu</th><th>Số tiền</th></tr>
+<tr><td>1</td><td></td><td></td></tr>
+<tr><td>2</td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td></tr>
+<tr><td></td><td>Cộng</td><td></td></tr>
+</table> 
  
  
 Người lập biểu 
@@ -1262,47 +872,20 @@ Người đại diện theo pháp luật của doanh nghiệp
  
  
 35 
-Mẫu số 04 
+### Mẫu số 04 
 CHI TIẾT CÁC KHOẢN CHI VẬN HÀNH, BẢO TRÌ DỰ ÁN 
 Giai đoạn: 
  
  
-TT 
-Nội dung các khoản 
-chi 
-Số tiền theo hợp đồng 
-dự án 
-Số thỏa thuận của 
-cơ quan có thẩm 
-quyền 
-Số thực hiện 
-1 
- 
- 
- 
- 
-2 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-Cộng 
+<table data-source="34-PLI-MAU04">
+<tr><th>TT</th><th>Nội dung các khoản<br>chi</th><th>Số tiền theo hợp đồng<br>dự án</th><th>Số thỏa thuận của<br>cơ quan có thẩm<br>quyền</th><th>Số thực hiện</th></tr>
+<tr><td>1</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2</td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Cộng</td><td></td><td></td><td></td></tr>
+</table> 
  
  
  
@@ -1311,23 +894,20 @@ Người lập biểu
 Người đại diện theo pháp luật của doanh nghiệp 
 
  
-Mẫu số 05 
+### Mẫu số 05 
 CHI TIẾT LÃI SUẤT TIỀN VAY  
 GIAI ĐOẠN KINH DOANH KHAI THÁC 
 Giai đoạn:……….. 
  
-Ngày, tháng, năm 
-áp dụng mức lãi 
-suất 
-Lãi suất vay theo 
-hợp đồng dự án 
-Lãi suất so sánh 
-theo quy định hợp 
-đồng dự án 
-Lãi suất vay thực tế 
-của nhà đầu tư 
-Lãi suất vay 
-áp dụng 
+<table data-source="34-PLI-MAU05">
+<tr><th>Ngày, tháng, năm<br>áp dụng mức lãi<br>suất</th><th>Lãi suất vay theo<br>hợp đồng dự án</th><th>Lãi suất so sánh<br>theo quy định hợp<br>đồng dự án</th><th>Lãi suất vay thực tế<br>của nhà đầu tư</th><th>Lãi suất vay<br>áp dụng</th></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+</table> 
  
  
  
@@ -1367,47 +947,20 @@ Người đại diện theo pháp luật của doanh nghiệp
  
  
 37 
-Mẫu số 06 
+### Mẫu số 06 
 CÁC CHỈ TIÊU TÀI CHÍNH KHÁC  
 GIAI ĐOẠN KINH DOANH KHAI THÁC 
 Giai đoạn:……… 
  
-TT 
-Chỉ tiêu 
-Quy định tại hợp 
-đồng dự án 
-Thực tế 
-Mức áp dụng 
-đề xuất 
-1 
-Tỷ lệ trượt giá 
- 
- 
- 
-2 
-Tỷ lệ chi tổ chức thu 
- 
- 
- 
-3 
-Tỷ lệ trích doanh thu cho dịch 
-vụ thu điện tử không dừng 
-(ETC) 
- 
- 
- 
-4 
-Tỷ lệ tăng trưởng doanh thu 
- 
- 
- 
-5 
-Tỷ lệ tăng trưởng lưu lượng 
- 
- 
- 
-... 
-... 
+<table data-source="34-PLI-MAU06">
+<tr><th>TT</th><th>Chỉ tiêu</th><th>Quy định tại hợp<br>đồng dự án</th><th>Thực tế</th><th>Mức áp dụng<br>đề xuất</th></tr>
+<tr><td>1</td><td>Tỷ lệ trượt giá</td><td></td><td></td><td></td></tr>
+<tr><td>2</td><td>Tỷ lệ chi tổ chức thu</td><td></td><td></td><td></td></tr>
+<tr><td>3</td><td>Tỷ lệ trích doanh thu cho dịch<br>vụ thu điện tử không dừng<br>(ETC)</td><td></td><td></td><td></td></tr>
+<tr><td>4</td><td>Tỷ lệ tăng trưởng doanh thu</td><td></td><td></td><td></td></tr>
+<tr><td>5</td><td>Tỷ lệ tăng trưởng lưu lượng</td><td></td><td></td><td></td></tr>
+<tr><td>...</td><td>...</td><td></td><td></td><td></td></tr>
+</table> 
  
  
  
@@ -1416,7 +969,7 @@ Người lập biểu
 Người đại diện theo pháp luật của doanh nghiệp 
 
  
-Mẫu số 07  
+### Mẫu số 07  
 NHÀ ĐẦU TƯ:  
 ĐƠN VỊ VẬN HÀNH THU: 
 THUYẾT MINH BÁO CÁO 
@@ -1449,7 +1002,7 @@ như thế nào);
  
  
 39
-Mẫu số 08 
+### Mẫu số 08 
 NHÀ ĐẦU TƯ: 
 ĐƠN VỊ VẬN HÀNH THU: 
  
@@ -1462,19 +1015,13 @@ Trạm thu phí: .......
 A. Danh mục tài sản bàn giao 
 Ngày nhận bàn giao: 
 Đơn vị tính: Đồng 
-TT 
-Tên tài sản Số lượng Nguyên giá Hao mòn trong 
-năm 
-Hao mòn lũy 
-kế 
-Giá trị còn lại 
-A 
-B 
-1 
-2 
-3 
-4 
-5=2-4 
+<table data-source="34-PLI-MAU08-A">
+<tr><th>TT</th><th>Tên tài sản</th><th>Số lượng</th><th>Nguyên giá</th><th>Hao mòn trong<br>năm</th><th>Hao mòn lũy<br>kế</th><th>Giá trị còn lại</th></tr>
+<tr><td>A</td><td>B</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5=2-4</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table> 
  
  
  
@@ -1498,23 +1045,14 @@ B
  
 B. Tình hình nộp phí sử dụng tài sản 
 Đơn vị tính: Đồng 
-TT 
-Nội dung 
-Số tiền 
-1 
-Phí sử dụng tài sản các năm trước đã nộp 
- 
-2 
-Phí sử dụng tài sản các năm trước chưa nộp chuyển sang 
- 
-3 
-Phí sử dụng tài sản phải nộp trong năm 
- 
-4 
-Phí sử dụng tài sản đã nộp trong năm 
- 
-5 
-Phí sử dụng tài sản còn phải nộp chuyển năm sau 
+<table data-source="34-PLI-MAU08-B">
+<tr><th>TT</th><th>Nội dung</th><th>Số tiền</th></tr>
+<tr><td>1</td><td>Phí sử dụng tài sản các năm trước đã nộp</td><td></td></tr>
+<tr><td>2</td><td>Phí sử dụng tài sản các năm trước chưa nộp chuyển sang</td><td></td></tr>
+<tr><td>3</td><td>Phí sử dụng tài sản phải nộp trong năm</td><td></td></tr>
+<tr><td>4</td><td>Phí sử dụng tài sản đã nộp trong năm</td><td></td></tr>
+<tr><td>5</td><td>Phí sử dụng tài sản còn phải nộp chuyển năm sau</td><td></td></tr>
+</table> 
  
  
 Người lập biểu 
@@ -1522,252 +1060,45 @@ Người lập biểu
 
  
  
-Phụ lục II 
+## Phụ lục II 
+Bảng/hình gốc của Phụ lục II: data/raw/pdf/34_2024_TT_BGTVT_cb52836.pdf#page=30 (PDF 30–33; trang in 40–43). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 34/2024/TT-BGTVT ngày 14/11/2024 của Bộ 
 trưởng Bộ Giao thông vận tải quy định về hoạt động trạm thu phí đường bộ) 
  
 Các hạng mục công việc vi phạm chất lượng bảo trì không được khắc phục 
 kịp thời phải tạm dừng thu tiền dịch vụ sử dụng đường bộ 
  
-TT 
-Hạng mục công việc 
-vi phạm chất lượng 
-Mức độ vi phạm chất lượng bảo trì phải tạm dừng 
-thu tiền dịch vụ sử dụng đường bộ 
-A 
-Quốc lộ, đường tỉnh 
-I 
-Đối với mặt đường nhựa 
-1 
-Mặt đường bị nứt: 
-- Nứt mai rùa; 
-- Nứt lưới lớn; 
-- Nứt đơn dọc và 
-ngang; 
-- Nứt phản ánh; 
-- Nứt parabol. 
-Để xảy ra hư hỏng mức độ nặng (mức H theo TCVN 
-14182:2024 gây ảnh hưởng đến giao thông trên tuyến) có 
-khối lượng hư hỏng thuộc một trong các trường hợp sau: 
-- Tổng diện tích nứt mai rùa: chiếm 0,3% tổng diện tích 
-mặt đường và tối đa không quá 300 m2. 
-- Tổng diện tích nứt lưới lớn: chiếm 0,3% tổng diện tích 
-mặt đường và tối đa không quá 300 m2. 
-- 10 vệt (mỗi vệt ≥50% bề rộng mặt đường) và tổng 
-chiều dài nứt dọc ≥300 m. 
-- 10 vệt (mỗi vệt ≥50% bề rộng mặt đường) và tổng 
-chiều dài phản ánh ≥300 m. 
-- Tổng diện tích nứt parapol: chiếm 0,3% tổng diện tích 
-mặt đường và tối đa không quá 300 m2, không có ổ gà, 
-trồi lún. 
-2 
-Mặt đường bị lún vệt 
-bánh xe 
-Để xảy ra hư hỏng mức độ nặng, lún vệt bánh xe ≥ 2,5cm (mức 
-H theo TCVN 14182:2024 gây ảnh hưởng đến giao thông trên 
-tuyến) và có tổng chiều dài các vệt, đoạn lún ≥ 500 m. 
-3 
-Mặt đường bị hư hỏng 
-cục bộ: 
-- Lún lõm cục bộ; 
-- Lồi lõm; 
-- Đẩy trồi nhựa, dồn 
-nhựa (dạng sống trâu 
-≥5 cm); 
-Để xảy ra hư hỏng mức độ nặng (mức H theo TCVN 
-14182:2024 gây ảnh hưởng đến giao thông trên tuyến) có 
-khối lượng hư hỏng thuộc một trong các trường hợp sau: 
-- Tổng diện tích lún lõm cục bộ: chiếm 0,3% tổng diện 
-tích mặt đường và tối đa không quá 300 m2. 
-- Tổng diện tích lồi lõm: chiếm 0,3% tổng diện tích mặt 
-đường và tối đa không quá 200 m2. 
-- Tổng diện tích đẩy trồi nhựa, dồn nhựa: chiếm 0,3% 
-tổng diện tích mặt đường và tối đa không quá 300 m2. 
-
-41 
- 
- 
-41
-TT 
-Hạng mục công việc 
-vi phạm chất lượng 
-Mức độ vi phạm chất lượng bảo trì phải tạm dừng 
-thu tiền dịch vụ sử dụng đường bộ 
- 
-- Lượn sóng; 
-- Tổng diện tích lượn sóng: chiếm 0,3% tổng diện tích 
-mặt đường và tối đa không quá 300 m2. 
- 
-- Ổ gà (Sâu≥ 5 cm). 
-- Tổng diện tích ổ gà: chiếm 0,05% tổng diện tích mặt 
-đường và tối đa không quá 50 m2. 
-4 
-Mặt đường bị chảy 
-nhựa 
-Để xảy ra hư hỏng mức độ nặng (mức H theo TCVN 
-14182:2024 gây ảnh hưởng đến giao thông trên tuyến) và 
-có tổng diện tích chiếm 0,3% tổng diện tích mặt đường 
-và tối đa không quá 300 m2 
-5 
-Mặt đường bị hư hỏng 
-các dạng khác: 
-- Vệt cắt vá; 
-- Bong bật và bong 
-tróc; 
-- Nứt vỡ mép mặt 
-đường. 
-Để xảy ra hư hỏng mức độ nặng (mức H theo TCVN 
-14182:2024 gây ảnh hưởng đến giao thông trên tuyến) có 
-khối lượng hư hỏng thuộc một trong các trường hợp sau: 
-- Trên 10 vết cắt vát bị bong bật, rạn nứt; 
-- Tổng diện tích bong bật và bong tróc: chiếm 0,3% tổng 
-diện tích mặt đường và tối đa không quá 300 m2. 
-- Tổng chiều dài nứt vỡ mép ≥ 200 m2 hoặc ≥ 500 m. 
-II 
-Đối với mặt đường Bê tông xi măng (BTXM) 
-1 
-Mặt đường bị hư hỏng 
-cục bộ: rộp vỡ bề mặt; 
-nứt vỡ góc tấm, nứt 
-chia tấm, nứt om tấm; 
-nứt rạn, bong mặt 
-đường 
-Để xảy ra hư hỏng mức độ nặng (mức H theo TCVN 
-14182:2024 gây ảnh hưởng đến giao thông trên tuyến) và 
-có tổng số tấm hư hỏng ≥ 30 tấm hoặc ≥ 10% tổng diện 
-tích phần đường BTXM. 
-2 
-Chênh cao độ giữa các 
-tấm do lún (nền yếu, 
-do xói lở vật liệu, hay 
-do uốn vồng tấm); 
-chênh cao giữa tấm bê 
-tông mặt đường và lề 
-đường 
-Để xảy ra hư hỏng mức độ nặng (mức H theo TCVN 
-14182:2024 gây ảnh hưởng đến giao thông trên tuyến) và 
-chiều dài chênh cao ≥ 100 m. 
-3 
-Hư hỏng khe nối, bong 
-vỡ vật liệu khe nối; vết 
-nứt thẳng, vết nứt vỡ 
-Để xảy ra hư hỏng mức độ nặng (mức H theo TCVN 
-14182:2024 gây ảnh hưởng đến giao thông trên tuyến) và 
-tổng chiều dài khe hư hỏng ≥ 100 m. 
-
- 
- 
-TT 
-Hạng mục công việc 
-vi phạm chất lượng 
-Mức độ vi phạm chất lượng bảo trì phải tạm dừng 
-thu tiền dịch vụ sử dụng đường bộ 
-III Đối với các công trình khác 
-1 
-Sơn kẻ trên mặt đường 
-Các chỉ tiêu kỹ thuật của vạch sơn theo Bảng 9 TCVN 
-8791:2011 với các giá trị nhỏ hơn 70% giá trị các chỉ tiêu 
-quy định ở Bảng 3 và Bảng 4 TCVN 8791:2011 hoặc 
-trên 20% sơn kẻ trên đường mờ không còn tác dụng. 
-2 
-Đối với cầu 
-Cầu hư hỏng, xuống cấp xuất hiện nguy cơ sự cố công 
-trình dẫn đến mất an toàn, nguy cơ sập đổ. 
-3 
-Hệ thống thoát nước 
-mặt đường, cống, rãnh 
-Để đọng nước lớn hơn 1/3 chiều rộng mặt đường trên 
-mặt đường, tắc cống, rãnh thoát nước quá 24 giờ mà 
-không thực hiện các biện pháp thoát nước. 
-4 
-Công tác phát quang 
-cây cối, cắt cỏ 
-Cây cối che khuất hệ thống báo hiệu đường bộ, che khuất 
-tầm nhìn ảnh hưởng đến an toàn giao thông, cỏ mọc cao 
-quá quy định tại TCVN 14182:2024 với tổng chiều dài vi 
-phạm: chiếm 3% tổng chiều dài và tối đa không quá 300 m. 
-5 
-Hệ thống biển báo, cọc 
-tiêu, hộ lan 
-≥10% tổng số biển báo hoặc 5% biển cấm bị mờ không 
-đảm bảo QCVN 41:2024/BGTVT, không đảm bảo tầm 
-quan sát biển báo; màng phản quang chưa đảm bảo tiêu 
-chuẩn TCVN 7887:2018; 
-≥20% cọc tiêu, hộ lan bị hư hỏng mất tác dụng. 
-6 
-Lề đường 
-Chênh cao với mặt đường ≥5 cm với chiều dài ≥ 500 m hoặc 
-chênh cao với mặt đường ≥ 10 cm với chiều dài ≥ 300 m. 
-B 
-Đường cao tốc 
-1 
-Mặt đường bị hằn lún 
-vệt bánh xe 
-a) Tuyến đường có từ 5% chiều dài tuyến đường trở lên 
-có vệt hằn lún, trong đó vị trí lún sâu ≥ 2,5 cm có chiều 
-dài ≥ 150 m. 
-b) Tuyến đường có tổng chiều dài các vệt lún sâu hơn ≥ 
-2,5 cm lớn hơn 500 m. 
-c) Tuyến đường có tổng chiều dài các vệt lún sâu hơn ≥ 5 
-cm trên 100 m. 
-2 
-Mặt đường bị hư hỏng 
-cục bộ: ổ gà, sình lún 
-gây mất an toàn 
-Để xảy ra hư hỏng chiếm 0,01 % tổng diện tích mặt đường 
-và tối đa không quá 30 m2 mà không khắc phục trong 24 
-giờ (trừ khi mưa bão) theo yêu cầu về kỹ thuật, chất lượng 
-và thời gian thực hiện tại TCCS 17:2016/TCĐBVN (hoặc 
-TCVN tương đương). 
-
-43 
- 
- 
-43
-TT 
-Hạng mục công việc 
-vi phạm chất lượng 
-Mức độ vi phạm chất lượng bảo trì phải tạm dừng 
-thu tiền dịch vụ sử dụng đường bộ 
-3 
-Sơn kẻ trên mặt đường 
-Các chỉ tiêu kỹ thuật của vạch sơn theo Bảng 9 TCVN 
-8791:2011 với các giá trị nhỏ hơn 70% giá trị các chỉ tiêu 
-quy định ở Bảng 3 và Bảng 4 TCVN 8791:2011 hoặc 
-trên 10% sơn kẻ trên đường mờ không còn tác dụng. 
-4 
-Đối với cầu 
-Cầu hư hỏng, xuống cấp xuất hiện nguy cơ sự cố công 
-trình dẫn đến mất an toàn. 
-5 
-Hệ thống thoát nước 
-mặt đường, cống, rãnh 
-Để đọng nước lớn hơn 1/3 chiều rộng mặt đường trên 
-mặt đường, tắc cống, rãnh thoát nước quá 24 giờ mà 
-không thực hiện các biện pháp thoát nước. 
-6 
-Công tác phát quang 
-cây cối, cắt cỏ 
-Cây che khuất tầm nhìn ảnh hưởng đến an toàn giao 
-thông, cỏ mọc cao quá quy định tại TCCS 
-17:2016/TCĐBVN (hoặc TCVN tương đương) có chiều 
-dài 150 m. 
-7 
-Hệ thống biển báo, cọc 
-tiêu, hộ lan, đinh phản 
-quang 
-≥ 3% biển báo không đảm bảo QCVN 41:2024/BGTVT 
-không đảm bảo tầm quan sát biển báo; màng phản quang 
-chưa đảm bảo tiêu chuẩn TCVN 7887:2018; ≥ 3% cọc 
-tiêu, hộ lan , đinh phản quang bị hư hỏng mất tác dụng. 
-8 
-Lề đường 
-Lề đường không đảm bảo kích thước hình học (sạt, xói lở 
-≥ 1/2 chiều rộng lề đường, biến dạng, nhô cao hơn mép 
-mặt đường h≥ 05 cm) với chiều dài ≥ 300 m. 
-9 
-Các trường hợp khác 
-Vi phạm bằng hoặc lớn hơn mức quy định tại Mục A Phụ 
-lục này. 
+<table data-source="34-PLII">
+<tr><th>TT</th><th>Hạng mục công việc<br>vi phạm chất lượng</th><th>Mức độ vi phạm chất lượng bảo trì phải tạm dừng<br>thu tiền dịch vụ sử dụng đường bộ</th></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A"><td>A</td><td colspan="2">Quốc lộ, đường tỉnh</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::I"><td>I</td><td colspan="2">Đối với mặt đường nhựa</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::I::R1"><td>1</td><td>Mặt đường bị nứt:<br>- Nứt mai rùa;<br>- Nứt lưới lớn;<br>- Nứt đơn dọc và<br>ngang;<br>- Nứt phản ánh;<br>- Nứt parabol.</td><td>Để xảy ra hư hỏng mức độ nặng (mức H theo TCVN<br>14182:2024 gây ảnh hưởng đến giao thông trên tuyến) có<br>khối lượng hư hỏng thuộc một trong các trường hợp sau:<br>- Tổng diện tích nứt mai rùa: chiếm 0,3% tổng diện tích<br>mặt đường và tối đa không quá 300 m².<br>- Tổng diện tích nứt lưới lớn: chiếm 0,3% tổng diện tích<br>mặt đường và tối đa không quá 300 m².<br>- 10 vệt (mỗi vệt ≥50% bề rộng mặt đường) và tổng<br>chiều dài nứt dọc ≥300 m.<br>- 10 vệt (mỗi vệt ≥50% bề rộng mặt đường) và tổng<br>chiều dài phản ánh ≥300 m.<br>- Tổng diện tích nứt parapol: chiếm 0,3% tổng diện tích<br>mặt đường và tối đa không quá 300 m², không có ổ gà,<br>trồi lún.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::I::R2"><td>2</td><td>Mặt đường bị lún vệt<br>bánh xe</td><td>Để xảy ra hư hỏng mức độ nặng, lún vệt bánh xe ≥ 2,5cm (mức<br>H theo TCVN 14182:2024 gây ảnh hưởng đến giao thông trên<br>tuyến) và có tổng chiều dài các vệt, đoạn lún ≥ 500 m.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::I::R3"><td>3</td><td>Mặt đường bị hư hỏng<br>cục bộ:<br>- Lún lõm cục bộ;<br>- Lồi lõm;<br>- Đẩy trồi nhựa, dồn<br>nhựa (dạng sống trâu<br>≥5 cm);<br>- Lượn sóng;<br>- Ổ gà (Sâu≥ 5 cm).</td><td>Để xảy ra hư hỏng mức độ nặng (mức H theo TCVN<br>14182:2024 gây ảnh hưởng đến giao thông trên tuyến) có<br>khối lượng hư hỏng thuộc một trong các trường hợp sau:<br>- Tổng diện tích lún lõm cục bộ: chiếm 0,3% tổng diện<br>tích mặt đường và tối đa không quá 300 m².<br>- Tổng diện tích lồi lõm: chiếm 0,3% tổng diện tích mặt<br>đường và tối đa không quá 200 m².<br>- Tổng diện tích đẩy trồi nhựa, dồn nhựa: chiếm 0,3%<br>tổng diện tích mặt đường và tối đa không quá 300 m².<br>- Tổng diện tích lượn sóng: chiếm 0,3% tổng diện tích<br>mặt đường và tối đa không quá 300 m².<br>- Tổng diện tích ổ gà: chiếm 0,05% tổng diện tích mặt<br>đường và tối đa không quá 50 m².</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::I::R4"><td>4</td><td>Mặt đường bị chảy<br>nhựa</td><td>Để xảy ra hư hỏng mức độ nặng (mức H theo TCVN<br>14182:2024 gây ảnh hưởng đến giao thông trên tuyến) và<br>có tổng diện tích chiếm 0,3% tổng diện tích mặt đường<br>và tối đa không quá 300 m²</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::I::R5"><td>5</td><td>Mặt đường bị hư hỏng<br>các dạng khác:<br>- Vệt cắt vá;<br>- Bong bật và bong<br>tróc;<br>- Nứt vỡ mép mặt<br>đường.</td><td>Để xảy ra hư hỏng mức độ nặng (mức H theo TCVN<br>14182:2024 gây ảnh hưởng đến giao thông trên tuyến) có<br>khối lượng hư hỏng thuộc một trong các trường hợp sau:<br>- Trên 10 vết cắt vát bị bong bật, rạn nứt;<br>- Tổng diện tích bong bật và bong tróc: chiếm 0,3% tổng<br>diện tích mặt đường và tối đa không quá 300 m².<br>- Tổng chiều dài nứt vỡ mép ≥ 200 m² hoặc ≥ 500 m.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::II"><td>II</td><td colspan="2">Đối với mặt đường Bê tông xi măng (BTXM)</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::II::R1"><td>1</td><td>Mặt đường bị hư hỏng<br>cục bộ: rộp vỡ bề mặt;<br>nứt vỡ góc tấm, nứt<br>chia tấm, nứt om tấm;<br>nứt rạn, bong mặt<br>đường</td><td>Để xảy ra hư hỏng mức độ nặng (mức H theo TCVN<br>14182:2024 gây ảnh hưởng đến giao thông trên tuyến) và<br>có tổng số tấm hư hỏng ≥ 30 tấm hoặc ≥ 10% tổng diện<br>tích phần đường BTXM.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::II::R2"><td>2</td><td>Chênh cao độ giữa các<br>tấm do lún (nền yếu,<br>do xói lở vật liệu, hay<br>do uốn vồng tấm);<br>chênh cao giữa tấm bê<br>tông mặt đường và lề<br>đường</td><td>Để xảy ra hư hỏng mức độ nặng (mức H theo TCVN<br>14182:2024 gây ảnh hưởng đến giao thông trên tuyến) và<br>chiều dài chênh cao ≥ 100 m.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::II::R3"><td>3</td><td>Hư hỏng khe nối, bong<br>vỡ vật liệu khe nối; vết<br>nứt thẳng, vết nứt vỡ</td><td>Để xảy ra hư hỏng mức độ nặng (mức H theo TCVN<br>14182:2024 gây ảnh hưởng đến giao thông trên tuyến) và<br>tổng chiều dài khe hư hỏng ≥ 100 m.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::III"><td>III</td><td colspan="2">Đối với các công trình khác</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::III::R1"><td>1</td><td>Sơn kẻ trên mặt đường</td><td>Các chỉ tiêu kỹ thuật của vạch sơn theo Bảng 9 TCVN<br>8791:2011 với các giá trị nhỏ hơn 70% giá trị các chỉ tiêu<br>quy định ở Bảng 3 và Bảng 4 TCVN 8791:2011 hoặc<br>trên 20% sơn kẻ trên đường mờ không còn tác dụng.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::III::R2"><td>2</td><td>Đối với cầu</td><td>Cầu hư hỏng, xuống cấp xuất hiện nguy cơ sự cố công<br>trình dẫn đến mất an toàn, nguy cơ sập đổ.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::III::R3"><td>3</td><td>Hệ thống thoát nước<br>mặt đường, cống, rãnh</td><td>Để đọng nước lớn hơn 1/3 chiều rộng mặt đường trên<br>mặt đường, tắc cống, rãnh thoát nước quá 24 giờ mà<br>không thực hiện các biện pháp thoát nước.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::III::R4"><td>4</td><td>Công tác phát quang<br>cây cối, cắt cỏ</td><td>Cây cối che khuất hệ thống báo hiệu đường bộ, che khuất<br>tầm nhìn ảnh hưởng đến an toàn giao thông, cỏ mọc cao<br>quá quy định tại TCVN 14182:2024 với tổng chiều dài vi<br>phạm: chiếm 3% tổng chiều dài và tối đa không quá 300 m.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::III::R5"><td>5</td><td>Hệ thống biển báo, cọc<br>tiêu, hộ lan</td><td>≥10% tổng số biển báo hoặc 5% biển cấm bị mờ không<br>đảm bảo QCVN 41:2024/BGTVT, không đảm bảo tầm<br>quan sát biển báo; màng phản quang chưa đảm bảo tiêu<br>chuẩn TCVN 7887:2018;<br>≥20% cọc tiêu, hộ lan bị hư hỏng mất tác dụng.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::A::III::R6"><td>6</td><td>Lề đường</td><td>Chênh cao với mặt đường ≥5 cm với chiều dài ≥ 500 m hoặc<br>chênh cao với mặt đường ≥ 10 cm với chiều dài ≥ 300 m.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::B"><td>B</td><td colspan="2">Đường cao tốc</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::B::R1"><td>1</td><td>Mặt đường bị hằn lún<br>vệt bánh xe</td><td>a) Tuyến đường có từ 5% chiều dài tuyến đường trở lên<br>có vệt hằn lún, trong đó vị trí lún sâu ≥ 2,5 cm có chiều<br>dài ≥ 150 m.<br>b) Tuyến đường có tổng chiều dài các vệt lún sâu hơn ≥<br>2,5 cm lớn hơn 500 m.<br>c) Tuyến đường có tổng chiều dài các vệt lún sâu hơn ≥ 5<br>cm trên 100 m.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::B::R2"><td>2</td><td>Mặt đường bị hư hỏng<br>cục bộ: ổ gà, sình lún<br>gây mất an toàn</td><td>Để xảy ra hư hỏng chiếm 0,01 % tổng diện tích mặt đường<br>và tối đa không quá 30 m² mà không khắc phục trong 24<br>giờ (trừ khi mưa bão) theo yêu cầu về kỹ thuật, chất lượng<br>và thời gian thực hiện tại TCCS 17:2016/TCĐBVN (hoặc<br>TCVN tương đương).</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::B::R3"><td>3</td><td>Sơn kẻ trên mặt đường</td><td>Các chỉ tiêu kỹ thuật của vạch sơn theo Bảng 9 TCVN<br>8791:2011 với các giá trị nhỏ hơn 70% giá trị các chỉ tiêu<br>quy định ở Bảng 3 và Bảng 4 TCVN 8791:2011 hoặc<br>trên 10% sơn kẻ trên đường mờ không còn tác dụng.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::B::R4"><td>4</td><td>Đối với cầu</td><td>Cầu hư hỏng, xuống cấp xuất hiện nguy cơ sự cố công<br>trình dẫn đến mất an toàn.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::B::R5"><td>5</td><td>Hệ thống thoát nước<br>mặt đường, cống, rãnh</td><td>Để đọng nước lớn hơn 1/3 chiều rộng mặt đường trên<br>mặt đường, tắc cống, rãnh thoát nước quá 24 giờ mà<br>không thực hiện các biện pháp thoát nước.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::B::R6"><td>6</td><td>Công tác phát quang<br>cây cối, cắt cỏ</td><td>Cây che khuất tầm nhìn ảnh hưởng đến an toàn giao<br>thông, cỏ mọc cao quá quy định tại TCCS<br>17:2016/TCĐBVN (hoặc TCVN tương đương) có chiều<br>dài 150 m.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::B::R7"><td>7</td><td>Hệ thống biển báo, cọc<br>tiêu, hộ lan, đinh phản<br>quang</td><td>≥ 3% biển báo không đảm bảo QCVN 41:2024/BGTVT<br>không đảm bảo tầm quan sát biển báo; màng phản quang<br>chưa đảm bảo tiêu chuẩn TCVN 7887:2018; ≥ 3% cọc<br>tiêu, hộ lan , đinh phản quang bị hư hỏng mất tác dụng.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::B::R8"><td>8</td><td>Lề đường</td><td>Lề đường không đảm bảo kích thước hình học (sạt, xói lở<br>≥ 1/2 chiều rộng lề đường, biến dạng, nhô cao hơn mép<br>mặt đường h≥ 05 cm) với chiều dài ≥ 300 m.</td></tr>
+<tr data-unit="34_2024_TT_BGTVT::PLII::B::R9"><td>9</td><td>Các trường hợp khác</td><td>Vi phạm bằng hoặc lớn hơn mức quy định tại Mục A Phụ<br>lục này.</td></tr>
+</table> 
  
  

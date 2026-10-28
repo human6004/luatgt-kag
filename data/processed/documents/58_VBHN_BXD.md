@@ -6437,7 +6437,7 @@ Prime mover/Truck/Bus/Semi- trailer
 6 
 3 
 7 
-4 
+4 8 
 
 153
  

@@ -230,7 +230,7 @@ nguy hại cho xã hội, mặc dù phải thấy trước và có thể thấy 
 ##### Điều 12. Tuổi chịu trách nhiệm hình sự 
 1. Người từ đủ 16 tuổi trở lên phải chịu trách nhiệm hình sự về mọi tội phạm, 
 trừ những tội phạm mà Bộ luật này có quy định khác. 
-2.6 Người từ đủ 14 tuổi đến dưới 16 tuổi phải chịu trách nhiệm hình sự về tội 
+2. [^vbhn11-6] Người từ đủ 14 tuổi đến dưới 16 tuổi phải chịu trách nhiệm hình sự về tội 
 phạm rất nghiêm trọng, tội phạm đặc biệt nghiêm trọng quy định tại một trong các 
 điều 123, 134, 141, 142, 143, 144, 150, 151, 168, 169, 170, 171, 173, 178, 248, 
 249, 250, 251, 252, 265, 266, 286, 287, 289, 290, 299, 303 và 304 của Bộ luật này.  
@@ -238,20 +238,11 @@ phạm rất nghiêm trọng, tội phạm đặc biệt nghiêm trọng quy đ�
 Người phạm tội trong tình trạng mất khả năng nhận thức hoặc khả năng điều 
 khiển hành vi của mình do dùng rượu, bia hoặc chất kích thích mạnh khác, thì vẫn 
 phải chịu trách nhiệm hình sự. 
-##### Điều 14. Chuẩn bị phạm tội 
+##### Điều 14. Chuẩn bị phạm tội[^vbhn11-7]
 1. Chuẩn bị phạm tội là tìm kiếm, sửa soạn công cụ, phương tiện hoặc tạo ra 
 những điều kiện khác để thực hiện tội phạm hoặc thành lập, tham gia nhóm tội 
 phạm, trừ trường hợp thành lập hoặc tham gia nhóm tội phạm quy định tại Điều 
 109, điểm a khoản 2 Điều 113 hoặc điểm a khoản 2 Điều 299 của Bộ luật này. 
-                                          
-6 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 3 Điều 1 của Luật số 12/2017/QH14 
-sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực kể từ ngày 01 
-tháng 01 năm 2018. 
-7 Điều này được sửa đổi, bổ sung theo quy định tại khoản 4 Điều 1 của Luật số 12/2017/QH14 
-sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực kể từ ngày 01 
-tháng 01 năm 2018. 
-
-  
 2. Người chuẩn bị phạm tội quy định tại một trong các điều 108, 109, 110, 
 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 123, 134, 168, 169, 207, 
 299, 300, 301, 302, 303 và 324 của Bộ luật này thì phải chịu trách nhiệm hình sự. 
@@ -286,8 +277,6 @@ của người thực hành.
 cản trở việc phát hiện, điều tra, xử lý người phạm tội, thì phải chịu trách nhiệm 
 hình sự về tội che giấu tội phạm trong những trường hợp mà Bộ luật này quy định. 
 
-65 
- 
 2. Người che giấu tội phạm là ông, bà, cha, mẹ, con, cháu, anh chị em ruột, vợ 
 hoặc chồng của người phạm tội không phải chịu trách nhiệm hình sự theo quy định 
 tại khoản 1 Điều này, trừ trường hợp che giấu các tội xâm phạm an ninh quốc gia 
@@ -1467,10 +1456,10 @@ bị phạt tù từ 12 năm đến 20 năm, tù chung thân hoặc tử hình;
 2. Người đồng phạm khác, thì bị phạt tù từ 05 năm đến 15 năm; 
 3. Người chuẩn bị phạm tội này, thì bị phạt tù từ 01 năm đến 05 năm. 
 ##### Điều 113. Tội khủng bố nhằm chống chính quyền nhân dân 
-1. Người nào nhằm chống chính quyền nhân dân mà xâm phạm tính mạng 
+1. [^vbhn11-31] Người nào nhằm chống chính quyền nhân dân mà xâm phạm tính mạng 
 của cán bộ, công chức hoặc người khác hoặc phá hủy tài sản của cơ quan, tổ chức, 
 cá nhân, thì bị phạt tù từ 12 năm đến 20 năm, tù chung thân hoặc tử hình. 
-2. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 10 năm 
+2. [^vbhn11-32] Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 10 năm 
 đến 15 năm: 
 a) Thành lập, tham gia tổ chức khủng bố, tổ chức tài trợ khủng bố; 
 b) Cưỡng ép, lôi kéo, tuyển mộ, đào tạo, huấn luyện phần tử khủng bố; chế tạo, 
@@ -1479,7 +1468,7 @@ c) Xâm phạm tự do thân thể, sức khỏe của cán bộ, công chức h
 chiếm giữ, làm hư hại tài sản của cơ quan, tổ chức, cá nhân; 
 d) Tấn công, xâm hại, cản trở, gây rối loạn hoạt động của mạng máy tính, 
 mạng viễn thông, phương tiện điện tử của cơ quan, tổ chức, cá nhân. 
-3. Phạm tội trong trường hợp đe dọa thực hiện một trong các hành vi quy 
+3. [^vbhn11-33] Phạm tội trong trường hợp đe dọa thực hiện một trong các hành vi quy 
 định tại khoản 1 Điều này hoặc có hành vi khác uy hiếp tinh thần của cán bộ, công 
 chức hoặc người khác, thì bị phạt tù từ 05 năm đến 10 năm. 
 4. Khủng bố cá nhân, tổ chức nước ngoài hoặc các tổ chức quốc tế nhằm gây 
@@ -1487,17 +1476,8 @@ khó khăn cho quan hệ quốc tế của nước Cộng hòa xã hội chủ n
 cũng bị xử phạt theo Điều này. 
 5. Người chuẩn bị phạm tội này, thì bị phạt tù từ 01 năm đến 05 năm.  
  
-31 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 21 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
-32 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 21 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
-33 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 21 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
 
-5 
+ 
  
 ##### Điều 114. Tội phá hoại cơ sở vật chất - kỹ thuật của nước Cộng hòa xã hội 
 chủ nghĩa Việt Nam 
@@ -1699,8 +1679,7 @@ d) Đối với người dưới 16 tuổi;
 
 11 
  
-##### Điều 134. Tội cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người 
-khác34 
+##### Điều 134. Tội cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác[^vbhn11-34]
 1. Người nào cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người 
 khác mà tỷ lệ tổn thương cơ thể từ 11% đến 30% hoặc dưới 11% nhưng thuộc một 
 trong các trường hợp sau đây, thì bị phạt cải tạo không giam giữ đến 03 năm hoặc 
@@ -1715,7 +1694,7 @@ chữa bệnh cho mình;
 đ) Có tổ chức;  
 e) Lợi dụng chức vụ, quyền hạn; 
 g) Trong thời gian đang bị giữ, tạm giữ, tạm giam, đang chấp hành án phạt tù, 
-đang chấp hành biện pháp35 giáo dục tại trường giáo dưỡng hoặc đang chấp hành 
+đang chấp hành biện pháp[^vbhn11-35] giáo dục tại trường giáo dưỡng hoặc đang chấp hành 
 biện pháp xử lý vi phạm hành chính đưa vào cơ sở giáo dục bắt buộc, đưa vào 
 trường giáo dưỡng hoặc đưa vào cơ sở cai nghiện bắt buộc; 
 h) Thuê gây thương tích hoặc gây tổn hại cho sức khỏe của người khác hoặc 
@@ -1727,11 +1706,7 @@ k) Đối với người đang thi hành công vụ hoặc vì lý do công vụ
 a) Gây thương tích hoặc gây tổn hại cho sức khỏe của người khác mà tỷ lệ tổn 
 thương cơ thể từ 31% đến 60%; 
  
-34 Điều này được sửa đổi, bổ sung theo quy định tại khoản 22 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
-35 Từ “tư pháp” được bỏ theo quy định tại điểm b khoản 1 Điều 177 của Luật Tư pháp người 
-chưa thành niên số 59/2024/QH15, có hiệu lực kể từ ngày 01 tháng 01 năm 2026. 
+ 
 
   
 b) Gây thương tích hoặc gây tổn hại cho sức khỏe của 02 người trở lên mà tỷ 
@@ -1765,7 +1740,6 @@ d) Gây thương tích hoặc gây tổn hại cho sức khỏe của người k
 thương cơ thể 61% trở lên nhưng thuộc một trong các trường hợp quy định tại các 
 điểm từ điểm a đến điểm k khoản 1 Điều này; 
 
-13 
  
 đ) Gây thương tích hoặc gây tổn hại cho sức khỏe của 02 người trở lên mà tỷ 
 lệ tổn thương cơ thể của mỗi người từ 31% đến 60% nhưng thuộc một trong các 
@@ -1977,7 +1951,7 @@ kể từ ngày 01 tháng 01 năm 2018.
 
 19 
  
-3. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù 20 năm, 
+3. [^vbhn11-48] Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù 20 năm, 
 tù chung thân hoặc tử hình: 
 a) Có tổ chức; 
 b) Nhiều người hiếp một người; 
@@ -2003,9 +1977,6 @@ e) Gây thương tích, gây tổn hại cho sức khỏe hoặc gây rối lo�
 hành vi của nạn nhân mà tỷ lệ tổn thương cơ thể từ 31% đến 60%; 
 g) Tái phạm nguy hiểm. 
  
-48 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 24 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
 49 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 25 Điều 1 của Luật số 
 12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
 kể từ ngày 01 tháng 01 năm 2018. 
@@ -2047,7 +2018,7 @@ kể từ ngày 01 tháng 01 năm 2018.
  
 đ) Đối với 02 người trở lên; 
 e) Tái phạm nguy hiểm. 
-3. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 12 năm 
+3. [^vbhn11-52] Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 12 năm 
 đến 20 năm hoặc tù chung thân: 
 a) Nhiều người cưỡng dâm một người; 
 b) Gây thương tích, gây tổn hại cho sức khỏe hoặc gây rối loạn tâm thần và 
@@ -2073,9 +2044,6 @@ thương cơ thể từ 31% đến 60%;
 e) Đối với người mà người phạm tội có trách nhiệm chăm sóc, giáo dục, 
 chữa bệnh. 
  
-52 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 26 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
 
   
 3. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 07 năm 
@@ -2755,7 +2723,7 @@ kể từ ngày 01 tháng 01 năm 2018.
   
 b) Gây thương tích, gây tổn hại cho sức khỏe hoặc gây rối loạn tâm thần và 
 hành vi của nạn nhân mà tỷ lệ tổn thương cơ thể từ 31% đến 60%. 
-4. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 15 năm 
+4. [^vbhn11-81] Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 15 năm 
 đến 20 năm hoặc tù chung thân: 
 a) Chiếm đoạt tài sản trị giá 500.000.000 đồng trở lên; 
 b) Làm chết người; 
@@ -2780,9 +2748,6 @@ e) Tái phạm nguy hiểm.
 3. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 07 năm 
 đến 15 năm: 
  
-81 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 33 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
 
 43 
  
@@ -3099,9 +3064,9 @@ kể từ ngày 01 tháng 01 năm 2018.
   
 e) Vì lý do công vụ của người bị hại; 
 g) Tái phạm nguy hiểm. 
-3. Phạm tội gây thiệt hại cho tài sản trị giá từ 200.000.000 đồng đến dưới 
+3. [^vbhn11-103] Phạm tội gây thiệt hại cho tài sản trị giá từ 200.000.000 đồng đến dưới 
 500.000.000 đồng, thì bị phạt tù từ 05 năm đến 10 năm. 
-4. Phạm tội gây thiệt hại cho tài sản trị giá 500.000.000 đồng trở lên, thì bị 
+4. [^vbhn11-104] Phạm tội gây thiệt hại cho tài sản trị giá 500.000.000 đồng trở lên, thì bị 
 phạt tù từ 10 năm đến 20 năm. 
 5. Người phạm tội còn có thể bị phạt tiền từ 10.000.000 đồng đến 100.000.000 đồng, 
 cấm đảm nhiệm chức vụ, cấm hành nghề hoặc làm công việc nhất định từ 01 năm 
@@ -3121,12 +3086,6 @@ nghiệp trị giá 2.000.000.000 đồng trở lên, thì bị phạt tù từ 
 4. Người phạm tội còn có thể bị105 cấm đảm nhiệm chức vụ, cấm hành nghề 
 hoặc làm công việc nhất định từ 01 năm đến 05 năm.  
  
-103 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 36 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
-104 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 36 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
 105 Từ “bị” được bổ sung theo quy định tại điểm e khoản 1 Điều 2 của Luật số 
 12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
 kể từ ngày 01 tháng 01 năm 2018. 
@@ -3194,14 +3153,10 @@ b) Đã bị xử phạt vi phạm hành chính về hành vi này mà còn vi p
 a) Đối với người dưới 16 tuổi, phụ nữ mà biết là có thai, người già yếu; 
 b) Đối với người khuyết tật nặng, khuyết tật đặc biệt nặng hoặc người mắc 
 bệnh hiểm nghèo. 
-##### Điều 186. Tội từ chối hoặc trốn tránh nghĩa vụ cấp dưỡng 
+##### Điều 186. Tội từ chối hoặc trốn tránh nghĩa vụ cấp dưỡng[^vbhn11-107] 
  
-107 Điều này được sửa đổi, bổ sung theo quy định tại khoản 37 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
+ 
 
-55 
- 
 Người nào có nghĩa vụ cấp dưỡng và có khả năng thực tế để thực hiện việc cấp 
 dưỡng đối với người mà mình có nghĩa vụ cấp dưỡng theo quy định của pháp luật 
 mà từ chối hoặc trốn tránh nghĩa vụ cấp dưỡng, làm cho người được cấp dưỡng 
@@ -5887,7 +5842,7 @@ nghiệp và Phát triển nông thôn.
 cấm đảm nhiệm chức vụ, cấm hành nghề hoặc làm công việc nhất định từ 01 năm 
 đến 05 năm. 
 ##### Điều 242. Tội hủy hoại nguồn lợi thủy sản  
-1. Người nào vi phạm quy định về bảo vệ nguồn lợi thủy sản thuộc một 
+1. [^vbhn11-216] Người nào vi phạm quy định về bảo vệ nguồn lợi thủy sản thuộc một 
 trong các trường hợp sau đây, gây thiệt hại nguồn lợi thủy sản từ 100.000.000 đồng 
 đến dưới 500.000.000 đồng hoặc thủy sản thu được trị giá từ 50.000.000 đồng 
 đến dưới 200.000.000 đồng hoặc đã bị xử phạt vi phạm hành chính về một trong 
@@ -5906,13 +5861,7 @@ thương cơ thể 61% trở lên;
 e) Gây thương tích hoặc gây tổn hại cho sức khỏe của 02 người trở lên mà tổng 
 tỷ lệ tổn thương cơ thể của những người này từ 61% đến 121%; 
 g) Vi phạm quy định khác của pháp luật về bảo vệ nguồn lợi thủy sản. 
- 
-216 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 62 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
-
-  
-2. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tiền từ 
+2. [^vbhn11-217] Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tiền từ 
 300.000.000 đồng đến 1.000.000.000 đồng hoặc phạt tù từ 03 năm đến 05 năm: 
 a) Gây thiệt hại nguồn lợi thủy sản từ 500.000.000 đồng đến dưới 
 1.500.000.000 đồng hoặc thủy sản thu được trị giá từ 200.000.000 đồng đến dưới 
@@ -5920,7 +5869,7 @@ a) Gây thiệt hại nguồn lợi thủy sản từ 500.000.000 đồng đến
 b) Làm chết người; 
 c) Gây thương tích hoặc gây tổn hại cho sức khỏe của 02 người trở lên mà tổng 
 tỷ lệ tổn thương cơ thể của những người này từ 122% đến 200%.  
-3. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 05 năm 
+3. [^vbhn11-218] Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 05 năm 
 đến 10 năm: 
 a) Gây thiệt hại nguồn lợi thủy sản 1.500.000.000 đồng trở lên hoặc thủy sản 
 thu được trị giá 500.000.000 đồng trở lên; 
@@ -5938,21 +5887,11 @@ b) Phạm tội thuộc trường hợp quy định tại khoản 2 Điều này
 c) Phạm tội thuộc trường hợp quy định tại khoản 3 Điều này, thì bị phạt tiền từ 
 3.000.000.000 đồng đến 5.000.000.000 đồng hoặc đình chỉ hoạt động có thời hạn 
 từ 06 tháng đến 03 năm;  
- 
-217 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 62 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
-218 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 62 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
-
-41 
- 
 d) Pháp nhân thương mại còn có thể bị phạt tiền từ 50.000.000 đồng đến 
 200.000.000 đồng, cấm kinh doanh, cấm hoạt động trong một số lĩnh vực nhất định 
 từ 01 năm đến 03 năm hoặc cấm huy động vốn từ 01 năm đến 03 năm.  
 ##### Điều 243. Tội hủy hoại rừng 
-1. Người nào đốt, phá rừng trái phép hoặc có hành vi khác hủy hoại rừng 
+1. [^vbhn11-219] Người nào đốt, phá rừng trái phép hoặc có hành vi khác hủy hoại rừng 
 thuộc một trong các trường hợp sau đây, thì bị phạt tiền từ 50.000.000 đồng đến 
 500.000.000 đồng, phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 01 năm 
 đến 05 năm: 
@@ -5975,15 +5914,9 @@ g) Diện tích rừng hoặc trị giá lâm sản dưới mức quy định t�
 điểm a, b, c, d, đ và e khoản này nhưng đã bị xử phạt vi phạm hành chính về một 
 trong các hành vi quy định tại Điều này hoặc đã bị kết án về tội này, chưa được 
 xóa án tích mà còn vi phạm. 
-2. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 03 năm 
+2. [^vbhn11-220] Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 03 năm 
 đến 07 năm: 
  
-219 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 63 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
-220 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 63 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
 
   
 a) Có tổ chức; 
@@ -6004,7 +5937,7 @@ hoặc Danh mục thực vật rừng, động vật rừng nguy cấp, quý, hi
 từ 60.000.000 đồng đến dưới 100.000.000 đồng; thực vật thuộc Danh mục thực vật 
 rừng, động vật rừng nguy cấp, quý, hiếm Nhóm IIA trị giá từ 100.000.000 đồng 
 đến dưới 200.000.000 đồng. 
-3. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 07 năm 
+3. [^vbhn11-221] Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 07 năm 
 đến 15 năm: 
 a) Cây trồng chưa thành rừng hoặc rừng khoanh nuôi tái sinh thuộc rừng chưa 
 có trữ lượng có diện tích 100.000 mét vuông (m2) trở lên; 
@@ -6016,11 +5949,7 @@ rừng bị thiệt hại không tính được bằng diện tích;
 e) Thực vật thuộc Danh mục loài nguy cấp, quý, hiếm được ưu tiên bảo vệ 
 hoặc Danh mục thực vật rừng, động vật rừng nguy cấp, quý, hiếm Nhóm IA trị giá 
  
-221 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 63 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
 
-43 
  
 100.000.000 đồng trở lên; thực vật thuộc Danh mục thực vật rừng, động vật rừng 
 nguy cấp, quý, hiếm Nhóm IIA trị giá 200.000.000 đồng trở lên. 
@@ -6030,7 +5959,7 @@ cấm đảm nhiệm chức vụ, cấm hành nghề hoặc làm công việc nh
 5. Pháp nhân thương mại phạm tội quy định tại Điều này, thì bị phạt như sau: 
 a) Phạm tội thuộc trường hợp quy định tại khoản 1 Điều này, thì bị phạt tiền từ 
 500.000.000 đồng đến 2.000.000.000 đồng;  
-b)222 Phạm tội thuộc một trong các trường hợp quy định tại các điểm a, c, d, đ, 
+b) [^vbhn11-222] Phạm tội thuộc một trong các trường hợp quy định tại các điểm a, c, d, đ, 
 e, g, h và i khoản 2 Điều này, thì bị phạt tiền từ 2.000.000.000 đồng đến 
 5.000.000.000 đồng; 
 c) Phạm tội thuộc trường hợp quy định tại khoản 3 Điều này, thì bị phạt tiền từ 
@@ -6041,23 +5970,14 @@ chỉ hoạt động vĩnh viễn;
 đ) Pháp nhân thương mại còn có thể bị phạt tiền từ 50.000.000 đồng đến 
 200.000.000 đồng, cấm kinh doanh, cấm hoạt động trong một số lĩnh vực nhất định 
 hoặc cấm huy động vốn từ 01 năm đến 03 năm. 
-##### Điều 244. Tội vi phạm quy định về bảo vệ động vật nguy cấp, quý, hiếm  
-1. Người nào vi phạm quy định về bảo vệ động vật thuộc Danh mục loài 
+##### Điều 244. Tội vi phạm quy định về bảo vệ động vật nguy cấp, quý, hiếm [^vbhn11-223]  
+1. [^vbhn11-224] Người nào vi phạm quy định về bảo vệ động vật thuộc Danh mục loài 
 nguy cấp, quý, hiếm được ưu tiên bảo vệ hoặc Danh mục thực vật rừng, động vật 
 rừng nguy cấp, quý, hiếm Nhóm IB hoặc Phụ lục I Công ước về buôn bán quốc tế 
 các loài động vật, thực vật hoang dã nguy cấp thuộc một trong các trường hợp sau 
 đây, thì bị phạt tiền từ 500.000.000 đồng đến 2.000.000.000 đồng hoặc phạt tù từ 
 01 năm đến 05 năm: 
  
-222 Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 63 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
-223 Tên Điều này được sửa đổi, bổ sung theo quy định tại điểm a khoản 64 Điều 1 của Luật 
-số 12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu 
-lực kể từ ngày 01 tháng 01 năm 2018. 
-224 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 64 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
 
   
 a) Săn bắt, giết, nuôi, nhốt, vận chuyển, buôn bán trái phép động vật thuộc 
@@ -6083,7 +6003,7 @@ sống hoặc sản phẩm của động vật có số lượng dưới mức q
 và đ khoản này nhưng đã bị xử phạt vi phạm hành chính về một trong các hành vi 
 quy định tại Điều này hoặc đã bị kết án về tội này, chưa được xóa án tích mà còn 
 vi phạm. 
-2. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 05 năm 
+2. [^vbhn11-225] Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 05 năm 
 đến 10 năm: 
 a) Số lượng động vật hoặc bộ phận cơ thể không thể tách rời sự sống của từ 
 03 cá thể đến 07 cá thể lớp thú, từ 07 cá thể đến 10 cá thể lớp chim, bò sát hoặc từ 
@@ -6092,11 +6012,7 @@ b) Số lượng động vật hoặc bộ phận cơ thể không thể tách r
 08 cá thể đến 11 cá thể lớp thú, từ 11 cá thể đến 15 cá thể lớp chim, bò sát hoặc từ 
 16 cá thể đến 20 cá thể động vật lớp khác quy định tại điểm d khoản 1 Điều này; 
  
-225 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 64 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
 
-45 
  
 c) Từ 01 cá thể đến 02 cá thể voi, tê giác hoặc bộ phận cơ thể không thể tách 
 rời sự sống của từ 01 cá thể đến 02 cá thể voi, tê giác; từ 03 cá thể đến 05 cá thể 
@@ -6110,7 +6026,7 @@ g) Sử dụng công cụ hoặc phương tiện săn bắt bị cấm;
 h) Săn bắt trong khu vực bị cấm hoặc vào thời gian bị cấm; 
 i) Buôn bán, vận chuyển qua biên giới; 
 k) Tái phạm nguy hiểm. 
-3. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 10 năm 
+3. [^vbhn11-226] Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 10 năm 
 đến 15 năm: 
 a) Số lượng động vật hoặc bộ phận cơ thể không thể tách rời sự sống của 08 cá 
 thể lớp thú trở lên, 11 cá thể lớp chim, bò sát trở lên hoặc 16 cá thể động vật lớp 
@@ -6127,15 +6043,12 @@ d) Ngà voi có khối lượng 90 kilôgam trở lên; sừng tê giác có kh�
 cấm đảm nhiệm chức vụ, cấm hành nghề hoặc làm công việc nhất định từ 01 năm 
 đến 05 năm. 
  
-226 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 64 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
 
   
 5. Pháp nhân thương mại phạm tội quy định tại Điều này, thì bị phạt như sau: 
 a) Phạm tội thuộc trường hợp quy định tại khoản 1 Điều này, thì bị phạt tiền từ 
 1.000.000.000 đồng đến 5.000.000.000 đồng;  
-b)227 Phạm tội thuộc một trong các trường hợp quy định tại các điểm a, b, c, d, 
+b) [^vbhn11-227] Phạm tội thuộc một trong các trường hợp quy định tại các điểm a, b, c, d, 
 đ, g, h, i và k khoản 2 Điều này, thì bị phạt tiền từ 5.000.000.000 đồng đến 
 10.000.000.000 đồng; 
 c) Phạm tội thuộc trường hợp quy định tại khoản 3 Điều này, thì bị phạt tiền từ 
@@ -6146,8 +6059,8 @@ chỉ hoạt động vĩnh viễn;
 đ) Pháp nhân thương mại còn có thể bị phạt tiền từ 300.000.000 đồng đến 
 600.000.000 đồng, cấm kinh doanh, cấm hoạt động trong một số lĩnh vực nhất định 
 hoặc cấm huy động vốn từ 01 năm đến 03 năm. 
-##### Điều 245. Tội vi phạm228 quy định về quản lý khu bảo tồn thiên nhiên 
-1. Người nào vi phạm229 quy định về quản lý khu bảo tồn thiên nhiên thuộc 
+##### Điều 245. Tội vi phạm[^vbhn11-228] quy định về quản lý khu bảo tồn thiên nhiên 
+1. Người nào vi phạm[^vbhn11-229] quy định về quản lý khu bảo tồn thiên nhiên thuộc 
 một trong các trường hợp sau đây, thì bị phạt tiền từ 50.000.000 đồng đến 
 300.000.000 đồng, phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng 
 đến 03 năm: 
@@ -6158,23 +6071,13 @@ nghiêm ngặt của khu bảo tồn thiên nhiên có tổng diện tích từ 
 c) Đã bị xử phạt vi phạm hành chính về một trong những hành vi này mà còn 
 vi phạm hoặc đã bị kết án về tội này, chưa được xóa án tích mà còn vi phạm. 
  
-227 Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 64 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
-228 Từ “các” được bãi bỏ theo quy định tại điểm e khoản 3 Điều 2 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
-229 Từ “các” được bãi bỏ theo quy định tại điểm e khoản 3 Điều 2 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
 
-47 
  
 2. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 03 năm 
 đến 07 năm: 
 a) Gây thiệt hại về tài sản 200.000.000 đồng trở lên; 
 b) Gây thiệt hại đến cảnh quan, hệ sinh thái tự nhiên trong phân khu bảo vệ 
-nghiêm ngặt230 của khu bảo tồn thiên nhiên có tổng diện tích231 500 mét vuông 
+nghiêm ngặt[^vbhn11-230] của khu bảo tồn thiên nhiên có tổng diện tích[^vbhn11-231] 500 mét vuông 
 (m2) trở lên;  
 c) Có tổ chức; 
 d) Sử dụng công cụ, phương tiện, biện pháp bị cấm; 
@@ -6195,13 +6098,6 @@ d) Pháp nhân thương mại còn có thể bị phạt tiền từ 50.000.000 
 hoặc cấm huy động vốn từ 01 năm đến 03 năm. 
  
  
-230 Cụm từ “phân khu bảo tồn nghiêm ngặt” được thay thế bằng cụm từ “phân khu bảo vệ 
-nghiêm ngặt” theo quy định tại điểm n khoản 2 Điều 2 của Luật số 12/2017/QH14 sửa đổi, bổ 
-sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực kể từ ngày 01 tháng 01 
-năm 2018. 
-231 Từ “từ” được bãi bỏ theo quy định tại điểm e khoản 3 Điều 2 của Luật số 12/2017/QH14 
-sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực kể từ ngày 01 
-tháng 01 năm 2018. 
 
   
 ##### Điều 246. Tội nhập khẩu, phát tán các loài ngoại lai xâm hại  
@@ -8464,12 +8360,12 @@ d) Chiếm đoạt tài sản trị giá 500.000.000 đồng trở lên;
 5. Người chuẩn bị phạm tội này, thì bị phạt tù từ 01 năm đến 05 năm. 
 ##### Điều 303. Tội phá hủy công trình, cơ sở, phương tiện quan trọng về an ninh 
 quốc gia  
-1. Người nào phá hủy công trình, cơ sở hoặc phương tiện giao thông vận tải, 
+1. [^vbhn11-304] Người nào phá hủy công trình, cơ sở hoặc phương tiện giao thông vận tải, 
 thông tin - liên lạc, công trình điện lực, dẫn chất đốt, công trình thủy lợi hoặc công 
 trình quan trọng khác về quốc phòng, an ninh, kinh tế, khoa học - kỹ thuật, văn hóa 
 và xã hội, nếu không thuộc trường hợp quy định tại Điều 114 của Bộ luật này, thì 
 bị phạt tù từ 03 năm đến 12 năm. 
-2. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 10 năm 
+2. [^vbhn11-305] Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 10 năm 
 đến 20 năm hoặc tù chung thân: 
 a) Có tổ chức; 
 b) Làm công trình, cơ sở, phương tiện quan trọng về an ninh quốc gia hư hỏng, 
@@ -8483,12 +8379,8 @@ g) Tái phạm nguy hiểm.
 3. Người chuẩn bị phạm tội này, thì bị phạt tù từ 01 năm đến 05 năm. 
 4. Người phạm tội còn có thể bị phạt quản chế từ 01 năm đến 05 năm. 
                                           
-304 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 105 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
-305 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 105 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
+ 
+ 
 
   
 ##### Điều 304. Tội chế tạo, tàng trữ, vận chuyển, sử dụng, mua bán trái phép 
@@ -10805,7 +10697,7 @@ d) Tái phạm nguy hiểm.
 3. Người phạm tội còn có thể bị cấm cư trú từ 01 năm đến 03 năm, cấm đảm 
 nhiệm chức vụ từ 01 năm đến 03 năm. 
 ##### Điều 389. Tội che giấu tội phạm  
-1. Người nào không hứa hẹn trước mà che giấu một trong các tội phạm quy 
+1. [^vbhn11-393] Người nào không hứa hẹn trước mà che giấu một trong các tội phạm quy 
 định tại các điều sau đây của Bộ luật này, nếu không thuộc trường hợp quy định tại 
 khoản 2 Điều 18 của Bộ luật này, thì bị phạt cải tạo không giam giữ đến 03 năm 
 hoặc phạt tù từ 06 tháng đến 05 năm: 
@@ -10822,9 +10714,6 @@ và khoản 3 Điều 196, khoản 3 Điều 205, các khoản 2, 3 và 4 Điề
 khoản 3 Điều 221, khoản 2 và khoản 3 Điều 222, khoản 2 và khoản 3 Điều 223, 
 khoản 2 và khoản 3 Điều 224; 
                                           
-393 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 137 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
 
   
 đ) Khoản 2 và khoản 3 Điều 243; 
@@ -10844,7 +10733,7 @@ k) Các điều 421, 422, 423, 424 và 425.
 hiện tội phạm hoặc có những hành vi khác bao che người phạm tội, thì bị phạt tù từ 
 02 năm đến 07 năm. 
 ##### Điều 390. Tội không tố giác tội phạm 
-1. Người nào biết rõ một trong các tội phạm quy định tại khoản 2 hoặc 
+1. [^vbhn11-394] Người nào biết rõ một trong các tội phạm quy định tại khoản 2 hoặc 
 khoản 3 Điều 14 của Bộ luật này đang được chuẩn bị hoặc một trong các tội phạm 
 quy định tại Điều 389 của Bộ luật này đang được thực hiện hoặc đã được thực hiện 
 mà không tố giác, nếu không thuộc trường hợp quy định tại khoản 2 và khoản 3 
@@ -10853,18 +10742,12 @@ mà không tố giác, nếu không thuộc trường hợp quy định tại kh
 2. Người không tố giác nếu đã có hành động can ngăn người phạm tội hoặc 
 hạn chế tác hại của tội phạm, thì có thể được miễn trách nhiệm hình sự hoặc miễn 
 hình phạt. 
-##### Điều 391. Tội gây rối trật tự phiên tòa, phiên họp 
+##### Điều 391. Tội gây rối trật tự phiên tòa, phiên họp [^vbhn11-395] 
 1. Người nào tại phiên tòa, phiên họp mà thóa mạ, xúc phạm nghiêm trọng 
 danh dự, nhân phẩm của Thẩm phán, Hội thẩm, người có thẩm quyền tiến hành tố 
                                           
-394 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 138 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
-395 Điều này được sửa đổi, bổ sung theo quy định tại khoản 139 Điều 1 của Luật số 
-12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2018. 
 
-83 
+ 
  
 tụng khác hoặc người tham gia phiên tòa, phiên họp hoặc có hành vi đập phá tài 
 sản, nếu không thuộc trường hợp quy định tại Điều 178 của Bộ luật này, thì bị phạt 
@@ -11345,3 +11228,123 @@ ngày 01 tháng 01 năm 2028.”.
 theo quy định tại điểm x khoản 2 Điều 2 của Luật số 12/2017/QH14 sửa đổi, bổ sung một số 
 điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực kể từ ngày 01 tháng 01 năm 2018. 
 
+[^vbhn11-6]: 6 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 3 Điều 1 của Luật số 12/2017/QH14 
+    sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực kể từ ngày 01 
+    tháng 01 năm 2018. 
+
+[^vbhn11-7]: 7 Điều này được sửa đổi, bổ sung theo quy định tại khoản 4 Điều 1 của Luật số 12/2017/QH14 
+    sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực kể từ ngày 01 
+    tháng 01 năm 2018. 
+
+[^vbhn11-31]: 31 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 21 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018. 
+[^vbhn11-32]: 32 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 21 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018. 
+[^vbhn11-33]: 33 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 21 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018. 
+[^vbhn11-48]: 48 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 24 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018. 
+
+[^vbhn11-52]: 52 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 26 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018. 
+
+[^vbhn11-81]: 81 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 33 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018. 
+
+[^vbhn11-103]: 103 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 36 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018. 
+
+[^vbhn11-104]: 104 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 36 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018. 
+
+[^vbhn11-216]: 216 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 62 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018. 
+
+[^vbhn11-217]: 217 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 62 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018. 
+
+[^vbhn11-218]: 218 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 62 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018. 
+
+[^vbhn11-219]: 219 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 63 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018.
+[^vbhn11-220]: 220 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 63 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018.
+[^vbhn11-221]: 221 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 63 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018.
+[^vbhn11-222]: 222 Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 63 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018.
+[^vbhn11-223]: 223 Tên Điều này được sửa đổi, bổ sung theo quy định tại điểm a khoản 64 Điều 1 của Luật 
+    số 12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu 
+    lực kể từ ngày 01 tháng 01 năm 2018.
+[^vbhn11-224]: 224 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 64 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018.
+[^vbhn11-225]: 225 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 64 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018.
+[^vbhn11-226]: 226 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 64 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018.
+[^vbhn11-227]: 227 Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 64 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018.
+[^vbhn11-228]: 228 Từ “các” được bãi bỏ theo quy định tại điểm e khoản 3 Điều 2 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018.
+[^vbhn11-229]: 229 Từ “các” được bãi bỏ theo quy định tại điểm e khoản 3 Điều 2 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018.
+[^vbhn11-230]: 230 Cụm từ “phân khu bảo tồn nghiêm ngặt” được thay thế bằng cụm từ “phân khu bảo vệ 
+    nghiêm ngặt” theo quy định tại điểm n khoản 2 Điều 2 của Luật số 12/2017/QH14 sửa đổi, bổ 
+    sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực kể từ ngày 01 tháng 01 
+    năm 2018.
+[^vbhn11-231]: 231 Từ “từ” được bãi bỏ theo quy định tại điểm e khoản 3 Điều 2 của Luật số 12/2017/QH14 
+    sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực kể từ ngày 01 
+    tháng 01 năm 2018.
+
+[^vbhn11-393]: 393 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 137 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018. 
+
+[^vbhn11-394]: 394 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 138 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018. 
+
+[^vbhn11-395]: 395 Điều này được sửa đổi, bổ sung theo quy định tại khoản 139 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018. 
+
+[^vbhn11-34]: 34 Điều này được sửa đổi, bổ sung theo quy định tại khoản 22 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018.
+
+[^vbhn11-35]: 35 Từ “tư pháp” được bỏ theo quy định tại điểm b khoản 1 Điều 177 của Luật Tư pháp người 
+    chưa thành niên số 59/2024/QH15, có hiệu lực kể từ ngày 01 tháng 01 năm 2026.
+
+[^vbhn11-107]: Điều này được sửa đổi, bổ sung theo quy định tại khoản 37 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018.
+
+[^vbhn11-304]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 105 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018.
+
+[^vbhn11-305]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 105 Điều 1 của Luật số 
+    12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2018.

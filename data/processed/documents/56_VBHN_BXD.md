@@ -1,5 +1,4 @@
 
-102
  
  
  
@@ -24,7 +23,7 @@ hoạch ngày 20 tháng 11 năm 2018;
 Theo đề nghị của Bộ trưởng Bộ Giao thông vận tải; 
 Chính phủ ban hành Nghị định quy định chi tiết thi hành một số điều liên 
 quan đến lĩnh vực giao thông vận tải trong Luật Sửa đổi, bổ sung một số điều của 
-37 luật có liên quan đến quy hoạch1. 
+37 luật có liên quan đến quy hoạch[^vbhn56-1]. 
   
 ### Chương I 
 QUY ĐỊNH CHUNG 
@@ -35,18 +34,8 @@ thực hiện, đánh giá và điều chỉnh các quy hoạch có tính chất
 được quy định tại khoản 2 Điều 1, khoản 6 Điều 2, khoản 10 Điều 2, khoản 2 Điều 
 3 của Luật Sửa đổi, bổ sung một số điều của 37 luật có liên quan đến quy hoạch. 
  
-1 Nghị định số 16/2026/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 56/2019/NĐ-CP ngày 24 tháng 6 
-năm 2019 của Chính phủ quy định chi tiết thi hành một số điều liên quan đến lĩnh vực giao thông vận tải trong 
-Luật sửa đổi, bổ sung một số điều của 37 luật có liên quan đến quy hoạch, có căn cứ ban hành như sau:  
- 
-“ Căn cứ Luật Tổ chức Chính phủ số 63/2025/QH15; 
-Căn cứ Luật Tổ chức chính quyền địa phương số 72/2025/QH15; 
-Căn cứ Luật Đường sắt số 95/2025/QH15; 
-Theo đề nghị của Bộ trưởng Bộ Xây dựng; 
-Chính phủ ban hành Nghị định quy định chi tiết một số điều Luật Đường sắt.”.  
 
 
-103
  
  
 ##### Điều 2. Đối tượng áp dụng 
@@ -86,7 +75,6 @@ duyệt quy hoạch theo thẩm quyền.
 ##### Điều 7. Trách nhiệm của cơ quan lập quy hoạch 
 1. Chủ trì, phối hợp với các cơ quan, tổ chức liên quan xây dựng và trình 
 
-104
  
  
 nhiệm vụ lập quy hoạch; gửi hồ sơ trình thẩm định nhiệm vụ lập quy hoạch tới cơ 
@@ -124,7 +112,6 @@ g) Yêu cầu và nhiệm vụ đánh giá môi trường chiến lược;
 h) Yêu cầu về sản phẩm quy hoạch (thành phần, số lượng, tiêu chuẩn, quy 
 cách hồ sơ); 
 
-105
  
  
 i) Thời hạn lập quy hoạch, kế hoạch lập quy hoạch và trách nhiệm của các 
@@ -164,7 +151,6 @@ a) Tờ trình phê duyệt nhiệm vụ lập quy hoạch;
 b) Dự thảo Quyết định phê duyệt nhiệm vụ lập quy hoạch; 
 c) Báo cáo thẩm định nhiệm vụ lập quy hoạch; 
 
-106
  
  
 d) Báo cáo giải trình, tiếp thu ý kiến Hội đồng thẩm định (nếu có) về nội 
@@ -184,7 +170,7 @@ h) Các nội dung khác do cơ quan phê duyệt nhiệm vụ lập quy hoạch
 #### Mục 3 
 NỘI DUNG QUY HOẠCH VÀ LẤY Ý KIẾN VỀ QUY HOẠCH 
 ##### Điều 13. Nội dung quy hoạch 
-1.2 Nội dung chủ yếu của quy hoạch kết cấu hạ tầng đường bộ, quy hoạch 
+1. [^vbhn56-2] Nội dung chủ yếu của quy hoạch kết cấu hạ tầng đường bộ, quy hoạch 
 chi tiết nhóm cảng biển, bến cảng, cầu cảng, bến phao, khu nước, vùng nước, quy 
 hoạch vùng đất, vùng nước cảng biển, quy hoạch phát triển hệ thống cảng cạn, 
 thực hiện theo quy định tại khoản 2 Điều 1, khoản 6, khoản 10 Điều 2 Luật sửa 
@@ -202,10 +188,8 @@ hoàn thiện dự thảo quy hoạch.
 chức có liên quan về quy hoạch được thực hiện như sau: 
 a) Cơ quan tổ chức lập quy hoạch gửi hồ sơ lấy ý kiến về quy hoạch gồm 
  
-2 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 2 Điều 64 Nghị định số 16/2026/NĐ-CP của 
-Chính phủ quy định chi tiết một số điều Luật đường sắt, có hiệu lực thi hành kể từ ngày 14 tháng 01 năm 2026.  
 
-107
+
  
  
 báo cáo quy hoạch, bản đồ thể hiện nội dung quy hoạch; 
@@ -245,7 +229,6 @@ c) Được quyền bảo lưu ý kiến của mình.
 4. Tổ chức, cá nhân tham gia phản biện có trách nhiệm, quyền hạn sau đây: 
 a) Tham dự các cuộc họp của Hội đồng thẩm định; 
 
-108
  
  
 b) Nghiên cứu hồ sơ trình thẩm định quy hoạch, có ý kiến phản biện bằng 
@@ -286,7 +269,6 @@ của các thành viên Hội đồng thẩm định.
 Hội đồng thẩm định phải tổng hợp ý kiến và trình Chủ tịch Hội đồng thẩm 
 định về việc tổ chức họp thẩm định quy hoạch. 
 
-109
  
  
 2. Hội đồng thẩm định tiến hành họp thẩm định quy hoạch khi đáp ứng đủ 
@@ -329,13 +311,12 @@ từ khi tiếp nhận hồ sơ quy hoạch đã chỉnh sửa.
 định gửi văn bản kết luận của Hội đồng thẩm định tới cơ quan lập quy hoạch để 
 rà soát, điều chỉnh lại hồ sơ quy hoạch. 
 
-110
  
  
 #### Mục 2 
 PHÊ DUYỆT, CÔNG BỐ QUY HOẠCH 
 ##### Điều 21. Trình, phê duyệt quy hoạch 
-1.3 Thẩm quyền phê duyệt quy hoạch được quy định tại khoản 2 Điều 1, 
+1. [^vbhn56-3] Thẩm quyền phê duyệt quy hoạch được quy định tại khoản 2 Điều 1, 
 khoản 5, khoản 6, khoản 10 Điều 2 Luật sửa đổi, bổ sung một số Điều của 37 luật 
 có liên quan đến quy hoạch và điểm b khoản 2 Điều 19 Luật Đường sắt. 
 2. Hồ sơ trình phê duyệt dự án quy hoạch gồm: 
@@ -367,10 +348,8 @@ quan tổ chức lập quy hoạch, cơ quan lập quy hoạch;
 d) Tổ chức hội nghị phổ biến nội dung quy hoạch được duyệt; 
 đ) Phát hành ấn phẩm (sách, video...) về nội dung quy hoạch; 
  
-3 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 2 Điều 64 Nghị định số 16/2026/NĐ-CP của 
-Chính phủ quy định chi tiết một số điều Luật đường sắt, có hiệu lực thi hành kể từ ngày 14 tháng 01 năm 2026 
 
-111
+
  
  
 e) Đăng tải trên trang thông tin điện tử của cơ quan tổ chức lập quy hoạch 
@@ -411,7 +390,6 @@ như nhu cầu vận tải, phát triển kinh tế - xã hội...;
 c) Do tác động của thiên tai, biến đổi khí hậu, chiến tranh làm thay đổi mục 
 tiêu, định hướng, tổ chức không gian lãnh thổ của quy hoạch; 
 
-112
  
  
 d) Do biến động bất thường của tình hình kinh tế - xã hội làm hạn chế nguồn 
@@ -446,15 +424,10 @@ c) Trình cấp có thẩm quyền phê duyệt điều chỉnh cục bộ quy h
 4. Cơ quan lập quy hoạch chịu trách nhiệm lập điều chỉnh quy hoạch. 
   
 ### Chương V 
-ĐIỀU KHOẢN THI HÀNH4 
+ĐIỀU KHOẢN THI HÀNH[^vbhn56-4] 
  
-4 Điều 65 Nghị định số 16/2026/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 56/2019/NĐ-CP ngày 24 
-tháng 6 năm 2019 của Chính phủ quy định chi tiết thi hành một số điều liên quan đến lĩnh vực giao thông vận tải 
-trong Luật sửa đổi, bổ sung một số điều của 37 luật có liên quan đến quy hoạch, có hiệu lực thi hành kể từ ngày 
-14 tháng 01 năm 2026 quy định như sau:  
-“Điều 65. Hiệu lực thi hành 
 
-113
+
  
  
 ##### Điều 27. Điều khoản chuyển tiếp 
@@ -480,22 +453,44 @@ Hà Nội, ngày 29 tháng 6 năm 2026
 KT. BỘ TRƯỞNG 
 THỨ TRƯỞNG 
  
-Nguyễn Danh Huy 
- 
- 
-1. Nghị định này có hiệu lực kể từ ngày ký. 
-2. Các nghị định sau hết hiệu lực kể từ ngày nghị định này có hiệu lực thi hành: 
-a) Nghị định số 56/2018/NĐ-CP ngày 16 tháng 4 năm 2018 của Chính phủ quy định về quản lý, bảo vệ 
-kết cấu hạ tầng đường sắt; 
-b) Nghị định số 65/2018/NĐ-CP ngày 12 tháng 5 năm 2018 của Chính phủ quy định chi tiết thi hành một 
-số điều của Luật Đường sắt; 
-c) Nghị định số 01/2022/NĐ-CP ngày 04 tháng 01 năm 2022 của Chính phủ sửa đổi, bổ sung một số điều 
-của Nghị định số 65/2018/NĐ-CP ngày 12 tháng 5 năm 2018 của Chính phủ quy định chi tiết thi hành một số điều 
-của Luật Đường sắt; 
-d) Nghị định số 91/2023/NĐ-CP ngày 14 tháng 12 năm 2023 của Chính phủ sửa đổi, bổ sung một số điều 
-của Nghị định số 65/2018/NĐ-CP ngày 12 tháng 5 năm 2018 của Chính phủ quy định chi tiết thi hành một số điều 
-của Luật Đường sắt và Nghị định số 01/2022/NĐ-CP ngày 04 tháng 01 năm 2022 của Chính phủ sửa đổi, bổ sung 
-một số điều của Nghị định số 65/2018/NĐ-CP ngày 12 tháng 5 năm 2018 của Chính phủ. 
-3. Các văn bản quy phạm pháp luật dẫn chiếu trong Nghị định này khi được sửa đổi, bổ sung, thay thế 
-thì nội dung dẫn chiếu trong Nghị định này cũng được điều chỉnh và thực hiện theo văn bản quy phạm pháp luật 
-sửa đổi, bổ sung, thay thế.”.  
+Nguyễn Danh Huy
+
+[^vbhn56-1]: 1 Nghị định số 16/2026/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 56/2019/NĐ-CP ngày 24 tháng 6 
+    năm 2019 của Chính phủ quy định chi tiết thi hành một số điều liên quan đến lĩnh vực giao thông vận tải trong 
+    Luật sửa đổi, bổ sung một số điều của 37 luật có liên quan đến quy hoạch, có căn cứ ban hành như sau:  
+     
+    “ Căn cứ Luật Tổ chức Chính phủ số 63/2025/QH15; 
+    Căn cứ Luật Tổ chức chính quyền địa phương số 72/2025/QH15; 
+    Căn cứ Luật Đường sắt số 95/2025/QH15; 
+    Theo đề nghị của Bộ trưởng Bộ Xây dựng; 
+    Chính phủ ban hành Nghị định quy định chi tiết một số điều Luật Đường sắt.”.
+
+[^vbhn56-2]: 2 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 2 Điều 64 Nghị định số 16/2026/NĐ-CP của 
+    Chính phủ quy định chi tiết một số điều Luật đường sắt, có hiệu lực thi hành kể từ ngày 14 tháng 01 năm 2026.
+
+[^vbhn56-3]: 3 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 2 Điều 64 Nghị định số 16/2026/NĐ-CP của 
+    Chính phủ quy định chi tiết một số điều Luật đường sắt, có hiệu lực thi hành kể từ ngày 14 tháng 01 năm 2026
+
+[^vbhn56-4]: 4 Điều 65 Nghị định số 16/2026/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 56/2019/NĐ-CP ngày 24 
+    tháng 6 năm 2019 của Chính phủ quy định chi tiết thi hành một số điều liên quan đến lĩnh vực giao thông vận tải 
+    trong Luật sửa đổi, bổ sung một số điều của 37 luật có liên quan đến quy hoạch, có hiệu lực thi hành kể từ ngày 
+    14 tháng 01 năm 2026 quy định như sau:  
+    “Điều 65. Hiệu lực thi hành
+    
+    1. Nghị định này có hiệu lực kể từ ngày ký. 
+    2. Các nghị định sau hết hiệu lực kể từ ngày nghị định này có hiệu lực thi hành: 
+    a) Nghị định số 56/2018/NĐ-CP ngày 16 tháng 4 năm 2018 của Chính phủ quy định về quản lý, bảo vệ 
+    kết cấu hạ tầng đường sắt; 
+    b) Nghị định số 65/2018/NĐ-CP ngày 12 tháng 5 năm 2018 của Chính phủ quy định chi tiết thi hành một 
+    số điều của Luật Đường sắt; 
+    c) Nghị định số 01/2022/NĐ-CP ngày 04 tháng 01 năm 2022 của Chính phủ sửa đổi, bổ sung một số điều 
+    của Nghị định số 65/2018/NĐ-CP ngày 12 tháng 5 năm 2018 của Chính phủ quy định chi tiết thi hành một số điều 
+    của Luật Đường sắt; 
+    d) Nghị định số 91/2023/NĐ-CP ngày 14 tháng 12 năm 2023 của Chính phủ sửa đổi, bổ sung một số điều 
+    của Nghị định số 65/2018/NĐ-CP ngày 12 tháng 5 năm 2018 của Chính phủ quy định chi tiết thi hành một số điều 
+    của Luật Đường sắt và Nghị định số 01/2022/NĐ-CP ngày 04 tháng 01 năm 2022 của Chính phủ sửa đổi, bổ sung 
+    một số điều của Nghị định số 65/2018/NĐ-CP ngày 12 tháng 5 năm 2018 của Chính phủ. 
+    3. Các văn bản quy phạm pháp luật dẫn chiếu trong Nghị định này khi được sửa đổi, bổ sung, thay thế 
+    thì nội dung dẫn chiếu trong Nghị định này cũng được điều chỉnh và thực hiện theo văn bản quy phạm pháp luật 
+    sửa đổi, bổ sung, thay thế.”.
+

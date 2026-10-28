@@ -83,7 +83,7 @@ LegalUnit(LegalUnit): EntityType
     soHieu(soHieu): Text
       constraint: NotNull
     unitType(unitType): Text
-      constraint: NotNull, Enum="Dieu,Khoan,Diem,QCVN,QCVN_Muc,PhuLuc"
+      constraint: NotNull, Enum="Dieu,Khoan,Diem,QCVN,QCVN_Muc,PhuLuc,Muc,Bang,Hinh,MauBieu"
     text(text): Text
       constraint: NotNull
       index: Vector

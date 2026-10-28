@@ -452,7 +452,8 @@ R ≤ 105
 100 
 105 < R ≤ 115 
 110 
-115 < R ≤ 125 
+115 < R ≤ 125
+120  
 
 15 
   
@@ -1803,7 +1804,8 @@ mi (kg)
 240 
 245 < m ≤ 255 
 250 
-255 < m ≤ 265 
+255 < m ≤ 265
+260  
 
 47 
   
@@ -7109,15 +7111,7 @@ QCVN 86:2024/BGTVT
 (3) Giá trị được xác định trong điều kiện tiêu chuẩn 273,2 K (0oC) và 101,3kPa. 
 Chỉ số Wobbe (W) là tỉ số của nhiệt trị của một đơn vị thể tích khí và căn bậc hai 
 của tỉ trọng tương đối của nó trong điều kiện chuẩn: 
-gas
-air
-gas
-H
-W
-
-
-
-
+W = Hgas × sqrt(ρair/ρgas)
  
 Trong đó: 
 Hgas = Nhiệt trị của nhiên liệu MJ/m3 ở 0oC 
@@ -15209,7 +15203,8 @@ Chạy không tải trong 10 giây
 Tăng tốc độ trung bình lên 64km/h 
 1,34 
 2 
-Giữ tốc độ 64 km/h trong ¼ chặng 
+Giữ tốc độ 64 km/h trong ¼ chặng
+0  
 
 47 
  
@@ -15365,7 +15360,8 @@ Chạy không tải trong 45 giây
 Tăng tốc nhanh lên 88km/h 
 1,79 
 7 
-Giữ tốc độ 88km/h trong ¼ chặng 
+Giữ tốc độ 88km/h trong ¼ chặng
+0  
 
 49 
  
@@ -16238,7 +16234,8 @@ B
 (speed B) 
 C 
 (speed C) 
-10 
+10
+25  
 
 67 
  
@@ -17019,7 +17016,8 @@ Chiều rộng (1) Chiều cao
 Từ 17 đến 40 khách 
 650 
 1700 
-1200 
+1200
+1700  
 
 85 
  
@@ -20531,7 +20529,8 @@ BR
 25 R 
 1.72D, 9.0R 
  
-1250 
+1250
+1700  
 
 93 
   
@@ -24111,106 +24110,41 @@ Giá đỡ phải bao gồm một khung cứng vững, có hình dạng tương 
 dạng kính chắn gió, chùy thử phải đập vào bề mặt phía trong của kính. 
 Dầm ngang (tùy chọn) 
 Kích thước tính bằng milimét 
-Hình 2. Chùy thử 
+Hình 2. Chùy thử
 1. Thanh đỡ        3. Đầu chùy      2. Miếng đỡ trung gian      4. Lớp bọc bằng nỉ dày 5 mm 
+Hình gốc: data/raw/pdf/48_2024_TT_BGTVT_cb54115.pdf#page=82. Hình học và kích thước phải đọc tại trang nguồn.
 
-  
-QCVN 32:2024/BGTVT 
- 
- 
 Nếu cần thiết, kính chắn gió phải được kẹp chặt với giá đỡ. Mômen xoắn nhỏ 
 nhất nên dùng để siết bu lông M 20 là 30 Nm. 
 Giá đỡ phải được đặt trên bệ cứng vững, có tấm cao su lót giữa dày 3 mm, độ 
-cứng 70 IRHD. Bề mặt kính chắn gió đặt vuông góc với phương rơi của chùy thử. 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+cứng 70 IRHD. Bề mặt kính chắn gió đặt vuông góc với phương rơi của chùy thử.
+
+Hình 3 - Giá để thử bằng chùy thử
+Hình gốc: data/raw/pdf/48_2024_TT_BGTVT_cb54115.pdf#page=83. Hình học và kích thước phải đọc tại trang nguồn.
+1. Gioăng cao su               2. Bu lông M20 
+
 Chùy thử phải đập vào kính chắn gió tại điểm nằm trong vòng tròn có tâm là 
 tâm hình học của mẫu thử, bán kính 40 mm, trên bề mặt phía trong của kính và chỉ 
 được phép thực hiện một lần va đập. 
-Bề mặt va đập của tấm nỉ được thay thế sau 12 lần thử. 
-3.2. Thử bằng chùy có đo sự giảm tốc  
+Bề mặt va đập của tấm nỉ được thay thế sau 12 lần thử.
+
+3.2. Thử bằng chùy có đo sự giảm tốc
+
 3.2.1. Thiết bị thử 
 Phép thử bằng chùy dùng để xác định giá trị chấn thương vùng đầu “HIC” 
 theo mô phỏng, vật rơi là chùy thử (xem Hình 4), khối lượng toàn bộ của chùy 
-thử là 10,0 + 0,2 kg. 
-Kích thước tính bằng milimét 
-Hình 3 - Giá để thử bằng chùy thử 
-1. Gioăng cao su               2. Bu lông M20 
+thử là 10,0 + 0,2 kg.
 
-85 
-  
-QCVN 32:2024/BGTVT 
- 
- 
-Ở giữa đĩa cơ sở (24) là một đế ba trục (26) lắp đặt sao cho nó nằm tại trọng 
+Ở giữa đĩa cơ sở(24) là một đế ba trục (26) lắp đặt sao cho nó nằm tại trọng 
 tâm để nhận tín hiệu của cảm biến gia tốc (27). Cảm biến gia tốc được bố trí theo 
 phương thẳng đứng với các chi tiết khác. 
 Chỏm cầu (18) và lớp bọc (19) nằm ở dưới đĩa cơ sở, chiếm phần lớn bề mặt, 
 và đặt dưới phần đàn hồi của chùy. Tính chất đàn hồi của chùy thử được xác định 
-bởi độ cứng và độ dày của vòng đệm trung gian và chỏm cầu. 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-Hình 4 - Chùy thử 10 kg 
-Bảng 3. Danh mục các chi tiết của chùy thử 10 kg (xem Hình 4) 
-Vị trí 
-Số 
-lượng 
-Ký hiệu 
-Vật liệu 
-Ghi chú 
-1 
-1 
-Nam châm giữ 
-Thép DIN 17100 
-- 
-2 
-1 
-Giảm chấn 
-Cao su/thép 
-Đ ư ờn g k í n h : 5 0 m m  
-Độ dày:  30 mm 
-Ren: M10 
+bởi độ cứng và độ dày của vòng đệm trung gian và chỏm cầu.
+
+Hình 4 - Chùy thử 10 kg
+Hình gốc: data/raw/pdf/48_2024_TT_BGTVT_cb54115.pdf#page=84. Hình học và kích thước phải đọc tại trang nguồn.
+Chú dẫn trên hình:
 (30) Nắp bảo vệ 
 (29) Đĩa phủ 
 (28) Khối gỗ 
@@ -24240,189 +24174,41 @@ Vít chỉnh khe hở (21)
 va đập 
 (27) Đồng hồ 
 đo gia tốc 
-Nam châm giữ (1) 
+Nam châm giữ (1)
 
-  
-QCVN 32:2024/BGTVT 
- 
- 
-Vị trí 
-Số 
-lượng 
-Ký hiệu 
-Vật liệu 
-Ghi chú 
-3 
-4 
-BNC đầu nối HF  
- 
-4 
-1 
-Ê cu lục giác DIN 
-985 
- 
- 
-5 
-6 
-Đĩa DIN125 
- 
- 
-6 
-3 
-Chi tiết chuyển 
-tiếp 
- 
- 
-7 
-6 
-Bu lông DIN912 
- 
- 
-8 
-3 
-Ê cu lục giác 
- 
- 
-9 
-3 
-Đĩa 
-Thép DIN17100 
-Đ ư ờn g k í n h l ỗ: 8 m m 
-Đường kính ngoài: 35 mm 
-Độ dày: 1,5 mm 
-10 
-3 
-Đệm cao su 
-Cao su, độ cứng 60 
-IRHD 
-Đ ư ờn g k í n h l ỗ: 8 m m 
-Đường kính ngoài: 30 mm 
-Độ dày: 10 mm 
-11 
-1 
-Đệm chống va 
-đập 
-Đệm giấy nhiều lớp 
-Đường kính lỗ: 120 mm 
-Đường kính ngoài: 199 mm 
-Độ dày: 0,5 mm 
-12 
- 
- 
- 
- 
-13 
-1 
-Đệm trung gian 
-Cao su Butadien, 
-độ cứng khoảng 80 
-IRHD 
-Đường kính lỗ: 129 mm 
-Đường kính ngoài: 192 mm 
-Độ dày: 4 mm 
-14 
-3 
-Ống dẫn 
-Polytetra-fluorethen 
-(PTFE) 
-Đường kính trong: 8 mm 
-Đường kính ngoài: 10 mm 
-Dài: 40 mm 
-15 
-3 
-Ê cu lục giác 
- 
- 
-16 
-3 
-Bu lông ren DIN 
-976 
- 
- 
-17 
-3 
-Vít chìm 
-Hợp kim đúc 
-DIN1709 - GD - 
-CuZn37Pb 
- 
-18 
-1 
-Chỏm cầu 
-Polyamid12 
- 
-19 
-1 
-Vỏ bọc 
-Cao su butadien 
-Độ dày: 6mm 
-Một mặt có gân  
- 
-20 
-1 
-Ống lót dẫn 
-hướng 
-Thép DIN 17100 
-
-87 
-  
-QCVN 32:2024/BGTVT 
- 
- 
-Vị trí 
-Số 
-lượng 
-Ký hiệu 
-Vật liệu 
-Ghi chú 
-21 
-4 
-Vít chỉnh khe hở  
- 
-22 
-1 
-Đĩa chống va đập Đệm giấy nhiều lớp Đường kính ngoài: 65 mm 
-Độ dày: 0,5 mm 
-23 
- 
- 
- 
- 
-24 
-1 
-Đĩa Cơ sở 
-Thép DIN 17100 
- 
-25 
-1 
-Vít chỉnh lục giác Loại độ bền 45H 
- 
-26 
-1 
-Đế 3 trục 
- 
- 
-27 
-3 
-Thiết bị đo gia 
-tốc 
- 
- 
-28 
-1 
-Khối gỗ 
-Gỗ cây trăn, keo 
-giữa các lớp 
- 
-29 
-1 
-Đĩa phủ 
-Hợp kim (AlMg5) 
- 
-30 
-1 
-Nắp bảo vệ 
-Polyamid 12 
+Bảng 3. Danh mục các chi tiết của chùy thử 10 kg (xem Hình 4)
+| Vị trí | Số lượng | Ký hiệu | Vật liệu | Ghi chú |
+|---|---|---|---|---|
+| 1 | 1 | Nam châm giữ | Thép DIN 17100 | - |
+| 2 | 1 | Giảm chấn | Cao su/thép | Đường kính: 50 mm; Độ dày: 30 mm; Ren: M10 |
+| 3 | 4 | BNC đầu nối HF |  |  |
+| 4 | 1 | Ê cu lục giác DIN 985 |  |  |
+| 5 | 6 | Đĩa DIN125 |  |  |
+| 6 | 3 | Chi tiết chuyển tiếp |  |  |
+| 7 | 6 | Bu lông DIN912 |  |  |
+| 8 | 3 | Ê cu lục giác |  |  |
+| 9 | 3 | Đĩa | Thép DIN17100 | Đường kính lỗ: 8 mm; Đường kính ngoài: 35 mm; Độ dày: 1,5 mm |
+| 10 | 3 | Đệm cao su | Cao su, độ cứng 60 IRHD | Đường kính lỗ: 8 mm; Đường kính ngoài: 30 mm; Độ dày: 10 mm |
+| 11 | 1 | Đệm chống va đập | Đệm giấy nhiều lớp | Đường kính lỗ: 120 mm; Đường kính ngoài: 199 mm; Độ dày: 0,5 mm |
+| 12 |  |  |  |  |
+| 13 | 1 | Đệm trung gian | Cao su Butadien, độ cứng khoảng 80 IRHD | Đường kính lỗ: 129 mm; Đường kính ngoài: 192 mm; Độ dày: 4 mm |
+| 14 | 3 | Ống dẫn | Polytetra-fluorethen (PTFE) | Đường kính trong: 8 mm; Đường kính ngoài: 10 mm; Dài: 40 mm |
+| 15 | 3 | Ê cu lục giác |  |  |
+| 16 | 3 | Bu lông ren DIN 976 |  |  |
+| 17 | 3 | Vít chìm | Hợp kim đúc DIN1709 - GD - CuZn37Pb |  |
+| 18 | 1 | Chỏm cầu | Polyamid12 |  |
+| 19 | 1 | Vỏ bọc | Cao su butadien | Độ dày: 6mm; Một mặt có gân |
+| 20 | 1 | Ống lót dẫn hướng | Thép DIN 17100 |  |
+| 21 | 4 | Vít chỉnh khe hở |  |  |
+| 22 | 1 | Đĩa chống va đập | Đệm giấy nhiều lớp | Đường kính ngoài: 65 mm; Độ dày: 0,5 mm |
+| 23 |  |  |  |  |
+| 24 | 1 | Đĩa Cơ sở | Thép DIN 17100 |  |
+| 25 | 1 | Vít chỉnh lục giác | Loại độ bền 45H |  |
+| 26 | 1 | Đế 3 trục |  |  |
+| 27 | 3 | Thiết bị đo gia tốc |  |  |
+| 28 | 1 | Khối gỗ | Gỗ cây trăn, keo giữa các lớp |  |
+| 29 | 1 | Đĩa phủ | Hợp kim (AlMg5) |  |
+| 30 | 1 | Nắp bảo vệ | Polyamid 12 |  | 
  
 3.2.2. Điều chỉnh và hiệu chuẩn: 
 Để tiến hành thử nghiệm, chùy thử phải được cố định với thanh ngang của hệ 
@@ -24653,82 +24439,37 @@ vuông góc với mặt của mẫu thử và trục của chùm sáng không đ
  
  
  
-Hình 7 - Sơ đồ nguyên lý của Hazemeter 
-1. Thấu kính      2. Quả cầu tích hợp    3. Tế bào quang điện    4. Tấm ngăn  
- 5. Ống bẫy sáng    6. Các tia sáng song song     7. Đèn 
+Hình 7 - Sơ đồ nguyên lý của Hazemeter
+1. Thấu kính      2. Quả cầu tích hợp    3. Tế bào quang điện    4. Tấm ngăn
+5. Ống bẫy sáng    6. Các tia sáng song song     7. Đèn 
+Hình gốc: data/raw/pdf/48_2024_TT_BGTVT_cb54115.pdf#page=92. Hình học và kích thước phải đọc tại trang nguồn.
 
-  
-QCVN 32:2024/BGTVT 
- 
- 
 Lấy 4 số đo được chỉ ra ở Bảng 5 dưới đây : 
-Bảng 5. Các số đo 
-Điều kiện 
-đọc 
-Với mẫu 
-thử 
-Với bẫy     
-ánh sáng 
-Với chuẩn 
-phản xạ 
-Đại lượng được biểu thị  
-T1 
-Không 
-Không 
-Có 
-Ánh sáng 
-T2 
-Có 
-Không 
-Có 
-Tổng ánh sáng truyền qua 
-của mẫu thử 
-T3 
-Không 
-Có 
-Không 
-Ánh sáng khuếch tán bởi 
-thiết bị 
-T4 
-Có 
- 
-Không 
-Ánh sáng khuếch tán bởi 
-dụng cụ và mẫu thử 
+Bảng 5. Các số đo
+| Điều kiện đọc | Với mẫu thử | Với bẫy ánh sáng | Với chuẩn phản xạ | Đại lượng được biểu thị |
+|---|---|---|---|---|
+| T1 | Không | Không | Có | Ánh sáng |
+| T2 | Có | Không | Có | Tổng ánh sáng truyền qua của mẫu thử |
+| T3 | Không | Có | Không | Ánh sáng khuếch tán bởi thiết bị |
+| T4 | Có | | Không | Ánh sáng khuếch tán bởi dụng cụ và mẫu thử |
 Lặp lại các số đo T1, T2, T3, T4 với các vị trí đặc biệt khác của mẫu thử để xác 
 định tính đồng nhất. Tính toán tổng hệ số truyền Tt = T2/T1 
  
  
-(3) 
+Td = (T4 - T3 × (T2/T1))/T1  (3) 
  
 Tính toán hệ số truyền khuếch tán như sau: 
 Tính toán phần trăm độ mờ, hoặc độ sáng, hoặc cả hai, độ khuếch tán bằng 
 công thức sau: 
-(Td/Tt)  100%                                 (4) 
+(Td/Tt) × 100%                                 (4) 
 Đo độ mờ ban đầu của mẫu thử ở ít nhất 4 điểm cách đều nhau trên vùng được 
 mài mòn theo công thức trên. Lấy trung bình kết quả của mỗi mẫu thử. Có thể nhận 
 được giá trị trung bình bằng cách quay đều mẫu thử 3 vòng/s hoặc hơn thay cho 
 việc đo 4 lần. 
-1
-1
-2
-3
-4
-)
-/
-(
-T
-T
-T
-T
-T
-Td
-
-
+
 
 95 
   
-QCVN 32:2024/BGTVT 
  
  
 Với mỗi tấm kính an toàn, thực hiện 3 lần thử với cùng một tải. Sử dụng độ mờ 
@@ -24737,8 +24478,7 @@ mài mòn.
 Đo ánh sáng khuếch tán tại vết mài mòn ở ít nhất 4 điểm cách đều nhau dọc 
 theo vết mài mòn bằng công thức trên. Lấy trung bình kết quả cho mỗi mẫu thử. 
 Thay vì đo 4 lần, có thể quay đều mẫu thử 3 vòng/giây hoặc hơn để có kết quả 
-trung bình. 
-4.5. Phép thử mài mòn chỉ được thực hiện khi phòng thử nghiệm đã có đầy đủ 
+trung bình.4.5. Phép thử mài mòn chỉ được thực hiện khi phòng thử nghiệm đã có đầy đủ 
 các thông số về cách bố trí của tấm kính. 
 Trừ vật liệu thủy tinh-vật liệu dẻo, sự thay đổi chiều dày lớp trung gian hoặc 
 chiều dày vật liệu thường không đòi hỏi phải thực hiện thêm phép thử nữa. 
@@ -25291,7 +25031,8 @@ Kính nổi
 Kính tấm mỏng 
 Chỉ số cản trở 
 1 
-1 
+1
+2  
 
 17 
   
@@ -25689,48 +25430,19 @@ Kích thước tính bằng milimét
 Hình 18 - Cấu tạo của buồng đốt 
 1. Khe hở thông khí       2. Ngọn lửa khí ga         3. Mẫu thử 
 
-  
-QCVN 32:2024/BGTVT 
- 
 Trước khi tiến hành thử, phải đo tốc độ của không khí theo chiều thẳng đứng đi 
 qua tủ khói, tại điểm cách đầu cuối của tủ khói 100 mm và hướng về phía cuối tủ. 
 Vận tốc không khí đo được phải nằm trong khoảng 0,10 đến 0,30 m/s để hỗn hợp 
 đã cháy không ảnh hưởng đến người sử dụng. Cũng có thể sử dụng tủ khói với 
-thông gió tự nhiên và tốc độ không khí thích hợp. 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-Kích thước tính bằng milimét 
-Nắp đậy 
-Mẫu thử 
-Hình 20 - Kết cấu của giá giữ mẫu 
-Kích thước tính bằng milimét 
-Hình 19 - Kết cấu của khay hứng 
+thông gió tự nhiên và tốc độ không khí thích hợp.
 
-29 
-  
-QCVN 32:2024/BGTVT 
+Hình 19 - Kết cấu của khay hứng
+Hình gốc: data/raw/pdf/48_2024_TT_BGTVT_cb54118.pdf#page=27. Hình học và kích thước phải đọc tại trang nguồn.
+Kích thước tính bằng milimét.
+
+Hình 20 - Kết cấu của giá giữ mẫu
+Hình gốc: data/raw/pdf/48_2024_TT_BGTVT_cb54118.pdf#page=27. Hình học và kích thước phải đọc tại trang nguồn.
+Kích thước tính bằng milimét. Chú dẫn: Nắp đậy; Mẫu thử. 
  
  
  
@@ -32823,77 +32535,31 @@ QCVN 113:2024/BGTVT
 Độ đồng phẳng của vành được đo bằng cách đặt vành lên mặt phẳng chuẩn như 
 Hình 1. Khe hở lớn nhất giữa vành và mặt phẳng chuẩn không được lớn hơn 0,8 mm. 
  
-Hình 1 - Độ đồng phẳng của vành 
+Hình 1 - Độ đồng phẳng của vành
+Hình gốc: data/raw/pdf/48_2024_TT_BGTVT_cb54124.pdf#page=57 (trang in 58). Hình học và vị trí khe hở đọc tại nguồn. 
 2.2.3. Độ bền biến dạng 
 Vành không bị gãy hoặc rạn nứt khi tác dụng một lực F vào vành theo mô tả ở 
 hình B1. Độ biến dạng của vành đạt tới giá trị ghi trong bảng 1 thì lực tác dụng 
 không được nhỏ hơn giá trị ghi trong bảng 2. 
 Phương pháp thử được mô tả trong Phụ lục B 
-Đường kính danh nghĩa của vành (inch) 
- 15 
-16, 17, 18 
-≥19 
-Mã chiều rộng danh 
-nghĩa của vành 
-Độ biến dạng (mm) 
-Từ 1.10 đến 6.00 
-10 
-15 
-20 
-Bảng 1 - Độ biến dạng 
- 
-Bảng 2 - Lực nén hướng kính 
- 
-Mã chiều rộng 
-danh nghĩa 
-Lực (kN) 
-Mã chiều rộng 
-danh nghĩa 
-Lực (kN) 
-1.10 
-0,98 
-2.75 
-6,37 
-1.20 
-1,47 
-3.00 
-6,37 
-1.40 
-1,96 
-3.50 
-6,37 
-1.50 
-2,45 
-4.00 
-6,37 
-1.60 
-3,43 
-4.50 
-6,37 
+Bảng 1 - Độ biến dạng
 
-59 
- 
-QCVN 113:2024/BGTVT 
- 
- 
-Mã chiều rộng 
-danh nghĩa 
-Lực (kN) 
-Mã chiều rộng 
-danh nghĩa 
-Lực (kN) 
-1.85 
-4,41 
-5.00 
-6,37 
-2.15 
-4,90 
-5.50 
-6,37 
-2.50 
-6,37 
-6.00 
-6,37 
+| Mã chiều rộng danh nghĩa của vành | Độ biến dạng (mm): Đường kính danh nghĩa của vành (inch) ≤ 15 | Độ biến dạng (mm): Đường kính danh nghĩa của vành (inch) 16, 17, 18 | Độ biến dạng (mm): Đường kính danh nghĩa của vành (inch) ≥19 |
+| --- | --- | --- | --- |
+| Từ 1.10 đến 6.00 | 10 | 15 | 20 |
+
+Bảng 2 - Lực nén hướng kính
+
+| Mã chiều rộng danh nghĩa | Lực (kN) | Mã chiều rộng danh nghĩa | Lực (kN) |
+| --- | --- | --- | --- |
+| 1.10 | 0,98 | 2.75 | 6,37 |
+| 1.20 | 1,47 | 3.00 | 6,37 |
+| 1.40 | 1,96 | 3.50 | 6,37 |
+| 1.50 | 2,45 | 4.00 | 6,37 |
+| 1.60 | 3,43 | 4.50 | 6,37 |
+| 1.85 | 4,41 | 5.00 | 6,37 |
+| 2.15 | 4,90 | 5.50 | 6,37 |
+| 2.50 | 6,37 | 6.00 | 6,37 | 
 2.3. Các yêu cầu kỹ thuật đối với vành bánh xe 
 Vành, vành bánh xe phải đáp ứng các yêu cầu sau (không áp dụng yêu cầu này 
 cho vành bánh xe có kết cấu ghép sử dụng nan hoa): 
@@ -35528,7 +35194,8 @@ Gia tốc (m/s2)
 10 
 18 - 25 (1) 
 Tăng dần từ 10 đến 20 
-25 - 200 
+25 - 200
+20  
 
 29 
  
@@ -38025,7 +37692,8 @@ phụ tùng xe cơ giới; thiết bị an toàn cho trẻ em
  
  
  Phụ lục A 
-Kích thước lớn nhất của xe 
+Kích thước lớn nhất của xe
+Hình gốc: data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=1. Hình học phải đọc tại trang nguồn. 
  
  
  
@@ -38036,63 +37704,34 @@ L: Chiều dài; W: Chiều rộng; H: Chiều cao.
 3 
  
 QCVN 14:2024/BGTVT 
-Phụ lục B 
-Cơ cấu điều khiển, báo hiệu khi lắp đặt trên xe (nếu có) 
- 
-TT 
-Cơ cấu điều khiển, báo hiệu 
-Biểu tượng 
-1 
-Vị trí “dừng” 
- 
-2 
-Vị trí “hoạt động” 
- 
-3 
-Khởi động điện  
- 
-4 
-Trợ giúp khởi động khi thời tiết lạnh 
- 
-5 
-Vị trí số trung gian 
- 
-6 
-Còi điện 
- 
-7 
-Điều khiển đèn chiếu sáng phía trước - Đèn chiếu xa 
- 
-8 
-Điều khiển đèn chiếu sáng phía trước - Đèn chiếu gần 
- 
-9 
-Đèn sương mù trước 
- 
-10 Đèn sương mù sau 
- 
-11 Đèn báo rẽ 
- 
-12 Cảnh báo nguy hiểm 
- 
-13 Đèn vị trí 
- 
-14 Công tắc đèn chính 
- 
-15 Đèn báo đỗ 
- 
-16 Nhiên liệu 
- 
-17 Nhiệt độ làm mát động cơ 
- 
-18 Nạp ắc quy  
- 
-19 Dầu bôi trơn động cơ 
+Phụ lục B
+Cơ cấu điều khiển, báo hiệu khi lắp đặt trên xe (nếu có)
 
-  
-QCVN 14:2024/BGTVT 
+| TT | Cơ cấu điều khiển, báo hiệu | Biểu tượng |
+|---|---|---|
+| 1 | Vị trí “dừng” | Xem biểu tượng hàng 1 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 2 | Vị trí “hoạt động” | Xem biểu tượng hàng 2 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 3 | Khởi động điện | Xem biểu tượng hàng 3 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 4 | Trợ giúp khởi động khi thời tiết lạnh | Xem biểu tượng hàng 4 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 5 | Vị trí số trung gian | Xem biểu tượng hàng 5 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 6 | Còi điện | Xem biểu tượng hàng 6 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 7 | Điều khiển đèn chiếu sáng phía trước - Đèn chiếu xa | Xem biểu tượng hàng 7 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 8 | Điều khiển đèn chiếu sáng phía trước - Đèn chiếu gần | Xem biểu tượng hàng 8 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 9 | Đèn sương mù trước | Xem biểu tượng hàng 9 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 10 | Đèn sương mù sau | Xem biểu tượng hàng 10 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 11 | Đèn báo rẽ | Xem biểu tượng hàng 11 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 12 | Cảnh báo nguy hiểm | Xem biểu tượng hàng 12 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 13 | Đèn vị trí | Xem biểu tượng hàng 13 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 14 | Công tắc đèn chính | Xem biểu tượng hàng 14 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 15 | Đèn báo đỗ | Xem biểu tượng hàng 15 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 16 | Nhiên liệu | Xem biểu tượng hàng 16 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 17 | Nhiệt độ làm mát động cơ | Xem biểu tượng hàng 17 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 18 | Nạp ắc quy | Xem biểu tượng hàng 18 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+| 19 | Dầu bôi trơn động cơ | Xem biểu tượng hàng 19 tại data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=2 |
+
 Phụ lục C 
-Thiết bị thử phun nước 
+Thiết bị thử phun nước
+Hình gốc: data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=3. Hình học và kích thước phải đọc tại trang nguồn. 
  
  
 1. Van nước 
@@ -38105,20 +37744,17 @@ Thiết bị thử phun nước
 - 1 lỗ ở tâm. 
 - 2 đường tròn bên trong có 12 lỗ cách nhau 30o 
 - 4 đường tròn bên ngoài có 24 lỗ cách nhau 15o 
-8. Cơ cấu điện 
+8. Cơ cấu điện
 
-5 
- 
-QCVN 14:2024/BGTVT 
-Phụ lục D 
-Ký hiệu xe cho người khuyết tật 
- 
-Kích thước và màu sắc ký hiệu do cơ sở sản xuất tự thiết kế tùy theo tạo dáng và 
-mỹ quan bên ngoài của xe 
+Phụ lục D
+Ký hiệu xe cho người khuyết tật
 
-  
-QCVN 14:2024/BGTVT 
-Phụ lục E 
+Kích thước và màu sắc ký hiệu do cơ sở sản xuất tự thiết kế tùy theo tạo dáng và
+mỹ quan bên ngoài của xe
+
+Hình gốc: data/raw/pdf/48_2024_TT_BGTVT_cb54130.pdf#page=4. Hình ký hiệu phải đọc tại trang nguồn.
+
+Phụ lục E
 Sản phẩm cùng kiểu loại về mức tiêu thụ năng lượng 
  
 1. Đối với xe mô tô, xe gắn máy chỉ được dẫn động bằng động cơ đốt trong:  
@@ -40189,7 +39825,8 @@ Chiều cao
 Nhỏ nhất 
 120 
 Các bậc khác 
-Chiều sâu hữu ích nhỏ nhất 
+Chiều sâu hữu ích nhỏ nhất
+200  
 
 55 
  
@@ -44318,7 +43955,8 @@ kg
 218 
 86 
 530 
-117 
+117
+1285  
 
 65 
  
@@ -44634,7 +44272,8 @@ kPa
 900 
 930 
 970 
-1000 
+1000
+1030  
 
 67 
  
@@ -45907,7 +45546,8 @@ Chéo
 508 
 1370 
 1370 
-446 
+446
+446  
 
 79 
  
@@ -46600,7 +46240,8 @@ Theo hệ Anh
 28x9-15 
 7.00 
 381 
-707 
+707
+216  
 
 83 
  
@@ -46918,7 +46559,8 @@ S (mm)
 7.50 
 381 
 724 
-731 
+731
+240  
 
 85 
  
@@ -47356,7 +46998,8 @@ S (mm)
 11.00 
 432 
 978 
-985 
+985
+345  
 
 87 
  
@@ -47609,7 +47252,8 @@ S (mm) 3/
 432 
 859 
 - 
-876 
+876
+215  
 
 89 
  
@@ -47980,7 +47624,8 @@ S (mm) 3/
 521 
 1369 
 - 
-- 
+-
+606  
 
 91 
  
@@ -48232,7 +47877,8 @@ d (mm)
 125 R 12 
 3.5 
 510 
-127 
+127
+305  
 
 93 
  
@@ -48456,7 +48102,8 @@ Chiều rộng mặt cắt
 ngang S (mm) 
 280/45 R 415 
 240 
-661 
+661
+281  
 
 95 
  
@@ -48761,7 +48408,8 @@ của vành "d”
 203 
 9 
 229 
-10 
+10
+254  
 
 9 
   
@@ -48836,7 +48484,8 @@ B
 50 
 F 
 80 
-G 
+G
+90  
 
 11 
   
@@ -48915,7 +48564,8 @@ Mức chịu tải lớn nhất
 95 
 230 
 90 
-240 
+240
+85  
 
 13 
   
@@ -49309,7 +48959,8 @@ B
 345 
 355 
 365 
-375 
+375
+387  
 
 23 
   
@@ -49481,7 +49132,8 @@ lớn nhất
 401 
 422 
 473 
-80 
+80
+86  
 
 25 
   
@@ -50367,7 +50019,8 @@ ngang
 749 
 93 
 102 
-107 
+107
+113  
 
 31 
   
@@ -50796,7 +50449,8 @@ lớn nhất
 561 
 612 
 662 
-170 
+170
+180  
 
 35 
   
@@ -51108,7 +50762,8 @@ AT20x7-10
 177 
 493 
 508 
-523 
+523
+193  
 
 37 
   
@@ -51432,7 +51087,8 @@ AT23x12-9
 304 
 563 
 584 
-605 
+605
+331  
 
 39 
   
@@ -51841,6 +51497,7 @@ Lốp mọi địa hình
     
 Toàn bộ 
 0.45 
+45 
 
 43 
   
@@ -55017,28 +54674,17 @@ d) Không hoạt động khi đóng mở.
   
 X 
   
-25. Tay vịn, cột chống, giá để hàng, khoang hành lý 
-a) Không đầy đủ, lắp đặt không chắc 
-chắn, nứt gãy. 
- 
-X  
+25. Tay vịn, cột chống, giá để hàng, khoang hành lý
   
-25.1. Tay vịn, cột 
-chống 
-b) Mọt gỉ. 
-X  
- 
+25.1. Tay vịn, cột chống
+Khiếm khuyết, hư hỏng | MiD | MaD | DD
+a) Không đầy đủ, lắp đặt không chắc chắn, nứt gãy. |  | X |
+b) Mọt gỉ. | X |  |
   
-a) Không đầy đủ, lắp đặt không 
-chắc chắn, nứt, gãy, thủng, rách. 
-  
-X 
-  
-25.2. Giá để hàng, 
-khoang hành lý 
-b) Không chia khoang theo quy định. 
-  
-X 
+25.2. Giá để hàng, khoang hành lý
+Khiếm khuyết, hư hỏng | MiD | MaD | DD
+a) Không đầy đủ, lắp đặt không chắc chắn, nứt, gãy, thủng, rách. |  | X |
+b) Không chia khoang theo quy định. |  | X |
   
 26. Ghế ngồi, giường nằm, vị trí đặt xe lăn, dây đai an toàn 
 a) Số chỗ ngồi, nằm, vị trí đặt xe lăn 
@@ -55891,157 +55537,47 @@ X
   
 41. Dẫn động phanh chính 
  41.1. Dẫn động phanh 
-a) Lắp đặt không chắc chắn. 
   
-X 
-  
-b) Có dấu vết cọ sát vào bộ phận 
-khác của xe. 
-  
-X 
-  
-41.1.1. Ống cứng, 
-ống mềm 
-  
-c) Ống, chỗ kết nối bị rò rỉ; ống 
-cứng bị rạn, nứt, mọt gỉ; ống mềm 
-bị nứt, phồng rộp. 
-  
-  
-X 
-a) Lắp đặt không chắc chắn. 
-  
-X 
-  
-b) Có dấu vết cọ sát vào bộ phận 
-khác của xe. 
-  
-X 
-  
-41.1.2. Cần đẩy, các 
-liên kết 
-c) Thiếu chi tiết kẹp chặt và phòng 
-lỏng đối với dẫn động phanh chính. 
-  
-  
-X 
-a) Lắp đặt không chắc chắn hoặc 
-sai quy cách. 
-  
-X 
-  
-41.1.3. Đầu nối cho 
-phanh rơ moóc/sơ 
-mi rơ moóc 
-b) Bị rò rỉ. 
-  
-  
-X 
+41.1.1. Ống cứng, ống mềm
+Khiếm khuyết, hư hỏng | MiD | MaD | DD
+a) Lắp đặt không chắc chắn. |  | X |
+b) Có dấu vết cọ sát vào bộ phận khác của xe. |  | X |
+c) Ống, chỗ kết nối bị rò rỉ; ống cứng bị rạn, nứt, mọt gỉ; ống mềm bị nứt, phồng rộp. |  |  | X
 
-29 
-  
-QCVN 122:2024/BGTVT 
- 
-Mức khiếm khuyết, 
-hư hỏng 
-Hạng mục  
-kiểm tra 
-Khiếm khuyết, hư hỏng 
-MiD 
-MaD 
-DD 
- 
-c) Khóa hoặc van tự đóng bị hư 
-hỏng. 
-  
-X 
-  
-a) Không đúng kiểu loại (1), lắp đặt 
-không chắc chắn. 
-  
-  
-X 
-b) Rạn, nứt, vỡ, biến dạng. 
-  
-  
-X 
-c) Bị rò rỉ. 
-  
-  
-X 
-41.1.4. Cơ cấu tác 
-động (bầu phanh 
-hoặc xi lanh phanh) 
-d) Không đủ chi tiết kẹp chặt, phòng 
-lỏng. 
-  
-  
-X 
- 41.2. Bơm chân không, máy nén khí, các van và bình chứa môi chất 
-a) Không đầy đủ, lắp đặt không 
-chắc chắn. 
-  
-  
-X 
-b) Áp suất giảm rõ rệt, nghe rõ 
-tiếng rò khí. 
-  
-  
-X 
-c) Bình chứa rạn, nứt, biến dạng, 
-mọt gỉ. 
-  
-  
-X 
-41.2.1 Bơm chân 
-không, máy nén 
-khí, 
-bình 
-chứa, 
-các van an toàn, 
-van xả nước. 
-d) Các van an toàn, van xả nước 
-không có tác dụng. 
-  
-  
-X 
-a) Lắp đặt không đúng, không chắc 
-chắn. 
-  
-  
-X 
-41.2.2. Các van 
-phanh 
-b) Bị hư hỏng, rò rỉ. 
-  
-  
-X 
-a) Không đúng kiểu loại (1), lắp đặt 
-không chắc chắn. 
-  
-  
-X 
-b) Trợ lực hư hỏng, không có tác 
-dụng. 
-  
-X 
-  
-41.2.3. Trợ lực phanh, 
-xi lanh phanh chính. 
-c) Nắp bình chứa dầu phanh bị mất. 
-X 
+41.1.2. Cần đẩy, các liên kết
+Khiếm khuyết, hư hỏng | MiD | MaD | DD
+a) Lắp đặt không chắc chắn. |  | X |
+b) Có dấu vết cọ sát vào bộ phận khác của xe. |  | X |
+c) Thiếu chi tiết kẹp chặt và phòng lỏng đối với dẫn động phanh chính. |  |  | X
 
-  
-QCVN 122:2024/BGTVT 
- 
-Mức khiếm khuyết, 
-hư hỏng 
-Hạng mục  
-kiểm tra 
-Khiếm khuyết, hư hỏng 
-MiD 
-MaD 
-DD 
+41.1.3. Đầu nối cho phanh rơ moóc/sơ mi rơ moóc
+Khiếm khuyết, hư hỏng | MiD | MaD | DD
+a) Lắp đặt không chắc chắn hoặc sai quy cách. |  | X |
+b) Bị rò rỉ. |  |  | X
+c) Khóa hoặc van tự đóng bị hư hỏng. |  | X |
+41.1.4. Cơ cấu tác động (bầu phanh hoặc xi lanh phanh)
+Khiếm khuyết, hư hỏng | MiD | MaD | DD
+a) Không đúng kiểu loại (1), lắp đặt không chắc chắn. |  |  | X
+b) Rạn, nứt, vỡ, biến dạng. |  |  | X
+c) Bị rò rỉ. |  |  | X
+d) Không đủ chi tiết kẹp chặt, phòng lỏng. |  |  | X
+ 41.2. Bơm chân không, máy nén khí, các van và bình chứa môi chất
+41.2.1 Bơm chân không, máy nén khí, bình chứa, các van an toàn, van xả nước.
+Khiếm khuyết, hư hỏng | MiD | MaD | DD
+a) Không đầy đủ, lắp đặt không chắc chắn. |  |  | X
+b) Áp suất giảm rõ rệt, nghe rõ tiếng rò khí. |  |  | X
+c) Bình chứa rạn, nứt, biến dạng, mọt gỉ. |  |  | X
+d) Các van an toàn, van xả nước không có tác dụng. |  |  | X
+41.2.2. Các van phanh
+Khiếm khuyết, hư hỏng | MiD | MaD | DD
+a) Lắp đặt không đúng, không chắc chắn. |  |  | X
+b) Bị hư hỏng, rò rỉ. |  |  | X
+
+41.2.3. Trợ lực phanh, xi lanh phanh chính.
+Khiếm khuyết, hư hỏng | MiD | MaD | DD
+a) Không đúng kiểu loại (1), lắp đặt không chắc chắn. |  |  | X
+b) Trợ lực hư hỏng, không có tác dụng. |  | X |
+c) Nắp bình chứa dầu phanh bị mất. | X |  |
 42. Dẫn động phanh đỗ 
 a) Lắp đặt không chắc chắn. 
   
@@ -56219,21 +55755,11 @@ X
  
 d) Thủng, rách, vỡ vỏ bọc chắn bụi. 
 X 
-  
-  
-a) Bị bó kẹt khi di chuyển. 
-  
-  
-X 
-45.2. Sự làm việc  
-Sử dụng thiết bị 
-hỗ trợ kiểm tra 
-gầm, kích nâng để 
-kiểm tra 
-b) Khớp cầu, khớp chuyển hướng 
-rơ, lỏng, bị giật cục. 
-  
-X 
+45.2. Sự làm việc
+Sử dụng thiết bị hỗ trợ kiểm tra gầm, kích nâng để kiểm tra
+Khiếm khuyết, hư hỏng | MiD | MaD | DD
+a) Bị bó kẹt khi di chuyển. |  |  | X
+b) Khớp cầu, khớp chuyển hướng rơ, lỏng, bị giật cục. |  | X |
   
 46. Ngõng quay lái 
 a) Không đúng kiểu loại (1). 

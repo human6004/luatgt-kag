@@ -330,6 +330,8 @@ Vị trí kiểm tra đèn chiếu sáng phía trước
 Hình 1. Vị trí kiểm tra đèn chiếu sáng phía trước 
  đối với dây chuyền kiểm định loại I  
 
+[PDF trang 9; trang in 32](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=9). Hình học và vị trí kích thước đọc tại PDF gốc.
+
 33 
 QCVN 103:2024/BGTVT 
 2.2.2.1.1.1. Vị trí kiểm tra đèn chiếu sáng phía trước được đánh dấu trên sàn với kích 
@@ -352,6 +354,8 @@ thiết bị kiểm tra đèn chiếu sáng phía trước không được có c
  
 Hình 2. Vị trí kiểm tra đèn chiếu sáng phía trước 
  đối với dây chuyền kiểm định loại II  
+
+[PDF trang 10; trang in 33](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=10). Hình học và vị trí kích thước đọc tại PDF gốc.
 
 QCVN 103:2024/BGTVT 
 2.2.2.1.2.1 
@@ -380,6 +384,8 @@ Vị trí kiểm tra phanh
  
 Hình 3. Vị trí kiểm tra phanh đối với dây chuyền kiểm định loại I  
 
+[PDF trang 11; trang in 34](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=11). Hình học và vị trí kích thước đọc tại PDF gốc.
+
 35 
 QCVN 103:2024/BGTVT 
 2.2.2.2.1.1.  Vị trí kiểm tra phanh được đánh dấu trên sàn với kích thước chiều dài tối 
@@ -403,6 +409,8 @@ dễ quan sát bằng mắt thường của người kiểm tra.
  
 Hình 4. Vị trí kiểm tra phanh đối với dây chuyền kiểm định loại II  
 
+[PDF trang 12; trang in 35](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=12). Hình học và vị trí kích thước đọc tại PDF gốc.
+
 QCVN 103:2024/BGTVT 
 2.2.2.2.2.1. Vị trí kiểm tra phanh được đánh dấu trên sàn với kích thước chiều dài tối 
 thiểu 22,0 m, chiều rộng tối thiểu 4,0 m. Thiết bị kiểm tra phanh phải được 
@@ -422,6 +430,8 @@ dễ quan sát bằng mắt thường của người kiểm tra.
 Vị trí kiểm tra gầm (hầm kiểm tra) 
  
 Hình 5. Các phương án bố trí hầm kiểm tra 
+
+[PDF trang 13; trang in 36](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=13). Hình học và vị trí kích thước đọc tại PDF gốc.
 
 37 
 QCVN 103:2024/BGTVT 
@@ -492,6 +502,8 @@ bánh xe tới bệ thử phanh tối thiểu là 0,8 m.
 Hình 6. Vị trí lắp đặt thiết bị đo độ trượt ngang của bánh xe 
  đối với dây chuyền kiểm định loại I  
 
+[PDF trang 15; trang in 38](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=15). Hình học và vị trí kích thước đọc tại PDF gốc.
+
 39 
 QCVN 103:2024/BGTVT 
 2.2.2.4.2.  
@@ -504,6 +516,8 @@ bánh xe tới bệ thử phanh tối thiểu 2,8 m.
  
 Hình 7. Vị trí lắp đặt thiết bị đo độ trượt ngang của bánh xe 
  đối với dây chuyền kiểm định loại II   
+
+[PDF trang 16; trang in 39](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=16). Hình học và vị trí kích thước đọc tại PDF gốc.
 2.3. 
  Nhà văn phòng 
 2.3.1. 
@@ -568,66 +582,13 @@ Dải đo và độ chính xác theo công bố của nhà sản xuất nhưng k
 quá giá trị giới hạn trong bảng 1: 
 Bảng 1: Thông số dải đo, độ chính xác của thiết bị phân tích khí thải  
  
-CO 
-(% vol) 
-CO2 
-(% vol) 
-HC 
-(ppm) 
-O2 
-(% vol) 
-Lamda 
-() 
-Tốc độ 
-động cơ 
-(v/p) 
-Nhiệt độ 
-dầu động 
-cơ  (0C) 
-Dải đo 
-0-5 
-0-16 
-0-10.000 
-0-21 
-0,8 – 1,2 
-400 – 
-7.500 
-0 - 150 
-Độ chính 
-xác 
-± 0,03 
-hoặc 
-±5% 
-tương đối 
-(lấy giá trị 
-lớn hơn) 
-± 0,5 
-hoặc 
-±5% 
-tương đối 
-(lấy giá trị 
-lớn hơn) 
-± 10 
-hoặc 
-±5% 
-tương đối 
-(lấy giá trị 
-lớn hơn) 
-± 0, 1 
-hoặc 
-±5% 
-tương đối 
-(lấy giá trị 
-lớn hơn) 
-Không 
-quy định 
-Không 
-quy định 
-Không 
-quy định 
+<table data-source="103-B1">
+<tr><td></td><td>CO (% vol)</td><td>CO₂ (% vol)</td><td>HC (ppm)</td><td>O₂ (% vol)</td><td>Lamda (λ)</td><td>Tốc độ động cơ (v/p)</td><td>Nhiệt độ dầu động cơ (⁰C)</td></tr>
+<tr><td>Dải đo</td><td>0-5</td><td>0-16</td><td>0-10.000</td><td>0-21</td><td>0,8 – 1,2</td><td>400 – 7.500</td><td>0 - 150</td></tr>
+<tr><td>Độ chính xác</td><td>± 0,03 hoặc ±5% tương đối (lấy giá trị lớn hơn)</td><td>± 0,5 hoặc ±5% tương đối (lấy giá trị lớn hơn)</td><td>± 10 hoặc ±5% tương đối (lấy giá trị lớn hơn)</td><td>± 0, 1 hoặc ±5% tương đối (lấy giá trị lớn hơn)</td><td>Không quy định</td><td>Không quy định</td><td>Không quy định</td></tr>
+</table>
 
-41 
-QCVN 103:2024/BGTVT 
+[PDF trang 17; trang in 40](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=17). 
 2.4.2.1.7. 
 Thiết bị có khả năng hiển thị và lưu trữ kết quả đo bằng giá trị nồng độ các 
 thành phần khí thải, hệ số lamda, giá trị tốc độ và nhiệt độ dầu động cơ ở 
@@ -670,24 +631,13 @@ quá giá trị giới hạn trong bảng 2:
 QCVN 103:2024/BGTVT 
 Bảng 2: Thông số dải đo, độ chính xác của thiết bị đo độ khói  
  
-Độ khói  
-(%HSU) 
-Hệ số hấp thụ  
-ánh sáng (m-1) 
-Tốc độ  
-động cơ (v/p) 
-Nhiệt độ dầu 
-động cơ (oC) 
-Dải đo 
-0 - 99 
-0 – 9,99 
-400 – 7.500 
-0 -150 
-Độ chính xác 
-± 2,0 
-± 0,3 
-Không quy định 
-Không quy định 
+<table data-source="103-B2">
+<tr><td></td><td>Độ khói (%HSU)</td><td>Hệ số hấp thụ ánh sáng (m⁻¹)</td><td>Tốc độ động cơ (v/p)</td><td>Nhiệt độ dầu động cơ (°C)</td></tr>
+<tr><td>Dải đo</td><td>0 - 99</td><td>0 – 9,99</td><td>400 – 7.500</td><td>0 -150</td></tr>
+<tr><td>Độ chính xác</td><td>± 2,0</td><td>± 0,3</td><td>Không quy định</td><td>Không quy định</td></tr>
+</table>
+
+[PDF trang 19; trang in 42](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=19). 
 2.4.2.2.6.  
 Xử lý, hiển thị và lưu trữ kết quả: 
 2.4.2.2.6.1. Thiết bị có khả năng hiển thị và lưu trữ kết quả đo bằng số các giá trị độ 
@@ -727,19 +677,13 @@ QCVN 103:2024/BGTVT
 2.4.2.3.3. 
 Kích thước lắp đặt đảm bảo điều kiện tại bảng 3:  
 Bảng 3: Thông số kích thước lắp đặt của thiết bị kiểm tra phanh 
-Thông số 
-Đơn vị 
-Yêu cầu  
-Khoảng cách giữa mép trong của 2 
-con lăn (tính đến bề mặt làm việc) 
-mm 
-≤ 850 (đối với dây chuyền 
-kiểm định loại I) 
-Khoảng cách giữa mép ngoài của 2 
-con lăn (tính đến bề mặt làm việc) 
-mm 
-≥ 2750 (đối với dây chuyền 
-kiểm định loại II) 
+<table data-source="103-B3">
+<tr><td>Thông số</td><td>Đơn vị</td><td>Yêu cầu</td></tr>
+<tr><td>Khoảng cách giữa mép trong của 2 con lăn (tính đến bề mặt làm việc)</td><td>mm</td><td>≤ 850 (đối với dây chuyền kiểm định loại I)</td></tr>
+<tr><td>Khoảng cách giữa mép ngoài của 2 con lăn (tính đến bề mặt làm việc)</td><td>mm</td><td>≥ 2750 (đối với dây chuyền kiểm định loại II)</td></tr>
+</table>
+
+[PDF trang 20; trang in 43](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=20). 
 2.4.2.3.4. 
 Tự động dừng khi có hiện tượng trượt giữa bánh xe và con lăn trong quá 
 trình kiểm tra; 
@@ -756,20 +700,14 @@ sản xuất thiết bị nhưng không thấp hơn 0,5;
 2.4.2.3.7.2.  Đối với thiết bị đã qua sử dụng, µ có giá trị tối thiểu là 0,5 trong điều kiện 
 làm việc với bề mặt tiếp xúc giữa lốp xe và con lăn là khô và lốp xe ở 
 trạng thái hoạt động bình thường, được xác định theo công thức sau: 
-roll
-2.F
-μ= m.g
- 
- 
-  
- 
-Trong đó:  
- 
-Froll - là lực phanh một bên đo được trên thiết bị kiểm tra phanh; 
- 
-m – là khối lượng của trục xe hiển thị trên thiết bị kiểm tra phanh (kg); 
- 
-g – là gia tốc trọng trường (m/s2).  
+μ = (2 × F_roll) / (m × g)
+
+Trong đó:
+F_roll - là lực phanh một bên đo được trên thiết bị kiểm tra phanh;
+m – là khối lượng của trục xe hiển thị trên thiết bị kiểm tra phanh (kg);
+g – là gia tốc trọng trường (m/s²).
+
+[PDF trang 20; trang in 43](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=20).  
 2.4.2.3.7.3. Phương tiện dùng để kiểm tra µ phải phù hợp với loại dây chuyền, trường 
 hợp thiết bị đáp ứng quy định kiểm tra với cả 2 loại dây chuyền thì sử 
 dụng phượng tiện tương ứng với dây chuyền loại II để kiểm tra. 
@@ -777,24 +715,17 @@ dụng phượng tiện tương ứng với dây chuyền loại II để kiểm
 Chiều dài con lăn và đường kính con lăn đáp ứng yêu cầu tại bảng 4:  
  
 Bảng 4: Thông số con lăn của thiết bị kiểm tra phanh 
-Thông số 
-Đơn vị 
-Yêu cầu tối thiểu 
-Chiều dài con lăn (tính 
-đến bề mặt làm việc) 
-mm 
-650 (đối với dây chuyền kiểm định loại I) 
-900 (đối với dây chuyền kiểm định loại II) 
-Đường kính con lăn(*) 
-(tính đến bề mặt làm việc) 
-mm 
-150 (đối với dây chuyền kiểm định loại I) 
-200 (đối với dây chuyền kiểm định loại II) 
- 
- 
-(*) Chỉ áp dụng với thiết bị chưa qua sử dụng; 
+<table data-source="103-B4">
+<tr><td>Thông số</td><td>Đơn vị</td><td>Yêu cầu tối thiểu</td></tr>
+<tr><td rowspan="2">Chiều dài con lăn (tính đến bề mặt làm việc)</td><td rowspan="2">mm</td><td>650 (đối với dây chuyền kiểm định loại I)</td></tr>
+<tr><td>900 (đối với dây chuyền kiểm định loại II)</td></tr>
+<tr><td rowspan="2">Đường kính con lăn(*) (tính đến bề mặt làm việc)</td><td rowspan="2">mm</td><td>150 (đối với dây chuyền kiểm định loại I)</td></tr>
+<tr><td>200 (đối với dây chuyền kiểm định loại II)</td></tr>
+</table>
 
-QCVN 103:2024/BGTVT 
+(*) Chỉ áp dụng với thiết bị chưa qua sử dụng;
+
+[PDF trang 20; trang in 43](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=20). 
 2.4.2.3.9. 
 Số lượng cảm biến khối lượng không nhỏ hơn 4 đối với dây chuyền kiểm 
 định loại I và không nhỏ hơn 8 đối với dây chuyền kiểm định loại II;  
@@ -821,70 +752,32 @@ Hiển thị được giá trị lực phanh riêng ở từng bánh xe trên m�
 Hiển thị được hiệu quả phanh trên trục và hiệu quả phanh toàn bộ được 
 tính theo công thức: 
 2.4.2.3.14.1. Hiệu quả phanh trên trục KT: 
-Pti
-T
-t
-F
-K =
-.100%
-G
-
- 
- 
- 
- 
-Trong đó: 
-Pti
-F
-
- - tổng lực phanh trên tất cả các bánh xe trên trục khi kiểm tra phanh;  
- 
- 
-t
-G - khối lượng trục xe khi kiểm tra phanh. 
-2.4.2.3.14.2. Hiệu quả phanh toàn bộ KP: 
-Pi
-P
-F
-K =
-.100%
-G
-
- 
- 
- Trong đó: 
- 
- 
-Pi
-F
-
- - tổng lực phanh trên tất cả các bánh xe;  
- 
- G - khối lượng xe khi kiểm tra phanh. 
+K_T = (Σ F_Pti / G_t) × 100%
 
-45 
-QCVN 103:2024/BGTVT 
+Trong đó:
+Σ F_Pti - tổng lực phanh trên tất cả các bánh xe trên trục khi kiểm tra phanh;
+G_t - khối lượng trục xe khi kiểm tra phanh.
+
+[PDF trang 21; trang in 44](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=21). 
+2.4.2.3.14.2. Hiệu quả phanh toàn bộ KP: 
+K_P = (Σ F_Pi / G) × 100%
+
+Trong đó:
+Σ F_Pi - tổng lực phanh trên tất cả các bánh xe;
+G - khối lượng xe khi kiểm tra phanh.
+
+[PDF trang 21; trang in 44](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=21). 
 2.4.2.3.15. 
 Hiển thị được sai lệch lực phanh giữa hai bên bánh xe trên cùng một trục 
 (giữa bánh bên phải và bên trái):  
-Fl
-Fn
-SL
-Fl
-P - P
-K
-=
-.100%
-P
- 
-Trong đó: 
-SL
-K
-- sai lệch lực phanh trên một trục; 
-Fl
-P - lực phanh lớn hơn trên cùng một trục; 
-Fn
-P - lực phanh nhỏ hơn trên cùng một trục. 
+K_SL = ((P_Fl - P_Fn) / P_Fl) × 100%
+
+Trong đó:
+K_SL - sai lệch lực phanh trên một trục;
+P_Fl - lực phanh lớn hơn trên cùng một trục;
+P_Fn - lực phanh nhỏ hơn trên cùng một trục.
+
+[PDF trang 22; trang in 45](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=22). 
 2.4.2.3.16. 
 Trong quá trình hoạt động, thiết bị kiểm tra phanh phải đáp ứng các yêu 
 cầu sau: 
@@ -949,22 +842,14 @@ Dải đo và độ chính xác theo công bố của nhà sản xuất nhưng k
 quá giá trị giới hạn trong bảng 5: 
 Bảng 5: Thông số dải đo, độ chính xác của thiết bị đo đèn 
  
-Cường độ 
-(cd) 
-Độ lệch cm/10m (%) 
-Dưới 
-Trên 
-Trái 
-Phải 
-Dải đo 
-0 - 125.000 
-0-60 (0-6) 
-0-60 (0-6) 
-0-100 (0-10) 
-0-100 (0-10) 
-Độ chính xác 
-± 10 (%) 
-± 2 (± 0,2)  
+<table data-source="103-B5">
+<tr><td rowspan="2"></td><td rowspan="2">Cường độ (cd)</td><td colspan="4">Độ lệch cm/10m (%)</td></tr>
+<tr><td>Dưới</td><td>Trên</td><td>Trái</td><td>Phải</td></tr>
+<tr><td>Dải đo</td><td>0 - 125.000</td><td>0-60 (0-6)</td><td>0-60 (0-6)</td><td>0-100 (0-10)</td><td>0-100 (0-10)</td></tr>
+<tr><td>Độ chính xác</td><td>± 10 (%)</td><td colspan="4">± 2 (± 0,2)</td></tr>
+</table>
+
+[PDF trang 23; trang in 46](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=23).  
 2.4.2.5.6. 
 Hiển thị được cường độ, độ lệch chùm sáng của đèn chiếu xa; độ lệch 
 chùm sáng của đèn chiếu gần;  
@@ -998,10 +883,12 @@ Thiết bị phải có khả năng phản hồi kết quả đo ở mức nhanh
 2.4.2.6.5. 
 Dải đo và cấp chính xác phải thỏa mãn phạm vi trong bảng 6: 
   Bảng 6: Thông số dải đo, cấp chính xác của thiết bị đo âm lượng 
-Dải đo  
-Từ 30 dB(A) đến 130 dB(A) 
-Cấp chính xác   
-Class/Type 2 
+<table data-source="103-B6">
+<tr><td>Dải đo</td><td>Từ 30 dB(A) đến 130 dB(A)</td></tr>
+<tr><td>Cấp chính xác</td><td>Class/Type 2</td></tr>
+</table>
+
+[PDF trang 24; trang in 47](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=24). 
 2.4.2.6.6. 
 Trong quá trình hoạt động, thiết bị đo âm lượng phải đáp ứng các yêu cầu 
 sau: 
@@ -1512,18 +1399,21 @@ Phụ lục A
 MẪU BIỂN HIỆU CHO CƠ SỞ ĐĂNG KIỂM XE CƠ GIỚI; 
 CƠ SỞ KIỂM ĐỊNH KHÍ THẢI XE MÔ TÔ, XE GẮN MÁY 
  
+
+
+[PDF trang 35; trang in 58](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=35). Hình mẫu, kích thước H/L/L1 và vị trí ký hiệu đọc tại PDF gốc.
+
 Ghi chú: 
 Ký hiệu trong mẫu: 
-(1) 
-Tên tổ chức thành lập cơ sở (nếu có) 
-(2) 
-Tên cơ sở kèm theo mã số 
-(3) 
-Địa chỉ của cơ sở  
-(4) 
-Số điện thoại cơ sở (kể cả số hotline) 
-(5) 
-Email và Website (nếu có)  
+<table data-source="103-PLA">
+<tr><td>(1)</td><td>Tên tổ chức thành lập cơ sở (nếu có)</td></tr>
+<tr><td>(2)</td><td>Tên cơ sở kèm theo mã số</td></tr>
+<tr><td>(3)</td><td>Địa chỉ của cơ sở</td></tr>
+<tr><td>(4)</td><td>Số điện thoại cơ sở (kể cả số hotline)</td></tr>
+<tr><td>(5)</td><td>Email và Website (nếu có)</td></tr>
+</table>
+
+[PDF trang 35; trang in 58](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=35).  
  
 Kiểu chữ: 
    
@@ -1626,75 +1516,14 @@ khu vực tiếp nhận, bàn giao xe.
 2.1.3.   Các khu vực của cơ sở: 
 2.1.3.1.   Số lượng tối thiểu như quy định tại Bảng 1.  
 Bảng 1 - Các khu vực của cơ sở 
-Loại phương 
-tiện 
-Các khu vực của cơ sở và số lượng tối thiểu vị trí 
-làm việc của từng khu vực 
-Các khu 
-vực khác 
-Tiếp 
-nhận(1) 
-Bàn 
-giao(1) 
-Bảo 
-hành, 
-bảo 
-dưỡng(2) 
-Thân 
-vỏ 
-(gò, 
-hàn) 
-Sơn(3) 
-Kiểm 
-tra 
-xuất 
-xưởng 
-Nhà 
-điều 
-hành 
-Kho 
-phụ 
-tùng 
-Ô tô 
-1 
-1 
-2 
-1 
-1 
-1 
-1 
-1 
-Rơ moóc, sơ mi 
-rơ moóc 
-1 
-1 
-1 
-1 
-1 
-1 
-1 
-1 
-Xe bốn bánh có 
-gắn động cơ 
-1 
-1 
-2 
-1 
-1 
-1 
-1 
-1 
-Mô tô, xe gắn 
-máy 
-1 
-1 
-1 
-- 
-- 
-1 
-1(4) 
-1(4) 
-“-” Không áp dụng 
+<table data-source="121-B1">
+<tr><td rowspan="2">Loại phương tiện</td><td colspan="6">Các khu vực của cơ sở và số lượng tối thiểu vị trí làm việc của từng khu vực</td><td colspan="2">Các khu vực khác</td></tr>
+<tr><td>Tiếp nhận(1)</td><td>Bàn giao(1)</td><td>Bảo hành, bảo dưỡng(2)</td><td>Thân vỏ (gò, hàn)</td><td>Sơn(3)</td><td>Kiểm tra xuất xưởng</td><td>Nhà điều hành</td><td>Kho phụ tùng</td></tr>
+<tr><td>Ô tô</td><td>1</td><td>1</td><td>2</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>Rơ moóc, sơ mi rơ moóc</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>Xe bốn bánh có gắn động cơ</td><td>1</td><td>1</td><td>2</td><td>1</td><td>1</td><td>1</td><td>1</td><td>1</td></tr>
+<tr><td>Mô tô, xe gắn máy</td><td>1</td><td>1</td><td>1</td><td>-</td><td>-</td><td>1</td><td>1(4)</td><td>1(4)</td></tr>
+<tr><td colspan="9">“-” Không áp dụng 
 (1) Được phép sử dụng chung và được phép nằm ngoài nhà xưởng. 
 (2) Khu vực bảo hành, bảo dưỡng thực hiện các công việc liên quan đến động cơ, hệ thống truyền lực, 
 hệ thống chuyển động, hệ thống phanh, hệ thống lái, hệ thống treo, hệ thống điện, hệ thống đèn chiếu 
@@ -1704,66 +1533,29 @@ vực này để không ảnh hưởng tới các khu vực xung quanh.
 (4) Được phép sử dụng chung và nằm cùng trong các khu vực khác của nhà xưởng. 
 Các khu vực của cơ sở được phép bố trí tại các nhà xưởng khác nhau. Các nhà xưởng này có thể nằm 
 trong cùng khuôn viên đất hoặc trong các khuôn viên đất khác nhau trong cùng một cụm công nghiệp 
-hoặc cùng một khu công nghiệp. 
+hoặc cùng một khu công nghiệp.</td></tr>
+</table>
 
-63 
+[PDF trang 39; trang in 62](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=39). 
  
 2.1.3.2. Các khu vực phải được phân chia, có biển báo và chỉ dẫn. 
 2.1.4. Kích thước từng vị trí làm việc tương ứng với loại xe thực hiện bảo hành, bảo 
 dưỡng phải đáp ứng yêu cầu tối thiểu quy định tại Bảng 2. 
 Bảng 2 - Kích thước tối thiểu của các vị trí làm việc 
 Kích thước tính bằng mét 
-Loại phương tiện 
-Kích thước tối thiểu (rộng x dài) 
-Ghi chú 
-Tiếp 
-nhận 
-Bàn 
-giao 
-Bảo 
-hành, 
-bảo 
-dưỡng 
-Thân 
-vỏ (gò, 
-hàn) 
-Sơn 
-Kiểm 
-tra 
-xuất 
-xưởng 
-Ô tô con, ô tô khách 
-từ 16 chỗ trở xuống, 
-ô tô tải và ô tô 
-chuyên dùng có 
-khối lượng toàn bộ 
-đến 3,5 tấn, xe bốn 
-bánh có gắn động 
-cơ 
-3,5 x 6 
-4 x 8 
-  
-Các loại ô tô khác, 
-rơ moóc, sơ mi rơ 
-moóc 
-a x b 
- 
-a  A+2; b  
-L+3, với A và L 
-lần lượt là 
-chiều rộng và 
-chiều dài toàn 
-bộ của xe 
-Mô tô, xe gắn máy 
-2 x 3 
-- 
-- 
-2 x 3 
- 
-Các vị trí làm việc phải đủ không gian để thực hiện các thao tác trong quá trình bảo hành, bảo dưỡng 
+<table data-source="121-B2">
+<tr><td rowspan="2">Loại phương tiện</td><td colspan="6">Kích thước tối thiểu (rộng x dài)</td><td rowspan="2">Ghi chú</td></tr>
+<tr><td>Tiếp nhận</td><td>Bàn giao</td><td>Bảo hành, bảo dưỡng</td><td>Thân vỏ (gò, hàn)</td><td>Sơn</td><td>Kiểm tra xuất xưởng</td></tr>
+<tr><td>Ô tô con, ô tô khách từ 16 chỗ trở xuống, ô tô tải và ô tô chuyên dùng có khối lượng toàn bộ đến 3,5 tấn, xe bốn bánh có gắn động cơ</td><td colspan="5">3,5 x 6</td><td>4 x 8</td><td></td></tr>
+<tr><td>Các loại ô tô khác, rơ moóc, sơ mi rơ moóc</td><td colspan="6">a x b</td><td>a ≥ A+2; b ≥ L+3, với A và L lần lượt là chiều rộng và chiều dài toàn bộ của xe</td></tr>
+<tr><td>Mô tô, xe gắn máy</td><td colspan="3">2 x 3</td><td>-</td><td>-</td><td>2 x 3</td><td></td></tr>
+<tr><td colspan="8">Các vị trí làm việc phải đủ không gian để thực hiện các thao tác trong quá trình bảo hành, bảo dưỡng 
 (trường hợp có một số phần nhô hoặc vật cản nằm trong vị trí làm việc như trụ xưởng, rào chắn hoặc gờ 
 chống va chạm hoặc các vật tương tự, phải đảm bảo các phần nhô hoặc vật cản này không được làm 
-ảnh hưởng tới việc xe ra - vào vị trí làm việc và các hoạt động phục vụ việc bảo hành, bảo dưỡng xe). 
+ảnh hưởng tới việc xe ra - vào vị trí làm việc và các hoạt động phục vụ việc bảo hành, bảo dưỡng xe).</td></tr>
+</table>
+
+[PDF trang 40; trang in 63](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=40). 
 2.1.5. Chiều cao của không gian tại các vị trí bảo hành, bảo dưỡng, lối đi dành cho xe 
 di chuyển trong xưởng phải đáp ứng loại xe có chiều cao đăng ký bảo hành 
 bảo dưỡng tại cơ sở. 
@@ -1774,72 +1566,27 @@ với loại xe thực hiện bảo hành, bảo dưỡng):
 QCVN 121:2024/BGTVT  
  
 Bảng 4 - Các dụng cụ tối thiểu phục vụ bảo hành bảo dưỡng 
-TT 
-Tên dụng cụ 
-Số lượng tối thiểu 
-Ô tô, xe bốn 
-bánh có gắn 
-động cơ 
-Rơ moóc, sơ 
-mi rơ moóc, mô 
-tô, xe gắn máy 
-1 
-Bộ cờ lê 
-02 
-01 
-2 
-Bộ tròng, khẩu 
-02 
-01 
-3 
-Bộ kìm 
-02 
-01 
-4 
-Búa 
-02 
-01 
-5 
-Bộ tuốc-nơ-vít 
-02 
-01 
-6 
-Dụng cụ tháo, lắp dùng khí nén 
-02 
-01 
-7 
-Dụng cụ đo khe hở 
-01 
-01(8) 
-8 
-Dụng cụ vệ sinh bằng khí nén 
-02 
-01 
-9 
-Đèn pin hoặc đèn soi thông dụng 
-02 
-01 
-10 
-Dụng cụ đo áp suất lốp và bơm hơi lốp xe 
-01 
-01 
-11 
-Khay đựng chi tiết tháo rời 
-02 
-01 
-12 
-Dụng cụ kiểm tra lực siết 
-01 
-01 
-13 
-Kích nâng 
-01 
-01(8) 
-14 
-Bộ mễ kê 
-01 
-01(8) 
-(8) Không áp dụng đối với cơ sở bảo hành, bảo dưỡng mô tô, xe gắn máy 
+<table data-source="121-B4">
+<tr><td rowspan="2">TT</td><td rowspan="2">Tên dụng cụ</td><td colspan="2">Số lượng tối thiểu</td></tr>
+<tr><td>Ô tô, xe bốn bánh có gắn động cơ</td><td>Rơ moóc, sơ mi rơ moóc, mô tô, xe gắn máy</td></tr>
+<tr><td>1</td><td>Bộ cờ lê</td><td>02</td><td>01</td></tr>
+<tr><td>2</td><td>Bộ tròng, khẩu</td><td>02</td><td>01</td></tr>
+<tr><td>3</td><td>Bộ kìm</td><td>02</td><td>01</td></tr>
+<tr><td>4</td><td>Búa</td><td>02</td><td>01</td></tr>
+<tr><td>5</td><td>Bộ tuốc-nơ-vít</td><td>02</td><td>01</td></tr>
+<tr><td>6</td><td>Dụng cụ tháo, lắp dùng khí nén</td><td>02</td><td>01</td></tr>
+<tr><td>7</td><td>Dụng cụ đo khe hở</td><td>01</td><td>01(8)</td></tr>
+<tr><td>8</td><td>Dụng cụ vệ sinh bằng khí nén</td><td>02</td><td>01</td></tr>
+<tr><td>9</td><td>Đèn pin hoặc đèn soi thông dụng</td><td>02</td><td>01</td></tr>
+<tr><td>10</td><td>Dụng cụ đo áp suất lốp và bơm hơi lốp xe</td><td>01</td><td>01</td></tr>
+<tr><td>11</td><td>Khay đựng chi tiết tháo rời</td><td>02</td><td>01</td></tr>
+<tr><td>12</td><td>Dụng cụ kiểm tra lực siết</td><td>01</td><td>01</td></tr>
+<tr><td>13</td><td>Kích nâng</td><td>01</td><td>01(8)</td></tr>
+<tr><td>14</td><td>Bộ mễ kê</td><td>01</td><td>01(8)</td></tr>
+<tr><td colspan="4">(8) Không áp dụng đối với cơ sở bảo hành, bảo dưỡng mô tô, xe gắn máy</td></tr>
+</table>
+
+[PDF trang 41; trang in 64](../../raw/pdf/50_2024_TT_BGTVT_cb53871.pdf#page=41). 
 2.2.2. Trang thiết bị  
              Cơ sở bảo hành, bảo dưỡng phải có tối thiểu các trang thiết bị sau: 
 2.2.2.1. Cầu nâng hoặc bàn nâng xe (áp dụng đối với cơ sở bảo hành, bảo dưỡng các 

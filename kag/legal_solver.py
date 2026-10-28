@@ -58,9 +58,15 @@ def _unit_references(metadata, source_text=''):
     article = metadata.get('dieu_number')
     if (metadata.get('unit_type') == 'Dieu' and isinstance(article, str)
             and re.match(r'\s*Điều\s+'+re.escape(article)+r'[.]\s+', source_text, re.I)):
-        # Coordinates come from numbered paragraphs inside this verified whole article.
-        references.extend('khoản '+number for number in re.findall(
-            r'(?m)^\s*(\d+[a-zđ]?)[.)]\s+\S', source_text, re.I))
+        locator = metadata.get('source_record')
+        origin = locator.get('origin') if isinstance(locator, dict) else None
+        origin = origin if isinstance(origin, dict) else {}
+        # Quoted replacement paragraphs belong to the amended instrument.
+        numbers = (origin.get('operative_clause_numbers', [])
+                   if origin.get('source_role') == 'amendment_operation' else re.findall(
+                       r'(?m)^\s*(\d+[a-zđ]?)[.)]\s+\S', source_text, re.I))
+        references.extend('khoản '+number for number in numbers
+                          if isinstance(number, str) and re.fullmatch(r'\d+[a-zđ]?', number, re.I))
     return ' '.join(references)
 
 

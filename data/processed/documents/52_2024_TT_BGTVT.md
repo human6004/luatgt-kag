@@ -39,7 +39,6 @@ các yếu tố thời tiết, môi trường, điều kiện giao thông tại 
 đích cải tiến chất lượng an toàn kỹ thuật và bảo vệ môi trường của sản phẩm. 
 
 
-85 
  
  
  
@@ -112,7 +111,6 @@ trữ), gương, đèn, kính, lốp, vành hợp kim phải thuộc kiểu lo�
 hoặc có kết quả thử nghiệm đạt yêu cầu tại Việt Nam hoặc của tổ chức có thẩm 
 quyền nước ngoài. 
 
-87 
  
  
  
@@ -187,7 +185,6 @@ phân bố lên từng trục của đoàn xe được áp dụng tương tự n
 ô tô đầu kéo kéo sơ mi rơ moóc hoặc của tổ hợp xe ô tô thân liền kéo rơ moóc nêu 
 tại điểm c khoản 2 Điều này; 
 
-89 
  
  
  
@@ -242,11 +239,10 @@ THỨ TRƯỞNG
  
 Nguyễn Duy Lâm 
 
-91 
  
  
  
-Phụ lục 
+###### Phụ lục 
 MẪU PHIẾU KIỂM TRA CHẤT LƯỢNG XUẤT XƯỞNG 
 (Ban hành kèm theo Thông tư số 52/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
 của Bộ trưởng Bộ Giao thông vận tải quy định về yêu cầu kỹ thuật đối với xe cơ 
@@ -293,28 +289,20 @@ ensure that the product with the following information dispatched by our facilit
 with the quality technical safety and environmental protection requirements in accordance 
 with legal regulations: 
  
-1. Loại xe (Vehicle Type ): 
- 
-2. Nhãn hiệu (Trardemark): 
- 
-3. Tên thương mại (Commercial name): 
- 
-4. Mã kiểu loại (Model code) 
- 
-5. Mầu sơn (Color):                     
- 
-6. Số khung (Frame No): 
- 
-, nơi đóng:  
-7. Số động cơ (Engine No): 
- 
-, nơi đóng: 
-8. Bản chà số khung: 
-9. Bản chà số động cơ: 
-10. Năm sản xuất (Manufacture year): 
-11. Thông số kỹ thuật cơ bản và thông tin khác của xe: (xem trang sau) 
-     Major technical specification and other information 
- 
+| Nội dung | Thông tin của xe |
+| --- | --- |
+| 1. Loại xe (Vehicle Type ): |  |
+| 2. Nhãn hiệu (Trardemark): |  |
+| 3. Tên thương mại (Commercial name): |  |
+| 4. Mã kiểu loại (Model code) |  |
+| 5. Mầu sơn (Color): |  |
+| 6. Số khung (Frame No): | , nơi đóng: |
+| 7. Số động cơ (Engine No): | , nơi đóng: |
+| 8. Bản chà số khung: |  |
+| 9. Bản chà số động cơ: |  |
+| 10. Năm sản xuất (Manufacture year): |  |
+| 11. Thông số kỹ thuật cơ bản và thông tin khác của xe: (xem trang sau)<br>Major technical specification and other information |  |
+
                                                                                                       Ngày….tháng…..năm….      
                                                                                                   Thủ trưởng đơn vị 
 (Ký, ghi rõ họ tên, đóng dấu) 
@@ -352,4 +340,6 @@ THÔNG SỐ KỸ THUẬT CƠ BẢN VÀ THÔNG TIN LIÊN QUAN KHÁC CỦA XE
  
  
  
-Ghi chú: 
+Ghi chú:
+
+[Biểu mẫu gốc: PDF8–9, trang in91–92](../../raw/pdf/52_2024_TT_BGTVT_cb53139.pdf#page=8). Bảng giữ nhãn và ô thông tin; vùng bản chà, khoảng trống và khung trình bày xem bản gốc.

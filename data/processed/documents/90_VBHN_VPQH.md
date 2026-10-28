@@ -674,7 +674,7 @@ CÁC HÌNH THỨC XỬ PHẠT
 VÀ BIỆN PHÁP KHẮC PHỤC HẬU QUẢ 
 #### Mục 1 
 CÁC HÌNH THỨC XỬ PHẠT 
-##### Điều 21. Nguyên tắc quy định các hình thức xử phạt 
+##### Điều 21. Nguyên tắc quy định các hình thức xử phạt[^vbhn90-25] 
 1. Các hình thức xử phạt vi phạm hành chính bao gồm: 
 a) Cảnh cáo; 
 b) Phạt tiền; 
@@ -686,17 +686,11 @@ hành chính (sau đây gọi chung là tang vật, phương tiện vi phạm h�
 2. Hình thức xử phạt quy định tại điểm a và điểm b khoản 1 Điều này chỉ 
 được quy định và áp dụng là hình thức xử phạt chính. 
  
-25 Cụm từ “Các hình thức xử phạt và nguyên tắc áp dụng” được thay thế bằng cụm từ 
-“Nguyên tắc quy định các hình thức xử phạt” theo quy định tại điểm c khoản 28 Điều 1 của 
-Luật số 88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2025. 
+ 
 
-72
- 
- 
 Hình thức xử phạt quy định tại các điểm c, d và đ khoản 1 Điều này có thể 
 được quy định là hình thức xử phạt bổ sung hoặc hình thức xử phạt chính.  
-3. Mỗi vi phạm hành chính được quy định một hình thức xử phạt chính, có 
+3. [^vbhn90-26] Mỗi vi phạm hành chính được quy định một hình thức xử phạt chính, có 
 thể quy định một hoặc nhiều hình thức xử phạt bổ sung kèm theo.  
 Hình thức xử phạt bổ sung được áp dụng kèm theo hình thức xử phạt chính, 
 trừ trường hợp quy định tại khoản 2 Điều 65 của Luật này. 
@@ -710,7 +704,7 @@ văn bản.
 1. Mức phạt tiền trong xử phạt vi phạm hành chính từ 50.000 đồng đến 
 1.000.000.000 đồng đối với cá nhân, từ 100.000 đồng đến 2.000.000.000 đồng 
 đối với tổ chức, trừ trường hợp quy định tại khoản 3 Điều 24 của Luật này.  
-Đối với khu vực nội thành của thành phố27 thì mức phạt tiền có thể cao hơn, 
+Đối với khu vực nội thành của thành phố[^vbhn90-27] thì mức phạt tiền có thể cao hơn, 
 nhưng tối đa không quá 02 lần mức phạt chung áp dụng đối với cùng hành vi vi 
 phạm trong các lĩnh vực giao thông đường bộ; bảo vệ môi trường; an ninh trật tự, 
 an toàn xã hội. 
@@ -721,34 +715,25 @@ Luật này:
 a) Xác định số tiền phạt tối thiểu, tối đa; 
 b) Xác định số lần, tỷ lệ phần trăm của giá trị, số lượng hàng hóa, tang vật vi 
 phạm, đối tượng bị vi phạm hoặc doanh thu, số lợi thu được từ vi phạm hành chính. 
-3. Căn cứ vào hành vi, khung tiền phạt hoặc mức tiền phạt được quy định 
+3. [^vbhn90-28] Căn cứ vào hành vi, khung tiền phạt hoặc mức tiền phạt được quy định 
 tại nghị định của Chính phủ và yêu cầu quản lý kinh tế - xã hội đặc thù của địa 
  
-26 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 8 Điều 1 của Luật số 
-67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2022. 
-27 Cụm từ “trực thuộc trung ương” được bỏ theo quy định tại điểm a khoản 29 Điều 1 
-của Luật số 88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, 
-có hiệu lực kể từ ngày 01 tháng 7 năm 2025.  
-28 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 9 Điều 1 của Luật số 
-67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2022. 
+ 
+  
+ 
 
-73
- 
- 
-phương, Hội đồng nhân dân thành phố29 có quyền quyết định khung tiền phạt hoặc 
+phương, Hội đồng nhân dân thành phố[^vbhn90-29] có quyền quyết định khung tiền phạt hoặc 
 mức tiền phạt cụ thể đối với hành vi vi phạm trong các lĩnh vực quy định tại khoản 
 1 Điều này nhưng không vượt quá mức tiền phạt tối đa đối với lĩnh vực tương ứng 
 quy định tại Điều 24 của Luật này. 
-4. Mức tiền phạt cụ thể đối với một hành vi vi phạm hành chính là mức 
+4. [^vbhn90-30] Mức tiền phạt cụ thể đối với một hành vi vi phạm hành chính là mức 
 trung bình của khung tiền phạt được quy định đối với hành vi đó; nếu có tình tiết 
 giảm nhẹ thì mức tiền phạt có thể giảm xuống nhưng không được thấp hơn mức 
 tối thiểu của khung tiền phạt; nếu có tình tiết tăng nặng thì mức tiền phạt có thể 
 tăng lên nhưng không được vượt quá mức tối đa của khung tiền phạt. 
 Chính phủ quy định chi tiết khoản này. 
 ##### Điều 24. Mức phạt tiền tối đa trong các lĩnh vực   
-1. Mức phạt tiền tối đa trong các lĩnh vực quản lý nhà nước đối với cá nhân 
+1. [^vbhn90-31] Mức phạt tiền tối đa trong các lĩnh vực quản lý nhà nước đối với cá nhân 
 được quy định như sau: 
 a)32 Phạt tiền đến 30.000.000 đồng: hôn nhân và gia đình; bình đẳng giới; 
 bạo lực gia đình; lưu trữ; tín ngưỡng, tôn giáo; thi đua, khen thưởng; hành chính 
@@ -764,15 +749,9 @@ em; bảo trợ, cứu trợ xã hội; phòng, chống thiên tai; bảo vệ v
 quản lý và bảo tồn nguồn gen (trừ nguồn gen giống vật nuôi); trồng trọt (trừ phân 
 bón); thú y; kế toán;33 phí, lệ phí; quản lý tài sản công; hóa đơn; dự trữ quốc gia; 
  
-29 Cụm từ “trực thuộc trung ương” được bỏ theo quy định tại điểm a khoản 29 Điều 1 
-của Luật số 88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, 
-có hiệu lực kể từ ngày 01 tháng 7 năm 2025.  
-30 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 9 Điều 1 của Luật số 
-67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2022. 
-31 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 10 Điều 1 của Luật 
-số 67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu 
-lực kể từ ngày 01 tháng 01 năm 2022. 
+  
+ 
+ 
 32 Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 3 Điều 1 của Luật số 
 88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
 kể từ ngày 01 tháng 7 năm 2025. 
@@ -1007,7 +986,7 @@ cưỡng chế thực hiện.
 ### Chương II 
 THẨM QUYỀN XỬ PHẠT VI PHẠM HÀNH CHÍNH 
 VÀ ÁP DỤNG BIỆN PHÁP KHẮC PHỤC HẬU QUẢ 
-##### Điều 37a. Thẩm quyền xử phạt vi phạm hành chính 
+##### Điều 37a. Thẩm quyền xử phạt vi phạm hành chính[^vbhn90-43] 
 1. Người có thẩm quyền xử phạt vi phạm hành chính theo quy định của Luật 
 này bao gồm: 
 a) Chủ tịch Ủy ban nhân dân các cấp; 
@@ -1036,13 +1015,8 @@ Giám đốc Bảo hiểm xã hội khu vực, Giám đốc Bảo hiểm xã h�
 k) Chủ tịch Ủy ban Tiêu chuẩn Đo lường Chất lượng Quốc gia; Chủ tịch Ủy 
 ban Chứng khoán Nhà nước; Trưởng Ban cơ yếu Chính phủ; người đứng đầu cơ 
  
-43 Điều này được bổ sung theo quy định tại khoản 4 Điều 1 của Luật số 88/2025/QH15 
-sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 
-tháng 7 năm 2025. 
+ 
 
-80
- 
- 
 quan đại diện ngoại giao, cơ quan lãnh sự, cơ quan khác được ủy quyền thực hiện 
 chức năng lãnh sự của nước Cộng hòa xã hội chủ nghĩa Việt Nam ở nước ngoài; 
 l) Chủ tịch Ủy ban Cạnh tranh Quốc gia, trừ trường hợp Luật Cạnh tranh có 
@@ -1192,7 +1166,7 @@ c) Nếu hành vi thuộc thẩm quyền xử phạt vi phạm hành chính củ
 người thuộc các ngành khác nhau, thì thẩm quyền xử phạt thuộc Chủ tịch Ủy ban 
 nhân dân cấp có thẩm quyền xử phạt nơi xảy ra vi phạm. 
 ##### Điều 53. Thay đổi tên gọi, nhiệm vụ, quyền hạn của chức danh có thẩm 
-quyền xử phạt vi phạm hành chính64 
+quyền xử phạt vi phạm hành chính[^vbhn90-64] 
 1. Trường hợp chức danh có thẩm quyền xử phạt vi phạm hành chính theo 
 quy định của Chính phủ có sự thay đổi về tên gọi nhưng không thay đổi về nhiệm 
 vụ, quyền hạn, thì thẩm quyền xử phạt vi phạm hành chính của chức danh đó được 
@@ -1202,8 +1176,8 @@ quy định của Chính phủ có sự thay đổi về nhiệm vụ, quyền h
 bộ máy nhà nước, thì thẩm quyền xử phạt được tiếp tục thực hiện bởi chức danh 
 tiếp nhận chức năng, nhiệm vụ, quyền hạn đó tương ứng với từng lĩnh vực quản 
 lý nhà nước. 
-##### Điều 54. Giao quyền xử phạt 
-1. Người có thẩm quyền xử phạt vi phạm hành chính là cấp trưởng, người 
+##### Điều 54. Giao quyền xử phạt[^vbhn90-65] 
+1. [^vbhn90-66] Người có thẩm quyền xử phạt vi phạm hành chính là cấp trưởng, người 
 đứng đầu cơ quan, đơn vị được quy định tại Điều 37a của Luật này có thể giao 
 cho cấp phó thực hiện thẩm quyền xử phạt vi phạm hành chính. 
 2. Việc giao quyền xử phạt vi phạm hành chính được thực hiện thường xuyên 
@@ -1212,22 +1186,10 @@ bảo đảm xử lý vi phạm hành chính quy định tại các khoản 2, 3
 119 của Luật này. Việc giao quyền phải được thể hiện bằng quyết định, trong đó 
 xác định rõ phạm vi, nội dung, thời hạn giao quyền. 
  
-64 Điều này được sửa đổi, bổ sung lần thứ nhất theo quy định tại khoản 27 Điều 1 của 
-Luật số 67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có 
-hiệu lực kể từ ngày 01 tháng 01 năm 2022. 
-Điều này được sửa đổi, bổ sung lần thứ hai theo quy định tại khoản 6 Điều 1 của Luật 
-số 88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu 
-lực kể từ ngày 01 tháng 7 năm 2025. 
-65 Điều này được sửa đổi, bổ sung theo quy định tại khoản 28 Điều 1 của Luật số 
-67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2022. 
-66 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 7 Điều 1 của Luật số 
-88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
-kể từ ngày 01 tháng 7 năm 2025. 
+ 
+ 
+ 
 
-84
- 
- 
 3. Cấp phó được giao quyền xử phạt vi phạm hành chính phải chịu trách 
 nhiệm trước cấp trưởng và trước pháp luật về việc thực hiện quyền được giao. 
 Người được giao quyền không được giao quyền cho người khác. 
@@ -1243,7 +1205,7 @@ thi hành công vụ áp dụng đối với hành vi vi phạm hành chính đa
 chấm dứt ngay hành vi vi phạm. Buộc chấm dứt hành vi vi phạm hành chính được 
 thực hiện bằng lời nói, còi, hiệu lệnh, văn bản hoặc hình thức khác theo quy định 
 của pháp luật. 
-##### Điều 56. Xử phạt vi phạm hành chính không lập biên bản 
+##### Điều 56. Xử phạt vi phạm hành chính không lập biên bản[^vbhn90-67] 
 1. Xử phạt vi phạm hành chính không lập biên bản được áp dụng đối với các 
 trường hợp sau: 
 a) Xử phạt cảnh cáo hoặc phạt tiền đến 500.000 đồng đối với cá nhân, 
@@ -1259,25 +1221,18 @@ tại chỗ.
 phạm hành chính 
 1. Xử phạt vi phạm hành chính có lập biên bản được áp dụng đối với hành 
 vi vi phạm hành chính của cá nhân, tổ chức vi phạm hành chính không thuộc 
-trường hợp quy định tại68 khoản 1 Điều 56 của Luật này. 
+trường hợp quy định tại[^vbhn90-68] khoản 1 Điều 56 của Luật này. 
  
-67 Điều này được sửa đổi, bổ sung theo quy định tại khoản 8 Điều 1 của Luật số 
-88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
-kể từ ngày 01 tháng 7 năm 2025. 
-68 Cụm từ “đoạn 1” được bỏ theo quy định tại điểm b khoản 29 Điều 1 của Luật số 
-88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
-kể từ ngày 01 tháng 7 năm 2025.  
+ 
+  
 
-85
- 
- 
 2. Việc xử phạt vi phạm hành chính có lập biên bản phải được người có thẩm 
 quyền xử phạt lập thành hồ sơ xử phạt vi phạm hành chính. Hồ sơ bao gồm biên 
 bản vi phạm hành chính, quyết định xử phạt hành chính, các tài liệu, giấy tờ có 
 liên quan và phải được đánh bút lục. 
 Hồ sơ phải được lưu trữ theo quy định của pháp luật về lưu trữ.  
-##### Điều 58. Lập biên bản vi phạm hành chính 
-1. Khi phát hiện hành vi vi phạm hành chính thuộc lĩnh vực quản lý của 
+##### Điều 58. Lập biên bản vi phạm hành chính[^vbhn90-69] 
+1. [^vbhn90-70] Khi phát hiện hành vi vi phạm hành chính thuộc lĩnh vực quản lý của 
 mình, người có thẩm quyền đang thi hành công vụ phải kịp thời lập biên bản vi 
 phạm hành chính, trừ trường hợp xử phạt không lập biên bản theo quy định 
 tại khoản 1 Điều 56 của Luật này. 
@@ -1292,7 +1247,7 @@ của người có thẩm quyền lập biên bản hoặc địa điểm khác 
 vào biên bản. 
 3. Biên bản vi phạm hành chính có nội dung chủ yếu sau đây:  
 a) Thời gian, địa điểm lập biên bản;  
-b)71 Thông tin về người lập biên bản, cá nhân, tổ chức vi phạm và cơ quan, 
+b) [^vbhn90-71] Thông tin về người lập biên bản, cá nhân, tổ chức vi phạm và cơ quan, 
 tổ chức, cá nhân có liên quan.  
 Trường hợp không xác định được chủ thể thực hiện hành vi vi phạm, thì ghi 
 không xác định được cá nhân, tổ chức vi phạm; 
@@ -1302,19 +1257,10 @@ kiến, người bị thiệt hại hoặc đại diện tổ chức bị thiệ
 đ) Biện pháp ngăn chặn và bảo đảm xử lý vi phạm hành chính;  
 e) Quyền và thời hạn giải trình. 
  
-69 Điều này được sửa đổi, bổ sung theo quy định tại khoản 29 Điều 1 của Luật số 
-67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2022. 
-70 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 9 Điều 1 của Luật 
-số 88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu 
-lực kể từ ngày 01 tháng 7 năm 2025. 
-71 Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 9 Điều 1 của Luật số 
-88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
-kể từ ngày 01 tháng 7 năm 2025. 
+ 
+ 
+ 
 
-86
- 
- 
 4. Biên bản vi phạm hành chính phải được lập thành ít nhất 02 bản, phải được 
 người lập biên bản và người vi phạm hoặc đại diện tổ chức vi phạm ký, trừ trường 
 hợp biên bản được lập theo quy định tại khoản 7 Điều này.  
@@ -1323,7 +1269,7 @@ thì biên bản phải có chữ ký của đại diện chính quyền cấp x
 hoặc của ít nhất 01 người chứng kiến xác nhận việc cá nhân, tổ chức vi phạm 
 không ký vào biên bản; trường hợp không có chữ ký của đại diện chính quyền cấp 
 xã hoặc của người chứng kiến thì phải ghi rõ lý do vào biên bản. 
-5. Biên bản vi phạm hành chính lập xong phải được giao cho cá nhân, tổ 
+5. [^vbhn90-72] Biên bản vi phạm hành chính lập xong phải được giao cho cá nhân, tổ 
 chức vi phạm hành chính 01 bản; trường hợp vi phạm hành chính không thuộc 
 thẩm quyền xử phạt của người lập biên bản thì biên bản và các tài liệu khác phải 
 được chuyển kịp thời cho người có thẩm quyền xử phạt, trừ trường hợp vi phạm 
@@ -1346,20 +1292,13 @@ thuế có quy định khác.
 9. Chính phủ quy định chi tiết Điều này. 
 ##### Điều 59. Xác minh tình tiết của vụ việc vi phạm hành chính  
 1. Khi xem xét ra quyết định xử phạt vi phạm hành chính, trong trường 
-hợp cần thiết người có thẩm quyền lập biên bản vi phạm hành chính hoặc73 người 
+hợp cần thiết người có thẩm quyền lập biên bản vi phạm hành chính hoặc[^vbhn90-73] người 
 có thẩm quyền xử phạt có trách nhiệm xác minh các tình tiết sau đây:  
 a) Có hay không có vi phạm hành chính; 
  
-72 Khoản này được sửa đổi, bổ sung theo quy định tại điểm c khoản 9 Điều 1 của Luật 
-số 88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu 
-lực kể từ ngày 01 tháng 7 năm 2025. 
-73 Cụm từ “người có thẩm quyền lập biên bản vi phạm hành chính hoặc” được bổ sung 
-theo quy định tại khoản 27 Điều 1 của Luật số 88/2025/QH15 sửa đổi, bổ sung một số điều 
-của Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 tháng 7 năm 2025. 
+ 
+ 
 
-87
- 
- 
 b) Cá nhân, tổ chức thực hiện hành vi vi phạm hành chính, lỗi, nhân thân của 
 cá nhân vi phạm hành chính; 
 c) Tình tiết tăng nặng, giảm nhẹ; 
@@ -1372,7 +1311,7 @@ có thể trưng cầu giám định. Việc trưng cầu giám định được
 định của pháp luật về giám định.  
 2. Việc xác minh tình tiết của vụ việc vi phạm hành chính phải được thể hiện 
 bằng văn bản. 
-3. Người có thẩm quyền quy định tại khoản 1 Điều này tự mình hoặc phân 
+3. [^vbhn90-74] Người có thẩm quyền quy định tại khoản 1 Điều này tự mình hoặc phân 
 công, phối hợp thực hiện xác minh và phải chịu trách nhiệm trước pháp luật về 
 kết quả xác minh. 
 ##### Điều 60. Xác định giá trị tang vật, phương tiện75 vi phạm hành chính để 
@@ -1386,9 +1325,7 @@ một trong các căn cứ theo thứ tự ưu tiên sau đây:
 a) Giá niêm yết hoặc giá ghi trên hợp đồng hoặc hóa đơn mua bán hoặc tờ 
 khai nhập khẩu; 
  
-74 Khoản này được bổ sung theo quy định tại khoản 10 Điều 1 của Luật số 88/2025/QH15 
-sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 
-tháng 7 năm 2025. 
+ 
 75 Cụm từ “, phương tiện” được bổ sung theo quy định tại điểm d khoản 72 Điều 1 của 
 Luật số 67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có 
 hiệu lực kể từ ngày 01 tháng 01 năm 2022.  
@@ -1674,14 +1611,11 @@ c) Hết thời hiệu xử phạt vi phạm hành chính quy định tại Đi�
 thời hạn ra quyết định xử phạt quy định tại khoản 3 Điều 63 hoặc khoản 1 Điều 
 66 của Luật này; 
 
-94
- 
- 
 d) Cá nhân vi phạm hành chính chết, mất tích, tổ chức vi phạm hành chính 
 đã giải thể, phá sản trong thời gian xem xét ra quyết định xử phạt; 
 đ) Chuyển hồ sơ vụ vi phạm có dấu hiệu tội phạm theo quy định tại Điều 62 
 của Luật này. 
-2. Đối với trường hợp quy định tại các điểm a, b, c và d khoản 1 Điều này, 
+2. [^vbhn90-100] Đối với trường hợp quy định tại các điểm a, b, c và d khoản 1 Điều này, 
 người có thẩm quyền không ra quyết định xử phạt vi phạm hành chính nhưng vẫn 
 phải ra quyết định tịch thu tang vật, phương tiện vi phạm hành chính nếu tang vật, 
 phương tiện vi phạm hành chính thuộc loại cấm tàng trữ, cấm lưu hành hoặc tang 
@@ -1693,7 +1627,7 @@ quả được áp dụng, trách nhiệm và thời hạn thực hiện.
 Việc tịch thu tang vật, phương tiện vi phạm hành chính, áp dụng biện pháp 
 khắc phục hậu quả quy định tại khoản này không bị coi là đã bị xử phạt vi phạm 
 hành chính.  
-##### Điều 66. Thời hạn ra quyết định xử phạt vi phạm hành chính 
+##### Điều 66. Thời hạn ra quyết định xử phạt vi phạm hành chính[^vbhn90-101] 
 1. Thời hạn ra quyết định xử phạt vi phạm hành chính được quy định như sau: 
 a) Đối với vụ việc không thuộc trường hợp quy định tại điểm b và điểm c 
 khoản này, thời hạn ra quyết định xử phạt là 07 ngày làm việc, kể từ ngày lập biên 
@@ -1712,16 +1646,10 @@ biên bản vi phạm hành chính.
 quan nếu có lỗi trong việc để quá thời hạn mà không ra quyết định xử phạt thì bị 
 xử lý theo quy định của pháp luật. 
  
-100 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 33 Điều 1 của Luật số 
-67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2022. 
-101 Điều này được sửa đổi, bổ sung theo quy định tại khoản 34 Điều 1 của Luật số 
-67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2022. 
 
-95
  
  
+
 ##### Điều 67. Ra quyết định xử phạt vi phạm hành chính  
 1. Trường hợp một cá nhân, tổ chức thực hiện nhiều hành vi vi phạm hành 
 chính mà bị xử phạt trong cùng một lần thì chỉ ra 01 quyết định xử phạt, trong đó 
@@ -4195,4 +4123,92 @@ tháng 7 năm 2026 quy định như sau:
 theo Luật số 81/2025/QH15 hết hiệu lực kể từ ngày Luật này có hiệu lực thi hành.”. 
 278 Điều này được bãi bỏ theo quy định tại khoản 75 Điều 1 của Luật số 67/2020/QH14 
 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 
-tháng 01 năm 2022. 
+tháng 01 năm 2022.
+
+[^vbhn90-100]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 33 Điều 1 của Luật số 
+    67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2022.
+
+[^vbhn90-101]: Điều này được sửa đổi, bổ sung theo quy định tại khoản 34 Điều 1 của Luật số 
+    67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2022.
+
+[^vbhn90-25]: Cụm từ “Các hình thức xử phạt và nguyên tắc áp dụng” được thay thế bằng cụm từ 
+    “Nguyên tắc quy định các hình thức xử phạt” theo quy định tại điểm c khoản 28 Điều 1 của 
+    Luật số 88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2025.
+
+[^vbhn90-26]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 8 Điều 1 của Luật số 
+    67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2022.
+
+[^vbhn90-27]: Cụm từ “trực thuộc trung ương” được bỏ theo quy định tại điểm a khoản 29 Điều 1 
+    của Luật số 88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, 
+    có hiệu lực kể từ ngày 01 tháng 7 năm 2025.
+
+[^vbhn90-28]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 9 Điều 1 của Luật số 
+    67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2022.
+
+[^vbhn90-29]: Cụm từ “trực thuộc trung ương” được bỏ theo quy định tại điểm a khoản 29 Điều 1 
+    của Luật số 88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, 
+    có hiệu lực kể từ ngày 01 tháng 7 năm 2025.
+
+[^vbhn90-30]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 9 Điều 1 của Luật số 
+    67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2022.
+
+[^vbhn90-43]: Điều này được bổ sung theo quy định tại khoản 4 Điều 1 của Luật số 88/2025/QH15 
+    sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 
+    tháng 7 năm 2025.
+
+[^vbhn90-64]: Điều này được sửa đổi, bổ sung lần thứ nhất theo quy định tại khoản 27 Điều 1 của 
+    Luật số 67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có 
+    hiệu lực kể từ ngày 01 tháng 01 năm 2022. 
+    Điều này được sửa đổi, bổ sung lần thứ hai theo quy định tại khoản 6 Điều 1 của Luật 
+    số 88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu 
+    lực kể từ ngày 01 tháng 7 năm 2025.
+
+[^vbhn90-65]: Điều này được sửa đổi, bổ sung theo quy định tại khoản 28 Điều 1 của Luật số 
+    67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2022.
+
+[^vbhn90-66]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 7 Điều 1 của Luật số 
+    88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
+    kể từ ngày 01 tháng 7 năm 2025.
+
+[^vbhn90-67]: Điều này được sửa đổi, bổ sung theo quy định tại khoản 8 Điều 1 của Luật số 
+    88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
+    kể từ ngày 01 tháng 7 năm 2025.
+
+[^vbhn90-68]: Cụm từ “đoạn 1” được bỏ theo quy định tại điểm b khoản 29 Điều 1 của Luật số 
+    88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
+    kể từ ngày 01 tháng 7 năm 2025.
+
+[^vbhn90-69]: Điều này được sửa đổi, bổ sung theo quy định tại khoản 29 Điều 1 của Luật số 
+    67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
+    kể từ ngày 01 tháng 01 năm 2022.
+
+[^vbhn90-70]: Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 9 Điều 1 của Luật 
+    số 88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu 
+    lực kể từ ngày 01 tháng 7 năm 2025.
+
+[^vbhn90-71]: Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 9 Điều 1 của Luật số 
+    88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực 
+    kể từ ngày 01 tháng 7 năm 2025.
+
+[^vbhn90-72]: Khoản này được sửa đổi, bổ sung theo quy định tại điểm c khoản 9 Điều 1 của Luật 
+    số 88/2025/QH15 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu 
+    lực kể từ ngày 01 tháng 7 năm 2025.
+
+[^vbhn90-73]: Cụm từ “người có thẩm quyền lập biên bản vi phạm hành chính hoặc” được bổ sung 
+    theo quy định tại khoản 27 Điều 1 của Luật số 88/2025/QH15 sửa đổi, bổ sung một số điều 
+    của Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 tháng 7 năm 2025.
+
+[^vbhn90-74]: Khoản này được bổ sung theo quy định tại khoản 10 Điều 1 của Luật số 88/2025/QH15 
+    sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 
+    tháng 7 năm 2025.
+
+[^vbhn90-31]: Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 10 Điều 1 của Luật 
+    số 67/2020/QH14 sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính, có hiệu 
+    lực kể từ ngày 01 tháng 01 năm 2022.

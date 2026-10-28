@@ -18,7 +18,8 @@ CONTRACT = sample.CONTRACT
 PINS = {
     'nodes_jsonl_sha256': '03e929392b2b75d6ba8a381de94a3c0688e8ccc60dd59cb5bd048e9eeacff8e7',
     'edges_jsonl_sha256': '2e904697369d2e5d90e694cd5692041e83cfcb455ee529afcc1bf7a22d0bdb0f',
-    'plan_sha256': '144a50be5705920628ae6ad826d77a81110782c8f605c6ba32d7aa28d27daca0',
+    # Semantic hash includes the current schema/contract, even for this two-node fixture.
+    'plan_sha256': 'a135ebb8f0d9085ef7a5856a61fee7afadb73a86a8106b2423950cab80457dd7',
 }
 INPUT_SHA = 'f16d05ec6b29248d2c61adb1e9263f78e4f7bace1b955014a2d17872cfe4064d'
 

@@ -1097,7 +1097,8 @@ bản quy phạm pháp luật, quy chuẩn kỹ thuật sửa đổi, bổ sung,
 
 31 
  
-Phụ lục I 
+### Phụ lục I
+Bảng/hình gốc của Phụ lục I: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=30 (PDF 30–30; trang in 31–31). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU THÔNG BÁO KẾT QUẢ KIỂM TRA, ĐÁNH GIÁ 
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024  
 của Bộ trưởng Bộ Giao thông vận tải) 
@@ -1144,7 +1145,8 @@ hợp cải tạo;
 đường thử phanh không đáp ứng. 
 
   
-Phụ lục II 
+### Phụ lục II
+Bảng/hình gốc của Phụ lục II: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=31 (PDF 31–37; trang in 32–38). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU PHIẾU HỒ SƠ PHƯƠNG TIỆN   
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
 của Bộ trưởng Bộ Giao thông vận tải) 
@@ -1560,7 +1562,8 @@ giấy tờ khác;
 
 39 
  
-Phụ lục III 
+### Phụ lục III
+Bảng/hình gốc của Phụ lục III: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=38 (PDF 38–40; trang in 39–41). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 BẢN XÁC NHẬN THÔNG SỐ KỸ THUẬT CỦA XE  
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024  
 của Bộ trưởng Bộ Giao thông vận tải) 
@@ -1712,7 +1715,8 @@ Số quản lý phương tiện:
 Độc lập - Tự do - Hạnh phúc 
 
   
-Phụ lục IV 
+### Phụ lục IV
+Bảng/hình gốc của Phụ lục IV: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=41 (PDF 41–44; trang in 42–45). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU PHIẾU KIỂM SOÁT KIỂM ĐỊNH 
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024  
 của Bộ trưởng Bộ Giao thông vận tải) 
@@ -1972,7 +1976,8 @@ Hướng dẫn ghi:
 (1): Số phiếu được lấy theo số thứ tự xe mô tô, xe gắn máy vào kiểm định trong ngày. 
 
   
-Phụ lục V 
+### Phụ lục V
+Bảng/hình gốc của Phụ lục V: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=45 (PDF 45–47; trang in 46–48). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 CHU KỲ KIỂM ĐỊNH 
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
  của Bộ trưởng Bộ Giao thông vận tải) 
@@ -2016,7 +2021,7 @@ lái xe) không kinh doanh vận tải
 1.2 Thời gian sản xuất trên 07 năm đến 20 năm 
  
 12 
-1.3 Thời gian sản xuất trên 20 năm 
+1.3 Thời gian sản xuất trên 20 năm 06 
 
 47 
  
@@ -2123,7 +2128,8 @@ xuất xe.
 
 49 
  
-Phụ lục VI 
+### Phụ lục VI
+Bảng/hình gốc của Phụ lục VI: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=48 (PDF 48–49; trang in 49–50). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU GIẤY HẸN TRẢ GIẤY CHỨNG NHẬN KIỂM ĐỊNH,  
 GIẤY TIẾP NHẬN THÔNG TIN BÁO MẤT TEM KIỂM ĐỊNH,  
 GIẤY HẸN LỊCH KIỂM ĐỊNH  
@@ -2205,7 +2211,8 @@ bảo an toàn giao thông.
 51 
  
  
-Phụ lục VII 
+### Phụ lục VII
+Bảng/hình gốc của Phụ lục VII: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=50 (PDF 50–53; trang in 51–54). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU VĂN BẢN ĐỀ NGHỊ KIỂM ĐỊNH  
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
 của Bộ trưởng Bộ Giao thông vận tải)  
@@ -2387,7 +2394,8 @@ loại mặt đường.
 55 
  
  
-Phụ lục VIII 
+### Phụ lục VIII
+Bảng/hình gốc của Phụ lục VIII: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=54 (PDF 54–61; trang in 55–62). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU PHIẾU KIỂM ĐỊNH, PHIẾU KIỂM TRA TRÊN ĐƯỜNG 
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
 của Bộ trưởng Bộ Giao thông vận tải) 
@@ -3035,7 +3043,8 @@ b. Kết quả kiểm tra:
 63 
  
  
-Phụ lục IX 
+### Phụ lục IX
+Bảng/hình gốc của Phụ lục IX: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=62 (PDF 62–62; trang in 63–63). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU ĐƠN ĐỀ NGHỊ CẤP LẠI GIẤY CHỨNG NHẬN KIỂM ĐỊNH,  
 TEM KIỂM ĐỊNH; GIẤY CHỨNG NHẬN CẢI TẠO 
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
@@ -3077,7 +3086,8 @@ Lưu:……….
          Chủ xe/đại diện tổ chức  
                      (Ký, ghi rõ họ tên) 
 
-Phụ lục X 
+### Phụ lục X
+Bảng/hình gốc của Phụ lục X: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=63 (PDF 63–63; trang in 64–64). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU SỔ THEO DÕI CẤP GIẤY CHỨNG NHẬN KIỂM ĐỊNH, TEM KIỂM ĐỊNH, GIẤY CHỨNG NHẬN CẢI TẠO  
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải) 
 Mẫu số 01. Sổ theo dõi cấp Giấy chứng nhận kiểm định, tem kiểm định xe cơ giới 
@@ -3136,7 +3146,8 @@ hỏng
 Seri hỏng 
 
      65 
-Phụ lục XI 
+### Phụ lục XI
+Bảng/hình gốc của Phụ lục XI: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=64 (PDF 64–64; trang in 65–65). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU BÁO CÁO KẾT QUẢ THỰC HIỆN CÔNG TÁC KIỂM ĐỊNH 
  (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải) 
 CƠ SỞ ĐĂNG KIỂM (MÃ SỐ) 
@@ -3251,7 +3262,8 @@ Ngày....tháng....năm.....
 
     
  
-Phụ lục XII 
+### Phụ lục XII
+Bảng/hình gốc của Phụ lục XII: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=65 (PDF 65–65; trang in 66–66). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU PHIẾU TIẾP NHẬN HỒ SƠ  
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024  
 của Bộ trưởng Bộ Giao thông vận tải) 
@@ -3315,7 +3327,8 @@ Lưu ý: phiếu này được lập thành 02 bản, 01 bản giao cho chủ xe
 Hướng dẫn ghi: Đánh dấu “√” vào các ô tương ứng nếu có tài liệu. 
 
      67 
-Phụ lục XIII 
+### Phụ lục XIII
+Bảng/hình gốc của Phụ lục XIII: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=66 (PDF 66–66; trang in 67–67). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU BÁO CÁO KẾT QUẢ THỰC HIỆN CÔNG TÁC CHỨNG NHẬN XE CẢI TẠO 
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải) 
      CƠ SỞ ĐĂNG KIỂM (MÃ SỐ)  
@@ -3326,59 +3339,13 @@ MẪU BÁO CÁO KẾT QUẢ THỰC HIỆN CÔNG TÁC CHỨNG NHẬN XE CẢI T�
 BÁO CÁO KẾT QUẢ THỰC HIỆN CÔNG TÁC 
  CHỨNG NHẬN XE CẢI TẠO 
 (Từ ngày….. đến ngày…...) 
-Loại hồ sơ 
-Số lượng 
-hồ sơ tồn 
-Số lượng hồ sơ 
- tiếp nhận 
-Số lượng hồ sơ 
-đã cấp giấy 
-chứng nhận 
-Số lượng 
-hồ sơ 
-không đạt 
-Số lượng giấy chứng  
-nhận cấp lại 
-Ghi 
-chú 
-Do 
-mất 
-Do 
-hỏng 
-Do sai 
-thông 
-tin 
-Lý do 
-khác 
-Miễn  
-thiết kế 
-Có  
-thiết kế 
-Xe cơ giới 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-Xe máy chuyên 
-dùng 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-Xe mô tô, xe 
-gắn máy 
+| Loại hồ sơ | Số lượng hồ sơ tồn | Số lượng hồ sơ tiếp nhận: Miễn thiết kế | Số lượng hồ sơ tiếp nhận: Có thiết kế | Số lượng hồ sơ đã cấp giấy chứng nhận | Số lượng hồ sơ không đạt | Số lượng giấy chứng nhận cấp lại: Do mất | Số lượng giấy chứng nhận cấp lại: Do hỏng | Số lượng giấy chứng nhận cấp lại: Do sai thông tin | Số lượng giấy chứng nhận cấp lại: Lý do khác | Ghi chú |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Xe cơ giới |  |  |  |  |  |  |  |  |  |  |
+| Xe máy chuyên dùng |  |  |  |  |  |  |  |  |  |  |
+| Xe mô tô, xe gắn máy |  |  |  |  |  |  |  |  |  |  |
+
+Bảng gốc: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=66 (trang PDF 66; trang in 67). Ô gộp, vị trí ký và hình học biểu mẫu đọc tại nguồn. 
  
  
  
@@ -3402,7 +3369,8 @@ Người lập báo cáo
     
  
 68
-Phụ lục XIV 
+### Phụ lục XIV
+Bảng/hình gốc của Phụ lục XIV: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=67 (PDF 67–71; trang in 68–72). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 NỘI DUNG HỒ SƠ THIẾT KẾ CẢI TẠO 
  (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
 của Bộ trưởng Bộ Giao thông vận tải) 
@@ -3691,7 +3659,8 @@ bằng vật liệu chống cháy; cách định vị ống bảo vệ;
 73 
  
  
-Phụ lục XV 
+### Phụ lục XV
+Bảng/hình gốc của Phụ lục XV: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=72 (PDF 72–75; trang in 73–76). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU BIÊN BẢN KIỂM TRA, ĐÁNH GIÁ XE CẢI TẠO  
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
 của Bộ trưởng Bộ Giao thông vận tải) 
@@ -3862,7 +3831,8 @@ của cơ sở đăng kiểm xe cơ giới) kiểm tra, đánh giá ký trong bi
 đăng kiểm viên kiểm tra, đánh giá; 
 
      77 
-Phụ lục XVI 
+### Phụ lục XVI
+Bảng/hình gốc của Phụ lục XVI: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=76 (PDF 76–77; trang in 77–78). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU BẢNG KÊ CÁC HỆ THỐNG, TỔNG THÀNH THAY THẾ  
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải) 
 (CƠ SỞ CẢI TẠO) 
@@ -3992,7 +3962,8 @@ Hướng dẫn ghi:
 79 
  
  
-Phụ lục XVII 
+### Phụ lục XVII
+Bảng/hình gốc của Phụ lục XVII: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=78 (PDF 78–78; trang in 79–79). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU VĂN BẢN ĐỀ NGHỊ CHỨNG NHẬN XE CẢI TẠO  
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
 của Bộ trưởng Bộ Giao thông vận tải) 
@@ -4037,7 +4008,8 @@ công đảm bảo đúng quy định và đạt yêu cầu.
 
     
  
-Phụ lục XVIII 
+### Phụ lục XVIII
+Bảng/hình gốc của Phụ lục XVIII: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=79 (PDF 79–84; trang in 80–85). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU GIẤY CHỨNG NHẬN CẢI TẠO 
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
 của Bộ trưởng Bộ Giao thông vận tải)  
@@ -4345,7 +4317,8 @@ Hướng dẫn ghi :
 
     
  
- Phụ lục XIX 
+### Phụ lục XIX
+Bảng/hình gốc của Phụ lục XIX: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=85 (PDF 85–86; trang in 86–87). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU VĂN BẢN CHẤP THUẬN SỬ DỤNG CHUNG HỒ SƠ THIẾT KẾ 
  (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
 của Bộ trưởng Bộ Giao thông vận tải) 
@@ -4444,7 +4417,8 @@ CƠ SỞ THẾT KẾ
 
     
  
-Phụ lục XX 
+### Phụ lục XX
+Bảng/hình gốc của Phụ lục XX: data/raw/pdf/47_2024_TT_BGTVT_cb53791.pdf#page=87 (PDF 87–95; trang in 88–96). Cấu trúc ô gộp, hình học và vị trí trên biểu mẫu đọc tại nguồn.
 MẪU GIẤY CHỨNG NHẬN KIỂM ĐỊNH, TEM KIỂM ĐỊNH 
 (Ban hành kèm theo Thông tư số 47/2024/TT-BGTVT ngày 15 tháng 11 năm 2024  
 của Bộ trưởng Bộ Giao thông vận tải) 

@@ -116,7 +116,7 @@ c) Hành vi vi phạm hành chính phải được mô tả rõ ràng, đầy đ
 thể xác định và xử phạt được trong thực tiễn. 
 
   
-2.2 Việc quy định hành vi vi phạm hành chính được thực hiện như sau: 
+2. [^vbhn1651-2] Việc quy định hành vi vi phạm hành chính được thực hiện như sau: 
 a) Hành vi vi phạm hành chính, hình thức xử phạt, mức xử phạt, biện pháp 
 khắc phục hậu quả phải được quy định tại nghị định xử phạt vi phạm hành chính 
 trong lĩnh vực quản lý nhà nước tương ứng, phù hợp với tính chất vi phạm của 
@@ -147,16 +147,12 @@ a) Phải gây ra hậu quả hoặc có khả năng thực tế gây ra hậu q
 b) Đáp ứng yêu cầu khôi phục lại trật tự quản lý hành chính nhà nước do vi phạm 
 hành chính gây ra; 
                                          
-2 Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 1 Điều 1 của Nghị định 
-số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 
-tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
 
-87 
+
  
 c) Phải được mô tả rõ ràng, đầy đủ, cụ thể để có thể thực hiện được trong thực 
 tiễn và phải bảo đảm tính khả thi. 
-5a.3 Đối với hành vi vi phạm hành chính có quy định áp dụng hình thức xử phạt 
+5a. [^vbhn1651-3] Đối với hành vi vi phạm hành chính có quy định áp dụng hình thức xử phạt 
 tịch thu tang vật, phương tiện vi phạm hành chính, thì nghị định quy định về xử phạt 
 vi phạm hành chính trong lĩnh vực quản lý nhà nước quy định biện pháp khắc phục 
 hậu quả buộc nộp lại số tiền bằng với giá trị tang vật, phương tiện vi phạm hành 
@@ -186,10 +182,7 @@ chính nhà nước.
 hạn trong các trường hợp có quy định pháp luật về việc thu hồi giấy phép, chứng 
 chỉ hành nghề. 
                                          
-3 Khoản này được bổ sung theo quy định tại điểm b khoản 1 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 
-năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm 
-hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+
 
   
 3. Việc quy định đình chỉ một phần hoạt động có thời hạn đối với hành vi vi 
@@ -199,7 +192,7 @@ a) Trực tiếp vi phạm các hoạt động được ghi trong giấy phép;
 b) Vi phạm có tính chất, mức độ nghiêm trọng xâm hại trật tự quản lý hành 
 chính nhà nước; 
 c) Gây hậu quả nghiêm trọng hoặc có khả năng thực tế gây hậu quả nghiêm 
-trọng đối với tính mạng, sức khỏe con người, môi trường4. 
+trọng đối với tính mạng, sức khỏe con người, môi trường[^vbhn1651-4]. 
 4. Không quy định đình chỉ hoạt động có thời hạn đối với cơ sở sản xuất, kinh 
 doanh, dịch vụ mà theo quy định của pháp luật phải có giấy phép trong trường hợp 
 có quy định pháp luật về việc thu hồi giấy phép. 
@@ -209,29 +202,19 @@ hành vi vi phạm hành chính của cơ sở sản xuất, kinh doanh, dịch 
 căn cứ vào tính chất, mức độ nghiêm trọng xâm hại trật tự quản lý hành chính nhà 
 nước hoặc hậu quả nghiêm trọng đối với tính mạng, sức khỏe con người, môi 
 trường và trật tự, an toàn xã hội mà hành vi đó có khả năng thực tế gây ra. 
-6. Trường hợp tang vật, phương tiện vi phạm hành chính là5 vũ khí, vật liệu 
+6. Trường hợp tang vật, phương tiện vi phạm hành chính là[^vbhn1651-5] vũ khí, vật liệu 
 nổ, công cụ hỗ trợ, vật có giá trị lịch sử, giá trị văn hóa, bảo vật quốc gia, cổ vật, 
-hàng lâm sản quý hiếm,6 thì phải quy định tịch thu. Đối với các trường hợp khác, 
+hàng lâm sản quý hiếm,[^vbhn1651-6] thì phải quy định tịch thu. Đối với các trường hợp khác, 
 việc quy định tịch thu tang vật, phương tiện vi phạm hành chính đối với hành vi vi 
 phạm hành chính phải trên cơ sở có một trong các căn cứ sau đây: 
 a) Vi phạm được thực hiện do lỗi cố ý hoặc vi phạm có tính chất nghiêm trọng; 
 b) Vật, tiền, hàng hóa, phương tiện là tang vật trực tiếp của vi phạm hành 
 chính hoặc được trực tiếp sử dụng để thực hiện hành vi vi phạm hành chính, mà 
                                          
-4 Cụm từ “và trật tự, an toàn xã hội” được bãi bỏ theo quy định tại điểm b khoản 1 Điều 2 
-của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-
-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành 
-Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.    
-5 Cụm từ “ma túy,” được bãi bỏ theo quy định tại điểm c khoản 1 Điều 2 của Nghị định 
-số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 
-tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật 
-Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-6 Cụm từ “vật thuộc loại cấm tàng trữ, cấm lưu hành,” được bãi bỏ theo quy định tại điểm c 
-khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 
-118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện 
-pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
 
-89 
+
+
+
  
 nếu không có vật, tiền, hàng hóa, phương tiện này, thì không thể thực hiện được 
 hành vi vi phạm. 
@@ -304,16 +287,12 @@ a) Nếu hành vi vi phạm hành chính đã kết thúc, thì áp dụng ngh�
 hiệu lực tại thời điểm chấm dứt hành vi vi phạm để xử phạt; 
 b) Nếu hành vi vi phạm hành chính đang được thực hiện, thì áp dụng nghị 
 định đang có hiệu lực tại thời điểm phát hiện hành vi vi phạm để xử phạt. 
-3.7 Thẩm quyền, thủ tục và biểu mẫu trong xử phạt vi phạm hành chính được 
+3. [^vbhn1651-7] Thẩm quyền, thủ tục và biểu mẫu trong xử phạt vi phạm hành chính được 
 áp dụng theo văn bản quy phạm pháp luật có hiệu lực tại thời điểm xem xét, xử lý 
 hành vi vi phạm. 
                                          
-7 Khoản này được bổ sung theo quy định tại khoản 2 Điều 1 của Nghị định số 68/2025/NĐ-
-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 
-2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm 
-hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
 
-91 
+
  
 ##### Điều 8. Nguyên tắc xác định hành vi vi phạm hành chính, áp dụng các hình 
 thức xử phạt vi phạm hành chính, biện pháp khắc phục hậu quả và sự kiện bất 
@@ -327,12 +306,12 @@ người có thẩm quyền phát hiện vi phạm hành chính;
 b) Hành vi vi phạm hành chính đang thực hiện là hành vi đang diễn ra tại thời 
 điểm cơ quan, người có thẩm quyền phát hiện vi phạm hành chính và hành vi đó vẫn 
 đang xâm hại trật tự quản lý nhà nước. 
-1a.8 Cá nhân, tổ chức tiếp tục thực hiện hành vi vi phạm hành chính mà trước đó 
+1a. [^vbhn1651-8] Cá nhân, tổ chức tiếp tục thực hiện hành vi vi phạm hành chính mà trước đó 
 đã bị xử phạt hoặc chưa bị xử phạt đối với hành vi vi phạm được quy định ở các điểm 
 trong cùng một khoản hoặc các khoản trong cùng một điều với mức độ vi phạm hoặc 
 hậu quả gắn với mức phạt khác nhau, thì được coi là vi phạm cùng một hành vi để xác 
 định tái phạm hoặc vi phạm hành chính nhiều lần. 
-1b.9 Nếu vi phạm hành chính nhiều lần được quy định là tình tiết tăng nặng và 
+1b. [^vbhn1651-9] Nếu vi phạm hành chính nhiều lần được quy định là tình tiết tăng nặng và 
 thuộc trường hợp quy định tại khoản 1a Điều này thì áp dụng khung tiền phạt cao 
 nhất, khung thời hạn đình chỉ, tước quyền sử dụng giấy phép, chứng chỉ hành nghề 
 dài nhất quy định đối với hành vi đó trong các lần vi phạm. 
@@ -345,14 +324,8 @@ tại khoản 2 Điều 65 Luật Xử lý vi phạm hành chính.
 tiếp từ điều kiện, hoàn cảnh khách quan do dịch bệnh hoặc phải thực hiện các biện 
 pháp phòng chống dịch, để xác định việc có hay không xử phạt vi phạm hành chính, 
                                          
-8 Khoản này được bổ sung theo quy định tại khoản 3 Điều 1 của Nghị định số 68/2025/NĐ-
-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 
-của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có 
-hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-9 Khoản này được bổ sung theo quy định tại khoản 3 Điều 1 của Nghị định số 68/2025/NĐ-
-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 
-của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, 
-có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+
+
 
   
 người có thẩm quyền xử phạt phải xác minh, thu thập đầy đủ thông tin, số liệu, giấy 
@@ -847,14 +820,7 @@ c) Có kết luận nội dung tố cáo của người hoặc cơ quan có th�
 quyết tố cáo về việc phải sửa đổi, bổ sung, hủy bỏ một phần quyết định; 
 d) Có bản án, quyết định của Tòa án về việc sửa đổi, bổ sung, hủy bỏ một phần 
 quyết định bị khởi kiện. 
-3. (được bãi bỏ) 
- 
-15 Khoản này được bãi bỏ theo quy định tại khoản 2 Điều 2 của Nghị định số 68/2025/NĐ-CP 
-sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của 
-Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, 
-có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-
-11 
+3. [^vbhn1651-15] (được bãi bỏ) 
  
 4. Quyết định có áp dụng hình thức xử phạt tịch thu tang vật, phương tiện vi 
 phạm hành chính, biện pháp khắc phục hậu quả được đính chính, sửa đổi, bổ sung, 
@@ -862,7 +828,7 @@ hủy bỏ một phần theo quy định tại điểm a khoản 2 Điều này 
 sửa đổi, bổ sung, hủy bỏ một phần nội dung liên quan đến việc tịch thu tang vật, 
 phương tiện vi phạm hành chính, áp dụng biện pháp khắc phục hậu quả. 
 ##### Điều 16. Hiệu lực, thời hạn, thời hiệu thi hành quyết định đính chính, sửa 
-đổi, bổ sung, hủy bỏ hoặc quyết định mới trong xử phạt vi phạm hành chính16 
+đổi, bổ sung, hủy bỏ hoặc quyết định mới trong xử phạt vi phạm hành chính[^vbhn1651-16] 
 1. Quyết định đính chính, sửa đổi, bổ sung, hủy bỏ hoặc quyết định mới có 
 hiệu lực kể từ ngày ký và phải được thi hành ngay khi cá nhân, tổ chức vi phạm 
 nhận được quyết định. Việc giao quyết định đính chính, sửa đổi, bổ sung, hủy bỏ 
@@ -888,12 +854,6 @@ cưỡng chế thi hành, trừ trường hợp quyết định đính chính, s
 định cưỡng chế đối với các vụ việc quy định tại khoản 2 Điều 15 Nghị định này và 
 trường hợp ban hành quyết định mới do có thay đổi đối tượng vi phạm. 
  
-16 Điều này được sửa đổi, bổ sung theo quy định tại khoản 9 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-
-  
 6. Trong trường hợp quá thời hạn quy định tại các khoản 3, 4 và 5 Điều này, 
 thì không thi hành quyết định đó nữa, trừ trường hợp quyết định xử phạt có áp 
 dụng hình thức xử phạt tịch thu tang vật, phương tiện vi phạm hành chính, biện 
@@ -924,14 +884,9 @@ khó bảo quản hoặc tang vật, phương tiện vi phạm hành chính có 
 khả năng gây ô nhiễm môi trường, lây lan dịch, bệnh. 
 3. Việc giải trình và xem xét ý kiến giải trình được thể hiện bằng văn bản và 
 lưu trong hồ sơ xử phạt. 
-4. (được bãi bỏ) 
+4. [^vbhn1651-17] (được bãi bỏ) 
  
-17 Khoản này được bãi bỏ theo quy định tại khoản 2 Điều 2 của Nghị định số 68/2025/NĐ-CP 
-sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của 
-Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, 
-có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-
-13 
+ 
  
 ##### Điều 18. Công bố công khai trên các phương tiện thông tin đại chúng việc 
 xử phạt đối với cá nhân, tổ chức vi phạm hành chính 
@@ -1783,14 +1738,13 @@ theo các Nghị định quy định cụ thể về chế độ áp dụng bi�
 nước, Bộ trưởng, Thủ trưởng cơ quan ngang Bộ có thể ban hành các biểu mẫu 
 khác, ngoài các biểu mẫu quy định tại khoản 1 và khoản 2 Điều này, để sử dụng 
 
-35 
  
 trong ngành, lĩnh vực mình, sau khi có ý kiến đồng ý bằng văn bản của Bộ trưởng 
 Bộ Tư pháp. 
 4. Biểu mẫu sử dụng trong xử lý vi phạm hành chính được lưu trữ bằng giấy và 
 lưu trữ dưới dạng điện tử. Cơ quan, người có thẩm quyền có thể sử dụng mẫu được 
 in sẵn hoặc tự in các mẫu, quản lý và chịu trách nhiệm theo quy định của pháp luật. 
-4a.45 Việc ghi nội dung biểu mẫu trong xử phạt vi phạm hành chính đối với 
+4a. [^vbhn1651-45] Việc ghi nội dung biểu mẫu trong xử phạt vi phạm hành chính đối với 
 trường hợp đối tượng vi phạm là hộ gia đình, hộ kinh doanh, cộng đồng dân cư 
 được thực hiện như sau: 
 a) Thông tin của hộ gia đình, hộ kinh doanh, cộng đồng dân cư được ghi tại 
@@ -1811,18 +1765,12 @@ hộ gia đình và cộng đồng dân cư;
 doanh, ghi rõ họ và tên người đại diện cho cộng đồng dân cư là trưởng thôn, làng, 
 ấp, bản, bon, buôn, phum, sóc, tổ dân phố và điểm dân cư tương tự hoặc người được 
 cộng đồng dân cư thỏa thuận cử ra đối với đối tượng là cộng đồng dân cư. 
-4b.46 Việc ghi nội dung biểu mẫu trong xử phạt vi phạm hành chính đối với 
+4b. [^vbhn1651-46] Việc ghi nội dung biểu mẫu trong xử phạt vi phạm hành chính đối với 
 trường hợp đối tượng vi phạm là tổ hợp tác, chi nhánh, văn phòng đại diện, địa 
 điểm kinh doanh của pháp nhân, tổ chức được thực hiện như sau: 
  
-45 Khoản này được bổ sung theo quy định tại khoản 15 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-46 Khoản này được bổ sung theo quy định tại khoản 16 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+
+
 
   
 a) Thông tin của tổ hợp tác, chi nhánh, văn phòng đại diện, địa điểm kinh 
@@ -12296,5 +12244,39 @@ phạm hành chính.
 (4) Ghi rõ số lượng, tên các loại giấy phép, chứng chỉ hành nghề được bàn giao; Quyết định 
 tạm giữ tang vật, phương tiện vi phạm hành chính, giấy phép, chứng chỉ hành nghề; Biên bản tạm 
 giữ tang vật, phương tiện vi phạm hành chính, giấy phép, chứng chỉ hành nghề, Quyết định xử phạt 
-vi phạm hành chính; Biên bản giữ giấy phép, chứng chỉ hành nghề,... có trong hồ sơ. 
+vi phạm hành chính; Biên bản giữ giấy phép, chứng chỉ hành nghề,... có trong hồ sơ.
 
+[^vbhn1651-2]: Khoản này được sửa đổi, bổ sung theo quy định tại điểm a khoản 1 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-3]: Khoản này được bổ sung theo quy định tại điểm b khoản 1 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-7]: Khoản này được bổ sung theo quy định tại khoản 2 Điều 1 của Nghị định số 68/2025/NĐ- CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-8]: Khoản này được bổ sung theo quy định tại khoản 3 Điều 1 của Nghị định số 68/2025/NĐ- CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-9]: Khoản này được bổ sung theo quy định tại khoản 3 Điều 1 của Nghị định số 68/2025/NĐ- CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-45]: Khoản này được bổ sung theo quy định tại khoản 15 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-46]: Khoản này được bổ sung theo quy định tại khoản 16 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-4]: Cụm từ “và trật tự, an toàn xã hội” được bãi bỏ theo quy định tại điểm b khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ- CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-5]: Cụm từ “ma túy,” được bãi bỏ theo quy định tại điểm c khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-6]: Cụm từ “vật thuộc loại cấm tàng trữ, cấm lưu hành,” được bãi bỏ theo quy định tại điểm c khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-15]: Khoản này được bãi bỏ theo quy định tại khoản 2 Điều 2 của Nghị định số 68/2025/NĐ-CP 
+    sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của 
+    Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, 
+    có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-16]: Điều này được sửa đổi, bổ sung theo quy định tại khoản 9 Điều 1 của Nghị định số 
+    68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
+    12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
+    phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-17]: Khoản này được bãi bỏ theo quy định tại khoản 2 Điều 2 của Nghị định số 68/2025/NĐ-CP 
+    sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của 
+    Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, 
+    có hiệu lực kể từ ngày 02 tháng 5 năm 2025.

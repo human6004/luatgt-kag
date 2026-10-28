@@ -2,20 +2,20 @@
   "name": "Vietnamese Road Traffic Legal Dataset",
   "project": "caoDATA",
   "language": "vi",
-  "dataset_date": "2026-10-23",
+  "dataset_date": "2026-10-24",
   "counts": {
     "documents": 92,
     "production_markdown": 91,
     "out_of_scope_markdown": 1,
-    "units": 55572,
+    "units": 57035,
     "out_of_scope_units": 840,
     "relations": 834,
     "out_of_scope_relations": 15,
-    "xrefs": 21357,
+    "xrefs": 21724,
     "out_of_scope_xrefs": 1005,
     "penalties": 1820,
     "excluded_penalties": 127,
     "signs": 907
   },
-  "updated_at": "2026-10-23"
+  "updated_at": "2026-10-24"
 }

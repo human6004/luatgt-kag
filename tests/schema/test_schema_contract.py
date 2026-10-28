@@ -20,7 +20,7 @@ UPSTREAM = ROOT / 'vendor/KAG'
 SCHEMA = ROOT / 'kag/schema/VietRoadTraffic.schema'
 CONTRACT = ROOT / 'kag/schema/schema_contract.json'
 PIN = 'fdab15b3929d2ee40dfcdd388f90233096a6afc9'
-SCHEMA_SHA256 = '86daeeb01be6a5d920b75cfe79a98ed9430613268bc8cdbe099663ee0d04c165'
+SCHEMA_SHA256 = '4f9afe2e877b0926416b2cb29dd562cbe17805f053a090a5d6d7c618fdc69fde'
 NODE_COUNTS = {'LegalDocument': 29, 'LegalUnit': 32, 'TrafficSign': 18}
 DECLARED_COUNTS = {'LegalDocument': 27, 'LegalUnit': 30, 'TrafficSign': 16}
 PREDICATES = {
@@ -29,7 +29,7 @@ PREDICATES = {
     'AMENDS': 'amends', 'REPEALS': 'repeals', 'REPLACES': 'replaces', 'IMPLEMENTS': 'implements',
     'CONSOLIDATES': 'consolidates',
 }
-UNIT_TYPES = ['Dieu', 'Khoan', 'Diem', 'QCVN', 'QCVN_Muc', 'PhuLuc']
+UNIT_TYPES = ['Dieu', 'Khoan', 'Diem', 'QCVN', 'QCVN_Muc', 'PhuLuc', 'Muc', 'Bang', 'Hinh', 'MauBieu']
 
 
 @contextmanager
@@ -202,7 +202,7 @@ class SchemaContractTest(unittest.TestCase):
             k: approved['edge_application_key_contract'][k] for k in key_fields}
         digest = hashlib.sha256(json.dumps(approved, ensure_ascii=False, sort_keys=True,
                                 separators=(',', ':')).encode('utf-8')).hexdigest()
-        self.assertEqual(digest, 'f3472bd82903286e9cd604f9bf292974b2fb4a10966ba1f9fec9f4fe7d6feb20')
+        self.assertEqual(digest, '202d2f4d7de188565d8433b95c8a972506dd8a05819788f89a2e7b35cec30ec8')
 
     def test_exact_predicates_endpoints_and_relation_provenance(self):
         self.assertEqual(self.contract['logical_to_physical_predicates'], PREDICATES)
@@ -242,11 +242,11 @@ class SchemaContractTest(unittest.TestCase):
     def test_xref_integrity_gate(self):
         xref = self.contract['xref_contract']
         expected = {
-            'xref_sha256': '94a80504779af660802469dd2f5ea2aa99ffb665bdf6f6cbfbb92b2e3350e770',
-            'required_safe_edge_ledger_sha256': 'cb2770aa99f04d07f111078ee859d91f3b65fe5ec8126b6221a75202a7cfa226',
+            'xref_sha256': '4a408fc2bdac1868c7099256657056c378c4fc922514512ad7edd6e29d250f6e',
+            'required_safe_edge_ledger_sha256': 'd2a8a70f4f91d04cac4e935e063fb6f3077d0bbc845f1ddaa3d9905e11ec8c89',
             'join_contract': 'EXISTING_RECORD_FINGERPRINT_SHA256_CANONICAL_JSON',
-            'classification_total': 21357, 'safe_edge_total': 11988,
-            'safe_edge_affirmative': 10731, 'safe_edge_exclusion': 1257,
+            'classification_total': 21724, 'safe_edge_total': 12554,
+            'safe_edge_affirmative': 11144, 'safe_edge_exclusion': 1410,
         }
         self.assertEqual({k:xref[k] for k in expected}, expected)
         self.assertEqual(xref['ledger_artifact_name'], 'xref_a3g2_final_ledger.jsonl')
