@@ -44,6 +44,11 @@ _DOCUMENT = re.compile(r'\b\d+/(?:\d{4}/[\wĐđ-]+|VBHN-[\wĐđ-]+)', re.UNICODE
 DOCUMENT_CONTENT_PREFIX = 'Trích nội dung văn bản: '
 
 
+def document_number_matches(metadata, number):
+    return any((metadata.get(field) or '').casefold() == number.casefold()
+               for field in ('so_hieu', 'official_so_hieu'))
+
+
 def qcvn_matches(query, qcvn):
     """An explicit QCVN year must match even when its authority is omitted."""
     actual = re.sub(r'\s+', '', str(qcvn or '')).casefold()

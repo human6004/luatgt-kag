@@ -48,6 +48,11 @@ Lệnh này kiểm cấu hình Compose, không kiểm tính tương thích của
 
 ## 4. Cập nhật ứng dụng
 
+Nếu bản mới đổi schema KAG (như bản này), hash guard sẽ từ chối release cũ; Chat ngừng trả lời cho tới khi có graph/release mới.
+Hoàn tất backup ở trên, giữ image và release cũ để rollback; không ghi đè graph cũ.
+Trên phiên bản mới, dùng project/database **rỗng**: **Chuẩn bị cấu trúc** → build → seal → **Dùng cho Chat**, rồi mới chuyển Chat sang graph mới.
+Thực hiện theo [hướng dẫn runner](runner.md); không bỏ hoặc nới hash guard.
+
 ```powershell
 docker compose up -d --build
 docker compose ps -a

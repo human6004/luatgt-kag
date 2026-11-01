@@ -50,11 +50,11 @@ class Retriever:
     def _exact_keys(self, question, top_k):
         if not self.source_records:
             return []
-        from kag.legal_prompts import _reference_bindings, document_title_question, qcvn_matches
+        from kag.legal_prompts import _reference_bindings, document_title_question, document_number_matches, qcvn_matches
         title_number = document_title_question(question)
         if title_number:
             documents = {r.entity_id:r for r in self.source_records if r.entity_type == self.namespace+'.LegalDocument'
-                         and r.field == 'title' and (r.metadata.get('so_hieu') or '').casefold() == title_number.casefold()}
+                         and r.field == 'title' and document_number_matches(r.metadata, title_number)}
             return [(r.entity_type,r.entity_id) for r in documents.values()] if len(documents) == 1 else []
         codes = {v.casefold() for v in re.findall(r'\b[A-ZĐ]{1,4}\.\d+[a-z]?(?:-\d+)?\b',question,re.I)}
         if len(codes) == 1:
@@ -116,12 +116,9 @@ class Retriever:
         if not isinstance(question,str) or not question.strip() or type(expand) is not bool:
             raise ValueError('nonempty exact question and boolean expansion required')
         exact = self._exact_keys(question, top_k)
-        if exact and all(k[0].endswith('.LegalDocument') for k in exact):
-            return self._read_evidence(exact, {}, False)
-        if exact and all(k[0].endswith('.TrafficSign') for k in exact):
-            # Exact sign definitions include every matching version and its real parent.
-            # Whole appendices belong to explicitly requested graph expansion.
-            return self._read_evidence(exact, {}, expand)
+        from kag.legal_prompts import document_title_question
+        if self.source_records and document_title_question(question):
+            return self._read_evidence(exact, {}, False) if exact else []
         if self.embed is None:
             raise ValueError('query embedding callable required')
         evidence = self.retrieve_vector(self.embed(question),top_k=top_k,expand=expand)

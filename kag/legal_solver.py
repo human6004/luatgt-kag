@@ -15,7 +15,7 @@ from kag.builder.codec import canonical_json, decode_properties
 from kag.interface import ExecutorABC, GeneratorABC, LLMClient, PromptABC, SolverPipelineABC
 from kag.interface.solver.executor_abc import ExecutorResponse
 from kag.legal_prompts import (validate_subquery, material_constraints, query_content_terms, _reference_bindings, _clauses, CandidateError, UnsafeSubqueryError,
-                               LegalDeducePrompt, legal_trace, legal_timing, document_title_question, DOCUMENT_CONTENT_PREFIX, qcvn_matches)
+                               LegalDeducePrompt, legal_trace, legal_timing, document_title_question, document_number_matches, DOCUMENT_CONTENT_PREFIX, qcvn_matches)
 from kag.solver.executor.deduce.kag_deduce_executor import KagDeduceExecutor
 from kag.solver.planner.kag_iterative_planner import KAGIterativePlanner
 from kag.solver.pipeline.kag_iterative_pipeline import KAGIterativePipeline
@@ -25,7 +25,7 @@ from kag.retriever.neo4j import positive_limit
 
 _CONTEXT_KEY = secrets.token_bytes(32)
 _META = {
-    'LegalDocument': {'so_hieu', 'loai', 'scope', 'effective_from', 'effective_to', 'hieu_luc_note',
+    'LegalDocument': {'so_hieu', 'official_so_hieu', 'loai', 'scope', 'effective_from', 'effective_to', 'hieu_luc_note',
                       'het_hieu_luc_note', 'current_status', 'status_hint', 'ngay_hieu_luc_bo_phan',
                       'consolidation_as_of', 'underlying_effective_from'},
     'LegalUnit': {'so_hieu', 'unit_type', 'scope', 'dieu_number', 'khoan_number', 'diem_letter',
@@ -423,14 +423,18 @@ def _sign_applicable(query, metadata):
 def _applicable(query, item, support, payload):
     title_number = document_title_question(query)
     if title_number:
+        documents = [doc_id for doc_id, metadata in payload['documents'].items()
+                     if document_number_matches(metadata, title_number)]
         return (item['entity_type'].endswith('.LegalDocument')
-                and (payload['documents'].get(item['doc_id'], {}).get('so_hieu') or '').casefold() == title_number.casefold())
+                and documents == [item['doc_id']])
     text = '\n'.join(item['source_texts'].values())
     parent = item['metadata'].get('parent_id')
     parents = [(source, citation) for source, citation in support if citation.field == 'text'
                and source['unit_id'] == parent and parent and source['doc_id'] == item['doc_id']]
     context_text = '\n'.join(citation.quote for _, citation in parents)
-    own_scope = material_constraints(text+'\n'+canonical_json(item['metadata'])+'\n'+context_text)['scope']
+    authority_metadata = canonical_json({key: value for key, value in item['metadata'].items()
+                                         if key not in ('penalty_source_record', 'source_record')})
+    own_scope = material_constraints(text+'\n'+authority_metadata+'\n'+context_text)['scope']
     requested = material_constraints(query)
     sign_context = ''
     if item['sign_id']:
@@ -474,7 +478,7 @@ def _applicable(query, item, support, payload):
                        for own in own_bindings) for binding in bindings):
             return False
     # Numbered source paragraphs need their verified typed coordinates, as in planner grounding.
-    authority = text+'\n'+canonical_json(item['metadata'])+'\n'+document_number+'\n'+context_text+'\n'+coordinates+'\n'+sign_context
+    authority = text+'\n'+authority_metadata+'\n'+document_number+'\n'+context_text+'\n'+coordinates+'\n'+sign_context
     if not query_content_terms(query) <= {word.casefold() for word in re.findall(r'[^\W\d_]+', authority)}:
         return False
     provided = material_constraints(authority)
@@ -676,7 +680,7 @@ def exact_source_answer(query, *, source_records, contract, partial=False):
     if document is None:
         return None
     kind=document.metadata.get('loai')
-    number=document.metadata.get('so_hieu')
+    number=document_title_question(query) or document.metadata.get('so_hieu')
     if (not kind or not number or not re.search(r'(?:văn bản|'+re.escape(kind.casefold())+
             r')(?: số)?\s+'+re.escape(number.casefold())+r'(?!\w)',query.casefold())):
         return None

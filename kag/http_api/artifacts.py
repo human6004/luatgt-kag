@@ -802,10 +802,16 @@ def verify_native_sources(result: AnswerResult, release: ServingRelease, reader,
             if record.sign_id and not _sign_applicable(question, record.metadata):
                 _invalid('SOURCE_VALIDATION_FAILED')
             if content_question:
-                from kag.legal_prompts import material_constraints
-                requested=material_constraints(content_question)['documents']
-                actual=material_constraints(documents[record.doc_id].metadata.get('so_hieu') or '')['documents']
-                if not requested<=actual:_invalid('SOURCE_VALIDATION_FAILED')
+                from kag.legal_prompts import material_constraints, document_title_question, document_number_matches
+                title_number=document_title_question(question)
+                if title_number:
+                    matches={doc_id for doc_id, document in documents.items()
+                             if document_number_matches(document.metadata,title_number)}
+                    if matches!={record.doc_id}:_invalid('SOURCE_VALIDATION_FAILED')
+                else:
+                    requested=material_constraints(content_question)['documents']
+                    actual=material_constraints(documents[record.doc_id].metadata.get('so_hieu') or '')['documents']
+                    if not requested<=actual:_invalid('SOURCE_VALIDATION_FAILED')
             elif not _current(item,{key:r.metadata for key,r in documents.items()},as_of):
                 _invalid('SOURCE_VALIDATION_FAILED')
             resolved.append(record)
