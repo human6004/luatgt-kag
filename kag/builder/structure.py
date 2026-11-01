@@ -121,10 +121,12 @@ def target_state(project_id, token, *, for_write=True, check_structure=False):
             yield dict(target=target,reader=reader,identity=identity,proof=proof)
             return
         if for_write:
-            serving = Neo4jReadClient(reader.endpoint, os.environ.get('KAG_BUILDER_SERVING_DATABASE','neo4j'),
-                username=os.environ['KAG_NEO4J_USERNAME'], password=os.environ['KAG_NEO4J_PASSWORD'], timeout=60)
-            if serving.database_identity() == proof.physical_database_id:
-                raise RunBlocked('SCOPE')
+            serving_database = os.environ.get('KAG_BUILDER_SERVING_DATABASE','neo4j')
+            if serving_database:
+                serving = Neo4jReadClient(reader.endpoint, serving_database,
+                    username=os.environ['KAG_NEO4J_USERNAME'], password=os.environ['KAG_NEO4J_PASSWORD'], timeout=60)
+                if serving.database_identity() == proof.physical_database_id:
+                    raise RunBlocked('SCOPE')
             from kag.builder.serving import protect_active
             protect_active(reader,proof.physical_database_id)
         record = projects.get(id=project_id)

@@ -6,6 +6,16 @@ import { tokenKey } from '../src/api.ts'
 const citation = { doc_id: 'fixture-doc', unit_id: 'fixture-unit', quote: 'TEST ONLY — trích đoạn kiểm thử.\nKhông phải căn cứ pháp luật.' }
 const answered = { id: 'fixture-chat', question: 'Câu hỏi tiếng Việt\nDòng thứ hai', answer: 'TEST ONLY — nội dung từ HTTP fixture.', citations: [citation], state: 'ANSWERED', createdAt: '2026-10-10T00:00:00Z' }
 const unavailable = { ...answered, answer: '', citations: [], state: 'UNAVAILABLE' }
+test('sign citation labels preserve kind, common scope and QCVN from the sealed snapshot', async () => {
+  const qcvn = 'QCVN 41:2024/BGTVT'
+  for (const [kind, scope, label] of [['family', 'family_shared', 'Nhóm biển báo'], ['variant', 'specific', 'Biến thể biển báo'], ['variant', 'family_shared', 'Biến thể biển báo, quy định chung'], ['standalone', 'specific', 'Biển báo']]) {
+    const source = { contract_version: 'graph-source-v1', release_id: 'graph-A', source_snapshot_id: 'source-A', entity_type: 'RoadAlpha.TrafficSign', entity_id: 'sign-1',
+      text: citation.quote, metadata: { id: 'sign-1', doc_id: 'fixture-doc', record_type: kind, description_scope: scope, qcvn }, document_metadata: { id: 'fixture-doc' } }
+    const result = await loadCitationSource({ ...citation, sign_id: 'sign-1', source })
+    assert.equal(result.unitType, `${label} (${qcvn})`)
+    assert.equal(result.text, citation.quote)
+  }
+})
 test('graph snapshot citations keep their original source after graph changes without MySQL reads', async () => {
   for (const [kind,id,unit,sign] of [['LegalDocument','fixture-doc',null,null],['LegalUnit','fixture-unit','fixture-unit',null],['TrafficSign','sign-1',null,'sign-1']]) {
     const source={contract_version:'graph-source-v1',release_id:'graph-A',source_snapshot_id:'source-A',entity_type:`RoadAlpha.${kind}`,entity_id:id,

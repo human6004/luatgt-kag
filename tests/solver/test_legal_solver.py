@@ -298,6 +298,8 @@ class AdapterTests(unittest.TestCase):
                 for key, value in list(record['properties'].items()):
                     if key not in ('id', 'name', 'docId', 'text') and isinstance(value, str) and value != '{}':
                         record['properties'][key] = ''
+            # This boundary fixture isolates text; source provenance is budgeted separately.
+            reader.nodes['VietRoadTraffic.LegalUnit', 'đơn-vị']['properties']['sourceRecord'] = 'null'
             result, _, _ = self.invoke(reader, retriever)
             self.assertEqual(result.payload()['source_characters'], size)
             self.assertEqual(result.payload()['budget_exceeded'], exceeded)

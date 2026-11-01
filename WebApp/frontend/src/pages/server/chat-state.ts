@@ -31,8 +31,15 @@ export async function loadCitationSource(citation: Citation) {
   if (citation.source) {
     if (!snapshotMatches(citation)) throw new ApiError('Source snapshot mismatch', 502)
     const { metadata, document_metadata: doc, entity_type: kind } = citation.source
+    let unitType = kind.endsWith('.LegalUnit') ? String(metadata.unit_type ?? 'Đơn vị pháp lý') : 'Văn bản'
+    if (kind.endsWith('.TrafficSign')) {
+      const labels: Record<string, string> = { family: 'Nhóm biển báo', variant: 'Biến thể biển báo', standalone: 'Biển báo' }
+      unitType = labels[String(metadata.record_type)] ?? 'Biển báo'
+      if (metadata.record_type === 'variant' && ['family_shared', 'contextual'].includes(String(metadata.description_scope))) unitType += ', quy định chung'
+      if (typeof metadata.qcvn === 'string' && metadata.qcvn) unitType += ` (${metadata.qcvn})`
+    }
     return { title: String(doc.title ?? citation.doc_id), number: String(typeof doc.official_so_hieu === 'string' && doc.official_so_hieu.trim() || doc.so_hieu || citation.doc_id),
-      unitType: kind.endsWith('.LegalUnit') ? String(metadata.unit_type ?? 'Đơn vị pháp lý') : kind.endsWith('.TrafficSign') ? 'Biển báo' : 'Văn bản', text: citation.source.text }
+      unitType, text: citation.source.text }
   }
   const [documents, units] = await Promise.all([api<ContentRecord[]>('/documents'), api<ContentRecord[]>(`/units?docId=${encodeURIComponent(citation.doc_id)}`)])
   if (!Array.isArray(documents) || !Array.isArray(units)) throw new ApiError('Invalid source', 502)

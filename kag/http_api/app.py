@@ -483,6 +483,7 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                     embedding_url=embedding['base_url'],embedding_model=embedding['model'],embedding_key=embedding['api_key'])
                 initialize_runtime()
                 runtime=RequestRuntime(None,None,None,deadline,supervisor._budget,body['message'],None,capability='retrieve')
+                runtime.budget.transport_seconds=REQUEST_SECONDS
                 runtime.request_id=getattr(request.state,'request_id',None)
                 embed=await asyncio.to_thread(_new_embedding,candidate,runtime)
                 vector=await asyncio.to_thread(embed,body['message'])

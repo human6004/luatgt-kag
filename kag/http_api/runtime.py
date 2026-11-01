@@ -1097,6 +1097,9 @@ class RuntimeSupervisor:
         active = self._llm_config['active'] if self._llm_config else {}
         if not any(active.values()):
             return settings
+        if settings is None or release is None:
+            self._llm_runtime_error = 'RELEASE_UNAVAILABLE'
+            return None
         try:
             from .provider_budget import BudgetError, provider_route
             for role, item in active.items():

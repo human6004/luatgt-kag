@@ -15,6 +15,14 @@ Build thành công chưa tự đưa graph vào Chat. Mở **Đồ thị của t�
 
 Ví dụ xuyên suốt: tên hiển thị **Luật giao thông**, namespace **RoadLaw**, database **roadlaw**. Thay bằng tên của bạn; không chọn database đang phục vụ Chat hoặc chứa dữ liệu ngoài phạm vi quản lý.
 
+## Bộ biển báo và chuyển phiên bản
+
+Bộ nguồn ngày 22/10/2026 có 907 bản ghi biển báo, giữ các ID từ main và bổ sung nguồn tester đã đối soát. Có nhóm, biến thể và hàng còn xung đột/tham chiếu; không đồng nghĩa mọi hàng đủ căn cứ trả lời. Chi tiết ở [DATASHEET](../data/DATASHEET.md). Dữ liệu dẫn xuất đã đi kèm repo; cài đặt và Build thông thường không cần chạy converter hoặc kiểm thử nội bộ.
+
+Schema mới thêm metadata biển báo và đổi schema/contract hash. Code mới chưa đọc được release được seal bằng schema cũ; giữ image cũ cho graph/Chat hiện có. Không chuẩn bị schema mới trên project có dữ liệu cũ và không tự kích hoạt release mới.
+
+Để chuyển: dùng phiên bản mới trong stack riêng, tạo project/database rỗng riêng, chuẩn bị cấu trúc rồi Build và kiểm đọc lại trên đích mới. Người vận hành tự quyết lúc dựng toàn bộ, cập nhật các image ứng dụng và chọn **Dùng cho Chat** sau khi kiểm source, model, retrieval và citation. Giữ image/volumes/release cũ để quay lại; không sửa snapshot cũ tại chỗ. Chỉ thay source hoặc tạo plan offline chưa nạp bộ dữ liệu mới vào graph cũ.
+
 ## Tạo project trong OpenSPG
 
 OpenSPG gọi project là **Knowledge Base**. Nếu đã có project phù hợp, chuyển đến [quy trình trên LuậtGT](#dựng-đồ-thị-qua-5-bước).
@@ -83,7 +91,7 @@ Trong **Phạm vi dữ liệu → Dữ liệu sẽ dựng**, chọn rõ một tr
 
 Bấm **Xem trước phạm vi** và đọc thống kê trước khi lưu. Để trống ô số lượng/tỷ lệ không có nghĩa là toàn bộ; ô này bắt buộc khi chọn một phần. Phạm vi quá nhỏ để giữ đủ loại dữ liệu sẽ bị từ chối.
 
-Tập một phần được chọn cố định, ưu tiên nội dung ngắn; văn bản nguồn, đơn vị cha và hai đầu quan hệ đều nằm trong giới hạn. Mức quá nhỏ không giữ đủ nguồn/các loại sẽ bị từ chối. Đây không phải mẫu ngẫu nhiên hoặc bảo đảm đại diện thống kê.
+Tập một phần được chọn cố định, ưu tiên nội dung ngắn; văn bản nguồn, đơn vị cha, bản ghi cha của biến thể biển và hai đầu quan hệ đều nằm trong giới hạn. Mức quá nhỏ không giữ đủ nguồn/các loại sẽ bị từ chối. Đây không phải mẫu ngẫu nhiên hoặc bảo đảm đại diện thống kê.
 
 #### Chọn model và giới hạn
 

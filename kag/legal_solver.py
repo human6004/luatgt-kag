@@ -795,8 +795,8 @@ class _ThreadedPlannerClient(LLMClient):
                 and isinstance(response, LegalCandidateResponse) and last.result is response
                 and response.payload()['deduce_task'] == last.id):
             result = SafeLegalGenerator().invoke(variables['query'], context, as_of=kwargs.get('as_of'))
-            if not result.abstained:
-                # Finish needs no inference once the current candidate has passed the server checks.
+            if not result.abstained or result.reason == 'evidence exceeds demo source budget':
+                # The cumulative ledger cannot shrink through another retrieval.
                 legal_trace('planner.finish', reason=result.reason or 'verified candidate')
                 return prompt_op.parse_response({'executor': {'name': 'Finish', 'arguments': {}}},
                                                 query=variables['query'], context=variables.get('context'))
