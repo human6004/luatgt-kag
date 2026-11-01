@@ -957,8 +957,7 @@ Cá nhân, tổ chức vi phạm hành chính phải cải chính thông tin sai
 gây nhầm lẫn đã được công bố, đưa tin trên chính phương tiện thông tin đại chúng, 
 trang thông tin điện tử đã công bố, đưa tin; nếu cá nhân, tổ chức vi phạm hành 
 chính không tự nguyện thực hiện thì bị cưỡng chế thực hiện. 
-##### Điều 35. Buộc loại bỏ yếu tố vi phạm trên hàng hóa, bao bì hàng hóa, 
-phương tiện kinh doanh, vật phẩm 
+##### Điều 35. Buộc loại bỏ yếu tố vi phạm trên hàng hóa, bao bì hàng hóa, phương tiện kinh doanh, vật phẩm 
 Cá nhân, tổ chức sản xuất, kinh doanh hàng hóa hoặc sử dụng phương tiện 
 kinh doanh, vật phẩm chứa yếu tố vi phạm trên hàng hóa, bao bì hàng hóa, phương 
 tiện kinh doanh, vật phẩm thì phải loại bỏ các yếu tố vi phạm đó; nếu cá nhân, tổ 
@@ -2056,8 +2055,7 @@ và bảo quản theo quy định của Chính phủ.
 3. Tang vật, phương tiện vi phạm hành chính đã có quyết định tịch thu 
 được xử lý theo quy định của pháp luật về quản lý, sử dụng tài sản công. 
 ##### Điều 82. (được bãi bỏ)
-##### Điều 83. Quản lý tiền thu từ xử phạt vi phạm hành chính, chứng từ thu, 
-nộp tiền phạt 
+##### Điều 83. Quản lý tiền thu từ xử phạt vi phạm hành chính, chứng từ thu, nộp tiền phạt 
 1. Tiền thu từ xử phạt vi phạm hành chính gồm tiền nộp phạt vi phạm hành 
 chính; tiền nộp do chậm thi hành quyết định xử phạt tiền; tiền bán, thanh lý tang 
 vật, phương tiện vi phạm hành chính bị tịch thu và các khoản tiền khác. 
@@ -2236,8 +2234,7 @@ tại nơi cư trú trong trường hợp nhận thấy không cần thiết ph�
 cộng đồng. 
 2. Thời hạn áp dụng biện pháp giáo dục tại xã, phường, đặc khu125 từ 03 
 tháng đến 06 tháng. 
-##### Điều 90. Đối tượng bị áp dụng biện pháp giáo dục tại xã, phường, 
-đặc khu126  
+##### Điều 90. Đối tượng bị áp dụng biện pháp giáo dục tại xã, phường, đặc khu126  
 1. Người từ đủ 12 tuổi đến dưới 14 tuổi thực hiện hành vi có dấu hiệu của 
 một tội phạm rất nghiêm trọng do cố ý quy định tại Bộ luật Hình sự. 
 2. Người từ đủ 14 tuổi đến dưới 16 tuổi thực hiện hành vi có dấu hiệu của 
@@ -2396,8 +2393,7 @@ túy số 120/2025/QH15, có hiệu lực kể từ ngày 01 tháng 7 năm 2026.
 112
  
  
-##### Điều 97. Lập hồ sơ đề nghị áp dụng biện pháp giáo dục tại xã, phường, 
-đặc khu139 
+##### Điều 97. Lập hồ sơ đề nghị áp dụng biện pháp giáo dục tại xã, phường, đặc khu139 
 1. Trưởng Công an cấp xã nơi người vi phạm thuộc đối tượng quy định tại 
 Điều 90 của Luật này cư trú hoặc nơi họ có hành vi vi phạm pháp luật tự mình 
 hoặc theo đề nghị của Chủ tịch Ủy ban Mặt trận Tổ quốc cấp xã hoặc đại diện cơ 
@@ -2679,8 +2675,7 @@ cơ sở giáo dục bắt buộc165.
 ### Chương IV 
 THI HÀNH QUYẾT ĐỊNH ÁP DỤNG  
 BIỆN PHÁP XỬ LÝ HÀNH CHÍNH 
-##### Điều 107. Gửi quyết định áp dụng biện pháp đưa vào trường giáo dưỡng, 
-đưa vào cơ sở giáo dục bắt buộc để thi hành166 
+##### Điều 107. Gửi quyết định áp dụng biện pháp đưa vào trường giáo dưỡng, đưa vào cơ sở giáo dục bắt buộc để thi hành166 
 Trong thời hạn 03 ngày, kể từ ngày quyết định áp dụng biện pháp xử lý hành 
 chính có hiệu lực, Tòa án nhân dân đã ra quyết định phải gửi quyết định cho người 
 bị áp dụng, cơ quan đã gửi hồ sơ đề nghị áp dụng biện pháp xử lý hành chính167, 
@@ -2719,8 +2714,7 @@ hiệu thi hành sau 01 năm, kể từ ngày quyết định có hiệu lực p
 3. Trong trường hợp người phải chấp hành quyết định cố tình trốn tránh việc 
 thi hành, thì thời hiệu quy định tại khoản 1 và khoản 2 Điều này được tính kể từ 
 thời điểm hành vi trốn tránh chấm dứt. 
-##### Điều 109. Thi hành quyết định áp dụng biện pháp giáo dục tại xã, 
-phường, đặc khu170 
+##### Điều 109. Thi hành quyết định áp dụng biện pháp giáo dục tại xã, phường, đặc khu170 
 1. Sau khi nhận được quyết định áp dụng biện pháp giáo dục tại xã, phường, 
 đặc khu171, cơ quan, tổ chức được giao giáo dục, quản lý có trách nhiệm: 
 a) Tổ chức việc thực hiện biện pháp giáo dục tại xã, phường, đặc khu172 đối 

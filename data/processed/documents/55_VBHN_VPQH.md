@@ -1166,9 +1166,7 @@ a) Xe mô tô, xe gắn máy, xe ô tô chở người có số người cho ph�
 08 người (không kể người lái xe), xe ô tô chuyên dùng, rơ moóc, sơ mi rơ moóc; 
 b) Xe cơ giới của quân đội, công an phục vụ mục đích quốc phòng, an ninh. 
 4. Chính phủ quy định chi tiết Điều này. 
-##### Điều 41. Bảo đảm chất lượng an toàn kỹ thuật và bảo vệ môi trường của 
-xe cơ giới, xe máy chuyên dùng, phụ tùng xe cơ giới trong nhập khẩu, sản 
-xuất, lắp ráp 
+##### Điều 41. Bảo đảm chất lượng an toàn kỹ thuật và bảo vệ môi trường của xe cơ giới, xe máy chuyên dùng, phụ tùng xe cơ giới trong nhập khẩu, sản xuất, lắp ráp 
 1. Đối tượng phải bảo đảm chất lượng an toàn kỹ thuật và bảo vệ môi trường 
 bao gồm: 
 a) Xe cơ giới, xe máy chuyên dùng nhập khẩu, sản xuất, lắp ráp, trừ xe để 
@@ -1217,8 +1215,7 @@ chuẩn, tập huấn đăng kiểm viên, cấp mới, cấp lại, tạm đìn
 thủ tục chứng nhận chất lượng an toàn kỹ thuật và bảo vệ môi trường của xe cơ 
 giới, xe máy chuyên dùng, phụ tùng xe cơ giới trong nhập khẩu, sản xuất, lắp ráp 
 thuộc phạm vi quản lý của Bộ Quốc phòng, Bộ Công an. 
-##### Điều 42. Bảo đảm an toàn kỹ thuật và bảo vệ môi trường của xe cơ giới, 
-xe máy chuyên dùng tham gia giao thông đường bộ 
+##### Điều 42. Bảo đảm an toàn kỹ thuật và bảo vệ môi trường của xe cơ giới, xe máy chuyên dùng tham gia giao thông đường bộ 
 1. Xe cơ giới, xe máy chuyên dùng tham gia giao thông đường bộ phải được 
 kiểm định theo quy định của pháp luật.  
 2. Việc kiểm định đối với xe mô tô, xe gắn máy chỉ thực hiện kiểm định khí 
@@ -1973,8 +1970,7 @@ dung, chương trình bồi dưỡng kiến thức pháp luật về giao thông
 chuẩn của cơ sở đào tạo người điều khiển xe máy chuyên dùng thực hiện bồi 
 dưỡng, kiểm tra, cấp chứng chỉ bồi dưỡng kiến thức pháp luật về giao thông đường 
 bộ cho lực lượng quân đội, công an làm nhiệm vụ quốc phòng, an ninh. 
-##### Điều 64. Thời gian làm việc của người lái xe ô tô kinh doanh vận tải và 
-vận tải nội bộ 
+##### Điều 64. Thời gian làm việc của người lái xe ô tô kinh doanh vận tải và vận tải nội bộ 
 1. [^vbhn55-38] Thời gian lái xe liên tục của người lái xe không quá 04 giờ, trừ trường 
  
  

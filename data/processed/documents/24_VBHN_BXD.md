@@ -1021,8 +1021,7 @@ qua trước khi thực hiện.
 6. Quyết định điều chỉnh biểu đồ chạy xe được công bố trên các phương 
 tiện thông tin đại chúng chậm nhất 10 ngày trước khi thực hiện điều chỉnh biểu 
 đồ. 
-##### Điều 21. Quy định về ngừng khai thác trên tuyến, đóng tuyến xe buýt; 
-bổ sung xe, thay thế xe buýt khai thác trên tuyến 
+##### Điều 21. Quy định về ngừng khai thác trên tuyến, đóng tuyến xe buýt; bổ sung xe, thay thế xe buýt khai thác trên tuyến 
 1. Ngừng khai thác trên tuyến, đóng tuyến xe buýt 
 a) Trước khi ngừng khai thác ít nhất 30 ngày, đơn vị kinh doanh vận tải có 
 văn bản thông báo ngừng khai thác trên tuyến gửi Sở Xây dựng38 nơi cấp Giấy 

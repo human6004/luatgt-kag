@@ -2310,9 +2310,7 @@ Trường hợp sau khi có quyết định thu hồi Giấy phép liên vận A
 kinh doanh vận tải có văn gửi cơ quan cấp phép báo cáo bị mất; trong thời gian 
 60 ngày kể từ ngày nhận được văn bản của đơn vị kinh doanh vận tải, cơ quan cấp 
 phép không thực hiện cấp mới, cấp lại Giấy phép liên vận ASEAN. 
-##### Điều 34. Gia hạn thời gian lưu hành tại Việt Nam cho phương tiện của 
-các nước thực hiện các Hiệp định khung ASEAN về vận tải đường bộ qua 
-biên giới 
+##### Điều 34. Gia hạn thời gian lưu hành tại Việt Nam cho phương tiện của các nước thực hiện các Hiệp định khung ASEAN về vận tải đường bộ qua biên giới 
 1. Đối tượng: phương tiện của các nước thực hiện các Hiệp định khung 
 ASEAN về vận tải đường bộ qua biên giới quá thời gian lưu hành tại Việt Nam 
 quy định tại Giấy phép liên vận ASEAN trong trường hợp bất khả kháng. 
@@ -2569,8 +2567,7 @@ Giấy phép liên vận GMS hoặc sổ TAD, đơn vị kinh doanh vận tải 
 quan cấp phép báo cáo bị mất; trong thời gian 60 ngày kể từ ngày nhận được văn 
 bản của đơn vị kinh doanh vận tải, cơ quan cấp phép không thực hiện cấp mới, 
 cấp lại Giấy phép liên vận GMS hoặc sổ TAD. 
-##### Điều 39. Gia hạn thời gian lưu hành tại Việt Nam cho phương tiện của 
-các nước thực hiện Hiệp định GMS 
+##### Điều 39. Gia hạn thời gian lưu hành tại Việt Nam cho phương tiện của các nước thực hiện Hiệp định GMS 
 1. Đối tượng: phương tiện của các nước thực hiện Hiệp định GMS quá thời 
 gian lưu hành tại Việt Nam quy định tại sổ TAD trong trường hợp bất khả kháng. 
 2. Thẩm quyền gia hạn: Sở Xây dựng101 các tỉnh, thành phố trực thuộc trung 
@@ -2605,8 +2602,7 @@ hạn (nếu có) và sổ TAD tại Trung tâm phục vụ hành chính công h
 qua dịch vụ bưu chính. 
 #### Mục 4. TRÌNH TỰ, THỦ TỤC CẤP, CẤP LẠI, THU HỒI GIẤY PHÉP 
 LIÊN VẬN GIỮA VIỆT NAM, LÀO VÀ CAMPUCHIA 
-##### Điều 40. Cấp, cấp lại Giấy phép liên vận giữa Việt Nam, Lào và 
-Campuchia 
+##### Điều 40. Cấp, cấp lại Giấy phép liên vận giữa Việt Nam, Lào và Campuchia 
 1. Đối tượng: Giấy phép liên vận giữa Việt Nam, Lào và Campuchia được 
 cấp cho phương tiện của các tổ chức, cá nhân, đơn vị kinh doanh vận tải đáp ứng 
 các điều kiện theo quy định pháp luật về hoạt động vận tải đường bộ giữa Việt 
@@ -2793,8 +2789,7 @@ Việt Nam, Lào và Campuchia, đơn vị kinh doanh vận tải có văn gửi
 phép báo cáo bị mất; trong thời gian 60 ngày kể từ ngày nhận được văn bản của 
 đơn vị kinh doanh vận tải, cơ quan cấp phép không thực hiện cấp mới, cấp lại 
 Giấy phép liên vận giữa Việt Nam, Lào và Campuchia. 
-##### Điều 42. Gia hạn thời gian lưu hành tại Việt Nam cho phương tiện của 
-Lào, Campuchia 
+##### Điều 42. Gia hạn thời gian lưu hành tại Việt Nam cho phương tiện của Lào, Campuchia 
 
 80
  
@@ -3140,8 +3135,7 @@ tháng 8 năm 2026.
 88
  
  
-##### Điều 47. Cấp Giấy phép vận tải đường bộ quốc tế giữa Việt Nam và 
-Trung Quốc loại D cho phương tiện của Trung Quốc 
+##### Điều 47. Cấp Giấy phép vận tải đường bộ quốc tế giữa Việt Nam và Trung Quốc loại D cho phương tiện của Trung Quốc 
 1. Giấy phép vận tải loại D do cơ quan quản lý có thẩm quyền của Việt Nam 
 cấp cho phương tiện của Trung Quốc trên cơ sở Giấy giới thiệu của cơ quan có 
 thẩm quyền phía Trung Quốc. 
@@ -3203,8 +3197,7 @@ d) Trả kết quả cho tổ chức, đơn vị kinh doanh vận tải bằng c
 Bản điện tử hợp lệ trên VNeID hoặc Cổng dịch vụ công quốc gia, bản giấy Giấy 
 phép vận tải tại Trung tâm phục vụ hành chính công hoặc cơ quan cấp phép hoặc 
 được gửi qua dịch vụ bưu chính. 
-##### Điều 48. Thu hồi Giấy phép vận tải đường bộ quốc tế giữa Việt Nam và 
-Trung Quốc 
+##### Điều 48. Thu hồi Giấy phép vận tải đường bộ quốc tế giữa Việt Nam và Trung Quốc 
 1. Cơ quan có thẩm quyền cấp giấy phép thu hồi Giấy phép vận tải đường bộ 
 quốc tế giữa Việt Nam và Trung Quốc khi có vi phạm một trong các trường hợp 
 sau: 
@@ -3272,8 +3265,7 @@ và Trung Quốc, đơn vị kinh doanh vận tải có văn gửi cơ quan cấ
 bị mất; trong thời gian 60 ngày kể từ ngày nhận được văn bản của đơn vị kinh 
 doanh vận tải, cơ quan cấp phép không thực hiện cấp mới, cấp lại Giấy phép vận 
 tải đường bộ quốc tế giữa Việt Nam và Trung Quốc. 
-##### Điều 49. Gia hạn thời gian lưu hành tại Việt Nam cho phương tiện của 
-Trung Quốc 
+##### Điều 49. Gia hạn thời gian lưu hành tại Việt Nam cho phương tiện của Trung Quốc 
 1. Đối tượng: phương tiện của Trung Quốc quá thời gian lưu hành tại Việt 
 Nam quy định tại Giấy phép vận tải đường bộ quốc tế giữa Việt Nam và Trung 
 Quốc nếu có lý do chính đáng được gia hạn 01 lần với thời hạn không quá 10 
@@ -3465,8 +3457,7 @@ d) Trả kết quả cho đơn vị kinh doanh vận tải bằng các hình th�
 tử hợp lệ trên VNeID hoặc Cổng dịch vụ công quốc gia, bản giấy Giấy phép vận 
 tải đường bộ quốc tế giữa Việt Nam và Lào tại Trung tâm phục vụ hành chính 
 công hoặc được gửi qua dịch vụ bưu chính. 
-##### Điều 52. Thu hồi Giấy phép vận tải đường bộ quốc tế giữa Việt Nam và 
-Lào 
+##### Điều 52. Thu hồi Giấy phép vận tải đường bộ quốc tế giữa Việt Nam và Lào 
 1. Cơ quan cấp giấy phép thu hồi Giấy phép vận tải đường bộ quốc tế giữa 
 Việt Nam và Lào khi đơn vị kinh doanh vận tải vi phạm một trong các trường hợp 
 sau: 
@@ -3678,8 +3669,7 @@ hiện giải quyết theo quy định của Nghị định này. Trường hợ
 có văn gửi cơ quan cấp phép báo cáo bị mất; trong thời gian 60 ngày kể từ ngày 
 nhận được văn bản của đơn vị kinh doanh vận tải, cơ quan cấp phép không thực 
 hiện cấp mới, cấp lại Giấy phép liên vận giữa Việt Nam và Lào. 
-##### Điều 55. Gia hạn thời gian lưu hành tại Việt Nam cho phương tiện của 
-Lào 
+##### Điều 55. Gia hạn thời gian lưu hành tại Việt Nam cho phương tiện của Lào 
 1. Đối tượng: phương tiện của Lào quá thời gian lưu hành tại Việt Nam quy 
 định tại giấy phép liên vận trong trường hợp bất khả kháng thì được gia hạn 01 
 lần với thời gian không quá 10 ngày. 
@@ -3712,9 +3702,7 @@ c)147 Trả kết quả cho tổ chức, cá nhân, đơn vị kinh doanh vận 
 hình thức: Bản điện tử hợp lệ trên VNeID hoặc Cổng dịch vụ công quốc gia, bản 
 giấy văn bản gia hạn (nếu có) và Giấy phép liên vận giữa Lào và Việt Nam tại 
 Trung tâm phục vụ hành chính công hoặc được gửi qua dịch vụ bưu chính 
-##### Điều 56. Quy trình đăng ký, ngừng khai thác tuyến, bổ sung, thay thế, 
-ngừng phương tiện, điều chỉnh tần suất chạy xe trên tuyến vận tải hành 
-khách cố định giữa Việt Nam và Lào 
+##### Điều 56. Quy trình đăng ký, ngừng khai thác tuyến, bổ sung, thay thế, ngừng phương tiện, điều chỉnh tần suất chạy xe trên tuyến vận tải hành khách cố định giữa Việt Nam và Lào 
 1. Đối tượng đăng ký khai thác tuyến vận tải hành khách cố định giữa Việt 
 Nam và Lào: đơn vị kinh doanh vận tải có đủ điều kiện theo quy định hiện hành 
 được đăng ký khai thác tuyến vận tải hành khách cố định giữa Việt Nam và Lào. 
@@ -3888,8 +3876,7 @@ chính công hoặc được gửi qua dịch vụ bưu chính.
 5. Khi Giấy phép vận tải đường bộ quốc tế giữa Việt Nam và Campuchia bị 
 hư hỏng, bị mất, đơn vị kinh doanh vận tải lập hồ sơ đề nghị cấp lại giấy phép 
 theo quy định tại khoản 2 và khoản 4 Điều này. 
-##### Điều 58. Thu hồi Giấy phép vận tải đường bộ quốc tế giữa Việt Nam và 
-Campuchia 
+##### Điều 58. Thu hồi Giấy phép vận tải đường bộ quốc tế giữa Việt Nam và Campuchia 
 1. Cơ quan cấp giấy phép thu hồi Giấy phép vận tải đường bộ quốc tế giữa 
 Việt Nam và Campuchia khi đơn vị kinh doanh vận tải vi phạm một trong các 
 trường hợp sau: 
@@ -4102,8 +4089,7 @@ Nam và Campuchia, đơn vị kinh doanh vận tải có văn gửi cơ quan c�
 cáo bị mất; trong thời gian 60 ngày kể từ ngày nhận được văn bản của đơn vị kinh 
 doanh vận tải, cơ quan cấp phép không thực hiện cấp mới, cấp lại Giấy phép liên 
 vận giữa Việt Nam và Campuchia. 
-##### Điều 61. Gia hạn thời gian lưu hành tại Việt Nam cho phương tiện của 
-Campuchia 
+##### Điều 61. Gia hạn thời gian lưu hành tại Việt Nam cho phương tiện của Campuchia 
 1. Đối tượng: phương tiện của Campuchia quá thời gian lưu hành tại Việt 
 Nam quy định tại giấy phép liên vận trong trường hợp bất khả kháng thì được gia 
 hạn và mỗi lần gia hạn không quá 10 ngày. 

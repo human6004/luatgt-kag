@@ -7,7 +7,7 @@ Corpus tiếng Việt gồm 91 văn bản: luật, nghị định, thông tư, Q
 - `raw/`: PDF, HTML và DOC/DOCX nguồn để đối chiếu. Nghị định 119/2024 giữ cả bản đăng lại và bản ký có phụ lục.
 - `processed/documents/*.md`: toàn văn 91 văn bản; tên file là `doc_id`.
 - `processed/meta/documents.jsonl`: `doc_id`, `so_hieu`, `title`, loại/cơ quan, URL và file nguồn, ngày ban hành/hiệu lực, phạm vi và trạng thái văn bản. Các thông tin chưa xác định giữ `null` hoặc ghi chú nguồn.
-- `processed/units/units.jsonl`: 58.401 đơn vị; `unit_id`, `doc_id`, `parent_id`, `unit_type`, `text`, `title`, `order` cùng số Điều/Khoản/Điểm hoặc mục QCVN/phụ lục khi có. `legal_metadata` tùy chọn giữ đúng ba trường chức năng: `source_role`, `operative_clause_numbers`, `source_discrepancies`.
+- `processed/units/units.jsonl`: 58.402 đơn vị; `unit_id`, `doc_id`, `parent_id`, `unit_type`, `text`, `title`, `order` cùng số Điều/Khoản/Điểm hoặc mục QCVN/phụ lục khi có. `legal_metadata` tùy chọn giữ đúng ba trường chức năng: `source_role`, `operative_clause_numbers`, `source_discrepancies`.
 - `processed/meta/xrefs.jsonl`: 21.618 dẫn chiếu; `from_doc_id`, `from_so_hieu`, `from_unit_id`, các trường đích `to_*`, `evidence`, `scope`, `is_exclusion`, `in_corpus`, `downstream_use`.
 - `processed/meta/relations.jsonl`: quan hệ văn bản với IDs hai đầu, `rel_type`, corpus flags và evidence/ghi chú. Loại quan hệ: `cites`, `amends`, `repeals`, `replaces`, `implements`, `consolidates`.
 - `processed/penalties/penalties.jsonl`: chế tài theo `unit_id`/`penalty_id`; hành vi/đối tượng, tiền phạt, điểm GPLX, tước GPLX, tịch thu và các trường `fine_rule`, `sanction_rules` giữ căn cứ, điều kiện áp dụng.

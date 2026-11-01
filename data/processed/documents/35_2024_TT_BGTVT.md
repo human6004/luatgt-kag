@@ -2800,8 +2800,7 @@ b) Có khả năng cung cấp tài khoản cho Sở Giao thông vận tải đ�
 quản lý thông tin chứng chỉ bồi dưỡng kiến thức pháp luật về giao thông đường bộ 
 do các cơ sở đào tạo thuộc quyền quản lý; 
 c) Có khả năng kết nối, chia sẻ dữ liệu với các hệ thống thông tin liên quan. 
-##### Điều 55. Yêu cầu đối với hệ thống thông tin về người điều khiển xe cơ giới, 
-xe máy chuyên dùng 
+##### Điều 55. Yêu cầu đối với hệ thống thông tin về người điều khiển xe cơ giới, xe máy chuyên dùng 
 1. Quản lý tối thiểu các thông tin: họ, tên; số định danh cá nhân; ngày, tháng, 
 năm sinh; quốc tịch; nơi cư trú; số giấy phép lái xe, hạng giấy phép lái xe, cơ quan 
 cấp giấy phép lái xe, số chứng chỉ bồi dưỡng kiến thức pháp luật về giao thông 

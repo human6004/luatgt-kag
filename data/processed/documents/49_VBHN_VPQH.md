@@ -66,7 +66,7 @@ xe; trạm dừng nghỉ; điểm dừng xe, đỗ xe; đất của đường b�
 từ mép ngoài phần đất để bảo vệ, bảo trì đường bộ ra hai bên để bảo đảm an toàn 
 giao thông đường bộ, bảo đảm tầm nhìn xe chạy và hạn chế ảnh hưởng đến môi 
 trường xung quanh.  
-6.2 Cơ quan quản lý đường bộ là cơ quan thuộc Bộ Xây dựng giúp Bộ trưởng 
+6.² Cơ quan quản lý đường bộ là cơ quan thuộc Bộ Xây dựng giúp Bộ trưởng 
 Bộ Xây dựng thực hiện chức năng quản lý nhà nước về hoạt động đường bộ; cơ 
 quan chuyên môn thuộc Ủy ban nhân dân cấp tỉnh; Ủy ban nhân dân cấp xã. 
 7. Người quản lý, sử dụng đường bộ là chủ sở hữu trực tiếp quản lý, sử dụng, 
@@ -1646,8 +1646,7 @@ có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 
 thường xuyên của ngân sách nhà nước. 
 6. Người quản lý, sử dụng đường bộ đối với đường chuyên dùng phải bảo 
 đảm kinh phí quản lý, vận hành, khai thác, bảo trì và bảo vệ đường chuyên dùng. 
-##### Điều 42. Nguồn tài chính để đầu tư, xây dựng, quản lý, vận hành, khai thác, 
-bảo trì kết cấu hạ tầng đường bộ và nguồn thu từ kết cấu hạ tầng đường bộ 
+##### Điều 42. Nguồn tài chính để đầu tư, xây dựng, quản lý, vận hành, khai thác, bảo trì kết cấu hạ tầng đường bộ và nguồn thu từ kết cấu hạ tầng đường bộ 
 1. Nguồn tài chính để đầu tư, xây dựng, quản lý, vận hành, khai thác và bảo 
 trì kết cấu hạ tầng đường bộ được thực hiện theo quy định của pháp luật về ngân 
 sách nhà nước, pháp luật về đầu tư, pháp luật về đầu tư công, pháp luật về đầu tư 

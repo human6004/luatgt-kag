@@ -7182,8 +7182,7 @@ kể từ ngày 01 tháng 01 năm 2018.
 12/2017/QH14 sửa đổi, bổ sung một số điều của Bộ luật Hình sự số 100/2015/QH13, có hiệu lực 
 kể từ ngày 01 tháng 01 năm 2018.
 
-##### Điều 254. Tội sản xuất, tàng trữ, vận chuyển hoặc mua bán phương tiện, 
-dụng cụ dùng vào việc sản xuất hoặc sử dụng trái phép chất ma túy 
+##### Điều 254. Tội sản xuất, tàng trữ, vận chuyển hoặc mua bán phương tiện, dụng cụ dùng vào việc sản xuất hoặc sử dụng trái phép chất ma túy 
 1. Người nào sản xuất, tàng trữ, vận chuyển hoặc mua bán phương tiện, dụng 
 cụ dùng vào việc sản xuất hoặc sử dụng trái phép chất ma túy thuộc một trong các 
 trường hợp sau đây, thì bị phạt tù từ 01 năm đến 05 năm: 

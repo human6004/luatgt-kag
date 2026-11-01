@@ -200,8 +200,7 @@ PEV hoặc BEV, xe điện dùng pin nhiên liệu thuần túy PFCEV hoặc FCE
 dụng nhiên liệu hy-đrô). 
 
   
-##### Điều 10. Quy định về dấu hiệu nhận biết xe cơ giới sử dụng năng lượng sạch, 
-năng lượng xanh, thân thiện môi trường 
+##### Điều 10. Quy định về dấu hiệu nhận biết xe cơ giới sử dụng năng lượng sạch, năng lượng xanh, thân thiện môi trường 
 Xe cơ giới sử dụng năng lượng sạch, năng lượng xanh, thân thiện môi trường 
 được xác định theo quy định tại khoản 3 Điều 9 Thông tư này. Dấu hiệu nhận biết 
 xe cơ giới sử dụng năng lượng sạch, năng lượng xanh, thân thiện môi trường khi 
