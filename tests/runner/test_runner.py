@@ -90,7 +90,8 @@ class RunnerPreflightTests(unittest.TestCase):
             (schema_dir / filename).write_bytes((ROOT / 'kag/schema' / filename).read_bytes())
         (self.root / 'fixture.txt').write_bytes(b'fixture')
         inputs = [{'name': 'fixture.txt', 'sha256': checksum(self.root / 'fixture.txt')}]
-        pins = dict(scope.C3_IDENTITY)
+        pins = dict(schema_sha256=checksum(ROOT/'kag/schema/VietRoadTraffic.schema'),
+                    contract_sha256=checksum(ROOT/'kag/schema/schema_contract.json'))
         pins.update(nodes_jsonl_sha256=checksum(self.root / 'nodes.jsonl'),
                     edges_jsonl_sha256=checksum(self.root / 'edges.jsonl'))
         pins['plan_sha256'] = plan_hash(SimpleNamespace(nodes=self.originals, edges=self.edges,
@@ -143,8 +144,8 @@ class RunnerPreflightTests(unittest.TestCase):
         binding = patch.object(DockerBackendTransport, 'read',
             side_effect=lambda transport_store, verifier: (dict(metadata), ('fixture-runtime',)))
         binding.start(); self.addCleanup(binding.stop)
-        for target in (patch.object(scope, 'C3_IDENTITY', pins), patch.object(scope, 'ROOT', self.root),
-                       patch.object(scope, 'ARTIFACT_HASHES', (('fixture.txt', inputs[0]['sha256']),)),
+        for target in (patch.object(scope, 'ROOT', self.root),
+                       patch.object(scope, 'SOURCE_FILES', (('fixture', 'fixture.txt'),)),
                        patch.object(self.adapter, '_C43A_POLICY', policy)):
             target.start(); self.addCleanup(target.stop)
 

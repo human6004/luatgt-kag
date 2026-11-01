@@ -1,12 +1,12 @@
 """Offline source loading and fail-closed integrity checks.
 
 Frozen containers and their dictionaries are immutable by convention. Locators
-are repository-relative for corpus files and artifact names for external ledger.
+are repository-relative for corpus files.
 No full-source runner or count-based production-plan verification lives here.
 """
 from collections.abc import Mapping
 from copy import deepcopy
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import hashlib
 import json
 from pathlib import Path
@@ -16,11 +16,6 @@ from typing import Any
 from .codec import BuilderContractError, canonical_json, validate_properties
 
 
-ARTIFACT_HASHES = (
-    ('xref_a3g2_final_ledger.jsonl', 'ee025ac07a04895539d83bb0f056629cc59b5137f67be2a46fae043a77ed2068'),
-    ('xref_a3g2_final_audit.json', '94a13662fbebcd28cdf603bb5ac8bb57393d0d20d793594e0cc8268b7f514a9e'),
-    ('xref_a3g2_downstream_policy.json', '2d3fb1f6d3a80f83d28e704e500127fba4cb4480d84f89e4b51117eee586cf3d'),
-)
 SOURCE_FILES = (
     ('documents', 'data/processed/meta/documents.jsonl'),
     ('units', 'data/processed/units/units.jsonl'),
@@ -37,7 +32,7 @@ SIGN_VERIFICATION_STATES = ('verified_pdf', 'source_conflict', 'reference_only',
 
 
 class InputIntegrityError(BuilderContractError):
-    """Invalid source identity, hierarchy, join or artifact integrity."""
+    """Invalid source identity, hierarchy or source integrity."""
 
 
 def convert_signs(records, units, documents):
@@ -69,7 +64,7 @@ def convert_signs(records, units, documents):
             raise InputIntegrityError(f'{context}: verified legal source missing')
         unit = units.get(record['unit_id'])
         document = documents.get(unit.get('doc_id')) if unit else None
-        if not unit or not document or document.get('scope') == 'out_of_scope':
+        if not unit or not document:
             raise InputIntegrityError(f'{context}: production unit/document missing')
         qcvn = unit.get('scope') or unit.get('qcvn_id')
         if not isinstance(qcvn, str) or re.sub(r'\s+', '', qcvn) != re.sub(r'\s+', '', record['qcvn']):
@@ -121,9 +116,8 @@ class BuilderInputs:
     signs: tuple[SourceRecord, ...]
     relations: tuple[SourceRecord, ...]
     xrefs: tuple[SourceRecord, ...]
-    ledger: tuple[SourceRecord, ...]
     markdown_paths: frozenset[str]
-    artifact_hashes: dict[str, str]
+    source_hashes: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)
@@ -133,7 +127,6 @@ class ValidatedInputs:
     units: dict[str, SourceRecord]
     signs: dict[str, SourceRecord]
     penalties: dict[str, SourceRecord]
-    xref_ledger: dict[str, SourceRecord]
 
 
 def _error(row: SourceRecord, reason: str) -> InputIntegrityError:
@@ -164,8 +157,6 @@ def _node_values(
     record = row.record
     id_field = {'LegalDocument': 'doc_id', 'LegalUnit': 'unit_id', 'TrafficSign': 'sign_id'}[node_type]
     values = dict(record, id=record[id_field], name=record[id_field], source_record=dict(row.locator))
-    if 'source_evidence' in record:
-        values['source_record']['origin'] = deepcopy(record['source_evidence'])
     if node_type == 'LegalDocument':
         values['markdown_path'] = f"data/processed/documents/{record['doc_id']}.md"
         for primary, alias in (('effective_from', 'ngay_hieu_luc'), ('effective_to', 'ngay_het_hieu_luc')):
@@ -173,6 +164,18 @@ def _node_values(
                 raise _error(row, f'{primary}: date alias conflict with {alias}')
             values[primary] = record[primary] if primary in record else record.get(alias)
     elif node_type == 'LegalUnit':
+        if 'legal_metadata' in record:
+            legal = record['legal_metadata']
+            if (not isinstance(legal, dict) or legal.keys() - {
+                    'source_role', 'operative_clause_numbers', 'source_discrepancies'}):
+                raise _error(row, 'legal_metadata: expected object containing only functional legal fields')
+            if 'source_role' in legal and (not isinstance(legal['source_role'], str) or not legal['source_role'].strip()):
+                raise _error(row, 'legal_metadata: source_role must be nonblank Text')
+            for key, item_type in (('operative_clause_numbers', str), ('source_discrepancies', dict)):
+                if key in legal and (not isinstance(legal[key], list)
+                        or any(not isinstance(item, item_type) for item in legal[key])):
+                    raise _error(row, f'legal_metadata: invalid {key}')
+            values['source_record']['origin'] = deepcopy(legal)
         # Penalty properties are derived exclusively from the joined penalty row.
         values = {key: value for key, value in values.items() if not key.startswith('penalty_')}
         if penalty is not None:
@@ -199,11 +202,10 @@ def _validate_node(node_type: str, row: SourceRecord, contract: Mapping[str, Any
 
 
 def validate_input_integrity(inputs: BuilderInputs, contract: Mapping[str, Any]) -> ValidatedInputs:
-    """Validate the complete source/ledger join before inspecting SAFE_EDGE rows."""
+    """Validate source identities, hierarchy and embedded xref classifications."""
     documents = _index(inputs.documents, 'doc_id')
     documents = {key: row for key, row in documents.items()
-                 if row.record.get('scope') != 'out_of_scope'
-                 and f'data/processed/documents/{key}.md' in inputs.markdown_paths}
+                 if f'data/processed/documents/{key}.md' in inputs.markdown_paths}
     units = _index(inputs.units, 'unit_id')
     signs = _index(inputs.signs, 'sign_id')
     for row in documents.values():
@@ -287,26 +289,12 @@ def validate_input_integrity(inputs: BuilderInputs, contract: Mapping[str, Any])
         if fingerprint in source_by_hash:
             raise _error(row, f'duplicate source fingerprint {fingerprint}')
         source_by_hash[fingerprint] = row
-    ledger = _index(inputs.ledger, 'record_fingerprint')
-    missing = source_by_hash.keys() - ledger.keys()
-    extra = ledger.keys() - source_by_hash.keys()
-    if missing:
-        fingerprint = min(missing)
-        raise _error(source_by_hash[fingerprint], f'ledger missing fingerprint {fingerprint}')
-    if extra:
-        fingerprint = min(extra)
-        raise _error(ledger[fingerprint], f'ledger extra fingerprint {fingerprint}')
-    classification_field = contract['xref_contract']['classification_field']
-    for fingerprint, source in source_by_hash.items():
-        approved = ledger[fingerprint]
+    for source in inputs.xrefs:
         record = source.record
-        for key in sorted(record.keys() & approved.record.keys()):
-            if canonical_json(record[key]) != canonical_json(approved.record[key]):
-                raise _error(source, f'source/ledger invariant conflict {key}: {fingerprint}')
-        classification = approved.record.get(classification_field)
+        classification = record.get('downstream_use')
         if classification not in CLASSIFICATIONS:
-            raise _error(approved, f'invalid classification {classification!r}')
-        if classification != contract['xref_contract']['allowed_classification']:
+            raise _error(source, f'invalid classification {classification!r}')
+        if classification != 'SAFE_EDGE':
             continue
         if type(record.get('is_exclusion')) is not bool or record.get('in_corpus') is not True:
             raise _error(source, 'SAFE_EDGE requires exact bool polarity and in_corpus=True')
@@ -319,7 +307,7 @@ def validate_input_integrity(inputs: BuilderInputs, contract: Mapping[str, Any])
                 raise _error(source, f'SAFE_EDGE {side} endpoint missing/non-production {identity!r}')
             if units[identity].record['doc_id'] != document:
                 raise _error(source, f'SAFE_EDGE {side} document mismatch {identity!r}')
-    return ValidatedInputs(inputs, documents, units, signs, penalties, ledger)
+    return ValidatedInputs(inputs, documents, units, signs, penalties)
 
 
 def _read(path: Path) -> bytes:
@@ -350,43 +338,13 @@ def _jsonl(data: bytes, relative_path: str) -> tuple[SourceRecord, ...]:
     return tuple(result)
 
 
-def load_inputs(
-    project_root: str | Path, ledger_path: str | Path, audit_path: str | Path,
-    policy_path: str | Path, contract: Mapping[str, Any],
-    *, expected_artifact_hashes: Mapping[str, str] | None = None,
-) -> ValidatedInputs:
-    """Load only whitelisted source families; verify all artifacts before parsing.
-
-    Defaults pin the approved production artifacts. Synthetic disk fixtures must
-    explicitly supply expected_artifact_hashes and their own xref contract SHA.
-    Counts and full-source plan verification are deferred to C3.
-    """
+def load_inputs(project_root: str | Path, contract: Mapping[str, Any]) -> ValidatedInputs:
+    """Load the corpus directly; preserve file locators and validate structure."""
     root = Path(project_root)
-    expected = dict(ARTIFACT_HASHES) if expected_artifact_hashes is None else expected_artifact_hashes
-    artifacts = {}
-    hashes = {}
-    for (name, _), path in zip(ARTIFACT_HASHES, (ledger_path, audit_path, policy_path)):
-        path = Path(path)
-        if path.name != name:
-            raise InputIntegrityError(f'{path.name}: expected artifact name {name}')
-        data = _read(path)
-        digest = hashlib.sha256(data).hexdigest()
-        if digest != expected.get(name):
-            raise InputIntegrityError(f'{name}: SHA256 mismatch')
-        artifacts[name], hashes[name] = data, digest
-    for name, _ in ARTIFACT_HASHES[1:]:
-        try:
-            metadata = json.loads(artifacts[name])
-        except (json.JSONDecodeError, UnicodeDecodeError) as exc:
-            raise InputIntegrityError(f'{name}: invalid JSON') from exc
-        if not isinstance(metadata, dict):
-            raise InputIntegrityError(f'{name}: expected JSON object')
     source_data = {family: _read(root / relative) for family, relative in SOURCE_FILES}
-    if hashlib.sha256(source_data['xrefs']).hexdigest() != contract['xref_contract']['xref_sha256']:
-        raise InputIntegrityError('data/processed/meta/xrefs.jsonl: SHA256 mismatch')
     rows = {family: _jsonl(source_data[family], relative) for family, relative in SOURCE_FILES}
     markdown = frozenset(path.relative_to(root).as_posix()
                          for path in (root/'data/processed/documents').glob('*.md') if path.is_file())
-    inputs = BuilderInputs(**rows, ledger=_jsonl(artifacts[ARTIFACT_HASHES[0][0]], ARTIFACT_HASHES[0][0]),
-                           markdown_paths=markdown, artifact_hashes=hashes)
-    return validate_input_integrity(inputs, contract)
+    hashes = {relative: hashlib.sha256(source_data[family]).hexdigest()
+              for family, relative in SOURCE_FILES}
+    return validate_input_integrity(BuilderInputs(**rows, markdown_paths=markdown, source_hashes=hashes), contract)

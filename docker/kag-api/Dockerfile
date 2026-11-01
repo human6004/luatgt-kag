@@ -14,7 +14,6 @@ RUN python -m pip check \
 COPY --chown=10001:10001 docker/openspg-server.sh ./docker/openspg-server.sh
 COPY --chown=10001:10001 kag/ ./kag/
 COPY --chown=10001:10001 data/processed/ ./data/processed/
-COPY --chown=10001:10001 artifacts/inputs/xref-a3g2/ ./artifacts/inputs/xref-a3g2/
 COPY --chown=10001:10001 vendor/KAG/ ./vendor/KAG/
 # Verify the copied SDK against its upstream commit without host Git metadata.
 USER 10001:10001

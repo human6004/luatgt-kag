@@ -47,9 +47,7 @@ _SMOKE_PROJECT_PROOF = object()
 _MANIFEST_PROJECT_PROOF = object()
 _C43A_POLICY = {
     'project_id': SAMPLE_PROJECT_ID, 'project_name': 'VietRoadTrafficC43A10Pct',
-    'namespace': 'VietRoadTraffic', 'partition': 5, 'nodes': 7495, 'edges': 8180,
-    'nodes_sha256': 'fe61563daad7cf4f331b4f8c44a327365e07fe187436cc939b21c603ec6c25ff',
-    'edges_sha256': 'c5587eb118b3ba3f9a51b17539e773c4624447bc404de3a2a639842886661874',
+    'namespace': 'VietRoadTraffic', 'partition': 5,
 }
 
 
@@ -228,22 +226,20 @@ def discover_manifest_project(project_client: Any, host_addr: str, contract: Map
         path = Path(manifest_path).resolve()
         raw = path.read_bytes()
         manifest = json.loads(raw)
-        pins = ((manifest['chosen_partition'], 'partition'),
-                (manifest['counts_by_type']['total'], 'nodes'), (manifest['total_edges'], 'edges'),
-                (manifest['selected_node_identity_sha256'], 'nodes_sha256'),
-                (manifest['selected_edge_tuple_sha256'], 'edges_sha256'))
-        if any(type(value) is not type(_C43A_POLICY[key]) or value != _C43A_POLICY[key]
-               for value, key in pins):
-            raise WriterAdapterError('sample manifest partition, hashes or counts differ from C4.3a policy')
+        if manifest['chosen_partition'] != _C43A_POLICY['partition'] or type(manifest['chosen_partition']) is not int:
+            raise WriterAdapterError('sample manifest partition differs from C4.3a policy')
+        node_count, edge_count = manifest['counts_by_type']['total'], manifest['total_edges']
+        if any(type(value) is not int or value < 0 for value in (node_count, edge_count)):
+            raise WriterAdapterError('sample manifest counts must be nonnegative integers')
         node_keys = [(node['type'], node['id']) for node in node_specs]
         edge_tuples = [tuple(edge['tuple']) for edge in edge_specs]
-        if (len(node_keys) != _C43A_POLICY['nodes'] or len(set(node_keys)) != len(node_keys)
-                or len(edge_tuples) != _C43A_POLICY['edges'] or len(set(edge_tuples)) != len(edge_tuples)):
+        if (len(node_keys) != node_count or len(set(node_keys)) != len(node_keys)
+                or len(edge_tuples) != edge_count or len(set(edge_tuples)) != len(edge_tuples)):
             raise WriterAdapterError('sample actual counts or uniqueness differ from C4.3a policy')
         node_text = ''.join('\t'.join(key) + '\n' for key in sorted(node_keys))
         edge_text = ''.join(canonical_json(key) + '\n' for key in sorted(edge_tuples))
-        if (hashlib.sha256(node_text.encode('utf-8')).hexdigest() != _C43A_POLICY['nodes_sha256']
-                or hashlib.sha256(edge_text.encode('utf-8')).hexdigest() != _C43A_POLICY['edges_sha256']):
+        if (hashlib.sha256(node_text.encode('utf-8')).hexdigest() != manifest['selected_node_identity_sha256']
+                or hashlib.sha256(edge_text.encode('utf-8')).hexdigest() != manifest['selected_edge_tuple_sha256']):
             raise WriterAdapterError('actual sample identities or edge tuples do not match manifest hashes')
         allowed_nodes = frozenset(node_keys)
         if any(len(t) != 5 or (t[0], t[1]) not in allowed_nodes or (t[3], t[4]) not in allowed_nodes

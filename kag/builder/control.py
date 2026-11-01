@@ -17,7 +17,7 @@ import threading
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
-from kag.builder.production_scope import (C3_IDENTITY, ProductionSettings, _input_version, _spec_hash,
+from kag.builder.production_scope import (ProductionSettings, _input_version, _spec_hash,
     validate_c3_manifest, selection_limit, selection_summary, select_bounded_sources)
 from kag.http_api.contract import ApiFailure
 from kag.http_api.security import ServiceSecrets, authenticate, bounded_body
@@ -101,9 +101,9 @@ def check_source_inputs(value):
 
 
 def prepare_source_inputs(state_dir):
-    """Prepare only the corpus shipped with this release; publish a complete pinned plan."""
-    from kag.builder.graph_plan import build_graph_plan, write_dry_run
-    from kag.builder.inputs import ARTIFACT_HASHES, load_inputs
+    """Prepare only the corpus shipped with this release; publish a complete content-addressed plan."""
+    from kag.builder.graph_plan import build_graph_plan, plan_hash, write_dry_run
+    from kag.builder.inputs import load_inputs
     root = Path(__file__).resolve().parents[2]
     state = Path(state_dir)
     if not state.is_absolute() or state.resolve().is_relative_to(root):
@@ -111,13 +111,12 @@ def prepare_source_inputs(state_dir):
     state.mkdir(parents=True, exist_ok=True, mode=0o700)
     plans = state / 'plans'
     plans.mkdir(exist_ok=True)
-    destination = plans / C3_IDENTITY['plan_sha256']
     contract = json.loads((root / 'kag/schema/schema_contract.json').read_bytes())
+    inputs = load_inputs(root, contract)
+    plan = build_graph_plan(inputs, contract, project_root=root)
+    destination = plans / plan_hash(plan)
     if not destination.exists():
         with tempfile.TemporaryDirectory(prefix='prepare-', dir=state) as temporary:
-            inputs = load_inputs(root, *(root / 'artifacts/inputs/xref-a3g2' / name
-                for name, _ in ARTIFACT_HASHES), contract)
-            plan = build_graph_plan(inputs, contract, project_root=root)
             output = Path(temporary) / 'plan'
             write_dry_run(plan, output)
             data = validate_c3_manifest(contract, output / 'manifest.json')
@@ -161,10 +160,11 @@ def _builder_target():
             namespace=os.environ.get('KAG_BUILDER_NAMESPACE','VietRoadTraffic'), runtime_location=os.environ.get('KAG_BUILDER_RUNTIME_LOCATION','container'),
             endpoints=dict(openspg=os.environ['KAG_BUILDER_OPENSPG_URL'],
                 neo4j_http=os.environ['KAG_BUILDER_NEO4J_HTTP'], neo4j_uri=os.environ['KAG_BUILDER_NEO4J_URI']))
+        # Target syntax only; scope discovery separately binds the actual plan before any write.
         ProductionSettings(scope='PRODUCTION',runtime_location=target['runtime_location'],
             host_addr=target['endpoints']['openspg'],neo4j_uri=target['endpoints']['neo4j_uri'],
             project_name=target['project_name'],namespace=target['namespace'],expected_project_id=target['project_id'],
-            vector_dimensions=3072,confirmation=f'CONFIRM_PRODUCTION:{target["project_name"]}:{target["namespace"]}:{target["project_id"]}:{C3_IDENTITY["plan_sha256"]}').validate()
+            vector_dimensions=3072,confirmation=f'CONFIRM_PRODUCTION:{target["project_name"]}:{target["namespace"]}:{target["project_id"]}:{"0"*64}').validate()
         if (not 1<=target['project_id']<=2147483647 or len(target['project_name'])>255
                 or not re.fullmatch(r'[a-z][a-z0-9.-]{0,62}',target['database'])):raise ValueError
         return target
@@ -172,14 +172,15 @@ def _builder_target():
         raise RunBlocked('CONFIG') from None
 
 
-def _builder_config(state_dir, target, model, revision, batch_size, request_limit, node_limit=None, scope_preview=None):
+def _builder_config(state_dir, target, model, revision, batch_size, request_limit, node_limit=None, scope_preview=None, *, plan_sha256):
     config = json.loads((Path(__file__).resolve().parents[1]/'config/runner.example.json').read_bytes())
-    manifest = Path(state_dir)/'plans'/C3_IDENTITY['plan_sha256']/'manifest.json'
+    if not isinstance(plan_sha256,str) or not re.fullmatch('[0-9a-f]{64}',plan_sha256):raise RunBlocked('PLAN')
+    manifest = Path(state_dir)/'plans'/plan_sha256/'manifest.json'
     config.update(target, scope='PRODUCTION', write_mode='WRITE', vector_policy='provider', batch_size=batch_size,
         vector_dimensions=model['test']['dimension'],
         request_limit=request_limit, model_identity=model['config']['base_url'].rstrip('/')+'|'+model['config']['model'],
         embedding_model=dict(type='openai', base_url=model['config']['base_url'],model=model['config']['model'],timeout=60),
-        confirmation=f'CONFIRM_PRODUCTION:{target["project_name"]}:{target["namespace"]}:{target["project_id"]}:{C3_IDENTITY["plan_sha256"]}')
+        confirmation=f'CONFIRM_PRODUCTION:{target["project_name"]}:{target["namespace"]}:{target["project_id"]}:{plan_sha256}')
     config['paths'] = {name:None for name in config['paths']}
     config['paths'].update(c3_manifest=str(manifest),
         run_root=str(Path(os.environ.get('KAG_BUILDER_RUN_ROOT','/builder-runs'))/f'revision-{revision}'),
@@ -984,7 +985,7 @@ def create_app(*, control=None, token=None, state_dir=None):
         try:
             def select():
                 contract=json.loads((Path(__file__).resolve().parents[1]/'schema/schema_contract.json').read_bytes())
-                manifest=Path(state_dir)/'plans'/C3_IDENTITY['plan_sha256']/'manifest.json'
+                manifest=Path(state_dir)/'plans'/source_result['plan_sha256']/'manifest.json'
                 data=validate_c3_manifest(contract,manifest)
                 try:
                     selected=select_bounded_sources(data,limit,extended=True) if limit is not None else None
@@ -1068,7 +1069,7 @@ def create_app(*, control=None, token=None, state_dir=None):
             target = await asyncio.to_thread(selected_target,project_id,session_token(request))
             next_revision = body['revision']+1
             config = await asyncio.to_thread(_builder_config,state_dir,target,model,next_revision,
-                body['batch_size'],body['request_limit'],body.get('node_limit'),chosen)
+                body['batch_size'],body['request_limit'],body.get('node_limit'),chosen,plan_sha256=source_result['plan_sha256'])
             if (body['revision']!=(setup['revision'] if setup else 0)
                     or source_task is not None and not source_task.done()
                     or source_result['state']!='VALID'

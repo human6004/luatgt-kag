@@ -43,15 +43,10 @@ def xref_record(**changes):
     record = dict(from_doc_id='D', from_so_hieu='1/2026/NĐ-CP', from_unit_id='D::1',
                   to_doc_id='D', to_so_hieu='1/2026/NĐ-CP', to_unit_id='D::2',
                   to_dieu=None, to_khoan=None, to_diem=None, evidence='Khoản 2',
-                  scope='internal', is_exclusion=False, in_corpus=True)
+                  scope='internal', is_exclusion=False, in_corpus=True, downstream_use='SAFE_EDGE')
     record.update(changes)
     return record
 
-
-def ledger_record(module, record, classification='SAFE_EDGE'):
-    return dict({k: copy.deepcopy(v) for k, v in record.items() if k != 'from_so_hieu'},
-                record_fingerprint=module.xref_fingerprint(record), downstream_use=classification,
-                provenance={'notes': ['nguồn nguyên trạng']}, source_order_index=0)
 
 
 def synthetic_inputs(module, **changes):
@@ -71,11 +66,8 @@ def synthetic_inputs(module, **changes):
                             'bien_phu_variant': '', 'ngay_hieu_luc': '2025-01-01',
                             'ngay_het_hieu_luc': None}, 'signs'),),
         relations=(), xrefs=(wrap(module, raw, 'xrefs'),),
-        ledger=(module.SourceRecord(ledger_record(module, raw),
-                 dict(source_path='xref_a3g2_final_ledger.jsonl', file_sha256='b'*64, line=1)),),
         markdown_paths=frozenset(('data/processed/documents/D.md',
-                                  'data/processed/documents/E.md')),
-        artifact_hashes=dict(module.ARTIFACT_HASHES))
+                                  'data/processed/documents/E.md')))
     return replace(inputs, **changes)
 
 
@@ -93,20 +85,16 @@ class InputsTest(unittest.TestCase):
         with self.assertRaisesRegex(self.m.InputIntegrityError, message):
             self.validate(**changes)
 
-    def test_production_whitelist_scope_and_existing_markdown(self):
-        excluded = wrap(self.m, document('22_VBHN_BXD', scope_marker='original'), 'documents', 3)
-        excluded.record['scope'] = 'out_of_scope'
-        missing = wrap(self.m, document('MISSING'), 'documents', 4)
-        docs = self.inputs.documents + (excluded, missing)
-        result = self.validate(documents=docs,
-              markdown_paths=self.inputs.markdown_paths | {'data/processed/documents/22_VBHN_BXD.md'})
+    def test_documents_require_existing_markdown(self):
+        missing = wrap(self.m, document('MISSING'), 'documents', 3)
+        result = self.validate(documents=self.inputs.documents+(missing,))
         self.assertEqual(set(result.documents), {'D', 'E'})
         self.assertEqual(result.penalties['D::2'].record['phat_tien_min'], 0)
 
     def test_exact_identity_preserved(self):
         exact = ' D::e\u0301 '
         raw = synthetic_inputs(self.m, units=(wrap(self.m, unit(exact), 'units'),),
-                               penalties=(), signs=(), xrefs=(), ledger=())
+                               penalties=(), signs=(), xrefs=())
         result = self.m.validate_input_integrity(raw, CONTRACT)
         self.assertEqual(list(result.units), [exact])
         self.assertEqual(result.units[exact].record['unit_id'], exact)
@@ -142,7 +130,7 @@ class InputsTest(unittest.TestCase):
     def test_deep_hierarchy_uses_no_recursion_limit(self):
         rows = tuple(wrap(self.m, unit(f'U{i}', parent_id=f'U{i-1}' if i else None),
                           'units', i+1) for i in range(1200))
-        result = self.validate(units=rows, penalties=(), signs=(), xrefs=(), ledger=())
+        result = self.validate(units=rows, penalties=(), signs=(), xrefs=())
         self.assertEqual(len(result.units), 1200)
 
     def test_penalty_join_orphan_duplicate_mismatch_document_fail(self):
@@ -202,56 +190,46 @@ class InputsTest(unittest.TestCase):
                         {k:v for k,v in source.items() if k!='to_diem'}):
             self.assertNotEqual(self.m.xref_fingerprint(source), self.m.xref_fingerprint(changed))
 
-    def test_ledger_missing_extra_duplicate_and_source_duplicate_fail_before_filter(self):
-        self.assert_bad('ledger missing', ledger=())
-        extra = self.m.SourceRecord(dict(self.inputs.ledger[0].record, record_fingerprint='c'*64),
-                                    self.inputs.ledger[0].locator)
-        self.assert_bad('ledger extra', ledger=self.inputs.ledger+(extra,))
-        self.assert_bad('duplicate.*fingerprint', ledger=self.inputs.ledger*2)
-        self.assert_bad('duplicate.*fingerprint', xrefs=self.inputs.xrefs*2)
-        non_safe = self.m.SourceRecord(dict(self.inputs.ledger[0].record,
-                                           downstream_use='EXTERNAL_REFERENCE_ONLY'),
-                                       self.inputs.ledger[0].locator)
-        distinct = wrap(self.m, xref_record(evidence='Nguồn khác'), 'xrefs', 2)
-        self.assert_bad('ledger missing', xrefs=self.inputs.xrefs+(distinct,), ledger=(non_safe,))
+    def test_duplicate_xref_fails_before_filter(self):
+        source = wrap(self.m, xref_record(downstream_use='EXTERNAL_REFERENCE_ONLY'), 'xrefs')
+        self.assert_bad('duplicate.*fingerprint', xrefs=(source,source))
 
-    def test_ledger_shared_field_conflicts_fail_exactly(self):
-        for changes in ({'scope': 'changed'}, {'in_corpus': 1}, {'evidence': 'Changed'}):
-            bad = self.m.SourceRecord(dict(self.inputs.ledger[0].record, **changes),
-                                      self.inputs.ledger[0].locator)
-            self.assert_bad('source/ledger invariant conflict', ledger=(bad,))
+    def test_missing_classification_fails(self):
+        row = self.inputs.xrefs[0]
+        record = dict(row.record)
+        record.pop('downstream_use')
+        self.assert_bad('classification', xrefs=(self.m.SourceRecord(record,row.locator),))
 
     def test_all_four_classifications_accepted_unknown_fails(self):
         for classification in ('SAFE_EDGE', 'EXTERNAL_REFERENCE_ONLY',
                                'KEEP_UNRESOLVED_NO_EDGE', 'EXCLUDE_FROM_GRAPH_EDGE'):
-            ledger = self.m.SourceRecord(dict(self.inputs.ledger[0].record,
-                                              downstream_use=classification),
-                                          self.inputs.ledger[0].locator)
-            self.assertEqual(len(self.validate(ledger=(ledger,)).xref_ledger), 1)
-        bad = self.m.SourceRecord(dict(self.inputs.ledger[0].record, downstream_use='safe_edge'),
-                                  self.inputs.ledger[0].locator)
-        self.assert_bad('classification', ledger=(bad,))
+            source = wrap(self.m, xref_record(downstream_use=classification), 'xrefs')
+            self.assertEqual(len(self.validate(xrefs=(source,)).raw.xrefs), 1)
+        self.assert_bad('classification', xrefs=(wrap(self.m, xref_record(downstream_use='safe_edge'), 'xrefs'),))
 
     def test_safe_edge_endpoint_document_bool_and_evidence_gate_fail(self):
         for changes in ({'is_exclusion': 'false'}, {'is_exclusion': 0}, {'in_corpus': 1},
                         {'in_corpus': False}, {'evidence': ' \t'}, {'to_unit_id': 'missing'},
                         {'from_unit_id': 'missing'}, {'to_doc_id': 'E'}, {'from_doc_id': 'E'}):
             source = xref_record(**changes)
-            ledger = self.m.SourceRecord(ledger_record(self.m, source), self.inputs.ledger[0].locator)
             with self.subTest(changes=changes):
-                self.assert_bad('SAFE_EDGE', xrefs=(wrap(self.m, source, 'xrefs'),), ledger=(ledger,))
+                self.assert_bad('SAFE_EDGE', xrefs=(wrap(self.m, source, 'xrefs'),))
 
     def test_non_safe_unresolved_endpoints_do_not_require_placeholder(self):
-        source = xref_record(to_unit_id=None, to_doc_id='EXTERNAL')
-        ledger = self.m.SourceRecord(ledger_record(self.m, source, 'EXTERNAL_REFERENCE_ONLY'),
-                                    self.inputs.ledger[0].locator)
-        result = self.validate(xrefs=(wrap(self.m, source, 'xrefs'),), ledger=(ledger,))
+        source = xref_record(to_unit_id=None, to_doc_id='EXTERNAL', downstream_use='EXTERNAL_REFERENCE_ONLY')
+        result = self.validate(xrefs=(wrap(self.m, source, 'xrefs'),))
         self.assertEqual(set(result.units), {'D::1', 'D::2', 'E::1'})
 
     def test_validation_does_not_mutate_source(self):
         before = copy.deepcopy(self.inputs)
         self.validate()
         self.assertEqual(self.inputs, before)
+
+    def test_xref_uses_embedded_classification(self):
+        row = self.inputs.xrefs[0]
+        source = self.m.SourceRecord(dict(row.record, downstream_use='EXTERNAL_REFERENCE_ONLY'), row.locator)
+        result = self.validate(xrefs=(source,))
+        self.assertEqual(result.raw.xrefs[0].record['downstream_use'], 'EXTERNAL_REFERENCE_ONLY')
 
     def disk_fixture(self, root):
         for family, relative in PATHS.items():
@@ -264,17 +242,7 @@ class InputsTest(unittest.TestCase):
             path = root / relative
             path.parent.mkdir(parents=True, exist_ok=True)
             path.write_text('production', encoding='utf-8')
-        hashes = {}
-        for name, _ in self.m.ARTIFACT_HASHES:
-            path = root / name
-            data = ('\n'.join(json.dumps(r.record, ensure_ascii=False) for r in self.inputs.ledger)
-                    if name.endswith('.jsonl') else '{}')
-            path.write_text(data, encoding='utf-8')
-            hashes[name] = hashlib.sha256(path.read_bytes()).hexdigest()
-        contract = copy.deepcopy(CONTRACT)
-        contract['xref_contract']['xref_sha256'] = hashlib.sha256(
-            (root / PATHS['xrefs']).read_bytes()).hexdigest()
-        return contract, hashes
+        return copy.deepcopy(CONTRACT)
 
     def test_reviewed_sign_master_reproduces_builder_input(self):
         root = Path(__file__).resolve().parents[2]
@@ -307,27 +275,23 @@ class InputsTest(unittest.TestCase):
     def test_load_inputs_relative_locator_and_whitelist(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            contract, hashes = self.disk_fixture(root)
-            result = self.m.load_inputs(root, root/'xref_a3g2_final_ledger.jsonl',
-                    root/'xref_a3g2_final_audit.json', root/'xref_a3g2_downstream_policy.json',
-                    contract, expected_artifact_hashes=hashes)
+            contract = self.disk_fixture(root)
+            result = self.m.load_inputs(root, contract)
             row = result.units['D::1']
             self.assertEqual(row.locator, {'source_path': PATHS['units'], 'line': 2,
                  'file_sha256': hashlib.sha256((root/PATHS['units']).read_bytes()).hexdigest()})
             self.assertEqual(set(result.documents), {'D', 'E'})
 
-    def test_sha_mismatch_each_artifact_and_xref_fail_closed(self):
-        for family in ('xref_a3g2_final_ledger.jsonl', 'xref_a3g2_final_audit.json',
-                       'xref_a3g2_downstream_policy.json', PATHS['xrefs']):
-            with self.subTest(family=family), tempfile.TemporaryDirectory() as directory:
-                root = Path(directory)
-                contract, hashes = self.disk_fixture(root)
-                with (root/family).open('ab') as handle:
-                    handle.write(b' ')
-                with self.assertRaisesRegex(self.m.InputIntegrityError, 'SHA256 mismatch'):
-                    self.m.load_inputs(root, root/'xref_a3g2_final_ledger.jsonl',
-                        root/'xref_a3g2_final_audit.json', root/'xref_a3g2_downstream_policy.json',
-                        contract, expected_artifact_hashes=hashes)
+    def test_load_inputs_accepts_changed_valid_sources_without_code_pins(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            contract = self.disk_fixture(root)
+            path = root/PATHS['xrefs']
+            original = path.read_bytes()
+            path.write_bytes(original.replace(b'SAFE_EDGE', b'KEEP_UNRESOLVED_NO_EDGE'))
+            result = self.m.load_inputs(root, contract)
+            self.assertEqual(result.raw.xrefs[0].record['downstream_use'], 'KEEP_UNRESOLVED_NO_EDGE')
+            self.assertEqual(result.raw.source_hashes[PATHS['xrefs']], hashlib.sha256(path.read_bytes()).hexdigest())
 
     def test_jsonl_unicode_separators_inside_text_are_not_record_lines(self):
         row = self.inputs.units[0]
@@ -336,27 +300,49 @@ class InputsTest(unittest.TestCase):
         self.inputs = replace(self.inputs, units=units)
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            contract, hashes = self.disk_fixture(root)
-            result = self.m.load_inputs(root, root/'xref_a3g2_final_ledger.jsonl',
-                    root/'xref_a3g2_final_audit.json', root/'xref_a3g2_downstream_policy.json',
-                    contract, expected_artifact_hashes=hashes)
+            contract = self.disk_fixture(root)
+            result = self.m.load_inputs(root, contract)
             self.assertEqual(result.units['D::1'].record['text'], text)
             self.assertEqual(result.units['D::1'].locator['line'], 2)
 
-    def test_default_sha_pins_and_no_old_ledger_fallback(self):
-        self.assertEqual(dict(self.m.ARTIFACT_HASHES), {
-            'xref_a3g2_final_ledger.jsonl': 'ee025ac07a04895539d83bb0f056629cc59b5137f67be2a46fae043a77ed2068',
-            'xref_a3g2_final_audit.json': '94a13662fbebcd28cdf603bb5ac8bb57393d0d20d793594e0cc8268b7f514a9e',
-            'xref_a3g2_downstream_policy.json': '2d3fb1f6d3a80f83d28e704e500127fba4cb4480d84f89e4b51117eee586cf3d'})
+    def test_load_inputs_missing_source_fails(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
-            contract, _ = self.disk_fixture(root)
-            with self.assertRaisesRegex(self.m.InputIntegrityError, 'SHA256 mismatch'):
-                self.m.load_inputs(root, root/'xref_a3g2_final_ledger.jsonl',
-                    root/'xref_a3g2_final_audit.json', root/'xref_a3g2_downstream_policy.json', contract)
-            with self.assertRaisesRegex(self.m.InputIntegrityError, 'artifact name'):
-                self.m.load_inputs(root, root/'xref_a3g_final_ledger.jsonl',
-                    root/'xref_a3g2_final_audit.json', root/'xref_a3g2_downstream_policy.json', contract)
+            contract = self.disk_fixture(root)
+            (root/PATHS['xrefs']).unlink()
+            with self.assertRaisesRegex(self.m.InputIntegrityError, 'cannot read input'):
+                self.m.load_inputs(root, contract)
+
+    def test_source_evidence_does_not_enter_node_origin(self):
+        from kag.builder.mapping import map_nodes
+        row = self.inputs.units[0]
+        source = self.m.SourceRecord(dict(row.record, source_evidence={'private':'review'}), row.locator)
+        result = self.validate(units=(source,*self.inputs.units[1:]))
+        node = next(n for n in map_nodes(result,CONTRACT) if n['id']==row.record['unit_id'])
+        self.assertEqual(json.loads(node['properties']['sourceRecord']),row.locator)
+
+    def test_legal_metadata_reaches_origin_without_audit_fields_or_aliasing(self):
+        from kag.builder.mapping import map_nodes
+        row = self.inputs.units[0]
+        legal = dict(source_role='amendment_operation', operative_clause_numbers=['2', '3'],
+                     source_discrepancies=[{'status': 'unresolved'}])
+        source = self.m.SourceRecord(dict(row.record, legal_metadata=legal,
+                                         source_evidence={'private': 'review'}), row.locator)
+        result = self.validate(units=(source, *self.inputs.units[1:]))
+        node = next(n for n in map_nodes(result, CONTRACT) if n['id'] == row.record['unit_id'])
+        self.assertEqual(json.loads(node['properties']['sourceRecord']), dict(row.locator, origin=legal))
+        values = self.m._node_values('LegalUnit', source)
+        values['source_record']['origin']['operative_clause_numbers'].append('4')
+        self.assertEqual(source.record['legal_metadata']['operative_clause_numbers'], ['2', '3'])
+
+    def test_legal_metadata_rejects_non_object_and_unapproved_fields(self):
+        row = self.inputs.units[0]
+        for legal in (None, [], {'review_log': 'private'}, {'source_role': 3},
+                      {'operative_clause_numbers': '2'}, {'operative_clause_numbers': [2]},
+                      {'source_discrepancies': [False]}):
+            source = self.m.SourceRecord(dict(row.record, legal_metadata=legal), row.locator)
+            with self.subTest(legal=legal):
+                self.assert_bad('legal_metadata', units=(source, *self.inputs.units[1:]))
 
 
 if __name__ == '__main__':

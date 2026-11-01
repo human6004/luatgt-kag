@@ -14,5 +14,4 @@ workspace/
 artifacts/*
 !artifacts/inputs/
 artifacts/inputs/*
-!artifacts/inputs/xref-a3g2/
 logs/

@@ -6,13 +6,11 @@ Muốn chuyển cả dữ liệu từ máy/thư mục cũ, dùng [chuyển insta
 
 ## 1. Chuẩn bị công cụ
 
-Cài [Git for Windows](https://git-scm.com/install/windows), [Git LFS](https://git-lfs.com/) và [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/). Bật ảo hóa/WSL 2 theo yêu cầu Docker, chọn Linux containers và chờ Docker Engine chạy.
+Cài [Git for Windows](https://git-scm.com/install/windows) và [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/). Bật ảo hóa/WSL 2 theo yêu cầu Docker, chọn Linux containers và chờ Docker Engine chạy.
 
 Mở PowerShell:
 
 ```powershell
-git lfs version
-git lfs install
 docker version
 docker compose version
 ```
@@ -26,10 +24,9 @@ Tại thư mục muốn chứa dự án:
 ```powershell
 git clone --recurse-submodules https://github.com/human6004/luatgt-kag.git
 Set-Location luatgt-kag
-git lfs pull
 ```
 
-Git LFS phải tải nội dung thật của `artifacts/inputs/xref-a3g2/xref_a3g2_final_ledger.jsonl` và các assets được theo dõi bằng LFS. File pointer vài dòng chưa phải dữ liệu; Builder sẽ từ chối vì hash không khớp. Dùng clone có submodule và LFS, không dùng ZIP source thiếu những nội dung này. Nguồn pháp luật trong `data/raw/` được lưu trực tiếp trong Git.
+Dataset và nguồn pháp luật trong `data/raw/` được lưu trực tiếp trong Git. Clone cần có submodule `vendor/KAG`; không dùng ZIP source thiếu upstream. Xem [file và trường dataset](../data/README.md).
 
 Kiểm có `.env.example`, `docker-compose.yml` và `vendor/KAG`. **Mọi lệnh còn lại chạy tại thư mục gốc `luatgt-kag`, trong cùng cửa sổ PowerShell.** Compose chính tự include KAG; không cần ghép hai file bằng `-f`.
 

@@ -1380,7 +1380,6 @@
     "document": "evidence and note preserve source missing/empty distinction via sourceRecord; no SAFE_EDGE gate.",
     "unit_xref": {
       "evidenceRecords": "JSON array of every approved complete source record, including scope, is_exclusion, in_corpus, endpoints, evidence, fingerprint and source locator.",
-      "classificationProvenance": "JSON array of approved ledger records with fingerprint, downstream_use, artifact name, artifact SHA256 and classification provenance.",
       "sourceRecord": "JSON array of all contributing relative source paths, file SHA256 and one-based line locators.",
       "merge": "Deduplicate identical records by compact canonical JSON, then sort by that canonical UTF-8 representation; retain every distinct approved record."
     }
@@ -1393,45 +1392,26 @@
     "normalization": "No Unicode normalization, trimming, UUID, or replacement by title/order/text hash."
   },
   "xref_contract": {
-    "xref_sha256": "c807cd38e5fccdf88c5396bee7258b7c90d0e9e445143e2148757996b1ede11e",
-    "required_safe_edge_ledger_sha256": "ee025ac07a04895539d83bb0f056629cc59b5137f67be2a46fae043a77ed2068",
-    "ledger_artifact_name": "xref_a3g2_final_ledger.jsonl",
-    "runtime_path_source": "Runtime configuration; no absolute path dependency.",
-    "join_contract": "EXISTING_RECORD_FINGERPRINT_SHA256_CANONICAL_JSON",
-    "fingerprint_input": "Complete 13-field original xref record, including from_so_hieu; preserve missing/null/empty and string bytes.",
-    "fingerprint_canonical_json": "json.dumps(source_record, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')",
-    "fingerprint_algorithm": "SHA256",
-    "classification_total": 21618,
-    "safe_edge_total": 13106,
-    "safe_edge_affirmative": 11638,
-    "safe_edge_exclusion": 1468,
     "classification_field": "downstream_use",
     "allowed_classification": "SAFE_EDGE",
     "affirmative_predicate": "citesUnit",
     "exclusion_predicate": "excludesUnit",
     "fail_closed": true,
-    "validation_gate": "Verify both file hashes, complete unambiguous one-to-one fingerprint join, exact counts, source/target production units and matching document IDs, in_corpus=true and nonempty evidence. Missing, conflict or mismatch blocks unit xref edges."
+    "validation_gate": "Require a known downstream_use value; SAFE_EDGE requires exact boolean polarity, in_corpus=true, nonempty evidence and existing unit endpoints with matching document IDs."
   },
   "graph_inclusion_policy": {
     "documents": {
-      "rule": "doc_id exists in documents.jsonl, scope != out_of_scope, and corresponding processed/documents/{doc_id}.md exists",
-      "expected_count": 91,
-      "excluded_doc_ids": [
-        "22_VBHN_BXD"
-      ],
+      "rule": "doc_id exists in documents.jsonl and corresponding processed/documents/{doc_id}.md exists",
       "retain_historical_superseded": true
     },
     "units": {
-      "rule": "Source unit_id and doc_id belong to production whitelist; preserve source parent_id hierarchy",
-      "expected_count": 57913
+      "rule": "Source unit_id and doc_id belong to production whitelist; preserve source parent_id hierarchy"
     },
     "penalties": {
-      "rule": "Merge by unit_id only, LegalUnit 1:0..1 source penalty; duplicate/join/document mismatch fails closed",
-      "expected_count": 1820
+      "rule": "Merge by unit_id only, LegalUnit 1:0..1 source penalty; duplicate/join/document mismatch fails closed"
     },
     "signs": {
-      "rule": "Version-specific sign_id; hasSign follows source unit_id, endpoint exists and doc_id matches; broad extraction anchor is provenance, not exclusive definition",
-      "expected_count": 907
+      "rule": "Version-specific sign_id; hasSign follows source unit_id, endpoint exists and doc_id matches; broad extraction anchor is provenance, not exclusive definition"
     },
     "hierarchy": {
       "hasUnit": "Document to root unit only (parent_id=null)",
@@ -1439,14 +1419,10 @@
       "order": "Source order, exact unit_id as deterministic tie-break only"
     },
     "document_relations": {
-      "rule": "Both corpus flags true and both IDs in production whitelist; original direction; no duplicate edges from document metadata arrays",
-      "expected_count": 251,
-      "external_reference_only_count": 583
+      "rule": "Both corpus flags true and both IDs in production whitelist; original direction; no duplicate edges from document metadata arrays"
     },
-    "unit_xrefs": "Only external ledger SAFE_EDGE plus xref validation gate; retain self-reference, separate affirmative/exclusion predicates; other classifications never create unit edges.",
+    "unit_xrefs": "Only xrefs with downstream_use=SAFE_EDGE and valid endpoints create unit edges; preserve polarity and self-reference.",
     "excluded_sources": [
-      "processed/out_of_scope/**",
-      "processed/penalties/excluded_out_of_scope.jsonl",
       "processed/eval/**",
       "raw/**"
     ],

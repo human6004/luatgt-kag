@@ -4,17 +4,12 @@
   "language": "vi",
   "dataset_date": "2026-11-01",
   "counts": {
-    "documents": 92,
+    "documents": 91,
     "production_markdown": 91,
-    "out_of_scope_markdown": 1,
     "units": 58401,
-    "out_of_scope_units": 840,
     "relations": 834,
-    "out_of_scope_relations": 15,
     "xrefs": 21618,
-    "out_of_scope_xrefs": 1005,
     "penalties": 1826,
-    "excluded_penalties": 127,
     "signs": 907
   },
   "updated_at": "2026-11-01"

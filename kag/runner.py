@@ -198,7 +198,7 @@ def _sample_sources(data, manifest):
     if manifest.get('kind') == 'FRESH_SAMPLE':
         keys, tuples = c3.selected_hashes(data['node_hashes'], data['edge_hashes'],
             dict(node_limit=128,node_keys=manifest['selected_node_keys'],edge_tuples=manifest['selected_edge_tuples']))
-        if (manifest['c3_sha256'] != {k:c3.C3_IDENTITY[v] for k,v in
+        if (manifest['c3_sha256'] != {k:data['manifest'][v] for k,v in
                     (('nodes','nodes_jsonl_sha256'),('edges','edges_jsonl_sha256'),('plan','plan_sha256'))}):
             raise RunBlocked('PLAN')
         return ([n for n in data['nodes'] if (n['type'],n['id']) in keys],
@@ -215,8 +215,8 @@ def _sample_sources(data, manifest):
     keys = {(n['type'], n['id']) for n in nodes}
     edges = [e for e in data['edges'] if (e['tuple'][0], e['tuple'][1]) in keys
              and (e['tuple'][3], e['tuple'][4]) in keys]
-    expected = {'nodes': c3.C3_IDENTITY['nodes_jsonl_sha256'], 'edges': c3.C3_IDENTITY['edges_jsonl_sha256'],
-                'plan': c3.C3_IDENTITY['plan_sha256']}
+    expected = {'nodes': data['manifest']['nodes_jsonl_sha256'], 'edges': data['manifest']['edges_jsonl_sha256'],
+                'plan': data['manifest']['plan_sha256']}
     if manifest['c3_sha256'] != expected:
         raise RunBlocked('PLAN')
     return nodes, edges
@@ -330,6 +330,7 @@ def preflight(config, *, project_client, reader, backend_transport=None):
                 config['paths']['c3_manifest'], backend_session=backend_session)
             proof = writer_config.production_scope
             source_index = proof.node_hashes.index
+            source_identity = dict(proof.identity)
             if 'selection' in config:
                 selection = config['selection']
                 if 'request' in selection:
@@ -360,6 +361,7 @@ def preflight(config, *, project_client, reader, backend_transport=None):
         else:
             data = c3.validate_c3_manifest(contract, config['paths']['c3_manifest'])
             source_index = data['index']
+            source_identity = {key:data['manifest'][key] for key in c3.IDENTITY_FIELDS}
             manifest = json.loads(Path(config['paths']['sample_manifest']).read_bytes())
             nodes, edges = _sample_sources(data, manifest)
             discovery = discover_fresh_sample_project if config['scope'] == 'FRESH_SAMPLE' else discover_manifest_project
@@ -388,7 +390,7 @@ def preflight(config, *, project_client, reader, backend_transport=None):
             'batch_size': config['batch_size'], 'model_identity': config['model_identity'], 'dimension': config['vector_dimensions'],
             'write_mode': config['write_mode'], 'vector_policy': config['vector_policy'],
             'config_hash': c3._spec_hash(config), 'input_hashes': dict(config['input_sha256']),
-            'c3': dict(c3.C3_IDENTITY), 'python': '3.10.16',
+            'c3': source_identity, 'python': '3.10.16',
             'vendor_commit': 'fdab15b3929d2ee40dfcdd388f90233096a6afc9', 'common_lock': mount,
             'backend_identity': backend_proof.to_receipt()}
         return {'writer_config': writer_config, 'contract': contract, 'identity': identity, 'database_id': database_id,
@@ -822,9 +824,14 @@ def _execute_source(config, directory, run_id, resume, stop, verify_only):
         from kag.bootstrap import initialize, VENDOR_COMMIT
         initialize()
         _files(config)
+        try:
+            manifest = json.loads(Path(config['paths']['c3_manifest']).read_bytes())
+            source_identity = {key:manifest[key] for key in c3.IDENTITY_FIELDS}
+        except (OSError, ValueError, TypeError, KeyError):
+            raise RunBlocked('INTEGRITY') from None
         identity = {'scope': SOURCE_ONLY, 'run_id': run_id, 'batch_size': config['batch_size'],
             'write_mode': 'NO_OP', 'config_hash': c3._spec_hash(config),
-            'input_hashes': config['input_sha256'], 'c3': dict(c3.C3_IDENTITY),
+            'input_hashes': config['input_sha256'], 'c3': source_identity,
             'python': '3.10.16', 'vendor_commit': VENDOR_COMMIT}
         # Source-only takes a per-run local lock, never a graph database lock.
         lock = GraphLock(Path(config['paths']['run_root']) / '.source-locks',
@@ -836,6 +843,9 @@ def _execute_source(config, directory, run_id, resume, stop, verify_only):
         contract = json.loads((ROOT / 'kag/schema/schema_contract.json').read_bytes())
         data = c3.validate_c3_manifest(contract, config['paths']['c3_manifest'],
                                       db_path=state._owned_file('source-validation.sqlite3'))
+        if source_identity != {key:data['manifest'][key] for key in c3.IDENTITY_FIELDS}:
+            raise RunBlocked('INTEGRITY')
+        _files(config)
         verified = dict(data, identity=identity, contract=contract)
         preflight_result = {'identity_hash': c3._spec_hash(identity), 'source_only': True}
         if not state.completed_stage('preflight'):
@@ -857,10 +867,10 @@ def _execute_source(config, directory, run_id, resume, stop, verify_only):
         # Rehash protected inputs and durable source payloads before publishing source PASS.
         if plan_sources(config, db_path=state._owned_file('ledger.sqlite3'), verified=verified) != plan:
             raise RunBlocked('INTEGRITY')
-        if (plan['nodes_hash'] != c3.C3_IDENTITY['nodes_jsonl_sha256']
-                or plan['edges_hash'] != c3.C3_IDENTITY['edges_jsonl_sha256']):
+        if (plan['nodes_hash'] != data['manifest']['nodes_jsonl_sha256']
+                or plan['edges_hash'] != data['manifest']['edges_jsonl_sha256']):
             raise RunBlocked('INTEGRITY')
-        source_proof = {'nodes': nodes, 'edges': edges, 'c3': dict(c3.C3_IDENTITY), 'graph_verified': False}
+        source_proof = {'nodes': nodes, 'edges': edges, 'c3': source_identity, 'graph_verified': False}
         previous = state.completed_stage('source-verify')
         if previous is None:
             state.update('source-verify', 'RUNNING', 1, 1)

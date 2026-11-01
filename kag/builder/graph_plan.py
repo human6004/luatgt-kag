@@ -88,7 +88,7 @@ def _input_manifest(inputs: ValidatedInputs, project_root: Path) -> tuple[dict[s
     for family in _SOURCE_COLLECTIONS:
         for row in getattr(inputs.raw, family):
             add(row.locator.get('source_path'), row.locator.get('file_sha256'))
-    for name, digest in inputs.raw.artifact_hashes.items():
+    for name, digest in inputs.raw.source_hashes.items():
         add(name, digest)
 
     for relative in inputs.raw.markdown_paths:
@@ -176,6 +176,8 @@ def _audit_aggregation(
 
         for prop in contract['relation_properties'][predicate]:
             name = prop['logical_name']
+            if not prop['required'] and not any(name in row['properties'] for row in rows):
+                continue
             values = [row['properties'].get(name) for row in rows]
             if prop['contract_type'] == 'JSON_TEXT':
                 expected_items: dict[bytes, Any] = {}
@@ -202,11 +204,7 @@ def _audit_aggregation(
                                       else xref['affirmative_predicate'])
                 if type(polarity) is not bool or predicate != expected_predicate:
                     conflicts += 1
-                classifications = row['properties'].get('classification_provenance')
-                if (not isinstance(classifications, list) or not classifications
-                        or any(item.get(xref['classification_field']) != xref['allowed_classification']
-                               for item in classifications if isinstance(item, Mapping))
-                        or any(not isinstance(item, Mapping) for item in classifications or [])):
+                if row['invariants'].get('downstream_use') != 'SAFE_EDGE':
                     conflicts += 1
 
     if conflicts:

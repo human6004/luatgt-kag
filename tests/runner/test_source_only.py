@@ -89,6 +89,15 @@ class SourceOnlyTests(unittest.TestCase):
                 self.assertEqual(self.api().run(config, run_id='bad'), 2)
         self.assertFalse((self.root / 'runs/bad/ledger.sqlite3').exists())
 
+    def test_malformed_source_identity_is_integrity_block(self):
+        import hashlib
+        path = self.root/'manifest.json'
+        manifest = json.loads(path.read_bytes())
+        manifest.pop('plan_sha256')
+        path.write_text(json.dumps(manifest),encoding='utf-8')
+        self.config['input_sha256']['c3_manifest'] = hashlib.sha256(path.read_bytes()).hexdigest()
+        self.assertEqual(self.execute(),2)
+
     def test_source_resume_blocks_changed_config_input_or_source_ledger(self):
         self.assertEqual(self.execute(stop_after_batch=('source-nodes',1)), 1)
         original = copy.deepcopy(self.config)

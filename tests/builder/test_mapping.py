@@ -8,7 +8,7 @@ import itertools
 import json
 import unittest
 
-from test_inputs import CONTRACT, synthetic_inputs, wrap, xref_record, ledger_record
+from test_inputs import CONTRACT, synthetic_inputs, wrap, xref_record
 
 
 class MappingTest(unittest.TestCase):
@@ -115,7 +115,7 @@ class MappingTest(unittest.TestCase):
     def test_identity_exact_id_name_no_normalization(self):
         exact = ' D::e\u0301 '
         row = self.i.SourceRecord(dict(self.raw.units[0].record, unit_id=exact), self.raw.units[0].locator)
-        nodes = self.nodes(units=(row,), penalties=(), signs=(), xrefs=(), ledger=())
+        nodes = self.nodes(units=(row,), penalties=(), signs=(), xrefs=())
         n = next(n for n in nodes if n['type'].endswith('LegalUnit'))
         self.assertEqual((n['id'], n['name']), (exact, exact))
 
@@ -167,9 +167,8 @@ class MappingTest(unittest.TestCase):
             ('SAFE_EDGE', False, 'citesUnit'), ('SAFE_EDGE', True, 'excludesUnit'),
             ('EXTERNAL_REFERENCE_ONLY', False, None), ('KEEP_UNRESOLVED_NO_EDGE', False, None),
             ('EXCLUDE_FROM_GRAPH_EDGE', False, None)):
-            source = xref_record(is_exclusion=polarity)
-            ledger = self.i.SourceRecord(ledger_record(self.i, source, classification), self.raw.ledger[0].locator)
-            rows = self.relations(xrefs=(wrap(self.i, source, 'xrefs'),), ledger=(ledger,))
+            source = xref_record(is_exclusion=polarity, downstream_use=classification)
+            rows = self.relations(xrefs=(wrap(self.i, source, 'xrefs'),))
             actual = [r['tuple'][2] for r in rows if r['tuple'][2] in ('citesUnit', 'excludesUnit')]
             self.assertEqual(actual, [predicate] if predicate else [])
 
@@ -178,9 +177,8 @@ class MappingTest(unittest.TestCase):
                          'from_in_corpus': True, 'to_in_corpus': True, 'evidence': '', 'note': None},
                          'relations', i+1) for i,p in enumerate(('cites', 'amends', 'repeals', 'replaces', 'implements', 'consolidates')))
         exclusion = xref_record(is_exclusion=True)
-        ledger = self.i.SourceRecord(ledger_record(self.i, exclusion), dict(self.raw.ledger[0].locator, line=2))
         rows = self.relations(relations=records,
-                xrefs=self.raw.xrefs+(wrap(self.i, exclusion, 'xrefs', 2),), ledger=self.raw.ledger+(ledger,))
+                xrefs=self.raw.xrefs+(wrap(self.i, exclusion, 'xrefs', 2),))
         self.assertEqual({r['tuple'][2] for r in rows}, set(CONTRACT['relations']))
         for r in rows:
             if r['tuple'][2] in ('cites', 'amends', 'repeals', 'replaces', 'implements', 'consolidates'):
@@ -222,9 +220,7 @@ class MappingTest(unittest.TestCase):
 
     def xref_rows(self, records):
         sources = tuple(wrap(self.i, record, 'xrefs', i+1) for i,record in enumerate(records))
-        ledger = tuple(self.i.SourceRecord(ledger_record(self.i, record), dict(self.raw.ledger[0].locator, line=i+1))
-                       for i,record in enumerate(records))
-        return [r for r in self.relations(xrefs=sources, ledger=ledger) if r['tuple'][2]=='citesUnit']
+        return [r for r in self.relations(xrefs=sources) if r['tuple'][2]=='citesUnit']
 
     def test_evidence_outside_identity_and_distinct_evidence_aggregated(self):
         records = [xref_record(), xref_record(evidence='Khoản 2 Điều 1')]
@@ -234,18 +230,13 @@ class MappingTest(unittest.TestCase):
         self.assertEqual(len(specs), 1)
         props = specs[0]['properties']
         evidence = json.loads(props['evidenceRecords'])
-        classification = json.loads(props['classificationProvenance'])
+        self.assertNotIn('classificationProvenance', props)
         self.assertEqual({e['evidence'] for e in evidence}, {'Khoản 2', 'Khoản 2 Điều 1'})
-        self.assertEqual(len(classification), 2)
         for e in evidence:
             original = records[0] if e['evidence']=='Khoản 2' else records[1]
             self.assertEqual({k:e[k] for k in original}, original)
             self.assertEqual(e['record_fingerprint'], self.i.xref_fingerprint(original))
             self.assertEqual(e['source_locator']['source_path'], 'data/processed/meta/xrefs.jsonl')
-        for c in classification:
-            self.assertEqual(c['artifact_name'], 'xref_a3g2_final_ledger.jsonl')
-            self.assertEqual(c['artifact_sha256'], dict(self.i.ARTIFACT_HASHES)[c['artifact_name']])
-            self.assertEqual(c['provenance'], {'notes': ['nguồn nguyên trạng']})
 
     def test_permutation_invariant_and_byte_identical_provenance_dedup_only(self):
         rows = self.xref_rows([xref_record(evidence='Z'), xref_record(evidence='á'), xref_record(evidence='A')])
@@ -257,15 +248,14 @@ class MappingTest(unittest.TestCase):
         serialized = [json.dumps(x, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8') for x in evidence]
         self.assertEqual(serialized, sorted(serialized))
 
-    def test_same_evidence_with_distinct_locator_and_ledger_not_deduped(self):
+    def test_same_evidence_with_distinct_locator_not_deduped(self):
         row = self.xref_rows([xref_record()])[0]
         other = copy.deepcopy(row)
         other['properties']['evidence_records'][0]['source_locator']['line'] = 8
         other['properties']['source_record'][0]['line'] = 8
-        other['properties']['classification_provenance'][0]['provenance']['notes'].append('khác')
         props = self.m.aggregate_relations([row, other], CONTRACT)[0]['properties']
         self.assertEqual(len(json.loads(props['evidenceRecords'])), 2)
-        self.assertEqual(len(json.loads(props['classificationProvenance'])), 2)
+        self.assertNotIn('classificationProvenance', props)
 
     def test_source_invariant_conflicts_raise_including_missing_vs_null(self):
         for changes in ({'scope': 'different'}, {'from_so_hieu': 'different'}, {'future': None}):
@@ -308,7 +298,7 @@ class MappingTest(unittest.TestCase):
         before = copy.deepcopy(self.raw)
         rows = self.m.map_relation_rows(self.inputs, CONTRACT)
         xref = next(r for r in rows if r['tuple'][2]=='citesUnit')
-        xref['properties']['classification_provenance'][0]['provenance']['notes'].append('changed output')
+        xref['properties']['evidence_records'][0]['evidence'] = 'changed output'
         self.assertEqual(self.raw, before)
         self.m.map_nodes(self.inputs, CONTRACT)
         self.assertEqual(self.raw, before)

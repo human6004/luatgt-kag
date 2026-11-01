@@ -92,14 +92,11 @@ def map_relation_rows(inputs: ValidatedInputs, contract: Mapping[str, Any]) -> l
     for row in inputs.raw.xrefs:
         record = row.record
         fingerprint = xref_fingerprint(record)
-        ledger = inputs.xref_ledger[fingerprint].record
-        if ledger[xref['classification_field']] != xref['allowed_classification']:
+        if record['downstream_use'] != 'SAFE_EDGE':
             continue
         predicate = xref['exclusion_predicate'] if record['is_exclusion'] else xref['affirmative_predicate']
         properties = {
             'evidence_records': [dict(record, record_fingerprint=fingerprint, source_locator=row.locator)],
-            'classification_provenance': [dict(ledger, artifact_name=xref['ledger_artifact_name'],
-                      artifact_sha256=inputs.raw.artifact_hashes[xref['ledger_artifact_name']])],
             'source_record': [row.locator],
         }
         invariants = {key: value for key, value in record.items() if key != 'evidence'}
@@ -145,6 +142,8 @@ def aggregate_relations(
         logical = {}
         for prop in contract['relation_properties'][predicate]:
             name = prop['logical_name']
+            if not prop['required'] and not any(name in row['properties'] for row in rows):
+                continue
             if prop['contract_type'] == 'JSON_TEXT':
                 distinct = {}
                 for row in rows:

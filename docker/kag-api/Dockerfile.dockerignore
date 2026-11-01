@@ -9,8 +9,6 @@
 !data/processed/**
 !artifacts/
 !artifacts/inputs/
-!artifacts/inputs/xref-a3g2/
-!artifacts/inputs/xref-a3g2/**
 !vendor/
 !vendor/KAG/
 !vendor/KAG/**

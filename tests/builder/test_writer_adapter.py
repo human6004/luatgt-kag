@@ -643,7 +643,7 @@ class WriterAdapterTest(unittest.TestCase):
 
 class ManifestWriterScopeTest(unittest.TestCase):
     # Small independently hashed fixture exercises the policy gates without
-    # embedding a 7495-node corpus in unit tests. Live scope retains fixed pins.
+    # embedding the corpus in unit tests. Counts/hashes belong to each manifest.
     POLICY = {'nodes': 2, 'edges': 1,
         'nodes_sha256': 'ab13b605831a61a06fb0bcf602ccdb47620f94735950e363037662321e0d851f',
         'edges_sha256': '51998cc0c1fb095c8b18c1dd3d6ec49b461a457e3cf636279e5eb24ee12d2120'}

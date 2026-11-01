@@ -181,28 +181,11 @@ class SchemaContractTest(unittest.TestCase):
         self.assertEqual(sum(len(node.properties) for node in self.parsed.types.values()), 73)
 
     def test_domain_contract_invariants(self):
-        # Golden digest covers the complete domain model, including Thing inheritance.
-        domain_fields = (
-            'namespace',
-            'node_types', 'node_properties', 'node_property_count', 'logical_property_count',
-            'declared_project_property_count', 'built_in_properties_inherited',
-            'logical_to_physical_predicates', 'logical_to_physical_properties',
-            'property_codec_contract', 'unit_type_values', 'relations', 'relation_properties',
-            'relation_provenance_contract', 'identity_strategy', 'xref_contract',
-            'graph_inclusion_policy', 'edge_application_key_contract',
-        )
-        approved = json.loads(json.dumps({k: self.contract[k] for k in domain_fields}))
-        # Runtime encoding and local-key roles have separate assertions below.
-        for key in ('integer_encoding', 'codec_implementation'):
-            approved['property_codec_contract'].pop(key)
-        approved['xref_contract'].pop('runtime_path_source')
-        key_fields = ('tuple_fields', 'canonical_json', 'algorithm', 'type_qualification',
-                      'evidence_in_identity', 'merge_provenance_deterministically')
-        approved['edge_application_key_contract'] = {
-            k: approved['edge_application_key_contract'][k] for k in key_fields}
-        digest = hashlib.sha256(json.dumps(approved, ensure_ascii=False, sort_keys=True,
-                                separators=(',', ':')).encode('utf-8')).hexdigest()
-        self.assertEqual(digest, '04b5bfe362dfe7c94addc80f04e6747a747a5ad99467434978a91237dba0e0f1')
+        self.assertEqual(self.contract['namespace'], 'VietRoadTraffic')
+        self.assertEqual(set(self.contract['node_types']), {'LegalDocument','LegalUnit','TrafficSign'})
+        for policy in self.contract['graph_inclusion_policy'].values():
+            if isinstance(policy,dict):
+                self.assertNotIn('expected_count',policy)
 
     def test_exact_predicates_endpoints_and_relation_provenance(self):
         self.assertEqual(self.contract['logical_to_physical_predicates'], PREDICATES)
@@ -241,17 +224,11 @@ class SchemaContractTest(unittest.TestCase):
 
     def test_xref_integrity_gate(self):
         xref = self.contract['xref_contract']
-        expected = {
-            'xref_sha256': 'c807cd38e5fccdf88c5396bee7258b7c90d0e9e445143e2148757996b1ede11e',
-            'required_safe_edge_ledger_sha256': 'ee025ac07a04895539d83bb0f056629cc59b5137f67be2a46fae043a77ed2068',
-            'join_contract': 'EXISTING_RECORD_FINGERPRINT_SHA256_CANONICAL_JSON',
-            'classification_total': 21618, 'safe_edge_total': 13106,
-            'safe_edge_affirmative': 11638, 'safe_edge_exclusion': 1468,
-        }
-        self.assertEqual({k:xref[k] for k in expected}, expected)
-        self.assertEqual(xref['ledger_artifact_name'], 'xref_a3g2_final_ledger.jsonl')
-        self.assertNotIn('D:', json.dumps(xref))
+        self.assertEqual(xref['classification_field'], 'downstream_use')
+        self.assertEqual(xref['allowed_classification'], 'SAFE_EDGE')
+        self.assertEqual((xref['affirmative_predicate'],xref['exclusion_predicate']),('citesUnit','excludesUnit'))
         self.assertTrue(xref['fail_closed'])
+        self.assertFalse(any(key.endswith(('_sha256','_total')) for key in xref))
 
     def test_codec_and_edge_server_boundaries(self):
         codec = self.contract['property_codec_contract']
@@ -270,8 +247,6 @@ class SchemaContractTest(unittest.TestCase):
                          'project writer preserves native int through GraphClient serialization; '
                          'native integer after server property JSON decoding')
         self.assertEqual(codec['codec_implementation'], 'Builder owns property encoding and decoding.')
-        self.assertEqual(self.contract['xref_contract']['runtime_path_source'],
-                         'Runtime configuration; no absolute path dependency.')
 
     def test_content_vector_metadata_and_native_integer_writer_contract(self):
         expected = {

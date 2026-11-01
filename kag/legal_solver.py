@@ -603,7 +603,7 @@ def _consolidation_note(unit):
     """Detached consolidation notes are outside the operative text field."""
     from collections.abc import Mapping
     locator = unit.get('source_record')
-    evidence = locator.get('origin') if isinstance(locator, Mapping) else unit.get('source_evidence')
+    evidence = locator.get('origin') if isinstance(locator, Mapping) else unit.get('legal_metadata')
     return (unit.get('unit_type') == 'Muc' and isinstance(evidence, Mapping)
             and evidence.get('source_role') == 'consolidation_footnote')
 

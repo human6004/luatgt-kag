@@ -14,17 +14,12 @@ from urllib.parse import urlsplit
 
 from .codec import canonical_json
 from .graph_plan import plan_hash
-from .inputs import ARTIFACT_HASHES
+from .inputs import SOURCE_FILES
 from kag.vector_contract import TARGETS, valid_vector as _valid_vector
 
 
-C3_IDENTITY = {
-    'nodes_jsonl_sha256': 'a07065ef3881ab83bfddb7037f568ee26ccb1e157c6d62cca0efc6a3185aa194',
-    'edges_jsonl_sha256': 'bd5b50ac18e76410fbd9feb53fbbbce2f1de56ec0e6e13999077409d75f23f3e',
-    'plan_sha256': '719c3cfd057fa7a6927c27ee2d0ed878cd35d335a7c42760806f15e6ca1e6b59',
-    'schema_sha256': '4f9afe2e877b0926416b2cb29dd562cbe17805f053a090a5d6d7c618fdc69fde',
-    'contract_sha256': '4b9b87fdff55352cd59caf65951a929f39d513c3d07b0c054b28b24e7a857aac',
-}
+IDENTITY_FIELDS = ('nodes_jsonl_sha256', 'edges_jsonl_sha256', 'plan_sha256',
+                   'schema_sha256', 'contract_sha256')
 ROOT = Path(__file__).resolve().parents[2]
 SAMPLE_PROJECT_ID = 2
 _PRODUCTION_PROOF = object()
@@ -83,7 +78,7 @@ class ProductionSettings:
     vector_dimensions: int | None = None
     confirmation: str | None = field(default=None, repr=False)
 
-    def validate(self):
+    def validate(self, plan_sha256=None):
         if self.scope != 'PRODUCTION' or self.runtime_location not in ('host', 'container'):
             raise ProductionScopeError('explicit PRODUCTION scope and runtime location are required')
         if (not isinstance(self.project_name, str) or not self.project_name.strip()
@@ -96,10 +91,11 @@ class ProductionSettings:
             raise ProductionScopeError('expected production project ID must be a positive native int')
         if type(self.vector_dimensions) is not int or not 1 <= self.vector_dimensions <= 65536:
             raise ProductionScopeError('production vector dimension must be between 1 and 65536')
-        expected = (f'CONFIRM_PRODUCTION:{self.project_name}:{self.namespace}:'
-                    f'{self.expected_project_id}:{C3_IDENTITY["plan_sha256"]}')
-        if self.confirmation != expected:
-            raise ProductionScopeError('explicit production confirmation must bind project identity and C3 plan')
+        prefix = f'CONFIRM_PRODUCTION:{self.project_name}:{self.namespace}:{self.expected_project_id}:'
+        if (not isinstance(self.confirmation, str) or not self.confirmation.startswith(prefix)
+                or not re.fullmatch(r'[0-9a-f]{64}', self.confirmation[len(prefix):])
+                or plan_sha256 is not None and self.confirmation != prefix + plan_sha256):
+            raise ProductionScopeError('explicit production confirmation must bind project identity and verified plan_sha256')
         _endpoint(self.host_addr, ('http', 'https'), self.runtime_location)
         _endpoint(self.neo4j_uri, ('bolt', 'neo4j', 'bolt+s', 'neo4j+s'), self.runtime_location)
 
@@ -233,6 +229,7 @@ class ProductionScope:
     node_hashes: Mapping
     edge_hashes: Mapping
     contract_hash: str
+    identity: Mapping
     _proof: object = field(repr=False, compare=False)
 
     @property
@@ -245,7 +242,7 @@ class ProductionScope:
         return replace(self, node_hashes=nodes, edge_hashes=edges)
 
     def verify_files(self, contract):
-        self.settings.validate()
+        self.settings.validate(self.identity['plan_sha256'])
         if self._proof is not _PRODUCTION_PROOF or _spec_hash(contract) != self.contract_hash:
             raise ProductionScopeError('production scope/schema contract proof differs')
         # ponytail: exact rehash per batch; optimize only with immutable input snapshots in a future runner.
@@ -361,14 +358,16 @@ def validate_c3_manifest(contract, manifest_path, *, project_root=None, db_path=
         manifest = json.loads(raw)
         if not isinstance(manifest, dict) or 'chosen_partition' in manifest:
             raise ProductionScopeError('production requires C3 manifest, never a sample manifest')
-        for key, expected in C3_IDENTITY.items():
-            if manifest.get(key) != expected:
+        for key in IDENTITY_FIELDS:
+            if not isinstance(manifest.get(key), str) or not re.fullmatch(r'[0-9a-f]{64}', manifest[key]):
                 raise ProductionScopeError(f'C3 {key} mismatch')
         files = [(path, hashlib.sha256(raw).hexdigest())]
         schema_paths = (ROOT / 'kag/schema/VietRoadTraffic.schema', ROOT / 'kag/schema/schema_contract.json')
         for schema_path, key in zip(schema_paths, ('schema_sha256', 'contract_sha256')):
             versions[schema_path] = _input_version(schema_path)
-            files.append((schema_path, C3_IDENTITY[key]))
+            if _checksum(schema_path) != manifest[key]:
+                raise ProductionScopeError(f'C3 {key} mismatch')
+            files.append((schema_path, manifest[key]))
         if json.loads(schema_paths[1].read_bytes()) != contract:
             raise ProductionScopeError('supplied schema contract differs from the approved contract')
         inputs = manifest['input_manifest']
@@ -380,15 +379,16 @@ def validate_c3_manifest(contract, manifest_path, *, project_root=None, db_path=
                     or any(part in ('..', '.') for part in name.split('/')) or not name):
                 raise ProductionScopeError('C3 input manifest has duplicate or escaping paths')
             hashes[name] = row['sha256']
-            input_path = ((root / 'artifacts/inputs/xref-a3g2' / name)
-                          if name in dict(ARTIFACT_HASHES) and name.startswith('xref_') else root / name)
+            input_path = root / name
             versions[input_path] = _input_version(input_path)
             resolved = input_path.resolve()
             if not resolved.is_relative_to(root):
                 raise ProductionScopeError('production input escapes project root')
             files.append((resolved, row['sha256']))
-        if any(hashes.get(name) != expected for name, expected in ARTIFACT_HASHES):
-            raise ProductionScopeError('required runtime input checksum is absent or differs')
+        required = {relative for _, relative in SOURCE_FILES}
+        required.update(p.relative_to(root).as_posix() for p in documents_dir.glob('*.md') if p.is_file())
+        if not required <= hashes.keys():
+            raise ProductionScopeError('required runtime input checksum is absent')
         if db_path is not None:
             target = Path(db_path).resolve()
             protected = [source for source, _ in files] + [path.parent / name
@@ -401,8 +401,8 @@ def validate_c3_manifest(contract, manifest_path, *, project_root=None, db_path=
             for name, key in (('nodes', 'nodes_jsonl_sha256'), ('edges', 'edges_jsonl_sha256')):
                 record_path = path.parent / (name + '.jsonl')
                 versions[record_path] = _input_version(record_path)
-                files.append((record_path, C3_IDENTITY[key]))
-                if _checksum(record_path) != C3_IDENTITY[key]:
+                files.append((record_path, manifest[key]))
+                if _checksum(record_path) != manifest[key]:
                     raise ProductionScopeError(f'actual C3 {key} checksum mismatch')
                 counts, total = Counter(), 0
                 with record_path.open('rb') as stream:
@@ -437,12 +437,12 @@ def validate_c3_manifest(contract, manifest_path, *, project_root=None, db_path=
         records = {name: _DiskRecords(index, name) for name in ('nodes', 'edges')}
         plan_path = path.parent / 'plan.sha256'
         versions[plan_path] = _input_version(plan_path)
-        expected_plan_bytes = (C3_IDENTITY['plan_sha256'] + '\n').encode('ascii')
+        expected_plan_bytes = (manifest['plan_sha256'] + '\n').encode('ascii')
         files.append((plan_path, hashlib.sha256(expected_plan_bytes).hexdigest()))
         plan = SimpleNamespace(**records, input_manifest=inputs,
             schema_sha256=manifest['schema_sha256'], contract_sha256=manifest['contract_sha256'])
-        if plan_hash(plan) != C3_IDENTITY['plan_sha256']:
-            raise ProductionScopeError('recomputed semantic C3 plan hash mismatch')
+        if plan_hash(plan) != manifest['plan_sha256']:
+            raise ProductionScopeError('recomputed semantic C3 plan_sha256 mismatch')
         node_hashes, edge_hashes = _DiskHashes(index, 'nodes'), _DiskHashes(index, 'edges')
         for file_path, expected in files:
             if _checksum(file_path) != expected:
@@ -473,6 +473,11 @@ def validate_production_scope(settings, contract, manifest_path, *, project_root
         raise ProductionScopeError('target contract differs from the supplied LuatGT schema')
     data = validate_c3_manifest(canonical, manifest_path, project_root=project_root)
     index = data['index']
+    try:
+        settings.validate(data['manifest']['plan_sha256'])
+    except ProductionScopeError:
+        index.close()
+        raise
     if settings.namespace != canonical['namespace']:
         index.db.close()
         index.db = sqlite3.connect(index.path)
@@ -489,6 +494,7 @@ def validate_production_scope(settings, contract, manifest_path, *, project_root
         data['file_checksums'] = tuple((path, _checksum(path) if path == index.path.resolve() else digest)
             for path, digest in data['file_checksums'])
     scope = ProductionScope(settings, data['file_checksums'], data['node_hashes'],
-                            data['edge_hashes'], _spec_hash(contract), _PRODUCTION_PROOF)
+                            data['edge_hashes'], _spec_hash(contract),
+                            {key: data['manifest'][key] for key in IDENTITY_FIELDS}, _PRODUCTION_PROOF)
     scope.verify_files(contract)
     return scope
