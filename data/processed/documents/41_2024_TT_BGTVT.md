@@ -69,8 +69,6 @@ quy định tại Nghị định quy định chi tiết và hướng dẫn thi h
 Đường bộ, Điều 77 Luật Trật tự an toàn giao thông đường bộ; 
 c) Văn bản giao làm chủ đầu tư dự án xây dựng nút giao đấu nối vào đường 
 quốc lộ đang khai thác. 
-
-31 
  
 2. Cơ quan có thẩm quyền chấp thuận thiết kế nút giao đấu nối vào đường 
 quốc lộ đang khai thác: 

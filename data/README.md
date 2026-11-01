@@ -10,7 +10,7 @@ Corpus có 92 bản ghi metadata, 91 văn bản Markdown thuộc production corp
 
 ## Cấu trúc
 
-- `raw/`: 219 file nguồn — 175 PDF, 38 HTML, 6 DOC/DOCX; dùng đối chiếu.
+- `raw/`: 220 file nguồn — 176 PDF, 38 HTML, 6 DOC/DOCX; dùng đối chiếu. NĐ119/2024 giữ cả bản đăng lại 26 trang và bản ký chính thức 27 trang có phụ lục.
 - `processed/documents/`: toàn văn Markdown theo `doc_id`.
 - `processed/units/units.jsonl`: Điều/Khoản/Điểm, phụ lục và QCVN; giữ `unit_id`, `parent_id`, `unit_type`, `text`.
 - `processed/meta/`: `documents.jsonl`, `xrefs.jsonl`, `relations.jsonl`.
@@ -26,14 +26,7 @@ Corpus có 92 bản ghi metadata, 91 văn bản Markdown thuộc production corp
 
 ## Thống kê corpus
 
-[corpus.json](metadata/corpus.json) ghi snapshot `2026-10-24`; [checksums.json](metadata/checksums.json) giữ hash dữ liệu. Số lượng records:
-
-- Documents metadata: 92; production Markdown: 91.
-- Units: 57.035, gồm 17 phụ lục Thông tư 46/2024 được tách khỏi Điều 18; giữ các ID trích xuất cũ khi sửa cây cha/con.
-- Xrefs: 21.724
-- Relations: 834.
-- Penalties: 1.820.
-- Signs: 907; trạng thái nguồn và giới hạn ảnh ở [DATASHEET](DATASHEET.md#biển-báo-qcvn-41).
+[corpus.json](metadata/corpus.json) lưu số lượng bản ghi của snapshot; [checksums.json](metadata/checksums.json) giữ hash dữ liệu. Số bản ghi dẫn chiếu theo từng quyết định nằm trong [policy canonical](../artifacts/inputs/xref-a3g2/xref_a3g2_downstream_policy.json). Plan có thể gom các cạnh trùng, nên số bản ghi nguồn khác số cạnh graph.
 
 Tên “production corpus” phân biệt phạm vi dữ liệu, không xác nhận triển khai production hoặc tính cập nhật của pháp luật.
 

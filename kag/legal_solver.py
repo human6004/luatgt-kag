@@ -368,6 +368,9 @@ def _partial_period(props):
 
 def _current(item, documents, as_of):
     props = documents.get(item['doc_id'], {})
+    # An amended original cannot establish each retained unit's current validity.
+    if str(props.get('current_status') or '').strip().casefold() == 'amended':
+        return False
     if _partial_period(props):
         return False
     notes = ' '.join(str(props.get(k) or '') for k in ('hieu_luc_note', 'het_hieu_luc_note')).casefold()
@@ -596,6 +599,15 @@ def document_content_question(query):
     return question
 
 
+def _consolidation_note(unit):
+    """Detached consolidation notes are outside the operative text field."""
+    from collections.abc import Mapping
+    locator = unit.get('source_record')
+    evidence = locator.get('origin') if isinstance(locator, Mapping) else unit.get('source_evidence')
+    return (unit.get('unit_type') == 'Muc' and isinstance(evidence, Mapping)
+            and evidence.get('source_role') == 'consolidation_footnote')
+
+
 def _complete_partial_unit(record):
     """A corpus selection may omit descendants; inspect its hash-bound original unit family."""
     from collections.abc import Mapping
@@ -629,7 +641,7 @@ def _complete_partial_unit(record):
         raise ValueError('duplicate original unit identity')
     children={}
     for row in units:
-        if row.get('parent_id'):
+        if row.get('parent_id') and not _consolidation_note(row):
             children.setdefault(row['parent_id'],[]).append(row)
     pending=[origin];seen=set()
     while pending:
@@ -687,7 +699,7 @@ def exact_source_answer(query, *, source_records, contract, partial=False):
         # A parent heading alone cannot stand in for its separately stored descendants.
         children={}
         for child in source_records:
-            if child.entity_type==entity_type and child.field=='text' and child.metadata.get('parent_id'):
+            if child.entity_type==entity_type and child.field=='text' and child.metadata.get('parent_id') and not _consolidation_note(child.metadata):
                 children.setdefault(child.metadata['parent_id'],[]).append(child)
         pending=[record];seen=set()
         while pending:

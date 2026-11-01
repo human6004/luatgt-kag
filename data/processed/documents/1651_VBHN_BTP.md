@@ -1,5 +1,4 @@
 
-83 
  
 VĂN BẢN HỢP NHẤT - BỘ TƯ PHÁP 
  
@@ -25,20 +24,10 @@ sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành
 tháng 11 năm 2020; 
 Theo đề nghị của Bộ trưởng Bộ Tư pháp; 
 Chính phủ ban hành Nghị định quy định chi tiết một số điều và biện pháp thi 
-hành Luật Xử lý vi phạm hành chính1. 
-                                         
-1 Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 
-118/2020/NĐ-CP ngày 23/12/2021 của Chính phủ quy định chi tiết một số điều và biện pháp 
-thi hành Luật Xử lý vi phạm hành chính có căn cứ ban hành như sau:  
-“Căn cứ Luật Tổ chức Chính phủ ngày 18 tháng 02 năm 2025; 
-Căn cứ Luật Xử lý vi phạm hành chính ngày 20 tháng 6 năm 2012; Luật sửa đổi, bổ sung 
-một số điều của Luật Xử lý vi phạm hành chính ngày 13 tháng 11 năm 2020; 
-Căn cứ Luật Giao dịch điện tử ngày 22 tháng 6 năm 2023; 
-Căn cứ Luật Căn cước ngày 27 tháng 11 năm 2023; 
-Theo đề nghị của Bộ trưởng Bộ Tư pháp; 
+hành Luật Xử lý vi phạm hành chính[^vbhn1651-1].
 
+[^vbhn1651-1]: 1 Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2020/NĐ-CP ngày 23/12/2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính có căn cứ ban hành như sau: “Căn cứ Luật Tổ chức Chính phủ ngày 18 tháng 02 năm 2025; Căn cứ Luật Xử lý vi phạm hành chính ngày 20 tháng 6 năm 2012; Luật sửa đổi, bổ sung một số điều của Luật Xử lý vi phạm hành chính ngày 13 tháng 11 năm 2020; Căn cứ Luật Giao dịch điện tử ngày 22 tháng 6 năm 2023; Căn cứ Luật Căn cước ngày 27 tháng 11 năm 2023; Theo đề nghị của Bộ trưởng Bộ Tư pháp; Chính phủ ban hành Nghị định sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính.”
 
-  
 ### Chương I 
 NHỮNG QUY ĐỊNH CHUNG 
  
@@ -48,13 +37,15 @@ phạm hành chính về:
 1. Đối tượng bị xử phạt vi phạm hành chính. 
 2. Quy định về vi phạm hành chính và xử phạt vi phạm hành chính. 
 3. Áp dụng quy định về xử phạt vi phạm hành chính. 
-4. Quản lý nhà nước về thi hành pháp luật xử lý vi phạm hành chính. 
+4. Quản lý nhà nước về thi hành pháp luật xử lý vi phạm hành chính.
+
 ##### Điều 2. Đối tượng áp dụng 
 1. Cơ quan có thẩm quyền quản lý công tác thi hành pháp luật về xử lý vi 
 phạm hành chính. 
 2. Cơ quan, người có thẩm quyền xử lý vi phạm hành chính. 
 3. Cơ quan, tổ chức, cá nhân có liên quan đến việc thi hành pháp luật về xử lý 
-vi phạm hành chính. 
+vi phạm hành chính.
+
 ##### Điều 3. Đối tượng bị xử phạt vi phạm hành chính 
 1. Đối tượng bị xử phạt vi phạm hành chính được quy định tại khoản 1 Điều 5 
 Luật Xử lý vi phạm hành chính. 
@@ -71,11 +62,9 @@ vi phạm hành chính trong các lĩnh vực quản lý nhà nước.
 trong phạm vi và thời hạn được ủy quyền của pháp nhân, tổ chức hoặc theo sự chỉ 
 đạo, điều hành, phân công, chấp thuận của pháp nhân, tổ chức, thì đối tượng bị xử 
                                                                                                                                    
-Chính phủ ban hành Nghị định sửa đổi, bổ sung một số điều của Nghị định số 
-118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và 
-biện pháp thi hành Luật Xử lý vi phạm hành chính.” 
+ 
 
-85 
+
  
 phạt vi phạm hành chính là pháp nhân, tổ chức đó và bị xử phạt vi phạm hành 
 chính theo mức phạt áp dụng đối với tổ chức về những hoạt động do chi nhánh, 
@@ -103,8 +92,8 @@ chính, mà bị xử lý theo quy định của pháp luật có liên quan.
  
 ### Chương II 
 QUY ĐỊNH VỀ VI PHẠM HÀNH CHÍNH  
-VÀ XỬ PHẠT VI PHẠM HÀNH CHÍNH 
- 
+VÀ XỬ PHẠT VI PHẠM HÀNH CHÍNH
+
 ##### Điều 4. Quy định hành vi vi phạm hành chính, hình thức xử phạt, mức xử 
 phạt, biện pháp khắc phục hậu quả tại các nghị định quy định về xử phạt vi 
 phạm hành chính trong các lĩnh vực quản lý nhà nước 
@@ -165,7 +154,8 @@ biên bản vi phạm hành chính theo quy định pháp luật về xử lý v
 sửa chữa làm sai lệch nội dung, thì phải quy định biện pháp khắc phục hậu quả 
 buộc nộp lại giấy phép, chứng chỉ hành nghề, giấy đăng ký hoạt động bị tẩy xóa, 
 sửa chữa làm sai lệch nội dung cho cơ quan, người có thẩm quyền đã cấp giấy 
-phép, chứng chỉ hành nghề, giấy đăng ký hoạt động đó. 
+phép, chứng chỉ hành nghề, giấy đăng ký hoạt động đó.
+
 ##### Điều 5. Quy định hình thức xử phạt tước quyền sử dụng giấy phép, chứng 
 chỉ hành nghề có thời hạn, đình chỉ hoạt động có thời hạn hoặc tịch thu tang vật, 
 phương tiện vi phạm hành chính đối với hành vi vi phạm hành chính tại các 
@@ -228,7 +218,8 @@ vực quản lý nhà nước.
 8. Thời hạn tước quyền sử dụng giấy phép, chứng chỉ hành nghề có thời hạn 
 hoặc đình chỉ hoạt động có thời hạn đối với hành vi vi phạm hành chính phải được 
 quy định thành khung thời gian cụ thể, khoảng cách giữa thời gian tước, thời gian 
-đình chỉ tối thiểu và tối đa không quá lớn. 
+đình chỉ tối thiểu và tối đa không quá lớn.
+
 ##### Điều 6. Quy định về thẩm quyền xử phạt, thẩm quyền lập biên bản vi 
 phạm hành chính 
 1. Thẩm quyền phạt tiền của mỗi chức danh phải được quy định cụ thể trong 
@@ -271,8 +262,8 @@ thẩm quyền áp dụng hình thức xử phạt trục xuất theo quy địn
 khoản 5 và khoản 7 Điều 39 Luật Xử lý vi phạm hành chính. 
  
 ### Chương III 
-ÁP DỤNG QUY ĐỊNH VỀ XỬ PHẠT VI PHẠM HÀNH CHÍNH 
- 
+ÁP DỤNG QUY ĐỊNH VỀ XỬ PHẠT VI PHẠM HÀNH CHÍNH
+
 ##### Điều 7. Áp dụng văn bản quy phạm pháp luật để xử phạt đối với hành vi 
 vi phạm hành chính 
 1. Việc lựa chọn áp dụng văn bản quy phạm pháp luật để xử phạt đối với hành 
@@ -289,11 +280,8 @@ b) Nếu hành vi vi phạm hành chính đang được thực hiện, thì áp 
 định đang có hiệu lực tại thời điểm phát hiện hành vi vi phạm để xử phạt. 
 3. [^vbhn1651-7] Thẩm quyền, thủ tục và biểu mẫu trong xử phạt vi phạm hành chính được 
 áp dụng theo văn bản quy phạm pháp luật có hiệu lực tại thời điểm xem xét, xử lý 
-hành vi vi phạm. 
-                                         
+hành vi vi phạm.
 
-
- 
 ##### Điều 8. Nguyên tắc xác định hành vi vi phạm hành chính, áp dụng các hình 
 thức xử phạt vi phạm hành chính, biện pháp khắc phục hậu quả và sự kiện bất 
 khả kháng 
@@ -334,10 +322,11 @@ việc cụ thể. Nếu xác định dịch bệnh là nguyên nhân trực ti�
 hành chính; đối tượng thực hiện hành vi vi phạm không thể lường trước được hoàn 
 cảnh dịch bệnh và không thể khắc phục được, mặc dù đã thực hiện mọi biện pháp cần 
 thiết và khả năng cho phép để khắc phục, thì có thể áp dụng quy định tại khoản 4 
-Điều 11 Luật Xử lý vi phạm hành chính để không xử phạt vi phạm hành chính. 
+Điều 11 Luật Xử lý vi phạm hành chính để không xử phạt vi phạm hành chính.
+
 ##### Điều 9. Áp dụng hình thức phạt tiền; tước quyền sử dụng giấy phép, chứng 
 chỉ hành nghề có thời hạn; đình chỉ hoạt động có thời hạn; tịch thu tang vật, 
-phương tiện vi phạm hành chính và áp dụng biện pháp khắc phục hậu quả10 
+phương tiện vi phạm hành chính và áp dụng biện pháp khắc phục hậu quả[^vbhn1651-10]
 1. Nguyên tắc xác định mức phạt tiền cụ thể đối với một hành vi vi phạm hành 
 chính trong trường hợp có tình tiết tăng nặng, giảm nhẹ: 
 a) Mức phạt tiền cụ thể đối với một hành vi vi phạm hành chính là mức trung 
@@ -362,12 +351,9 @@ a) Thời hạn tước quyền sử dụng giấy phép, chứng chỉ hành ng
 động cụ thể đối với một hành vi vi phạm hành chính là mức trung bình của khung thời 
 gian tước, đình chỉ được quy định đối với hành vi đó; 
                                          
-10 Điều này được sửa đổi, bổ sung theo quy định tại khoản 4 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 
-năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm 
-hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
-93 
+
  
 b) Nếu có 01 tình tiết giảm nhẹ thì thời hạn bị tước hoặc đình chỉ được xác định 
 trong khoảng từ trên mức tối thiểu đến dưới mức trung bình của khung thời gian tước, 
@@ -444,7 +430,7 @@ phạm hành chính, thì người có thẩm quyền yêu cầu cá nhân, tổ
 nộp bản giấy của giấy phép, chứng chỉ hành nghề và tạm giữ giấy phép, chứng 
 chỉ hành nghề theo quy định; 
 
-95 
+
  
 b) Trường hợp phải áp dụng hình thức xử phạt tước quyền sử dụng giấy phép, 
 chứng chỉ hành nghề, thì người có thẩm quyền xử phạt yêu cầu cá nhân, tổ chức 
@@ -481,18 +467,10 @@ vi phạm hành chính đối với vụ việc đó.
 là hàng hóa, vật phẩm gây hại cho sức khoẻ con người, vật nuôi, cây trồng và môi 
 trường, văn hoá phẩm độc hại theo quy định tại khoản 5 Điều 126 Luật Xử lý vi 
 phạm hành chính là người có thẩm quyền xử phạt vi phạm hành chính đối với vụ 
-việc đó. 
+việc đó.
 
-VĂN BẢN PHÁP LUẬT KHÁC 
- 
-VĂN BẢN HỢP NHẤT - BỘ TƯ PHÁP 
-   
-Văn bản hợp nhất số 1651/VBHN-BTP ngày 28 tháng 3 năm 2025                           
-hợp nhất Nghị định quy định chi tiết một số điều và biện pháp thi hành               
-Luật Xử lý vi phạm hành chính 
- 
-(Tiếp theo Công báo số 633 + 634) 
- 
+[^vbhn1651-10]: 10 Điều này được sửa đổi, bổ sung theo quy định tại khoản 4 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
 ##### Điều 10. Giao quyền trong xử phạt vi phạm hành chính 
 1. Quyết định giao quyền quy định tại Điều 54, khoản 2 Điều 87 và khoản 2 
 Điều 123 Luật Xử lý vi phạm hành chính phải xác định rõ phạm vi, nội dung, thời 
@@ -519,7 +497,7 @@ c) Cấp trưởng chấm dứt việc giao quyền cho cấp phó. Trong trư�
 việc chấm dứt giao quyền phải được thể hiện bằng quyết định; 
 
 
-3 
+
  
 d) Người giao quyền hoặc người được giao quyền nghỉ hưu, thôi việc, được 
 điều động, bổ nhiệm, luân chuyển, biệt phái, từ chức, miễn nhiệm, cách chức, 
@@ -531,8 +509,9 @@ giao cho cơ quan, người có thẩm quyền khác xử lý theo quy định c
 g) Người giao quyền hoặc người được giao quyền bị khởi tố; bị tạm giữ, tạm 
 giam để phục vụ công tác điều tra, truy tố, xét xử; 
  h) Điều kiện để cấp trưởng giao quyền tạm giữ người theo thủ tục hành chính 
-quy định tại khoản 2 Điều 123 Luật Xử lý vi phạm hành chính không còn. 
-##### Điều 11. Xử phạt vi phạm hành chính trong hoạt động thanh tra11 
+quy định tại khoản 2 Điều 123 Luật Xử lý vi phạm hành chính không còn.
+
+##### Điều 11. Xử phạt vi phạm hành chính trong hoạt động thanh tra[^vbhn1651-11]
 1. Trưởng đoàn Thanh tra chuyên ngành có thẩm quyền xử phạt đối với hành 
 vi vi phạm hành chính thuộc phạm vi, nội dung cuộc thanh tra trong thời hạn thanh 
 tra theo quy định của pháp luật về thanh tra. 
@@ -553,10 +532,7 @@ quy định đối với vụ việc thì thẩm quyền thuộc về người �
 c) Nếu không thuộc trường hợp quy định tại các điểm a và b khoản này thì 
 thẩm quyền thuộc về Chánh Thanh tra cấp có thẩm quyền xử phạt đối với vụ việc 
  
-11 Điều này được sửa đổi, bổ sung theo quy định tại khoản 5 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
   
 hoặc Thủ trưởng cơ quan được giao thực hiện chức năng thanh tra chuyên ngành 
@@ -564,8 +540,11 @@ có thẩm quyền xử phạt đối với vụ việc hoặc Chủ tịch Ủy
 quyền xử phạt nơi xảy ra vi phạm. 
 4. Thẩm quyền cưỡng chế thi hành quyết định xử phạt vi phạm hành chính của 
 Trưởng đoàn thanh tra chuyên ngành trong trường hợp đã hết thời hạn thanh tra 
-được thực hiện theo quy định tại khoản 3 Điều này. 
-##### Điều 12. Lập biên bản vi phạm hành chính  
+được thực hiện theo quy định tại khoản 3 Điều này.
+
+[^vbhn1651-11]: 11 Điều này được sửa đổi, bổ sung theo quy định tại khoản 5 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+##### Điều 12. Lập biên bản vi phạm hành chính[^vbhn1651-12]
 1. Căn cứ lập biên bản vi phạm hành chính: 
 a) Đối với hành vi vi phạm hành chính không thuộc thẩm quyền lập biên bản 
 vi phạm hành chính hoặc không thuộc lĩnh vực, địa bàn quản lý hoặc trường hợp 
@@ -591,12 +570,9 @@ nghị xử phạt vi phạm hành chính của cơ quan có thẩm quyền ti�
 hình sự phải có những nội dung chủ yếu sau đây: thông tin về cá nhân, tổ chức vi 
 phạm và cơ quan, tổ chức, cá nhân có liên quan; giờ, ngày, tháng, năm, địa điểm 
  
-12 Điều này được sửa đổi, bổ sung theo quy định tại khoản 6 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
-5 
+
  
 xảy ra vi phạm; mô tả cụ thể, đầy đủ vụ việc, hành vi vi phạm; điểm, khoản, điều 
 của nghị định quy định về xử phạt vi phạm hành chính trong lĩnh vực cụ thể. 
@@ -672,7 +648,7 @@ người lập biên bản và người vi phạm hoặc đại diện tổ ch�
 hợp biên bản được lập theo quy định tại khoản 7 Điều 58 Luật Xử lý vi phạm hành 
 chính; trường hợp người vi phạm không ký được thì điểm chỉ; nếu có người chứng 
 
-7 
+
  
 kiến, người phiên dịch, người bị thiệt hại hoặc đại diện tổ chức bị thiệt hại, thì họ 
 cùng phải ký vào biên bản; trường hợp biên bản gồm nhiều trang, thì các bên liên 
@@ -709,10 +685,11 @@ biên bản đã được giao.
 10. Việc lập, gửi biên bản vi phạm hành chính bằng phương thức điện tử theo 
 quy định tại khoản 7 Điều 58 Luật Xử lý vi phạm hành chính được thực hiện theo 
 quy định tại nghị định về xử phạt vi phạm hành chính trong lĩnh vực quản lý nhà 
-nước, phù hợp với tính chất của từng lĩnh vực. 
+nước, phù hợp với tính chất của từng lĩnh vực.
 
-  
-##### Điều 13. Hủy bỏ, ban hành quyết định mới trong xử phạt vi phạm hành chính 
+[^vbhn1651-12]: 12 Điều này được sửa đổi, bổ sung theo quy định tại khoản 6 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+##### Điều 13. Hủy bỏ, ban hành quyết định mới trong xử phạt vi phạm hành chính[^vbhn1651-13]
 1. Người đã ban hành quyết định tự mình hoặc theo yêu cầu của những người quy 
 định tại khoản 3 Điều 18 Luật Xử lý vi phạm hành chính phải ban hành quyết định 
 hủy bỏ toàn bộ nội dung quyết định nếu thuộc một trong các trường hợp sau đây: 
@@ -744,12 +721,9 @@ ra quyết định hủy bỏ, trừ trường hợp quy định tại khoản 3
 quyết định bị hủy bỏ phải ban hành quyết định mới hoặc chuyển người có thẩm 
 quyền ban hành quyết định mới theo quy định tại các khoản 5, 6 và 7 Điều này. 
  
-13 Điều này được sửa đổi, bổ sung theo quy định tại khoản 7 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
-9 
+
  
 5. Trong trường hợp quy định tại các điểm c, d, đ, e, g và h khoản 1 Điều này, 
 nếu hành vi vi phạm vẫn còn thời hiệu xử phạt vi phạm hành chính hoặc có căn cứ 
@@ -766,9 +740,12 @@ phương tiện vi phạm hành chính thuộc loại cấm tàng trữ, cấm l
 luật có quy định áp dụng hình thức xử phạt tịch thu, biện pháp khắc phục hậu quả 
 đối với hành vi vi phạm hành chính thì người có thẩm quyền đã ban hành quyết 
 định hủy bỏ phải ban hành quyết định mới hoặc chuyển người có thẩm quyền ban 
-hành quyết định mới để tịch thu, áp dụng biện pháp khắc phục hậu quả. 
+hành quyết định mới để tịch thu, áp dụng biện pháp khắc phục hậu quả.
+
+[^vbhn1651-13]: 13 Điều này được sửa đổi, bổ sung theo quy định tại khoản 7 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
 ##### Điều 14. Đính chính, sửa đổi, bổ sung, hủy bỏ một phần quyết định trong 
-xử phạt vi phạm hành chính14 
+xử phạt vi phạm hành chính[^vbhn1651-14]
 1. Người đã ban hành quyết định tự mình hoặc theo yêu cầu của những người 
 quy định tại khoản 3 Điều 18 Luật Xử lý vi phạm hành chính có trách nhiệm đính 
 chính quyết định khi có sai sót về kỹ thuật soạn thảo. 
@@ -784,10 +761,7 @@ h khoản 1 Điều 13 Nghị định này, trừ trường hợp quy định t�
 quyết định xử phạt nhưng có sự thay đổi về nhiệm vụ, quyền hạn hoặc cơ cấu, tổ 
 chức dẫn đến không còn thẩm quyền xử phạt hoặc không còn chức danh đó, thì hồ 
  
-14 Điều này được sửa đổi, bổ sung theo quy định tại khoản 8 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
   
 sơ vụ vi phạm được chuyển theo quy định tại khoản 3 Điều 13 Nghị định này để ra 
@@ -797,7 +771,10 @@ hợp quy định tại khoản 3 Điều 11 Nghị định này.
 đính chính, sửa đổi, bổ sung, hủy bỏ một phần các quyết định áp dụng biện pháp 
 ngăn chặn và bảo đảm xử lý vi phạm hành chính.  
 6. Quyết định đính chính, sửa đổi, bổ sung, hủy bỏ một phần quyết định được 
-lưu trong hồ sơ xử phạt. 
+lưu trong hồ sơ xử phạt.
+
+[^vbhn1651-14]: 14 Điều này được sửa đổi, bổ sung theo quy định tại khoản 8 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
 ##### Điều 15. Thời hạn thực hiện và nội dung đính chính, sửa đổi, bổ sung, hủy 
 bỏ một phần hoặc toàn bộ quyết định trong xử phạt vi phạm hành chính 
 1. Thời hạn đính chính, sửa đổi, bổ sung, hủy bỏ một phần hoặc toàn bộ quyết định: 
@@ -961,7 +938,7 @@ của pháp luật dân sự về thừa kế có trách nhiệm tiếp tục th
 phục hậu quả trong phạm vi di sản thừa kế. 
 3. Gửi quyết định thi hành một phần quyết định xử phạt vi phạm hành chính: 
 
-15 
+
  
 a) Quyết định thi hành một phần quyết định xử phạt vi phạm hành chính trong 
 trường hợp tổ chức bị xử phạt giải thể, phá sản phải được gửi cho cơ quan, tổ chức, 
@@ -1020,26 +997,20 @@ b) Cá nhân, tổ chức bị xử phạt nộp phạt vào tài khoản Kho b�
 trong quyết định xử phạt trong thời hạn quy định tại khoản 1 Điều 73 Luật Xử lý vi 
 phạm hành chính; 
 c) Trong thời hạn 05 ngày làm việc, kể từ ngày tiền phạt được nộp trực tiếp 
-vào tài khoản của Kho bạc nhà nước hoặc gián tiếp thông qua dịch vụ18 bưu chính 
+vào tài khoản của Kho bạc nhà nước hoặc gián tiếp thông qua dịch vụ[^vbhn1651-18] bưu chính 
 công ích, người tạm giữ các giấy tờ để bảo đảm cho việc xử phạt theo quy định 
 tại khoản 6 Điều 125 Luật Xử lý vi phạm hành chính phải gửi trả lại cá nhân, tổ 
 chức bị xử phạt các giấy tờ đã tạm giữ qua bưu điện bằng hình thức bảo đảm đối 
-với trường hợp nộp trực tiếp hoặc gửi qua dịch vụ19 bưu chính công ích đối với 
+với trường hợp nộp trực tiếp hoặc gửi qua dịch vụ[^vbhn1651-19] bưu chính công ích đối với 
 trường hợp nộp gián tiếp. Chi phí gửi quyết định xử phạt và chi phí gửi trả lại giấy 
 tờ do cá nhân, tổ chức bị xử phạt chi trả; 
 d) Cá nhân, tổ chức bị xử phạt có thể trực tiếp nhận lại giấy tờ đã bị tạm 
 giữ hoặc thông qua người đại diện theo pháp luật hoặc đại diện theo ủy quyền. 
  
-18 Từ “vụ” được bổ sung theo quy định tại điểm a khoản 1 Điều 2 Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-19 Từ “vụ” được bổ sung theo quy định tại điểm a khoản 1 Điều 2 Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
+ 
 
-17 
+
  
 3. Trường hợp nộp chậm tiền phạt theo quy định tại khoản 1 Điều 78 Luật Xử 
 lý vi phạm hành chính, thì cơ quan thu tiền phạt căn cứ vào quyết định xử phạt để 
@@ -1053,7 +1024,12 @@ Chính phủ quy định về thủ tục hành chính thuộc lĩnh vực Kho b
 6. Bộ trưởng Bộ Tài chính hướng dẫn việc thu, nộp tiền phạt vi phạm hành chính 
 quy định tại các khoản 1, 2 và 3 Điều này; cách tính và thực hiện bù trừ số tiền nộp 
 phạt chênh lệch (nếu có) trong trường hợp có quyết định đính chính, sửa đổi, bổ sung, 
-hủy bỏ hoặc ban hành quyết định mới trong xử phạt vi phạm hành chính. 
+hủy bỏ hoặc ban hành quyết định mới trong xử phạt vi phạm hành chính.
+
+[^vbhn1651-18]: 18 Từ “vụ” được bổ sung theo quy định tại điểm a khoản 1 Điều 2 Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-19]: 19 Từ “vụ” được bổ sung theo quy định tại điểm a khoản 1 Điều 2 Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
 ##### Điều 21. Chứng từ thu, nộp tiền phạt và tiền chậm nộp phạt vi phạm hành chính 
 1. Chứng từ thu, nộp tiền phạt, tiền chậm nộp phạt được in, phát hành, quản lý, 
 sử dụng thống nhất trong phạm vi toàn quốc hoặc chứng từ điện tử nộp ngân sách 
@@ -1114,14 +1090,14 @@ hợp với từng chủng loại biên lai.
 6. Chứng từ điện tử nộp ngân sách nhà nước được phát hành và sử dụng theo 
 quy định của pháp luật. 
 
-19 
+
  
 7. Bộ trưởng Bộ Tài chính quy định cụ thể nội dung, hình thức biên lai thu tiền 
 phạt và các chứng từ thu tiền phạt khác; tổ chức in, phát hành và quản lý, sử dụng 
 biên lai thu tiền phạt và tiền chậm nộp phạt vi phạm hành chính, trừ giấy chứng 
 nhận nộp tiền phạt trong lĩnh vực giao thông đường bộ thông qua dịch vụ bưu 
 chính công ích quy định tại khoản 3 Điều này. 
-##### Điều 22. Chuyển quyết định xử phạt vi phạm hành chính để tổ chức thi hành 
+##### Điều 22. Chuyển quyết định xử phạt vi phạm hành chính để tổ chức thi hành[^vbhn1651-20] 
 1. Cơ quan của người đã ra quyết định xử phạt vi phạm hành chính đối với các 
 trường hợp quy định tại khoản 1 và khoản 2 Điều 71 Luật Xử lý vi phạm hành 
 chính có trách nhiệm chuyển toàn bộ bản gốc hồ sơ, giấy tờ liên quan đến cơ quan 
@@ -1138,7 +1114,10 @@ phạt nhiều lần theo quy định tại các Điều 76, 77 và 79 Luật X�
 chính, thì các quyết định hoãn, giảm, miễn tiền phạt hoặc nộp tiền phạt nhiều lần 
 phải được chuyển đến cơ quan tiếp nhận quyết định xử phạt để tổ chức thi hành. 
 3. Trường hợp phải cưỡng chế thi hành quyết định xử phạt thì thực hiện theo 
-quy định tại khoản 3 Điều 87 Luật Xử lý vi phạm hành chính. 
+quy định tại khoản 3 Điều 87 Luật Xử lý vi phạm hành chính.
+
+[^vbhn1651-20]: 20 Điều này được sửa đổi, bổ sung theo quy định tại khoản 10 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
 ##### Điều 23. Xử lý tang vật, phương tiện bị chiếm đoạt, sử dụng trái phép để 
 vi phạm hành chính thuộc trường hợp bị tịch thu 
 1. Đối với tang vật, phương tiện đang bị tạm giữ do bị chiếm đoạt, sử dụng trái 
@@ -1149,10 +1128,7 @@ phương tiện vi phạm vào ngân sách nhà nước.
 Trường hợp phải nộp một khoản tiền tương đương trị giá tang vật, phương tiện vi 
 phạm trong vụ việc có nhiều cá nhân, tổ chức vi phạm, thì các cá nhân, tổ chức vi phạm 
  
-20 Điều này được sửa đổi, bổ sung theo quy định tại khoản 10 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
   
 đều có trách nhiệm trong việc nộp khoản tiền tương đương trị giá tang vật, phương tiện 
@@ -1192,10 +1168,10 @@ quy định tại khoản 3 Điều 60 Luật Xử lý vi phạm hành chính.
 tiện vi phạm vào ngân sách nhà nước được thực hiện theo quy định tại Điều 21 
 Nghị định này 
 
-21 
+
  
 ##### Điều 24. Xác định thẩm quyền xử phạt và tạm giữ tang vật, phương tiện vi 
-phạm hành chính trong một số trường hợp21 
+phạm hành chính trong một số trường hợp[^vbhn1651-21] 
 1. Việc xác định thẩm quyền xử phạt vi phạm hành chính, áp dụng biện pháp khắc 
 phục hậu quả được thực hiện theo quy định tại Điều 52 Luật Xử lý vi phạm hành chính.  
 2. Vụ việc vi phạm hành chính do người có thẩm quyền thuộc cơ quan trung 
@@ -1227,10 +1203,7 @@ xác định theo nguyên tắc và thứ tự sau đây:
 a) Nếu người đang giải quyết vụ việc thuộc ngành, lĩnh vực mình quản lý quy 
 định tại các điều từ Điều 39 đến Điều 49 và Điều 51 Luật Xử lý vi phạm hành 
  
-21 Điều này được sửa đổi, bổ sung theo quy định tại khoản 11 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
   
 chính không có thẩm quyền tịch thu tang vật, phương tiện vi phạm hành chính 
@@ -1247,7 +1220,10 @@ quyền xử phạt được xác định theo quy định tại Chương II Ph�
 vi phạm hành chính và quy định của nghị định về xử phạt vi phạm hành chính. 
 5. Thẩm quyền quyết định tạm giữ tang vật, phương tiện vi phạm hành chính là 
 hàng cấm tàng trữ, cấm lưu hành được thực hiện theo quy định tại khoản 3 Điều 125 
-Luật Xử lý vi phạm hành chính. 
+Luật Xử lý vi phạm hành chính.
+
+[^vbhn1651-21]: 21 Điều này được sửa đổi, bổ sung theo quy định tại khoản 11 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
 ##### Điều 25. Xử phạt vi phạm hành chính đối với người chưa thành niên 
 1. Khi tiến hành xử phạt vi phạm hành chính đối với người chưa thành niên, trường 
 hợp không xác định được chính xác tuổi để áp dụng hình thức xử phạt, thì người có 
@@ -1270,7 +1246,7 @@ hành chính khi hành vi vi phạm hành chính quy định bị phạt cảnh 
 chưa thành niên tự nguyện khai báo, thừa nhận về hành vi vi phạm, thành thật hối 
 lỗi về hành vi vi phạm của mình. 
 
-23 
+
  
 3. Người có thẩm quyền xử phạt căn cứ vào các điều kiện quy định tại khoản 2 
 Điều này để xem xét, quyết định áp dụng biện pháp nhắc nhở. Việc nhắc nhở được 
@@ -1324,38 +1300,38 @@ phạm hành chính.
 hình thức phù hợp với từng đối tượng cụ thể. 
 4. Hướng dẫn nghiệp vụ áp dụng pháp luật về xử lý vi phạm hành chính. 
 ##### Điều 31. Kiểm tra việc thi hành pháp luật về xử lý vi phạm hành chính 
-1. Kế hoạch kiểm tra việc thi hành pháp luật về xử lý vi phạm hành chính của các 
+1. [^vbhn1651-22] Kế hoạch kiểm tra việc thi hành pháp luật về xử lý vi phạm hành chính của các 
 bộ, cơ quan ngang bộ, Tòa án nhân dân tối cao, Kiểm toán nhà nước và Ủy ban nhân 
 dân cấp tỉnh gửi đến Bộ Tư pháp để theo dõi, tổng hợp và phối hợp tổ chức thực hiện. 
 2. Bộ Tư pháp trong phạm vi nhiệm vụ, quyền hạn của mình có trách nhiệm phối 
-hợp với các bộ, cơ quan ngang bộ23, Tòa án nhân dân tối cao, Kiểm toán nhà nước xây 
+hợp với các bộ, cơ quan ngang bộ[^vbhn1651-23], Tòa án nhân dân tối cao, Kiểm toán nhà nước xây 
 dựng kế hoạch kiểm tra, xử lý các kế hoạch kiểm tra bị trùng lặp, chồng chéo. 
 3. Bộ trưởng Bộ Tư pháp kiểm tra công tác thi hành pháp luật về xử lý vi phạm 
-hành chính của các bộ, cơ quan ngang bộ24, Ủy ban nhân dân tỉnh, thành phố trực 
+hành chính của các bộ, cơ quan ngang bộ[^vbhn1651-24], Ủy ban nhân dân tỉnh, thành phố trực 
 thuộc Trung ương và các cơ quan quản lý người có thẩm quyền xử lý vi phạm 
 hành chính. 
  
-22 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 12 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-23 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bãi bỏ theo quy định tại điểm đ khoản 1 Điều 2 
-của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP 
-ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành 
-Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-24 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bãi bỏ theo quy định tại điểm đ khoản 1 Điều 2 
-của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP 
-ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành 
-Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
+ 
+ 
 
-25 
+
  
 4. Bộ trưởng Bộ Tư pháp giúp Chính phủ thực hiện kiểm tra công tác thi hành 
 pháp luật về xử lý vi phạm hành chính của Tòa án nhân dân tối cao, Kiểm toán nhà 
 nước theo quy định tại Điều 17 Luật Xử lý vi phạm hành chính. 
 5. Việc kiểm tra trong thi hành pháp luật về xử lý vi phạm hành chính được 
 thực hiện theo quy định của Chính phủ về kiểm tra, xử lý kỷ luật trong thi hành 
-pháp luật về xử lý25 vi phạm hành chính. 
+pháp luật về xử lý[^vbhn1651-25] vi phạm hành chính.
+
+[^vbhn1651-22]: 22 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 12 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-23]: 23 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bãi bỏ theo quy định tại điểm đ khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-24]: 24 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bãi bỏ theo quy định tại điểm đ khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-25]: 25 Cụm từ “xử lý” được bổ sung theo quy định tại điểm d khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
 ##### Điều 32. Phối hợp thanh tra việc thi hành pháp luật về xử lý vi phạm hành chính 
 1. Việc phối hợp thanh tra thi hành pháp luật về xử lý vi phạm hành chính giữa 
 Bộ Tư pháp với các cơ quan liên quan ở trung ương; giữa Sở Tư pháp với các cơ 
@@ -1364,34 +1340,31 @@ ngành dọc đóng trên địa bàn tỉnh, thành phố trực thuộc Trung 
 dân cấp huyện được thực hiện trong trường hợp có kiến nghị, phản ánh của cá 
 nhân, tổ chức, báo chí về việc áp dụng quy định pháp luật về xử lý vi phạm hành 
 chính gây ảnh hưởng nghiêm trọng đến quyền, lợi ích hợp pháp của cá nhân, tổ 
-chức hoặc theo kế hoạch26. 
+chức hoặc theo kế hoạch[^vbhn1651-26]. 
 2. Trình tự, thủ tục phối hợp thanh tra được thực hiện theo quy định của pháp 
-luật về thanh tra. 
+luật về thanh tra.
+
+[^vbhn1651-26]: 26 Cụm từ “hoặc theo kế hoạch” được bổ sung theo quy định tại điểm e khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
 ##### Điều 33. Cơ sở dữ liệu quốc gia về xử lý vi phạm hành chính 
 1. Cơ sở dữ liệu quốc gia về xử lý vi phạm hành chính được xây dựng trên cơ sở 
 tích hợp dữ liệu điện tử từ cơ sở dữ liệu về xử lý vi phạm hành chính của các bộ, cơ 
-quan ngang bộ27, Kiểm toán nhà nước, Tòa án nhân dân tối cao và Ủy ban nhân dân 
+quan ngang bộ[^vbhn1651-27], Kiểm toán nhà nước, Tòa án nhân dân tối cao và Ủy ban nhân dân 
 các cấp và các cơ quan quản lý người có thẩm quyền xử lý vi phạm hành chính. 
 2. Cơ sở dữ liệu quốc gia về xử lý vi phạm hành chính phải bảo đảm kết nối 
 với Cơ sở dữ liệu quốc gia về dân cư và Cơ sở dữ liệu chuyên ngành khác theo quy 
 định của pháp luật. 
  
-25 Cụm từ “xử lý” được bổ sung theo quy định tại điểm d khoản 1 Điều 2 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-26 Cụm từ “hoặc theo kế hoạch” được bổ sung theo quy định tại điểm e khoản 1 Điều 2 của 
-Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP 
-ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành 
-Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-27 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bỏ theo quy định tại điểm đ khoản 1 Điều 2 
-của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP 
-ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành 
-Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
+ 
+ 
 
   
 3. Việc xây dựng, quản lý, khai thác, sử dụng cơ sở dữ liệu quốc gia được thực 
-hiện theo quy định của Chính phủ và Bộ trưởng Bộ Tư pháp. 
+hiện theo quy định của Chính phủ và Bộ trưởng Bộ Tư pháp.
+
+[^vbhn1651-27]: 27 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bỏ theo quy định tại điểm đ khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
 ##### Điều 34. Thống kê về xử lý vi phạm hành chính 
 1. Thống kê về xử lý vi phạm hành chính là cơ sở để đánh giá tình hình, dự 
 báo xu hướng vi phạm pháp luật hành chính, đề xuất giải pháp khắc phục, hoàn 
@@ -1404,32 +1377,23 @@ luật về xử lý vi phạm hành chính.
 báo cáo về tình hình xử phạt vi phạm hành chính và báo cáo về tình hình áp dụng 
 các biện pháp xử lý hành chính, được thực hiện định kỳ hằng năm. 
 2. Báo cáo về tình hình xử phạt vi phạm hành chính bao gồm các nội dung sau đây: 
-a)28 Nhận xét, đánh giá chung về tình hình vi phạm hành chính và xử phạt vi 
+a)[^vbhn1651-28] Nhận xét, đánh giá chung về tình hình vi phạm hành chính và xử phạt vi 
 phạm hành chính; các loại hành vi vi phạm phổ biến; 
-b)29 Số lượng vụ vi phạm hành chính, vụ bị xử phạt vi phạm hành chính, vụ 
+b)[^vbhn1651-29] Số lượng vụ vi phạm hành chính, vụ bị xử phạt vi phạm hành chính, vụ 
 không ra quyết định xử phạt vi phạm hành chính theo Điều 65 Luật Xử lý vi phạm 
 hành chính, vụ đã bị lập biên bản vi phạm hành chính nhưng chưa ra quyết định xử 
 phạt vi phạm hành chính; đối tượng bị xử phạt; 
-c)30 Kết quả thi hành quyết định xử phạt vi phạm hành chính: Tổng số quyết 
+c)[^vbhn1651-30] Kết quả thi hành quyết định xử phạt vi phạm hành chính: Tổng số quyết 
 định xử phạt; tổng số tiền thu từ xử phạt vi phạm hành chính; số lượng quyết định 
 xử phạt đã thi hành xong; số lượng quyết định hoãn, giảm, miễn thi hành phạt tiền; 
 số lượng quyết định phải cưỡng chế thi hành; số lượng quyết định bị khiếu nại, 
 khởi kiện; 
  
-28 Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 13 Điều 1 của Nghị định 
-số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 
-tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử 
-lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-29 Điểm này được sửa đổi theo quy định tại điểm b khoản 13 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-30 Điểm này được sửa đổi theo quy định tại điểm c khoản 13 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
+ 
+ 
 
-27 
+
  
 d) Số lượng đối tượng vi phạm là người chưa thành niên được áp dụng biện 
 pháp thay thế xử lý vi phạm hành chính nhắc nhở; 
@@ -1466,7 +1430,7 @@ g) Nhận xét, đánh giá về tình hình tổ chức thi hành quyết đị
 cai nghiện bắt buộc; số lượng quyết định hoãn, miễn chấp hành quyết định; 
 
   
-g1)31 Số lượng đối tượng đang chấp hành biện pháp giáo dục tại xã, phường, 
+g1)[^vbhn1651-31] Số lượng đối tượng đang chấp hành biện pháp giáo dục tại xã, phường, 
 thị trấn; tạm đình chỉ hoặc miễn chấp hành phần thời gian còn lại; 
 h) Số lượng đối tượng đang chấp hành quyết định áp dụng biện pháp xử lý 
 hành chính tại cơ sở giáo dục bắt buộc, trường giáo dưỡng; giảm thời hạn; tạm 
@@ -1478,8 +1442,16 @@ k) Khó khăn, vướng mắc; đề xuất, kiến nghị.
 4. Thời gian chốt số liệu báo cáo thực hiện theo quy định của Chính phủ về chế 
 độ báo cáo của cơ quan hành chính nhà nước. 
 5. Bộ trưởng Bộ Tư pháp quy định cụ thể chế độ báo cáo công tác thi hành 
-pháp luật về xử lý vi phạm hành chính. 
- 
+pháp luật về xử lý vi phạm hành chính.
+
+[^vbhn1651-28]: 28 Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 13 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-29]: 29 Điểm này được sửa đổi theo quy định tại điểm b khoản 13 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-30]: 30 Điểm này được sửa đổi theo quy định tại điểm c khoản 13 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-31]: 31 Điểm này được bổ sung theo quy định tại điểm d khoản 13 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
 #### Mục 2 
 TRÁCH NHIỆM THỰC HIỆN QUẢN LÝ NHÀ NƯỚC TRONG 
 THI HÀNH PHÁP LUẬT VỀ XỬ LÝ VI PHẠM HÀNH CHÍNH 
@@ -1490,21 +1462,15 @@ a) Đề xuất với cơ quan có thẩm quyền việc xây dựng, hoàn thi�
 xử lý vi phạm hành chính; 
 b) Xây dựng, ban hành theo thẩm quyền hoặc trình cơ quan có thẩm quyền ban 
 hành văn bản quy phạm pháp luật về xử lý vi phạm hành chính; 
-c) Chủ trì, phối hợp với Văn phòng Chính phủ, các bộ, cơ quan ngang bộ32 xây 
+c) Chủ trì, phối hợp với Văn phòng Chính phủ, các bộ, cơ quan ngang bộ[^vbhn1651-32] xây 
 dựng danh mục các nghị định quy định chi tiết Luật Xử lý vi phạm hành chính; 
 hướng dẫn, kiểm tra, đôn đốc các bộ, cơ quan ngang bộ, Bảo hiểm xã hội Việt 
 Nam trong việc đề xuất, thực hiện Chương trình xây dựng các nghị định; 
  
-31 Điểm này được bổ sung theo quy định tại điểm d khoản 13 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-32 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bãi bỏ theo quy định tại điểm đ khoản 1 Điều 2 
-của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP 
-ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành 
-Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
+ 
 
-29 
+
  
 d) Đề nghị cơ quan có thẩm quyền nghiên cứu việc sửa đổi, bổ sung, hoàn 
 thiện pháp luật về xử lý vi phạm hành chính trên cơ sở kiến nghị của các cơ 
@@ -1538,89 +1504,60 @@ chính theo quy định của pháp luật.
 9. Quy định chế độ báo cáo, biểu mẫu thống kê số liệu trong xử lý vi phạm 
 hành chính và thực hiện báo cáo, thống kê về xử lý vi phạm hành chính. 
 10. Xây dựng, trình cơ quan có thẩm quyền báo cáo công tác thi hành pháp 
-luật về xử lý vi phạm hành chính. 
+luật về xử lý vi phạm hành chính.
 
-  
-##### Điều 37. Trách nhiệm của các bộ, cơ quan ngang bộ33, Tòa án nhân dân 
+[^vbhn1651-32]: 32 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bãi bỏ theo quy định tại điểm đ khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+##### Điều 37. Trách nhiệm của các bộ, cơ quan ngang bộ[^vbhn1651-33], Tòa án nhân dân 
 tối cao, Kiểm toán nhà nước 
-1. Trách nhiệm của các bộ, cơ quan ngang bộ34: 
+1. Trách nhiệm của các bộ, cơ quan ngang bộ[^vbhn1651-34]: 
 a) Thực hiện các nhiệm vụ xây dựng và hoàn thiện pháp luật về xử lý vi phạm 
 hành chính trong phạm vi thẩm quyền; 
 b) Thực hiện các nhiệm vụ báo cáo công tác thi hành pháp luật về xử lý vi 
 phạm hành chính trong phạm vi thẩm quyền; 
 c) Thực hiện các nhiệm vụ thống kê về xử lý vi phạm hành chính trong phạm 
 vi thẩm quyền; 
-d)35 Xây dựng Cơ sở dữ liệu về xử lý vi phạm hành chính trong phạm vi 
+d)[^vbhn1651-35] Xây dựng Cơ sở dữ liệu về xử lý vi phạm hành chính trong phạm vi 
 ngành, lĩnh vực quản lý; chỉ đạo các cơ quan, đơn vị cung cấp thông tin để phục vụ 
 công tác xây dựng Cơ sở dữ liệu về xử lý vi phạm hành chính và tích hợp vào Cơ 
 sở dữ liệu quốc gia về xử lý vi phạm hành chính tại Bộ Tư pháp; 
-đ)36 Thực hiện thanh tra, kiểm tra tình hình thi hành pháp luật về xử lý vi phạm 
+đ)[^vbhn1651-36] Thực hiện thanh tra, kiểm tra tình hình thi hành pháp luật về xử lý vi phạm 
 hành chính trong phạm vi chức năng, nhiệm vụ được giao; 
-đ1)37 Hướng dẫn thực hiện pháp luật về xử lý vi phạm hành chính theo thẩm 
+đ1)[^vbhn1651-37] Hướng dẫn thực hiện pháp luật về xử lý vi phạm hành chính theo thẩm 
 quyền hoặc theo đề nghị của bộ, ngành, địa phương trong phạm vi chức năng, 
 nhiệm vụ được giao; 
  
-33 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bãi bỏ theo quy định tại điểm đ khoản 1 Điều 2 
-của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP 
-ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành 
-Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-34 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bãi bỏ theo quy định tại điểm đ khoản 1 Điều 2 
-của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP 
-ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành 
-Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-35 Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 14 Điều 1 của Nghị định 
-số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 
-tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử 
-lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-36 Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 14 Điều 1 của Nghị định 
-số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 
-tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử 
-lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-37 Điểm này được bổ sung theo quy định tại điểm c khoản 14 Điều 1 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.  
+ 
+ 
+ 
+ 
+  
 
-31 
+
  
 e) Thực hiện các nhiệm vụ phổ biến, tập huấn, bồi dưỡng nghiệp vụ áp dụng 
 pháp luật về xử lý vi phạm hành chính thuộc thẩm quyền quản lý của bộ, cơ quan 
-ngang bộ38; 
+ngang bộ[^vbhn1651-38]; 
 g) Xây dựng cơ sở vật chất, kiện toàn tổ chức, bố trí nguồn lực để triển khai 
 việc thi hành pháp luật về xử lý vi phạm hành chính. 
-2. Trách nhiệm của các bộ, cơ quan ngang bộ39 trong báo cáo công tác thi hành 
+2. Trách nhiệm của các bộ, cơ quan ngang bộ[^vbhn1651-39] trong báo cáo công tác thi hành 
 pháp luật về xử lý vi phạm hành chính: 
 a) Báo cáo về tình hình xử phạt vi phạm hành chính theo nội dung quy định 
 tại khoản 2 Điều 35 của Nghị định này. 
-Đối với40 các bộ, cơ quan ngang bộ được tổ chức theo ngành dọc đóng trên địa 
+Đối với[^vbhn1651-40] các bộ, cơ quan ngang bộ được tổ chức theo ngành dọc đóng trên địa 
 bàn tỉnh, thành phố trực thuộc Trung ương , thì tổng hợp cả số liệu của các đơn vị 
 trực thuộc gửi Bộ Tư pháp; 
-b)41 (được bãi bỏ) 
-c)42 Bộ Công an báo cáo tình hình áp dụng biện pháp giáo dục tại xã, phường, 
+b)[^vbhn1651-41] (được bãi bỏ) 
+c)[^vbhn1651-42] Bộ Công an báo cáo tình hình áp dụng biện pháp giáo dục tại xã, phường, 
 thị trấn; đưa vào trường giáo dưỡng; đưa vào cơ sở giáo dục bắt buộc; đưa vào cơ 
 sở cai nghiện bắt buộc theo nội dung quy định tại các điểm a, c, d, đ, e, g, g1, h, i 
 và k khoản 3 Điều 35 của Nghị định này; 
  
-38 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bãi bỏ theo quy định tại điểm đ khoản 1 Điều 2 
-của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP 
-ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành 
-Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-39 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bãi bỏ theo quy định tại điểm đ khoản 1 Điều 2 
-của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP 
-ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành 
-Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-40 Cụm từ “Bảo hiểm xã hội Việt Nam,” được bãi bỏ theo quy định tại điểm g khoản 1 Điều 2 
-của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP 
-ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành 
-Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-41 Điểm này được bãi bỏ theo quy định tại khoản 2 Điều 2 của Nghị định số 68/2025/NĐ-CP 
-sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của 
-Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, 
-có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-42 Điểm này được sửa đổi, bổ sung theo quy định tại điểm d khoản 14 Điều 1 của Nghị định 
-số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 
-tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử 
-lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
+ 
+ 
+ 
+ 
 
   
 d) Báo cáo công tác thi hành pháp luật về xử lý vi phạm hành chính gửi về Bộ 
@@ -1636,33 +1573,52 @@ xử lý hành chính theo nội dung quy định tại các điểm b, c, d, e,
 của Luật Xử lý vi phạm hành chính và định kỳ hằng năm gửi báo cáo đến Bộ Tư 
 pháp về tình hình xử phạt vi phạm hành chính theo nội dung quy định tại khoản 2 
 Điều 35 của Nghị định này. 
-5. Các bộ, cơ quan ngang bộ phân công tổ chức pháp chế hoặc đơn vị phù 
+5. [^vbhn1651-43] Các bộ, cơ quan ngang bộ phân công tổ chức pháp chế hoặc đơn vị phù 
 hợp chủ trì giúp Bộ trưởng, Thủ trưởng cơ quan ngang bộ quản lý công tác thi 
 hành pháp luật về xử lý vi phạm hành chính trong các lĩnh vực thuộc phạm vi quản 
 lý, thực hiện nhiệm vụ quy định tại khoản 1 và khoản 2 Điều này và các nhiệm vụ 
-khác, bảo đảm phù hợp chức năng, nhiệm vụ, quyền hạn của từng đơn vị. 
+khác, bảo đảm phù hợp chức năng, nhiệm vụ, quyền hạn của từng đơn vị.
+
+[^vbhn1651-33]: 33 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bãi bỏ theo quy định tại điểm đ khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-34]: 34 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bãi bỏ theo quy định tại điểm đ khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-35]: 35 Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 14 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-36]: 36 Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 14 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-37]: 37 Điểm này được bổ sung theo quy định tại điểm c khoản 14 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-38]: 38 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bãi bỏ theo quy định tại điểm đ khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-39]: 39 Cụm từ “, Bảo hiểm xã hội Việt Nam” được bãi bỏ theo quy định tại điểm đ khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-40]: 40 Cụm từ “Bảo hiểm xã hội Việt Nam,” được bãi bỏ theo quy định tại điểm g khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-41]: 41 Điểm này được bãi bỏ theo quy định tại khoản 2 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-42]: 42 Điểm này được sửa đổi, bổ sung theo quy định tại điểm d khoản 14 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-43]: 43 Khoản này được sửa đổi, bổ sung theo quy định tại điểm đ khoản 14 Điều 1 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
 ##### Điều 38. Trách nhiệm của Bộ Tài chính 
 1. Thực hiện các nhiệm vụ quy định tại khoản 1, các điểm a và d khoản 2, 
-khoản 5 Điều 37 của Nghị định này. 
+khoản 5 Điều 37[^vbhn1651-44] của Nghị định này. 
 2. Chủ trì, phối hợp với Bộ Tư pháp hướng dẫn, bảo đảm kinh phí cho công tác 
 quản lý nhà nước về thi hành pháp luật về xử lý vi phạm hành chính và tổ chức 
 triển khai thi hành pháp luật về xử lý vi phạm hành chính theo quy định của Luật 
-Ngân sách nhà nước. 
+Ngân sách nhà nước.
+
+[^vbhn1651-44]: 44 Cụm từ “các khoản 1, 2 và 5 Điều 37” được thay thế bởi cụm từ “khoản 1, các điểm a và d khoản 2, khoản 5 Điều 37” theo quy định tại điểm h khoản 1 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
 ##### Điều 39. Trách nhiệm của Ủy ban nhân dân các cấp 
 1. Ủy ban nhân dân các cấp trong quá trình thi hành pháp luật về xử lý vi phạm 
 hành chính, nếu phát hiện các quy định về xử lý vi phạm hành chính không khả thi, 
  
-43 Khoản này được sửa đổi, bổ sung theo quy định tại điểm đ khoản 14 Điều 1 của Nghị 
-định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 
-23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật 
-Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-44 Cụm từ “các khoản 1, 2 và 5 Điều 37” được thay thế bởi cụm từ “khoản 1, các điểm a và d 
-khoản 2, khoản 5 Điều 37” theo quy định tại điểm h khoản 1 Điều 2 của Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
+ 
 
-33 
+
  
 không phù hợp với thực tiễn hoặc chồng chéo, mâu thuẫn, thì kiến nghị cơ quan 
 chủ trì soạn thảo hoặc Bộ Tư pháp để nghiên cứu, xử lý. 
@@ -1790,7 +1746,7 @@ doanh đối với đối tượng là chi nhánh, văn phòng đại diện, đ
 5. Cơ quan có thẩm quyền xử lý vi phạm hành chính phải chịu trách nhiệm về 
 tính chính xác, đầy đủ trong việc in ấn, phát hành, quản lý và sử dụng các biểu 
 mẫu ban hành theo quy định tại các khoản 1, 2 và 3 Điều này. 
-##### Điều 42. Hiệu lực thi hành 
+##### Điều 42. Hiệu lực thi hành[^vbhn1651-47] 
 1. Nghị định này có hiệu lực từ ngày 01 tháng 01 năm 2022. 
 2. Các quy định tại điểm a khoản 1, các khoản 2 và 4 Điều 15 Nghị định 
 này có hiệu lực thi hành đối với các quyết định trong xử phạt vi phạm hành chính 
@@ -1800,21 +1756,17 @@ này có hiệu lực thi hành đối với các quyết định trong xử ph�
 vi phạm hành chính và Nghị định số 97/2017/NĐ-CP ngày 18 tháng 8 năm 2017 
 của Chính phủ sửa đổi, bổ sung một số điều của Nghị định số 81/2013/NĐ-CP ngày 
 19 tháng 7 năm 2013 của Chính phủ quy định chi tiết một số điều và biện pháp thi 
-hành Luật Xử lý vi phạm hành chính. 
- 
-47 Điều 3 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 
-118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và 
-biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025 
-quy định như sau:  
-“Điều 3. Điều khoản thi hành 
-Nghị định này có hiệu lực thi hành từ ngày 02 tháng 5 năm 2025.”.  
+hành Luật Xử lý vi phạm hành chính.
 
-37 
- 
-##### Điều 43. Trách nhiệm thi hành 
+[^vbhn1651-47]: 47 Điều 3 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025 quy định như sau: “Điều 3. Điều khoản thi hành Nghị định này có hiệu lực thi hành từ ngày 02 tháng 5 năm 2025.”.
+
+##### Điều 43. Trách nhiệm thi hành[^vbhn1651-48] 
 Các Bộ trưởng, Thủ trưởng cơ quan ngang Bộ, Thủ trưởng cơ quan thuộc 
 Chính phủ, Chủ tịch Ủy ban nhân dân các tỉnh, thành phố trực thuộc Trung ương  
-và các cơ quan liên quan chịu trách nhiệm thi hành Nghị định này./. 
+và các cơ quan liên quan chịu trách nhiệm thi hành Nghị định này./.
+
+### Xác thực văn bản hợp nhất
+
 BỘ TƯ PHÁP 
  
 Số:  1651/VBHN-BTP 
@@ -1824,355 +1776,119 @@ Hà Nội, ngày 28 tháng 3 năm 2025
  
 KT. BỘ TRƯỞNG 
 THỨ TRƯỞNG 
-Đặng Hoàng Oanh 
- 
- 
- 
- 
- 
- 
-48 Điều 4 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 
-118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và 
-biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025 
-quy định như sau: 
-“Điều 4. Trách nhiệm tổ chức thực hiện 
-1. Bộ trưởng Bộ Tư pháp có trách nhiệm hướng dẫn và tổ chức thực hiện Nghị định này. 
-2. Các Bộ trưởng, Thủ trưởng cơ quan ngang bộ, Thủ trưởng cơ quan thuộc Chính phủ, 
-Chủ tịch Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương  và các cơ quan liên quan chịu 
-trách nhiệm tổ chức thực hiện Nghị định này.” 
+Đặng Hoàng Oanh
 
-  
-Phụ lục 
+## Phụ lục 
 MỘT SỐ BIỂU MẪU TRONG XỬ PHẠT VI PHẠM HÀNH CHÍNH 
 (Kèm theo Nghị định số 118/2021/NĐ-CP   
-ngày 23 tháng 12 năm 2021 của Chính phủ) 
- 
-STT 
-Mã số 
-Mẫu biểu 
-I. 
-MẪU QUYẾT ĐỊNH 
-1. 
-MQĐ01 Quyết định xử phạt vi phạm hành chính không lập biên bản49 
-2. 
-MQĐ02 
-Quyết định xử phạt vi phạm hành chính (sử dụng cho cả trường 
-hợp một hoặc nhiều cá nhân/tổ chức thực hiện một hoặc nhiều 
-hành vi vi phạm hành chính)50 
-3. 
-MQĐ03 Quyết định hoãn thi hành quyết định phạt tiền 
-4. 
-MQĐ04 Quyết định giảm/miễn phần còn tại/miễn toàn bộ tiền phạt vi 
-phạm hành chính 
-5. 
-MQĐ05 Quyết định nộp tiền phạt nhiều lần 
-6. 
-MQĐ06 Quyết định hoãn thi hành quyết định xử phụt trục xuất 
-7. 
-MQĐ07 Quyết định cưỡng chế khấu trừ một phần lương/một phần thu 
-nhập 
-8. 
-MQĐ08 Quyết định cưỡng chế khấu trừ tiền từ tài khoản 
-9. 
-MQĐ09 Quyết định cưỡng chế kê biên tài sản có giá trị tương ứng với số 
-Tiền phạt/phải hoàn trả 
- 
-49 Mẫu MQĐ01 Quyết định xử phạt vi phạm hành chính không lập biên bản tại Phụ lục ban 
-hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy 
-định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ 
-ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MQĐ01 Quyết định xử phạt vi phạm hành 
-chính không lập biên bản tại Phụ lục ban hành kèm theo Nghị định số 68/2025/NĐ-CP sửa đổi, 
-bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định tại khoản 3 Điều 2 của 
-Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.  
-50 Mẫu MQĐ02 Quyết định xử phạt vi phạm hành chính (sử dụng cho cả trường hợp một 
-hoặc nhiều cá nhân/tổ chức thực hiện một hoặc nhiều hành vi vi phạm hành chính) tại Phụ lục 
-ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ 
-quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MQĐ02 MQĐ 02 Quyết định xử phạt 
-vi phạm hành chính (sử dụng cho cả trường hợp một hoặc nhiều cá nhân/tổ chức thực hiện một 
-hoặc nhiều hành vi vi phạm hành chính) tại Phụ lục ban hành kèm theo Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định 
-tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ngày 23 tháng 12 năm 2021 của Chính phủ)
 
-39 
- 
-STT 
-Mã số 
-Mẫu biểu 
-10. 
-MQĐ10 Quyết định cưỡng chế thu tiền, tài sản để thi hành quyết định xử 
-phạt vi phạm hành chính/hoàn trả kinh phí 
-11. 
-MQĐ11 Quyết định cưỡng chế buộc thực hiện biện pháp khắc phục hậu quả51 
-12. MQĐ12a 
-Quyết định cưỡng chế thi hành quyết định xử phạt vi phạm hành 
-chính (sử dụng cho trường hợp cưỡng chế khấu trừ một phần 
-lương/một phần thu nhập/tiền từ tài khoản và buộc thực hiện biện 
-pháp khắc phục hậu quả) 
-13. MQĐ12b 
-Quyết định cưỡng chế thi hành quyết định xử phạt vi phạm hành 
-chính (sử dụng cho trường hợp cưỡng chế kê biên tài sản có giá 
-trị tương ứng với số tiền phạt/phải hoàn trả và buộc thực hiện 
-biện pháp khắc phục hậu quả) 
-14. MQĐ12c 
-Quyết định cưỡng chế thi hành Quyết định xử phạt vi phạm hành 
-chính (sử dụng cho trường hợp cưỡng chế thu tiền, tài sản để thi 
-hành quyết định xử phạt vi phạm hành chính/hoàn trả kinh phí và 
-buộc thực hiện biện pháp khắc phục hậu quả) 
-15. 
-MQĐ13 Quyết định kê biên tài sản có giá trị tương ứng với số tiền phạt 
-16. 
-MQĐ14 
-Quyết định tịch thu tang vật, phương tiện vi phạm hành chính (sử 
-dụng cho trường hợp không ra quyết định xử phạt vi phạm hành 
-chính hoặc hết thời hạn tạm giữ mà người vi phạm, chủ sở hữu, 
-người quản lý hoặc người sử dụng hợp pháp không đến nhận) 
-17. 
-MQĐ15 Quyết định buộc thực hiện biện pháp khắc phục hậu quả (sử dụng 
-cho trường hợp không ra quyết định xử phạt vi phạm hành chính) 
-18. 
-MQĐ16 Quyết định buộc tiêu hủy tang vật, phương tiện vi phạm hành chính 
-19. 
-MQĐ17 
-Quyết định thi hành một phần quyết định xử phạt vi phạm hành 
-chính (sử dụng cho trường hợp người bị xử phạt chết/mất tích; tổ 
-chức bị giải thể/phá sản) 
-20. 
-MQĐ18 Quyết định tạm giữ người theo thủ tục hành chính 
-21. 
-MQĐ19 Quyết định kéo dài thời hạn tạm giữ người theo thủ tục hành chính 
- 
-51 Mẫu MQĐ11 Quyết định cưỡng chế buộc thực hiện biện pháp khắc phục hậu quả tại Phụ 
-lục ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính 
-phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu 
-lực kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MQĐ11 Quyết định cưỡng chế 
-buộc thực hiện biện pháp khắc phục hậu quả tại Phụ lục ban hành kèm theo Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định 
-tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+### I. MẪU QUYẾT ĐỊNH
 
-  
-STT 
-Mã số 
-Mẫu biểu 
-22. 
-MQĐ20 Quyết định tạm giữ tang vật, phương tiện vi phạm hành chính, 
-giấy phép, chứng chỉ hành nghề 
-23. 
-MQĐ21 Quyết định kéo dài thời hạn tạm giữ tang vật phương tiện vi 
-phạm hành chính, giấy phép, chứng chỉ hành nghề 
-24. 
-MQĐ22 Quyết định giao phương tiện giao thông bị tạm giữ theo thủ tục 
-hành chính cho tổ chức, cá nhân giữ, bảo quản 
-25. 
-MQĐ23 Quyết định khấu trừ tiền đặt bảo lãnh 
-26. 
-MQĐ24 Quyết định trả lại tang vật, phương tiện vi phạm hành chính, giấy 
-phép, chứng chỉ hành nghề bị tạm giữ 
-27. 
-MQĐ25 Quyết định khám người theo thủ tục hành chính 
-28. 
-MQĐ26 Quyết định khám phương tiện vận tải, đồ vật theo thủ tục hành 
-chính 
-29. 
-MQĐ27 Quyết định khám nơi cất giấu tang vật, phương tiện vi phạm 
-hành chính 
-30. 
-MQĐ28 Quyết định khám nơi cất giấu tang vật, phương tiện vi phạm 
-hành chính là chỗ ở 
-31. 
-MQĐ29 Quyết định hủy bỏ biện pháp ngăn chặn và bảo đảm xử lý vi 
-phạm hành chính 
-32. 
-MQĐ30 Quyết định chuyển phương tiện giao thông đã giao cho tổ chức, 
-cá nhân giữ, bảo quản về nơi bị tạm giữ 
-33. 
-MQĐ31 Quyết định tạm đình chỉ thi hành quyết định xử phạt vi phạm 
-hành chính 
-34. 
-MQĐ32 Quyết định chấm dứt tạm đình chỉ thi hành quyết định xử phạt vi 
-phạm hành chính 
-35. 
-MQĐ33 Quyết định chuyển hồ sơ vụ vi phạm có dấu hiệu tội phạm để 
-truy cứu trách nhiệm hình sự 
-36. 
-MQĐ34 Quyết định về việc giao quyền xử phạt vi phạm hành chính 
-37. 
-MQĐ35 Quyết định về việc giao quyền cưỡng chế thi hành quyết định xử 
-phạt vi phạm hành chính 
-38. 
-MQĐ36 Quyết định về việc giao quyền tạm giữ người theo thủ tục hành 
-chính 
-39. 
-MQĐ37 
-Quyết định chấm dứt việc giao quyền xử phạt vi phạm hành 
-chính/cưỡng chế thi hành quyết định xử phạt vi phạm hành 
-chính/tạm giữ người theo thủ tục hành chính 
+| STT | Mã số | Mẫu biểu |
+| --- | --- | --- |
+| 1 | MQĐ01 | Quyết định xử phạt vi phạm hành chính không lập biên bản[^vbhn1651-49] |
+| 2 | MQĐ02 | Quyết định xử phạt vi phạm hành chính (sử dụng cho cả trường hợp một hoặc nhiều cá nhân/tổ chức thực hiện một hoặc nhiều hành vi vi phạm hành chính)[^vbhn1651-50] |
+| 3 | MQĐ03 | Quyết định hoãn thi hành quyết định phạt tiền |
+| 4 | MQĐ04 | Quyết định giảm/miễn phần còn tại/miễn toàn bộ tiền phạt vi phạm hành chính |
+| 5 | MQĐ05 | Quyết định nộp tiền phạt nhiều lần |
+| 6 | MQĐ06 | Quyết định hoãn thi hành quyết định xử phụt trục xuất |
+| 7 | MQĐ07 | Quyết định cưỡng chế khấu trừ một phần lương/một phần thu nhập |
+| 8 | MQĐ08 | Quyết định cưỡng chế khấu trừ tiền từ tài khoản |
+| 9 | MQĐ09 | Quyết định cưỡng chế kê biên tài sản có giá trị tương ứng với số Tiền phạt/phải hoàn trả |
+| 10 | MQĐ10 | Quyết định cưỡng chế thu tiền, tài sản để thi hành quyết định xử phạt vi phạm hành chính/hoàn trả kinh phí |
+| 11 | MQĐ11 | Quyết định cưỡng chế buộc thực hiện biện pháp khắc phục hậu quả[^vbhn1651-51] |
+| 12 | MQĐ12a | Quyết định cưỡng chế thi hành quyết định xử phạt vi phạm hành chính (sử dụng cho trường hợp cưỡng chế khấu trừ một phần lương/một phần thu nhập/tiền từ tài khoản và buộc thực hiện biện pháp khắc phục hậu quả) |
+| 13 | MQĐ12b | Quyết định cưỡng chế thi hành quyết định xử phạt vi phạm hành chính (sử dụng cho trường hợp cưỡng chế kê biên tài sản có giá trị tương ứng với số tiền phạt/phải hoàn trả và buộc thực hiện biện pháp khắc phục hậu quả) |
+| 14 | MQĐ12c | Quyết định cưỡng chế thi hành Quyết định xử phạt vi phạm hành chính (sử dụng cho trường hợp cưỡng chế thu tiền, tài sản để thi hành quyết định xử phạt vi phạm hành chính/hoàn trả kinh phí và buộc thực hiện biện pháp khắc phục hậu quả) |
+| 15 | MQĐ13 | Quyết định kê biên tài sản có giá trị tương ứng với số tiền phạt |
+| 16 | MQĐ14 | Quyết định tịch thu tang vật, phương tiện vi phạm hành chính (sử dụng cho trường hợp không ra quyết định xử phạt vi phạm hành chính hoặc hết thời hạn tạm giữ mà người vi phạm, chủ sở hữu, người quản lý hoặc người sử dụng hợp pháp không đến nhận) |
+| 17 | MQĐ15 | Quyết định buộc thực hiện biện pháp khắc phục hậu quả (sử dụng cho trường hợp không ra quyết định xử phạt vi phạm hành chính) |
+| 18 | MQĐ16 | Quyết định buộc tiêu hủy tang vật, phương tiện vi phạm hành chính |
+| 19 | MQĐ17 | Quyết định thi hành một phần quyết định xử phạt vi phạm hành chính (sử dụng cho trường hợp người bị xử phạt chết/mất tích; tổ chức bị giải thể/phá sản) |
+| 20 | MQĐ18 | Quyết định tạm giữ người theo thủ tục hành chính |
+| 21 | MQĐ19 | Quyết định kéo dài thời hạn tạm giữ người theo thủ tục hành chính |
+| 22 | MQĐ20 | Quyết định tạm giữ tang vật, phương tiện vi phạm hành chính, giấy phép, chứng chỉ hành nghề |
+| 23 | MQĐ21 | Quyết định kéo dài thời hạn tạm giữ tang vật phương tiện vi phạm hành chính, giấy phép, chứng chỉ hành nghề |
+| 24 | MQĐ22 | Quyết định giao phương tiện giao thông bị tạm giữ theo thủ tục hành chính cho tổ chức, cá nhân giữ, bảo quản |
+| 25 | MQĐ23 | Quyết định khấu trừ tiền đặt bảo lãnh |
+| 26 | MQĐ24 | Quyết định trả lại tang vật, phương tiện vi phạm hành chính, giấy phép, chứng chỉ hành nghề bị tạm giữ |
+| 27 | MQĐ25 | Quyết định khám người theo thủ tục hành chính |
+| 28 | MQĐ26 | Quyết định khám phương tiện vận tải, đồ vật theo thủ tục hành chính |
+| 29 | MQĐ27 | Quyết định khám nơi cất giấu tang vật, phương tiện vi phạm hành chính |
+| 30 | MQĐ28 | Quyết định khám nơi cất giấu tang vật, phương tiện vi phạm hành chính là chỗ ở |
+| 31 | MQĐ29 | Quyết định hủy bỏ biện pháp ngăn chặn và bảo đảm xử lý vi phạm hành chính |
+| 32 | MQĐ30 | Quyết định chuyển phương tiện giao thông đã giao cho tổ chức, cá nhân giữ, bảo quản về nơi bị tạm giữ |
+| 33 | MQĐ31 | Quyết định tạm đình chỉ thi hành quyết định xử phạt vi phạm hành chính |
+| 34 | MQĐ32 | Quyết định chấm dứt tạm đình chỉ thi hành quyết định xử phạt vi phạm hành chính |
+| 35 | MQĐ33 | Quyết định chuyển hồ sơ vụ vi phạm có dấu hiệu tội phạm để truy cứu trách nhiệm hình sự |
+| 36 | MQĐ34 | Quyết định về việc giao quyền xử phạt vi phạm hành chính |
+| 37 | MQĐ35 | Quyết định về việc giao quyền cưỡng chế thi hành quyết định xử phạt vi phạm hành chính |
+| 38 | MQĐ36 | Quyết định về việc giao quyền tạm giữ người theo thủ tục hành chính |
+| 39 | MQĐ37 | Quyết định chấm dứt việc giao quyền xử phạt vi phạm hành chính/cưỡng chế thi hành quyết định xử phạt vi phạm hành chính/tạm giữ người theo thủ tục hành chính |
+| 40 | MQĐ38 | Quyết định sửa đổi, bổ sung, hủy bỏ một phần quyết định trong xử phạt vi phạm hành chính[^vbhn1651-52] |
+| 41 | MQĐ39 | Quyết định đính chính quyết định trong xử phạt vi phạm hành chính[^vbhn1651-53] |
+| 42 | MQĐ40 | Quyết định hủy bỏ quyết định trong xử phạt vi phạm hành chính[^vbhn1651-54] |
+| 43 | MQĐ41 | Quyết định trưng cầu giám định |
+| 44 | MQĐ42 | Quyết định chuyển giấy phép, chứng chỉ hành nghề đã quá thời hạn tạm giữ/hết thời hiệu thi hành quyết định xử phạt vi phạm hành chính |
 
-41 
- 
-STT 
-Mã số 
-Mẫu biểu 
-40. 
-MQĐ38 Quyết định sửa đổi, bổ sung, hủy bỏ một phần quyết định trong 
-xử phạt vi phạm hành chính52 
-41. 
-MQĐ39 Quyết định đính chính quyết định trong xử phạt vi phạm hành chính53 
-42. 
-MQĐ40 Quyết định hủy bỏ quyết định trong xử phạt vi phạm hành chính54 
-43. 
-MQĐ41 Quyết định trưng cầu giám định 
-44. 
-MQĐ42 
-Quyết định chuyển giấy phép, chứng chỉ hành nghề đã quá thời 
-hạn tạm giữ/hết thời hiệu thi hành quyết định xử phạt vi phạm 
-hành chính 
-II. MẪU BIÊN BẢN 
-1. 
-MBB01 Biên bản vi phạm hành chính55 
- 
-52 Mẫu MQĐ38 Quyết định sửa đổi, bổ sung, hủy bỏ một phần quyết định trong xử phạt vi 
-phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 
-12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi 
-phạm hành chính, có hiệu lực kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MQĐ38 
-Quyết định sửa đổi, bổ sung, hủy bỏ một phần quyết định trong xử phạt vi phạm hành chính tại 
-Phụ lục ban hành kèm theo Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị 
-định số 118/2021/NĐ-CP theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP, có 
-hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-53 Mẫu MQĐ39 Quyết định đính chính quyết định trong xử phạt vi phạm hành chính tại Phụ 
-lục ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính 
-phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu 
-lực kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MQĐ39 Quyết định đính chính 
-quyết định trong xử phạt vi phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 
-68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định 
-tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-54 Mẫu MQĐ40 Quyết định hủy bỏ quyết định trong xử phạt vi phạm hành chính tại Phụ lục 
-ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ 
-quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực 
-kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MQĐ40 Quyết định hủy bỏ quyết định 
-trong xử phạt vi phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 68/2025/NĐ-CP 
-sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định tại khoản 3 Điều 2 
-của Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
-55 Mẫu MBB01 Biên bản vi phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 
-118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và 
-biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 tháng 01 năm 2022 
-được thay thế bởi Mẫu MBB01 Biên bản vi phạm hành chính tại Phụ lục ban hành kèm theo 
-Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP 
-theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 
-tháng 5 năm 2025. 
+### II. MẪU BIÊN BẢN
 
-  
-STT 
-Mã số 
-Mẫu biểu 
-2. 
-MBB02 Biên bản làm việc 
-3. 
-MBB03 Biên bản phiên giải trình trực tiếp 
-4. 
-MBB04 Biên bản xác định giá trị tang vật, phương tiện vi phạm hành chính 
-5. 
-MBB05 Biên bản xác minh tình tiết của vụ việc vi phạm hành chính56 
-6. 
-MBB06 Biên bản về việc không nhận quyết định xử phạt vi phạm hành chính 
-7. 
-MBB07 Biên bản về việc không nhận quyết định cưỡng chế thi hành 
-quyết định xử phạt vi phạm hành chính 
-8. 
-MBB08 Biên bản giữ giấy phép, chứng chỉ hành nghề 
-9. 
-MBB09 Biên bản xác minh thông tin về tiền, tài sản của cá nhân/tổ chức 
-bị cưỡng chế 
-10. 
-MBB10 Biên bản cưỡng chế thu tiền, tài sản để thi hành quyết định xử 
-phạt vi phạm hành chính/hoàn trả kinh phí 
-11. 
-MBB11 Biên bản cưỡng chế buộc thực hiện biện pháp khắc phục hậu quả 
-12. 
-MBB12 Biên bản cưỡng chế kê biên tài sản có giá trị tương ứng với số 
-tiền phạt/phải hoàn trả 
-13. 
-MBB13 Biên bản giao bảo quản tài sản kê biên 
-14. 
-MBB14 Biên bản chuyển giao tài sản đã kê biên để bán đấu giá 
-15. 
-MBB15 Biên bản tạm giữ tang vật, phương tiện vi phạm hành chính, giấy 
-phép, chứng chỉ hành nghề 
-16. 
-MBB16 
-Biên bản trả lại tang vật, phương tiện, giấy phép, chứng chỉ hành 
-nghề bị tạm giữ (sử dụng cho trường hợp không ra quyết định 
-tạm giữ tang vật, phương tiện vi phạm hành chính, giấy phép, 
-chứng chỉ hành nghề) 
-17. 
-MBB17 Biên bản trả lại tang vật, phương tiện, giấy phép, chứng chỉ hành 
-nghề bị tạm giữ 
-18. 
-MBB18 Đặt/Trả lại tiền bảo lãnh 
- 
-56 Mẫu MBB05 Biên bản xác minh tình tiết của vụ việc vi phạm hành chính tại Phụ lục ban 
-hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy 
-định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ 
-ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MBB05 Biên bản xác minh tình tiết của vụ 
-việc vi phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 68/2025/NĐ-CP sửa đổi, 
-bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định tại khoản 3 Điều 2 của 
-Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+| STT | Mã số | Mẫu biểu |
+| --- | --- | --- |
+| 1 | MBB01 | Biên bản vi phạm hành chính[^vbhn1651-55] |
+| 2 | MBB02 | Biên bản làm việc |
+| 3 | MBB03 | Biên bản phiên giải trình trực tiếp |
+| 4 | MBB04 | Biên bản xác định giá trị tang vật, phương tiện vi phạm hành chính |
+| 5 | MBB05 | Biên bản xác minh tình tiết của vụ việc vi phạm hành chính[^vbhn1651-56] |
+| 6 | MBB06 | Biên bản về việc không nhận quyết định xử phạt vi phạm hành chính |
+| 7 | MBB07 | Biên bản về việc không nhận quyết định cưỡng chế thi hành quyết định xử phạt vi phạm hành chính |
+| 8 | MBB08 | Biên bản giữ giấy phép, chứng chỉ hành nghề |
+| 9 | MBB09 | Biên bản xác minh thông tin về tiền, tài sản của cá nhân/tổ chức bị cưỡng chế |
+| 10 | MBB10 | Biên bản cưỡng chế thu tiền, tài sản để thi hành quyết định xử phạt vi phạm hành chính/hoàn trả kinh phí |
+| 11 | MBB11 | Biên bản cưỡng chế buộc thực hiện biện pháp khắc phục hậu quả |
+| 12 | MBB12 | Biên bản cưỡng chế kê biên tài sản có giá trị tương ứng với số tiền phạt/phải hoàn trả |
+| 13 | MBB13 | Biên bản giao bảo quản tài sản kê biên |
+| 14 | MBB14 | Biên bản chuyển giao tài sản đã kê biên để bán đấu giá |
+| 15 | MBB15 | Biên bản tạm giữ tang vật, phương tiện vi phạm hành chính, giấy phép, chứng chỉ hành nghề |
+| 16 | MBB16 | Biên bản trả lại tang vật, phương tiện, giấy phép, chứng chỉ hành nghề bị tạm giữ (sử dụng cho trường hợp không ra quyết định tạm giữ tang vật, phương tiện vi phạm hành chính, giấy phép, chứng chỉ hành nghề) |
+| 17 | MBB17 | Biên bản trả lại tang vật, phương tiện, giấy phép, chứng chỉ hành nghề bị tạm giữ |
+| 18 | MBB18 | Đặt/Trả lại tiền bảo lãnh |
+| 19 | MBB19 | Giao phương tiện giao thông bị tạm giữ theo thủ tục hành chính cho tổ chức, cá nhân giữ, bảo quản |
+| 20 | MBB20 | Biên bản tịch thu tang vật, phương tiện vi phạm hành chính |
+| 21 | MBB21 | Biên bản tiêu hủy tang vật, phương tiện vi phạm hành chính |
+| 22 | MBB22 | Biên bản bàn giao người có hành vi vi phạm hành chính/bị áp giải |
+| 23 | MBB23 | Biên bản khám người theo thủ tục hành chính |
+| 24 | MBB24 | Biên bản khám phương tiện vận tải, đồ vật theo thủ tục hành chính |
+| 25 | MBB25 | Biên bản khảm nơi cất giấu tang vật, phương tiện vi phạm hành chính |
+| 26 | MBB26 | Biên bản niêm phong tang vật, phương tiện vi phạm hành chính bị tạm giữ theo thủ tục hành chính |
+| 27 | MBB27 | Biên bản mở niêm phong tang vật, phương tiện vi phạm hành chính bị tạm giữ theo thủ tục hành chính[^vbhn1651-57] |
+| 28 | MBB28 | Biên bản bản giao hồ sơ vụ vi phạm có dấu hiệu tội phạm để truy cứu trách nhiệm hình sự |
+| 29 | MBB29 | Biên bản chuyển hồ sơ và quyết định xử phạt vi phạm hành chính để tổ chức thi hành |
+| 30 | MBB30 | Biên bản chuyển giấy phép, chứng chỉ hành nghề đã quá thời hạn tạm giữ/hết thời hiệu thi hành quyết định xử phạt vi phạm hành chính |
 
-43 
- 
-STT 
-Mã số 
-Mẫu biểu 
-19. 
-MBB19 Giao phương tiện giao thông bị tạm giữ theo thủ tục hành chính 
-cho tổ chức, cá nhân giữ, bảo quản 
-20. 
-MBB20 Biên bản tịch thu tang vật, phương tiện vi phạm hành chính 
-21. 
-MBB21 Biên bản tiêu hủy tang vật, phương tiện vi phạm hành chính 
-22. 
-MBB22 Biên bản bàn giao người có hành vi vi phạm hành chính/bị áp 
-giải 
-23. 
-MBB23 Biên bản khám người theo thủ tục hành chính 
-24. 
-MBB24 Biên bản khám phương tiện vận tải, đồ vật theo thủ tục hành 
-chính 
-25. 
-MBB25 Biên bản khảm nơi cất giấu tang vật, phương tiện vi phạm hành 
-chính 
-26. 
-MBB26 Biên bản niêm phong tang vật, phương tiện vi phạm hành chính 
-bị tạm giữ theo thủ tục hành chính 
-27. 
-MBB27 Biên bản mở niêm phong tang vật, phương tiện vi phạm hành 
-chính bị tạm giữ theo thủ tục hành chính57 
-28. 
-MBB28 Biên bản bản giao hồ sơ vụ vi phạm có dấu hiệu tội phạm để truy 
-cứu trách nhiệm hình sự 
-29. 
-MBB29 Biên bản chuyển hồ sơ và quyết định xử phạt vi phạm hành chính 
-để tổ chức thi hành 
-30. 
-MBB30 
-Biên bản chuyển giấy phép, chứng chỉ hành nghề đã quá thời hạn 
-tạm giữ/hết thời hiệu thi hành quyết định xử phạt vi phạm hành 
-chính 
- 
- 
-57 Mẫu MBB27 Biên bản mở niêm phong tang vật, phương tiện vi phạm hành chính bị tạm 
-giữ theo thủ tục hành chính tại Phụ lục ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 
-23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật 
-Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu 
-MBB27 Biên bản mở niêm phong tang vật, phương tiện vi phạm hành chính bị tạm giữ theo thủ 
-tục hành chính tại Phụ lục ban hành kèm theo Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung 
-một số điều của Nghị định số 118/2021/NĐ-CP theo quy định tại khoản 3 Điều 2 của Nghị định 
-số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
 
-   
- 
-    
-Mẫu quyết định số 01 
+[^vbhn1651-48]: 48 Điều 4 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025 quy định như sau: “Điều 4. Trách nhiệm tổ chức thực hiện 1. Bộ trưởng Bộ Tư pháp có trách nhiệm hướng dẫn và tổ chức thực hiện Nghị định này. 2. Các Bộ trưởng, Thủ trưởng cơ quan ngang bộ, Thủ trưởng cơ quan thuộc Chính phủ, Chủ tịch Ủy ban nhân dân tỉnh, thành phố trực thuộc Trung ương và các cơ quan liên quan chịu trách nhiệm tổ chức thực hiện Nghị định này.”
+
+[^vbhn1651-49]: 49 Mẫu MQĐ01 Quyết định xử phạt vi phạm hành chính không lập biên bản tại Phụ lục ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MQĐ01 Quyết định xử phạt vi phạm hành chính không lập biên bản tại Phụ lục ban hành kèm theo Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-50]: 50 Mẫu MQĐ02 Quyết định xử phạt vi phạm hành chính (sử dụng cho cả trường hợp một hoặc nhiều cá nhân/tổ chức thực hiện một hoặc nhiều hành vi vi phạm hành chính) tại Phụ lục ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MQĐ02 MQĐ 02 Quyết định xử phạt vi phạm hành chính (sử dụng cho cả trường hợp một hoặc nhiều cá nhân/tổ chức thực hiện một hoặc nhiều hành vi vi phạm hành chính) tại Phụ lục ban hành kèm theo Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-51]: 51 Mẫu MQĐ11 Quyết định cưỡng chế buộc thực hiện biện pháp khắc phục hậu quả tại Phụ lục ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MQĐ11 Quyết định cưỡng chế buộc thực hiện biện pháp khắc phục hậu quả tại Phụ lục ban hành kèm theo Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-52]: 52 Mẫu MQĐ38 Quyết định sửa đổi, bổ sung, hủy bỏ một phần quyết định trong xử phạt vi phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MQĐ38 Quyết định sửa đổi, bổ sung, hủy bỏ một phần quyết định trong xử phạt vi phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-53]: 53 Mẫu MQĐ39 Quyết định đính chính quyết định trong xử phạt vi phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MQĐ39 Quyết định đính chính quyết định trong xử phạt vi phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-54]: 54 Mẫu MQĐ40 Quyết định hủy bỏ quyết định trong xử phạt vi phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MQĐ40 Quyết định hủy bỏ quyết định trong xử phạt vi phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-55]: 55 Mẫu MBB01 Biên bản vi phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MBB01 Biên bản vi phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-56]: 56 Mẫu MBB05 Biên bản xác minh tình tiết của vụ việc vi phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MBB05 Biên bản xác minh tình tiết của vụ việc vi phạm hành chính tại Phụ lục ban hành kèm theo Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+[^vbhn1651-57]: 57 Mẫu MBB27 Biên bản mở niêm phong tang vật, phương tiện vi phạm hành chính bị tạm giữ theo thủ tục hành chính tại Phụ lục ban hành kèm theo Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 01 tháng 01 năm 2022 được thay thế bởi Mẫu MBB27 Biên bản mở niêm phong tang vật, phương tiện vi phạm hành chính bị tạm giữ theo thủ tục hành chính tại Phụ lục ban hành kèm theo Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+### Mẫu quyết định số 01 
 CƠ QUAN (1) 
                              
  
@@ -2183,7 +1899,7 @@ CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 (2) ......, ngày.... tháng.... năm........ 
  
 QUYẾT ĐỊNH 
-Xử phạt vi phạm hành chính không lập biên bản*58 
+Xử phạt vi phạm hành chính không lập biên bản*[^vbhn1651-58] 
 THẨM QUYỀN BAN HÀNH (3) 
 Căn cứ Điều 56, <Điều 63>(*) Điều 69 Luật Xử lý vi phạm hành chính (sửa đổi, bổ 
 sung năm 2020); 
@@ -2191,7 +1907,8 @@ Căn cứ (4) ..................................................................
 Căn cứ (5) .............................................................................................................. ; 
 Căn cứ Quyết định số: ..../QĐ-GQXP ngày ..../..../........ về việc giao quyền xử 
 phạt vi phạm hành chính (nếu có). 
-QUYẾT ĐỊNH: 
+QUYẾT ĐỊNH:
+
 ##### Điều 1.  
 1. Xử phạt vi phạm hành chính theo thủ tục không lập biên bản đối với <ông 
 (bà)/tổ chức>(**) có tên sau đây: 
@@ -2206,12 +1923,9 @@ ngày cấp: ..../..../........; nơi cấp: ...................................
 Địa chỉ trụ sở chính: ..............................................................................................  
  ...............................................................................................................................  
  
-58 Mẫu này được thay thế  theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP 
-sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của 
-Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, 
-có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
-45 
+
  
 Mã số doanh nghiệp: .............................................................................................  
 Số GCN đăng ký đầu tư/doanh nghiệp hoặc GP thành lập/đăng ký hoạt động: ...... ; 
@@ -2267,7 +1981,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (23) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-47 
+
  
 <In ở mặt sau>(***) Quyết định đã giao trực tiếp cho <cá nhân/người đại diện 
 của tổ chức>(**) bị xử phạt vào hồi.... giờ... phút, ngày ..../..../........ 
@@ -2348,13 +2062,11 @@ của nước mà người bị trục xuất là công dân hoặc nước mà 
 đến Việt Nam; (iii) Tên của cơ quan Công an quản lý người nước ngoài bị trục xuất.  
 (23) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định. 
+quyết định.
 
-49 
- 
- 
- 
-Mẫu quyết định số 02 
+[^vbhn1651-58]: 58 Mẫu này được thay thế theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+### Mẫu quyết định số 02 
  
 CƠ QUAN (1) 
  
@@ -2366,7 +2078,7 @@ CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 (2) ......, ngày.... tháng.... năm........ 
  
 QUYẾT ĐỊNH 
-Xử phạt vi phạm hành chính*59 
+Xử phạt vi phạm hành chính*[^vbhn1651-59] 
  
 THẨM QUYỀN BAN HÀNH (3) 
  
@@ -2392,10 +2104,7 @@ Nơi ở hiện tại: .........................................................
 Số định danh cá nhân/CMND/Hộ chiếu: ............................................................. ;  
 ngày cấp: ..../..../........; nơi cấp: ...................................................................................  
  
-59 Mẫu này được thay thế  theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-
-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 
-của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành 
-chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
   
 <Tên của tổ chức>(**): ..........................................................................................  
@@ -2434,7 +2143,7 @@ cho: (16) ......................................................................
 là cơ quan đã thực hiện biện pháp khắc phục hậu quả theo quy định tại khoản 5 
 Điều 85 Luật Xử lý vi phạm hành chính. 
 
-51 
+
  
 ##### Điều 2. Quyết định này có hiệu lực thi hành kể từ (17) .........................................  
 ##### Điều 3. Quyết định này được: 
@@ -2520,7 +2229,7 @@ vực cụ thể.
 tiền/Tước quyền sử dụng giấy phép, chứng chỉ hành nghề có thời hạn/Đình chỉ hoạt động có thời 
 hạn/Tịch thu tang vật, phương tiện vi phạm hành chính/Trục xuất. 
 
-53 
+
  
 (11) Ghi cụ thể hình thức xử phạt chính được áp dụng theo từng trường hợp:  
 - Trường hợp phạt tiền thì ghi cụ thể mức tiền phạt (bằng số và bằng chữ).  
@@ -2584,13 +2293,11 @@ xuất là công dân hoặc nước mà người đó cư trú cuối cùng tr�
 cơ quan Công an quản lý người nước ngoài bị trục xuất. 
 (27) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định. 
+quyết định.
 
-55 
- 
- 
- 
-Mẫu quyết định số 03 
+[^vbhn1651-59]: 59 Mẫu này được thay thế theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ- CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+### Mẫu quyết định số 03 
  
 CƠ QUAN(1) 
  
@@ -2661,7 +2368,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (12) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-57 
+
  
 <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho <cá nhân/người đại 
 diện của tổ chức>(*) được hoãn thi hành quyết định phạt tiền vào hồi.... giờ.... 
@@ -2699,12 +2406,9 @@ chức không phải là doanh nghiệp.
 (11) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (12)  Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định. 
+quyết định.
 
-  
- 
- 
-Mẫu quyết định số 04 
+### Mẫu quyết định số 04 
  
 CƠ QUAN(1) 
  
@@ -2745,7 +2449,7 @@ Mã số doanh nghiệp: .......................................................
 Số GCN đăng ký đầu tư/doanh nghiệp hoặc GP thành lập/đăng ký hoạt động: ........ 
  .................................................. ; ngày cấp:..../..../........; nơi cấp: .........................  
 
-59 
+
  
 Người đại diện theo pháp luật:(8) ...................................... Giới tính: ...................  
 Chức danh:(9) .........................................................................................................  
@@ -2817,13 +2521,9 @@ toàn bộ tiền phạt vi phạm hành chính.
 (13) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (14)  Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định. 
+quyết định.
 
-61 
- 
- 
- 
-Mẫu quyết định số 05 
+### Mẫu quyết định số 05 
  
 CƠ QUAN (1) 
  
@@ -2902,7 +2602,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ(15) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-63 
+
  
 <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho <cá nhân/người đại diện 
 của tổ chức>(*) được nộp tiền phạt nhiều lần vào hồi.... giờ.... phút, ngày..../..../........ 
@@ -2949,12 +2649,9 @@ chức không phải là doanh nghiệp.
 (14) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (15)  Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định. 
+quyết định.
 
-  
- 
- 
-Mẫu quyết định số 06 
+### Mẫu quyết định số 06 
  
 CƠ QUAN(1) 
  
@@ -2996,7 +2693,7 @@ Nơi ở bắt buộc trong thời gian làm thủ tục trục xuất: ........
 3. Lý do hoãn:(5)  ...................................................................................................  
 ##### Điều 2. Quyết định này có hiệu lực thi hành kể từ ngày ký. 
 
-65 
+
  
 ##### Điều 3. Quyết định này được: 
 1. Giao cho ông (bà) là cá nhân được hoãn thi hành hình thức xử phạt trục xuất 
@@ -3068,13 +2765,9 @@ công dân hoặc nước mà người đó cư trú cuối cùng trước khi �
 - Tên của cơ quan Công an quản lý người nước ngoài bị trục xuất. 
 (9) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định. 
+quyết định.
 
-67 
- 
- 
- 
-Mẫu quyết định số 07 
+### Mẫu quyết định số 07 
  
 CƠ QUAN (1) 
  
@@ -3153,7 +2846,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ(18) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-69 
+
  
 <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho cá nhân bị cưỡng chế khấu 
 trừ <một phần lương/một phần thu nhập>(*) vào hồi.... giờ.... phút, ngày..../..../........ 
@@ -3221,13 +2914,9 @@ lần khấu trừ với tổng số tiền phải thực hiện khấu trừ.
 (16) Ghi họ và tên của cá nhân/tên của tổ chức có trách nhiệm chủ trì tổ chức thi hành quyết định. 
 (17) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (18) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền cưỡng chế ký quyết 
-định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định. 
+định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-71 
- 
- 
- 
-Mẫu quyết định số 08 
+### Mẫu quyết định số 08 
  
 CƠ QUAN(1) 
  
@@ -3316,7 +3005,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ(18) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-73 
+
  
 <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho <cá nhân/người đại diện 
 của tổ chức>(*) bị cưỡng chế khấu tiền từ tài khoản vào hồi.... giờ.... phút, ngày..../..../........ 
@@ -3381,13 +3070,9 @@ nước đã tổ chức thi hành biện pháp khắc phục hậu quả>».
 (16) Ghi họ và tên của cá nhân/tên của tổ chức có trách nhiệm chủ trì tổ chức thi hành quyết định. 
 (17) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (18) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền cưỡng chế ký quyết 
-định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định. 
+định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-75 
- 
- 
- 
-Mẫu quyết định số 09 
+### Mẫu quyết định số 09 
  
 CƠ QUAN (1) 
  
@@ -3465,7 +3150,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (15) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-77 
+
  
 <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho <cá nhân/người đại diện 
 của tổ chức>(*) bị cưỡng chế kê biên tài sản có giá trị tương ứng với số tiền 
@@ -3530,13 +3215,9 @@ cưỡng chế đang làm việc
 - Ghi tên của Ủy ban nhân dân xã/phường/thị trấn nơi tổ chức bị cưỡng chế đóng trụ sở. 
 (14) Ghi họ và tên của cá nhân có trách nhiệm chủ trì tổ chức thi hành quyết định. 
 (15) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền cưỡng chế ký quyết 
-định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.  
+định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-79 
- 
- 
- 
-Mẫu quyết định số 10 
+### Mẫu quyết định số 10 
  
 CƠ QUAN (1) 
  
@@ -3625,7 +3306,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (18) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-81 
+
  
 <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho <cá nhân/người đại 
 diện của tổ chức>(*) bị cưỡng chế thu tiền, tài sản do cá nhân, tổ chức khác 
@@ -3692,13 +3373,9 @@ các cơ quan, tổ chức có liên quan.
 thẩm quyền để làm thủ tục bán đấu giá». 
 (17) Ghi họ và tên của cá nhân/tên của tổ chức có trách nhiệm chủ trì tổ chức thi hành quyết định. 
 (18) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền cưỡng chế ký quyết 
-định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định. 
+định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-83 
- 
- 
- 
-            Mẫu quyết định số 11 
+### Mẫu quyết định số 11 
  
 CƠ QUAN (1) 
 __________ 
@@ -3711,7 +3388,7 @@ CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
  
  
 QUYẾT ĐỊNH 
-Cưỡng chế buộc thực hiện biện pháp khắc phục hậu quả*60 
+Cưỡng chế buộc thực hiện biện pháp khắc phục hậu quả*[^vbhn1651-60] 
  
  
 THẨM QUYỀN BAN HÀNH (3) 
@@ -3745,10 +3422,7 @@ Mã số doanh nghiệp: .......................................................
 Số GCN đăng ký đầu tư/doanh nghiệp hoặc GP thành lập/đăng ký hoạt động: ......... ;  
 ngày cấp:..../..../ ........; nơi cấp: .............................................................................  
  
-60 Mẫu này được thay thế  theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP 
-sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của 
-Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, 
-có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
   
 Người đại diện theo pháp luật: (6) ..................................... Giới tính: ...................  
@@ -3796,7 +3470,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (17) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-85 
+
  
 <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho <cá nhân/người đại diện của tổ 
 chức>(*) bị cưỡng chế buộc thực hiện biện pháp khắc phục hậu quả vào hồi.... giờ.... phút, 
@@ -3858,12 +3532,11 @@ bổ sung năm 2020).
 (15) Ghi họ và tên của cá nhân/tên của tổ chức bị áp dụng biện pháp cưỡng chế. 
 (16) Ghi họ và tên của cá nhân/tên của tổ chức có trách nhiệm chủ trì tổ chức thi hành quyết định. 
 (17) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền cưỡng chế ký quyết 
-định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định. 
+định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-87 
- 
- 
-Mẫu quyết định số 12a 
+[^vbhn1651-60]: 60 Mẫu này được thay thế theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+### Mẫu quyết định số 12a 
  
 CƠ QUAN (1) 
  
@@ -3953,7 +3626,7 @@ không tự nguyện thực hiện trong thời hạn quy định tại khoản 
 của <cá nhân/tổ chức bị cưỡng chế>(*) số tiền bị khấu trừ quy định tại khoản 4 
 Điều này đến tài khoản số: (18) ................  của (19) ................................................. >(***) 
 
-89 
+
  
 ##### Điều 2.  
 1. Cưỡng chế buộc thực hiện biện pháp khắc phục hậu quả đối với <ông 
@@ -4043,7 +3716,7 @@ thì ghi: «hoàn trả kinh phí thực hiện biện pháp khắc phục hậu
 (9) Ghi họ và tên của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu tổ 
 chức không phải là doanh nghiệp. 
 
-91 
+
  
 (10) Ghi chức danh của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu tổ 
 chức không phải là doanh nghiệp. 
@@ -4089,12 +3762,9 @@ bổ sung năm 2020).
 (28) Ghi họ và tên của cá nhân/tên của tổ chức có trách nhiệm chủ trì tổ chức thi hành quyết định. 
 (29) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (30) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền cưỡng chế ký quyết 
-định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định. 
+định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-  
- 
- 
-Mẫu quyết định số 12b 
+### Mẫu quyết định số 12b 
  
 CƠ QUAN (1) 
  
@@ -4142,7 +3812,7 @@ Số GCN đăng ký đầu tư/doanh nghiệp hoặc GP thành lập/đăng ký 
 Người đại diện theo pháp luật: (7) ..................................... Giới tính: ...................  
 Chức danh: (8) ........................................................................................................  
 
-93 
+
  
 2. Lý do kê biên tài sản: (9)  ...................................................................................  
 <Ông (bà)/tổ chức>(*) (10) ......................................................................................  
@@ -4237,7 +3907,7 @@ chức không phải là doanh nghiệp.
 «Không tự nguyện chấp hành Quyết định số:..../QĐ-XPHC ngày..../..../........ xử phạt vi 
 phạm hành chính». 
 
-95 
+
  
 - Trường hợp không tự nguyện hoàn trả kinh phí cho cơ quan đã thực hiện biện pháp khắc 
 phục hậu quả thì ghi: «Không tự nguyện hoàn trả kinh phí cho <Ghi tên của cơ quan nhà 
@@ -4272,31 +3942,9 @@ bổ sung năm 2020).
 (20) Ghi họ và tên của cá nhân/tên của tổ chức có trách nhiệm chủ trì tổ chức thi hành quyết định. 
 (21) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (22) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền cưỡng chế ký quyết 
-định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định. 
+định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-VĂN BẢN PHÁP LUẬT KHÁC 
- 
-VĂN BẢN HỢP NHẤT - BỘ TƯ PHÁP 
-Văn bản hợp nhất số 1651/VBHN-BTP hợp nhất Nghị định  
-quy định chi tiết một số điều và biện pháp thi hành   
-Luật Xử lý vi phạm hành chính. 
- 
-(Tiếp theo Công báo số 635 + 636) 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
-           
-         Mẫu quyết định số 12c 
+### Mẫu quyết định số 12c 
  
 CƠ QUAN (1) 
  
@@ -4325,7 +3973,7 @@ phạm hành chính/hoàn trả kinh phí thực hiện biện pháp khắc ph�
 quan nhà nước>(*) (4). 
 
 
-3 
+
   
 QUYẾT ĐỊNH: 
 ##### Điều 1.  
@@ -4404,7 +4052,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (25) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-5 
+
   
  <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho <cá nhân/người đại diện 
 của tổ chức>(*) bị cưỡng chế thi hành quyết định xử phạt vi phạm hành chính vào 
@@ -4488,13 +4136,9 @@ thẩm quyền để làm thủ tục bán đấu giá».
 (23) Ghi họ và tên của cá nhân/tên của tổ chức có trách nhiệm chủ trì tổ chức thi hành quyết định. 
 (24) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (25) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền cưỡng chế ký quyết 
-định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định. 
+định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-7 
-  
- 
- 
-Mẫu quyết định số 13 
+### Mẫu quyết định số 13 
  
 CƠ QUAN (1) 
  
@@ -4571,7 +4215,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (13) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-9 
+
   
 <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho <cá nhân/người đại diện 
 của tổ chức>(*) bị kê biên tài sản có giá trị tương ứng với số tiền phạt vào hồi.... 
@@ -4619,12 +4263,9 @@ phạm hành chính.
 (12) Ghi họ và tên của cá nhân có trách nhiệm chủ trì tổ chức thi hành quyết định. 
 (13) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định. 
+quyết định.
 
-  
- 
- 
-            Mẫu quyết định số 14 
+### Mẫu quyết định số 14 
  
 CƠ QUAN (1) 
  
@@ -4667,7 +4308,7 @@ ngày cấp:..../..../........; nơi cấp: ....................................
 Địa chỉ trụ sở chính: ..............................................................................................  
  .....................................................................................................................................  
 
-11 
+
   
 Mã số doanh nghiệp: .............................................................................................  
 Số GCN đăng ký đầu tư/doanh nghiệp hoặc GP thành lập/đăng ký hoạt động: ...   
@@ -4761,7 +4402,7 @@ người đã ra quyết định tạm giữ tang vật, phương tiện vi ph�
 dụng hợp pháp của tang vật, phương tiện vi phạm hành chính thì ghi <phương tiện thông tin đại 
 chúng đã đăng tin thông báo>. 
 
-13 
+
   
 (5) Ghi cụ thể thời gian đã thực hiện việc thông báo lần thứ hai. 
  (6) và (11) Ghi họ và tên của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu 
@@ -4787,10 +4428,9 @@ người sử dụng hợp pháp».
 (16) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (17) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định.  
+quyết định.
 
-  
-Mẫu quyết định số 15 
+### Mẫu quyết định số 15 
  
 CƠ QUAN (1) 
  
@@ -4837,7 +4477,7 @@ Chức danh: (5) ...............................................................
 2. Phải thực hiện biện pháp khắc phục hậu quả do đã có hành vi vi phạm hành 
 chính quy định tại: 
 
-15 
+
   
 a) Điểm........ Khoản........ Điều……….Nghị định số:..../..../NĐ-CP ngày..../..../........ quy 
 định xử phạt vi phạm hành chính ...................................................................................... 
@@ -4926,7 +4566,7 @@ giải thể, phá sản nhưng không có cá nhân, tổ chức tiếp nhận 
 (8) Ghi cụ thể biện pháp khắc phục hậu quả phải thực hiện. 
 (9) Ghi thời gian phù hợp với điều kiện thực tế để thực hiện biện pháp khắc phục hậu quả. 
 
-17 
+
   
 (10) Ghi tên của cơ quan nhà nước đã tổ chức thi hành biện pháp khắc phục hậu quả trong 
 trường hợp khẩn cấp theo quy định tại khoản 5 Điều 85 Luật Xử lý vi phạm hành chính. 
@@ -4943,10 +4583,9 @@ sản nhưng không có cá nhân, tổ chức tiếp nhận chuyển giao quy�
 (14) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (15) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định.  
+quyết định.
 
-  
-Mẫu quyết định số 16 
+### Mẫu quyết định số 16 
  
 CƠ QUAN (1) 
  
@@ -4992,7 +4631,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (10) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-19 
+
   
 <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho <cá nhân/người đại diện 
 của tổ chức>(*) bị áp dụng biện pháp buộc tiêu hủy tang vật, phương tiện vi phạm 
@@ -5039,11 +4678,9 @@ hành chính bị tiêu hủy và các cơ quan có liên quan khác.
 (9) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (10) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm 
 hành chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm 
-quyền ra quyết định.  
+quyền ra quyết định.
 
-  
- 
-Mẫu quyết định số 17 
+### Mẫu quyết định số 17 
  
 CƠ QUAN (1) 
  
@@ -5089,7 +4726,7 @@ Chức danh: (6) ...............................................................
 3. Lý do đình chỉ thi hành hình thức phạt tiền: (8) ...................................................... 
  ..........................................................................................................................................  
 
-21 
+
   
 ##### Điều 2.  
 1. Tiếp tục thi hành (9)  ............................................................................................... 
@@ -5179,7 +4816,7 @@ hậu quả».
 hành chính và biện pháp khắc phục hậu quả thì ghi «hình thức xử phạt tịch thu tang vật, 
 phương tiện vi phạm hành chính và áp dụng biện pháp khắc phục hậu quả». 
 
-23 
+
   
 (10) Ghi cụ thể điều, khoản quy định hình thức xử phạt tịch thu tang vật, phương tiện vi 
 phạm hành chính hoặc áp dụng biện pháp khắc phục hậu quả trong quyết định xử phạt vi phạm 
@@ -5207,13 +4844,9 @@ thể/phá sản.
 (17) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (18) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định.  
+quyết định.
 
-  
- 
- 
- 
-            Mẫu quyết định số 18 
+### Mẫu quyết định số 18 
  
 CƠ QUAN (1) 
  
@@ -5256,7 +4889,7 @@ ngày cấp:..../..../........; nơi cấp: ....................................
  .....................................................................................................................................  
 5. Thời hạn tạm giữ là: (7).... <giờ/phút>(**), kể từ hồi.... giờ.... phút, ngày..../..../...... 
 
-25 
+
   
 6. Việc tạm giữ được thông báo cho: (8) ................................................................  
  .....................................................................................................................................  
@@ -5320,12 +4953,9 @@ hành chính.
 (11) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (12) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền tạm giữ người theo thủ 
 tục hành chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm 
-quyền ra quyết định.  
+quyền ra quyết định.
 
-27 
-  
- 
-Mẫu quyết định số 19  
+### Mẫu quyết định số 19  
 CƠ QUAN (1) 
  
  
@@ -5392,7 +5022,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (11) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-29 
+
   
 <In ở mặt sau>(***) Quyết định đã giao trực tiếp cho cá nhân bị kéo dài thời 
 hạn tạm giữ người theo thủ tục hành chính vào hồi.... giờ.... phút, ngày..../..../........ 
@@ -5439,11 +5069,9 @@ hoặc học tập của người bị kéo dài thời hạn tạm giữ.
 (10) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (11) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền tạm giữ người theo thủ 
 tục hành chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm 
-quyền ra quyết định. 
+quyền ra quyết định.
 
-  
- 
-Mẫu quyết định số 20 
+### Mẫu quyết định số 20 
 CƠ QUAN (1) 
  
  
@@ -5484,7 +5112,7 @@ Số GCN đăng ký đầu tư/doanh nghiệp hoặc GP thành lập/đăng ký 
  ................................................... ; ngày cấp:..../..../........; nơi cấp: .........................  
 Người đại diện theo pháp luật: (5) ..................................... Giới tính: ...................  
 
-31 
+
   
 Chức danh: (6) ........................................................................................................  
 2. Tang vật, phương tiện vi phạm hành chính, giấy phép, chứng chỉ hành nghề 
@@ -5560,7 +5188,7 @@ nghề thì ghi: «tang vật, phương tiện vi phạm hành chính và giấy
 (5) Ghi họ và tên của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu tổ 
 chức không phải là doanh nghiệp. 
 
-33 
+
   
 (6) Ghi chức danh của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu tổ 
 chức không phải là doanh nghiệp. 
@@ -5589,12 +5217,9 @@ vật, phương tiện vi phạm hành chính, giấy phép, chứng chỉ hành
 (14) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (15)  Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định.  
+quyết định.
 
-  
- 
- 
-            Mẫu quyết định số 21 
+### Mẫu quyết định số 21 
 CƠ QUAN (1) 
  
  
@@ -5635,7 +5260,7 @@ Mã số doanh nghiệp: .......................................................
 Số GCN đăng ký đầu tư/doanh nghiệp hoặc GP thành lập/đăng ký hoạt động: ..   
  ................................................... ; ngày cấp:..../..../........; nơi cấp: .........................  
 
-35 
+
   
 Người đại diện theo pháp luật: (5) ..................................... Giới tính: ...................  
 Chức danh: (6) ........................................................................................................  
@@ -5720,7 +5345,7 @@ chứng chỉ hành nghề».
 (5) Ghi họ và tên của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu tổ 
 chức không phải là doanh nghiệp. 
 
-37 
+
   
 (6) Ghi chức danh của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu tổ 
 chức không phải là doanh nghiệp.  
@@ -5741,10 +5366,9 @@ tiện vi phạm hành chính, giấy phép, chứng chỉ hành nghề theo th�
 (14) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (15) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định. 
+quyết định.
 
-  
-Mẫu quyết định số 22 
+### Mẫu quyết định số 22 
 CƠ QUAN (1) 
  
  
@@ -5786,7 +5410,7 @@ Nghề nghiệp: ...............................................................
 Nơi ở hiện tại: .......................................................................................................  
  .....................................................................................................................................  
 
-39 
+
   
 Số định danh cá nhân/CMND/Hộ chiếu: ............................................................. ;  
 ngày cấp:..../..../........; nơi cấp: ....................................................................................  
@@ -5879,7 +5503,7 @@ chức không phải là doanh nghiệp.
 chức, cá nhân giữ, bảo quản theo từng trường hợp quy định tại khoản 10 Điều 125 Luật Xử lý 
 vi phạm hành chính (sửa đổi, bổ sung năm 2020); 
 
-41 
+
   
 - Trường hợp tổ chức, cá nhân không đặt tiền bảo lãnh thì ghi: «<Ghi họ và tên của cá 
 nhân/tên của tổ chức> có địa chỉ rõ ràng, có điều kiện bến bãi, bảo quản phương tiện». 
@@ -5895,12 +5519,9 @@ tiện giao thông bị tạm giữ theo thủ tục hành chính.
 tổ chức, cá nhân giữ, bảo quản để phối hợp giám sát, quản lý. 
 (14) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định.  
+quyết định.
 
-  
- 
- 
-Mẫu quyết định số 23 
+### Mẫu quyết định số 23 
 CƠ QUAN (1) 
  
  
@@ -5941,7 +5562,7 @@ Nơi ở hiện tại: .........................................................
 Số định danh cá nhân/CMND/Hộ chiếu: ............................................................. ;  
 ngày cấp:..../..../........; nơi cấp: ....................................................................................  
 
-43 
+
   
 <Tên của tổ chức>(*): ...........................................................................................  
 Địa chỉ trụ sở chính: ..............................................................................................  
@@ -6017,12 +5638,9 @@ chức không phải là doanh nghiệp.
 (13) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (14) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định.  
+quyết định.
 
-45 
-  
- 
-Mẫu quyết định số 24 
+### Mẫu quyết định số 24 
  
 CƠ QUAN (1) 
  
@@ -6092,7 +5710,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (12) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-47 
+
   
 <In ở mặt sau>(***) Quyết định đã giao trực tiếp cho <cá nhân/người đại diện 
 của tổ chức>(*) được trả lại <tang vật, phương tiện vi phạm hành chính, giấy phép, 
@@ -6143,12 +5761,9 @@ chính, giấy phép, chứng chỉ hành nghề bị tạm giữ.
 (11) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (12)  Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định.  
+quyết định.
 
-  
- 
- 
-            Mẫu quyết định số 25 
+### Mẫu quyết định số 25 
 CƠ QUAN (1) 
  
  
@@ -6196,7 +5811,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (8) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-49 
+
   
 <In ở mặt sau>(*) Quyết định đã giao trực tiếp cho cá nhân bị áp dụng biện 
 pháp ngăn chặn khám người theo thủ tục hành chính vào hồi.... giờ.... phút, 
@@ -6247,11 +5862,9 @@ khám người theo thủ tục hành chính theo hướng dẫn về thể th�
 (7) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (8) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định.  
+quyết định.
 
-  
- 
-Mẫu quyết định số 26 
+### Mẫu quyết định số 26 
 CƠ QUAN (1) 
  
  
@@ -6292,7 +5905,7 @@ ngày cấp:..../..../........; nơi cấp: ....................................
  .....................................................................................................................................   
  .....................................................................................................................................  
 
-51 
+
   
 7. Phạm vi khám: (8) ...............................................................................................  
  .....................................................................................................................................  
@@ -6362,13 +5975,9 @@ vật bị khám.
 (11) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (12) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định.  
+quyết định.
 
-53 
-  
- 
- 
-Mẫu quyết định số 27 
+### Mẫu quyết định số 27 
 CƠ QUAN (1) 
  
  
@@ -6435,7 +6044,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (13) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-55 
+
   
 <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho <cá nhân/người đại diện 
 của tổ chức>(*) bị áp dụng biện pháp ngăn chặn khám nơi cất giấu tang vật, phương 
@@ -6484,10 +6093,9 @@ giấu tang vật, phương tiện vi phạm hành chính.
 (12) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (13) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định.  
+quyết định.
 
-  
-Mẫu quyết định số 28 
+### Mẫu quyết định số 28 
 ỦY BAN NHÂN DÂN (1) 
  
  
@@ -6529,7 +6137,7 @@ Chức danh: (6) ...............................................................
 2. Lý do khám: (7) ..................................................................................................  
  .....................................................................................................................................   
 
-57 
+
   
 3. Phạm vi khám: (8) ...............................................................................................  
  .....................................................................................................................................   
@@ -6598,13 +6206,9 @@ hành chính.
 giấu tang vật, phương tiện vi phạm hành chính. 
 (11) Ghi họ và tên của cá nhân/tên của tổ chức có trách nhiệm chủ trì tổ chức thực hiện việc khám. 
 (12) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
-(13) Ghi tên của quận/huyện/thị xã/thành phố thuộc tỉnh và tương đương. 
+(13) Ghi tên của quận/huyện/thị xã/thành phố thuộc tỉnh và tương đương.
 
-59 
-  
- 
- 
-Mẫu quyết định số 29 
+### Mẫu quyết định số 29 
 CƠ QUAN (1) 
  
  
@@ -6669,7 +6273,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (13) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-61 
+
   
 <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho <cá nhân/người đại diện 
 của tổ chức>(*) được hủy bỏ áp dụng biện pháp ngăn chặn và bảo đảm xử lý vi 
@@ -6714,11 +6318,9 @@ bảo đảm xử lý vi phạm hành chính.
 (12) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (13)  Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định. 
+quyết định.
 
-  
- 
-Mẫu quyết định số 30 
+### Mẫu quyết định số 30 
 CƠ QUAN (1) 
  
  
@@ -6760,7 +6362,7 @@ ngày cấp:..../..../........; nơi cấp: ....................................
 Địa chỉ trụ sở chính: ..............................................................................................  
  .....................................................................................................................................  
 
-63 
+
   
 Mã số doanh nghiệp:............................................................................................. 
 Số GCN đăng ký đầu tư/doanh nghiệp hoặc GP thành lập/đăng ký hoạt động: ..........   
@@ -6845,12 +6447,9 @@ tiện giao thông bị tạm giữ theo thủ tục hành chính.
 tổ chức, cá nhân giữ, bảo quản. 
 (14) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định.  
+quyết định.
 
-65 
-  
- 
-Mẫu quyết định số 31 
+### Mẫu quyết định số 31 
 CƠ QUAN (1) 
  
  
@@ -6910,7 +6509,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (11) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-67 
+
   
 <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho <cá nhân/người đại 
 diện của tổ chức>(*) được tạm đình chỉ thi hành quyết định xử phạt vi phạm 
@@ -6963,11 +6562,9 @@ phạm hành chính.
 (10) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (11) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định. 
+quyết định.
 
-  
- 
-Mẫu quyết định số 32 
+### Mẫu quyết định số 32 
 CƠ QUAN (1) 
  
  
@@ -7009,7 +6606,7 @@ Mã số doanh nghiệp: .......................................................
 Số GCN đăng ký đầu tư/doanh nghiệp hoặc GP thành lập/đăng ký hoạt động: ..   
  ................................................... ; ngày cấp:..../..../........; nơi cấp: .........................  
 
-69 
+
   
 Người đại diện theo pháp luật: (5) ..................................... Giới tính: ...................  
 Chức danh: (6) ........................................................................................................  
@@ -7082,12 +6679,9 @@ xử phạt vi phạm hành chính.
 (11) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (12) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định. 
+quyết định.
 
-71 
-  
- 
-Mẫu quyết định số 33 
+### Mẫu quyết định số 33 
 CƠ QUAN (1) 
  
  
@@ -7196,13 +6790,9 @@ chức không phải là doanh nghiệp.
 (10) Ghi họ và tên của cá nhân/tên của cơ quan, tổ chức có liên quan (nếu có). 
 (11)  Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định. 
+quyết định.
 
-73 
-  
- 
- 
-            Mẫu quyết định số 34 
+### Mẫu quyết định số 34 
 CƠ QUAN (1) 
  
  
@@ -7271,13 +6861,9 @@ quyền xử phạt vi phạm hành chính theo vụ việc thì không phải g
 (8) Ghi chức danh của người có thẩm quyền xử phạt vi phạm hành chính theo quy định 
 của Luật Xử lý vi phạm hành chính. 
 (9) Ghi chức vụ của người ký. Trường hợp cấp phó được giao phụ trách hoặc tương đương ký 
-quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định. 
+quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-75 
-  
- 
- 
-  Mẫu quyết định số 35 
+### Mẫu quyết định số 35 
 CƠ QUAN (1) 
  
  
@@ -7342,13 +6928,9 @@ chức của cơ quan của người có thẩm quyền ra quyết định cư�
 vi phạm hành chính. 
 (5) Ghi cụ thể thời hạn giao quyền (theo đơn vị thời gian ngày, tháng hoặc năm). 
 (6)  Ghi chức vụ của người ký. Trường hợp cấp phó được giao phụ trách hoặc tương đương ký 
-quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định. 
+quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-77 
-  
- 
- 
-Mẫu quyết định số 36 
+### Mẫu quyết định số 36 
 CƠ QUAN (1) 
  
  
@@ -7414,11 +6996,9 @@ người theo thủ tục hành chính.
 do khác. 
 (6) Ghi cụ thể thời hạn giao quyền (theo đơn vị thời gian ngày, tháng hoặc năm). 
 (7)  Ghi chức vụ của người ký. Trường hợp cấp phó được giao phụ trách hoặc tương đương ký 
-quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định. 
+quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-79 
-  
-             Mẫu quyết định số 37 
+### Mẫu quyết định số 37 
 CƠ QUAN (1) 
  
  
@@ -7509,13 +7089,9 @@ hành chính thì ghi: «..../QĐ-GQCC ».
 (9) Ghi họ và tên của người được giao quyền. 
 (10) Ghi chức danh và tên cơ quan của người được giao quyền. 
 (11) Ghi chức vụ của người ký. Trường hợp cấp phó được giao phụ trách hoặc tương đương ký 
-quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định. 
+quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-81 
-  
- 
- 
-              Mẫu quyết định số 38 
+### Mẫu quyết định số 38 
 CƠ QUAN (1) 
 _________ 
  
@@ -7527,7 +7103,7 @@ CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
  
 QUYẾT ĐỊNH 
 Sửa đổi, bổ sung, hủy bỏ một phần quyết định  
-trong xử phạt vi phạm hành chính*61 
+trong xử phạt vi phạm hành chính*[^vbhn1651-61] 
 ____________ 
 THẨM QUYỀN BAN HÀNH (3) 
  
@@ -7553,9 +7129,7 @@ QUYẾT ĐỊNH:
 <a) Sửa đổi, bổ sung điểm... khoản .... Điều ....>(*) như sau: ...............................  
  ...............................................................................................................................  
  
-61 Mẫu này được thay thế  theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung 
-một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều 
-và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
   
 <b) Hủy bỏ điểm... khoản .... Điều ....>(*) như sau: ..............................................  
@@ -7580,7 +7154,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (19) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-83 
+
   
 <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho <cá nhân/người đại diện 
 của tổ chức>(*) có liên quan đến Quyết định được sửa đổi, bổ sung, hủy bỏ một 
@@ -7647,12 +7221,11 @@ bổ sung, hủy bỏ một phần.
 hiện (nếu có). 
 (18) Ghi họ và tên của cá nhân/tên của tổ chức có trách nhiệm chủ trì tổ chức thi hành quyết định. 
 (19) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền ký quyết định thì ghi 
-chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.  
+chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-85 
-  
- 
-            Mẫu quyết định số 39 
+[^vbhn1651-61]: 61 Mẫu này được thay thế theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+### Mẫu quyết định số 39 
 CƠ QUAN (1) 
 __________ 
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM 
@@ -7663,7 +7236,7 @@ Số: ..../QĐ-ĐC
  
  
 QUYẾT ĐỊNH 
-Đính chính quyết định trong xử phạt vi phạm hành chính*62 
+Đính chính quyết định trong xử phạt vi phạm hành chính*[^vbhn1651-62] 
 ____________ 
  
 THẨM QUYỀN BAN HÀNH (3) 
@@ -7690,10 +7263,7 @@ QUYẾT ĐỊNH:
 <Điểm... khoản .... Điều .... >(*) đã viết là: ...........................................................  
  ...............................................................................................................................  
  
- 62 Mẫu này được thay thế  theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP 
-sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của 
-Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có 
-hiệu lực kể từ ngày 02 tháng 5 năm 2025.  
+  
 
   
 Nay sửa lại là: .......................................................................................................  
@@ -7719,7 +7289,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (19) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-87 
+
   
 <In ở mặt sau>(**) Quyết định đã giao trực tiếp cho <cá nhân/người đại diện 
 của tổ chức>(*) có liên quan đến quyết định được đính chính vào hồi .... giờ .... phút, 
@@ -7771,11 +7341,11 @@ Luật Xử lý vi phạm hành chính (được sửa đổi, bổ sung bởi N
 hiện (nếu có). 
 (18) Ghi họ và tên của cá nhân/tên của tổ chức có trách nhiệm chủ trì tổ chức thi hành quyết định. 
 (19) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền ký quyết định thì ghi 
-chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định. 
+chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-  
- 
-              Mẫu quyết định số 40 
+[^vbhn1651-62]: 62 Mẫu này được thay thế theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+### Mẫu quyết định số 40 
  
 CƠ QUAN (1) 
 __________ 
@@ -7786,7 +7356,7 @@ Số: ..../QĐ-HB
 (2) ......, ngày .... tháng .... năm ........ 
  
 QUYẾT ĐỊNH 
-Hủy bỏ quyết định trong xử phạt vi phạm hành chính*63 
+Hủy bỏ quyết định trong xử phạt vi phạm hành chính*[^vbhn1651-63] 
 ______________ 
  
 THẨM QUYỀN BAN HÀNH (3) 
@@ -7811,12 +7381,9 @@ QUYẾT ĐỊNH:
 ##### Điều 2. Quyết định này có hiệu lực thi hành kể từ ngày ký. 
 ##### Điều 3. Quyết định này được: 
  
- 63 Mẫu này được thay thế  theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP 
-sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của 
-Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có 
-hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
-89 
+
   
 1. Giao cho ông (bà) (12) …………………………. là <cá nhân/người đại diện 
 của tổ chức>(*) có liên quan đến quyết định bị hủy bỏ tại Điều 1 Quyết định này để 
@@ -7886,12 +7453,11 @@ hủy bỏ toàn bộ.
 hiện (nếu có).  
 (15) Ghi họ và tên của cá nhân/tên của tổ chức có trách nhiệm chủ trì tổ chức thi hành quyết định. 
 (16) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền ký quyết định thì ghi 
-chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định. 
+chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra quyết định.
 
-91 
-  
- 
-Mẫu quyết định số 41 
+[^vbhn1651-63]: 63 Mẫu này được thay thế theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+### Mẫu quyết định số 41 
 CƠ QUAN (1) 
  
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM 
@@ -7984,13 +7550,9 @@ phù hợp với điều kiện thực tế để ra quyết định xử phạt
 (11) Ghi họ và tên của cá nhân/tên của tổ chức có trách nhiệm chủ trì tổ chức thi hành quyết định. 
 (12) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định. 
+quyết định.
 
-93 
-  
- 
- 
-Mẫu quyết định số 42 
+### Mẫu quyết định số 42 
 CƠ QUAN (1) 
  
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM 
@@ -8055,7 +7617,7 @@ Nơi nhận:
 CHỨC VỤ CỦA NGƯỜI KÝ (12) 
 (Ký, đóng dấu (nếu có); ghi rõ họ và tên) 
 
-95 
+
   
  
  
@@ -8094,26 +7656,9 @@ cá nhân/tên của tổ chức có giấy phép, chứng chỉ hành nghề ph
 của pháp luật. 
 (12) Ghi chức vụ của người ký. Trường hợp cấp phó được giao quyền xử phạt vi phạm hành 
 chính ký quyết định thì ghi chữ viết tắt “KT.” vào trước chức vụ của người có thẩm quyền ra 
-quyết định. 
+quyết định.
 
-VĂN BẢN PHÁP LUẬT KHÁC 
- 
-VĂN BẢN HỢP NHẤT - BỘ TƯ PHÁP 
- 
- 
-Văn bản hợp nhất số 1651/VBHN-BTP ngày 28 tháng 3 năm 2025  
-hợp nhất Nghị định quy định chi tiết một số điều và biện pháp thi hành  
-Luật Xử lý vi phạm hành chính   
- 
-(Tiếp theo Công báo số 637 + 638) 
- 
- 
- 
- 
- 
- 
- 
-Mẫu biên bản số 01 
+### Mẫu biên bản số 01 
  
 CƠ QUAN (1) 
 ________ 
@@ -8126,7 +7671,7 @@ CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
  
  
  
-BIÊN BẢN VI PHẠM HÀNH CHÍNH*64 
+BIÊN BẢN VI PHẠM HÀNH CHÍNH*[^vbhn1651-64] 
 Về ………………………(2) 
 _____________ 
  
@@ -8140,13 +7685,10 @@ Chúng tôi gồm:
 Họ và tên: ......................................................... Chức vụ: .....................................   
 Cơ quan: ................................................................................................................  
  
-64 Mẫu này được thay thế  theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP 
-sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của 
-Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có 
-hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
 
-3 
+
  
 2. Với sự chứng kiến của: (5) 
 <Họ và tên>(*): ................................................. Nghề nghiệp: ..............................   
@@ -8221,7 +7763,7 @@ bản>(*), 01 bản lưu hồ sơ.
 <Trường hợp cá nhân/người đại diện của tổ chức vi phạm không ký 
 biên bản vi phạm hành chính> 
 
-5 
+
  
 Lý do ông (bà) (13) .................................................................................................   
 < cá nhân/người đại diện của tổ chức >(*) không ký biên bản: ..................................  
@@ -8302,7 +7844,7 @@ hành chính trong lĩnh vực cụ thể, đồng thời, mô tả vụ việc;
 ra vi phạm,... hành vi vi phạm cụ thể. Đối với vi phạm trên biển cần ghi rõ tên tàu, công suất 
 máy chính, tổng dung tích/trọng tải toàn phần, địa điểm xảy ra vi phạm thuộc nội thủy/lãnh 
 
-7 
+
  
 hải/vùng tiếp giáp lãnh hải/vùng đặc quyền kinh tế/thềm lục địa/các đảo thuộc chủ quyền, quyền 
 chủ quyền, quyền tài phán quốc gia của Việt Nam và tọa độ (vĩ độ, kinh độ), hành trình của tàu. 
@@ -8319,12 +7861,11 @@ ghi nội dung này.
 (13) Ghi họ và tên của cá nhân/người đại diện của tổ chức vi phạm. 
 (14) Ghi chức danh và tên cơ quan của người có thẩm quyền xử phạt vi phạm hành chính đối 
 với vụ việc. 
-(15) Ghi địa chỉ nơi dự kiến làm việc với cá nhân/người đại diện của tổ chức vi phạm. 
+(15) Ghi địa chỉ nơi dự kiến làm việc với cá nhân/người đại diện của tổ chức vi phạm.
 
- 
- 
- 
-Mẫu biên bản số 02 
+[^vbhn1651-64]: 64 Mẫu này được thay thế theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+### Mẫu biên bản số 02 
 CƠ QUAN (1) 
  
 Số:.../BB-LV 
@@ -8368,7 +7909,7 @@ trực tiếp đến vụ việc:
 2. Địa điểm xảy ra vụ việc: ...................................................................................  
  .....................................................................................................................................  
 
-9 
+
  
 3. Diễn biến của vụ việc: 
  .....................................................................................................................................  
@@ -8458,13 +7999,9 @@ bị thiệt hại.
 chức không phải là doanh nghiệp. 
 (5) Ghi chức danh của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu tổ 
 chức không phải là doanh nghiệp. 
-(6) Ghi họ và tên của cá nhân/người đại diện của tổ chức có liên quan trực tiếp đến vụ việc. 
+(6) Ghi họ và tên của cá nhân/người đại diện của tổ chức có liên quan trực tiếp đến vụ việc.
 
-11 
- 
- 
- 
-Mẫu biên bản số 03 
+### Mẫu biên bản số 03 
 CƠ QUAN (1) 
  
 Số:..../BB-GTTT 
@@ -8551,7 +8088,7 @@ BÊN TỔ CHỨC GIẢI TRÌNH
 NGƯỜI GHI BIÊN BẢN 
 (Ký, ghi rõ chức vụ, họ và tên) 
 
-13 
+
  
 <In ở mặt sau>(**) Biên bản đã giao trực tiếp cho <cá nhân/người đại diện của 
 tổ chức>(*) vi phạm hoặc người đại diện hợp pháp của <cá nhân/tổ chức>(*) vi 
@@ -8593,10 +8130,9 @@ chức không phải là doanh nghiệp.
 (8) Ghi chức danh của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu tổ 
 chức không phải là doanh nghiệp. 
 (9) Ghi họ và tên của cá nhân/người đại diện của tổ chức vi phạm hoặc họ và tên của người 
-đại diện hợp pháp của cá nhân/tổ chức vi phạm. 
+đại diện hợp pháp của cá nhân/tổ chức vi phạm.
 
- 
-Mẫu biên bản số 04 
+### Mẫu biên bản số 04 
 CƠ QUAN (1) 
 HỘI ĐỒNG ĐỊNH GIÁ 
  
@@ -8635,7 +8171,7 @@ nghề (nếu có) - Thành viên:
 Ông (Bà): ......................................................... Chức vụ: .....................................   
 Cơ quan: ................................................................................................................  
 
-15 
+
  
 Tiến hành xác định giá trị và lập biên bản xác định giá trị tang vật, 
 phương tiện vi phạm hành chính theo Quyết định số:..../QĐ-TG <và Quyết 
@@ -8725,13 +8261,9 @@ chính, giấy phép, chứng chỉ hành nghề theo hướng dẫn về thể 
 (3) Ghi chức danh và tên cơ quan của người có thẩm quyền ra quyết định tạm giữ tang vật, 
 phương tiện vi phạm hành chính, giấy phép, chứng chỉ hành nghề. 
 (4) Ghi cụ thể các căn cứ làm cơ sở để xác định giá trị tang vật, phương tiện vi phạm 
-hành chính. 
+hành chính.
 
-17 
- 
- 
- 
-Mẫu biên bản số 05 
+### Mẫu biên bản số 05 
  
 CƠ QUAN (1) 
 __________ 
@@ -8745,7 +8277,7 @@ CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
  
  
 BIÊN BẢN 
-Xác minh tình tiết của vụ việc vi phạm hành chính*65 
+Xác minh tình tiết của vụ việc vi phạm hành chính*[^vbhn1651-65] 
 ______________ 
 Căn cứ (3) ...............................................................................................................  
 Chúng tôi gồm:  
@@ -8770,10 +8302,7 @@ Nơi ở hiện tại: .........................................................
 Số định danh cá nhân/CMND/Hộ chiếu: ............................................................. ;  
 ngày cấp: ..../..../........; nơi cấp: ...................................................................................  
  
-65 Mẫu này được thay thế  theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP 
-sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của 
-Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có 
-hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
  
 <1. Tên của tổ chức>(*): .......................................................................................  
@@ -8812,7 +8341,7 @@ trường hợp cần thiết):
  .....................................................................................................................................  
  .....................................................................................................................................  
 
-19 
+
  
 12. Những tình tiết xác minh khác: 
  .....................................................................................................................................  
@@ -8857,12 +8386,11 @@ CỦA TỔ CHỨC BỊ THIỆT HẠI(***)
 CÁ NHÂN/NGƯỜI ĐẠI DIỆN  
 CỦA TỔ CHỨC CUNG CẤP  
 THÔNG TIN XÁC MINH(***) 
-(Ký, ghi rõ họ và tên) 
+(Ký, ghi rõ họ và tên)
 
- 
- 
- 
-Mẫu biên bản số 06 
+[^vbhn1651-65]: 65 Mẫu này được thay thế theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+### Mẫu biên bản số 06 
 CƠ QUAN (1) 
  
 Số: ..../BB-KNQĐXP 
@@ -8902,7 +8430,7 @@ Người đại diện theo pháp luật: (4) ..................................
 Chức danh: (5) ........................................................................................................  
 2. Ông (Bà): (6)...................................giao Quyết định số:..../QĐ-XPHC 
 
-21 
+
  
 ngày..../..../........ xử phạt vi phạm hành chính cho <ông (bà)/tổ chức>(*) (7) ...............  
  .......................................................... để thi hành theo quy định của pháp 
@@ -8938,12 +8466,9 @@ chức không phải là doanh nghiệp.
 ĐẠI DIỆN CHÍNH QUYỀN 
 (Ký, đóng dấu; ghi rõ họ và tên) 
 NGƯỜI LẬP BIÊN BẢN 
-(Ký, ghi rõ chức vụ, họ và tên) 
+(Ký, ghi rõ chức vụ, họ và tên)
 
- 
- 
- 
-Mẫu biên bản số 07 
+### Mẫu biên bản số 07 
 CƠ QUAN (1) 
  
 Số:... /BB-KNQĐCC 
@@ -8989,7 +8514,7 @@ tài khoản>/kê biên tài sản có giá trị tương ứng với số tiề
 trả>/thu tiền, tài sản để <thi hành quyết định xử phạt vi phạm hành chính/hoàn trả 
 kinh phí>/buộc thực hiện biện pháp khắc phục hậu quả>(*) (7) cho <ông (bà)/tổ 
 
-23 
+
  
 chức>(*) (8) để thi hành theo quy định của pháp luật, nhưng <ông (bà)/tổ chức>(*) có 
 tên nêu trên cố tình không nhận quyết định. 
@@ -9039,12 +8564,9 @@ tiền, tài sản để hoàn trả kinh phí».
 - Trường hợp giao quyết định cưỡng chế buộc thực hiện biện pháp khắc phục hậu quả thì 
 ghi: «buộc thực hiện biện pháp khắc phục hậu quả». 
 (8) Ghi họ và tên của cá nhân/tên của tổ chức bị xử phạt. 
-(9) Ghi họ và tên của cá nhân/người đại diện của tổ chức bị xử phạt. 
+(9) Ghi họ và tên của cá nhân/người đại diện của tổ chức bị xử phạt.
 
- 
- 
- 
-Mẫu biên bản số 08 
+### Mẫu biên bản số 08 
 CƠ QUAN (1) 
  
 Số:..../BB-GGPCC 
@@ -9082,7 +8604,7 @@ Mã số doanh nghiệp: .......................................................
 Số GCN đăng ký đầu tư/doanh nghiệp hoặc GP thành lập/đăng ký hoạt 
 động:..........................; ngày cấp:..../..../....; nơi cấp:................................................... 
 
-25 
+
  
 Người đại diện theo pháp luật:(5) ...................................... Giới tính: ....................  
 Chức danh:(6) .........................................................................................................  
@@ -9160,13 +8682,9 @@ Ghi họ và tên, nghề nghiệp, địa chỉ liên hệ của người chứ
 chức không phải là doanh nghiệp. 
 (6) Ghi chức danh của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu tổ 
 chức không phải là doanh nghiệp. 
-(7) Ghi họ và tên của cá nhân/người đại diện của tổ chức bị xử phạt. 
+(7) Ghi họ và tên của cá nhân/người đại diện của tổ chức bị xử phạt.
 
-27 
- 
- 
- 
-Mẫu biên bản số 09 
+### Mẫu biên bản số 09 
 CƠ QUAN (1) 
  
 Số:..../BB-XMCC 
@@ -9249,7 +8767,7 @@ trên cùng nghe, công nhận là đúng và cùng ký tên dưới đây; giao
  ................................................ là <cá nhân/người đại diện của tổ chức>(*) phải <thi 
 hành quyết định xử phạt vi phạm hành chính/hoàn trả kinh phí thực hiện biện pháp 
 
-29 
+
  
 khắc phục hậu quả>(*) có tên tại Mục 1 của Biên bản này (cá nhân/tổ chức có 
 thông tin phải xác minh) 01 bản, 01 bản lưu hồ sơ. 
@@ -9320,7 +8838,7 @@ trả kinh phí thực hiện biện pháp khắc phục hậu quả mở tài k
 nhân/cơ quan, đơn vị, tổ chức có liên quan đến cá nhân/tổ chức phải thi hành quyết định xử phạt 
 vi phạm hành chính/hoàn trả kinh phí thực hiện biện pháp khắc phục hậu quả, như: người thành 
 
-31 
+
  
 niên có đầy đủ năng lực hành vi dân sự trong gia đình hoặc người đại diện hợp pháp (đối với cá 
 nhân); người đại diện cho tổ chức; đại diện chính quyền địa phương nơi có tài sản thuộc sở hữu 
@@ -9341,12 +8859,9 @@ phạm hành chính».
 phục hậu quả thì ghi: «Không tự nguyện hoàn trả kinh phí cho <ghi tên của cơ quan nhà 
 nước đã tổ chức thi hành biện pháp khắc phục hậu quả>». 
 (9) Ghi họ và tên của cá nhân/người đại diện của tổ chức phải thi hành quyết định xử phạt vi 
-phạm hành chính/hoàn trả kinh phí thực hiện biện pháp khắc phục hậu quả. 
+phạm hành chính/hoàn trả kinh phí thực hiện biện pháp khắc phục hậu quả.
 
- 
- 
- 
-Mẫu biên bản số 10 
+### Mẫu biên bản số 10 
 CƠ QUAN (1) 
  
 Số: ..../BB-CCXP 
@@ -9384,7 +8899,7 @@ hành quyết định xử phạt vi phạm hành chính/hoàn trả kinh phí>(
 <1. Họ và tên>(*): ............................................................. Giới tính: ....................   
 Ngày, tháng, năm sinh:..../..../........ ................................... Quốc tịch: ..................  
 
-33 
+
  
 Nghề nghiệp:... ......................................................................................................  
 Nơi ở hiện tại: .......................................................................................................  
@@ -9466,7 +8981,7 @@ PHỐI HỢP CƯỠNG CHẾ
 NGƯỜI CHỨNG KIẾN 
 (Ký, ghi rõ họ và tên) 
 
-35 
+
  
 <In ở mặt sau>(**) Biên bản đã giao trực tiếp cho <cá nhân/người đại diện của 
 tổ chức>(*) bị cưỡng chế, <cá nhân/người đại diện của tổ chức>(*) đang giữ tiền, 
@@ -9514,12 +9029,9 @@ chức không phải là doanh nghiệp.
 (12) Ghi cụ thể số tiền phải thu (bằng số và bằng chữ). 
 (13) Ghi họ và tên của cá nhân/người đại diện của tổ chức bị cưỡng chế.  
 (14) Ghi họ và tên của cá nhân/người đại diện của tổ chức đang giữ tiền, tài sản của đối tượng bị 
-cưỡng chế. 
+cưỡng chế.
 
- 
- 
- 
-Mẫu biên bản số 11 
+### Mẫu biên bản số 11 
 CƠ QUAN (1) 
  
 Số:..../BB-CCXP 
@@ -9559,7 +9071,7 @@ ngày cấp: ..../..../........; nơi cấp: ...................................
 <1. Tên của tổ chức>(*): .......................................................................................  
 Địa chỉ trụ sở chính: ..............................................................................................  
 
-37 
+
  
  .....................................................................................................................................  
 Mã số doanh nghiệp: .............................................................................................  
@@ -9647,13 +9159,9 @@ chức không phải là doanh nghiệp.
 chức không phải là doanh nghiệp. 
 (9) Ghi cụ thể kết quả thực hiện từng biện pháp khắc phục hậu quả đã được nêu trong quyết 
 định cưỡng chế buộc thực hiện biện pháp khắc phục hậu quả. 
-(10) Ghi họ và tên của cá nhân/người đại diện của tổ chức bị cưỡng chế.  
+(10) Ghi họ và tên của cá nhân/người đại diện của tổ chức bị cưỡng chế.
 
-39 
- 
- 
- 
-Mẫu biên bản số 12 
+### Mẫu biên bản số 12 
 CƠ QUAN (1) 
  
 Số:..../BB-CCXP 
@@ -9738,7 +9246,7 @@ cùng ký tên dưới đây; giao cho ông (bà) (11)/(5)......................
 nhân có tài sản bị kê biên 01 bản, 01 bản lưu hồ sơ. 
 <Trường hợp có người vắng mặt hoặc có mặt nhưng từ chối ký biên bản> 
 
-41 
+
  
 Lý do ông (bà) (11)/(5)............................ là <cá nhân/người đại diện của tổ 
 chức>(*) có tài sản bị kê biên hoặc người đại diện hợp pháp của cá nhân có tài sản 
@@ -9810,14 +9318,9 @@ chức không phải là doanh nghiệp.
 (10) Việc kê biên tài sản có giá trị tương ứng với số tiền phạt để bán đấu giá phải thực hiện 
 vào ban ngày, thời gian từ 08 giờ đến 17 giờ. 
 (11) Ghi họ và tên của cá nhân/người đại diện của tổ chức có tài sản bị kê biên hoặc họ và tên 
-của người đại diện hợp pháp của cá nhân có tài sản bị kê biên. 
+của người đại diện hợp pháp của cá nhân có tài sản bị kê biên.
 
-43 
- 
- 
- 
- 
-Mẫu biên bản số 13 
+### Mẫu biên bản số 13 
 CƠ QUAN (1) 
  
 Số:..../BB-GBQTS 
@@ -9897,7 +9400,7 @@ tài sản bị kê biên 01 bản, <cá nhân/tổ chức>(*) được giao b�
 người chứng kiến 01 bản và 01 bản lưu hồ sơ. 
 <Trường hợp có người vắng mặt hoặc có mặt nhưng từ chối ký biên bản> 
 
-45 
+
  
 Lý do ông (bà) (8) ...................................................................... là <cá nhân/người  
 đại diện của tổ chức>(*) có tài sản bị kê biên hoặc người đại diện hợp pháp của cá 
@@ -9966,14 +9469,9 @@ giao quản lý tài sản bị kê biên.
 chức không phải là doanh nghiệp. 
 (7) Ghi chức danh của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu tổ 
 chức không phải là doanh nghiệp. 
-(8) Ghi họ và tên của cá nhân/người đại diện của tổ chức có tài sản bị kê biên. 
+(8) Ghi họ và tên của cá nhân/người đại diện của tổ chức có tài sản bị kê biên.
 
-47 
- 
- 
- 
- 
-Mẫu biên bản số 14 
+### Mẫu biên bản số 14 
 CƠ QUAN (1) 
  
 Số:..../BB-GTSĐG 
@@ -10073,7 +9571,7 @@ BÊN BÀN GIAO
 BÊN TIẾP NHẬN 
 (Ký, ghi rõ họ và tên) 
 
-49 
+
  
 <In ở mặt sau>(**) Biên bản đã giao trực tiếp cho <cá nhân/người đại diện của 
 tổ chức>(*) có tài sản bị kê biên hoặc người đại diện hợp pháp của cá nhân có tài 
@@ -10123,12 +9621,9 @@ bàn tỉnh, thành phố trực thuộc Trung ương nơi có tài sản bị k
 chức không phải là doanh nghiệp. 
 (6) Ghi chức danh của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu tổ 
 chức không phải là doanh nghiệp. 
-(7) Ghi họ và tên của cá nhân/người đại diện của tổ chức có tài sản bị kê biên. 
+(7) Ghi họ và tên của cá nhân/người đại diện của tổ chức có tài sản bị kê biên.
 
- 
-  
- 
-Mẫu biên bản số 15 
+### Mẫu biên bản số 15 
 CƠ QUAN (1) 
  
 Số:..../BB-TG 
@@ -10167,7 +9662,7 @@ Số GCN đăng ký đầu tư/doanh nghiệp hoặc GP thành lập/đăng ký 
 Người đại diện theo pháp luật: (6) ..................................... Giới tính: ....................  
 Chức danh: (7) ........................................................................................................  
 
-51 
+
  
 2. Tang vật, phương tiện vi phạm hành chính bị tạm giữ, gồm: 
  
@@ -10287,13 +9782,9 @@ xác định được cá nhân/tổ chức vi phạm» và không phải ghi c�
 chức không phải là doanh nghiệp. 
 (7) Ghi chức danh của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu tổ 
 chức không phải là doanh nghiệp. 
-(8) Ghi họ và tên của cá nhân/người đại diện của tổ chức vi phạm.  
+(8) Ghi họ và tên của cá nhân/người đại diện của tổ chức vi phạm.
 
-53 
- 
- 
-  
-Mẫu biên bản số 16 
+### Mẫu biên bản số 16 
 CƠ QUAN (1) 
  
 Số:..../BB-TL 
@@ -10396,7 +9887,7 @@ CỦA TỔ CHỨC ĐƯỢC NHẬN LẠI
 NGƯỜI LẬP BIÊN BẢN 
 (Ký, ghi rõ chức vụ, họ và tên) 
 
-55 
+
  
 <In ở mặt sau>(**) Biên bản đã giao trực tiếp cho <cá nhân/người đại diện của 
 tổ chức>(*) được nhận lại <tang vật/phương tiện vi phạm hành chính/giấy 
@@ -10443,10 +9934,9 @@ chức không phải là doanh nghiệp.
 chức không phải là doanh nghiệp. 
 (7) Nếu có sự thay đổi so với lúc bị tạm giữ thì phải ghi rõ những thay đổi đó. 
 (8) Ghi họ và tên của cá nhân/người đại diện của tổ chức được nhận lại tang vật, phương tiện 
-vi phạm hành chính, giấy phép, chứng chỉ hành nghề. 
+vi phạm hành chính, giấy phép, chứng chỉ hành nghề.
 
- 
-Mẫu biên bản số 17 
+### Mẫu biên bản số 17 
 CƠ QUAN (1) 
  
 Số:..../BB-TL 
@@ -10485,7 +9975,7 @@ Số GCN đăng ký đầu tư/doanh nghiệp hoặc GP thành lập/đăng ký 
 động:.............................; ngày cấp: ..../..../....; nơi cấp:.............................................. 
 Người đại diện theo pháp luật: (6) ..................................... Giới tính: ...................  
 
-57 
+
  
 Chức danh: (7) ........................................................................................................  
 Trả lại và lập biên bản trả lại <tang vật, phương tiện vi phạm hành chính, giấy 
@@ -10608,13 +10098,9 @@ chức không phải là doanh nghiệp.
 chức không phải là doanh nghiệp. 
 (8) Nếu có sự thay đổi so với lúc bị tạm giữ thì phải ghi rõ những thay đổi đó. 
 (9) Ghi họ và tên của cá nhân/người đại diện của tổ chức được nhận lại tang vật, phương tiện 
-vi phạm hành chính, giấy phép, chứng chỉ hành nghề. 
+vi phạm hành chính, giấy phép, chứng chỉ hành nghề.
 
-59 
- 
- 
- 
-Mẫu biên bản số 18 
+### Mẫu biên bản số 18 
 CƠ QUAN (1) 
  
 Số:..../BB-<ĐTBL/TTBL>(*) (2) 
@@ -10684,7 +10170,7 @@ TIỀN BẢO LÃNH
 NGƯỜI LẬP BIÊN BẢN 
 (Ký, ghi rõ chức vụ, họ và tên) 
 
-61 
+
  
 <In ở mặt sau>(***) Biên bản đã giao trực tiếp cho <cá nhân/người đại diện 
 của tổ chức>(*) <đặt/nhận lại>(*) tiền bảo lãnh vào hồi... giờ... phút, 
@@ -10734,12 +10220,9 @@ chức không phải là doanh nghiệp.
 (10) Ghi chức danh của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu tổ 
 chức không phải là doanh nghiệp. 
 (11) Ghi cụ thể số tiền đặt bảo lãnh/trả lại (bằng số và bằng chữ).  
-(12) Ghi họ và tên của cá nhân/người đại diện của tổ chức đặt/nhận lại tiền bảo lãnh. 
+(12) Ghi họ và tên của cá nhân/người đại diện của tổ chức đặt/nhận lại tiền bảo lãnh.
 
- 
- 
- 
-Mẫu biên bản số 19 
+### Mẫu biên bản số 19 
 CƠ QUAN (1) 
  
 Số:..../BB-GPTTG 
@@ -10780,7 +10263,7 @@ ngày cấp: ..../..../........; nơi cấp: ...................................
 <1. Tên của tổ chức>(*): .......................................................................................  
 Địa chỉ trụ sở chính: ..............................................................................................  
 
-63 
+
  
  .....................................................................................................................................  
 Mã số doanh nghiệp: .............................................................................................  
@@ -10862,7 +10345,7 @@ BẢO QUẢN PHƯƠNG TIỆN
 NGƯỜI LẬP BIÊN BẢN 
 (Ký, ghi rõ chức vụ, họ và tên) 
 
-65 
+
  
 <In ở mặt sau>(**) Biên bản đã giao trực tiếp cho <cá nhân/người đại diện của 
 tổ chức>(*) được giao giữ, bảo quản phương tiện giao thông bị tạm giữ theo thủ tục 
@@ -10913,11 +10396,9 @@ chức không phải là doanh nghiệp.
 (6) Ghi chức danh của người đại diện theo pháp luật của doanh nghiệp/người đứng đầu tổ 
 chức không phải là doanh nghiệp. 
 (7) Ghi họ và tên của cá nhân/người đại diện của tổ chức được giao giữ, bảo quản phương 
-tiện giao thông bị tạm giữ theo thủ tục hành chính. 
+tiện giao thông bị tạm giữ theo thủ tục hành chính.
 
- 
- 
-Mẫu biên bản số 20 
+### Mẫu biên bản số 20 
 CƠ QUAN (1) 
  
 Số:..../BB-TT 
@@ -10957,7 +10438,7 @@ Tiến hành lập biên bản tịch thu <tang vật/phương tiện vi phạm 
 chính>(*) (8) theo Quyết định số:..../QĐ-<XPHC/TT>(*) 
 1. <Tang vật/phương tiện vi phạm hành chính>(*) (8) bị tịch thu, gồm: 
 
-67 
+
  
 STT 
 Tên tang vật, 
@@ -11074,12 +10555,9 @@ chức không phải là doanh nghiệp.
 hành chính». 
 (9) Nếu có sự thay đổi so với lúc bị tạm giữ thì phải ghi rõ những thay đổi đó. 
 (10) Ghi họ và tên của cá nhân/người đại diện của tổ chức bị tịch thu tang vật, phương tiện vi 
-phạm hành chính.  
+phạm hành chính.
 
-69 
- 
- 
-Mẫu biên bản số 21 
+### Mẫu biên bản số 21 
 CƠ QUAN (1) 
  
 Số:..../BB-BTH 
@@ -11177,7 +10655,7 @@ NGƯỜI LẬP BIÊN BẢN
 QUẢN LÝ CHUYÊN NGÀNH 
 (Ký, ghi rõ chức vụ họ và tên) 
 
-71 
+
  
 <In ở mặt sau>(**) Biên bản đã giao trực tiếp cho <cá nhân/người đại diện của tổ 
 chức>(*) vi phạm có tang vật, phương tiện vi phạm hành chính bị tiêu hủy vào hồi... giờ... 
@@ -11219,12 +10697,9 @@ phương tiện vi phạm hành chính.
 (5) Ghi cụ thể biện pháp tiêu hủy được thực hiện đối với tang vật, phương tiện vi phạm hành 
 chính như: Nghiền, đốt, chôn lấp hoặc các biện pháp khác. 
 (6) Ghi họ và tên của cá nhân/người đại diện của tổ chức vi phạm có tang vật, phương tiện 
-vi phạm hành chính bị tiêu hủy.  
+vi phạm hành chính bị tiêu hủy.
 
- 
- 
- 
-Mẫu biên bản số 22 
+### Mẫu biên bản số 22 
 CƠ QUAN (1) 
  
 Số:......../BB-BGN 
@@ -11265,7 +10740,7 @@ Nghề nghiệp: ...............................................................
 Nơi ở hiện tại: .......................................................................................................  
  .....................................................................................................................................  
 
-73 
+
  
 Số định danh cá nhân/CMND/Hộ chiếu: ............................................................. ;  
 ngày cấp: ..../..../........; nơi cấp: ...................................................................................  
@@ -11363,13 +10838,9 @@ người đại diện và tên của cơ quan, tổ chức nơi người vi ph�
 vi vi phạm hành chính/bị áp giải tại thời điểm bàn giao.  
 (9) Trường hợp đã tạm giữ người trên tàu bay, tàu biển, tàu hỏa thì ghi số hiệu của tàu bay, 
 tàu biển, tàu hỏa đó và thời gian khi tàu bay, tàu biển, tàu hỏa đến sân bay, bến cảng, nhà ga. 
-(10) Ghi họ và tên của người có hành vi vi phạm hành chính/bị áp giải. 
+(10) Ghi họ và tên của người có hành vi vi phạm hành chính/bị áp giải.
 
-75 
- 
- 
- 
-Mẫu biên bản số 23 
+### Mẫu biên bản số 23 
 CƠ QUAN (1) 
  
 Số:..../BB-KN 
@@ -11436,7 +10907,7 @@ NGƯỜI LẬP BIÊN BẢN
 NGƯỜI CHỨNG KIẾN 
 (Ký, ghi rõ họ và tên) 
 
-77 
+
  
 <In ở mặt sau>(**) Biên bản đã giao trực tiếp cho cá nhân vi phạm pháp luật bị 
 áp dụng biện pháp ngăn chặn khám người theo thủ tục hành chính vào hồi... giờ... 
@@ -11479,12 +10950,9 @@ khám.
 (6) Ghi rõ tên, số lượng, đơn vị tính, nhãn hiệu, chủng loại, đặc điểm, tình trạng của đồ vật, 
 tang vật, phương tiện vi phạm hành chính phát hiện được (nếu nhiều thì lập bản thống kê riêng). 
 (7) Ghi họ và tên của cá nhân vi phạm pháp luật bị áp dụng biện pháp ngăn chặn khám 
-người theo thủ tục hành chính. 
+người theo thủ tục hành chính.
 
- 
- 
- 
-Mẫu biên bản số 24 
+### Mẫu biên bản số 24 
 CƠ QUAN (1) 
  
 Số:..../BB-KPTĐV  
@@ -11524,7 +10992,7 @@ ngày cấp:..../..../ ......; nơi cấp: .....................................
 Biển số đăng ký phương tiện vận tải (nếu có): (9) .................................................   
 3. Phạm vi khám: (10) .............................................................................................  
 
-79 
+
  
 4. Sau khi khám phương tiện vận tải, đồ vật, chúng tôi phát hiện những tang 
 vật vi phạm hành chính, gồm: (11) 
@@ -11600,11 +11068,9 @@ mặt, thì người có thẩm quyền lập biên bản phải bảo đảm s�
 (9) Ghi biển số đăng ký phương tiện vận tải (ô tô, tàu, thuyền...). 
 (10) Ghi rõ khám những bộ phận, thiết bị nào của phương tiện vận tải, đồ vật. 
 (11) Ghi rõ tên, số lượng, đơn vị tính, nhãn hiệu, chủng loại, đặc điểm, tình trạng của đồ vật, 
-tang vật, phương tiện vi phạm hành chính phát hiện được (nếu nhiều thì lập bản thống kê riêng). 
+tang vật, phương tiện vi phạm hành chính phát hiện được (nếu nhiều thì lập bản thống kê riêng).
 
-81 
- 
-Mẫu biên bản số 25 
+### Mẫu biên bản số 25 
 CƠ QUAN (1) 
  
 Số:..../BB-KNCG 
@@ -11674,7 +11140,7 @@ NGƯỜI CHỨNG KIẾN
 ĐẠI DIỆN CHÍNH QUYỀN 
 (Ký, ghi rõ chức vụ, họ và tên) 
 
-83 
+
  
 <In ở mặt sau>(**) Biên bản đã giao trực tiếp cho <cá nhân/người đại diện của 
 tổ chức>(*) là chủ nơi bị khám vào hồi... giờ... phút, ngày..../..../........ 
@@ -11717,12 +11183,9 @@ nơi cất giấu tang vật, phương tiện vi phạm hành chính.
 phương tiện vi phạm hành chính phát hiện được (nếu nhiều thì lập bản thống kê riêng). 
 (10) Việc khám nơi cất giấu tang vật, phương tiện vi phạm hành chính không được thực hiện 
 vào ban đêm, trừ trường hợp khẩn cấp hoặc việc khám đang được thực hiện mà chưa kết thúc 
-nhưng phải ghi rõ lý do vào biên bản. 
+nhưng phải ghi rõ lý do vào biên bản.
 
- 
- 
- 
-Mẫu biên bản số 26 
+### Mẫu biên bản số 26 
 CƠ QUAN (1) 
  
 Số:..../BB-NPTG 
@@ -11763,7 +11226,7 @@ ngày cấp: ..../..../........; nơi cấp: ...................................
 Mã số doanh nghiệp: .............................................................................................  
 Số GCN đăng ký đầu tư/doanh nghiệp hoặc GP thành lập/đăng ký hoạt động: 
 
-85 
+
  
  ................................................... ; ngày cấp: ..../..../........; nơi cấp: ........................  
 Người đại diện theo pháp luật: (7) ..................................... Giới tính: ....................  
@@ -11872,11 +11335,9 @@ chức không phải là doanh nghiệp.
 tạm giữ theo thủ tục hành chính phải niêm phong. 
 (10) Ghi tên cơ quan của người được giao bảo quản tang vật, phương tiện vi phạm hành chính 
 bị tạm giữ theo thủ tục hành chính phải niêm phong. 
-(11) Ghi họ và tên của cá nhân/người đại diện của tổ chức vi phạm. 
+(11) Ghi họ và tên của cá nhân/người đại diện của tổ chức vi phạm.
 
-87 
- 
-Mẫu biên bản số 27 
+### Mẫu biên bản số 27 
 CƠ QUAN (1) 
  
 Số: ..../BB-MNP 
@@ -11887,7 +11348,7 @@ CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
  
 BIÊN BẢN 
 Mở niêm phong tang vật, phương tiện vi phạm hành chính 
-bị tạm giữ theo thủ tục hành chính*66 
+bị tạm giữ theo thủ tục hành chính*[^vbhn1651-66] 
 ____________ 
 Căn cứ (2) ...............................................................................................................  
 Hôm nay, hồi .... giờ .... phút, ngày ..../..../........, tại (3) .........................................  
@@ -11914,10 +11375,7 @@ Số GCN đăng ký đầu tư/doanh nghiệp hoặc GP thành lập/đăng ký 
 Người đại diện theo pháp luật: (4) ..................................... Giới tính: ....................  
 Chức danh: (5) ........................................................................................................  
  
-66 Mẫu này được thay thế  theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP 
-sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của 
-Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có 
-hiệu lực kể từ ngày 02 tháng 5 năm 2025. 
+ 
 
  
 3. Người có trách nhiệm bảo quản tang vật, phương tiện vi phạm hành chính bị tạm 
@@ -11987,7 +11445,7 @@ NGƯỜI BẢO QUẢN TANG VẬT,
 PHƯƠNG TIỆN 
 (Ký, ghi rõ chức vụ, họ và tên) 
 
-89 
+
  
 <In ở mặt sau>(**) Biên bản đã giao trực tiếp cho <cá nhân/người đại diện của 
 tổ chức>(*) vi phạm vào hồi .... giờ .... phút, ngày ..../..../........ 
@@ -12028,12 +11486,11 @@ chức không phải là doanh nghiệp.
 chức không phải là doanh nghiệp. 
 (6) Ghi họ và tên của cá nhân/người đại diện của tổ chức vi phạm. 
 (7) Ghi họ và tên của người được giao bảo quản tang vật, phương tiện vi phạm hành chính bị 
-tạm giữ theo thủ tục hành chính được niêm phong. 
+tạm giữ theo thủ tục hành chính được niêm phong.
 
- 
- 
- 
-Mẫu biên bản số 28 
+[^vbhn1651-66]: 66 Mẫu này được thay thế theo quy định tại khoản 3 Điều 2 của Nghị định số 68/2025/NĐ-CP sửa đổi, bổ sung một số điều của Nghị định số 118/2021/NĐ-CP ngày 23 tháng 12 năm 2021 của Chính phủ quy định chi tiết một số điều và biện pháp thi hành Luật Xử lý vi phạm hành chính, có hiệu lực kể từ ngày 02 tháng 5 năm 2025.
+
+### Mẫu biên bản số 28 
 CƠ QUAN (1) 
  
 Số:..../BB-CHS 
@@ -12074,7 +11531,7 @@ BÊN NHẬN BÀN GIAO
 BÊN BÀN GIAO 
 (Ký, ghi rõ chức vụ, họ và tên) 
 
-91 
+
  
  
 * Mẫu này được sử dụng để lập biên bản bàn giao hồ sơ vụ vi phạm có dấu hiệu tội phạm để 
@@ -12085,12 +11542,9 @@ Chính phủ.
 (2) Ghi chức danh và tên cơ quan của người có thẩm quyền ra quyết định chuyển hồ sơ vụ vi 
 phạm có dấu hiệu tội phạm để truy cứu trách nhiệm hình sự. 
 (3) Ghi địa chỉ trụ sở cơ quan của người có thẩm quyền lập biên bản. 
-(4) Ghi rõ số lượng, tên các loại biên bản, quyết định, tài liệu có trong hồ sơ. 
+(4) Ghi rõ số lượng, tên các loại biên bản, quyết định, tài liệu có trong hồ sơ.
 
- 
- 
- 
-Mẫu biên bản số 29 
+### Mẫu biên bản số 29 
 CƠ QUAN (1) 
  
 Số:..../BB-CQĐXP 
@@ -12164,7 +11618,7 @@ BÊN NHẬN BÀN GIAO
 BÊN BÀN GIAO 
 (Ký, ghi rõ chức vụ, họ và tên) 
 
-93 
+
  
  
 * Mẫu này được sử dụng để lập biên bản chuyển hồ sơ và quyết định xử phạt vi phạm hành 
@@ -12177,12 +11631,9 @@ Chính phủ.
 (3) Ghi địa chỉ trụ sở cơ quan của người có thẩm quyền lập biên bản. 
 (4) Ghi chức danh và tên cơ quan của người có thẩm quyền ra quyết định xử phạt vi phạm 
 hành chính. 
-(5) Ghi rõ số lượng, tên các loại biên bản, quyết định, tài liệu có trong hồ sơ. 
+(5) Ghi rõ số lượng, tên các loại biên bản, quyết định, tài liệu có trong hồ sơ.
 
- 
- 
- 
-Mẫu biên bản số 30 
+### Mẫu biên bản số 30 
 CƠ QUAN (1) 
  
 Số:..../BB-CGPCC 
@@ -12227,7 +11678,7 @@ BÊN NHẬN BÀN GIAO
 BÊN BÀN GIAO 
 (Ký, ghi rõ chức vụ, họ và tên) 
 
-95 
+
  
  
 * Mẫu này được sử dụng để lập biên bản bàn giao giấy phép, chứng chỉ hành nghề trong 

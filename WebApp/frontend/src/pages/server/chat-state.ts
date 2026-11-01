@@ -31,14 +31,14 @@ export async function loadCitationSource(citation: Citation) {
   if (citation.source) {
     if (!snapshotMatches(citation)) throw new ApiError('Source snapshot mismatch', 502)
     const { metadata, document_metadata: doc, entity_type: kind } = citation.source
-    return { title: String(doc.title ?? citation.doc_id), number: String(doc.so_hieu ?? citation.doc_id),
+    return { title: String(doc.title ?? citation.doc_id), number: String(typeof doc.official_so_hieu === 'string' && doc.official_so_hieu.trim() || doc.so_hieu || citation.doc_id),
       unitType: kind.endsWith('.LegalUnit') ? String(metadata.unit_type ?? 'Đơn vị pháp lý') : kind.endsWith('.TrafficSign') ? 'Biển báo' : 'Văn bản', text: citation.source.text }
   }
   const [documents, units] = await Promise.all([api<ContentRecord[]>('/documents'), api<ContentRecord[]>(`/units?docId=${encodeURIComponent(citation.doc_id)}`)])
   if (!Array.isArray(documents) || !Array.isArray(units)) throw new ApiError('Invalid source', 502)
   const doc = documents.find(d => d.externalId === citation.doc_id), unit = units.find(u => u.externalId === citation.unit_id)
   if (!doc?.data || !unit?.data || unit.data.doc_id !== citation.doc_id || typeof unit.data.text !== 'string' || !citation.quote.trim() || !unit.data.text.includes(citation.quote) || typeof doc.data.title !== 'string' || typeof doc.data.so_hieu !== 'string' || typeof unit.data.unit_type !== 'string') throw new ApiError('Source not available', 502)
-  return { title: doc.data.title, number: doc.data.so_hieu, unitType: unit.data.unit_type, text: unit.data.text }
+  return { title: doc.data.title, number: typeof doc.data.official_so_hieu === 'string' && doc.data.official_so_hieu.trim() || doc.data.so_hieu, unitType: unit.data.unit_type, text: unit.data.text }
 }
 
 function snapshotMatches(citation: Citation) {

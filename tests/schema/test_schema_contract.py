@@ -202,7 +202,7 @@ class SchemaContractTest(unittest.TestCase):
             k: approved['edge_application_key_contract'][k] for k in key_fields}
         digest = hashlib.sha256(json.dumps(approved, ensure_ascii=False, sort_keys=True,
                                 separators=(',', ':')).encode('utf-8')).hexdigest()
-        self.assertEqual(digest, '202d2f4d7de188565d8433b95c8a972506dd8a05819788f89a2e7b35cec30ec8')
+        self.assertEqual(digest, '04b5bfe362dfe7c94addc80f04e6747a747a5ad99467434978a91237dba0e0f1')
 
     def test_exact_predicates_endpoints_and_relation_provenance(self):
         self.assertEqual(self.contract['logical_to_physical_predicates'], PREDICATES)
@@ -242,11 +242,11 @@ class SchemaContractTest(unittest.TestCase):
     def test_xref_integrity_gate(self):
         xref = self.contract['xref_contract']
         expected = {
-            'xref_sha256': '4a408fc2bdac1868c7099256657056c378c4fc922514512ad7edd6e29d250f6e',
-            'required_safe_edge_ledger_sha256': 'd2a8a70f4f91d04cac4e935e063fb6f3077d0bbc845f1ddaa3d9905e11ec8c89',
+            'xref_sha256': 'c807cd38e5fccdf88c5396bee7258b7c90d0e9e445143e2148757996b1ede11e',
+            'required_safe_edge_ledger_sha256': 'ee025ac07a04895539d83bb0f056629cc59b5137f67be2a46fae043a77ed2068',
             'join_contract': 'EXISTING_RECORD_FINGERPRINT_SHA256_CANONICAL_JSON',
-            'classification_total': 21724, 'safe_edge_total': 12554,
-            'safe_edge_affirmative': 11144, 'safe_edge_exclusion': 1410,
+            'classification_total': 21618, 'safe_edge_total': 13106,
+            'safe_edge_affirmative': 11638, 'safe_edge_exclusion': 1468,
         }
         self.assertEqual({k:xref[k] for k in expected}, expected)
         self.assertEqual(xref['ledger_artifact_name'], 'xref_a3g2_final_ledger.jsonl')

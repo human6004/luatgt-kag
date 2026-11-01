@@ -10,7 +10,7 @@ Văn bản pháp luật lấy từ Công báo Chính phủ và CDN đi kèm. `ra
 
 ## Snapshot corpus
 
-[corpus.json](metadata/corpus.json) ghi `dataset_date=2026-10-24`; [checksums.json](metadata/checksums.json) giữ SHA-256. Ngày snapshot không phải kết luận hiệu lực pháp luật.
+[corpus.json](metadata/corpus.json) ghi ngày `dataset_date` của snapshot hiện tại; [checksums.json](metadata/checksums.json) giữ SHA-256. Ngày snapshot không phải kết luận hiệu lực pháp luật.
 
 Số lượng từng loại dữ liệu được trình bày tại [Thống kê corpus](README.md#thống-kê-corpus), đối chiếu với metadata của snapshot.
 

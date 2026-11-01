@@ -19,11 +19,11 @@ from kag.vector_contract import TARGETS, valid_vector as _valid_vector
 
 
 C3_IDENTITY = {
-    'nodes_jsonl_sha256': '2ab96971f7d8aa0100ee12ff07ce992002c1707a0150e59920140c41bcaa91aa',
-    'edges_jsonl_sha256': '31952b03b208cd20c0a157037d19371f5fbd9ead92659377ce932d3c8564b157',
-    'plan_sha256': '55d27a76ea988d5b81521eb0b355d70d0225b03e0006856f3dd0e72757e7b334',
+    'nodes_jsonl_sha256': 'a07065ef3881ab83bfddb7037f568ee26ccb1e157c6d62cca0efc6a3185aa194',
+    'edges_jsonl_sha256': 'bd5b50ac18e76410fbd9feb53fbbbce2f1de56ec0e6e13999077409d75f23f3e',
+    'plan_sha256': '719c3cfd057fa7a6927c27ee2d0ed878cd35d335a7c42760806f15e6ca1e6b59',
     'schema_sha256': '4f9afe2e877b0926416b2cb29dd562cbe17805f053a090a5d6d7c618fdc69fde',
-    'contract_sha256': 'd0e25beb8d780ea19e43f7a7d54f398f3e6845861da18a43eb2a353e2767cfd8',
+    'contract_sha256': '4b9b87fdff55352cd59caf65951a929f39d513c3d07b0c054b28b24e7a857aac',
 }
 ROOT = Path(__file__).resolve().parents[2]
 SAMPLE_PROJECT_ID = 2

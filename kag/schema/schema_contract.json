@@ -1393,18 +1393,18 @@
     "normalization": "No Unicode normalization, trimming, UUID, or replacement by title/order/text hash."
   },
   "xref_contract": {
-    "xref_sha256": "4a408fc2bdac1868c7099256657056c378c4fc922514512ad7edd6e29d250f6e",
-    "required_safe_edge_ledger_sha256": "d2a8a70f4f91d04cac4e935e063fb6f3077d0bbc845f1ddaa3d9905e11ec8c89",
+    "xref_sha256": "c807cd38e5fccdf88c5396bee7258b7c90d0e9e445143e2148757996b1ede11e",
+    "required_safe_edge_ledger_sha256": "ee025ac07a04895539d83bb0f056629cc59b5137f67be2a46fae043a77ed2068",
     "ledger_artifact_name": "xref_a3g2_final_ledger.jsonl",
     "runtime_path_source": "Runtime configuration; no absolute path dependency.",
     "join_contract": "EXISTING_RECORD_FINGERPRINT_SHA256_CANONICAL_JSON",
     "fingerprint_input": "Complete 13-field original xref record, including from_so_hieu; preserve missing/null/empty and string bytes.",
     "fingerprint_canonical_json": "json.dumps(source_record, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')",
     "fingerprint_algorithm": "SHA256",
-    "classification_total": 21724,
-    "safe_edge_total": 12554,
-    "safe_edge_affirmative": 11144,
-    "safe_edge_exclusion": 1410,
+    "classification_total": 21618,
+    "safe_edge_total": 13106,
+    "safe_edge_affirmative": 11638,
+    "safe_edge_exclusion": 1468,
     "classification_field": "downstream_use",
     "allowed_classification": "SAFE_EDGE",
     "affirmative_predicate": "citesUnit",
@@ -1423,7 +1423,7 @@
     },
     "units": {
       "rule": "Source unit_id and doc_id belong to production whitelist; preserve source parent_id hierarchy",
-      "expected_count": 57035
+      "expected_count": 57913
     },
     "penalties": {
       "rule": "Merge by unit_id only, LegalUnit 1:0..1 source penalty; duplicate/join/document mismatch fails closed",

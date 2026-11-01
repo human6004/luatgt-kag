@@ -19,7 +19,7 @@ PINS = {
     'nodes_jsonl_sha256': '03e929392b2b75d6ba8a381de94a3c0688e8ccc60dd59cb5bd048e9eeacff8e7',
     'edges_jsonl_sha256': '2e904697369d2e5d90e694cd5692041e83cfcb455ee529afcc1bf7a22d0bdb0f',
     # Semantic hash includes the current schema/contract, even for this two-node fixture.
-    'plan_sha256': 'a135ebb8f0d9085ef7a5856a61fee7afadb73a86a8106b2423950cab80457dd7',
+    'plan_sha256': '51348c7ac2ca010062c3a22abf72d27bc73cc2d82f26cbf8a0ae030e945cc0d5',
 }
 INPUT_SHA = 'f16d05ec6b29248d2c61adb1e9263f78e4f7bace1b955014a2d17872cfe4064d'
 

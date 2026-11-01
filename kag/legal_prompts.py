@@ -40,7 +40,7 @@ class UnsafeSubqueryError(CandidateError):
         self.executor = executor
 
 
-_DOCUMENT = re.compile(r'\b\d+/\d{4}/[\wĐđ-]+', re.UNICODE)
+_DOCUMENT = re.compile(r'\b\d+/(?:\d{4}/[\wĐđ-]+|VBHN-[\wĐđ-]+)', re.UNICODE | re.I)
 DOCUMENT_CONTENT_PREFIX = 'Trích nội dung văn bản: '
 
 
@@ -63,7 +63,7 @@ def document_title_question(query):
     if len(numbers) != 1:
         return None
     number = next(iter(numbers))
-    document = r'(?:văn bản|nghị định|thông tư|luật|nghị quyết|quyết định)(?: số)?\s+'+re.escape(number.casefold())
+    document = r'(?:văn bản(?: hợp nhất)?|nghị định|thông tư|luật|nghị quyết|quyết định)(?: số)?\s+'+re.escape(number.casefold())
     pattern = (r'(?:tên(?: đầy đủ)?(?: của)?\s+'+document+r'(?:\s+là gì)?|'
                +document+r'\s+(?:có )?tên(?: gọi)? là gì)\s*[?.]?')
     return number if re.fullmatch(pattern, question.casefold()) else None
@@ -89,7 +89,7 @@ def exact_source_question(query):
     clause=r'khoản\s+\d+[a-zđ]?'
     point=r'điểm\s+[a-zđ]'
     unit=r'(?:'+point+r'\s+'+clause+r'\s+'+article+r'|'+clause+r'\s+'+article+r'|'+article+r')'
-    document=r'(?:văn bản|nghị định|thông tư|luật|nghị quyết|quyết định)(?: số)?\s+'
+    document=r'(?:văn bản(?: hợp nhất)?|nghị định|thông tư|luật|nghị quyết|quyết định)(?: số)?\s+'
     return bool(re.fullmatch(unit+r'\s+(?:(?:của|thuộc)\s+)?'+document+
                             re.escape(next(iter(numbers)).casefold())+r'\s*[?.]?',question.casefold()))
 
