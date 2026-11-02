@@ -1,25 +1,23 @@
-import { BrowserRouter, Routes, Route, Navigate, useLocation, useSearchParams } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { AdminProvider, useAdmin } from './admin/store'
 import UserLayout from './layouts/UserLayout'
 import AdminLayout from './layouts/AdminLayout'
 import LoginPage from './pages/LoginPage'
-import { AuthProvider, RequireRole, SessionHome, useAuth } from './auth'
+import { AuthProvider, RequireRole, SessionHome } from './auth'
 import Chat from './pages/ChatPage'
 import Study from './pages/ChapterStudyPage'
 import Exam from './pages/ExamPage'
 import Signs from './pages/SignLibraryPage'
 import Dashboard from './pages/AdminDashboard'
 import Chatbot from './pages/AdminChatbot'
+import Content from './pages/AdminContent'
 import Users from './pages/AdminUsers'
-import Logs from './pages/AdminChatLogs'
 import Questions from './pages/AdminQuestions'
 import Sources from './pages/AdminSources'
 import Benchmark from './pages/AdminBenchmark'
 import Docker from './pages/AdminDocker'
-import { ContentManager, Imports as ContentImports } from './pages/server/AdminPages'
 import { Infrastructure } from './pages/server/OperationsPages'
 import KagSchemaPage from './pages/server/KagSchemaPage'
-import { Button } from './admin/ui'
 
 function Toast() {
   const { toast } = useAdmin()
@@ -67,49 +65,6 @@ function ImportsRedirect({ defaultType }: { defaultType: 'signs' | 'questions' }
   return <Navigate to={`/admin/content?${next.toString()}`} replace />
 }
 
-function ContentShell() {
-  const [params, setParams] = useSearchParams()
-  const rawTab = params.get('tab')
-  const tab = rawTab === 'units' || rawTab === 'signs' ? rawTab : 'documents'
-  const showImport = params.get('import') === '1'
-  return (
-    <div>
-      <div className="px-6 sm:px-8 pt-6 max-w-6xl mx-auto flex flex-wrap items-center justify-between gap-2 border-b border-line pb-3">
-        <nav aria-label="Loại nội dung luật" className="flex flex-wrap gap-2">
-          {([['documents', 'Văn bản'], ['units', 'Điều khoản'], ['signs', 'Biển báo']] as const).map(([key, label]) => (
-            <Button key={key} variant={tab === key ? 'dark' : 'outline'} onClick={() => setParams({ tab: key })}>{label}</Button>
-          ))}
-        </nav>
-        <Button variant={showImport ? 'dark' : 'outline'} onClick={() => setParams(showImport ? { tab } : { tab, import: '1' })}>
-          {showImport ? 'Đóng nhập hàng loạt' : 'Nhập hàng loạt'}
-        </Button>
-      </div>
-      {showImport ? <ContentImports key={`imp-${tab}`} /> : <ContentManager key={tab} kind={tab} />}
-    </div>
-  )
-}
-
-function UsersShell() {
-  const { session } = useAuth()
-  const [params, setParams] = useSearchParams()
-  const isPolice = session?.role === 'police'
-  const tab = isPolice || params.get('tab') === 'logs' ? 'logs' : 'users'
-  return (
-    <div>
-      {!isPolice && (
-        <div className="px-6 sm:px-8 pt-6 max-w-6xl mx-auto">
-          <nav aria-label="Quản lý người dùng và nhật ký" className="flex flex-wrap gap-2 border-b border-line pb-3">
-            {([['users', 'Người dùng'], ['logs', 'Nhật ký chat']] as const).map(([key, label]) => (
-              <Button key={key} variant={tab === key ? 'dark' : 'outline'} onClick={() => setParams({ tab: key })}>{label}</Button>
-            ))}
-          </nav>
-        </div>
-      )}
-      {tab === 'logs' ? <Logs /> : <Users />}
-    </div>
-  )
-}
-
 export default function App() {
   return (
     <BrowserRouter>
@@ -136,9 +91,9 @@ export default function App() {
               <Route element={<AdminLayout />}>
                 <Route path="/admin/dashboard" element={<Dashboard />} />
                 <Route path="/admin/chatbot" element={<Chatbot />} />
-                <Route path="/admin/content" element={<ContentShell />} />
+                <Route path="/admin/content" element={<Content />} />
                 <Route path="/admin/questions" element={<Questions />} />
-                <Route path="/admin/users" element={<UsersShell />} />
+                <Route path="/admin/users" element={<Users />} />
                 <Route path="/admin/infrastructure" element={<Infrastructure />} />
                 <Route path="/admin/sources" element={<Sources />} />
                 <Route path="/admin/schema" element={<KagSchemaPage />} />

@@ -1,18 +1,5 @@
 import { createContext, useCallback, useContext, useRef, useState } from 'react'
 
-export type DocStatus = 'Chờ xử lý' | 'Đang xử lý' | 'Chờ duyệt' | 'Đã lập chỉ mục' | 'Lưu trữ' | 'Lỗi'
-export interface LegalDoc {
-  id: string
-  name: string
-  type: 'Luật' | 'Nghị định' | 'Thông tư' | 'Quyết định'
-  effective: string
-  status: DocStatus
-  chunks: number
-  entities: number
-  step: number
-  updated: string
-}
-
 export type JobStatus = 'queued' | 'running' | 'success' | 'failed' | 'cancelled'
 export interface Job {
   id: string
@@ -24,40 +11,6 @@ export interface Job {
   logs: string[]
   startedAt: string
   duration?: number
-}
-
-export interface QBankItem {
-  id: string
-  chapter: string
-  question: string
-  options: string[]
-  answer: number
-  critical: boolean
-  explanation: string
-  source: string
-}
-
-export interface ChatLog {
-  id: string
-  user: string
-  question: string
-  answer: string
-  latency: number
-  feedback: 'up' | 'down' | null
-  status: 'Đã trả lời' | 'Không có căn cứ' | 'Phản hồi sai' | 'Văn bản hết hiệu lực'
-  resolved: boolean
-  time: string
-}
-
-export interface AppUser {
-  id: string
-  name: string
-  email: string
-  role: 'Người học' | 'Biên tập viên' | 'Cảnh sát' | 'Quản trị viên'
-  licenseClass: string
-  questions: number
-  active: boolean
-  joined: string
 }
 
 interface TaskDef {
@@ -88,16 +41,7 @@ const tasks: TaskDef[] = [
 
 const now = () => new Date().toLocaleString('vi-VN', { hour: '2-digit', minute: '2-digit', day: '2-digit', month: '2-digit' })
 
-const seedDocs: LegalDoc[] = [
-  { id: 'd1', name: 'Nghị định 168/2024/NĐ-CP', type: 'Nghị định', effective: '01/01/2025', status: 'Đã lập chỉ mục', chunks: 412, entities: 2381, step: 5, updated: '28/09 14:02' },
-  { id: 'd2', name: 'Luật Trật tự, an toàn giao thông đường bộ 2024', type: 'Luật', effective: '01/01/2025', status: 'Đã lập chỉ mục', chunks: 296, entities: 1740, step: 5, updated: '27/09 09:15' },
-  { id: 'd3', name: 'Thông tư 35/2024/TT-BGTVT (sát hạch GPLX)', type: 'Thông tư', effective: '01/01/2025', status: 'Chờ duyệt', chunks: 188, entities: 902, step: 3, updated: '30/09 16:40' },
-  { id: 'd4', name: 'Nghị định 100/2019/NĐ-CP', type: 'Nghị định', effective: 'Hết hiệu lực', status: 'Lưu trữ', chunks: 350, entities: 2011, step: 5, updated: '02/01 08:00' },
-]
-
 interface Store {
-  docs: LegalDoc[]
-  setDocs: React.Dispatch<React.SetStateAction<LegalDoc[]>>
   jobs: Job[]
   runTask: (taskId: string, opts?: { label?: string; onDone?: () => void }) => string
   toast: string | null
@@ -107,10 +51,7 @@ interface Store {
 const Ctx = createContext<Store | null>(null)
 
 export function AdminProvider({ children }: { children: React.ReactNode }) {
-  const [docs, setDocs] = useState(seedDocs)
-  const [jobs, setJobs] = useState<Job[]>([
-    { id: 'j0', taskId: 'eval', title: 'Chạy bộ câu hỏi kiểm thử', command: 'python solver/eval.py', status: 'success', progress: 100, logs: ['hit@20 = 0.861 (143/166)'], startedAt: '29/09 22:10', duration: 412 },
-  ])
+  const [jobs, setJobs] = useState<Job[]>([])
   const [toast, setToast] = useState<string | null>(null)
   const timers = useRef<Record<string, number>>({})
   const toastTimer = useRef<number | undefined>(undefined)
@@ -154,7 +95,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
   }, [])
 
   return (
-    <Ctx.Provider value={{ docs, setDocs, jobs, runTask, toast, notify }}>
+    <Ctx.Provider value={{ jobs, runTask, toast, notify }}>
       {children}
     </Ctx.Provider>
   )
