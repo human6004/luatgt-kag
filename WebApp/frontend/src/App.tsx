@@ -9,17 +9,14 @@ import Study from './pages/ChapterStudyPage'
 import Exam from './pages/ExamPage'
 import Signs from './pages/SignLibraryPage'
 import Dashboard from './pages/AdminDashboard'
+import Chatbot from './pages/AdminChatbot'
 import Users from './pages/AdminUsers'
 import Logs from './pages/AdminChatLogs'
 import Questions from './pages/AdminQuestions'
-import Graph from './pages/AdminGraph'
 import Sources from './pages/AdminSources'
-import Pipeline from './pages/AdminPipeline'
 import Benchmark from './pages/AdminBenchmark'
 import Docker from './pages/AdminDocker'
-import Config from './pages/AdminConfig'
 import { ContentManager, Imports as ContentImports } from './pages/server/AdminPages'
-import { BuilderGraph } from './pages/server/KagManagement'
 import { Infrastructure } from './pages/server/OperationsPages'
 import KagSchemaPage from './pages/server/KagSchemaPage'
 import { Button } from './admin/ui'
@@ -68,25 +65,6 @@ function ImportsRedirect({ defaultType }: { defaultType: 'signs' | 'questions' }
   next.set('import', '1')
   params.forEach((v, k) => { if (k !== 'type') next.set(k, v) })
   return <Navigate to={`/admin/content?${next.toString()}`} replace />
-}
-
-// Temporary Batch 2 wrappers (replaced by unified pages in Batches 3 & 4)
-function ChatbotShell() {
-  const [params, setParams] = useSearchParams()
-  const step = params.get('step') === '2' ? '2' : params.get('step') === '3' ? '3' : '1'
-  const verifyRun = params.get('verify_run')
-  return (
-    <div>
-      <div className="px-6 sm:px-8 pt-6 max-w-6xl mx-auto">
-        <nav aria-label="Các bước thiết lập Chatbot" className="flex flex-wrap gap-2 border-b border-line pb-3">
-          {([['1', '① API key & model'], ['2', '② Dựng đồ thị'], ['3', '③ Dùng cho Chat']] as const).map(([s, label]) => (
-            <Button key={s} variant={step === s ? 'dark' : 'outline'} onClick={() => setParams({ step: s })}>{label}</Button>
-          ))}
-        </nav>
-      </div>
-      {step === '1' ? <Config /> : step === '2' ? (verifyRun ? <BuilderGraph runId={verifyRun} /> : <Pipeline />) : <Graph />}
-    </div>
-  )
 }
 
 function ContentShell() {
@@ -157,7 +135,7 @@ export default function App() {
               <Route path="/admin" element={<SessionHome />} />
               <Route element={<AdminLayout />}>
                 <Route path="/admin/dashboard" element={<Dashboard />} />
-                <Route path="/admin/chatbot" element={<ChatbotShell />} />
+                <Route path="/admin/chatbot" element={<Chatbot />} />
                 <Route path="/admin/content" element={<ContentShell />} />
                 <Route path="/admin/questions" element={<Questions />} />
                 <Route path="/admin/users" element={<UsersShell />} />

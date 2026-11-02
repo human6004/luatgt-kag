@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
-import { Page, Button, Card, Field, inputCls } from "../../admin/ui"
+import { Button, Card, Field, inputCls } from "../../admin/ui"
 import { Notice } from "./shared"
 import { inspectionError } from "./kag-inspection"
 import {
@@ -87,8 +87,8 @@ function BuilderResult({ status, link = true, links }: { status: BuilderStatus; 
         <div key={label}><dt className="text-muted">{label}</dt><dd className="text-xl font-semibold tabular-nums mt-1">{count.toLocaleString('vi-VN')}</dd></div>)}
     </dl>
     <p>Xác minh lúc {builderTime(result.verified_at)} · {result.indexes} chỉ mục, {result.dimension} chiều.</p>
-    <p>Build không tự kích hoạt Chat. Chọn phiên và dùng cho Chat tại Đồ thị của tôi.</p>
-    {link && <Link className="underline inline-block" to={`/admin/graph?project_id=${binding.project_id}&run_id=${encodeURIComponent(binding.run_id)}`}>Xem đồ thị và kiểm tra để dùng cho Chat</Link>}
+    <p>Build không tự kích hoạt Chat. Chọn phiên và dùng cho Chat ở Bước ③ ngay bên cạnh.</p>
+    {link && <Link className="underline inline-block font-semibold text-accent-strong" to={`/admin/chatbot?step=3&project_id=${binding.project_id}&run_id=${encodeURIComponent(binding.run_id)}&tab=chat`}>Tiếp tục: ③ Dùng cho Chat →</Link>}
     {links && <a className="underline block" target="_blank" rel="noreferrer" href={builderNeo4jLink(links, binding.database)}>Mở Neo4j · {binding.database}</a>}
     <p>Nếu Browser chưa chọn đúng database, chạy <code>:use {binding.database}</code>.</p>
     <p>Xem tối đa 25 node hoặc quan hệ bằng truy vấn chỉ đọc:</p>
@@ -104,13 +104,13 @@ function BuilderResult({ status, link = true, links }: { status: BuilderStatus; 
 export function BuilderGraph({ runId }: { runId: string }) {
   const data = useInspection(loadBuilderStatus)
   const configuration = useInspection(loadBuilderConfiguration)
-  return <Page title="Xác minh đồ thị" subtitle="Kết quả Worker đã xác minh cho phiên và đích dựng được yêu cầu."
-    actions={<Link to="/admin/pipeline" className="underline text-sm">Về Dựng đồ thị</Link>}>
+  return <div className="space-y-4">
+    <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-base font-semibold text-navy">Xác minh đồ thị ({runId})</h2><Link to="/admin/chatbot?step=2" className="underline text-sm">← Về các bước dựng đồ thị</Link></div>
     <Notice {...data} retry={data.reload} />
     {data.value && (data.value.run_id !== runId ? <p role="alert">Phiên được yêu cầu không khớp kết quả hiện tại.</p> :
       <Card title="Kết quả xác minh"><div className="px-5 pb-5"><BuilderResult status={data.value} link={false} links={configuration.value?.links} /></div></Card>)}
-    <p className="text-sm text-muted mt-4">Đây là kết quả lần xác minh đã lưu. Trang này không truy vấn lại toàn bộ graph.</p>
-  </Page>
+    <p className="text-sm text-muted">Đây là kết quả lần xác minh đã lưu. Trang này không truy vấn lại toàn bộ graph.</p>
+  </div>
 }
 
 const builderRows: { label: string; stages: [BuilderStage, string, string][] }[] = [
@@ -130,10 +130,18 @@ function ScopeCounts({ summary }: { summary: SelectionSummary }) {
 }
 
 export function BuilderControls() {
-  const [parameters]=useSearchParams()
+  const [parameters, setParameters] = useSearchParams()
+  const rawBstep = parameters.get('bstep')
+  const selected = rawBstep && /^[0-4]$/.test(rawBstep) ? Number(rawBstep) : null
+  function setSelected(next: number | null) {
+    const np = new URLSearchParams(parameters)
+    if (next === null) np.delete('bstep')
+    else np.set('bstep', String(next))
+    setParameters(np)
+  }
   const [snapshot, setSnapshot] = useState<BuilderSnapshot>(), [connectionError, setConnectionError] = useState(''),
     [actionError, setActionError] = useState(''), [busy, setBusy] = useState(false), [version, setVersion] = useState(0),
-    [selected, setSelected] = useState<number | null>(null), [batch, setBatch] = useState('64'), [limit, setLimit] = useState(''),
+    [batch, setBatch] = useState('64'), [limit, setLimit] = useState(''),
     [confirmation, setConfirmation] = useState<BuilderSnapshot>(), [nodeLimit, setNodeLimit] = useState(''),
     [scopeMode, setScopeMode] = useState<SelectionRequest['mode']>('ALL'), [scopePreview, setScopePreview] = useState<BuilderSelection>(),
     [receivedAt, setReceivedAt] = useState(''),
@@ -276,7 +284,7 @@ export function BuilderControls() {
       </>}
       {step === 1 && <>
         <h3 className="font-semibold">Nơi lưu</h3>
-        <div className="flex flex-wrap items-end gap-3"><div className="flex-1 min-w-0"><Field label="Project OpenSPG" hint="Danh sách project bạn sở hữu trong phiên đăng nhập OpenSPG."><select className={inputCls} value={projectId} disabled={active || busy || catalog.loading} onChange={event => setProjectId(event.target.value)}>
+        <div className="flex flex-wrap items-end gap-3"><div className="flex-1 min-w-0"><Field label="Project OpenSPG" hint="Danh sách project bạn sở hữu trong phiên đăng nhập OpenSPG."><select className={inputCls} value={projectId} disabled={active || busy || catalog.loading} onChange={event => { const v = event.target.value; setProjectId(v); const np = new URLSearchParams(parameters); if (v) np.set('project_id', v); else np.delete('project_id'); setParameters(np) }}>
           <option value="">Chọn project</option>
           {projectId && !choice && <option value={projectId}>Project đã lưu #{projectId} · chưa có trong danh sách</option>}
           {catalog.value?.projects.map(row => <option key={row.project_id} value={row.project_id} disabled={row.state !== 'AVAILABLE'}>{row.project_name}{catalog.value!.projects.some(other => other.project_id !== row.project_id && other.project_name === row.project_name) ? ` · #${row.project_id}` : ''} · {row.database ?? 'chưa có kết nối'}{row.state === 'SERVING_PROTECTED' ? ' · đang phục vụ' : row.state === 'CONNECTION_NOT_CONFIGURED' ? ' · chưa cấp kết nối' : ''}</option>)}
@@ -329,7 +337,7 @@ export function BuilderControls() {
           </fieldset>
           <section className="space-y-2"><h3 className="font-semibold">Dịch vụ tạo vector</h3>
             {config?.embedding ? <><p className="break-words">Embedding: {config.embedding.model}</p><p>API key: {config.embedding.key_configured ? 'Đã lưu, được che' : 'Chưa lưu'} · {config.embedding.tested ? 'Đã kiểm kết nối' : 'Chưa kiểm kết nối'}</p></> : <p>Chưa lưu cấu hình Embedding.</p>}
-            <Link className="underline inline-block" to="/admin/config">Cấu hình và kiểm kết nối Embedding</Link>
+            <Link className="underline inline-block" to={`/admin/chatbot?step=1${projectId ? `&project_id=${encodeURIComponent(projectId)}` : ""}`}>Cấu hình và kiểm kết nối Embedding</Link>
             <p className="text-muted">Kiểm model tại Cấu hình gửi request thật và có thể tính phí. Builder dùng Embedding đã lưu; không cần áp dụng cho Chat.</p>
           </section>
           <details><summary className="cursor-pointer underline">Cấu hình nâng cao</summary><div className="grid gap-4 sm:grid-cols-2 mt-4">
@@ -356,7 +364,7 @@ export function BuilderControls() {
           const row = config?.readiness.checks.find(value => value.name === name)
           return <div key={name} className="py-3"><div className="flex flex-wrap justify-between gap-2"><dt>{({ source: 'Dữ liệu', embedding: 'Embedding', target: 'Đích lưu và chỉ mục', lock: 'Quyền ghi và khóa' })[name]}</dt><dd>{row?.state === 'READY' ? 'Đã đạt' : row?.state === 'BLOCKED' ? 'Cần xử lý' : 'Chưa kiểm tra'}</dd></div>
             {row?.code && <p className="text-muted mt-1">{row.state === 'NOT_CHECKED' ? ({ WAIT_SOURCE: 'Chờ dữ liệu nguồn hợp lệ.', WAIT_EMBEDDING: 'Chờ cấu hình Embedding hợp lệ.', WAIT_TARGET: 'Chờ schema, chỉ mục và danh tính đích hợp lệ.' } as Record<string, string>)[row.code] : builderIssue(row.code)}</p>}
-            {row?.state === 'BLOCKED' && (name === 'embedding' ? <Link className="underline inline-block mt-2" to="/admin/config">Mở cấu hình Embedding</Link> : name !== 'lock' ? <Button onClick={() => setSelected(name === 'source' ? 0 : 1)}>{name === 'source' ? 'Về Dữ liệu' : 'Về Cấu hình và cấu trúc'}</Button> :
+            {row?.state === 'BLOCKED' && (name === 'embedding' ? <Link className="underline inline-block mt-2" to={`/admin/chatbot?step=1${projectId ? `&project_id=${encodeURIComponent(projectId)}` : ""}`}>Mở cấu hình Embedding</Link> : name !== 'lock' ? <Button onClick={() => setSelected(name === 'source' ? 0 : 1)}>{name === 'source' ? 'Về Dữ liệu' : 'Về Cấu hình và cấu trúc'}</Button> :
               <p className="mt-2 break-words">{row.owner ? `Khóa do phiên ${row.owner.run_id} · project ${row.owner.project_id} giữ. ${status?.run_id === row.owner.run_id && status.target?.project_id === row.owner.project_id ? 'Trạng thái Worker: ' + builderStateLabel(status.state) + '.' : 'Worker này chưa xác minh trạng thái của phiên đó.'}` : 'Chưa đọc được danh tính phiên giữ khóa.'} Giữ nguyên khóa; kiểm trạng thái Worker, không xóa khóa để ép chạy.</p>)}
           </div>
         })}</dl>
