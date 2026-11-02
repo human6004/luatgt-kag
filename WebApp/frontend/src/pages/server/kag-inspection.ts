@@ -4,49 +4,6 @@ export type ServingSelection = { release_id: string; project_id: number; project
 export type ServingRun = { run_id: string; project_id: number; project_name: string; database: string; namespace: string; nodes: number; edges: number; vectors: number; dimension: number; model_identity: string; partial: boolean }
 export type ServingCatalog = { contract_version: 'builder-serving-v1'; active: ServingSelection | null; busy: boolean; runs: ServingRun[]; runtime_ready: boolean; chat_blockers: string[] }
 export type ServingPreview = { release_id: string; project_id: number; project_name: string; database: string; database_id: string; namespace: string; run_id: string; preview_id: string; counts: { nodes: number; edges: number; vectors: number }; dimension: number; partial: boolean; embedding: { base_url: string; model: string }; chat: { base_url: string; model: string } | null; previous: ServingSelection | null; chat_ready: boolean; chat_blockers: string[]; status?: 'ACTIVE' }
-export type GraphSource = { source_id: string; record_id: string | null; status: 'MISSING' | 'UNPUBLISHED' | 'CONTENT_MISMATCH' | 'NOT_EFFECTIVE' | 'PUBLISHED'; release_published: boolean; import_data: Record<string, unknown> }
-export type SourceSummary = { total: number; missing: number; unpublished: number; mismatch: number; ineffective: number; release_missing: number }
-export type GraphSources = { contract_version: 'builder-sources-v1'; import_limits: { rows: number; bytes: number }; target: { project_id: number; project_name: string; database: string; namespace: string }; run_id: string; partial: boolean; release: { release_id: string } | null; documents: GraphSource[]; units: GraphSource[]; summary: { documents: SourceSummary; units: SourceSummary } }
-export function sourceImportBatch(value: Pick<GraphSources, 'documents' | 'units' | 'import_limits'>, kind: 'documents' | 'units') {
-  const missing = new Map(value[kind].filter(row => row.status === 'MISSING').map(row => [row.source_id, row]))
-  const output: Record<string, unknown>[] = [], visiting = new Set<string>()
-  const encoder = new TextEncoder(), { rows: rowLimit, bytes: limit } = value.import_limits
-  const displayLimit = `${(limit / (limit >= 1024 * 1024 ? 1024 * 1024 : 1024)).toLocaleString('vi-VN', { maximumFractionDigits: 2 })} ${limit >= 1024 * 1024 ? 'MiB' : 'KiB'}`
-  const envelopeBytes = encoder.encode(JSON.stringify({ rows: [], updateExisting: false })).byteLength
-  let bytes = envelopeBytes, full = false
-  function add(id: string) {
-    const row = missing.get(id)
-    if (!row || full || output.length >= rowLimit) return
-    if (visiting.has(id)) throw new ApiError('Nguồn có vòng lặp đơn vị cha; kiểm tra lại phiên', 502)
-    visiting.add(id)
-    if (kind === 'units' && typeof row.import_data.parent_id === 'string') add(row.import_data.parent_id)
-    visiting.delete(id)
-    if (full || output.length >= rowLimit) return
-    const rowBytes = encoder.encode(JSON.stringify(row.import_data)).byteLength
-    if (envelopeBytes + rowBytes > limit) throw new ApiError(`Nguồn ${id} vượt giới hạn JSON ${displayLimit} cho một bản ghi; kiểm tra nguồn trước khi nhập`, 413)
-    const addition = rowBytes + (output.length ? 1 : 0)
-    if (bytes + addition > limit) { full = true; return }
-    bytes += addition; output.push(row.import_data); missing.delete(id)
-  }
-  for (const row of value[kind]) { add(row.source_id); if (full || output.length >= rowLimit) break }
-  return output
-}
-export async function loadGraphSources(projectId: number, runId: string, signal?: AbortSignal): Promise<GraphSources> {
-  if (!Number.isInteger(projectId) || projectId < 1 || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(runId)) throw new ApiError('Chọn project và phiên đã xác minh', 400)
-  const value = await api<GraphSources>(`/admin/kag/sources/${projectId}/${encodeURIComponent(runId)}`, { signal, cache: 'no-store' })
-  if (value.contract_version !== 'builder-sources-v1' || value.target?.project_id !== projectId || value.run_id !== runId || typeof value.partial !== 'boolean' ||
-    !Number.isSafeInteger(value.import_limits?.rows) || value.import_limits.rows < 1 || !Number.isSafeInteger(value.import_limits?.bytes) || value.import_limits.bytes < 1 ||
-    !['documents', 'units'].every(group => {
-      const rows = value[group as 'documents' | 'units'], counts = value.summary?.[group as 'documents' | 'units']
-      return Array.isArray(rows) && new Set(rows.map(row => row.source_id)).size === rows.length && rows.every(row => typeof row.source_id === 'string' && !!row.source_id && ['MISSING', 'UNPUBLISHED', 'CONTENT_MISMATCH', 'NOT_EFFECTIVE', 'PUBLISHED'].includes(row.status) &&
-        typeof row.release_published === 'boolean' && !!row.import_data && row.import_data.reviewed === false && row.import_data[group === 'documents' ? 'doc_id' : 'unit_id'] === row.source_id) && counts &&
-        ['total', 'missing', 'unpublished', 'mismatch', 'ineffective', 'release_missing'].every(key => Number.isInteger(counts[key as keyof SourceSummary]) && counts[key as keyof SourceSummary] >= 0) && counts.total === rows.length &&
-        counts.missing === rows.filter(row => row.status === 'MISSING').length && counts.unpublished === rows.filter(row => row.status === 'UNPUBLISHED').length &&
-        counts.mismatch === rows.filter(row => row.status === 'CONTENT_MISMATCH').length && counts.ineffective === rows.filter(row => row.status === 'NOT_EFFECTIVE').length &&
-        counts.release_missing === rows.filter(row => !row.release_published).length
-    })) throw new ApiError('Danh sách nguồn không khớp project/phiên; kiểm tra lại', 502)
-  return value
-}
 export const servingReasons: Record<string, string> = {
   GRAPH_REQUIRED: 'Chọn một đồ thị rồi bấm Dùng cho Chat.',
   SOURCE_MISSING: 'Bản nguồn của đồ thị chưa đầy đủ. Chọn lại phiên dựng và kiểm tra nguồn đi kèm.',

@@ -12,7 +12,8 @@ import { parseCsv, tableObjects } from "../../admin/import-data"
 
 import { useData, useTask, Notice, Asset, inputClass, download } from "./shared"
 
-type Kind = "questions" | "signs" | "documents" | "units"
+type ContentKind = "signs" | "documents" | "units"
+type Kind = "questions" | ContentKind
 
 const titles: Record<Kind, string> = {
   questions: "Ngân hàng câu hỏi",
@@ -21,8 +22,7 @@ const titles: Record<Kind, string> = {
   units: "Đơn vị pháp lý",
 }
 
-const fields: Record<Kind, string[]> = {
-  questions: ["externalId", "text", "chapter", "source", "explanation"],
+const fields: Record<ContentKind, string[]> = {
   signs: [
     "externalId",
     "code",
@@ -58,10 +58,8 @@ const fields: Record<Kind, string[]> = {
 
 const labels: Record<string, string> = {
   externalId: "Mã định danh",
-  text: "Câu hỏi",
-  chapter: "Chương (1–6)",
+  text: "Nội dung",
   source: "Nguồn",
-  explanation: "Giải thích",
   code: "Mã biển",
   name: "Tên biển",
   group: "Nhóm biển",
@@ -93,7 +91,7 @@ function sourceGraphContext(parameters: URLSearchParams) {
     ? `project_id=${projectId}&run_id=${encodeURIComponent(runId)}` : ""
 }
 
-export function ContentManager({ kind }: { kind: Kind }) {
+export function ContentManager({ kind }: { kind: ContentKind }) {
   const resource = kind === "units" ? "/admin/units" : "/admin/content"
   const [parameters] = useSearchParams()
   const graphContext = sourceGraphContext(parameters)
@@ -103,7 +101,6 @@ export function ContentManager({ kind }: { kind: Kind }) {
     [query, setQuery] = useState(""),
     [selected, setSelected] = useState<ContentRecord | null>(null),
     [form, setForm] = useState<Record<string, unknown>>({}),
-    [checked, setChecked] = useState<Set<string>>(new Set()),
     [history, setHistory] = useState<{
       version: number
       changedAt: string
@@ -188,17 +185,7 @@ export function ContentManager({ kind }: { kind: Kind }) {
                 published: false,
                 data: {},
               })
-              setForm(
-                kind === "questions"
-                  ? {
-                      chapter: 1,
-                      options: ["", ""],
-                      correctAnswer: null,
-                      critical: null,
-                      reviewed: false,
-                    }
-                  : { reviewed: false },
-              )
+              setForm({ reviewed: false })
               setHistory([])
             }}
           >
@@ -250,46 +237,9 @@ export function ContentManager({ kind }: { kind: Kind }) {
         placeholder="Tìm theo mã hoặc nội dung"
         className={inputClass}
       />
-      {kind === "questions" && (
-        <div className="flex flex-wrap items-center gap-3 my-4">
-          <Button onClick={() => setChecked(new Set(rows.map((r) => r.id)))}>
-            Chọn {rows.length} câu đang hiển thị
-          </Button>
-          <Button onClick={() => setChecked(new Set())}>Bỏ chọn</Button>
-          <Button
-            disabled={task.busy || !checked.size}
-            onClick={() =>
-              task.run(async () => {
-                if (
-                  !window.confirm(
-                    `Xác nhận đã đối chiếu đáp án, câu điểm liệt và hình của ${checked.size} câu được chọn trước khi xuất bản?`,
-                  )
-                )
-                  return
-                await api(
-                  "/admin/questions/publication-batch",
-                  send("POST", {
-                    rows: (data.value || [])
-                      .filter((r) => checked.has(r.id))
-                      .map((r) => ({ id: r.id, version: r.version })),
-                    reviewed: true,
-                    published: true,
-                  }),
-                )
-                setChecked(new Set())
-                data.reload()
-                setMessage("Đã kiểm duyệt và xuất bản các câu được chọn.")
-              })
-            }
-          >
-            Duyệt & xuất bản ({checked.size})
-          </Button>
-        </div>
-      )}
       <Table>
         <thead>
           <tr>
-            {kind === "questions" && <Th>Chọn</Th>}
             <Th>Mã</Th>
             <Th>Nội dung</Th>
             <Th>Trạng thái</Th>
@@ -299,39 +249,11 @@ export function ContentManager({ kind }: { kind: Kind }) {
         <tbody>
           {rows.map((r) => (
             <tr key={r.id}>
-              {kind === "questions" && (
-                <Td>
-                  <input
-                    type="checkbox"
-                    aria-label={`Chọn ${r.externalId}`}
-                    checked={checked.has(r.id)}
-                    onChange={(e) =>
-                      setChecked((prev) => {
-                        const next = new Set(prev)
-                        e.target.checked ? next.add(r.id) : next.delete(r.id)
-                        return next
-                      })
-                    }
-                  />
-                </Td>
-              )}
               <Td>{r.externalId}</Td>
               <Td>
                 <p className="max-w-xl">
                   {String(r.data.text || r.data.title || r.data.name)}
                 </p>
-                {kind === "questions" && (
-                  <p className="text-xs text-muted mt-1">
-                    Chương {String(r.data.chapter)}
-                    {r.data.critical === true ? " · Điểm liệt" : ""} · Đáp án{" "}
-                    {typeof r.data.correctAnswer === "number"
-                      ? r.data.correctAnswer + 1
-                      : "chưa xác nhận"}
-                    {r.data.imageRequired && !r.data.imageKey
-                      ? " · Thiếu ảnh"
-                      : ""}
-                  </p>
-                )}
               </Td>
               <Td>{r.published ? "Đã xuất bản" : "Bản nháp"}</Td>
               <Td>
@@ -381,7 +303,7 @@ export function ContentManager({ kind }: { kind: Kind }) {
               <label
                 key={key}
                 className={`text-sm ${
-                  ["text", "meaning", "explanation"].includes(key)
+                  ["text", "meaning"].includes(key)
                     ? "sm:col-span-2"
                     : ""
                 }`}
@@ -389,7 +311,7 @@ export function ContentManager({ kind }: { kind: Kind }) {
                 {kind === "units" && key === "text"
                   ? "Nội dung pháp lý"
                   : labels[key]}
-                {["text", "meaning", "explanation"].includes(key) ? (
+                {["text", "meaning"].includes(key) ? (
                   <textarea
                     rows={3}
                     value={String(form[key] || "")}
@@ -400,13 +322,12 @@ export function ContentManager({ kind }: { kind: Kind }) {
                   <input
                     readOnly={
                       !!selected.id &&
-                      ((key === "externalId" && kind !== "questions") ||
-                        (key === "doc_id" && kind === "units"))
+                      (key === "externalId" || (key === "doc_id" && kind === "units"))
                     }
                     min={key === "order" ? 0 : undefined}
-                    step={["chapter", "order"].includes(key) ? 1 : undefined}
+                    step={key === "order" ? 1 : undefined}
                     type={
-                      ["chapter", "order"].includes(key)
+                      key === "order"
                         ? "number"
                         : key.startsWith("ngay_")
                           ? "date"
@@ -416,7 +337,7 @@ export function ContentManager({ kind }: { kind: Kind }) {
                     onChange={(e) =>
                       field(
                         key,
-                        ["chapter", "order"].includes(key)
+                        key === "order"
                           ? Number(e.target.value)
                           : (key.startsWith("ngay_") || key === "parent_id") &&
                               !e.target.value
@@ -429,72 +350,6 @@ export function ContentManager({ kind }: { kind: Kind }) {
                 )}
               </label>
             ))}
-            {kind === "questions" && (
-              <>
-                <label className="sm:col-span-2 text-sm">
-                  Các phương án, mỗi dòng một phương án
-                  <textarea
-                    rows={4}
-                    value={(form.options as string[] || []).join("\n")}
-                    onChange={(e) =>
-                      field("options", e.target.value.split("\n"))
-                    }
-                    className={`${inputClass} mt-2`}
-                  />
-                </label>
-                <label className="text-sm">
-                  Đáp án đúng
-                  <select
-                    value={
-                      form.correctAnswer == null
-                        ? ""
-                        : String(form.correctAnswer)
-                    }
-                    onChange={(e) =>
-                      field(
-                        "correctAnswer",
-                        e.target.value === "" ? null : Number(e.target.value),
-                      )
-                    }
-                    className={`${inputClass} mt-2`}
-                  >
-                    <option value="">Chưa xác nhận</option>
-                    {(form.options as string[] || []).map((_, i) => (
-                      <option key={i} value={i}>
-                        Phương án {i + 1}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="text-sm">
-                  Câu điểm liệt
-                  <select
-                    value={form.critical == null ? "" : String(form.critical)}
-                    onChange={(e) =>
-                      field(
-                        "critical",
-                        e.target.value === ""
-                          ? null
-                          : e.target.value === "true",
-                      )
-                    }
-                    className={`${inputClass} mt-2`}
-                  >
-                    <option value="">Chưa xác nhận</option>
-                    <option value="true">Có</option>
-                    <option value="false">Không</option>
-                  </select>
-                </label>
-                <label className="text-sm">
-                  <input
-                    type="checkbox"
-                    checked={!!form.imageRequired}
-                    onChange={(e) => field("imageRequired", e.target.checked)}
-                  />{" "}
-                  Câu hỏi cần hình minh họa
-                </label>
-              </>
-            )}
             <label className="text-sm">
               <input
                 type="checkbox"
