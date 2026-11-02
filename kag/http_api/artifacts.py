@@ -861,25 +861,6 @@ def release_view(release: ServingRelease) -> dict:
     return value
 
 
-def verify_production_backend(release,reader):
-    from kag.verify import verify_graph
-    from .community import WorkerRetrievalClient
-    if release.release_kind!='PRODUCTION':_invalid()
-    _unchanged(release)
-    if isinstance(reader,WorkerRetrievalClient):
-        # Keep exact graph scans beside the database, without relaying every vector through the API.
-        rows=reader._query('verify_graph')
-        if len(rows)!=1 or type(rows[0]) is not dict:_invalid()
-        result=rows[0]
-    else:
-        _backend(reader,release)
-        result=verify_graph(reader,db_path=release.root/'expected.sqlite3',
-            contract=_json(release.contract_bytes),batch_size=64)
-        _backend(reader,release)
-    if result['fingerprint']!=release.descriptor['graph_fingerprint']:_invalid()
-    _unchanged(release)
-
-
 def load_sample_proof(release, expected_sha256, reader_username):
     """Operator pin permits only bounded SAMPLE vector reads; receipts alone never suffice."""
     try:

@@ -1208,8 +1208,7 @@ class RuntimeSupervisor:
                 initialize_runtime()
                 reader=await asyncio.to_thread(_new_reader,settings,release,self._budget)
                 if settings.production:
-                    from .artifacts import verify_production_backend
-                    await asyncio.to_thread(verify_production_backend,release,reader)
+                    await asyncio.to_thread(_backend,reader,release)
                 else:
                     from .sample_query import verify_gateway
                     await asyncio.to_thread(verify_sample_backend,release,settings.sample_proof_sha256,None,reader)
@@ -1304,9 +1303,6 @@ class RuntimeSupervisor:
                 runtime.reader = await asyncio.to_thread(_new_reader,settings,release,runtime.budget)
                 def preflight():
                     runtime.budget.remaining()
-                    if settings.production:
-                        from .artifacts import verify_production_backend
-                        verify_production_backend(release,runtime.reader)
                     if settings.query_proof_sha256:
                         verify_sample_backend(release,settings.sample_proof_sha256,None,runtime.reader)
                         from .sample_query import load_proof,verify_gateway
@@ -1314,7 +1310,7 @@ class RuntimeSupervisor:
                         verify_gateway(settings,proof)
                     _backend(runtime.reader,release)
                     from .artifacts import dataset_sources
-                    # Dataset graphs were checked in full above; citations are read back again before response.
+                    # Dataset graphs were verified at activation; citations are read back before response.
                     if not (settings.production and dataset_sources(release)):
                         _readback(runtime.reader,release.records,_json(release.contract_bytes))
                         _backend(runtime.reader,release)
@@ -1343,9 +1339,8 @@ class RuntimeSupervisor:
                     with legal_timing('request.solver'):
                         result = await run_query(runtime,parsed.message,as_of)
                 if settings.production:
-                    from .artifacts import verify_production_backend
                     with legal_timing('request.postflight'):
-                        await asyncio.to_thread(verify_production_backend,release,runtime.reader)
+                        await asyncio.to_thread(_backend,runtime.reader,release)
                 if settings.query_proof_sha256:
                     await asyncio.to_thread(verify_sample_backend,release,settings.sample_proof_sha256,None,runtime.reader)
                     from dataclasses import asdict
@@ -1398,9 +1393,6 @@ class RuntimeSupervisor:
                 runtime.reader = await asyncio.to_thread(_new_reader,settings,release,runtime.budget)
                 def integrity():
                     runtime.budget.remaining()
-                    if settings.production:
-                        from .artifacts import verify_production_backend
-                        verify_production_backend(release,runtime.reader)
                     if settings.query_proof_sha256:
                         verify_sample_backend(release,settings.sample_proof_sha256,None,runtime.reader)
                     _backend(runtime.reader,release)

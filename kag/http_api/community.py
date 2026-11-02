@@ -120,7 +120,6 @@ class WorkerRetrievalClient(Neo4jRetrievalClient):
     def _query(self,name,parameters=None,*,database=None):
         from kag.http_api.read_broker import _parameters
         from kag.http_api.artifacts import ArtifactFailure,VerificationState
-        from kag.http_api.runtime import REQUEST_SECONDS
         from kag.legal_prompts import legal_trace
         from time import perf_counter
         started = perf_counter()
@@ -132,7 +131,7 @@ class WorkerRetrievalClient(Neo4jRetrievalClient):
                 headers={'Authorization':'Bearer '+self._token,'Content-Type':'application/json'},
                 data=json.dumps(dict(release_id=self._release_id,operation=name,parameters=parameters or {}),allow_nan=False).encode())
             self.read_requests+=1
-            with self._opener.open(request,timeout=REQUEST_SECONDS if name=='verify_graph' else self.timeout) as response:
+            with self._opener.open(request,timeout=self.timeout) as response:
                 raw=response.read(8*1024*1024+1)
             if len(raw)>8*1024*1024:raise ValueError()
             value=json.loads(raw)
