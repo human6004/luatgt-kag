@@ -1,7 +1,7 @@
 import { type ContentRecord } from '../api'
 import { Asset, Notice, useData } from './server/shared'
-import { useState, useMemo } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState, useMemo } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 
 export type SignCategory = string
 
@@ -21,19 +21,62 @@ export interface SignItem {
     clause: string
   }[]
   imageKey?: string
-  source?: Record<string,unknown>
+  source?: Record<string, unknown>
 }
 
 export default function SignLibraryPage() {
-  const data=useData<ContentRecord[]>('/signs')
-  const mockSigns:SignItem[]=(data.value||[]).map(r=>({id:r.id,code:String(r.data.code||''),name:String(r.data.name||''),category:String(r.data.group||''),categoryLabel:String(r.data.group||''),shortDesc:String(r.data.meaning||''),meaning:String(r.data.meaning||''),applicableCases:String(r.data.applicableCases||'Chưa có thông tin từ backend'),relatedViolations:[],imageKey:r.data.imageKey?String(r.data.imageKey):undefined,source:r.data}))
-  const categories=[{key:'all',label:'Tất cả'},...Array.from(new Set(mockSigns.map(s=>s.category))).map(v=>({key:v,label:v}))]
-  const [searchQuery, setSearchQuery] = useState('')
-  const [activeCategory, setActiveCategory] = useState<SignCategory>('all')
-  const [selectedSign, setSelectedSign] = useState<SignItem | null>(null)
+  const [params, setParams] = useSearchParams()
+  const data = useData<ContentRecord[]>('/signs')
+
+  const signs: SignItem[] = useMemo(
+    () =>
+      (data.value || []).map((r) => ({
+        id: r.id,
+        code: String(r.data.code || r.externalId || ''),
+        name: String(r.data.name || ''),
+        category: String(r.data.group || ''),
+        categoryLabel: String(r.data.group || ''),
+        shortDesc: String(r.data.meaning || ''),
+        meaning: String(r.data.meaning || ''),
+        applicableCases: String(r.data.applicableCases || 'Chưa có thông tin từ backend'),
+        relatedViolations: [],
+        imageKey: r.data.imageKey ? String(r.data.imageKey) : undefined,
+        source: r.data,
+      })),
+    [data.value],
+  )
+
+  const categories = [
+    { key: 'all', label: 'Tất cả' },
+    ...Array.from(new Set(signs.map((s) => s.category).filter(Boolean))).map((v) => ({ key: v, label: v })),
+  ]
+
+  const urlQ = params.get('q') ?? ''
+  const [searchQuery, setSearchQuery] = useState(urlQ)
+  const activeCategory: SignCategory = params.get('cat') ?? 'all'
+  const signParam = params.get('sign') ?? ''
+  const selectedSign = signParam ? signs.find((s) => s.code === signParam || s.id === signParam) ?? null : null
+
+  useEffect(() => {
+    setSearchQuery(urlQ)
+  }, [urlQ])
+
+  function updateUrl(patch: Record<string, string | null>, replace = false) {
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        for (const [k, v] of Object.entries(patch)) {
+          if (v === null || v === '') next.delete(k)
+          else next.set(k, v)
+        }
+        return next
+      },
+      { replace },
+    )
+  }
 
   const filteredSigns = useMemo(() => {
-    return mockSigns.filter((sign) => {
+    return signs.filter((sign) => {
       if (activeCategory !== 'all' && sign.category !== activeCategory) {
         return false
       }
@@ -42,7 +85,7 @@ export default function SignLibraryPage() {
       const searchTarget = (sign.code + ' ' + sign.name + ' ' + sign.shortDesc + ' ' + sign.meaning).toLowerCase()
       return searchTarget.includes(query)
     })
-  }, [searchQuery, activeCategory, data.value])
+  }, [searchQuery, activeCategory, signs])
 
   return (
     <div className="min-h-full pb-16 px-6 sm:px-8 max-w-7xl mx-auto pt-6">
@@ -75,8 +118,13 @@ export default function SignLibraryPage() {
         <div className="relative">
           <input
             type="text"
+            aria-label="Tìm biển báo"
             value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
+            onChange={(e) => {
+              const v = e.target.value
+              setSearchQuery(v)
+              updateUrl({ q: v || null }, true)
+            }}
             placeholder="Tìm theo mã biển (VD: P.102, W.201, R.301) hoặc tên biển báo..."
             className="w-full bg-bg border border-line rounded-xl pl-10 pr-4 py-3 text-sm text-navy placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all"
           />
@@ -85,7 +133,11 @@ export default function SignLibraryPage() {
           </div>
           {searchQuery && (
             <button
-              onClick={() => setSearchQuery('')}
+              type="button"
+              onClick={() => {
+                setSearchQuery('')
+                updateUrl({ q: null }, true)
+              }}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted hover:text-navy"
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -103,7 +155,8 @@ export default function SignLibraryPage() {
             return (
               <button
                 key={cat.key}
-                onClick={() => setActiveCategory(cat.key)}
+                type="button"
+                onClick={() => updateUrl({ cat: cat.key === 'all' ? null : cat.key, sign: null })}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all ${
                   isActive
                     ? 'bg-navy text-white shadow-2xs'
@@ -120,7 +173,7 @@ export default function SignLibraryPage() {
       {/* Grid of Signs */}
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2 px-1">
         <span className="text-sm font-medium text-navy">
-          Hiển thị <span className="font-mono text-accent-strong font-semibold">{data.value?filteredSigns.length:'—'}</span> biển báo
+          Hiển thị <span className="font-mono text-accent-strong font-semibold">{data.value ? filteredSigns.length : '—'}</span> biển báo
         </span>
         <span className="text-xs text-muted">Nhấp vào thẻ để xem chi tiết ý nghĩa & lỗi vi phạm</span>
       </div>
@@ -135,16 +188,14 @@ export default function SignLibraryPage() {
           {filteredSigns.map((sign) => (
             <div
               key={sign.id}
-              onClick={() => setSelectedSign(sign)}
+              onClick={() => updateUrl({ sign: sign.code || sign.id })}
               className="min-w-0 break-words bg-surface rounded-2xl border border-line hover:border-accent p-5 cursor-pointer shadow-2xs hover:shadow-md transition-all group flex flex-col justify-between"
             >
               <div>
-                {/* Visual Graphic Canvas */}
                 <div className="w-24 h-24 mx-auto mb-4 p-2 bg-bg rounded-xl border border-selected flex items-center justify-center group-hover:scale-105 transition-transform">
                   {sign.imageKey ? <Asset id={sign.id} alt={sign.name} className="h-full w-full object-contain" /> : <p className="text-center text-xs text-muted">Chưa có ảnh nguồn</p>}
                 </div>
 
-                {/* Badge & Code */}
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                   <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-semibold bg-navy text-white">
                     {sign.code}
@@ -154,18 +205,15 @@ export default function SignLibraryPage() {
                   </span>
                 </div>
 
-                {/* Name */}
                 <h3 className="font-sans text-[17px] font-semibold text-navy group-hover:text-accent-strong transition-colors leading-snug mb-2">
                   {sign.name}
                 </h3>
 
-                {/* Short Desc */}
                 <p className="text-xs text-muted line-clamp-2 leading-relaxed">
                   {sign.shortDesc}
                 </p>
               </div>
 
-              {/* Action Hint */}
               <div className="mt-4 pt-3 border-t border-selected flex flex-wrap items-center justify-between gap-2 text-[11px] leading-5 text-muted">
                 <span>Liên kết xử phạt: chưa có API</span>
                 <span className="text-accent-strong font-semibold group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-0.5">
@@ -177,11 +225,10 @@ export default function SignLibraryPage() {
         </div>
       )}
 
-      {/* Modal / Drawer Chi tiết Biển Báo */}
+      {/* Modal Chi tiết Biển Báo */}
       {selectedSign && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/40 backdrop-blur-xs">
           <div className="bg-bg w-full max-w-2xl rounded-2xl border border-line shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            {/* Modal Header */}
             <div className="flex items-start justify-between gap-3 px-6 py-4 border-b border-line bg-surface">
               <div className="min-w-0 flex flex-wrap items-center gap-3">
                 <span className="px-2.5 py-1 rounded-lg text-xs font-mono font-bold bg-navy text-white">
@@ -195,16 +242,16 @@ export default function SignLibraryPage() {
                 </div>
               </div>
               <button
-                onClick={() => setSelectedSign(null)}
+                type="button"
+                aria-label="Đóng chi tiết biển báo"
+                onClick={() => updateUrl({ sign: null })}
                 className="shrink-0 p-1 rounded-lg text-muted hover:bg-selected hover:text-navy transition-colors"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
               </button>
             </div>
 
-            {/* Modal Body */}
             <div className="p-6 max-h-[75vh] overflow-y-auto space-y-6">
-              {/* Graphic + Ý nghĩa */}
               <div className="flex flex-col sm:flex-row gap-5 items-start bg-surface p-4 rounded-xl border border-line">
                 <div className="w-28 h-28 shrink-0 mx-auto sm:mx-0 p-3 bg-bg rounded-xl border border-selected flex items-center justify-center">
                   {selectedSign.imageKey ? <Asset id={selectedSign.id} alt={selectedSign.name} className="h-full w-full object-contain" /> : <p className="text-center text-xs text-muted">Chưa có ảnh nguồn</p>}
@@ -219,8 +266,15 @@ export default function SignLibraryPage() {
                 </div>
               </div>
 
-<dl className="text-xs space-y-2">{["qcvn","so_hieu","doc_id","unit_id","ngay_hieu_luc","ngay_het_hieu_luc","bien_phu_variant"].map(k=><div key={k}><dt>{k}</dt><dd className="break-words">{String(selectedSign.source?.[k]||"Chưa có thông tin")}</dd></div>)}</dl>
-              {/* Trường hợp áp dụng */}
+              <dl className="text-xs space-y-2">
+                {['qcvn', 'so_hieu', 'doc_id', 'unit_id', 'ngay_hieu_luc', 'ngay_het_hieu_luc', 'bien_phu_variant'].map((k) => (
+                  <div key={k}>
+                    <dt>{k}</dt>
+                    <dd className="break-words">{String(selectedSign.source?.[k] || 'Chưa có thông tin')}</dd>
+                  </div>
+                ))}
+              </dl>
+
               <div className="bg-surface p-4 rounded-xl border border-line space-y-1.5">
                 <h4 className="text-xs uppercase tracking-wider font-semibold text-muted">
                   Trường hợp áp dụng & Vị trí đặt biển
@@ -230,7 +284,6 @@ export default function SignLibraryPage() {
                 </p>
               </div>
 
-              {/* Lỗi vi phạm liên quan & Mức phạt */}
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h4 className="text-xs uppercase tracking-wider font-semibold text-navy flex items-center gap-1.5">
@@ -251,12 +304,8 @@ export default function SignLibraryPage() {
                     {selectedSign.relatedViolations.map((v, idx) => (
                       <div key={idx} className="bg-surface p-4 rounded-xl border border-line space-y-2">
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                          <p className="text-xs font-semibold text-navy">
-                            {v.title}
-                          </p>
-                          <span className="text-sm font-bold text-accent-strong font-sans shrink-0">
-                            {v.fineRange}
-                          </span>
+                          <p className="text-xs font-semibold text-navy">{v.title}</p>
+                          <span className="text-sm font-bold text-accent-strong font-sans shrink-0">{v.fineRange}</span>
                         </div>
                         <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-selected text-xs text-muted">
                           {v.demerit && (
@@ -273,7 +322,6 @@ export default function SignLibraryPage() {
               </div>
             </div>
 
-            {/* Modal Footer */}
             <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-3.5 bg-sidebar border-t border-line">
               <Link
                 to="/chat"
@@ -285,7 +333,7 @@ export default function SignLibraryPage() {
               </Link>
               <button
                 type="button"
-                onClick={() => setSelectedSign(null)}
+                onClick={() => updateUrl({ sign: null })}
                 className="px-4 py-2 rounded-xl text-xs font-medium text-text-secondary bg-surface border border-line hover:bg-bg transition-colors"
               >
                 Đóng

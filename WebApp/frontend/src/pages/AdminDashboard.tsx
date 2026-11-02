@@ -32,21 +32,21 @@ export default function AdminDashboard() {
   const runtimeReady = kag.value?.queryReadiness.state === 'READY'
   const servingBlocked = !!serving.value && (!active || !serving.value.runtime_ready || serving.value.chat_blockers.length > 0)
   const chatReady = runtimeReady && !servingBlocked
-  const releaseId = typeof kag.value?.release.evidence?.release_id === 'string' ? kag.value.release.evidence.release_id : null
+  const rawReleaseId = kag.value?.queryReadiness.evidence?.release_id ?? kag.value?.release.evidence?.release_id
+  const releaseId = typeof rawReleaseId === 'string' && rawReleaseId ? rawReleaseId : null
+  const shortReleaseId = releaseId && releaseId.length > 18 ? `${releaseId.slice(0, 16)}…` : releaseId
 
   const graphTitle = serving.loading && kag.loading
     ? '—'
     : serving.value
       ? (active ? active.project_name : 'Chưa chọn')
-      : kag.value?.release.state === 'READY'
-        ? (releaseId ?? 'Đã nạp dữ liệu')
-        : 'Chưa có dữ liệu'
+      : shortReleaseId ?? (runtimeReady || kag.value?.release.state === 'READY' ? 'Đang phục vụ' : 'Chưa có dữ liệu')
 
   const graphSub = serving.value
     ? (activeRun
       ? `${activeRun.nodes.toLocaleString('vi-VN')} nội dung · ${activeRun.edges.toLocaleString('vi-VN')} quan hệ`
       : active ? `Phiên ${active.run_id}` : 'Chọn ở trang Chatbot (bước ③)')
-    : serving.error && kag.value?.release.state === 'READY'
+    : serving.error && (shortReleaseId || runtimeReady || kag.value?.release.state === 'READY')
       ? 'Đang phục vụ · đăng nhập OpenSPG để xem tên project'
       : 'Xem chi tiết ở trang Chatbot (bước ③)'
 
@@ -68,7 +68,7 @@ export default function AdminDashboard() {
       label: 'Đồ thị đang dùng',
       value: graphTitle,
       sub: graphSub,
-      warn: !serving.loading && !kag.loading && ((!!serving.value && !active) || (!serving.value && kag.value?.release.state !== 'READY')),
+      warn: !serving.loading && !kag.loading && ((!!serving.value && !active) || (!serving.value && !shortReleaseId && !runtimeReady && kag.value?.release.state !== 'READY')),
     },
     {
       label: 'Lượt hỏi gần đây',
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
         {stats.map((s) => (
           <Card key={s.label} className="grid grid-rows-[auto_1fr_auto] gap-2 p-5">
             <p className="text-xs leading-5 text-muted">{s.label}</p>
-            <p className={`self-center text-2xl sm:text-3xl leading-tight font-semibold tracking-tight tabular-nums break-words ${s.warn ? 'text-accent-strong' : 'text-navy'}`}>{s.value}</p>
+            <p title={s.label === 'Đồ thị đang dùng' ? (releaseId ?? String(s.value)) : undefined} className={`min-w-0 self-center text-2xl sm:text-3xl leading-tight font-semibold tracking-tight tabular-nums break-words ${s.warn ? 'text-accent-strong' : 'text-navy'}`}>{s.value}</p>
             <p className="text-[11.5px] leading-5 text-muted">{s.sub}</p>
           </Card>
         ))}

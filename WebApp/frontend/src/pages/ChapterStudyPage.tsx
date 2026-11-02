@@ -1,8 +1,9 @@
 import { api, send, type ContentRecord } from '../api'
+import { useAdmin } from '../admin/store'
 import { Asset, Notice, useData, useTask } from './server/shared'
-import { Button } from '../admin/ui'
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Badge, Button } from '../admin/ui'
+import { useEffect, useState } from 'react'
+import { Link, useSearchParams } from 'react-router-dom'
 
 export type ChapterStatus = 'not_started' | 'in_progress' | 'completed'
 
@@ -25,43 +26,39 @@ const initialChapters: ChapterItem[] = [
     title: 'Chương I: Khái niệm và quy tắc giao thông đường bộ',
     subtitle: 'Nền tảng lý thuyết bắt buộc',
     desc: 'Bao gồm các khái niệm định nghĩa: dải phân cách, làn đường, khổ giới hạn, quy tắc vượt xe, nhường đường, chuyển hướng và tốc độ quy định.',
-    totalQuestions: 166,
-    studiedQuestions: 166,
-    criticalQuestions: 45,
-    status: 'completed',
-    completedDate: '28/09/2026',
-    lastStudiedDate: '28/09/2026',
+    totalQuestions: 0,
+    studiedQuestions: 0,
+    criticalQuestions: 0,
+    status: 'not_started',
   },
   {
     id: 2,
     title: 'Chương II: Nghiệp vụ vận tải & Đạo đức người lái xe',
     subtitle: 'Văn hóa giao thông & Trách nhiệm xã hội',
     desc: 'Quy định trách nhiệm của người lái xe, nghiệp vụ vận tải hàng hóa và hành khách, kỹ năng xử lý tình huống khẩn cấp và sơ cấp cứu nạn nhân.',
-    totalQuestions: 57,
-    studiedQuestions: 45,
-    criticalQuestions: 12,
-    status: 'in_progress',
-    lastStudiedDate: '30/09/2026',
+    totalQuestions: 0,
+    studiedQuestions: 0,
+    criticalQuestions: 0,
+    status: 'not_started',
   },
   {
     id: 3,
     title: 'Chương III: Kỹ thuật lái xe ô tô an toàn',
     subtitle: 'Thao tác điều khiển trên nhiều địa hình',
     desc: 'Thao tác lái xe cơ bản, khởi hành xe ngang dốc, phanh khẩn cấp, lái xe đường đèo dốc quanh co, thời tiết sương mù và trơn trượt.',
-    totalQuestions: 85,
-    studiedQuestions: 38,
-    criticalQuestions: 20,
-    status: 'in_progress',
-    lastStudiedDate: '01/10/2026',
+    totalQuestions: 0,
+    studiedQuestions: 0,
+    criticalQuestions: 0,
+    status: 'not_started',
   },
   {
     id: 4,
     title: 'Chương IV: Cấu tạo và sửa chữa xe cơ giới thông thường',
     subtitle: 'Kiến thức kỹ thuật máy & an toàn kỹ thuật',
     desc: 'Cấu tạo động cơ, hệ thống truyền lực, phanh, lái, lốp xe và các hư hỏng thông thường trên đường cùng phương pháp khắc phục an toàn.',
-    totalQuestions: 48,
+    totalQuestions: 0,
     studiedQuestions: 0,
-    criticalQuestions: 8,
+    criticalQuestions: 0,
     status: 'not_started',
   },
   {
@@ -69,50 +66,86 @@ const initialChapters: ChapterItem[] = [
     title: 'Chương V: Hệ thống biển báo hiệu đường bộ',
     subtitle: 'Nhận diện và phân tích biển báo',
     desc: 'Quy chuẩn hệ thống biển báo cấm, biển nguy hiểm, biển hiệu lệnh, biển chỉ dẫn, biển phụ và vạch kẻ đường theo QCVN 41:2019/BGTVT.',
-    totalQuestions: 182,
-    studiedQuestions: 75,
-    criticalQuestions: 25,
-    status: 'in_progress',
-    lastStudiedDate: '29/09/2026',
+    totalQuestions: 0,
+    studiedQuestions: 0,
+    criticalQuestions: 0,
+    status: 'not_started',
   },
   {
     id: 6,
     title: 'Chương VI: Giải các thế sa hình và kỹ năng xử lý',
     subtitle: 'Quy tắc nhường đường tại nơi giao nhau',
     desc: 'Phân tích các thế sa hình theo thứ tự ưu tiên: Xe ưu tiên - Đường ưu tiên - Bên phải không vướng - Hướng rẽ ưu tiên.',
-    totalQuestions: 114,
+    totalQuestions: 0,
     studiedQuestions: 0,
-    criticalQuestions: 30,
+    criticalQuestions: 0,
     status: 'not_started',
   },
 ]
 
 export default function ChapterStudyPage() {
-  const questions=useData<ContentRecord[]>('/questions'), progress=useData<{chapter:number;practiced:number;correct:number;attempts:number}[]>('/progress'), task=useTask()
-  const [demoAdvance,setDemoAdvance]=useState<Record<number,number>>({})
-  const [practiceIndex,setPracticeIndex]=useState(0)
-  const [answer,setAnswer]=useState<{correct:boolean;correctAnswer:number;critical:boolean;explanation:string}|null>(null)
-  const chapters:ChapterItem[]=initialChapters.map(c=>{const total=questions.value?.filter(q=>Number(q.data.chapter)===c.id).length||0;const practiced=progress.value?.find(p=>p.chapter===c.id)?.practiced||0;return {...c,totalQuestions:total,studiedQuestions:practiced,criticalQuestions:questions.value?.filter(q=>Number(q.data.chapter)===c.id&&q.data.critical===true).length||0,status:total>0&&practiced>=total?'completed':practiced>0?'in_progress':'not_started',lastStudiedDate:undefined,completedDate:undefined}})
-  const ready=!!questions.value&&!!progress.value&&!questions.error&&!progress.error
+  const [params, setParams] = useSearchParams()
+  const { notify } = useAdmin()
+  const questions = useData<ContentRecord[]>('/questions')
+  const progress = useData<{ chapter: number; practiced: number; correct: number; attempts: number }[]>('/progress')
+  const task = useTask()
 
-  const [filterStatus, setFilterStatus] = useState<string>('all')
-  const [selectedProgressChapterId, setSelectedProgressChapterId] = useState<number>(
-    initialChapters.find((chapter) => chapter.status === 'in_progress')?.id ?? initialChapters[0].id
-  )
-  const [activePracticeModal, setActivePracticeModal] = useState<ChapterItem | null>(null)
+  const [practiceIndex, setPracticeIndex] = useState(0)
+  const [answer, setAnswer] = useState<{ correct: boolean; correctAnswer: number; critical: boolean; explanation: string } | null>(null)
 
-  const currentPractice=chapters.find(c=>c.id===activePracticeModal?.id)
-  const practiceQuestions=questions.value?.filter(q=>Number(q.data.chapter)===activePracticeModal?.id)||[]
-  const question=practiceQuestions[practiceIndex]
+  const chapters: ChapterItem[] = initialChapters.map((c) => {
+    const total = questions.value?.filter((q) => Number(q.data.chapter) === c.id).length || 0
+    const practiced = progress.value?.find((p) => p.chapter === c.id)?.practiced || 0
+    return {
+      ...c,
+      totalQuestions: total,
+      studiedQuestions: practiced,
+      criticalQuestions: questions.value?.filter((q) => Number(q.data.chapter) === c.id && q.data.critical === true).length || 0,
+      status: total > 0 && practiced >= total ? 'completed' : practiced > 0 ? 'in_progress' : 'not_started',
+    }
+  })
+  const ready = !!questions.value && !!progress.value && !questions.error && !progress.error
 
-  // Calculating overall progress
+  const rawFilter = params.get('filter')
+  const filterStatus = rawFilter === 'in_progress' || rawFilter === 'completed' || rawFilter === 'not_started' ? rawFilter : 'all'
+
+  const rawChapter = Number(params.get('chapter') ?? '')
+  const selectedProgressChapterId =
+    Number.isInteger(rawChapter) && rawChapter >= 1 && rawChapter <= 6 ? rawChapter : 1
+
+  const rawPractice = Number(params.get('practice') ?? '')
+  const activePracticeModal =
+    Number.isInteger(rawPractice) && rawPractice >= 1 && rawPractice <= 6
+      ? chapters.find((c) => c.id === rawPractice) ?? null
+      : null
+
+  useEffect(() => {
+    setPracticeIndex(0)
+    setAnswer(null)
+  }, [rawPractice])
+
+  function updateUrl(patch: Record<string, string | null>) {
+    setParams((prev) => {
+      const next = new URLSearchParams(prev)
+      for (const [k, v] of Object.entries(patch)) {
+        if (v === null || v === '') next.delete(k)
+        else next.set(k, v)
+      }
+      return next
+    })
+  }
+
+  const currentPractice = chapters.find((c) => c.id === activePracticeModal?.id)
+  const practiceQuestions = questions.value?.filter((q) => Number(q.data.chapter) === activePracticeModal?.id) || []
+  const question = practiceQuestions[practiceIndex]
+
   const totalAllQuestions = chapters.reduce((acc, c) => acc + c.totalQuestions, 0)
   const totalStudied = chapters.reduce((acc, c) => acc + c.studiedQuestions, 0)
   const overallPercentage = Math.round((totalStudied / (totalAllQuestions || 1)) * 100)
   const completedChaptersCount = chapters.filter((c) => c.status === 'completed').length
   const selectedProgressChapter = chapters.find((chapter) => chapter.id === selectedProgressChapterId) ?? chapters[0]
   const selectedProgressPercentage = Math.round(
-    (selectedProgressChapter.studiedQuestions / (selectedProgressChapter.totalQuestions || 1)) * 100
+    (selectedProgressChapter.studiedQuestions / (selectedProgressChapter.totalQuestions || 1)) * 100,
   )
   const selectedProgressRemaining = selectedProgressChapter.totalQuestions - selectedProgressChapter.studiedQuestions
 
@@ -121,13 +154,22 @@ export default function ChapterStudyPage() {
     return c.status === filterStatus
   })
 
-  // Quick action: continue learning simulation
-  const handleQuickAdvance=(id:number)=>setDemoAdvance(p=>({...p,[id]:(p[id]||0)+10}))
-  function openPractice(c:ChapterItem) {setPracticeIndex(0);setAnswer(null);setActivePracticeModal(c)}
+  function openPractice(c: ChapterItem) {
+    setPracticeIndex(0)
+    setAnswer(null)
+    updateUrl({ practice: String(c.id) })
+  }
+
+  function closePractice() {
+    updateUrl({ practice: null })
+  }
 
   return (
     <div className="min-h-full pb-16 px-6 sm:px-8 max-w-7xl mx-auto pt-6">
-      <Notice {...questions} empty={questions.value?.length===0} retry={questions.reload} /><Notice {...progress} retry={progress.reload} /><Notice error={task.error} />
+      <Notice {...questions} empty={questions.value?.length === 0} retry={questions.reload} />
+      <Notice {...progress} retry={progress.reload} />
+      <Notice error={task.error} />
+
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-2 text-xs text-muted mb-2 font-mono">
@@ -158,9 +200,8 @@ export default function ChapterStudyPage() {
 
       {/* Main 2-Column Layout */}
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-8 items-start">
-        {/* Left Column: Chapters List (Col span 7 or 8) */}
+        {/* Left Column: Chapters List */}
         <div className="min-w-0 xl:col-span-8 space-y-4">
-          {/* Filter Pills */}
           <div className="flex items-center justify-between bg-surface p-3.5 rounded-2xl border border-line">
             <div className="flex items-center gap-1.5 overflow-x-auto text-xs">
               {[
@@ -171,23 +212,19 @@ export default function ChapterStudyPage() {
               ].map((item) => (
                 <button
                   key={item.key}
-                  onClick={() => setFilterStatus(item.key)}
+                  type="button"
+                  onClick={() => updateUrl({ filter: item.key === 'all' ? null : item.key })}
                   className={`px-3 py-1.5 rounded-lg font-medium transition-colors whitespace-nowrap ${
-                    filterStatus === item.key
-                      ? 'bg-navy text-white shadow-2xs'
-                      : 'text-text-secondary hover:bg-selected'
+                    filterStatus === item.key ? 'bg-navy text-white shadow-2xs' : 'text-text-secondary hover:bg-selected'
                   }`}
                 >
                   {item.label}
                 </button>
               ))}
             </div>
-            <span className="text-xs text-muted hidden sm:block shrink-0 pl-2">
-              {filteredChapters.length} chương
-            </span>
+            <span className="text-xs text-muted hidden sm:block shrink-0 pl-2">{filteredChapters.length} chương</span>
           </div>
 
-          {/* Chapter Cards */}
           <div className="space-y-4">
             {filteredChapters.map((chapter) => {
               const pct = Math.round((chapter.studiedQuestions / (chapter.totalQuestions || 1)) * 100)
@@ -199,23 +236,17 @@ export default function ChapterStudyPage() {
                   className="bg-surface rounded-2xl border border-line hover:border-accent/60 p-5 sm:p-6 shadow-2xs hover:shadow-xs transition-all flex flex-col justify-between"
                 >
                   <div>
-                    {/* Header: Title + Status Badge */}
                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-2">
                       <div>
                         <div className="flex items-center gap-2 mb-1">
                           <span className="px-2 py-0.5 rounded text-[11px] font-mono font-semibold bg-bg border border-line text-text-secondary">
                             Chương {chapter.id}
                           </span>
-                          <span className="text-xs font-medium text-accent-strong">
-                            {chapter.subtitle}
-                          </span>
+                          <span className="text-xs font-medium text-accent-strong">{chapter.subtitle}</span>
                         </div>
-                        <h3 className="font-sans text-lg sm:text-[19px] font-semibold text-navy">
-                          {chapter.title}
-                        </h3>
+                        <h3 className="font-sans text-lg sm:text-[19px] font-semibold text-navy">{chapter.title}</h3>
                       </div>
 
-                      {/* Status Tag */}
                       <div className="shrink-0">
                         {chapter.status === 'completed' && (
                           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#ecfdf5] text-[#059669]">
@@ -226,66 +257,53 @@ export default function ChapterStudyPage() {
                         {chapter.status === 'in_progress' && (
                           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-surface text-accent-strong">
                             <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse"></span>
-                            Đang học ({ready ? pct : "—"}%)
+                            Đang học ({ready ? pct : '—'}%)
                           </span>
                         )}
                         {chapter.status === 'not_started' && (
                           <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-bg text-muted border border-line">
-                            {ready?'Chưa học':'Chưa đọc được tiến độ'}
+                            {ready ? 'Chưa học' : 'Chưa đọc được tiến độ'}
                           </span>
                         )}
                       </div>
                     </div>
 
-                    {/* Description */}
-                    <p className="text-xs sm:text-sm text-text-secondary leading-relaxed mb-4">
-                      {chapter.desc}
-                    </p>
+                    <p className="text-xs sm:text-sm text-text-secondary leading-relaxed mb-4">{chapter.desc}</p>
 
-                    {/* Metrics row */}
                     <div className="flex flex-wrap items-center gap-4 text-xs text-muted py-2 border-y border-selected mb-4">
                       <span className="flex items-center gap-1.5">
                         <svg className="w-4 h-4 text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                        Tổng: <strong className="text-navy">{questions.value?chapter.totalQuestions:'—'} câu hỏi</strong>
-                      </span>
-                      <span className="flex items-center gap-1.5 text-[#b91c1c]">
-                        <svg className="w-4 h-4 text-[#ef4444]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
-                        Phân loại điểm liệt: chưa được API cung cấp
+                        Tổng: <strong className="text-navy">{questions.value ? chapter.totalQuestions : '—'} câu hỏi</strong>
                       </span>
                       {chapter.status === 'in_progress' && (
-                        <span className="text-accent-strong font-medium">
-                          Còn {remaining} câu chưa học
-                        </span>
+                        <span className="text-accent-strong font-medium">Còn {remaining} câu chưa học</span>
                       )}
                     </div>
                   </div>
 
-                  {/* Actions & Progress line */}
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
                     <div className="text-xs text-muted">
                       {chapter.status === 'completed' && (
                         <span className="text-[#059669] font-medium">Đã ôn toàn bộ câu hỏi chương này</span>
                       )}
-                      {chapter.status === 'in_progress' && (
-                        <span>Lượt trả lời đã ghi nhận trên server</span>
-                      )}
+                      {chapter.status === 'in_progress' && <span>Lượt trả lời đã ghi nhận trên server</span>}
                       {chapter.status === 'not_started' && (
-                        <span>{ready?'Chưa ghi nhận lượt trả lời':'Chưa đọc được tiến độ'}</span>
+                        <span>{ready ? 'Chưa ghi nhận lượt trả lời' : 'Chưa đọc được tiến độ'}</span>
                       )}
                     </div>
 
                     <div className="flex flex-wrap items-center gap-2">
-                      {demoAdvance[chapter.id]>0 && <p className="text-xs text-muted">Demo: +{demoAdvance[chapter.id]} câu, không lưu tiến độ</p>}
                       <button
-                        onClick={() => handleQuickAdvance(chapter.id)}
-                        title="Demo: không thay đổi tiến độ thật"
-                        className="px-3 py-2 rounded-xl text-xs font-medium text-text-secondary bg-bg hover:bg-selected border border-line transition-colors"
+                        type="button"
+                        onClick={() => notify('Chức năng đang phát triển')}
+                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium text-text-secondary bg-bg hover:bg-selected border border-line transition-colors"
                       >
-                        +10 câu · Demo
+                        +10 câu <Badge tone="gray">Đang phát triển</Badge>
                       </button>
 
                       {chapter.status === 'not_started' ? (
                         <button
+                          type="button"
                           onClick={() => openPractice(chapter)}
                           className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl text-xs font-semibold text-navy transition-all shadow-xs"
                           style={{ background: 'var(--color-accent)' }}
@@ -295,6 +313,7 @@ export default function ChapterStudyPage() {
                         </button>
                       ) : (
                         <button
+                          type="button"
                           onClick={() => openPractice(chapter)}
                           className="inline-flex items-center gap-1.5 px-5 py-2 rounded-xl text-xs font-semibold text-white transition-all shadow-xs"
                           style={{ background: 'var(--color-navy)' }}
@@ -311,59 +330,53 @@ export default function ChapterStudyPage() {
           </div>
         </div>
 
-        {/* Right Column: Tiến độ của tôi (Sticky sidebar layout) */}
+        {/* Right Column: Tiến độ của tôi */}
         <div className="min-w-0 xl:col-span-4 xl:sticky xl:top-6 space-y-6">
           <div className="bg-surface rounded-2xl border border-line shadow-xs p-6 space-y-6">
-            {/* Widget Title */}
             <div className="flex items-center justify-between border-b border-selected pb-4">
               <div className="flex items-center gap-2">
                 <span className="w-3 h-3 rounded-full bg-accent"></span>
-                <h2 className="font-sans text-lg font-bold text-navy">
-                  Tiến độ của tôi
-                </h2>
+                <h2 className="font-sans text-lg font-bold text-navy">Tiến độ của tôi</h2>
               </div>
               <span className="text-xs px-2.5 py-0.5 rounded-full bg-selected text-accent-strong font-medium font-mono">
                 Hạng B
               </span>
             </div>
 
-            {/* Overall Percentage Card */}
             <div className="bg-bg rounded-xl p-5 border border-line">
               <div className="flex items-baseline justify-between mb-2">
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted">
                   Tổng tiến độ hoàn thành
                 </span>
-                <span className="font-sans text-3xl font-bold text-navy">
-                  {ready ? overallPercentage : "—"}%
-                </span>
+                <span className="font-sans text-3xl font-bold text-navy">{ready ? overallPercentage : '—'}%</span>
               </div>
 
-              {/* Thanh progress màu xanh pastel */}
               <div className="w-full bg-line h-3.5 rounded-full overflow-hidden p-0.5">
                 <div
                   className="h-full rounded-full bg-progress transition-all duration-500 ease-out"
-                  style={{
-                    width: `${ready ? overallPercentage : "—"}%`,
-                  }}
+                  style={{ width: `${ready ? overallPercentage : 0}%` }}
                 />
               </div>
 
               <div className="flex flex-wrap justify-between items-center gap-x-3 gap-y-1 text-xs text-muted mt-2.5">
-                <span>Đã học: <strong className="text-navy">{ready?totalStudied:'—'}</strong> / {ready?totalAllQuestions:'—'} câu</span>
-                <span>Hoàn tất: <strong className="text-navy">{ready?completedChaptersCount:'—'}</strong> / {chapters.length} chương</span>
+                <span>
+                  Đã học: <strong className="text-navy">{ready ? totalStudied : '—'}</strong> / {ready ? totalAllQuestions : '—'} câu
+                </span>
+                <span>
+                  Hoàn tất: <strong className="text-navy">{ready ? completedChaptersCount : '—'}</strong> / {chapters.length} chương
+                </span>
               </div>
             </div>
 
-            {/* Tiến độ từng chương */}
             <div className="space-y-4">
               <label htmlFor="chapter-progress-selection" className="block text-xs font-semibold uppercase tracking-wider text-muted">
-                  Tiến độ chi tiết từng chương
+                Tiến độ chi tiết từng chương
               </label>
               <div className="relative">
                 <select
                   id="chapter-progress-selection"
                   value={selectedProgressChapterId}
-                  onChange={(event) => setSelectedProgressChapterId(Number(event.target.value))}
+                  onChange={(event) => updateUrl({ chapter: event.target.value === '1' ? null : event.target.value })}
                   className="w-full min-w-0 appearance-none rounded-xl border border-line bg-bg py-3 pl-3 pr-9 text-xs font-medium text-navy cursor-pointer outline-none transition-colors hover:border-accent focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/25"
                 >
                   {chapters.map((chapter) => (
@@ -379,12 +392,8 @@ export default function ChapterStudyPage() {
 
               <div className="rounded-xl border border-line bg-bg p-4 space-y-3" aria-live="polite" aria-atomic="true">
                 <div className="flex items-start justify-between gap-3">
-                  <span className="text-xs font-medium leading-relaxed text-navy">
-                    {selectedProgressChapter.subtitle}
-                  </span>
-                  <span className="shrink-0 font-mono text-sm font-bold text-accent-strong">
-                    {selectedProgressPercentage}%
-                  </span>
+                  <span className="text-xs font-medium leading-relaxed text-navy">{selectedProgressChapter.subtitle}</span>
+                  <span className="shrink-0 font-mono text-sm font-bold text-accent-strong">{selectedProgressPercentage}%</span>
                 </div>
                 <div
                   className="w-full bg-selected h-2 rounded-full overflow-hidden"
@@ -400,44 +409,41 @@ export default function ChapterStudyPage() {
                   />
                 </div>
                 <div className="flex justify-between gap-2 text-[11px] text-muted">
-                  <span>Đã học: <strong className="text-navy">{ready?selectedProgressChapter.studiedQuestions:'—'}</strong> / {ready?selectedProgressChapter.totalQuestions:'—'} câu</span>
+                  <span>
+                    Đã học: <strong className="text-navy">{ready ? selectedProgressChapter.studiedQuestions : '—'}</strong> /{' '}
+                    {ready ? selectedProgressChapter.totalQuestions : '—'} câu
+                  </span>
                   <span>Còn {selectedProgressRemaining} câu</span>
                 </div>
-                <p className="text-[11px] text-muted leading-relaxed">
-                  {selectedProgressChapter.status === 'completed'
-                    ? `Đã hoàn thành${selectedProgressChapter.completedDate ? ` ngày ${selectedProgressChapter.completedDate}` : ''}`
-                    : selectedProgressChapter.lastStudiedDate
-                      ? `Học gần nhất ${selectedProgressChapter.lastStudiedDate}`
-                      : 'Chưa bắt đầu học'}
-                </p>
               </div>
             </div>
 
             {/* Quick Practice Suggestion */}
             <div className="bg-selected/70 rounded-xl p-4 border border-line space-y-2">
-              <div className="flex items-center gap-2 text-xs font-semibold text-accent-strong">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                <span>Gợi ý học tập thông minh</span>
+              <div className="flex items-center justify-between gap-2 text-xs font-semibold text-accent-strong">
+                <span className="inline-flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                  <span>Gợi ý học tập thông minh</span>
+                </span>
+                <Badge tone="gray">Đang phát triển</Badge>
               </div>
               <p className="text-xs text-text-secondary leading-relaxed">
-                Demo: gợi ý học tập chưa có API cá nhân hóa. Có thể mở Chương II để luyện câu hỏi thật.
+                Phân tích câu hay sai và gợi ý lộ trình ôn tập cá nhân hóa.
               </p>
               <button
-                onClick={() => {
-                  const ch2 = chapters.find((c) => c.id === 2)
-                  if (ch2) openPractice(ch2)
-                }}
+                type="button"
+                onClick={() => notify('Chức năng đang phát triển')}
                 className="w-full mt-1 py-1.5 rounded-lg text-xs font-semibold text-navy text-center transition-colors shadow-2xs"
                 style={{ background: 'var(--color-accent)' }}
               >
-                Ôn ngay câu điểm liệt Chương II
+                Nhận gợi ý ôn tập · Đang phát triển
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* Modal học tập chương mô phỏng câu hỏi */}
+      {/* Modal học tập chương */}
       {activePracticeModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/40 backdrop-blur-xs">
           <div className="bg-bg w-full max-w-xl rounded-2xl border border-line shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
@@ -446,12 +452,12 @@ export default function ChapterStudyPage() {
                 <span className="text-[11px] font-mono font-bold text-accent-strong">
                   Chương {activePracticeModal.id} • Hạng B
                 </span>
-                <h3 className="font-sans text-lg font-semibold text-navy">
-                  {activePracticeModal.title}
-                </h3>
+                <h3 className="font-sans text-lg font-semibold text-navy">{activePracticeModal.title}</h3>
               </div>
               <button
-                onClick={() => setActivePracticeModal(null)}
+                type="button"
+                aria-label="Đóng hộp thoại ôn tập"
+                onClick={closePractice}
                 className="shrink-0 p-1 rounded-lg text-muted hover:bg-selected hover:text-navy"
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -460,14 +466,52 @@ export default function ChapterStudyPage() {
 
             <div className="p-6 space-y-4 max-h-[65vh] overflow-y-auto">
               <div className="p-4 bg-surface rounded-xl border border-line space-y-2">
-                {question ? <><p className="text-xs text-muted">Câu {practiceIndex+1}/{practiceQuestions.length}</p><p className="text-sm font-medium text-navy">{String(question.data.text)}</p>
-                {!!question.data.imageKey&&<Asset id={question.id} alt="Ảnh câu hỏi"/>}
-                <div className="space-y-1.5 pt-2">{(question.data.options as string[]).map((o,i)=><Button key={i} disabled={task.busy||!!answer} className="w-full justify-start text-left whitespace-normal" onClick={()=>void task.run(async()=>{setAnswer(await api(`/study/${question.id}/answer`,send('POST',{selected:i})));progress.reload()})}>{i+1}. {o}</Button>)}</div>
-                {answer&&<div role="status" className="text-sm"><p>{answer.correct?'Đúng':'Sai'} · Đáp án {answer.correctAnswer+1}{answer.critical?' · Điểm liệt':''}</p><p>{answer.explanation}</p></div>}</> : <p>Chưa có câu hỏi đã xuất bản cho chương này.</p>}
+                {question ? (
+                  <>
+                    <p className="text-xs text-muted">
+                      Câu {practiceIndex + 1}/{practiceQuestions.length}
+                    </p>
+                    <p className="text-sm font-medium text-navy">{String(question.data.text)}</p>
+                    {!!question.data.imageKey && <Asset id={question.id} alt="Ảnh câu hỏi" />}
+                    <div className="space-y-1.5 pt-2">
+                      {(question.data.options as string[]).map((o, i) => (
+                        <Button
+                          key={i}
+                          disabled={task.busy || !!answer}
+                          className="w-full justify-start text-left whitespace-normal"
+                          onClick={() =>
+                            void task.run(async () => {
+                              setAnswer(await api(`/study/${question.id}/answer`, send('POST', { selected: i })))
+                              progress.reload()
+                            })
+                          }
+                        >
+                          {i + 1}. {o}
+                        </Button>
+                      ))}
+                    </div>
+                    {answer && (
+                      <div role="status" className="text-sm">
+                        <p>
+                          {answer.correct ? 'Đúng' : 'Sai'} · Đáp án {answer.correctAnswer + 1}
+                          {answer.critical ? ' · Điểm liệt' : ''}
+                        </p>
+                        <p>{answer.explanation}</p>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <p>Chưa có câu hỏi đã xuất bản cho chương này.</p>
+                )}
               </div>
               <div className="p-3.5 bg-selected rounded-xl text-xs text-text-secondary flex items-center justify-between">
-                <span>Tiến độ chương này: <strong>{(currentPractice?.studiedQuestions??0)}</strong> / {(currentPractice?.totalQuestions??0)} câu</span>
-                <span className="text-accent-strong font-semibold">{Math.round(((currentPractice?.studiedQuestions??0) / ((currentPractice?.totalQuestions??0) || 1)) * 100)}%</span>
+                <span>
+                  Tiến độ chương này: <strong>{currentPractice?.studiedQuestions ?? 0}</strong> /{' '}
+                  {currentPractice?.totalQuestions ?? 0} câu
+                </span>
+                <span className="text-accent-strong font-semibold">
+                  {Math.round(((currentPractice?.studiedQuestions ?? 0) / ((currentPractice?.totalQuestions ?? 0) || 1)) * 100)}%
+                </span>
               </div>
             </div>
 
@@ -483,7 +527,8 @@ export default function ChapterStudyPage() {
                 <button
                   type="button"
                   onClick={() => {
-                    setAnswer(null); setPracticeIndex(i => practiceQuestions.length ? (i+1)%practiceQuestions.length : 0)
+                    setAnswer(null)
+                    setPracticeIndex((i) => (practiceQuestions.length ? (i + 1) % practiceQuestions.length : 0))
                   }}
                   className="px-4 py-2 rounded-xl text-xs font-semibold text-navy bg-accent hover:bg-accent-hover transition-colors shadow-2xs"
                 >

@@ -1,5 +1,7 @@
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useSearchParams } from 'react-router-dom'
 import { api, send as request } from '../api'
+import { useAdmin } from '../admin/store'
+import { Badge } from '../admin/ui'
 import { Notice, useTask } from './server/shared'
 import { createChat, chatView, loadCitationSource } from './server/chat-state'
 import LogoMark from '../components/LogoMark'
@@ -52,7 +54,6 @@ const ic = {
   book: 'M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4zM5 16a4 4 0 0 1 4-4h10',
   send: 'M12 19V5M6 11l6-6 6 6',
   dots: 'M5 12h.01M12 12h.01M19 12h.01',
-  pin: 'M9 4h6l-1 6 4 3H6l4-3zM12 13v7',
   copy: 'M9 9h10v10H9zM5 15V5h10',
   up: 'M7 10v10M7 10l4-6a2 2 0 0 1 3 2l-1 4h5a2 2 0 0 1 2 2l-2 6a2 2 0 0 1-2 2H7',
   retry: 'M4 12a8 8 0 1 0 3-6.2M4 4v4h4',
@@ -60,43 +61,117 @@ const ic = {
   close: 'M6 6l12 12M18 6 6 18',
 }
 
-function RichAnswer({text}:{text:string}) {
-  return <div className="text-navy leading-[1.7]"><p className="font-sans text-[16px] whitespace-pre-wrap break-words mb-5">{text}</p>
-    <div className="font-sans grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">{['Phạt tiền','Trừ điểm GPLX','Hình thức bổ sung'].map((label,i)=><div key={label} className={`relative overflow-hidden rounded-xl border px-4 py-3.5 ${i===0?'border-accent/50 bg-selected':'border-line bg-surface'}`}>
-    {i===0&&<span className="absolute inset-y-0 left-0 w-[3px] bg-accent" aria-hidden/>}<p className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-muted mb-1.5">{label}</p><p className="text-[17px] font-semibold tracking-tight leading-tight">Chưa có dữ liệu cấu trúc</p><p className="mt-0.5 text-[11.5px] text-muted">Đọc câu trả lời và căn cứ; không suy đoán giá trị.</p></div>)}</div>
-    <p className="mb-4 text-[15px] text-text-secondary border-l-2 border-line pl-4">Hiệu lực và ngoại lệ: xem căn cứ được backend trả về.</p>
-  </div>
+function RichAnswer({ text }: { text: string }) {
+  return (
+    <div className="text-navy leading-[1.7]">
+      <p className="font-sans text-[16px] whitespace-pre-wrap break-words mb-5">{text}</p>
+      <div className="font-sans grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">
+        {['Phạt tiền', 'Trừ điểm GPLX', 'Hình thức bổ sung'].map((label, i) => (
+          <div
+            key={label}
+            className={`relative overflow-hidden rounded-xl border px-4 py-3.5 ${
+              i === 0 ? 'border-accent/50 bg-selected' : 'border-line bg-surface'
+            }`}
+          >
+            {i === 0 && <span className="absolute inset-y-0 left-0 w-[3px] bg-accent" aria-hidden />}
+            <p className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-muted mb-1.5">{label}</p>
+            <p className="text-[17px] font-semibold tracking-tight leading-tight">Chưa có dữ liệu cấu trúc</p>
+            <p className="mt-0.5 text-[11.5px] text-muted">Đọc câu trả lời và căn cứ; không suy đoán giá trị.</p>
+          </div>
+        ))}
+      </div>
+      <p className="mb-4 text-[15px] text-text-secondary border-l-2 border-line pl-4">
+        Hiệu lực và ngoại lệ: xem căn cứ được backend trả về.
+      </p>
+    </div>
+  )
 }
 
 export default function ChatPage() {
   const [chat] = useState(createChat)
-  const data = useSyncExternalStore(chat.subscribe, chat.getSnapshot), task = useTask()
-  const nav = useNavigate(), location = useLocation()
+  const data = useSyncExternalStore(chat.subscribe, chat.getSnapshot)
+  const task = useTask()
+  const { notify } = useAdmin()
+  const location = useLocation()
+  const [params, setParams] = useSearchParams()
+
+  const activeId = params.get('c')
+  const urlQ = params.get('q') ?? ''
+  const rawCite = params.get('cite')
+  const citeIndex = rawCite !== null && /^\d+$/.test(rawCite) ? Number(rawCite) : null
+
   const [pinned, setPinned] = useState<Set<string>>(new Set())
   const [notice, setNotice] = useState('')
   const [source, setSource] = useState<Awaited<ReturnType<typeof loadCitationSource>>>()
-  const [sourceError, setSourceError] = useState(''), [sourceBusy, setSourceBusy] = useState(false)
+  const [sourceError, setSourceError] = useState('')
+  const [sourceBusy, setSourceBusy] = useState(false)
   const sourceRequest = useRef(0)
-  const sessions: Session[] = data.rows.map(row => {
-    const view = chatView(row)
-    return { id: row.id, title: row.question, group: 'Hôm nay', pinned: pinned.has(row.id), messages: [
-      { role: 'user', text: row.question },
-      { role: 'bot', text: view.answer, status: view.status, rich: !!view.answer, citations: view.citations.map(c => ({title:c.doc_id, clause:c.unit_id ?? c.sign_id ?? '', label:`${c.doc_id}${c.unit_id || c.sign_id ? ` · ${c.unit_id ?? c.sign_id}` : ''}`, raw:c})) },
-    ] }
-  })
-  // Backend stores one question per record and exposes no session date/grouping.
-  useEffect(() => { void chat.load(); return () => chat.dispose() }, [chat])
-  useEffect(() => { if (data.currentId) setActiveId(data.currentId) }, [data.currentId])
-  useEffect(() => { const q=location.state?.initialQuery; if(typeof q==='string') setInput(q) }, [location.state])
-  const [activeId, setActiveId] = useState<string | null>(null)
+  const lastSubmittedId = useRef<string | undefined>(undefined)
+
   const [input, setInput] = useState('')
-  const [query, setQuery] = useState('')
+  const [query, setQuery] = useState(urlQ)
   const [showList, setShowList] = useState(() => window.innerWidth >= 768)
-  const [selectedCitation, setSelectedCitation] = useState<{
-    sessionId: string
-    messageIndex: number
-    referenceIndex: number
-  } | null>(null)
+
+  useEffect(() => {
+    setQuery(urlQ)
+  }, [urlQ])
+
+  function updateUrl(patch: Record<string, string | null>, replace = false) {
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        for (const [k, v] of Object.entries(patch)) {
+          if (v === null || v === '') next.delete(k)
+          else next.set(k, v)
+        }
+        return next
+      },
+      { replace },
+    )
+  }
+
+  const sessions: Session[] = data.rows.map((row) => {
+    const view = chatView(row)
+    return {
+      id: row.id,
+      title: row.question,
+      group: 'Hôm nay',
+      pinned: pinned.has(row.id),
+      messages: [
+        { role: 'user', text: row.question },
+        {
+          role: 'bot',
+          text: view.answer,
+          status: view.status,
+          rich: !!view.answer,
+          citations: view.citations.map((c) => ({
+            title: c.doc_id,
+            clause: c.unit_id ?? c.sign_id ?? '',
+            label: `${c.doc_id}${c.unit_id || c.sign_id ? ` · ${c.unit_id ?? c.sign_id}` : ''}`,
+            raw: c,
+          })),
+        },
+      ],
+    }
+  })
+
+  useEffect(() => {
+    void chat.load()
+    return () => chat.dispose()
+  }, [chat])
+
+  useEffect(() => {
+    if (data.currentId && data.currentId !== lastSubmittedId.current) {
+      lastSubmittedId.current = data.currentId
+      updateUrl({ c: data.currentId, cite: null })
+    }
+  }, [data.currentId])
+
+  useEffect(() => {
+    const q = location.state?.initialQuery
+    if (typeof q === 'string') setInput(q)
+  }, [location.state])
+
   const thinking = data.busy
   const blocked = data.busy || data.loading || task.busy
   const endRef = useRef<HTMLDivElement>(null)
@@ -106,13 +181,11 @@ export default function ChatPage() {
 
   const active = sessions.find((s) => s.id === activeId) ?? null
   const messages = active?.messages ?? []
-  const selectedReference = selectedCitation?.sessionId === activeId
-    ? messages[selectedCitation.messageIndex]?.citations?.[selectedCitation.referenceIndex]
-    : undefined
+  const selectedReference = citeIndex !== null ? messages[1]?.citations?.[citeIndex] : undefined
 
   const filtered = useMemo(
     () => sessions.filter((s) => s.title.toLowerCase().includes(query.toLowerCase())),
-    [sessions, query]
+    [sessions, query],
   )
 
   useEffect(() => {
@@ -120,21 +193,24 @@ export default function ChatPage() {
   }, [messages.length, thinking])
 
   useEffect(() => {
-    setSelectedCitation(null)
-  }, [activeId])
+    sourceRequest.current++
+    setSource(undefined)
+    setSourceError('')
+    setSourceBusy(false)
+  }, [activeId, citeIndex])
 
   useEffect(() => {
-    if (!selectedCitation) return
+    if (!selectedReference) return
     citationCloseRef.current?.focus()
     function handleEscape(event: KeyboardEvent) {
       if (event.key === 'Escape') {
-        setSelectedCitation(null)
+        updateUrl({ cite: null })
         citationTriggerRef.current?.focus()
       }
     }
     document.addEventListener('keydown', handleEscape)
     return () => document.removeEventListener('keydown', handleEscape)
-  }, [selectedCitation])
+  }, [selectedReference])
 
   useEffect(() => {
     const ta = taRef.current
@@ -144,30 +220,65 @@ export default function ChatPage() {
   }, [input])
 
   function newChat() {
-    setActiveId(null)
+    updateUrl({ c: null, cite: null })
     setInput('')
   }
 
   async function send(text = input) {
     if (blocked || !text.trim()) return
-    if (await chat.submit(text)) { setActiveId(chat.getSnapshot().rows[0]?.id ?? null); setInput(''); if(window.innerWidth<768) setShowList(false) }
+    if (await chat.submit(text)) {
+      const nextId = chat.getSnapshot().rows[0]?.id ?? null
+      lastSubmittedId.current = nextId ?? undefined
+      updateUrl({ c: nextId, cite: null })
+      setInput('')
+      if (window.innerWidth < 768) setShowList(false)
+    }
   }
+
   async function readSource() {
     if (!selectedReference) return
-    const id=++sourceRequest.current; setSourceBusy(true); setSourceError(''); setSource(undefined)
-    try { const result=await loadCitationSource(selectedReference.raw); if(id===sourceRequest.current)setSource(result) }
-    catch { if(id===sourceRequest.current)setSourceError('Chi tiết nguồn chưa khả dụng hoặc không khớp trích đoạn. Trích dẫn backend được giữ nguyên.') }
-    finally { if(id===sourceRequest.current)setSourceBusy(false) }
+    const id = ++sourceRequest.current
+    setSourceBusy(true)
+    setSourceError('')
+    setSource(undefined)
+    try {
+      const result = await loadCitationSource(selectedReference.raw)
+      if (id === sourceRequest.current) setSource(result)
+    } catch {
+      if (id === sourceRequest.current) {
+        setSourceError('Chi tiết nguồn chưa khả dụng hoặc không khớp trích đoạn. Trích dẫn backend được giữ nguyên.')
+      }
+    } finally {
+      if (id === sourceRequest.current) setSourceBusy(false)
+    }
   }
+
   function messageAction(action: string, text: string) {
-    if(action==='Sao chép') { void navigator.clipboard.writeText(text).then(()=>setNotice('Đã sao chép')).catch(()=>setNotice('Không sao chép được')); return }
-    if(action==='Tạo lại') { const q=active?.messages[0]?.text; if(q)setInput(q); setNotice('Câu hỏi đã đưa vào ô nhập. Gửi để tạo lượt hỏi mới.'); return }
-    if(active) void task.run(async()=>{ await api(`/chat/${active.id}/feedback`,request('POST',{feedback:action==='Hữu ích'?'HELPFUL':action,note:''})); setNotice('Đã lưu phản hồi') })
+    if (action === 'Sao chép') {
+      void navigator.clipboard
+        .writeText(text)
+        .then(() => setNotice('Đã sao chép'))
+        .catch(() => setNotice('Không sao chép được'))
+      return
+    }
+    if (action === 'Tạo lại') {
+      const q = active?.messages[0]?.text
+      if (q) setInput(q)
+      setNotice('Câu hỏi đã đưa vào ô nhập. Gửi để tạo lượt hỏi mới.')
+      return
+    }
+    if (active) {
+      void task.run(async () => {
+        await api(`/chat/${active.id}/feedback`, request('POST', { feedback: action === 'Hữu ích' ? 'HELPFUL' : action, note: '' }))
+        setNotice('Đã lưu phản hồi')
+      })
+    }
   }
+
   function handleKey(e: React.KeyboardEvent) {
     if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault()
-      send()
+      void send()
     }
   }
 
@@ -186,17 +297,33 @@ export default function ChatPage() {
         onKeyDown={handleKey}
       />
       <div className="flex flex-wrap items-center justify-between gap-2 px-3 pb-3">
-        <div className="flex items-center gap-1">
-          <button onClick={() => setNotice("Demo: đính kèm ảnh chưa có API. Dùng thư viện biển báo để tra cứu.")} className="p-2 rounded-lg text-muted hover:bg-selected" title="Đính kèm ảnh biển báo · Demo">
+        <div className="flex items-center gap-1.5">
+          <button
+            type="button"
+            onClick={() => notify('Chức năng đang phát triển')}
+            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-muted hover:bg-selected"
+            aria-label="Đính kèm ảnh biển báo"
+          >
             <Icon d={ic.clip} />
+            <Badge tone="gray">Đang phát triển</Badge>
           </button>
-          <span className="ml-1 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-medium text-text-secondary bg-sidebar border border-line">
+          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-medium text-text-secondary bg-sidebar border border-line">
             <span className="w-1.5 h-1.5 rounded-full bg-accent" aria-hidden />
             Hạng B
           </span>
         </div>
-        {thinking && <button onClick={() => void chat.cancel()} disabled={data.stopping} className="border border-line rounded-lg px-3 py-2 text-xs disabled:opacity-50">{data.stopping ? 'Đang dừng…' : 'Dừng'}</button>}
+        {thinking && (
+          <button
+            type="button"
+            onClick={() => void chat.cancel()}
+            disabled={data.stopping}
+            className="border border-line rounded-lg px-3 py-2 text-xs disabled:opacity-50"
+          >
+            {data.stopping ? 'Đang dừng…' : 'Dừng'}
+          </button>
+        )}
         <button
+          type="button"
           onClick={() => void send()}
           disabled={!input.trim() || blocked}
           className="w-9 h-9 grid place-items-center rounded-full bg-navy text-bg transition hover:bg-navy-light disabled:bg-line disabled:text-muted disabled:cursor-not-allowed shadow-xs"
@@ -214,10 +341,15 @@ export default function ChatPage() {
       {showList && (
         <aside aria-label="Lịch sử câu hỏi" className="absolute inset-y-0 left-0 z-10 w-64 max-w-full md:static shrink-0 flex flex-col border-r border-line bg-bg shadow-lg md:shadow-none">
           <div className="p-3 space-y-2">
-            <button onClick={() => setShowList(false)} className="md:hidden w-full border border-line rounded-lg px-3 py-2">Đóng lịch sử</button>
+            <button type="button" onClick={() => setShowList(false)} className="md:hidden w-full border border-line rounded-lg px-3 py-2">
+              Đóng lịch sử
+            </button>
             <Notice loading={data.loading} error={data.error} retry={chat.load} />
-            <button disabled={thinking} onClick={chat.load} className="text-xs underline">Tải lại lịch sử</button>
+            <button type="button" disabled={thinking} onClick={chat.load} className="text-xs underline">
+              Tải lại lịch sử
+            </button>
             <button
+              type="button"
               onClick={newChat}
               className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-navy hover:bg-selected transition-colors"
             >
@@ -229,8 +361,13 @@ export default function ChatPage() {
             <label className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-line bg-surface text-muted">
               <Icon d={ic.search} className="w-3.5 h-3.5" />
               <input
+                aria-label="Tìm cuộc trò chuyện"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => {
+                  const v = e.target.value
+                  setQuery(v)
+                  updateUrl({ q: v || null }, true)
+                }}
                 placeholder="Tìm cuộc trò chuyện"
                 className="flex-1 bg-transparent text-[13px] outline-none text-navy placeholder-muted"
               />
@@ -240,9 +377,26 @@ export default function ChatPage() {
           <div className="flex-1 overflow-y-auto px-2 pb-4">
             {filtered.some((s) => s.pinned) && (
               <Section label="Đã ghim">
-                {filtered.filter((s) => s.pinned).map((s) => (
-                  <SessionItem key={s.id} s={s} active={s.id === activeId} onClick={() => { setActiveId(s.id); if(window.innerWidth<768)setShowList(false) }} onPin={() => setPinned(p=>{const n=new Set(p); n.has(s.id)?n.delete(s.id):n.add(s.id); return n})} />
-                ))}
+                {filtered
+                  .filter((s) => s.pinned)
+                  .map((s) => (
+                    <SessionItem
+                      key={s.id}
+                      s={s}
+                      active={s.id === activeId}
+                      onClick={() => {
+                        updateUrl({ c: s.id, cite: null })
+                        if (window.innerWidth < 768) setShowList(false)
+                      }}
+                      onPin={() =>
+                        setPinned((p) => {
+                          const n = new Set(p)
+                          n.has(s.id) ? n.delete(s.id) : n.add(s.id)
+                          return n
+                        })
+                      }
+                    />
+                  ))}
               </Section>
             )}
             {groups.map((g) => {
@@ -251,7 +405,22 @@ export default function ChatPage() {
               return (
                 <Section key={g} label="Lịch sử backend · mỗi mục một lượt hỏi">
                   {items.map((s) => (
-                    <SessionItem key={s.id} s={s} active={s.id === activeId} onClick={() => { setActiveId(s.id); if(window.innerWidth<768)setShowList(false) }} onPin={() => setPinned(p=>{const n=new Set(p); n.has(s.id)?n.delete(s.id):n.add(s.id); return n})} />
+                    <SessionItem
+                      key={s.id}
+                      s={s}
+                      active={s.id === activeId}
+                      onClick={() => {
+                        updateUrl({ c: s.id, cite: null })
+                        if (window.innerWidth < 768) setShowList(false)
+                      }}
+                      onPin={() =>
+                        setPinned((p) => {
+                          const n = new Set(p)
+                          n.has(s.id) ? n.delete(s.id) : n.add(s.id)
+                          return n
+                        })
+                      }
+                    />
                   ))}
                 </Section>
               )
@@ -266,6 +435,7 @@ export default function ChatPage() {
         <header className="h-14 shrink-0 flex items-center justify-between px-4 border-b border-line/70 bg-bg/85 backdrop-blur">
           <div className="flex items-center gap-2 min-w-0">
             <button
+              type="button"
               onClick={() => setShowList((v) => !v)}
               className="p-2 rounded-lg text-muted hover:bg-selected"
               title={showList ? 'Ẩn danh sách' : 'Hiện danh sách'}
@@ -276,7 +446,15 @@ export default function ChatPage() {
           </div>
         </header>
 
-        <div className="px-4"><Notice error={data.requestError || task.error} /><Notice error={data.error} retry={chat.load} />{notice && <p role="status" className="py-2 text-xs text-muted">{notice}</p>}</div>
+        <div className="px-4">
+          <Notice error={data.requestError || task.error} />
+          <Notice error={data.error} retry={chat.load} />
+          {notice && (
+            <p role="status" className="py-2 text-xs text-muted">
+              {notice}
+            </p>
+          )}
+        </div>
         {!active ? (
           /* Empty state */
           <div className="flex-1 flex flex-col items-center justify-center px-4 pb-24">
@@ -289,7 +467,8 @@ export default function ChatPage() {
                 {starters.map((s) => (
                   <button
                     key={s.label}
-                    onClick={() => send(s.q)}
+                    type="button"
+                    onClick={() => void send(s.q)}
                     className="px-3 py-1.5 rounded-lg border border-line text-[13px] text-text-secondary hover:bg-selected transition-colors"
                   >
                     {s.label}
@@ -302,9 +481,7 @@ export default function ChatPage() {
           <>
             <div className="flex-1 overflow-y-auto">
               <div className="mx-auto w-full max-w-2xl px-4 py-8 space-y-10">
-                {messages.length === 0 && (
-                  <p className="text-center text-sm text-muted py-12">Cuộc trò chuyện này chưa có tin nhắn.</p>
-                )}
+                {messages.length === 0 && <p className="text-center text-sm text-muted py-12">Cuộc trò chuyện này chưa có tin nhắn.</p>}
                 {messages.map((m, i) =>
                   m.role === 'user' ? (
                     <div key={i} className="flex justify-end">
@@ -321,25 +498,31 @@ export default function ChatPage() {
                         Trợ lý LuậtGT
                         <span className="font-normal text-muted">· trích từ {m.citations?.length ?? 0} văn bản</span>
                       </div>
-                      <p role="status" className="text-xs text-muted">{m.status}</p>{m.rich?<RichAnswer text={m.text}/>:<p className="font-sans text-[16px] leading-[1.7] text-navy whitespace-pre-wrap break-words">{m.text}</p>}
+                      <p role="status" className="text-xs text-muted">
+                        {m.status}
+                      </p>
+                      {m.rich ? (
+                        <RichAnswer text={m.text} />
+                      ) : (
+                        <p className="font-sans text-[16px] leading-[1.7] text-navy whitespace-pre-wrap break-words">{m.text}</p>
+                      )}
                       {m.citations && m.citations.length > 0 && (
                         <div className="mt-3 flex flex-wrap gap-2">
                           {m.citations.map((citation, referenceIndex) => {
-                            const isSelected = selectedCitation?.sessionId === activeId
-                              && selectedCitation.messageIndex === i
-                              && selectedCitation.referenceIndex === referenceIndex
+                            const isSelected = citeIndex === referenceIndex
                             return (
                               <button
-                                key={`${citation.title}-${citation.clause}`}
+                                key={`${citation.title}-${citation.clause}-${referenceIndex}`}
                                 type="button"
                                 onClick={(event) => {
-                                  if (!active) return
                                   citationTriggerRef.current = event.currentTarget
-                                  sourceRequest.current++; setSource(undefined); setSourceError(''); setSourceBusy(false); setSelectedCitation({ sessionId: active.id, messageIndex: i, referenceIndex })
+                                  updateUrl({ cite: String(referenceIndex) })
                                 }}
                                 aria-controls={isSelected ? 'legal-citation-panel' : undefined}
                                 aria-expanded={isSelected}
-                                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-medium text-left text-xs text-accent-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${isSelected ? 'border-accent bg-selected' : 'border-line bg-surface hover:border-accent/60 hover:bg-selected'}`}
+                                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-medium text-left text-xs text-accent-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${
+                                  isSelected ? 'border-accent bg-selected' : 'border-line bg-surface hover:border-accent/60 hover:bg-selected'
+                                }`}
                               >
                                 <Icon d={ic.book} className="w-3.5 h-3.5 shrink-0" />
                                 <span>{citation.label}</span>
@@ -357,16 +540,28 @@ export default function ChatPage() {
                           { d: ic.up, t: 'NO_BASIS' },
                           { d: ic.up, t: 'OUTDATED' },
                         ].map((a) => (
-                          <button disabled={blocked} onClick={() => messageAction(a.t,m.text)} key={a.t} aria-label={a.t} title={a.t} className="p-1.5 rounded-md hover:bg-selected hover:text-navy">
+                          <button
+                            type="button"
+                            disabled={blocked}
+                            onClick={() => messageAction(a.t, m.text)}
+                            key={a.t}
+                            aria-label={a.t}
+                            title={a.t}
+                            className="p-1.5 rounded-md hover:bg-selected hover:text-navy"
+                          >
                             <Icon d={a.d} className="w-3.5 h-3.5" />
                           </button>
                         ))}
-                        <button onClick={() => { setNotice("Demo: sinh câu luyện tập chưa có API. Trang ôn thi dùng câu hỏi đã xuất bản."); nav("/on-thi") }} title="Demo: chưa có API sinh câu" className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-line text-xs font-medium text-accent-strong hover:bg-selected hover:border-accent/60">
-                          <span aria-hidden>✻</span> Tạo 5 câu luyện tập
+                        <button
+                          type="button"
+                          onClick={() => notify('Chức năng đang phát triển')}
+                          className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-line text-xs font-medium text-accent-strong hover:bg-selected hover:border-accent/60"
+                        >
+                          <span aria-hidden>✻</span> Tạo 5 câu luyện tập <Badge tone="gray">Đang phát triển</Badge>
                         </button>
                       </div>
                     </div>
-                  )
+                  ),
                 )}
                 {thinking && (
                   <div className="flex items-center gap-2 text-sm text-muted">
@@ -397,7 +592,7 @@ export default function ChatPage() {
               ref={citationCloseRef}
               type="button"
               onClick={() => {
-                sourceRequest.current++; setSelectedCitation(null)
+                updateUrl({ cite: null })
                 citationTriggerRef.current?.focus()
               }}
               aria-label="Đóng nguồn trích dẫn"
@@ -415,8 +610,24 @@ export default function ChatPage() {
               <h2 className="text-[15px] font-semibold leading-relaxed text-navy mb-3">{selectedReference.title}</h2>
               <p className="text-xs text-muted leading-relaxed">{selectedReference.clause}</p>
               <blockquote className="mt-3 text-sm whitespace-pre-wrap break-words">{selectedReference.raw.quote}</blockquote>
-              <button disabled={sourceBusy} onClick={() => void readSource()} className="mt-3 border border-line rounded-lg px-3 py-2 text-xs">Đối chiếu chi tiết nguồn</button><Notice error={sourceError} />
-              {source && <details open className="mt-3 text-xs"><summary>{source.title} · {source.number} · {source.unitType}</summary><p className="whitespace-pre-wrap mt-2">{source.text}</p><p>Trích đoạn khớp nguồn; không xác nhận hiệu lực hiện hành.</p></details>}
+              <button
+                type="button"
+                disabled={sourceBusy}
+                onClick={() => void readSource()}
+                className="mt-3 border border-line rounded-lg px-3 py-2 text-xs"
+              >
+                Đối chiếu chi tiết nguồn
+              </button>
+              <Notice error={sourceError} />
+              {source && (
+                <details open className="mt-3 text-xs">
+                  <summary>
+                    {source.title} · {source.number} · {source.unitType}
+                  </summary>
+                  <p className="whitespace-pre-wrap mt-2">{source.text}</p>
+                  <p>Trích đoạn khớp nguồn; không xác nhận hiệu lực hiện hành.</p>
+                </details>
+              )}
             </div>
           </div>
         </aside>
@@ -444,7 +655,11 @@ function SessionItem({ s, active, onClick, onPin }: { s: Session; active: boolea
     >
       <span className="flex-1 truncate">{s.title}</span>
       <button
-        onClick={(e) => {e.stopPropagation(); onPin()}}
+        type="button"
+        onClick={(e) => {
+          e.stopPropagation()
+          onPin()
+        }}
         className="opacity-0 group-hover:opacity-100 p-0.5 rounded text-muted hover:text-navy"
         aria-label="Ghim trong phiên giao diện"
       >
