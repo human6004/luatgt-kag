@@ -1,4 +1,5 @@
 import { type ContentRecord } from '../api'
+import { FilterTabs } from '../admin/ui'
 import { Asset, Notice, useData } from './server/shared'
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
@@ -174,7 +175,7 @@ const designCategories: { key: SignCategory; label: string }[] = [
 
 export default function SignLibraryPage() {
   const data=useData<ContentRecord[]>('/signs')
-  const mockSigns:SignItem[]=(data.value||[]).map(r=>({id:r.id,code:String(r.data.code||''),name:String(r.data.name||''),category:String(r.data.group||''),categoryLabel:String(r.data.group||''),shortDesc:String(r.data.meaning||''),meaning:String(r.data.meaning||''),applicableCases:String(r.data.applicableCases||'Chưa có thông tin từ backend'),relatedViolations:[],shape:'rect-white',iconType:'',imageKey:r.data.imageKey?String(r.data.imageKey):undefined,source:r.data}))
+  const mockSigns:SignItem[]=(data.value||[]).map(r=>({id:r.id,code:String(r.data.code||''),name:String(r.data.name||''),category:String(r.data.group||''),categoryLabel:String(r.data.group||''),shortDesc:String(r.data.meaning||''),meaning:String(r.data.meaning||''),applicableCases:String(r.data.applicableCases||'Chưa có thông tin từ backend'),relatedViolations:[],shape:'rect-white',iconType:'',imageKey:r.data.image_status==='verified'&&r.data.imageKey?String(r.data.imageKey):undefined,source:r.data}))
   const categories=[{key:'all',label:'Tất cả'},...Array.from(new Set(mockSigns.map(s=>s.category))).map(v=>({key:v,label:v}))]
   const [searchQuery, setSearchQuery] = useState('')
   const [activeCategory, setActiveCategory] = useState<SignCategory>('all')
@@ -223,6 +224,7 @@ export default function SignLibraryPage() {
         <div className="relative">
           <input
             type="text"
+            aria-label="Tìm biển báo"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Tìm theo mã biển (VD: P.102, W.201, R.301) hoặc tên biển báo..."
@@ -241,28 +243,9 @@ export default function SignLibraryPage() {
           )}
         </div>
 
-        {/* Category Pills */}
-        <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-selected">
-          <span className="text-xs font-semibold uppercase tracking-wider text-muted mr-1">
-            Phân loại:
-          </span>
-          {categories.map((cat) => {
-            const isActive = activeCategory === cat.key
-            return (
-              <button
-                key={cat.key}
-                onClick={() => setActiveCategory(cat.key)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all ${
-                  isActive
-                    ? 'bg-navy text-white shadow-2xs'
-                    : 'bg-bg text-text-secondary border border-line hover:bg-selected'
-                }`}
-              >
-                {cat.label}
-              </button>
-            )
-          })}
-        </div>
+        <FilterTabs label="Phân loại biển báo" value={activeCategory} onChange={setActiveCategory}
+          items={categories.map(category => ({value: category.key, label: category.label}))}/>
+
       </div>
 
       {/* Grid of Signs */}
@@ -367,7 +350,7 @@ export default function SignLibraryPage() {
                 </div>
               </div>
 
-<dl className="text-xs space-y-2">{["qcvn","so_hieu","doc_id","unit_id","ngay_hieu_luc","ngay_het_hieu_luc","bien_phu_variant"].map(k=><div key={k}><dt>{k}</dt><dd className="break-words">{String(selectedSign.source?.[k]||"Chưa có thông tin")}</dd></div>)}</dl>
+<dl className="text-xs space-y-2">{["qcvn","so_hieu","doc_id","unit_id","ngay_hieu_luc","ngay_het_hieu_luc","bien_phu_variant","record_type","parent_code","children_codes","description_scope","note"].map(k=><div key={k}><dt>{k}</dt><dd className="break-words">{String(selectedSign.source?.[k]||"Chưa có thông tin")}</dd></div>)}</dl>
               {/* Trường hợp áp dụng */}
               <div className="bg-surface p-4 rounded-xl border border-line space-y-1.5">
                 <h4 className="text-xs uppercase tracking-wider font-semibold text-muted">

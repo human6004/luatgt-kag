@@ -1,0 +1,756 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="draw.io" version="32.4.1" pages="8">
+  <diagram id="account-chat" name="01 · Tài khoản và chat">
+    <mxGraphModel grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="0" page="0" pageScale="1" pageWidth="1140" pageHeight="2008" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="accounts" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E7EEF9;strokeColor=#42679B;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="accounts&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;UQ  email : VARCHAR(254)&#10;    password : VARCHAR(100)&#10;    name : VARCHAR(100)&#10;    role : VARCHAR(10)&#10;    enabled : BOOLEAN&#10;    token_version : INTEGER&#10;──────────────────────────────────────&#10;UQ (email)&#10;CHECK(role IN ('USER','POLICE','ADMIN'))" vertex="1">
+          <mxGeometry height="426" width="960" x="80.0" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="chat_messages" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E7EEF9;strokeColor=#42679B;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="chat_messages&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  owner_id : BINARY(16)&#10;    question : LONGTEXT&#10;    answer : LONGTEXT ?&#10;    citations : LONGTEXT&#10;    state : VARCHAR(20)&#10;    created_at : DATETIME(6)&#10;    feedback : VARCHAR(20) ?&#10;    feedback_note : VARCHAR(1000) ?&#10;    resolved : BOOLEAN&#10;    resolution : VARCHAR(1000) ?" vertex="1">
+          <mxGeometry height="502" width="960" x="80.0" y="1186.0" as="geometry" />
+        </mxCell>
+        <mxCell id="fk3" edge="1" parent="1" source="accounts" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="chat_messages" value="FK04">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="560.0" y="926.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="doc_title" parent="1" vertex="1" value="01 · Tài khoản và chat" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=32;fontColor=#25364B;strokeColor=none;fillColor=none;fontStyle=1;">
+          <mxGeometry as="geometry" x="80" y="28" width="1400" height="52" />
+        </mxCell>
+        <mxCell id="doc_source" parent="1" vertex="1" value="Nguồn: SQL migrations V1–V6; Java migration V4; code hiện tại · cập nhật 02/11/2026" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="90" width="1400" height="35" />
+        </mxCell>
+        <mxCell id="doc_legend" parent="1" vertex="1" value="PK: khóa chính · FK: khóa ngoại · UQ: duy nhất · ?: NULL · ||: đúng 1 · o|: 0..1 · o{: 0..N" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="132" width="1400" height="32" />
+        </mxCell>
+        <mxCell id="doc_legend2" parent="1" vertex="1" value="Nét liền: FK SQL; nét đứt: quan hệ/đối chiếu trong code. Khung nét đứt: bảng tham chiếu từ trang khác. Trang KAG dùng cạnh đồ thị riêng." style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="172" width="1400" height="45" />
+        </mxCell>
+        <mxCell id="doc_notes" parent="1" vertex="1" value="• Role sau V4: USER / POLICE / ADMIN. JWT được kiểm tra token_version; không có bảng session riêng.&#10;• chat_messages lưu từng lượt hỏi/đáp. citations là JSON trong LONGTEXT; căn cứ doc_id/unit_id được kiểm trong ChatService, không phải FK&#10;SQL.&#10;• FKxx là mã quan hệ trong sơ đồ, không phải tên constraint trong database:&#10;• FK04: chat_messages(owner_id) → accounts(id)" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="1753.0" width="1400" height="170" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="legal-content" name="02 · Nội dung, pháp luật và kiểm duyệt">
+    <mxGraphModel grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="0" page="0" pageScale="1" pageWidth="4681" pageHeight="2044" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="content" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="content&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;    kind : VARCHAR(20)&#10;    external_id : VARCHAR(250)&#10;    data : LONGTEXT&#10;    published : BOOLEAN&#10;    version : BIGINT&#10;──────────────────────────────────────&#10;UQ (kind, external_id)&#10;CHECK(kind IN ('questions','signs','documents'))" vertex="1">
+          <mxGeometry height="394" width="960" x="400.0" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="content_history" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="content_history&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  content_id : BINARY(16)&#10;    content_version : BIGINT&#10;    data : LONGTEXT&#10;    published : BOOLEAN&#10;    changed_at : DATETIME(6)" vertex="1">
+          <mxGeometry height="302" width="960" x="80.0" y="1154.0" as="geometry" />
+        </mxCell>
+        <mxCell id="legal_units" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="legal_units&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  document_id : BINARY(16)&#10;UQ  unit_id : VARCHAR(500)&#10;    data : LONGTEXT&#10;    published : BOOLEAN&#10;    version : BIGINT&#10;──────────────────────────────────────&#10;UQ (unit_id)" vertex="1">
+          <mxGeometry height="362" width="960" x="3621.0" y="1154.0" as="geometry" />
+        </mxCell>
+        <mxCell id="law_relations" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="law_relations&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  predecessor : BINARY(16)&#10;FK  successor : BINARY(16)&#10;    relation_type : VARCHAR(20)&#10;    effective_date : DATE&#10;    note : VARCHAR(1000)&#10;    version : BIGINT&#10;──────────────────────────────────────&#10;UQ (predecessor, successor, relation_type)&#10;CHECK(relation_type IN ('REPLACES','AMENDS'))&#10;CHECK(predecessor &lt;&gt; successor)" vertex="1">
+          <mxGeometry height="458" width="960" x="1160.0" y="1154.0" as="geometry" />
+        </mxCell>
+        <mxCell id="penalty_rules" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="penalty_rules&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  document_id : BINARY(16)&#10;    data : LONGTEXT&#10;    published : BOOLEAN&#10;    version : BIGINT" vertex="1">
+          <mxGeometry height="266" width="960" x="2240.0" y="1154.0" as="geometry" />
+        </mxCell>
+        <mxCell id="fk4" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.1667;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="content_history" value="FK05">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="560.0" y="894.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk5" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.3333;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="law_relations" value="FK06">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="200" y="180" as="offset" />
+            <Array as="points">
+              <mxPoint x="720.0" y="714.0" />
+              <mxPoint x="1480.0" y="714.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk6" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="law_relations" value="FK07">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="14" y="190" as="offset" />
+            <Array as="points">
+              <mxPoint x="880.0" y="704.0" />
+              <mxPoint x="1544.0" y="704.0" />
+              <mxPoint x="1544.0" y="964.0" />
+              <mxPoint x="1800.0" y="964.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk7" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.6667;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="penalty_rules" value="FK08">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="640" y="200" as="offset" />
+            <Array as="points">
+              <mxPoint x="1040.0" y="694.0" />
+              <mxPoint x="2720.0" y="694.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk8" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.8333;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="legal_units" value="FK09">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1240.5" y="210" as="offset" />
+            <Array as="points">
+              <mxPoint x="1200.0" y="684.0" />
+              <mxPoint x="4101.0" y="684.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="logic0" edge="1" parent="1" source="legal_units" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=none;endArrow=open;strokeColor=#9372A9;dashed=1;dashPattern=7 4;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.3;entryX=0;entryY=0.7;" target="legal_units" value="data.parent_id → unit_id (code)">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="3521.0" y="1262.6" />
+              <mxPoint x="3521.0" y="1407.4" />
+            </Array>
+            <mxPoint as="offset" x="-175.0" y="0" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="doc_title" parent="1" vertex="1" value="02 · Nội dung, pháp luật và kiểm duyệt" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=32;fontColor=#25364B;strokeColor=none;fillColor=none;fontStyle=1;">
+          <mxGeometry as="geometry" x="80" y="28" width="4501.0" height="52" />
+        </mxCell>
+        <mxCell id="doc_source" parent="1" vertex="1" value="Nguồn: SQL migrations V1–V6; Java migration V4; code hiện tại · cập nhật 02/11/2026" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="90" width="4501.0" height="35" />
+        </mxCell>
+        <mxCell id="doc_legend" parent="1" vertex="1" value="PK: khóa chính · FK: khóa ngoại · UQ: duy nhất · ?: NULL · ||: đúng 1 · o|: 0..1 · o{: 0..N" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="132" width="4501.0" height="32" />
+        </mxCell>
+        <mxCell id="doc_legend2" parent="1" vertex="1" value="Nét liền: FK SQL; nét đứt: quan hệ/đối chiếu trong code. Khung nét đứt: bảng tham chiếu từ trang khác. Trang KAG dùng cạnh đồ thị riêng." style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="172" width="4501.0" height="45" />
+        </mxCell>
+        <mxCell id="doc_notes" parent="1" vertex="1" value="• content.kind: questions / signs / documents. data lưu JSON nháp, nguồn, metadata; version chống ghi đè.&#10;• legal_units.data.parent_id → legal_units.unit_id; kiểm cùng văn bản và chống chu trình ở LegalUnitService, không có cột/FK parent_id SQL.&#10;• penalty_rules.data.unit_id và content.data.doc_id được đối chiếu trong code. law_relations nối các content mang kind=documents.&#10;• FKxx là mã quan hệ trong sơ đồ, không phải tên constraint trong database:&#10;• FK05: content_history(content_id) → content(id)&#10;• FK06: law_relations(predecessor) → content(id)&#10;• FK07: law_relations(successor) → content(id)&#10;• FK08: penalty_rules(document_id) → content(id)&#10;• FK09: legal_units(document_id) → content(id)" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="1677.0" width="1600" height="282" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="question-bank" name="03 · Ngân hàng câu hỏi và phiên bản">
+    <mxGraphModel grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="0" page="0" pageScale="1" pageWidth="4380" pageHeight="4072" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="bank_release" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="bank_release&#10;──────────────────────────────────────&#10;PK  release_id : BINARY(16)&#10;UQ  release_code : VARCHAR(40)&#10;    title : VARCHAR(500)&#10;    issued_on : DATE ?&#10;    effective_from : DATE ?&#10;    effective_to : DATE ?&#10;    source_url : VARCHAR(2000) ?&#10;──────────────────────────────────────&#10;UQ (release_code)&#10;CHECK(effective_to IS NULL OR effective_from IS NULL OR&#10;effective_to &gt; effective_from)" vertex="1">
+          <mxGeometry height="458" width="960" x="240.0" y="994.0" as="geometry" />
+        </mxCell>
+        <mxCell id="question_set" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="question_set&#10;──────────────────────────────────────&#10;PK  set_id : BINARY(16)&#10;FK  release_id : BINARY(16)&#10;    set_code : VARCHAR(30)&#10;    set_name : VARCHAR(500)&#10;──────────────────────────────────────&#10;UQ (release_id, set_code)&#10;UQ (set_id, release_id)" vertex="1">
+          <mxGeometry height="330" width="960" x="80.0" y="2036.0" as="geometry" />
+        </mxCell>
+        <mxCell id="topic" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="topic&#10;──────────────────────────────────────&#10;PK  topic_id : BINARY(16)&#10;FK  release_id : BINARY(16)&#10;    topic_code : VARCHAR(30)&#10;    topic_name : VARCHAR(500)&#10;    chapter : SMALLINT&#10;──────────────────────────────────────&#10;UQ (release_id, topic_code)&#10;UQ (release_id, chapter)&#10;UQ (topic_id, release_id)&#10;CHECK(chapter BETWEEN 1 AND 6)" vertex="1">
+          <mxGeometry height="426" width="960" x="1160.0" y="1988.0" as="geometry" />
+        </mxCell>
+        <mxCell id="question" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="question&#10;──────────────────────────────────────&#10;PK FK  question_id : BINARY(16)" vertex="1">
+          <mxGeometry height="138" width="960" x="2240.0" y="1154.0" as="geometry" />
+        </mxCell>
+        <mxCell id="question_revision" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="question_revision&#10;──────────────────────────────────────&#10;PK  revision_id : BINARY(16)&#10;FK  question_id : BINARY(16)&#10;    revision_no : BIGINT&#10;    question_text : LONGTEXT&#10;    explanation : LONGTEXT ?&#10;    choice_mode : VARCHAR(10)&#10;    external_id : VARCHAR(250)&#10;    source_text : VARCHAR(2000)&#10;──────────────────────────────────────&#10;UQ (question_id, revision_no)&#10;CHECK(choice_mode='single')" vertex="1">
+          <mxGeometry height="458" width="960" x="2240.0" y="1972.0" as="geometry" />
+        </mxCell>
+        <mxCell id="answer_option" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="answer_option&#10;──────────────────────────────────────&#10;PK  option_id : BINARY(16)&#10;FK  revision_id : BINARY(16)&#10;    option_position : SMALLINT&#10;    option_text : LONGTEXT&#10;    is_correct : BOOLEAN&#10;    image_url : VARCHAR(2000) ?&#10;──────────────────────────────────────&#10;UQ (revision_id, option_position)&#10;UQ (option_id, revision_id)&#10;CHECK(option_position BETWEEN 0 AND 3)" vertex="1">
+          <mxGeometry height="426" width="960" x="2240.0" y="2950.0" as="geometry" />
+        </mxCell>
+        <mxCell id="question_asset" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="question_asset&#10;──────────────────────────────────────&#10;PK  asset_id : BINARY(16)&#10;FK  revision_id : BINARY(16)&#10;    display_order : SMALLINT&#10;    media_url : VARCHAR(1000)&#10;    mime_type : VARCHAR(100)&#10;    alt_text : VARCHAR(1000) ?&#10;──────────────────────────────────────&#10;UQ (revision_id, display_order)" vertex="1">
+          <mxGeometry height="362" width="960" x="3320.0" y="2950.0" as="geometry" />
+        </mxCell>
+        <mxCell id="set_question" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="set_question&#10;──────────────────────────────────────&#10;PK  set_question_id : BINARY(16)&#10;FK  set_id : BINARY(16)&#10;FK  revision_id : BINARY(16)&#10;FK  topic_id : BINARY(16)&#10;FK  release_id : BINARY(16)&#10;    source_no : INTEGER&#10;    is_critical : BOOLEAN&#10;──────────────────────────────────────&#10;UQ (set_id, source_no)&#10;UQ (set_id, revision_id)&#10;UQ (set_question_id, set_id)&#10;UQ (set_question_id, revision_id)&#10;CHECK(source_no&gt;0)" vertex="1">
+          <mxGeometry height="522" width="960" x="1160.0" y="2950.0" as="geometry" />
+        </mxCell>
+        <mxCell id="content" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="content&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;──────────────────────────────────────&#10;6 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="2350.0" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="fk9" edge="1" parent="1" source="bank_release" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.3333;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="question_set" value="FK10">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="-32" as="offset" />
+            <Array as="points">
+              <mxPoint x="560.0" y="1744.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk10" edge="1" parent="1" source="bank_release" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.6667;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="topic" value="FK11">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="162" y="210" as="offset" />
+            <Array as="points">
+              <mxPoint x="880.0" y="1502.0" />
+              <mxPoint x="1640.0" y="1502.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk11" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToOne;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="question" value="FK12">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="-80" as="offset" />
+            <Array as="points">
+              <mxPoint x="2720.0" y="814.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk12" edge="1" parent="1" source="question" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="question_revision" value="FK13">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="80" as="offset" />
+            <Array as="points">
+              <mxPoint x="2720.0" y="1632.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk13" edge="1" parent="1" source="question_revision" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="answer_option" value="FK14">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="2720.0" y="2690.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk14" edge="1" parent="1" source="question_revision" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.75;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="question_asset" value="FK15">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="210" y="210" as="offset" />
+            <Array as="points">
+              <mxPoint x="2960.0" y="2480.0" />
+              <mxPoint x="3800.0" y="2480.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk15" edge="1" parent="1" source="question_set" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.25;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="set_question" value="FK16">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-318" y="-70" as="offset" />
+            <Array as="points">
+              <mxPoint x="560.0" y="2760.0" />
+              <mxPoint x="1400.0" y="2760.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk16" edge="1" parent="1" source="topic" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="set_question" value="FK17">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="8" as="offset" />
+            <Array as="points">
+              <mxPoint x="1640.0" y="2682.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk17" edge="1" parent="1" source="question_revision" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.25;exitY=1;entryX=0.75;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="set_question" value="FK18">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="230" y="-70" as="offset" />
+            <Array as="points">
+              <mxPoint x="2480.0" y="2760.0" />
+              <mxPoint x="1880.0" y="2760.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="doc_title" parent="1" vertex="1" value="03 · Ngân hàng câu hỏi và phiên bản" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=32;fontColor=#25364B;strokeColor=none;fillColor=none;fontStyle=1;">
+          <mxGeometry as="geometry" x="80" y="28" width="4200.0" height="52" />
+        </mxCell>
+        <mxCell id="doc_source" parent="1" vertex="1" value="Nguồn: SQL migrations V1–V6; Java migration V4; code hiện tại · cập nhật 02/11/2026" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="90" width="4200.0" height="35" />
+        </mxCell>
+        <mxCell id="doc_legend" parent="1" vertex="1" value="PK: khóa chính · FK: khóa ngoại · UQ: duy nhất · ?: NULL · ||: đúng 1 · o|: 0..1 · o{: 0..N" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="132" width="4200.0" height="32" />
+        </mxCell>
+        <mxCell id="doc_legend2" parent="1" vertex="1" value="Nét liền: FK SQL; nét đứt: quan hệ/đối chiếu trong code. Khung nét đứt: bảng tham chiếu từ trang khác. Trang KAG dùng cạnh đồ thị riêng." style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="172" width="4200.0" height="45" />
+        </mxCell>
+        <mxCell id="doc_notes" parent="1" vertex="1" value="• question.question_id dùng lại UUID quản trị trong content. sourceExternalId giữ mã gốc; mã quản trị khi nhập được tách theo bộ.&#10;• question_revision và answer_option không bị sửa tại chỗ. Câu đã có lượt luyện/thi muốn thay đổi phải xuất bản vào bộ mới.&#10;• Ngày ban hành/hiệu lực chưa xác minh được để NULL. LEGACY giữ dữ liệu trước nâng cấp, không phải đợt ban hành chính thức.&#10;• Các cột release_id/set_id/revision_id bổ sung phục vụ FK ghép. question_asset.media_url là khóa đối tượng MinIO, ảnh được tải qua API có&#10;kiểm quyền.&#10;• FKxx là mã quan hệ trong sơ đồ, không phải tên constraint trong database:&#10;• FK10: question_set(release_id) → bank_release(release_id)&#10;• FK11: topic(release_id) → bank_release(release_id)&#10;• FK12: question(question_id) → content(id)&#10;• FK13: question_revision(question_id) → question(question_id)&#10;• FK14: answer_option(revision_id) → question_revision(revision_id)&#10;• FK15: question_asset(revision_id) → question_revision(revision_id)&#10;• FK16: set_question(set_id, release_id) → question_set(set_id, release_id)&#10;• FK17: set_question(topic_id, release_id) → topic(topic_id, release_id)&#10;• FK18: set_question(revision_id) → question_revision(revision_id)" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="3537.0" width="1600" height="450" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="exam-rules" name="04 · Bộ, hạng và quy tắc đề">
+    <mxGraphModel grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="0" page="0" pageScale="1" pageWidth="2860" pageHeight="3704" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="license_class" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF1DE;strokeColor=#B27A2F;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="license_class&#10;──────────────────────────────────────&#10;PK  class_id : BINARY(16)&#10;UQ  class_code : VARCHAR(12)&#10;    class_name : VARCHAR(200)&#10;──────────────────────────────────────&#10;UQ (class_code)" vertex="1">
+          <mxGeometry height="266" width="960" x="80.0" y="994.0" as="geometry" />
+        </mxCell>
+        <mxCell id="exam_rule" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF1DE;strokeColor=#B27A2F;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="exam_rule&#10;──────────────────────────────────────&#10;PK  rule_id : BINARY(16)&#10;FK  set_id : BINARY(16)&#10;FK  class_id : BINARY(16)&#10;    valid_from : DATE&#10;    valid_to : DATE ?&#10;    total_questions : SMALLINT&#10;    duration_minutes : SMALLINT&#10;    minimum_correct : SMALLINT&#10;    critical_slots : SMALLINT&#10;    fail_on_critical : BOOLEAN&#10;──────────────────────────────────────&#10;UQ (set_id, class_id, valid_from)&#10;UQ (rule_id, set_id)&#10;CHECK(valid_to IS NULL OR valid_to&gt;valid_from)&#10;CHECK(total_questions&gt;0 AND duration_minutes&gt;0)&#10;CHECK(minimum_correct BETWEEN 1 AND total_questions)&#10;CHECK(critical_slots BETWEEN 0 AND total_questions)" vertex="1">
+          <mxGeometry height="650" width="960" x="240.0" y="1780.0" as="geometry" />
+        </mxCell>
+        <mxCell id="exam_rule_topic" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF1DE;strokeColor=#B27A2F;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="exam_rule_topic&#10;──────────────────────────────────────&#10;PK FK  rule_id : BINARY(16)&#10;PK FK  topic_id : BINARY(16)&#10;    question_quota : SMALLINT&#10;──────────────────────────────────────&#10;CHECK(question_quota&gt;=0)" vertex="1">
+          <mxGeometry height="266" width="960" x="400.0" y="2950.0" as="geometry" />
+        </mxCell>
+        <mxCell id="bank_release" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="bank_release&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  release_id : BINARY(16)&#10;──────────────────────────────────────&#10;7 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="1283.33" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="question_set" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="question_set&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  set_id : BINARY(16)&#10;FK  release_id : BINARY(16)&#10;──────────────────────────────────────&#10;4 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="266" width="740" x="1160.0" y="994.0" as="geometry" />
+        </mxCell>
+        <mxCell id="topic" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="topic&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  topic_id : BINARY(16)&#10;FK  release_id : BINARY(16)&#10;──────────────────────────────────────&#10;5 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="266" width="740" x="2020.0" y="994.0" as="geometry" />
+        </mxCell>
+        <mxCell id="fk9" edge="1" parent="1" source="bank_release" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.3333;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="question_set" value="FK10">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1530.0" y="734.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk10" edge="1" parent="1" source="bank_release" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.6667;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="topic" value="FK11">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="96.66" y="210" as="offset" />
+            <Array as="points">
+              <mxPoint x="1776.67" y="524.0" />
+              <mxPoint x="2390.0" y="524.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk18" edge="1" parent="1" source="question_set" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="exam_rule" value="FK19">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="255" y="-70" as="offset" />
+            <Array as="points">
+              <mxPoint x="1530.0" y="1590.0" />
+              <mxPoint x="880.0" y="1590.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk19" edge="1" parent="1" source="license_class" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="exam_rule" value="FK20">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="560.0" y="1520.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk20" edge="1" parent="1" source="exam_rule" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="exam_rule_topic" value="FK21">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="720.0" y="2690.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk21" edge="1" parent="1" source="topic" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="exam_rule_topic" value="FK22">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="20" y="-655" as="offset" />
+            <Array as="points">
+              <mxPoint x="2390.0" y="1520.0" />
+              <mxPoint x="2390.0" y="2760.0" />
+              <mxPoint x="1040.0" y="2760.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="doc_title" parent="1" vertex="1" value="04 · Bộ, hạng và quy tắc đề" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=32;fontColor=#25364B;strokeColor=none;fillColor=none;fontStyle=1;">
+          <mxGeometry as="geometry" x="80" y="28" width="2680.0" height="52" />
+        </mxCell>
+        <mxCell id="doc_source" parent="1" vertex="1" value="Nguồn: SQL migrations V1–V6; Java migration V4; code hiện tại · cập nhật 02/11/2026" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="90" width="2680.0" height="35" />
+        </mxCell>
+        <mxCell id="doc_legend" parent="1" vertex="1" value="PK: khóa chính · FK: khóa ngoại · UQ: duy nhất · ?: NULL · ||: đúng 1 · o|: 0..1 · o{: 0..N" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="132" width="2680.0" height="32" />
+        </mxCell>
+        <mxCell id="doc_legend2" parent="1" vertex="1" value="Nét liền: FK SQL; nét đứt: quan hệ/đối chiếu trong code. Khung nét đứt: bảng tham chiếu từ trang khác. Trang KAG dùng cạnh đồ thị riêng." style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="172" width="2680.0" height="45" />
+        </mxCell>
+        <mxCell id="doc_notes" parent="1" vertex="1" value="• Tổng sáu question_quota (câu thường) + critical_slots = total_questions; builder/service kiểm tra trước khi tạo đề.&#10;• Không chồng khoảng hiệu lực trong cùng bộ/hạng; topic quota thuộc release của bộ. Đây là kiểm tra trong service, không phải mọi ràng buộc&#10;đều là CHECK SQL.&#10;• valid_to là mốc loại trừ. Kết thúc rule cũ vào ngày tương lai trước khi tạo rule kế tiếp; ngày hiệu lực được xét theo Việt Nam.&#10;• FKxx là mã quan hệ trong sơ đồ, không phải tên constraint trong database:&#10;• FK10: question_set(release_id) → bank_release(release_id)&#10;• FK11: topic(release_id) → bank_release(release_id)&#10;• FK19: exam_rule(set_id) → question_set(set_id)&#10;• FK20: exam_rule(class_id) → license_class(class_id)&#10;• FK21: exam_rule_topic(rule_id) → exam_rule(rule_id)&#10;• FK22: exam_rule_topic(topic_id) → topic(topic_id)" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="3281.0" width="1600" height="338" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="attempt-study" name="05 · Lượt thi, đáp án và lượt luyện">
+    <mxGraphModel grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="0" page="0" pageScale="1" pageWidth="3084" pageHeight="3834" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="exam_attempt" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E6F4F8;strokeColor=#337F94;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="exam_attempt&#10;──────────────────────────────────────&#10;PK  attempt_id : BINARY(16)&#10;FK  user_id : BINARY(16)&#10;FK  rule_id : BINARY(16)&#10;FK  set_id : BINARY(16)&#10;    started_at : DATETIME(6)&#10;    expires_at : DATETIME(6)&#10;    submitted_at : DATETIME(6) ?&#10;    score : INTEGER ?&#10;    critical_failed : BOOLEAN ?&#10;    passed : BOOLEAN ?&#10;──────────────────────────────────────&#10;UQ (attempt_id, set_id)" vertex="1">
+          <mxGeometry height="508" width="960" x="130.0" y="1058.0" as="geometry" />
+        </mxCell>
+        <mxCell id="attempt_question" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E6F4F8;strokeColor=#337F94;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="attempt_question&#10;──────────────────────────────────────&#10;PK  attempt_question_id : BINARY(16)&#10;FK  attempt_id : BINARY(16)&#10;FK  set_question_id : BINARY(16)&#10;FK  set_id : BINARY(16)&#10;FK  revision_id : BINARY(16)&#10;    display_position : SMALLINT&#10;──────────────────────────────────────&#10;UQ (attempt_id, display_position)&#10;UQ (attempt_id, set_question_id)&#10;UQ (attempt_question_id, revision_id)" vertex="1">
+          <mxGeometry height="426" width="960" x="370.0" y="2086.0" as="geometry" />
+        </mxCell>
+        <mxCell id="attempt_answer" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E6F4F8;strokeColor=#337F94;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="attempt_answer&#10;──────────────────────────────────────&#10;PK FK  attempt_question_id : BINARY(16)&#10;FK  option_id : BINARY(16)&#10;FK  revision_id : BINARY(16)" vertex="1">
+          <mxGeometry height="202" width="960" x="530.0" y="3032.0" as="geometry" />
+        </mxCell>
+        <mxCell id="study_attempt" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E6F4F8;strokeColor=#337F94;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="study_attempt&#10;──────────────────────────────────────&#10;PK  study_attempt_id : BINARY(16)&#10;FK  user_id : BINARY(16)&#10;FK  set_question_id : BINARY(16)&#10;FK  selected_option_id : BINARY(16)&#10;FK  revision_id : BINARY(16)&#10;    correct : BOOLEAN&#10;    created_at : DATETIME(6)" vertex="1">
+          <mxGeometry height="342" width="960" x="1525.0" y="2086.0" as="geometry" />
+        </mxCell>
+        <mxCell id="accounts" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E7EEF9;strokeColor=#42679B;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="accounts&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;──────────────────────────────────────&#10;7 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="940.0" y="304.0" as="geometry" />
+        </mxCell>
+        <mxCell id="exam_rule" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF1DE;strokeColor=#B27A2F;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="exam_rule&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  rule_id : BINARY(16)&#10;FK  set_id : BINARY(16)&#10;FK  class_id : BINARY(16)&#10;──────────────────────────────────────&#10;10 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="298" width="740" x="80.0" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="set_question" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="set_question&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  set_question_id : BINARY(16)&#10;FK  set_id : BINARY(16)&#10;FK  revision_id : BINARY(16)&#10;FK  topic_id : BINARY(16)&#10;FK  release_id : BINARY(16)&#10;──────────────────────────────────────&#10;7 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="362" width="740" x="1210.0" y="1204.0" as="geometry" />
+        </mxCell>
+        <mxCell id="answer_option" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="answer_option&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  option_id : BINARY(16)&#10;FK  revision_id : BINARY(16)&#10;──────────────────────────────────────&#10;6 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="266" width="740" x="2244.0" y="1300.0" as="geometry" />
+        </mxCell>
+        <mxCell id="fk22" edge="1" parent="1" source="accounts" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.3333;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="exam_attempt" value="FK23">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="138.34" y="-70" as="offset" />
+            <Array as="points">
+              <mxPoint x="1186.67" y="868.0" />
+              <mxPoint x="770.0" y="868.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk23" edge="1" parent="1" source="exam_rule" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="exam_attempt" value="FK24">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="450.0" y="798.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk24" edge="1" parent="1" source="exam_attempt" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.25;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="attempt_question" value="FK25">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="610.0" y="1826.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk25" edge="1" parent="1" source="set_question" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.25;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="attempt_question" value="FK26">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-62.5" y="210" as="offset" />
+            <Array as="points">
+              <mxPoint x="1395.0" y="1616.0" />
+              <mxPoint x="850.0" y="1616.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk26" edge="1" parent="1" source="set_question" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.75;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="attempt_question" value="FK27">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="175" y="-70" as="offset" />
+            <Array as="points">
+              <mxPoint x="1580.0" y="1896.0" />
+              <mxPoint x="1090.0" y="1896.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk27" edge="1" parent="1" source="attempt_question" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToOne;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="attempt_answer" value="FK28">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="850.0" y="2772.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk28" edge="1" parent="1" source="answer_option" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.6667;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="attempt_answer" value="FK29">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="135.34" y="-543" as="offset" />
+            <Array as="points">
+              <mxPoint x="2737.33" y="1616.0" />
+              <mxPoint x="2632.0" y="1616.0" />
+              <mxPoint x="2632.0" y="2842.0" />
+              <mxPoint x="1170.0" y="2842.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk29" edge="1" parent="1" source="accounts" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.6667;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="study_attempt" value="FK30">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint y="285.84" as="offset" />
+            <Array as="points">
+              <mxPoint x="1433.33" y="588.0" />
+              <mxPoint x="2097.0" y="588.0" />
+              <mxPoint x="2097.0" y="1896.0" />
+              <mxPoint x="2005.0" y="1896.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk30" edge="1" parent="1" source="set_question" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.75;exitY=1;entryX=0.25;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="study_attempt" value="FK31">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1765.0" y="1826.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk31" edge="1" parent="1" source="answer_option" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.3333;exitY=1;entryX=0.75;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="study_attempt" value="FK32">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="52.84" y="-70" as="offset" />
+            <Array as="points">
+              <mxPoint x="2490.67" y="1896.0" />
+              <mxPoint x="2245.0" y="1896.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="doc_title" parent="1" vertex="1" value="05 · Lượt thi, đáp án và lượt luyện" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=32;fontColor=#25364B;strokeColor=none;fillColor=none;fontStyle=1;">
+          <mxGeometry as="geometry" x="80" y="28" width="2904.0" height="52" />
+        </mxCell>
+        <mxCell id="doc_source" parent="1" vertex="1" value="Nguồn: SQL migrations V1–V6; Java migration V4; code hiện tại · cập nhật 02/11/2026" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="90" width="2904.0" height="35" />
+        </mxCell>
+        <mxCell id="doc_legend" parent="1" vertex="1" value="PK: khóa chính · FK: khóa ngoại · UQ: duy nhất · ?: NULL · ||: đúng 1 · o|: 0..1 · o{: 0..N" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="132" width="2904.0" height="32" />
+        </mxCell>
+        <mxCell id="doc_legend2" parent="1" vertex="1" value="Nét liền: FK SQL; nét đứt: quan hệ/đối chiếu trong code. Khung nét đứt: bảng tham chiếu từ trang khác. Trang KAG dùng cạnh đồ thị riêng." style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="172" width="2904.0" height="45" />
+        </mxCell>
+        <mxCell id="doc_notes" parent="1" vertex="1" value="• FK ghép bảo đảm câu thuộc bộ của rule và option thuộc revision đã phát. attempt_answer PK chỉ attempt_question_id: mỗi câu chọn tối đa một&#10;đáp án.&#10;• study_attempt giữ option đã chọn, revision, đúng/sai và thời điểm. Chủ đề/chương suy ra qua set_question → topic, không lặp cột chapter.&#10;• Server giữ thời gian, chấm điểm và kiểm quyền sở hữu. Quy tắc, phiên bản và khóa ảnh cũ được giữ để xem/chấm bài cũ.&#10;• FKxx là mã quan hệ trong sơ đồ, không phải tên constraint trong database:&#10;• FK23: exam_attempt(user_id) → accounts(id)&#10;• FK24: exam_attempt(rule_id, set_id) → exam_rule(rule_id, set_id)&#10;• FK25: attempt_question(attempt_id, set_id) → exam_attempt(attempt_id, set_id)&#10;• FK26: attempt_question(set_question_id, set_id) → set_question(set_question_id, set_id)&#10;• FK27: attempt_question(set_question_id, revision_id) → set_question(set_question_id, revision_id)&#10;• FK28: attempt_answer(attempt_question_id, revision_id) → attempt_question(attempt_question_id, revision_id)&#10;• FK29: attempt_answer(option_id, revision_id) → answer_option(option_id, revision_id)&#10;• FK30: study_attempt(user_id) → accounts(id)&#10;• FK31: study_attempt(set_question_id, revision_id) → set_question(set_question_id, revision_id)&#10;• FK32: study_attempt(selected_option_id, revision_id) → answer_option(option_id, revision_id)" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="3299.0" width="1600" height="450" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="traffic-signs" name="06 · Catalog biển báo và ảnh">
+    <mxGraphModel grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="0" page="0" pageScale="1" pageWidth="5240" pageHeight="3176" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="signs" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF3E6;strokeColor=#B5793E;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="signs&#10;──────────────────────────────────────&#10;PK  sign_id : VARCHAR(250)&#10;FK UQ  content_id : BINARY(16)&#10;    ma_bien : VARCHAR(100)&#10;FK  nhom : VARCHAR(200)&#10;    ten : VARCHAR(500)&#10;    mo_ta : LONGTEXT ?&#10;FK  qcvn : VARCHAR(200) ?&#10;FK  record_type : VARCHAR(30) ?&#10;    parent_code : VARCHAR(100) ?&#10;    children_codes : LONGTEXT ?&#10;    description_scope : VARCHAR(100) ?&#10;    unit_id : VARCHAR(500) ?&#10;    image_required : BOOLEAN ?&#10;FK  image_id : BINARY(16) ?&#10;    image_status : VARCHAR(100) ?&#10;    verification_status : VARCHAR(100) ?&#10;    note : LONGTEXT ?&#10;──────────────────────────────────────&#10;UQ (content_id)" vertex="1">
+          <mxGeometry height="788" width="960" x="2240.0" y="1058.0" as="geometry" />
+        </mxCell>
+        <mxCell id="images" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF3E6;strokeColor=#B5793E;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="images&#10;──────────────────────────────────────&#10;PK  image_id : BINARY(16)&#10;UQ  image_url : VARCHAR(1000)&#10;    file_name : VARCHAR(500) ?&#10;    metadata : LONGTEXT ?&#10;──────────────────────────────────────&#10;UQ (image_url)" vertex="1">
+          <mxGeometry height="298" width="960" x="80.0" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="nhom_enum" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF3E6;strokeColor=#B5793E;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="nhom_enum&#10;──────────────────────────────────────&#10;PK  nhom_id : VARCHAR(200)&#10;UQ  nhom_name : VARCHAR(200)&#10;──────────────────────────────────────&#10;UQ (nhom_name)" vertex="1">
+          <mxGeometry height="234" width="960" x="1160.0" y="304.0" as="geometry" />
+        </mxCell>
+        <mxCell id="qcvn_enum" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF3E6;strokeColor=#B5793E;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="qcvn_enum&#10;──────────────────────────────────────&#10;PK  qcvn_id : VARCHAR(200)&#10;UQ  qcvn_name : VARCHAR(200)&#10;──────────────────────────────────────&#10;UQ (qcvn_name)" vertex="1">
+          <mxGeometry height="234" width="960" x="2240.0" y="304.0" as="geometry" />
+        </mxCell>
+        <mxCell id="record_type_enum" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF3E6;strokeColor=#B5793E;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="record_type_enum&#10;──────────────────────────────────────&#10;PK  record_type_id : VARCHAR(30)&#10;UQ  record_type_name : VARCHAR(100)&#10;──────────────────────────────────────&#10;UQ (record_type_name)" vertex="1">
+          <mxGeometry height="234" width="960" x="3320.0" y="304.0" as="geometry" />
+        </mxCell>
+        <mxCell id="content" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="content&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;──────────────────────────────────────&#10;6 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="4400.0" y="304.0" as="geometry" />
+        </mxCell>
+        <mxCell id="legal_units" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="legal_units&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  document_id : BINARY(16)&#10;──────────────────────────────────────&#10;6 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="266" width="740" x="2473.33" y="2366.0" as="geometry" />
+        </mxCell>
+        <mxCell id="fk8" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.6667;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="legal_units" value="FK09">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="239.33" y="-724" as="offset" />
+            <Array as="points">
+              <mxPoint x="4893.33" y="798.0" />
+              <mxPoint x="4893.33" y="2176.0" />
+              <mxPoint x="2966.67" y="2176.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk32" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToOne;strokeColor=#75859A;exitX=0.3333;exitY=1;entryX=0.8333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="signs" value="FK33">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="723.34" y="-80" as="offset" />
+            <Array as="points">
+              <mxPoint x="4646.67" y="878.0" />
+              <mxPoint x="3040.0" y="878.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk33" edge="1" parent="1" source="nhom_enum" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="signs" value="FK34">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-390" y="-70" as="offset" />
+            <Array as="points">
+              <mxPoint x="1640.0" y="868.0" />
+              <mxPoint x="2560.0" y="868.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk34" edge="1" parent="1" source="qcvn_enum" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERzeroToOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="signs" value="FK35">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="2720.0" y="798.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk35" edge="1" parent="1" source="record_type_enum" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERzeroToOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="signs" value="FK36">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="390" y="-70" as="offset" />
+            <Array as="points">
+              <mxPoint x="3800.0" y="868.0" />
+              <mxPoint x="2880.0" y="868.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk36" edge="1" parent="1" source="images" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERzeroToOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.1667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="signs" value="FK37">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="-840" y="-80" as="offset" />
+            <Array as="points">
+              <mxPoint x="560.0" y="878.0" />
+              <mxPoint x="2400.0" y="878.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="logic0" edge="1" parent="1" source="signs" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=none;endArrow=open;strokeColor=#9372A9;dashed=1;dashPattern=7 4;exitX=0.5;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="legal_units" value="unit_id → unit_id (code)">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="2720.0" y="2106.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="doc_title" parent="1" vertex="1" value="06 · Catalog biển báo và ảnh" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=32;fontColor=#25364B;strokeColor=none;fillColor=none;fontStyle=1;">
+          <mxGeometry as="geometry" x="80" y="28" width="5060.0" height="52" />
+        </mxCell>
+        <mxCell id="doc_source" parent="1" vertex="1" value="Nguồn: SQL migrations V1–V6; Java migration V4; code hiện tại · cập nhật 02/11/2026" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="90" width="5060.0" height="35" />
+        </mxCell>
+        <mxCell id="doc_legend" parent="1" vertex="1" value="PK: khóa chính · FK: khóa ngoại · UQ: duy nhất · ?: NULL · ||: đúng 1 · o|: 0..1 · o{: 0..N" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="132" width="5060.0" height="32" />
+        </mxCell>
+        <mxCell id="doc_legend2" parent="1" vertex="1" value="Nét liền: FK SQL; nét đứt: quan hệ/đối chiếu trong code. Khung nét đứt: bảng tham chiếu từ trang khác. Trang KAG dùng cạnh đồ thị riêng." style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="172" width="5060.0" height="45" />
+        </mxCell>
+        <mxCell id="doc_notes" parent="1" vertex="1" value="• sign_id là định danh nguồn nguyên trạng; ma_bien không UNIQUE. Không ghép biển chỉ bằng mã khi khác QCVN.&#10;• parent_code/children_codes là quan hệ logic theo ma_bien trong cùng qcvn; code chặn thiếu/nhập nhằng/chu trình. children_codes và note lưu&#10;JSON trong LONGTEXT.&#10;• signs.unit_id → legal_units.unit_id được kiểm trong code khi xuất bản; không có FK SQL trực tiếp.&#10;• Ảnh công khai cần nội dung đã xuất bản, nguồn còn hiệu lực và image_status=verified. Upload mới đưa về nháp/chưa kiểm ảnh.&#10;• images.image_url là khóa đối tượng MinIO. Danh mục nhom/qcvn lấy từ dữ liệu, record_type gồm family/variant/standalone/unverified_code.&#10;• FKxx là mã quan hệ trong sơ đồ, không phải tên constraint trong database:&#10;• FK09: legal_units(document_id) → content(id)&#10;• FK33: signs(content_id) → content(id)&#10;• FK34: signs(nhom) → nhom_enum(nhom_id)&#10;• FK35: signs(qcvn) → qcvn_enum(qcvn_id)&#10;• FK36: signs(record_type) → record_type_enum(record_type_id)&#10;• FK37: signs(image_id) → images(image_id)" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="2697.0" width="1600" height="394" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="legacy" name="07 · Lịch sử trước nâng cấp">
+    <mxGraphModel grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="0" page="0" pageScale="1" pageWidth="2270" pageHeight="1862" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="exams" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F0F1F3;strokeColor=#7E8792;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="exams&#10;Lịch sử cũ — giữ tương thích&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  owner_id : BINARY(16)&#10;    started_at : DATETIME(6)&#10;    expires_at : DATETIME(6)&#10;    submitted_at : DATETIME(6) ?&#10;    snapshot : LONGTEXT&#10;    answers : LONGTEXT&#10;    score : INTEGER ?&#10;    critical_failed : BOOLEAN ?&#10;    passed : BOOLEAN ?" vertex="1">
+          <mxGeometry height="492" width="960" x="80.0" y="994.0" as="geometry" />
+        </mxCell>
+        <mxCell id="study_attempts" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F0F1F3;strokeColor=#7E8792;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="study_attempts&#10;Lịch sử cũ — giữ tương thích&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  owner_id : BINARY(16)&#10;FK  question_id : BINARY(16)&#10;    chapter : INTEGER&#10;    correct : BOOLEAN&#10;    created_at : DATETIME(6)" vertex="1">
+          <mxGeometry height="332" width="960" x="1160.0" y="994.0" as="geometry" />
+        </mxCell>
+        <mxCell id="accounts" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E7EEF9;strokeColor=#42679B;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="accounts&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;──────────────────────────────────────&#10;7 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="313.33" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="content" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="content&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;──────────────────────────────────────&#10;6 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="1430.0" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="fk0" edge="1" parent="1" source="accounts" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.3333;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="exams" value="FK01">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="560.0" y="734.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk1" edge="1" parent="1" source="accounts" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.6667;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="study_attempts" value="FK02">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="126.66" y="210" as="offset" />
+            <Array as="points">
+              <mxPoint x="806.67" y="524.0" />
+              <mxPoint x="1480.0" y="524.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk2" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="study_attempts" value="FK03">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1800.0" y="734.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="doc_title" parent="1" vertex="1" value="07 · Lịch sử trước nâng cấp" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=32;fontColor=#25364B;strokeColor=none;fillColor=none;fontStyle=1;">
+          <mxGeometry as="geometry" x="80" y="28" width="2090.0" height="52" />
+        </mxCell>
+        <mxCell id="doc_source" parent="1" vertex="1" value="Nguồn: SQL migrations V1–V6; Java migration V4; code hiện tại · cập nhật 02/11/2026" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="90" width="2090.0" height="35" />
+        </mxCell>
+        <mxCell id="doc_legend" parent="1" vertex="1" value="PK: khóa chính · FK: khóa ngoại · UQ: duy nhất · ?: NULL · ||: đúng 1 · o|: 0..1 · o{: 0..N" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="132" width="2090.0" height="32" />
+        </mxCell>
+        <mxCell id="doc_legend2" parent="1" vertex="1" value="Nét liền: FK SQL; nét đứt: quan hệ/đối chiếu trong code. Khung nét đứt: bảng tham chiếu từ trang khác. Trang KAG dùng cạnh đồ thị riêng." style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="172" width="2090.0" height="45" />
+        </mxCell>
+        <mxCell id="doc_notes" parent="1" vertex="1" value="• Các bảng cũ được giữ nguyên; API ghép lịch sử cũ/mới. Không ghi thêm đề hoặc lượt luyện mới vào hai bảng này.&#10;• exams.snapshot / answers lưu JSON. study_attempts cũ chỉ lưu đúng/sai và chapter, không có phương án đã chọn; migration không tự suy đoán.&#10;• Dữ liệu mới dùng exam_attempt / attempt_question / attempt_answer / study_attempt.&#10;• FKxx là mã quan hệ trong sơ đồ, không phải tên constraint trong database:&#10;• FK01: exams(owner_id) → accounts(id)&#10;• FK02: study_attempts(owner_id) → accounts(id)&#10;• FK03: study_attempts(question_id) → content(id)" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="1551.0" width="1600" height="226" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+  <diagram id="kag" name="08 · KAG và đối chiếu định danh">
+    <mxGraphModel grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="0" page="0" pageScale="1" pageWidth="2893" pageHeight="5712" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="KAG_LegalDocument" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FCEADF;strokeColor=#B4673D;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="KAG · LegalDocument&#10;Node OpenSPG; không phải bảng SQL&#10;──────────────────────────────────────&#10;ID  id : Text&#10;    name : Text&#10;    so_hieu (soHieu) : Text&#10;    title : Text&#10;    loai : Text&#10;    co_quan (coQuan) : Text&#10;    official_so_hieu (officialSoHieu) : Text ?&#10;    identity_note (identityNote) : Text ?&#10;    scope : Text&#10;    tier : Text&#10;    document_role (documentRole) : Text ?&#10;    legal_domains (legalDomains) : Text ?&#10;    current_status (currentStatus) : Text ?&#10;    status_hint (statusHint) : Text ?&#10;    phan_lien_quan (phanLienQuan) : Text ?&#10;    ngay_ban_hanh (ngayBanHanh) : Text&#10;    effective_from (effectiveFrom) : Text ?&#10;    effective_to (effectiveTo) : Text ?&#10;    hieu_luc_note (hieuLucNote) : Text ?&#10;    het_hieu_luc_note (hetHieuLucNote) : Text ?&#10;    ngay_hieu_luc_bo_phan (ngayHieuLucBoPhan) : Text ?&#10;    consolidation_as_of (consolidationAsOf) : Text ?&#10;    underlying_effective_from (underlyingEffectiveFrom) : Text ?&#10;    source_url (sourceUrl) : Text&#10;    source_kind (sourceKind) : Text&#10;    source_quality (sourceQuality) : Text ?&#10;    source_note (sourceNote) : Text ?&#10;    markdown_path (markdownPath) : Text&#10;    source_record (sourceRecord) : Text" vertex="1">
+          <mxGeometry height="1270" width="1040" x="720.0" y="994.0" as="geometry" />
+        </mxCell>
+        <mxCell id="KAG_LegalUnit" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FCEADF;strokeColor=#B4673D;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="KAG · LegalUnit&#10;Node OpenSPG; không phải bảng SQL&#10;──────────────────────────────────────&#10;ID  id : Text&#10;    name : Text&#10;    doc_id (docId) : Text&#10;    so_hieu (soHieu) : Text&#10;    unit_type (unitType) : Text&#10;    text : Text&#10;    order : Integer&#10;    parent_id (parentId) : Text ?&#10;    title : Text ?&#10;    dieu_number (dieuNumber) : Text ?&#10;    khoan_number (khoanNumber) : Text ?&#10;    diem_letter (diemLetter) : Text ?&#10;    dieu_occurrence (dieuOccurrence) : Integer ?&#10;    khoan_occurrence (khoanOccurrence) : Integer ?&#10;    diem_occurrence (diemOccurrence) : Integer ?&#10;    qcvn_id (qcvnId) : Text ?&#10;    scope : Text ?&#10;    section_number (sectionNumber) : Text ?&#10;    section_occurrence (sectionOccurrence) : Integer ?&#10;    penalty_id (penaltyId) : Text ?&#10;    penalty_dieu_title (penaltyDieuTitle) : Text ?&#10;    penalty_doi_tuong (penaltyDoiTuong) : Text ?&#10;    penalty_hanh_vi (penaltyHanhVi) : Text ?&#10;    penalty_phat_tien_min (penaltyPhatTienMin) : Integer ?&#10;    penalty_phat_tien_max (penaltyPhatTienMax) : Integer ?&#10;    penalty_canh_cao (penaltyCanhCao) : Text ?&#10;    penalty_tru_diem_gplx (penaltyTruDiemGplx) : Integer ?&#10;    penalty_tuoc_gplx_thang_min (penaltyTuocGplxThangMin) : Integer ?&#10;    penalty_tuoc_gplx_thang_max (penaltyTuocGplxThangMax) : Integer ?&#10;    penalty_tich_thu (penaltyTichThu) : Text ?&#10;    penalty_source_record (penaltySourceRecord) : Text ?&#10;    source_record (sourceRecord) : Text" vertex="1">
+          <mxGeometry height="1390" width="1040" x="893.33" y="2784.0" as="geometry" />
+        </mxCell>
+        <mxCell id="KAG_TrafficSign" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FCEADF;strokeColor=#B4673D;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="KAG · TrafficSign&#10;Node OpenSPG; không phải bảng SQL&#10;──────────────────────────────────────&#10;ID  id : Text&#10;    name : Text&#10;    doc_id (docId) : Text&#10;    unit_id (unitId) : Text&#10;    so_hieu (soHieu) : Text&#10;    ma_bien (maBien) : Text&#10;    nhom : Text&#10;    qcvn : Text&#10;    ten : Text&#10;    bien_phu_variant (bienPhuVariant) : Text&#10;    mo_ta (moTa) : Text&#10;    ngay_hieu_luc (ngayHieuLuc) : Text&#10;    ngay_het_hieu_luc (ngayHetHieuLuc) : Text ?&#10;    source_record (sourceRecord) : Text" vertex="1">
+          <mxGeometry height="670" width="1040" x="1066.67" y="4694.0" as="geometry" />
+        </mxCell>
+        <mxCell id="content" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="content&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;──────────────────────────────────────&#10;6 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="870.0" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="legal_units" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="legal_units&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  document_id : BINARY(16)&#10;──────────────────────────────────────&#10;6 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="266" width="740" x="1880.0" y="1998.0" as="geometry" />
+        </mxCell>
+        <mxCell id="signs" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF3E6;strokeColor=#B5793E;strokeWidth=2;fontSize=24;fontFamily=Consolas;dashed=1;dashPattern=6 4;" value="signs&#10;Tham chiếu: chỉ hiện PK/FK&#10;──────────────────────────────────────&#10;PK  sign_id : VARCHAR(250)&#10;FK UQ  content_id : BINARY(16)&#10;FK  nhom : VARCHAR(200)&#10;FK  qcvn : VARCHAR(200) ?&#10;FK  record_type : VARCHAR(30) ?&#10;FK  image_id : BINARY(16) ?&#10;──────────────────────────────────────&#10;17 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="394" width="740" x="2053.33" y="3780.0" as="geometry" />
+        </mxCell>
+        <mxCell id="joinDoc" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=none;endArrow=open;strokeColor=#9372A9;dashed=1;dashPattern=7 4;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="KAG_LegalDocument" value="kind=documents; external_id = id = doc_id">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1240.0" y="734.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="joinUnit" edge="1" parent="1" source="legal_units" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=none;endArrow=open;strokeColor=#9372A9;dashed=1;dashPattern=7 4;exitX=0.5;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="KAG_LegalUnit" value="unit_id = id = exact unit_id">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="261.66" y="-70" as="offset" />
+            <Array as="points">
+              <mxPoint x="2250.0" y="2594.0" />
+              <mxPoint x="1586.67" y="2594.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="joinSign" edge="1" parent="1" source="signs" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=none;endArrow=open;strokeColor=#9372A9;dashed=1;dashPattern=7 4;exitX=0.5;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="KAG_TrafficSign" value="sign_id = id = exact sign_id">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="261.66" y="-70" as="offset" />
+            <Array as="points">
+              <mxPoint x="2423.33" y="4504.0" />
+              <mxPoint x="1760.0" y="4504.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kagrel0" edge="1" parent="1" source="KAG_LegalDocument" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=none;endArrow=open;strokeColor=#B86D3E;exitX=0.5;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="KAG_LegalUnit" value="hasUnit">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1240.0" y="2524.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kagrel1" edge="1" parent="1" source="KAG_LegalUnit" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=none;endArrow=open;strokeColor=#B86D3E;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.3;entryX=0;entryY=0.7;" target="KAG_LegalUnit" value="hasChild / citesUnit / excludesUnit">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="793.33" y="3201.0" />
+              <mxPoint x="793.33" y="3757.0" />
+            </Array>
+            <mxPoint as="offset" x="-195.0" y="0" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kagrel2" edge="1" parent="1" source="KAG_LegalUnit" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=none;endArrow=open;strokeColor=#B86D3E;exitX=0.5;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="KAG_TrafficSign" value="hasSign">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint as="offset" />
+            <Array as="points">
+              <mxPoint x="1413.33" y="4434.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="kagrel3" edge="1" parent="1" source="KAG_LegalDocument" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=none;endArrow=open;strokeColor=#B86D3E;edgeStyle=orthogonalEdgeStyle;exitX=0;exitY=0.3;entryX=0;entryY=0.7;" target="KAG_LegalDocument" value="cites / amends / repeals / implements / consolidates">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="620.0" y="1375.0" />
+              <mxPoint x="620.0" y="1883.0" />
+            </Array>
+            <mxPoint as="offset" x="-280.0" y="0" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="doc_title" parent="1" vertex="1" value="08 · KAG và đối chiếu định danh" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=32;fontColor=#25364B;strokeColor=none;fillColor=none;fontStyle=1;">
+          <mxGeometry as="geometry" x="80" y="28" width="2713.33" height="52" />
+        </mxCell>
+        <mxCell id="doc_source" parent="1" vertex="1" value="Nguồn: kag/schema/schema_contract.json + VietRoadTraffic.schema; code WebApp · cập nhật 02/11/2026" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="90" width="2713.33" height="35" />
+        </mxCell>
+        <mxCell id="doc_legend" parent="1" vertex="1" value="PK: khóa chính · FK: khóa ngoại · UQ: duy nhất · ?: NULL · ||: đúng 1 · o|: 0..1 · o{: 0..N" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="132" width="2713.33" height="32" />
+        </mxCell>
+        <mxCell id="doc_legend2" parent="1" vertex="1" value="Nét liền: FK SQL; nét đứt: quan hệ/đối chiếu trong code. Khung nét đứt: bảng tham chiếu từ trang khác. Trang KAG dùng cạnh đồ thị riêng." style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="172" width="2713.33" height="45" />
+        </mxCell>
+        <mxCell id="doc_notes" parent="1" vertex="1" value="• Thuộc tính: tên logical trong contract; tên camelCase vật lý của schema ghi trong ngoặc khi khác nhau. id/name là thuộc tính nội tại&#10;OpenSPG.&#10;• Cạnh cam là loại quan hệ được schema khai báo, không khẳng định mọi cạnh đã có trong graph đang chạy. Không gán cardinality SQL cho đồ&#10;thị.&#10;• Nét đứt là đối chiếu định danh qua ứng dụng/ETL, không có FK xuyên MySQL và KAG. source_record là provenance, không thay định danh node.&#10;• Redis giữ rate-limit/cache; MinIO giữ bytes tệp/ảnh. Không biểu diễn hai dịch vụ này thành bảng SQL giả." style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="5429.0" width="1600" height="198" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

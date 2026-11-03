@@ -1,9 +1,8 @@
 import { api, send } from '../api'
 import { useData, useTask, Notice } from './server/shared'
 import { useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useAdmin, type ChatLog } from '../admin/store'
-import { Badge, Button, Card, Page, inputCls, type Tone } from '../admin/ui'
+import { Badge, Button, Card, FilterTabs, NavLinkButton, Page, inputCls, type Tone } from '../admin/ui'
 
 const statusTone: Record<ChatLog['status'], Tone> = {
   'Đã trả lời': 'green',
@@ -18,17 +17,16 @@ export default function AdminChatLogs() {
   const data=useData<Record[]>('/admin/chatlogs?pending=false')
   const logs=(data.value||[]).map(r=>({...r,user:r.ownerId,answer:r.answer||'',status:r.feedback==='WRONG'?'Phản hồi sai':r.feedback==='OUTDATED'?'Văn bản hết hiệu lực':r.feedback==='NO_BASIS'||r.state==='KAG_ABSTAINED'?'Không có căn cứ':r.state==='ANSWERED'?'Đã trả lời':r.state,feedback:r.feedback==='HELPFUL'?'up':r.feedback?'down':null,time:r.createdAt,latency:null}))
 
-  const nav = useNavigate()
   const [q, setQ] = useState('')
-  const [tab, setTab] = useState<'all' | 'issue' | 'down'>('all')
+  const [tab, setTab] = useState<'all' | 'issue' | 'resolved'>('all')
   const [sel, setSel] = useState<string | null>(null)
   const [note, setNote] = useState('')
 
   const shown = useMemo(
     () =>
       logs.filter((l) => {
-        if (tab === 'issue' && (l.status === 'Đã trả lời' || l.resolved)) return false
-        if (tab === 'down' && l.feedback !== 'down') return false
+        if (tab === 'issue' && l.resolved) return false
+        if (tab === 'resolved' && !l.resolved) return false
         return (l.question + l.user).toLowerCase().includes(q.toLowerCase())
       }),
     [logs, tab, q]
@@ -40,26 +38,18 @@ export default function AdminChatLogs() {
     const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n')
     const a = document.createElement('a')
     a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv' }))
-    a.download = 'nhat-ky-chat.csv'
+    a.download = 'phan-hoi-chat.csv'
     a.click()
   }
 
   return (
-    <Page title="Nhật ký chat" subtitle="Theo dõi câu hỏi, đánh giá phản hồi và chuyển câu chưa trả lời được sang bổ sung tri thức." actions={<Button onClick={exportCsv}>Xuất CSV</Button>}>
+    <Page title="Phản hồi chat" subtitle="Chỉ hiển thị câu trả lời được người dùng báo sai, thiếu căn cứ hoặc lỗi thời. Lịch sử chat riêng không xuất hiện ở đây." actions={<Button disabled={data.loading || !!data.error || !data.value?.length} onClick={exportCsv}>Xuất CSV</Button>}>
       <Notice {...data} retry={data.reload}/><Notice error={task.error}/>
       <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
         <div className="min-w-0">
-          <div className="flex flex-wrap items-center gap-3 mb-4">
-            <div className="flex max-w-full flex-wrap rounded-xl border border-line bg-surface p-0.5">
-              {([['all', 'Tất cả'], ['issue', 'Cần xử lý'], ['down', 'Đánh giá 👎']] as const).map(([k, l]) => (
-                <button key={k} onClick={() => setTab(k)} className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${tab === k ? 'bg-selected text-navy' : 'text-muted hover:text-navy'}`}>
-                  {l}
-                  {k === 'issue' && <span className="ml-1 text-accent-strong">{logs.filter((x) => x.status !== 'Đã trả lời' && !x.resolved).length}</span>}
-                </button>
-              ))}
-            </div>
-            <input className={`${inputCls} max-w-xs`} placeholder="Tìm theo câu hỏi, người dùng…" value={q} onChange={(e) => setQ(e.target.value)} />
-          </div>
+          <input aria-label="Tìm báo cáo" className={`${inputCls} mb-3 w-full`} placeholder="Tìm theo câu hỏi, người dùng…" value={q} onChange={(e) => setQ(e.target.value)} />
+          <FilterTabs label="Lọc trạng thái báo cáo" value={tab} onChange={setTab} className="mb-4"
+            items={[{value: 'all', label: 'Tất cả báo cáo'}, {value: 'issue', label: <>Cần xử lý <span className="ml-1 text-accent-strong">{data.value ? logs.filter(x => !x.resolved).length : '—'}</span></>}, {value: 'resolved', label: 'Đã xử lý'}]}/>
           <Card>
             <ul className="divide-y divide-line/70">
               {shown.map((l) => (
@@ -75,12 +65,12 @@ export default function AdminChatLogs() {
                   </button>
                 </li>
               ))}
-              {!shown.length && <li className="px-5 py-8 text-center text-sm text-muted">Không có bản ghi.</li>}
+              {!shown.length && <li className="px-5 py-8 text-center text-sm text-muted">{data.loading ? 'Đang tải báo cáo…' : data.error ? 'Chưa tải được báo cáo. Vui lòng thử lại.' : 'Không có báo cáo phù hợp.'}</li>}
             </ul>
           </Card>
         </div>
 
-        <Card title="Chi tiết hội thoại" className="self-start xl:sticky xl:top-6">
+        <Card title="Chi tiết báo cáo" className="self-start xl:sticky xl:top-6">
           {cur ? (
             <div className="px-5 pb-5 space-y-4">
               <div className="flex justify-end">
@@ -103,12 +93,12 @@ export default function AdminChatLogs() {
                     Đánh dấu đã xử lý
                   </Button>
                 )}
-                <Button onClick={() => nav('/admin/knowledge')}>Bổ sung văn bản</Button>
+                <NavLinkButton to="/admin/knowledge" size="sm">Bổ sung văn bản</NavLinkButton>
                 <Button variant="ghost" onClick={() => notify('Demo: mô phỏng chạy lại; không gọi KAG solver')}>Chạy lại · Demo</Button>
               </div>
             </div>
           ) : (
-            <p className="px-5 pb-5 text-sm text-muted">Chọn một hội thoại.</p>
+            <p className="px-5 pb-5 text-sm text-muted">Chọn một báo cáo.</p>
           )}
         </Card>
       </div>

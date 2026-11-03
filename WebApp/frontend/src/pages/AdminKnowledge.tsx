@@ -1,11 +1,10 @@
 import { Relations } from './server/AdminPages'
-import { useNavigate } from 'react-router-dom'
 import { api,send,type ContentRecord } from '../api'
 import { Notice,useData,useTask,download } from './server/shared'
 import { runRetrieval,inspectionError } from './server/kag-inspection'
 import { useRef, useState } from 'react'
 import { useAdmin, type DocStatus, type LegalDoc } from '../admin/store'
-import { Badge, Button, Card, Field, Modal, Page, Progress, Td, Th, inputCls, type Tone } from '../admin/ui'
+import { Badge, Button, Card, FilterTabs, Field, Modal, NavLinkButton, Page, Progress, Td, Th, inputCls, type Tone } from '../admin/ui'
 
 const pipelineSteps = ['Tách Điều / Khoản / Điểm', 'Trích xuất thực thể & quan hệ', 'Dựng đồ thị & vector', 'Kiểm duyệt bởi quản trị viên', 'Xuất bản phiên bản mới']
 
@@ -19,7 +18,6 @@ const statusTone: Record<DocStatus, Tone> = {
 }
 
 export default function AdminKnowledge() {
-  const nav=useNavigate()
   const {docs:demoDocs,setDocs,notify}=useAdmin(),task=useTask(),data=useData<ContentRecord[]>('/admin/documents')
   const units=useData<ContentRecord[]>('/admin/units')
   const docs:LegalDoc[]=(data.value||[]).map(r=>({id:r.id,name:String(r.data.title||''),type:String(r.data.type||'') as LegalDoc['type'],effective:String(r.data.ngay_hieu_luc||'Chưa có thông tin'),status:r.published?'Đã lập chỉ mục':'Chờ duyệt',chunks:units.value?.filter(u=>u.data.doc_id===r.externalId).length||0,entities:0,step:0,updated:'—'}))
@@ -66,7 +64,7 @@ export default function AdminKnowledge() {
       subtitle={`${data.value?docs.length:'—'} văn bản · số thực thể mỗi văn bản chưa có API`}
       actions={
         <>
-          <Button onClick={()=>nav("/admin/imports?type=documents")}>Nhập danh mục</Button><Button onClick={()=>{setMetadataId('');setUploadFiles([]);setMetadata({externalId:'',title:'',so_hieu:'',source:'',ngay_hieu_luc:'',reviewed:false})}}>Thêm văn bản</Button><Button onClick={() => setUrlOpen(true)}>Dán đường dẫn · Demo</Button>
+          <NavLinkButton to="/admin/imports?type=documents">Nhập danh mục</NavLinkButton><Button onClick={()=>{task.clearError();setMetadataId('');setUploadFiles([]);setMetadata({externalId:'',title:'',so_hieu:'',source:'',ngay_hieu_luc:'',reviewed:false})}}>Thêm văn bản</Button><Button onClick={() => setUrlOpen(true)}>Dán đường dẫn · Demo</Button>
           <Button variant="primary" onClick={() => fileRef.current?.click()}>Tải văn bản lên</Button>
           <input
             ref={fileRef}
@@ -86,17 +84,9 @@ export default function AdminKnowledge() {
       <Notice {...data} retry={data.reload}/><Notice {...units} retry={units.reload}/><Notice error={task.error}/><p className="mb-4 text-xs text-muted">Danh mục, metadata, tệp nguồn và xuất bản dùng API thật. Quy trình trích xuất tự động, URL, lưu trữ và xóa: Demo. Trạng thái xuất bản không chứng minh đã lập chỉ mục graph.</p>
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
         <div className="space-y-4 min-w-0">
-          <div className="flex flex-wrap gap-1.5">
-            {(['all', 'Đã lập chỉ mục', 'Chờ duyệt', 'Đang xử lý', 'Lưu trữ'] as const).map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`rounded-full px-3 py-1 text-xs font-medium border transition-colors ${filter === f ? 'bg-navy text-bg border-navy' : 'border-line text-text-secondary hover:bg-selected'}`}
-              >
-                {f === 'all' ? 'Tất cả' : f}
-              </button>
-            ))}
-          </div>
+          <FilterTabs label="Lọc trạng thái văn bản" value={filter} onChange={setFilter}
+            items={(['all', 'Đã lập chỉ mục', 'Chờ duyệt', 'Đang xử lý', 'Lưu trữ'] as const).map(value => ({value, label: value === 'all' ? 'Tất cả' : value}))}/>
+
 
           <Card className="overflow-x-auto">
             <table className="w-full min-w-[640px]">
@@ -107,20 +97,18 @@ export default function AdminKnowledge() {
               </thead>
               <tbody>
                 {shown.map((d) => (
-                  <tr
-                    key={d.id}
-                    onClick={() => setSelectedId(d.id)}
-                    className={`border-b border-line/60 last:border-0 cursor-pointer transition-colors ${d.id === selectedId ? 'bg-selected/60' : 'hover:bg-bg'}`}
-                  >
-                    <Td className="font-medium text-navy">
-                      {d.name}
-                      <span className="block text-[11.5px] font-normal text-muted">{units.value?d.chunks:'—'} đơn vị nguồn · thực thể chưa đo</span>
+                  <tr key={d.id} className={`border-b border-line/60 last:border-0 transition-colors ${d.id === selectedId ? 'bg-selected/60' : 'hover:bg-bg'}`}>
+                    <Td className="min-w-[200px] font-medium text-navy">
+                      <button type="button" onClick={() => setSelectedId(d.id)} aria-pressed={d.id === selectedId} className="w-full text-left focus-visible:outline-2 focus-visible:outline-accent-strong">
+                        {d.name}
+                        <span className="block text-[11.5px] font-normal text-muted">{units.value?d.chunks:'—'} đơn vị nguồn · thực thể chưa đo</span>
+                      </button>
                     </Td>
-                    <Td className="text-muted">{d.type||'Chưa có loại'}</Td>
-                    <Td className="text-muted">{d.effective}</Td>
-                    <Td><Badge tone={statusTone[d.status]}>{d.status==='Đã lập chỉ mục'?'Đã xuất bản':d.status}</Badge></Td>
-                    <Td className="text-right whitespace-nowrap" >
-                      <span onClick={(e) => e.stopPropagation()} className="inline-flex gap-1">
+                    <Td className="min-w-28 text-muted">{d.type||'Chưa có loại'}</Td>
+                    <Td className="min-w-36 text-muted">{d.effective}</Td>
+                    <Td className="min-w-32"><Badge tone={statusTone[d.status]}>{d.status==='Đã lập chỉ mục'?'Đã xuất bản':d.status}</Badge></Td>
+                    <Td className="text-right" >
+                      <span className="inline-flex w-56 flex-wrap justify-end gap-2">
                         {d.status === 'Chờ duyệt' && <Button size="sm" variant="primary" onClick={() => approve(d)}>Duyệt</Button>}
                         {(d.status === 'Đã lập chỉ mục' || d.status === 'Lỗi' || d.status === 'Chờ xử lý') && (
                           <Button size="sm" variant="ghost" onClick={() => processDoc(d.id)}>Lập chỉ mục lại · Demo</Button>
@@ -128,13 +116,13 @@ export default function AdminKnowledge() {
                         {d.status !== 'Lưu trữ' && d.status !== 'Đang xử lý' && (
                           <Button size="sm" variant="ghost" onClick={() => { update(d.id, { status: 'Lưu trữ' }) }}>Lưu trữ · Demo</Button>
                         )}
-                        <Button size="sm" onClick={()=>{const r=data.value?.find(r=>r.id===d.id);setUploadFiles([]);setHistory(undefined);if(r){setMetadataId(r.id);setSelectedId(r.id);setMetadata({...r.data,externalId:r.externalId})}}}>Sửa metadata</Button><Button size="sm" onClick={()=>{const r=data.value?.find(r=>r.id===d.id);if(r)void task.run(async()=>{await api(`/admin/content/${r.id}/publication`,send('POST',{version:r.version,published:false}));data.reload()})}}>Hủy xuất bản</Button><Button size="sm" variant="danger" onClick={()=>notify('Demo: xóa văn bản chưa có API; không xóa bản ghi server')}>Xoá · Demo</Button>
+                        <Button size="sm" onClick={()=>{const r=data.value?.find(r=>r.id===d.id);setUploadFiles([]);setHistory(undefined);if(r){task.clearError();setMetadataId(r.id);setSelectedId(r.id);setMetadata({...r.data,externalId:r.externalId})}}}>Sửa metadata</Button><Button size="sm" onClick={()=>{const r=data.value?.find(r=>r.id===d.id);if(r)void task.run(async()=>{await api(`/admin/content/${r.id}/publication`,send('POST',{version:r.version,published:false}));data.reload()})}}>Hủy xuất bản</Button><Button size="sm" variant="danger" onClick={()=>notify('Demo: xóa văn bản chưa có API; không xóa bản ghi server')}>Xoá · Demo</Button>
                       </span>
                     </Td>
                   </tr>
                 ))}
                 {!shown.length && (
-                  <tr><Td className="text-center text-muted py-8">Không có văn bản.</Td></tr>
+                  <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-muted">Không có văn bản.</td></tr>
                 )}
               </tbody>
             </table>
@@ -193,15 +181,16 @@ export default function AdminKnowledge() {
 
           <Card title="Thử truy vấn · Retrieval thật">
             <div className="px-5 pb-5">
-              <div className="flex gap-2">
+              <div className="flex min-w-0 flex-col gap-2 sm:flex-row sm:items-start">
                 <input
-                  className={inputCls}
+                  className={`${inputCls} flex-1`}
+                  aria-label="Nội dung thử truy vấn"
                   placeholder="VD: vượt đèn đỏ xe máy"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && testQuery()}
                 />
-                <Button variant="dark" onClick={testQuery} disabled={!query.trim() || querying}>Chạy</Button>
+                <Button className="w-full shrink-0 whitespace-nowrap sm:w-auto" variant="dark" onClick={testQuery} disabled={!query.trim() || querying}>Chạy</Button>
               </div>
               <Notice error={queryError}/>
               <div className="mt-3 rounded-xl bg-bg border border-line p-3 min-h-24 text-xs leading-relaxed">
@@ -229,8 +218,11 @@ export default function AdminKnowledge() {
         </div>
       </div>
 
-      <div className="mt-5 text-xs text-muted"><p>Văn bản URL mô phỏng: {demoDocs.filter(d=>d.id.startsWith('demo-')).map(d=>d.name).join(', ')||'Chưa có'}</p><Button onClick={()=>nav('/admin/units')}>Đơn vị pháp lý & quan hệ nguồn</Button></div>
-      <Card title="Quan hệ văn bản · API thật"><div className="px-5 pb-5"><Relations documents={data.value||[]}/></div></Card>
+      <div className="mt-5 flex flex-wrap items-center gap-3 text-xs text-muted">
+        <p>Văn bản URL mô phỏng: {demoDocs.filter(d=>d.id.startsWith('demo-')).map(d=>d.name).join(', ')||'Chưa có'}</p>
+        <NavLinkButton to="/admin/units">Đơn vị pháp lý &amp; quan hệ nguồn</NavLinkButton>
+      </div>
+      <Relations documents={data.value||[]}/>
       <Modal open={!!metadata} title="Metadata và tệp nguồn" onClose={()=>setMetadata(null)} footer={<><Button onClick={()=>setMetadata(null)}>Đóng</Button><Button disabled={task.busy} onClick={save} variant="primary">Lưu bản nháp</Button></>}><Notice error={task.error}/>{metadata&&<div className="space-y-3">{['externalId','title','so_hieu','source','ngay_hieu_luc','ngay_het_hieu_luc'].map(k=><Field key={k} label={k}><input className={inputCls} value={String(metadata[k]||'')} disabled={k==='externalId'&&!!metadataRecord} onChange={e=>{const aliases:Record<string,string>={externalId:"doc_id",source:"source_url",ngay_hieu_luc:"effective_from",ngay_het_hieu_luc:"effective_to"};setMetadata(p=>({...p,[k]:e.target.value,...(aliases[k]?{[aliases[k]]:e.target.value}:{})}))}}/></Field>)}<label className="text-sm"><input type="checkbox" checked={metadata.reviewed===true} onChange={e=>setMetadata(p=>({...p,reviewed:e.target.checked}))}/> Đã kiểm duyệt nguồn</label><Field label="Tệp nguồn"><input type="file" accept=".pdf,.doc,.docx,.md" onChange={e=>setUploadFiles(Array.from(e.target.files||[]).slice(0,1))}/></Field><p>{uploadFiles[0]?.name||'Chưa chọn tệp mới'}</p>{metadataRecord&&<><Button onClick={()=>void task.run(async()=>download(metadataRecord.id))}>Tải tệp nguồn</Button><Button onClick={()=>void task.run(async()=>setHistory(await api(`/admin/content/${metadataRecord.id}/history`)))}>Lịch sử chỉnh sửa</Button>{history!==undefined&&<pre className="text-xs whitespace-pre-wrap break-all">{JSON.stringify(history,null,2)}</pre>}</>}</div>}</Modal>
       <Modal
         open={urlOpen}

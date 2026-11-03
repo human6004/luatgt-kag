@@ -1,21 +1,22 @@
-import { useNavigate } from 'react-router-dom'
 import { api,send,type ContentRecord } from '../api'
 import { Asset,Notice,useData,useTask } from './server/shared'
 import { useMemo, useState } from 'react'
 import { useAdmin, type QBankItem } from '../admin/store'
-import { Badge, Button, Card, Field, Modal, Page, Td, Th, Toggle, inputCls } from '../admin/ui'
+import { Badge, Button, Card, Field, Modal, NavLinkButton, Page, Td, Th, Toggle, inputCls } from '../admin/ui'
+import { type QuestionSet } from './server/QuestionBankSettings'
 
 const chapters = ['Khái niệm và quy tắc', 'Văn hoá giao thông', 'Kỹ thuật lái xe', 'Cấu tạo sửa chữa', 'Biển báo đường bộ', 'Sa hình']
 const blank = (): QBankItem => ({ id: '', chapter: chapters[0], question: '', options: ['', '', ''], answer: 0, critical: false, explanation: '', source: '' })
 
 export default function AdminQuestions() {
-  const nav=useNavigate()
   const {notify}=useAdmin(),task=useTask(),data=useData<ContentRecord[]>('/admin/questions')
   const [demoQuestions,setQbank]=useState<QBankItem[]>([])
   const qbank:QBankItem[]=[...(data.value||[]).map(r=>({id:r.id,chapter:chapters[Number(r.data.chapter)-1]||String(r.data.chapter),question:String(r.data.text||''),options:r.data.options as string[],answer:Number(r.data.correctAnswer),critical:r.data.critical===true,explanation:String(r.data.explanation||''),source:String(r.data.source||'')})),...demoQuestions]
+  const sets=useData<QuestionSet[]>('/admin/questions/sets')
+  const [questionSetId,setQuestionSetId]=useState('')
   const [externalId,setExternalId]=useState(''),[reviewed,setReviewed]=useState(false),[imageRequired,setImageRequired]=useState(false)
   const [history,setHistory]=useState<unknown>(),[checked,setChecked]=useState<Set<string>>(new Set())
-  function edit(x:QBankItem){const r=data.value?.find(r=>r.id===x.id);setExternalId(r?.externalId||'');setReviewed(r?.data.reviewed===true);setImageRequired(r?.data.imageRequired===true);setHistory(undefined);setEditing({...x,options:[...x.options]})}
+  function edit(x:QBankItem){task.clearError();const r=data.value?.find(r=>r.id===x.id);setQuestionSetId(String(r?.data.questionSetId||''));setExternalId(String(r?.data.sourceExternalId||r?.externalId||''));setReviewed(r?.data.reviewed===true);setImageRequired(r?.data.imageRequired===true);setHistory(undefined);setEditing({...x,options:[...x.options]})}
 
   const [q, setQ] = useState('')
   const [chapter, setChapter] = useState('all')
@@ -31,11 +32,12 @@ export default function AdminQuestions() {
 
   function save() {
     if(!editing||task.busy||!editing.question.trim())return
+    if(!record&&!questionSetId){notify('Chọn bộ câu hỏi trước khi thêm câu mới');return}
     if(editing.id.startsWith('g')){setQbank(xs=>xs.map(x=>x.id===editing.id?editing:x));setEditing(null);notify('Demo: đã sửa câu hỏi mẫu');return}
     void task.run(async()=>{
-      const payload={...record?.data,externalId,text:editing.question,chapter:chapters.indexOf(editing.chapter)+1,options:editing.options,correctAnswer:editing.answer,critical:editing.critical,source:editing.source,explanation:editing.explanation,reviewed,imageRequired}
+      const payload={...record?.data,...(questionSetId?{questionSetId}:{}),externalId:record?.externalId||externalId,text:editing.question,chapter:chapters.indexOf(editing.chapter)+1,options:editing.options,correctAnswer:editing.answer,critical:editing.critical,source:editing.source,explanation:editing.explanation,reviewed,imageRequired}
       if(record)await api(`/admin/content/${record.id}`,send('PUT',{version:record.version,data:payload}))
-      else await api('/admin/imports/questions/confirm',send('POST',{rows:[payload],updateExisting:false}))
+      else await api('/admin/imports/questions/confirm',send('POST',{rows:[payload],updateExisting:false,questionSetId}))
       data.reload();setEditing(null);notify('Đã lưu bản nháp; chưa xuất bản')
     })
   }
@@ -69,22 +71,24 @@ export default function AdminQuestions() {
       subtitle={`${data.value?qbank.length:'—'} câu · ${data.value?qbank.filter((x) => x.critical).length:'—'} câu điểm liệt`}
       actions={
         <>
-          <Button onClick={()=>nav("/admin/imports?type=questions")}>Nhập hàng loạt</Button><Button onClick={exportJson}>Xuất JSON</Button>
+          <NavLinkButton to="/admin/imports?type=questions">Nhập hàng loạt</NavLinkButton><Button onClick={exportJson}>Xuất JSON</Button>
           <Button onClick={generate} disabled={generating}>{generating ? 'Đang sinh…' : '✻ Sinh câu hỏi từ KAG · Demo'}</Button>
-          <Button variant="primary" onClick={() => {edit(blank());setExternalId('')}}>+ Thêm câu hỏi</Button>
+          <Button variant="primary" onClick={() => {sets.reload();edit(blank());setExternalId('')}}>+ Thêm câu hỏi</Button>
         </>
       }
     >
       <Notice {...data} retry={data.reload}/><Notice error={task.error}/><p className="mb-4 text-xs text-muted">Danh sách, thêm/sửa, ảnh và xuất bản dùng API thật. Sinh và xóa câu hỏi: Demo, không xóa bản ghi server.</p>
-      <div className="flex flex-wrap items-center gap-3 mb-4">
-        <input className={`${inputCls} max-w-xs`} placeholder="Tìm câu hỏi…" value={q} onChange={(e) => setQ(e.target.value)} />
-        <select className={`${inputCls} max-w-[220px]`} value={chapter} onChange={(e) => setChapter(e.target.value)} aria-label="Chương">
-          <option value="all">Tất cả chương</option>
-          {chapters.map((c) => <option key={c}>{c}</option>)}
-        </select>
-        <label className="flex items-center gap-2 text-[13px] text-text-secondary">
-          <Toggle checked={onlyCritical} onChange={setOnlyCritical} label="Chỉ câu điểm liệt" /> Chỉ câu điểm liệt
-        </label>
+      <div className="mb-4 space-y-3">
+        <input aria-label="Tìm câu hỏi" className={`${inputCls} w-full`} placeholder="Tìm câu hỏi…" value={q} onChange={(e) => setQ(e.target.value)} />
+        <div className="flex flex-wrap items-center gap-3">
+          <select className={`${inputCls} w-full max-w-[220px]`} value={chapter} onChange={(e) => setChapter(e.target.value)} aria-label="Chương">
+            <option value="all">Tất cả chương</option>
+            {chapters.map((c) => <option key={c}>{c}</option>)}
+          </select>
+          <label className="flex items-center gap-2 text-[13px] text-text-secondary">
+            <Toggle checked={onlyCritical} onChange={setOnlyCritical} label="Chỉ câu điểm liệt" /> Chỉ câu điểm liệt
+          </label>
+        </div>
       </div>
 
       <Card className="overflow-x-auto">
@@ -110,7 +114,7 @@ export default function AdminQuestions() {
                 </Td>
               </tr>
             ))}
-            {!shown.length && <tr><Td className="py-8 text-center text-muted">Không có câu hỏi phù hợp.</Td></tr>}
+            {!shown.length && <tr><td colSpan={5} className="px-4 py-8 text-center text-sm text-muted">Không có câu hỏi phù hợp.</td></tr>}
           </tbody>
         </table>
       </Card>
@@ -125,7 +129,8 @@ export default function AdminQuestions() {
         <Notice error={task.error}/>
         {editing && (
           <div className="space-y-4">
-            {!editing.id.startsWith('g')&&<Field label="Mã định danh nguồn"><input className={inputCls} value={externalId} onChange={e=>setExternalId(e.target.value)} /></Field>}
+            {!editing.id.startsWith('g')&&<Field label="Bộ câu hỏi"><select className={inputCls} aria-label="Bộ câu hỏi" value={questionSetId} onChange={e=>setQuestionSetId(e.target.value)}><option value="">Ngân hàng hiện có</option>{sets.value?.map(s=><option key={s.set_id} value={s.set_id}>{s.set_name}</option>)}</select></Field>}
+          {!editing.id.startsWith('g')&&<Field label="Mã định danh nguồn"><input className={inputCls} readOnly={!!record?.data.sourceExternalId} value={externalId} onChange={e=>setExternalId(e.target.value)} /></Field>}
             <Field label="Nội dung câu hỏi">
               <textarea rows={2} className={inputCls} value={editing.question} onChange={(e) => setEditing({ ...editing, question: e.target.value })} />
             </Field>

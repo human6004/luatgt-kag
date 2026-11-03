@@ -4,9 +4,6 @@
 !WebApp/backend/pom.xml
 !WebApp/backend/src/
 !WebApp/backend/src/**
-!WebApp/docs/
-!WebApp/docs/imports/
-!WebApp/docs/imports/questions-draft.json
 !kag/
 !kag/schema/
 !kag/schema/schema_contract.json

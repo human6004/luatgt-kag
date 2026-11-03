@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import { Notice,useData } from './server/shared'
 import { useMemo, useState } from 'react'
 import JSZip from 'jszip'
@@ -54,7 +55,7 @@ export default function AdminDocker() {
         </>
       }
     >
-      <Notice {...infrastructure} retry={infrastructure.reload}/><Card title="Trạng thái dịch vụ · API thật" className="mb-5"><div className="px-5 pb-5 text-sm">{Object.entries(infrastructure.value||{}).map(([k,v])=><p key={k} className="flex justify-between border-b border-line py-2"><span>{k}</span><span>{v}</span></p>)}<a href="/admin/infrastructure" className="underline inline-block mt-3">Kết nối KAG & truy xuất evidence</a></div></Card><p className="mb-4 text-xs text-muted">Phần đóng gói bên dưới: Demo. Tải ZIP chỉ tạo tệp trong trình duyệt; nút Build/Pack chỉ mô phỏng, không chạy Docker và không dùng dữ liệu luatgt.</p>
+      <Notice {...infrastructure} retry={infrastructure.reload}/><Card title="Trạng thái dịch vụ · API thật" className="mb-5"><div className="px-5 pb-5 text-sm">{Object.entries(infrastructure.value||{}).map(([k,v])=><p key={k} className="flex justify-between border-b border-line py-2"><span>{k}</span><span>{v}</span></p>)}<Link to="/admin/infrastructure" className="underline underline-offset-4 inline-block mt-3">Kết nối KAG & truy xuất evidence</Link></div></Card><p className="mb-4 text-xs text-muted">Phần đóng gói bên dưới: Demo. Tải ZIP chỉ tạo tệp trong trình duyệt; nút Build/Pack chỉ mô phỏng, không chạy Docker và không dùng dữ liệu luatgt.</p>
       <ol className="mb-5 grid gap-2 sm:grid-cols-4">
         {[
           ['1', 'Cấu hình', 'Tên, cổng, mật khẩu, bộ nhớ'],
@@ -144,7 +145,7 @@ export default function AdminDocker() {
             </div>
           </Card>
 
-          <Card title="So với compose gốc của OpenSPG">
+          <Card title="So với compose gốc của OpenSPG" flush>
             <div className="overflow-x-auto px-5 pb-4">
               <table className="w-full min-w-[560px] text-[12.5px]">
                 <thead><tr className="text-left text-muted"><th className="py-2 font-medium">Hạng mục</th><th className="py-2 font-medium">docker-compose-west.yml</th><th className="py-2 font-medium">deploy/ của mình</th></tr></thead>

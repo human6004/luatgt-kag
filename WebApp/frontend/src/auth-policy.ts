@@ -11,7 +11,7 @@ export function roleFor(value: unknown): Role {
 }
 
 const policePages = [
-  "/admin/knowledge", "/admin/units", "/admin/questions", "/admin/signs",
+  "/admin/knowledge", "/admin/units", "/admin/questions", "/admin/question-bank-settings", "/admin/signs",
   "/admin/imports", "/admin/content-imports", "/admin/chatlogs",
 ]
 export const canAccessAdminPage = (role: Role, pathname: string) =>

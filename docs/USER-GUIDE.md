@@ -34,13 +34,13 @@ Kết quả lấy từ nội dung đã xuất bản. Danh sách rỗng không kh
 
 ## USER — Ôn và thi thử
 
-**Bước 1:** mở **Ôn thi theo chương**, chọn **Tiếp tục học/Ôn tập lại**. Chọn một phương án để backend chấm ngay, đọc giải thích rồi **Câu tiếp theo**. Kết quả và tiến độ được lưu; chương rỗng cần ADMIN nhập/duyệt câu hỏi.
+**Bước 1:** mở **Ôn thi theo chương**, chọn bộ câu hỏi rồi **Tiếp tục học/Ôn tập lại**. Chọn một phương án để backend chấm ngay, đọc giải thích rồi **Câu tiếp theo**. Kết quả và tiến độ được lưu; chương rỗng cần ADMIN nhập/duyệt câu hỏi.
 
-**Bước 2:** tại `/exam`, chọn **B → Đề ngẫu nhiên → Bắt đầu thi**. Backend cần đủ câu đã xuất bản. Cấu hình luyện tập: **30 câu, 20 phút, đạt từ 27 câu đúng và không sai/bỏ trống câu điểm liệt**; không tự cập nhật quy định và không thay kỳ sát hạch chính thức.
+**Bước 2:** tại `/exam`, chọn bộ, hạng và quy tắc đang hiệu lực rồi **Bắt đầu thi**. Số câu, thời gian, ngưỡng đạt và điều kiện điểm liệt lấy từ cấu hình đã duyệt. Backend chỉ dùng câu đã xuất bản trong đúng bộ. Thi thử không thay kỳ sát hạch chính thức.
 
-**Bước 3:** chọn đáp án, điều hướng theo số câu, **Nộp bài** và xác nhận; hết giờ server kiểm thời hạn. Xem điểm và **Lịch sử thi**; mục **Bài thi server** là bài thật.
+**Bước 3:** chọn đáp án, điều hướng theo số câu, **Nộp bài** và xác nhận; hết giờ server kiểm thời hạn. Xem điểm, lời giải, lọc câu sai và **Lịch sử thi**; bài cũ có thể mở lại bằng **Xem bài**.
 
-## ADMIN — Nội dung
+## ADMIN / POLICE — Nội dung
 
 **Bước 1 — Nhập bản nháp:** mở trang Văn bản, Đơn vị pháp lý, Câu hỏi hoặc Biển báo; chọn thêm/sửa, điền mã nguồn và các trường bắt buộc, rồi lưu. Văn bản nhận PDF; ảnh nhận PNG/JPEG. Giữ mã nguồn và đúng cây đơn vị/văn bản.
 
@@ -52,17 +52,21 @@ Kết quả lấy từ nội dung đã xuất bản. Danh sách rỗng không kh
 
 ### Nhập nhiều bản ghi
 
-**Bước 1:** mở **Nhập dữ liệu hàng loạt**, chọn loại dữ liệu và JSON/CSV/XLSX. Xem preview/lỗi và lựa chọn cập nhật bản ghi đã có.
+**Bước 1:** với câu hỏi, vào **Ngân hàng câu hỏi → Bộ câu hỏi và quy tắc đề thi** để tạo đợt ban hành/bộ riêng cho 250 và 600 câu. Ngày ban hành/hiệu lực chưa xác minh có thể để trống. Tại **Nhập dữ liệu**, chọn bộ đích trước khi chọn JSON/CSV/XLSX; xem preview/lỗi và lựa chọn cập nhật. Hai bộ có thể cùng mã nguồn `Q001` mà không ghi đè nhau.
 
 **Bước 2:** chọn **Xác nhận nhập … dòng hợp lệ**. Kết quả là số thêm/cập nhật/bỏ qua, nội dung còn ở bản nháp; tiếp tục kiểm duyệt trước khi xuất bản.
 
-**Bước 3:** với câu hỏi/biển báo, tải ZIP ảnh PNG/JPEG theo mã sau khi nhập bản ghi. Kiểm các ảnh chưa ghép được. Đáp án JSON bắt đầu từ 0; CSV/XLSX dùng 1–4. Ngân hàng nháp đi kèm: [`WebApp/docs/imports/`](../WebApp/docs/imports/).
+**Bước 3:** với câu hỏi/biển báo, tải ZIP ảnh PNG/JPEG theo mã sau khi nhập bản ghi. Kiểm các ảnh chưa ghép được. Đáp án JSON bắt đầu từ 0; CSV/XLSX dùng 1–4. Ngân hàng nháp đi kèm: [250 câu](../WebApp/docs/250/) và [600 câu](../WebApp/docs/600/), mỗi bộ có `questions-draft.json` và `question-images.zip`. Giữ đúng bộ đích khi ghép ZIP. Tệp nháp chưa được xem là đã kiểm duyệt.
+
+**Bước 4:** nhập quy tắc đề theo hạng, bộ và thời kỳ trong **Ngân hàng câu hỏi**. Sáu quota là số câu thường từng chương; cộng số câu điểm liệt phải bằng tổng câu. Không tự lấy quy tắc hạng B áp dụng cho A/A1. Muốn đổi thời kỳ, kết thúc hiệu lực quy tắc cũ vào ngày tương lai và tạo quy tắc mới từ ngày đó; điểm bài cũ không bị chấm lại.
+
+Câu/đáp án đã có lượt luyện hoặc thi được giữ nguyên theo phiên bản. Khi sửa nội dung đó, chọn bộ mới trong màn chỉnh sửa trước khi xuất bản. Lượt luyện lưu phương án đã chọn và phiên bản câu; tiến độ được lọc theo bộ. Dữ liệu thi/luyện cũ vẫn đọc được, không tự suy đoán phương án mà lịch sử cũ không lưu.
 
 Nhập đơn vị pháp lý dùng `/admin/content-imports?type=units`, preview rồi **Xác nhận nhập bản nháp**. Nút Nhập hàng loạt trên trang Đơn vị hiện chưa dẫn đúng loại; mở route này trực tiếp.
 
 ## ADMIN — Tài khoản và phản hồi
 
-**Bước 1:** tại **Nhật ký chat**, đọc câu hỏi/kết quả/phản hồi, ghi chú và đánh dấu đã xử lý. Thao tác không tự hỏi lại hoặc sửa graph.
+**Bước 1:** tại **Phản hồi chat**, chỉ đọc những lượt hỏi được người dùng báo **Câu trả lời sai**, **Thiếu căn cứ** hoặc **Thông tin lỗi thời**; ghi chú và đánh dấu đã xử lý. Chat chưa được báo cáo và phản hồi **Hữu ích** không hiển thị cho ADMIN/POLICE. Lịch sử riêng vẫn được giữ cho chính người dùng. Thao tác không tự hỏi lại hoặc sửa graph.
 
 **Bước 2:** tại **Người dùng**, tìm USER và bật/khóa trạng thái. Backend lưu thay đổi theo quyền quản trị.
 
@@ -83,7 +87,7 @@ Nhập đơn vị pháp lý dùng `/admin/content-imports?type=units`, preview r
 Các khối/nút ghi **Demo** dùng dữ liệu hoặc thao tác mô phỏng, không xác nhận backend thành công; nội dung luật mẫu chưa được xác minh:
 
 - Chat: đính kèm ảnh, sinh câu luyện tập; học: `+10 câu`, gợi ý thông minh.
-- Thi: hạng khác B, đề cố định và ôn câu sai; kết quả mẫu giữ ở trình duyệt.
+- Thi dùng quy tắc và dữ liệu server cho các hạng đã cấu hình; không còn sinh đề hoặc điểm demo trên trình duyệt.
 - Nội dung: dán URL, trích xuất/reindex/archive/delete; sinh hoặc xóa câu hỏi.
 - Người dùng: mời, đổi vai trò, đặt lại mật khẩu, xóa.
 - Graph: namespace khác SAMPLE thật, Cypher, export/restore/checksum.

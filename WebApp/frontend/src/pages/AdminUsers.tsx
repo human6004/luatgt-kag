@@ -41,12 +41,14 @@ export default function AdminUsers() {
           </Card>
         ))}
       </div>
-      <div className="flex flex-wrap gap-3 mb-4">
-        <input className={`${inputCls} max-w-xs`} placeholder="Tìm tên, email…" value={q} onChange={(e) => setQ(e.target.value)} />
-        <select className={`${inputCls} max-w-[200px]`} value={role} onChange={(e) => setRole(e.target.value)} aria-label="Vai trò">
-          <option value="all">Tất cả vai trò</option>
-          {roles.map((r) => <option key={r}>{r}</option>)}
-        </select>
+      <div className="mb-4 space-y-3">
+        <input aria-label="Tìm người dùng" className={`${inputCls} w-full`} placeholder="Tìm tên, email…" value={q} onChange={(e) => setQ(e.target.value)} />
+        <div>
+          <select className={`${inputCls} w-full max-w-[200px]`} value={role} onChange={(e) => setRole(e.target.value)} aria-label="Vai trò">
+            <option value="all">Tất cả vai trò</option>
+            {roles.map((r) => <option key={r}>{r}</option>)}
+          </select>
+        </div>
       </div>
       <Card className="overflow-x-auto">
         <table className="w-full min-w-[760px]">

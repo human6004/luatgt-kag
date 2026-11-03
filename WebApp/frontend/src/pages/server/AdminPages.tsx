@@ -1,14 +1,10 @@
 import { useState } from "react"
 
-import { normalizeImport } from "./import-normalization"
-
-import { Link } from "react-router-dom"
+import { Link, Navigate, useSearchParams } from "react-router-dom"
 
 import { api, send, media, type ContentRecord } from "../../api"
 
-import { Page, Button, Card, Th, Td } from "../../admin/ui"
-
-import { parseCsv, tableObjects } from "../../admin/import-data"
+import { Page, Button, Card, FilterTabs, Modal, Th, Td } from "../../admin/ui"
 
 import { useData, useTask, Notice, Asset, inputClass, download } from "./shared"
 
@@ -34,6 +30,9 @@ const fields: Record<Kind, string[]> = {
     "qcvn",
     "so_hieu",
     "bien_phu_variant",
+    "record_type",
+    "parent_code",
+    "description_scope",
     "ngay_hieu_luc",
     "ngay_het_hieu_luc",
   ],
@@ -71,6 +70,9 @@ const labels: Record<string, string> = {
   qcvn: "Quy chuẩn",
   so_hieu: "Số hiệu văn bản",
   bien_phu_variant: "Biến thể biển phụ",
+  record_type: "Loại bản ghi biển báo",
+  parent_code: "Mã biển cha",
+  description_scope: "Phạm vi mô tả",
   ngay_hieu_luc: "Ngày hiệu lực",
   ngay_het_hieu_luc: "Ngày hết hiệu lực",
   title: "Tên văn bản",
@@ -113,6 +115,7 @@ export function ContentManager({ kind }: { kind: Kind }) {
   )
 
   function edit(row: ContentRecord) {
+    task.clearError()
     setSelected(row)
     setForm({ ...row.data })
     setHistory([])
@@ -170,7 +173,10 @@ export function ContentManager({ kind }: { kind: Kind }) {
             Nhập hàng loạt
           </Link>
           <Button
+            disabled={task.busy}
             onClick={() => {
+              task.clearError()
+              setMessage('')
               setSelected({
                 id: "",
                 externalId: "",
@@ -198,7 +204,7 @@ export function ContentManager({ kind }: { kind: Kind }) {
       }
     >
       <Notice {...data} retry={data.reload} empty={!data.value?.length} />
-      <Notice error={task.error} />
+      <Notice error={!selected ? task.error : undefined} />
       {message && (
         <p role="status" className="my-3 text-emerald-700">
           {message}
@@ -216,29 +222,15 @@ export function ContentManager({ kind }: { kind: Kind }) {
           </Card>
         ))}
       </div>
-      <div className="flex flex-wrap gap-2 mb-4">
-        {[
-          ["", "Tất cả"],
-          ["published", "Đã xuất bản"],
-          ["draft", "Bản nháp"],
-        ].map(([value, label]) => (
-          <Button
-            key={value}
-            aria-pressed={state === value}
-            variant={state === value ? "dark" : "outline"}
-            onClick={() => setState(value)}
-          >
-            {label}
-          </Button>
-        ))}
-      </div>
       <input
         aria-label="Tìm nội dung"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Tìm theo mã hoặc nội dung"
-        className={inputClass}
+        className={`${inputClass} mb-3`}
       />
+      <FilterTabs label="Lọc trạng thái xuất bản" value={state} onChange={setState} className="mb-4"
+        items={[{value: '', label: 'Tất cả'}, {value: 'published', label: 'Đã xuất bản'}, {value: 'draft', label: 'Bản nháp'}]}/>
       {kind === "questions" && (
         <div className="flex flex-wrap items-center gap-3 my-4">
           <Button onClick={() => setChecked(new Set(rows.map((r) => r.id)))}>
@@ -333,14 +325,12 @@ export function ContentManager({ kind }: { kind: Kind }) {
         </tbody>
       </Table>
       {selected && (
-        <section className="mt-8 border-t border-line pt-6">
-          <div className="flex justify-between">
-            <h2 className="text-lg font-semibold">
-              {selected.id ? "Chỉnh sửa nội dung" : "Thêm nội dung"}
-            </h2>
-            <Button onClick={() => setSelected(null)}>Đóng</Button>
-          </div>
-          <form
+        <Modal open={!!selected} title={`${selected.id ? 'Chỉnh sửa' : 'Thêm'} ${kind === 'signs' ? 'biển báo' : kind === 'units' ? 'đơn vị pháp lý' : kind === 'documents' ? 'văn bản' : 'câu hỏi'}`}
+          onClose={() => { if (!task.busy) setSelected(null) }}
+          footer={<><Button disabled={task.busy} onClick={() => setSelected(null)}>Đóng</Button><Button disabled={task.busy} type="submit" form="content-editor" variant="dark">Lưu bản nháp</Button></>}>
+          <Notice error={task.error}/>
+          {message && <p role="status" className="mb-4 text-sm text-emerald-700">{message}</p>}
+          <form id="content-editor"
             onSubmit={(e) => {
               e.preventDefault()
               task.run(async () => {
@@ -418,6 +408,7 @@ export function ContentManager({ kind }: { kind: Kind }) {
                 )}
               </label>
             ))}
+            {kind === "signs" && <>{["children_codes","note"].map(key=><label key={key} className="sm:col-span-2 text-sm">{key==="children_codes"?"Mã biển con (mỗi dòng một mã)":"Ghi chú (mỗi dòng một ghi chú)"}<textarea className={inputClass} rows={3} value={Array.isArray(form[key])?(form[key] as string[]).join('\n'):''} onChange={e=>field(key,e.target.value.split('\n').map(v=>v.trim()).filter(Boolean))}/></label>)}<label className="text-sm"><input type="checkbox" checked={form.image_required===true} onChange={e=>field('image_required',e.target.checked)}/> Nguồn yêu cầu ảnh biển báo</label></>}
             {kind === "questions" && (
               <>
                 <label className="sm:col-span-2 text-sm">
@@ -492,11 +483,7 @@ export function ContentManager({ kind }: { kind: Kind }) {
               />{" "}
               Đã đối chiếu nội dung với nguồn
             </label>
-            <div className="sm:col-span-2">
-              <Button disabled={task.busy} type="submit" variant="dark">
-                Lưu bản nháp
-              </Button>
-            </div>
+
           </form>
           {selected.id && (
             <div className="mt-5 space-y-4">
@@ -613,7 +600,7 @@ export function ContentManager({ kind }: { kind: Kind }) {
               ))}
             </div>
           )}
-        </section>
+        </Modal>
       )}
       {kind === "documents" && <Relations documents={data.value || []} />}
     </Page>
@@ -637,13 +624,21 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
     [date, setDate] = useState(""),
     [note, setNote] = useState(""),
     [relationId, setRelationId] = useState(""),
-    [relationVersion, setRelationVersion] = useState(0)
+    [relationVersion, setRelationVersion] = useState(0),
+    [editing, setEditing] = useState(false)
   return (
-    <section className="border-t border-line pt-6 mt-8">
-      <h2 className="font-semibold">Quan hệ sửa đổi / thay thế</h2>
+    <section className="mt-8 space-y-3">
+      <div className="flex flex-wrap justify-between items-center gap-3">
+        <h2 className="font-semibold">Quan hệ sửa đổi / thay thế</h2>
+        <Button disabled={task.busy} onClick={() => {
+          task.clearError(); setPredecessor(''); setSuccessor(''); setType('REPLACES'); setDate(''); setNote(''); setRelationId(''); setRelationVersion(0); setEditing(true)
+        }}>Thêm quan hệ</Button>
+      </div>
       <Notice {...data} retry={data.reload} />
-      <Notice error={task.error} />
-      {data.value?.map((r) => (
+      <Notice error={!editing ? task.error : undefined} />
+      {data.value && <Card><div className="px-5">
+      {!data.value.length && <p className="py-6 text-center text-sm text-muted">Chưa có quan hệ văn bản.</p>}
+      {data.value.map((r) => (
         <p key={r.id} className="text-sm py-3 border-b border-line">
           {documents.find((d) => d.id === r.successor)?.externalId}{" "}
           {r.type === "REPLACES" ? "thay thế" : "sửa đổi"}{" "}
@@ -652,6 +647,8 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
           <Button
             size="sm"
             onClick={() => {
+              task.clearError()
+              setEditing(true)
               setPredecessor(r.predecessor)
               setSuccessor(r.successor)
               setType(r.type)
@@ -665,8 +662,12 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
           </Button>
         </p>
       ))}
-      <form
-        className="grid sm:grid-cols-2 gap-3 mt-4"
+      </div></Card>}
+      <Modal open={editing} title={relationId ? 'Chỉnh sửa quan hệ văn bản' : 'Thêm quan hệ văn bản'} onClose={() => { if (!task.busy) setEditing(false) }}
+        footer={<><Button disabled={task.busy} onClick={() => setEditing(false)}>Hủy</Button><Button type="submit" form="law-relation-editor" disabled={task.busy}>Lưu quan hệ</Button></>}>
+      <Notice error={task.error}/>
+      <form id="law-relation-editor"
+        className="grid sm:grid-cols-2 gap-3"
         onSubmit={(e) => {
           e.preventDefault()
           task.run(async () => {
@@ -687,6 +688,7 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
             setNote("")
             setRelationId("")
             setRelationVersion(0)
+            setEditing(false)
           })
         }}
       >
@@ -742,202 +744,15 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
             className={`${inputClass} mt-2`}
           />
         </label>
-        <Button disabled={task.busy} type="submit">
-          Lưu quan hệ
-        </Button>
       </form>
+      </Modal>
     </section>
   )
 }
 
 export function Imports() {
-  const [kind, setKind] = useState<Kind>(
-      (() => {
-        const type = new URLSearchParams(location.search).get("type")
-        return type === "signs" || type === "documents" || type === "units"
-          ? type
-          : "questions"
-      })(),
-    ),
-    [rows, setRows] = useState<unknown[]>([]),
-    [preview, setPreview] = useState<{
-      row: number
-      valid: boolean
-      existing?: boolean
-      data?: Record<string, unknown>
-      message?: string
-    }[]>([]),
-    [update, setUpdate] = useState(false),
-    [message, setMessage] = useState("")
-  const task = useTask()
-  return (
-    <Page
-      title="Nhập dữ liệu hàng loạt"
-      subtitle="Dữ liệu được kiểm tra trên server, lưu nháp và chỉ xuất bản sau khi duyệt."
-    >
-      <select
-        aria-label="Loại dữ liệu"
-        value={kind}
-        onChange={(e) => {
-          setKind(e.target.value as Kind)
-          setRows([])
-          setPreview([])
-          setMessage("")
-        }}
-        className={inputClass}
-      >
-        {Object.entries(titles).map(([key, title]) => (
-          <option key={key} value={key}>
-            {title}
-          </option>
-        ))}
-      </select>
-      <Notice error={task.error} />
-      {message && (
-        <p role="status" className="my-4 text-emerald-700">
-          {message}
-        </p>
-      )}
-      <label className="block my-5 text-sm">
-        Tệp CSV, Excel hoặc JSON
-        <input
-          type="file"
-          accept=".csv,.xlsx,.json"
-          disabled={task.busy}
-          className="block mt-2"
-          onChange={(e) => {
-            const file = e.target.files?.[0]
-            if (!file) return
-            setRows([])
-            setPreview([])
-            task.run(async () => {
-              if (file.size > 10 * 1024 * 1024)
-                throw new Error("Tệp dữ liệu tối đa 10 MB.")
-              let input: unknown
-              if (file.name.endsWith(".json"))
-                input = JSON.parse(await file.text())
-              else if (file.name.endsWith(".xlsx")) {
-                const { readSheet } = await import("read-excel-file/browser")
-                input = tableObjects(await readSheet(file))
-              } else input = tableObjects(parseCsv(await file.text()))
-              if (!Array.isArray(input))
-                throw new Error("Cần danh sách dữ liệu.")
-              input = input.map((row) => normalizeImport(kind, row))
-              setRows(input as unknown[])
-              setPreview(
-                await api(
-                  `/admin/imports/${kind}/preview`,
-                  send("POST", { rows: input, updateExisting: update }),
-                ),
-              )
-              setMessage("Đã kiểm tra tệp.")
-            })
-          }}
-        />
-      </label>
-      <label className="text-sm">
-        <input
-          type="checkbox"
-          checked={update}
-          onChange={(e) => setUpdate(e.target.checked)}
-        />{" "}
-        Cập nhật bản ghi đã tồn tại (quay về nháp)
-      </label>
-      <p className="my-4 text-sm">
-        {preview.filter((r) => r.valid).length} dòng hợp lệ ·{" "}
-        {preview.filter((r) => !r.valid).length} dòng lỗi ·{" "}
-        {preview.filter((r) => r.existing).length} dòng đã tồn tại
-      </p>
-      <Button
-        variant="dark"
-        disabled={task.busy || !rows.length || preview.some((r) => !r.valid)}
-        onClick={() =>
-          task.run(async () => {
-            const result = await api<{
-              inserted: number
-              updated: number
-              skipped: number
-            }>(
-              `/admin/imports/${kind}/confirm`,
-              send("POST", { rows, updateExisting: update }),
-            )
-            setRows([])
-            setPreview([])
-            setMessage(
-              `Đã thêm ${result.inserted}, cập nhật ${result.updated}, bỏ qua ${result.skipped} bản ghi.`,
-            )
-          })
-        }
-      >
-        Xác nhận nhập bản nháp
-      </Button>
-      <Table>
-        <thead>
-          <tr>
-            <Th>Dòng</Th>
-            <Th>Mã</Th>
-            <Th>Nội dung</Th>
-            <Th>Kiểm tra</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {preview.map((r) => (
-            <tr key={r.row}>
-              <Td>{r.row}</Td>
-              <Td>{String(r.data?.externalId || "")}</Td>
-              <Td>
-                {String(r.data?.text || r.data?.name || r.data?.title || "")}
-              </Td>
-              <Td>
-                {r.valid ? (r.existing ? "Đã tồn tại" : "Hợp lệ") : r.message}
-              </Td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-      {(kind === "questions" || kind === "signs") && (
-        <section className="mt-8 border-t border-line pt-5">
-          <h2 className="font-semibold">Ghép ảnh qua ZIP</h2>
-          <p className="text-sm text-muted my-3">
-            Nhập dữ liệu trước, sau đó tải ZIP. Tên ảnh theo mã:{" "}
-            {kind === "questions" ? "Q301.png" : "DP.127.png"}. Mỗi ZIP tối đa
-            20 MB; PNG/JPEG, mỗi ảnh tối đa 5 MB.
-          </p>
-          <input
-            aria-label="ZIP ảnh"
-            type="file"
-            accept=".zip"
-            multiple
-            disabled={task.busy}
-            onChange={(e) => {
-              const files = Array.from(e.target.files || [])
-              task.run(async () => {
-                const messages = []
-                for (const file of files) {
-                  const body = new FormData()
-                  body.append("file", file)
-                  const result = await api<{
-                    matched: string[]
-                    unmatched: string[]
-                  }>(`/admin/${kind}/images-zip`, { method: "POST", body })
-                  messages.push(
-                    `${file.name}: ghép ${result.matched.length} ảnh; chưa khớp ${result.unmatched.join(", ") || "không có"}`,
-                  )
-                }
-                setMessage(messages.join("\n"))
-              })
-            }}
-          />
-        </section>
-      )}
-      <section className="mt-8">
-        <h2 className="font-semibold">Dữ liệu mẫu và bộ 600 câu</h2>
-        <p className="text-sm mt-2">
-          Bộ câu hỏi đã chuẩn hóa, ảnh và báo cáo đối chiếu nằm trong thư mục
-          docs/imports của dự án. Nhập questions-draft.json, tải ZIP ảnh, rồi
-          kiểm duyệt tại Ngân hàng câu hỏi.
-        </p>
-      </section>
-    </Page>
-  )
+  const [params] = useSearchParams()
+  const requested = params.get("type")
+  const kind = requested === "signs" || requested === "documents" || requested === "units" ? requested : "questions"
+  return <Navigate to={`/admin/imports?type=${kind}`} replace/>
 }

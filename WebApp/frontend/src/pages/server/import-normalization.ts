@@ -6,6 +6,7 @@ export function normalizeImport(kind: string, value: unknown): unknown {
   else if (kind === 'documents') row.externalId ??= row.doc_id ?? row.id
   else row.externalId ??= row.sign_id ?? row.id ?? row.code ?? row.ma_bien
   if (kind === 'units' && typeof row.order === 'string' && /^\d+$/.test(row.order)) row.order = Number(row.order)
+  if (kind === 'units' && row.parent_id === '') delete row.parent_id
   if (kind === 'questions') {
     row.text ??= row.question
     const csv = !Array.isArray(row.options)

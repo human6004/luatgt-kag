@@ -126,7 +126,7 @@ export default function AdminGraph() {
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)] mb-5">
         <Card title="Tra cứu nút">
           <div className="px-5 pb-5">
-            <input className={inputCls} placeholder="Tìm id hoặc tên nút, VD: article:168-2024-ND-CP:7" value={search} onChange={(e) => setSearch(e.target.value)} />
+            <input aria-label="Tìm nút đồ thị" className={inputCls} placeholder="Tìm id hoặc tên nút, VD: article:168-2024-ND-CP:7" value={search} onChange={(e) => setSearch(e.target.value)} />
             <div className="mt-2 flex flex-wrap gap-1.5">
               {found.map((n) => (
                 <button key={n.id} onClick={() => setNodeId(n.id)} className={`rounded-full border px-2.5 py-1 font-mono text-[11px] transition-colors ${n.id === nodeId ? 'border-accent bg-selected text-accent-strong' : 'border-line text-text-secondary hover:bg-selected'}`}>

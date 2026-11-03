@@ -13,7 +13,7 @@ import vn.luatgt.service.ContentService;
 public class ContentController {
     private final ContentService service;
     public ContentController(ContentService service) { this.service=service; }
-    @GetMapping("/{kind:questions|signs|documents}") List<Map<String,Object>> list(@PathVariable String kind,@RequestParam(required=false) Integer chapter) { return service.list(kind,chapter); }
+    @GetMapping("/{kind:questions|signs|documents}") List<Map<String,Object>> list(@PathVariable String kind,@RequestParam(required=false) Integer chapter,@RequestParam(required=false) UUID questionSetId) { return service.list(kind,chapter,questionSetId); }
     @GetMapping("/admin/{kind:questions|signs|documents}") List<Map<String,Object>> admin(@PathVariable String kind) { return service.admin(kind); }
     @PostMapping("/admin/imports/{kind}/preview") List<Map<String,Object>> preview(@PathVariable String kind,@Valid @RequestBody ImportRequest input) { return service.preview(kind,input); }
     @PostMapping("/admin/imports/{kind}/confirm") Map<String,Integer> confirm(@PathVariable String kind,@Valid @RequestBody ImportRequest input) { return service.confirm(kind,input); }

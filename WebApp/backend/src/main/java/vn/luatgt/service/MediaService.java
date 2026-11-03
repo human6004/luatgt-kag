@@ -40,7 +40,7 @@ public class MediaService {
         } else mime=imageMime(bytes);
         // ponytail: replacing an asset can leave an unreferenced object; add a bucket cleanup job when storage grows.
         n.put(document?"fileKey":"imageKey",storage.put(bytes,mime)); n.put(document?"fileMime":"imageMime",mime);
-        n.put("reviewed",false); c.data=data.write(n); c.published=false; contents.save(c);
+        n.put("reviewed",false);if(c.kind.equals("signs"))n.put("image_status","unverified");c.data=data.write(n); c.published=false; contents.save(c);data.sync(c);
     }
     @Transactional
     public Map<String,Object> upload(UUID id,MultipartFile file) throws IOException {
@@ -54,13 +54,17 @@ public class MediaService {
     }
     @Transactional
     public Map<String,Object> zip(MultipartFile file,String kind) throws IOException {
+        return zip(file,kind,null);
+    }
+    @Transactional
+    public Map<String,Object> zip(MultipartFile file,String kind,UUID questionSetId) throws IOException {
         if(!Set.of("signs","questions").contains(kind)) throw ApiErrors.bad("ZIP chỉ dùng cho biển báo/câu hỏi");
         if(file.isEmpty()||file.getSize()>20*1024*1024) throw ApiErrors.bad("ZIP tối đa 20 MB");
         var matched=new ArrayList<String>(); var unmatched=new ArrayList<String>(); var seen=new HashSet<String>();
         long total=0; int count=0;
         // Validate the entire archive before uploading: no partial DB import on malformed input.
         var assets=new LinkedHashMap<Content,byte[]>();
-        var signs=contents.findByKindOrderByExternalId(kind);
+        var signs=contents.findByKindOrderByExternalId(kind).stream().filter(c->questionSetId==null||data.read(c).path("questionSetId").asText().equals(questionSetId.toString())).toList();
         try(var zip=new ZipInputStream(file.getInputStream())) {
             ZipEntry entry;
             while((entry=zip.getNextEntry())!=null) {
@@ -75,7 +79,7 @@ public class MediaService {
                 imageMime(bytes);
                 String code=name.substring(0,name.lastIndexOf('.'));
                 if(!seen.add(code.toUpperCase(Locale.ROOT))) throw ApiErrors.bad("Trùng tên ảnh: "+code);
-                var candidates=signs.stream().filter(c -> (kind.equals("signs")?data.read(c).path("code").asText():c.externalId).equalsIgnoreCase(code)).toList();
+                var candidates=signs.stream().filter(c -> (kind.equals("signs")?data.read(c).path("code").asText():data.read(c).path("sourceExternalId").asText(c.externalId)).equalsIgnoreCase(code)).toList();
                 if(candidates.size()!=1) { unmatched.add(name); continue; }
                 assets.put(candidates.getFirst(),bytes); matched.add(code);
             }
@@ -86,6 +90,7 @@ public class MediaService {
     public Download download(UUID id,boolean canReadDrafts) {
         var c=contents.findById(id).orElseThrow(ApiErrors::missing); var n=data.read(c);
         if(!canReadDrafts&&(!c.published||!data.isEffective(c))) throw ApiErrors.missing();
+        if(!canReadDrafts&&c.kind.equals("signs")&&!n.path("image_status").asText().equals("verified"))throw ApiErrors.missing();
         String key=c.kind.equals("documents")?"fileKey":"imageKey", mime=c.kind.equals("documents")?"fileMime":"imageMime";
         if(!n.hasNonNull(key)) throw ApiErrors.missing();
         return new Download(storage.get(n.path(key).asText()),n.path(mime).asText("application/octet-stream"));

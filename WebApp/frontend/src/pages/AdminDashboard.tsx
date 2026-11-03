@@ -2,23 +2,22 @@ import { api,send } from '../api'
 import { useData,useTask,Notice } from './server/shared'
 import { useInspection } from './server/KagManagement'
 import { loadKagStatus,loadBuilderStatus,loadSampleInspection } from './server/kag-inspection'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useAdmin } from '../admin/store'
-import { Badge, Button, Card, Page, Progress } from '../admin/ui'
+import { Badge, Button, Card, NavLinkButton, Page, Progress } from '../admin/ui'
 import { jobTone } from './AdminPipeline'
 
 export default function AdminDashboard() {
-  const {jobs,runTask,notify}=useAdmin(),nav=useNavigate(),task=useTask()
+  const {jobs,runTask,notify}=useAdmin(),task=useTask()
   const report=useData<Record<string,number>>('/admin/reports')
   const data=useData<{id:string;question:string;state:string;feedback:string|null;resolved:boolean}[]>('/admin/chatlogs?pending=false')
   const kag=useInspection(loadKagStatus), builder=useInspection(loadBuilderStatus), sample=useInspection(loadSampleInspection)
   const logs=(data.value||[]).map(r=>({...r,status:r.feedback==='WRONG'?'Phản hồi sai':r.feedback==='OUTDATED'?'Văn bản hết hiệu lực':r.state==='ANSWERED'&&r.feedback!=='NO_BASIS'?'Đã trả lời':r.state==='KAG_ABSTAINED'||r.feedback==='NO_BASIS'?'Không có căn cứ':r.state}))
-  const issues=logs.filter(l=>l.status!=='Đã trả lời'&&!l.resolved),rated=logs.filter(l=>l.feedback)
-  const helpful=rated.length?Math.round(rated.filter(l=>l.feedback==='HELPFUL').length/rated.length*100):null
+  const issues=logs.filter(l=>!l.resolved)
   const evalJob=jobs.find(j=>j.taskId==='eval'&&j.status==='running')
   const stats=[
-    {label:'Lượt hỏi gần đây',value:data.value?logs.length:'—',sub:'Tối đa 100 bản ghi từ server'},
-    {label:'Tỷ lệ phản hồi hữu ích',value:helpful===null?'Chưa đo':helpful+'%',sub:`${data.value?rated.length:'—'} lượt có phản hồi`},
+    {label:'Chat được báo cáo',value:report.value?.chatMessages??'—',sub:'Chỉ các phản hồi sai, thiếu căn cứ, lỗi thời'},
+    {label:'Báo cáo đã xử lý',value:report.value?report.value.chatMessages-report.value.pendingChats:'—',sub:'Trong các báo cáo của người dùng'},
     {label:'Câu cần xử lý',value:report.value?.pendingChats??'—',sub:'Theo dữ liệu backend',warn:!!issues.length},
     {label:'Độ trễ trung bình',value:'Chưa đo',sub:'API chưa cung cấp thời gian xử lý'},
   ]
@@ -39,7 +38,7 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <Card title="Câu hỏi cần bổ sung tri thức" right={<button onClick={() => nav('/admin/chatlogs')} className="text-xs font-medium text-accent-strong hover:underline">Xem nhật ký →</button>}>
+        <Card title="Câu hỏi cần bổ sung tri thức" flush right={<Link to="/admin/chatlogs" className="text-xs font-medium text-accent-strong underline underline-offset-4 hover:text-navy">Xem phản hồi →</Link>}>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[520px]">
               <thead>
@@ -55,8 +54,10 @@ export default function AdminDashboard() {
                     <td className="px-5 py-3 text-[13.5px] text-navy">{row.question}</td>
                     <td className="px-5 py-3"><Badge tone={row.status === 'Phản hồi sai' ? 'red' : row.status === 'Không có căn cứ' ? 'amber' : 'gray'}>{row.status}</Badge></td>
                     <td className="px-5 py-3 text-right whitespace-nowrap">
-                      <Button size="sm" variant="outline" onClick={() => nav(row.status === 'Phản hồi sai' ? '/admin/chatlogs' : '/admin/knowledge')}>{actionFor(row.status)}</Button>
-                      <Button size="sm" variant="ghost" onClick={() => { void task.run(async()=>{await api(`/admin/chatlogs/${row.id}/resolve`,send('POST',{note:''}));data.reload();report.reload();notify('Đã đánh dấu đã xử lý')}) }}>✓</Button>
+                      <div className="inline-flex items-center gap-2">
+                        <NavLinkButton size="sm" to={row.status === 'Phản hồi sai' ? '/admin/chatlogs' : '/admin/knowledge'}>{actionFor(row.status)}</NavLinkButton>
+                        <Button size="sm" variant="outline" disabled={task.busy} title="Đánh dấu báo cáo đã xử lý" onClick={() => { void task.run(async()=>{await api(`/admin/chatlogs/${row.id}/resolve`,send('POST',{note:''}));data.reload();report.reload();notify('Đã đánh dấu đã xử lý')}) }}>Hoàn tất</Button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -72,7 +73,7 @@ export default function AdminDashboard() {
               <Row label="Dịch vụ KAG"><span className="text-xs">{kag.value?.queryReadiness.state??'Chưa đọc được trạng thái'}</span></Row>
               <Row label="Đồ thị tri thức"><span className="text-xs">{sample.value?`${sample.value.counts.nodes} node SAMPLE`:'Chưa đọc được graph'}</span></Row>
               <Row label="Bộ câu hỏi kiểm thử">
-                <button className="text-xs underline" onClick={()=>nav('/admin/benchmark')}>Xem kết quả thực đo</button>
+                <Link className="text-xs underline underline-offset-4 hover:text-navy" to="/admin/benchmark">Xem kết quả thực đo →</Link>
               </Row>
               <Notice {...kag} retry={kag.reload}/><Notice {...sample} retry={sample.reload}/>
               {evalJob && (
@@ -87,7 +88,7 @@ export default function AdminDashboard() {
             </div>
           </Card>
 
-          <Card title="Tác vụ gần đây" right={<button onClick={() => nav('/admin/pipeline')} className="text-xs font-medium text-accent-strong hover:underline">Pipeline →</button>}>
+          <Card title="Tác vụ gần đây" right={<Link to="/admin/pipeline" className="text-xs font-medium text-accent-strong underline underline-offset-4 hover:text-navy">Pipeline →</Link>}>
             <ul className="px-5 pb-4 space-y-2.5"><li className="text-xs"><Notice {...builder} retry={builder.reload}/>{builder.value&&<>Builder thật: {builder.value.state} · {builder.value.run_id??'Chưa có run'}</>}</li>
               {jobs.slice(0, 4).map((j) => (
                 <li key={j.id} className="flex items-center justify-between gap-2">

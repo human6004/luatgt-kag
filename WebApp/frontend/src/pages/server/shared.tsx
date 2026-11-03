@@ -47,7 +47,7 @@ export function useTask() {
       setBusy(false)
     }
   }
-  return { busy, error, run }
+  return { busy, error, run, clearError: () => setError("") }
 }
 
 export function Notice({

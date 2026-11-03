@@ -14,6 +14,7 @@ import Logs from './pages/AdminChatLogs'
 import Knowledge from './pages/AdminKnowledge'
 import Questions from './pages/AdminQuestions'
 import Imports from './pages/AdminImports'
+import QuestionBankSettings from './pages/server/QuestionBankSettings'
 import Graph from './pages/AdminGraph'
 import Pipeline from './pages/AdminPipeline'
 import Benchmark from './pages/AdminBenchmark'
@@ -37,7 +38,7 @@ export default function App(){
     <Route element={<RequireRole roles={['admin','police']}/>}>
       <Route path="/admin" element={<SessionHome/>}/><Route element={<AdminLayout/>}>
       <Route path="/admin/dashboard" element={<Dashboard/>}/><Route path="/admin/knowledge" element={<Knowledge/>}/>
-      <Route path="/admin/questions" element={<Questions/>}/><Route path="/admin/imports" element={<Imports/>}/>
+      <Route path="/admin/questions" element={<Questions/>}/><Route path="/admin/question-bank-settings" element={<QuestionBankSettings/>}/><Route path="/admin/imports" element={<Imports/>}/>
       <Route path="/admin/users" element={<Users/>}/><Route path="/admin/chatlogs" element={<Logs/>}/>
       <Route path="/admin/graph" element={<Graph/>}/><Route path="/admin/pipeline" element={<Pipeline/>}/><Route path="/admin/benchmark" element={<Benchmark/>}/>
       <Route path="/admin/docker" element={<Docker/>}/><Route path="/admin/config" element={<Config/>}/>

@@ -1,0 +1,117 @@
+{
+  "pdfSha256": "46ff58989fd51ecdca396a4b48a34caf6d2bff06ff894e4f85014833a187fa4a",
+  "source": "bo-250-cau-hoi-A1.pdf",
+  "criticalSource": "https://xaydungchinhsach.chinhphu.vn/60-cau-hoi-ve-xu-ly-tinh-huong-mat-an-toan-giao-thong-nghiem-trong-119250513145731021.htm",
+  "questions": 250,
+  "answers": 242,
+  "critical": 43,
+  "images": 125,
+  "archives": [
+    "question-images.zip"
+  ],
+  "unresolvedAnswers": [
+    345,
+    364,
+    415,
+    419,
+    430,
+    433,
+    455,
+    461
+  ],
+  "manualChecks": {
+    "22": {
+      "page": 6,
+      "correctAnswer": 1
+    },
+    "125": {
+      "page": 19,
+      "correctAnswer": 0
+    },
+    "142": {
+      "page": 20,
+      "correctAnswer": 0
+    },
+    "185": {
+      "page": 23,
+      "correctAnswer": 2
+    },
+    "187": {
+      "page": 23,
+      "correctAnswer": 0
+    },
+    "189": {
+      "page": 23,
+      "correctAnswer": 0
+    },
+    "215": {
+      "page": 25,
+      "correctAnswer": 0
+    },
+    "345": {
+      "page": 33,
+      "answerCandidates": [
+        0,
+        1
+      ],
+      "correctAnswer": null
+    },
+    "364": {
+      "page": 36,
+      "answerCandidates": [
+        0,
+        1
+      ],
+      "correctAnswer": null
+    },
+    "415": {
+      "page": 46,
+      "answerCandidates": [
+        0,
+        1
+      ],
+      "correctAnswer": null
+    },
+    "419": {
+      "page": 46,
+      "answerCandidates": [
+        0,
+        1
+      ],
+      "correctAnswer": null
+    },
+    "430": {
+      "page": 47,
+      "answerCandidates": [
+        0,
+        1
+      ],
+      "correctAnswer": null
+    },
+    "433": {
+      "page": 48,
+      "answerCandidates": [
+        0,
+        1
+      ],
+      "correctAnswer": null
+    },
+    "455": {
+      "page": 52,
+      "answerCandidates": [
+        0,
+        1
+      ],
+      "correctAnswer": null
+    },
+    "461": {
+      "page": 54,
+      "answerCandidates": [
+        0,
+        1
+      ],
+      "correctAnswer": null
+    }
+  },
+  "publication": "draft; explicit administrator approval required"
+}

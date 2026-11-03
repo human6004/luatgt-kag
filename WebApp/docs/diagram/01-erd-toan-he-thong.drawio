@@ -1,0 +1,401 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mxfile host="draw.io" version="32.4.1" pages="1">
+  <diagram id="overview" name="01 · ERD toàn hệ thống — SQL hiện tại">
+    <mxGraphModel grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="0" page="0" pageScale="1" pageWidth="10158" pageHeight="3544" math="0" shadow="0" background="#FFFFFF">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="accounts" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E7EEF9;strokeColor=#42679B;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="accounts&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;──────────────────────────────────────&#10;7 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="202" width="740" x="841.0" y="1348.0" as="geometry" />
+        </mxCell>
+        <mxCell id="content" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="content&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;──────────────────────────────────────&#10;6 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="202" width="740" x="4281.0" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="exams" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F0F1F3;strokeColor=#7E8792;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="exams&#10;Lịch sử cũ — giữ tương thích&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  owner_id : BINARY(16)&#10;──────────────────────────────────────&#10;10 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="266" width="740" x="841.0" y="1790.0" as="geometry" />
+        </mxCell>
+        <mxCell id="study_attempts" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F0F1F3;strokeColor=#7E8792;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="study_attempts&#10;Lịch sử cũ — giữ tương thích&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  owner_id : BINARY(16)&#10;FK  question_id : BINARY(16)&#10;──────────────────────────────────────&#10;6 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="298" width="740" x="80.0" y="1790.0" as="geometry" />
+        </mxCell>
+        <mxCell id="chat_messages" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E7EEF9;strokeColor=#42679B;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="chat_messages&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  owner_id : BINARY(16)&#10;──────────────────────────────────────&#10;11 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="1701.0" y="1790.0" as="geometry" />
+        </mxCell>
+        <mxCell id="content_history" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="content_history&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  content_id : BINARY(16)&#10;──────────────────────────────────────&#10;6 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="2561.0" y="682.0" as="geometry" />
+        </mxCell>
+        <mxCell id="law_relations" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="law_relations&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  predecessor : BINARY(16)&#10;FK  successor : BINARY(16)&#10;──────────────────────────────────────&#10;7 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="266" width="740" x="4281.0" y="682.0" as="geometry" />
+        </mxCell>
+        <mxCell id="penalty_rules" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="penalty_rules&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  document_id : BINARY(16)&#10;──────────────────────────────────────&#10;5 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="5141.0" y="682.0" as="geometry" />
+        </mxCell>
+        <mxCell id="legal_units" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#F1ECFA;strokeColor=#8061A6;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="legal_units&#10;──────────────────────────────────────&#10;PK  id : BINARY(16)&#10;FK  document_id : BINARY(16)&#10;──────────────────────────────────────&#10;6 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="3421.0" y="682.0" as="geometry" />
+        </mxCell>
+        <mxCell id="bank_release" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="bank_release&#10;──────────────────────────────────────&#10;PK  release_id : BINARY(16)&#10;──────────────────────────────────────&#10;7 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="202" width="740" x="9194.33" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="question_set" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="question_set&#10;──────────────────────────────────────&#10;PK  set_id : BINARY(16)&#10;FK  release_id : BINARY(16)&#10;──────────────────────────────────────&#10;4 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="8334.33" y="767.33" as="geometry" />
+        </mxCell>
+        <mxCell id="topic" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="topic&#10;──────────────────────────────────────&#10;PK  topic_id : BINARY(16)&#10;FK  release_id : BINARY(16)&#10;──────────────────────────────────────&#10;5 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="9317.67" y="1305.33" as="geometry" />
+        </mxCell>
+        <mxCell id="question" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="question&#10;──────────────────────────────────────&#10;PK FK  question_id : BINARY(16)&#10;──────────────────────────────────────&#10;1 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="202" width="740" x="1701.0" y="762.0" as="geometry" />
+        </mxCell>
+        <mxCell id="question_revision" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="question_revision&#10;──────────────────────────────────────&#10;PK  revision_id : BINARY(16)&#10;FK  question_id : BINARY(16)&#10;──────────────────────────────────────&#10;8 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="1701.0" y="1308.0" as="geometry" />
+        </mxCell>
+        <mxCell id="answer_option" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="answer_option&#10;──────────────────────────────────────&#10;PK  option_id : BINARY(16)&#10;FK  revision_id : BINARY(16)&#10;──────────────────────────────────────&#10;6 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="5631.0" y="1854.0" as="geometry" />
+        </mxCell>
+        <mxCell id="question_asset" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="question_asset&#10;──────────────────────────────────────&#10;PK  asset_id : BINARY(16)&#10;FK  revision_id : BINARY(16)&#10;──────────────────────────────────────&#10;6 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="7351.0" y="1790.0" as="geometry" />
+        </mxCell>
+        <mxCell id="set_question" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E5F5ED;strokeColor=#388165;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="set_question&#10;──────────────────────────────────────&#10;PK  set_question_id : BINARY(16)&#10;FK  set_id : BINARY(16)&#10;FK  revision_id : BINARY(16)&#10;FK  topic_id : BINARY(16)&#10;FK  release_id : BINARY(16)&#10;──────────────────────────────────────&#10;7 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="330" width="740" x="8457.67" y="1790.0" as="geometry" />
+        </mxCell>
+        <mxCell id="license_class" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF1DE;strokeColor=#B27A2F;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="license_class&#10;──────────────────────────────────────&#10;PK  class_id : BINARY(16)&#10;──────────────────────────────────────&#10;3 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="202" width="740" x="6614.33" y="842.0" as="geometry" />
+        </mxCell>
+        <mxCell id="exam_rule" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF1DE;strokeColor=#B27A2F;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="exam_rule&#10;──────────────────────────────────────&#10;PK  rule_id : BINARY(16)&#10;FK  set_id : BINARY(16)&#10;FK  class_id : BINARY(16)&#10;──────────────────────────────────────&#10;10 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="266" width="740" x="6737.67" y="1284.0" as="geometry" />
+        </mxCell>
+        <mxCell id="exam_rule_topic" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF1DE;strokeColor=#B27A2F;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="exam_rule_topic&#10;──────────────────────────────────────&#10;PK FK  rule_id : BINARY(16)&#10;PK FK  topic_id : BINARY(16)&#10;──────────────────────────────────────&#10;3 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="234" width="740" x="9317.67" y="1790.0" as="geometry" />
+        </mxCell>
+        <mxCell id="exam_attempt" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E6F4F8;strokeColor=#337F94;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="exam_attempt&#10;──────────────────────────────────────&#10;PK  attempt_id : BINARY(16)&#10;FK  user_id : BINARY(16)&#10;FK  rule_id : BINARY(16)&#10;FK  set_id : BINARY(16)&#10;──────────────────────────────────────&#10;10 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="298" width="740" x="6491.0" y="1800.67" as="geometry" />
+        </mxCell>
+        <mxCell id="attempt_question" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E6F4F8;strokeColor=#337F94;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="attempt_question&#10;──────────────────────────────────────&#10;PK  attempt_question_id : BINARY(16)&#10;FK  attempt_id : BINARY(16)&#10;FK  set_question_id : BINARY(16)&#10;FK  set_id : BINARY(16)&#10;FK  revision_id : BINARY(16)&#10;──────────────────────────────────────&#10;6 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="330" width="740" x="8457.67" y="2360.0" as="geometry" />
+        </mxCell>
+        <mxCell id="attempt_answer" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E6F4F8;strokeColor=#337F94;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="attempt_answer&#10;──────────────────────────────────────&#10;PK FK  attempt_question_id : BINARY(16)&#10;FK  option_id : BINARY(16)&#10;FK  revision_id : BINARY(16)&#10;──────────────────────────────────────&#10;3 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="266" width="740" x="8334.33" y="2930.0" as="geometry" />
+        </mxCell>
+        <mxCell id="study_attempt" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#E6F4F8;strokeColor=#337F94;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="study_attempt&#10;──────────────────────────────────────&#10;PK  study_attempt_id : BINARY(16)&#10;FK  user_id : BINARY(16)&#10;FK  set_question_id : BINARY(16)&#10;FK  selected_option_id : BINARY(16)&#10;FK  revision_id : BINARY(16)&#10;──────────────────────────────────────&#10;7 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="330" width="740" x="5754.33" y="2360.0" as="geometry" />
+        </mxCell>
+        <mxCell id="nhom_enum" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF3E6;strokeColor=#B5793E;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="nhom_enum&#10;──────────────────────────────────────&#10;PK  nhom_id : VARCHAR(200)&#10;──────────────────────────────────────&#10;2 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="202" width="740" x="7721.0" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="qcvn_enum" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF3E6;strokeColor=#B5793E;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="qcvn_enum&#10;──────────────────────────────────────&#10;PK  qcvn_id : VARCHAR(200)&#10;──────────────────────────────────────&#10;2 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="202" width="740" x="6861.0" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="record_type_enum" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF3E6;strokeColor=#B5793E;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="record_type_enum&#10;──────────────────────────────────────&#10;PK  record_type_id : VARCHAR(30)&#10;──────────────────────────────────────&#10;2 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="202" width="740" x="5141.0" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="images" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF3E6;strokeColor=#B5793E;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="images&#10;──────────────────────────────────────&#10;PK  image_id : BINARY(16)&#10;──────────────────────────────────────&#10;4 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="202" width="740" x="6001.0" y="240.0" as="geometry" />
+        </mxCell>
+        <mxCell id="signs" parent="1" style="rounded=0;whiteSpace=wrap;html=0;align=left;verticalAlign=top;spacing=14;overflow=hidden;fillColor=#FFF3E6;strokeColor=#B5793E;strokeWidth=2;fontSize=24;fontFamily=Consolas;" value="signs&#10;──────────────────────────────────────&#10;PK  sign_id : VARCHAR(250)&#10;FK UQ  content_id : BINARY(16)&#10;FK  nhom : VARCHAR(200)&#10;FK  qcvn : VARCHAR(200) ?&#10;FK  record_type : VARCHAR(30) ?&#10;FK  image_id : BINARY(16) ?&#10;──────────────────────────────────────&#10;17 cột · chi tiết trong file 02" vertex="1">
+          <mxGeometry height="362" width="740" x="7474.33" y="682.0" as="geometry" />
+        </mxCell>
+        <mxCell id="fk0" edge="1" parent="1" source="accounts" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="exams" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1211.0" y="1670.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk1" edge="1" parent="1" source="accounts" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.1667;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="study_attempts" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="964.33" y="1600.0" />
+              <mxPoint x="573.33" y="1600.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk2" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.1111;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="study_attempts" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="4363.22" y="492.0" />
+              <mxPoint x="326.67" y="492.0" />
+              <mxPoint x="326.67" y="1417.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk3" edge="1" parent="1" source="accounts" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.6667;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="chat_messages" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1334.33" y="1660.0" />
+              <mxPoint x="2071.0" y="1660.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk4" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.3333;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="content_history" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="4527.67" y="512.0" />
+              <mxPoint x="2931.0" y="512.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk5" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5556;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="law_relations" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="4692.11" y="532.0" />
+              <mxPoint x="4527.67" y="532.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk6" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.6667;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="law_relations" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="4774.33" y="562.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk7" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.7778;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="penalty_rules" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="4856.56" y="532.0" />
+              <mxPoint x="5511.0" y="532.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk8" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.4444;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="legal_units" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="4609.89" y="522.0" />
+              <mxPoint x="3791.0" y="522.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk9" edge="1" parent="1" source="bank_release" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.3333;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="question_set" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="9441.0" y="492.0" />
+              <mxPoint x="8704.33" y="492.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk10" edge="1" parent="1" source="bank_release" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.6667;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="topic" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="9687.67" y="863.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk11" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToOne;strokeColor=#75859A;exitX=0.2222;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="question" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="4445.44" y="502.0" />
+              <mxPoint x="2071.0" y="502.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk12" edge="1" parent="1" source="question" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="question_revision" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2071.0" y="1136.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk13" edge="1" parent="1" source="question_revision" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.25;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="answer_option" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1886.0" y="1640.0" />
+              <mxPoint x="6001.0" y="1640.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk14" edge="1" parent="1" source="question_revision" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="question_asset" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2071.0" y="1630.0" />
+              <mxPoint x="7721.0" y="1630.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk15" edge="1" parent="1" source="question_set" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.6667;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="set_question" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="8827.67" y="1417.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk16" edge="1" parent="1" source="topic" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.3333;exitY=1;entryX=0.75;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="set_question" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="9564.33" y="1600.0" />
+              <mxPoint x="9012.67" y="1600.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk17" edge="1" parent="1" source="question_revision" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.75;exitY=1;entryX=0.25;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="set_question" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="2256.0" y="1620.0" />
+              <mxPoint x="8642.67" y="1620.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk18" edge="1" parent="1" source="question_set" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.3333;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="exam_rule" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="8581.0" y="1094.0" />
+              <mxPoint x="7231.0" y="1094.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk19" edge="1" parent="1" source="license_class" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="exam_rule" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="6984.33" y="1164.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk20" edge="1" parent="1" source="exam_rule" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.6667;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="exam_rule_topic" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="7231.0" y="1610.0" />
+              <mxPoint x="9564.33" y="1610.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk21" edge="1" parent="1" source="topic" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.6667;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="exam_rule_topic" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="9811.0" y="1664.67" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk22" edge="1" parent="1" source="accounts" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.8333;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="exam_attempt" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1457.67" y="1650.0" />
+              <mxPoint x="6737.67" y="1650.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk23" edge="1" parent="1" source="exam_rule" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.3333;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="exam_attempt" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="6984.33" y="1675.34" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk24" edge="1" parent="1" source="exam_attempt" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.25;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="attempt_question" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="6861.0" y="2180.0" />
+              <mxPoint x="8642.67" y="2180.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk25" edge="1" parent="1" source="set_question" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="attempt_question" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="8827.67" y="2240.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk26" edge="1" parent="1" source="set_question" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.75;exitY=1;entryX=0.75;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="attempt_question" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="9012.67" y="2240.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk27" edge="1" parent="1" source="attempt_question" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToOne;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="attempt_answer" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="8827.67" y="2810.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk28" edge="1" parent="1" source="answer_option" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.3333;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="attempt_answer" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="5877.67" y="2170.0" />
+              <mxPoint x="5743.33" y="2170.0" />
+              <mxPoint x="5743.33" y="2740.0" />
+              <mxPoint x="8581.0" y="2740.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk29" edge="1" parent="1" source="accounts" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.3333;exitY=1;entryX=0.25;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="study_attempt" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1087.67" y="1610.0" />
+              <mxPoint x="830.0" y="1610.0" />
+              <mxPoint x="830.0" y="2180.0" />
+              <mxPoint x="5939.33" y="2180.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk30" edge="1" parent="1" source="set_question" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.25;exitY=1;entryX=0.75;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="study_attempt" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="8642.67" y="2170.0" />
+              <mxPoint x="6309.33" y="2170.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk31" edge="1" parent="1" source="answer_option" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.6667;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="study_attempt" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="6124.33" y="2224.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk32" edge="1" parent="1" source="content" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToOne;strokeColor=#75859A;exitX=0.8889;exitY=1;entryX=0.1667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="signs" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="4938.78" y="522.0" />
+              <mxPoint x="7597.67" y="522.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk33" edge="1" parent="1" source="nhom_enum" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERmandOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.8333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="signs" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="8091.0" y="562.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk34" edge="1" parent="1" source="qcvn_enum" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERzeroToOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.6667;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="signs" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="7231.0" y="492.0" />
+              <mxPoint x="7967.67" y="492.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk35" edge="1" parent="1" source="record_type_enum" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERzeroToOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.3333;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="signs" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="5511.0" y="512.0" />
+              <mxPoint x="7721.0" y="512.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="fk36" edge="1" parent="1" source="images" style="rounded=0;curved=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=20;fontFamily=Arial;strokeWidth=2;labelBackgroundColor=#FFFFFF;fontColor=#51627A;startFill=0;endFill=0;startArrow=ERzeroToOne;endArrow=ERzeroToMany;strokeColor=#75859A;exitX=0.5;exitY=1;entryX=0.5;entryY=0;edgeStyle=orthogonalEdgeStyle;" target="signs" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="6371.0" y="502.0" />
+              <mxPoint x="7844.33" y="502.0" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="doc_title" parent="1" vertex="1" value="01 · ERD toàn hệ thống — SQL hiện tại" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=32;fontColor=#25364B;strokeColor=none;fillColor=none;fontStyle=1;">
+          <mxGeometry as="geometry" x="80" y="28" width="9977.67" height="52" />
+        </mxCell>
+        <mxCell id="doc_source" parent="1" vertex="1" value="Nguồn: SQL migrations V1–V6; Java migration V4; code hiện tại · cập nhật 02/11/2026" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="90" width="9977.67" height="35" />
+        </mxCell>
+        <mxCell id="doc_legend" parent="1" vertex="1" value="PK: khóa chính · FK: khóa ngoại · UQ: duy nhất · ?: NULL · ||: đúng 1 · o|: 0..1 · o{: 0..N" style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="132" width="9977.67" height="32" />
+        </mxCell>
+        <mxCell id="doc_legend2" parent="1" vertex="1" value="Nét liền: FK SQL; nét đứt: quan hệ/đối chiếu trong code. Khung nét đứt: bảng tham chiếu từ trang khác. Trang KAG dùng cạnh đồ thị riêng." style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="172" width="9977.67" height="45" />
+        </mxCell>
+        <mxCell id="doc_notes" parent="1" vertex="1" value="• 29 bảng SQL · 37 ràng buộc FOREIGN KEY vật lý. Hiển thị PK/FK; xem thuộc tính và UQ/CHECK ở các trang chi tiết.&#10;• Màu nhóm: xanh dương tài khoản/chat; tím nội dung/pháp luật; xanh lá ngân hàng; vàng cấu hình; xanh ngọc thi/luyện; cam biển báo; xám lịch&#10;sử cũ.&#10;• accounts là tài khoản dùng chung; không có bảng APP_USER/auth_session/chat_thread riêng trong code hiện tại.&#10;• KAG/OpenSPG là kho đồ thị riêng, không phải bảng SQL. Xem trang 08 của ERD chi tiết về node, cạnh và cách đối chiếu định danh.&#10;• Nguồn là schema/code, không phải xác nhận trạng thái database đang triển khai. Không tự kết luận BCNF." style="text;html=0;whiteSpace=wrap;align=left;verticalAlign=top;fontFamily=Arial;fontSize=18;fontColor=#25364B;strokeColor=none;fillColor=none;">
+          <mxGeometry as="geometry" x="80" y="3261.0" width="1600" height="198" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

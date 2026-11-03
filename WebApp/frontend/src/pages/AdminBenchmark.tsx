@@ -155,6 +155,7 @@ export default function AdminBenchmark() {
         <div className="space-y-5 min-w-0">
           <Card
             title="Kết quả đánh giá"
+            flush
             right={
               <select className="rounded-lg border border-line bg-transparent px-2 py-1 text-[12px] text-navy" value={cat} onChange={(e) => setCat(e.target.value)} aria-label="Nhóm câu hỏi">
                 <option value="all">Tất cả metric</option>
@@ -163,9 +164,9 @@ export default function AdminBenchmark() {
             }
           >
             {!hasResult ? (
-              <div className="px-5 pb-6 text-sm text-muted">{running ? 'Đang mô phỏng Demo… xem log ở trang Pipeline.' : 'Chưa có kết quả.'}</div>
+              <div className="px-5 py-6 text-sm text-muted">{running ? 'Đang mô phỏng Demo… xem log ở trang Pipeline.' : 'Chưa có kết quả.'}</div>
             ) : !shown.length ? (
-              <div className="px-5 pb-6 text-sm text-muted">Bật ít nhất một hệ thống.</div>
+              <div className="px-5 py-6 text-sm text-muted">Bật ít nhất một hệ thống.</div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[620px]">
@@ -205,6 +206,7 @@ export default function AdminBenchmark() {
           </div></Card>
           <Card
             title="Smoke test (8 câu) · Demo"
+            flush
             right={<Button size="sm" variant="primary" disabled={smokeState === 'run'} onClick={runSmoke}>{smokeState === 'run' ? `Đang chạy ${smokeIdx}/8…` : '▶ Chạy smoke · Demo'}</Button>}
           >
             <div className="overflow-x-auto">
