@@ -2,10 +2,11 @@ import { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { normalizeImport } from "./import-normalization"
 import { api, send, type ContentRecord } from "../../api"
-import { Badge, Button, Card, Th, Td } from "../../admin/ui"
+import { Badge, Button, Card, FilterTabs, Modal, Th, Td } from "../../admin/ui"
 import { useAdmin } from "../../admin/store"
 import { csvSamples, parseCsv, tableObjects, type ImportKind } from "../../admin/import-data"
 import { useData, useTask, Notice, Asset, inputClass, download } from "./shared"
+import type { QuestionSet } from "./QuestionBankSettings"
 
 export type ContentKind = "signs" | "documents" | "units"
 
@@ -28,6 +29,9 @@ const fields: Record<ContentKind, string[]> = {
     "qcvn",
     "so_hieu",
     "bien_phu_variant",
+    "record_type",
+    "parent_code",
+    "description_scope",
     "ngay_hieu_luc",
     "ngay_het_hieu_luc",
   ],
@@ -63,6 +67,9 @@ const labels: Record<string, string> = {
   qcvn: "Quy chuẩn",
   so_hieu: "Số hiệu văn bản",
   bien_phu_variant: "Biến thể biển phụ",
+  record_type: "Loại bản ghi biển báo",
+  parent_code: "Mã biển cha",
+  description_scope: "Phạm vi mô tả",
   ngay_hieu_luc: "Ngày hiệu lực",
   ngay_het_hieu_luc: "Ngày hết hiệu lực",
   title: "Tên văn bản",
@@ -140,6 +147,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
     }
     if (editId === "new") {
       if (!selected || selected.id !== "") {
+        task.clearError()
         applySelection({ id: "", externalId: "", version: 0, published: false, data: {} })
         setMessage("")
       }
@@ -148,6 +156,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
     if (!data.value) return
     const target = data.value.find((r) => r.id === editId || r.externalId === editId)
     if (target && selected?.id !== target.id) {
+      task.clearError()
       applySelection(target)
       setMessage("")
     }
@@ -162,12 +171,14 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
   )
 
   function openEdit(row: ContentRecord) {
+    task.clearError()
     applySelection(row)
     setMessage("")
     updateUrl({ id: row.id })
   }
 
   function closeEdit() {
+    if (task.busy) return
     applySelection(null)
     updateUrl({ id: null })
   }
@@ -222,7 +233,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
         </p>
       )}
       <Notice {...data} retry={data.reload} empty={!data.value?.length} />
-      <Notice error={task.error} />
+      <Notice error={!selected ? task.error : undefined} />
       {message && (
         <p role="status" className="my-3 text-emerald-700">
           {message}
@@ -240,22 +251,6 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
           </Card>
         ))}
       </div>
-      <div className="flex flex-wrap gap-2 mb-4">
-        {[
-          ["", "Tất cả"],
-          ["published", "Đã xuất bản"],
-          ["draft", "Bản nháp"],
-        ].map(([value, label]) => (
-          <Button
-            key={value}
-            aria-pressed={state === value}
-            variant={state === value ? "dark" : "outline"}
-            onClick={() => updateUrl({ status: value || null })}
-          >
-            {label}
-          </Button>
-        ))}
-      </div>
       <input
         aria-label="Tìm nội dung"
         value={query}
@@ -265,7 +260,18 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
           updateUrl({ q: v || null }, true)
         }}
         placeholder="Tìm theo mã hoặc nội dung"
-        className={inputClass}
+        className={`${inputClass} mb-3`}
+      />
+      <FilterTabs
+        label="Lọc trạng thái xuất bản"
+        value={state}
+        onChange={(v) => updateUrl({ status: v || null })}
+        className="mb-4"
+        items={[
+          { value: "", label: "Tất cả" },
+          { value: "published", label: "Đã xuất bản" },
+          { value: "draft", label: "Bản nháp" },
+        ]}
       />
       <Table>
         <thead>
@@ -308,14 +314,31 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
         </tbody>
       </Table>
       {selected && (
-        <section className="mt-8 border-t border-line pt-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold">
-              {selected.id ? "Chỉnh sửa nội dung" : "Thêm nội dung"}
-            </h2>
-            <Button onClick={closeEdit}>Đóng</Button>
-          </div>
+        <Modal
+          open={!!selected}
+          title={`${selected.id ? "Chỉnh sửa" : "Thêm"} ${
+            kind === "signs" ? "biển báo" : kind === "units" ? "đơn vị pháp lý" : "văn bản"
+          }`}
+          onClose={closeEdit}
+          footer={
+            <>
+              <Button disabled={task.busy} onClick={closeEdit}>
+                Đóng
+              </Button>
+              <Button disabled={task.busy} type="submit" form="content-editor" variant="dark">
+                Lưu bản nháp
+              </Button>
+            </>
+          }
+        >
+          <Notice error={task.error} />
+          {message && (
+            <p role="status" className="mb-4 text-sm text-emerald-700">
+              {message}
+            </p>
+          )}
           <form
+            id="content-editor"
             onSubmit={(e) => {
               e.preventDefault()
               task.run(async () => {
@@ -395,6 +418,43 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                 )}
               </label>
             ))}
+            {kind === "signs" && (
+              <>
+                {["children_codes", "note"].map((key) => (
+                  <label key={key} className="sm:col-span-2 text-sm">
+                    {key === "children_codes"
+                      ? "Mã biển con (mỗi dòng một mã)"
+                      : "Ghi chú (mỗi dòng một ghi chú)"}
+                    <textarea
+                      className={inputClass}
+                      rows={3}
+                      value={
+                        Array.isArray(form[key])
+                          ? (form[key] as string[]).join("\n")
+                          : ""
+                      }
+                      onChange={(e) =>
+                        field(
+                          key,
+                          e.target.value
+                            .split("\n")
+                            .map((v) => v.trim())
+                            .filter(Boolean),
+                        )
+                      }
+                    />
+                  </label>
+                ))}
+                <label className="text-sm">
+                  <input
+                    type="checkbox"
+                    checked={form.image_required === true}
+                    onChange={(e) => field("image_required", e.target.checked)}
+                  />{" "}
+                  Nguồn yêu cầu ảnh biển báo
+                </label>
+              </>
+            )}
             <label className="text-sm">
               <input
                 type="checkbox"
@@ -403,11 +463,6 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
               />{" "}
               Đã đối chiếu nội dung với nguồn
             </label>
-            <div className="sm:col-span-2">
-              <Button disabled={task.busy} type="submit" variant="dark">
-                Lưu bản nháp
-              </Button>
-            </div>
           </form>
           {selected.id && (
             <div className="mt-5 space-y-4">
@@ -522,7 +577,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
               ))}
             </div>
           )}
-        </section>
+        </Modal>
       )}
       {kind === "documents" && (
         <>
@@ -564,115 +619,165 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
     [date, setDate] = useState(""),
     [note, setNote] = useState(""),
     [relationId, setRelationId] = useState(""),
-    [relationVersion, setRelationVersion] = useState(0)
+    [relationVersion, setRelationVersion] = useState(0),
+    [editing, setEditing] = useState(false)
   return (
-    <section className="border-t border-line pt-6 mt-8">
-      <h2 className="font-semibold">Quan hệ sửa đổi / thay thế</h2>
-      <Notice {...data} retry={data.reload} />
-      <Notice error={task.error} />
-      {data.value?.map((r) => (
-        <p key={r.id} className="text-sm py-3 border-b border-line">
-          {documents.find((d) => d.id === r.successor)?.externalId}{" "}
-          {r.type === "REPLACES" ? "thay thế" : "sửa đổi"}{" "}
-          {documents.find((d) => d.id === r.predecessor)?.externalId} ·{" "}
-          {r.effectiveDate} · {r.note}{" "}
-          <Button
-            size="sm"
-            onClick={() => {
-              setPredecessor(r.predecessor)
-              setSuccessor(r.successor)
-              setType(r.type)
-              setDate(r.effectiveDate)
-              setNote(r.note)
-              setRelationId(r.id)
-              setRelationVersion(r.version)
-            }}
-          >
-            Chỉnh sửa
-          </Button>
-        </p>
-      ))}
-      <form
-        className="grid sm:grid-cols-2 gap-3 mt-4"
-        onSubmit={(e) => {
-          e.preventDefault()
-          task.run(async () => {
-            await api(
-              relationId
-                ? "/admin/law-relations/" + relationId
-                : "/admin/law-relations",
-              send(relationId ? "PUT" : "POST", {
-                predecessor,
-                successor,
-                type,
-                effectiveDate: date,
-                note,
-                version: relationVersion,
-              }),
-            )
-            data.reload()
+    <section className="mt-8 space-y-3">
+      <div className="flex flex-wrap justify-between items-center gap-3">
+        <h2 className="font-semibold">Quan hệ sửa đổi / thay thế</h2>
+        <Button
+          disabled={task.busy}
+          onClick={() => {
+            task.clearError()
+            setPredecessor("")
+            setSuccessor("")
+            setType("REPLACES")
+            setDate("")
             setNote("")
             setRelationId("")
             setRelationVersion(0)
-          })
+            setEditing(true)
+          }}
+        >
+          Thêm quan hệ
+        </Button>
+      </div>
+      <Notice {...data} retry={data.reload} />
+      <Notice error={!editing ? task.error : undefined} />
+      {data.value && (
+        <Card>
+          <div className="px-5">
+            {!data.value.length && (
+              <p className="py-6 text-center text-sm text-muted">
+                Chưa có quan hệ văn bản.
+              </p>
+            )}
+            {data.value.map((r) => (
+              <p key={r.id} className="text-sm py-3 border-b border-line">
+                {documents.find((d) => d.id === r.successor)?.externalId}{" "}
+                {r.type === "REPLACES" ? "thay thế" : "sửa đổi"}{" "}
+                {documents.find((d) => d.id === r.predecessor)?.externalId} ·{" "}
+                {r.effectiveDate} · {r.note}{" "}
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    task.clearError()
+                    setEditing(true)
+                    setPredecessor(r.predecessor)
+                    setSuccessor(r.successor)
+                    setType(r.type)
+                    setDate(r.effectiveDate)
+                    setNote(r.note)
+                    setRelationId(r.id)
+                    setRelationVersion(r.version)
+                  }}
+                >
+                  Chỉnh sửa
+                </Button>
+              </p>
+            ))}
+          </div>
+        </Card>
+      )}
+      <Modal
+        open={editing}
+        title={relationId ? "Chỉnh sửa quan hệ văn bản" : "Thêm quan hệ văn bản"}
+        onClose={() => {
+          if (!task.busy) setEditing(false)
         }}
+        footer={
+          <>
+            <Button disabled={task.busy} onClick={() => setEditing(false)}>
+              Hủy
+            </Button>
+            <Button type="submit" form="law-relation-editor" disabled={task.busy}>
+              Lưu quan hệ
+            </Button>
+          </>
+        }
       >
-        {[
-          ["Văn bản cũ", predecessor, setPredecessor],
-          ["Văn bản mới", successor, setSuccessor],
-        ].map(([label, value, setter]) => (
-          <label key={String(label)} className="text-sm">
-            {String(label)}
+        <Notice error={task.error} />
+        <form
+          id="law-relation-editor"
+          className="grid sm:grid-cols-2 gap-3"
+          onSubmit={(e) => {
+            e.preventDefault()
+            task.run(async () => {
+              await api(
+                relationId
+                  ? "/admin/law-relations/" + relationId
+                  : "/admin/law-relations",
+                send(relationId ? "PUT" : "POST", {
+                  predecessor,
+                  successor,
+                  type,
+                  effectiveDate: date,
+                  note,
+                  version: relationVersion,
+                }),
+              )
+              data.reload()
+              setNote("")
+              setRelationId("")
+              setRelationVersion(0)
+              setEditing(false)
+            })
+          }}
+        >
+          {[
+            ["Văn bản cũ", predecessor, setPredecessor],
+            ["Văn bản mới", successor, setSuccessor],
+          ].map(([label, value, setter]) => (
+            <label key={String(label)} className="text-sm">
+              {String(label)}
+              <select
+                required
+                value={String(value)}
+                onChange={(e) => (setter as (s: string) => void)(e.target.value)}
+                className={`${inputClass} mt-2`}
+              >
+                <option value="">Chọn văn bản</option>
+                {documents.map((d) => (
+                  <option key={d.id} value={d.id}>
+                    {d.externalId} — {String(d.data.title)}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ))}
+          <label className="text-sm">
+            Quan hệ
             <select
-              required
-              value={String(value)}
-              onChange={(e) => (setter as (s: string) => void)(e.target.value)}
+              value={type}
+              onChange={(e) => setType(e.target.value)}
               className={`${inputClass} mt-2`}
             >
-              <option value="">Chọn văn bản</option>
-              {documents.map((d) => (
-                <option key={d.id} value={d.id}>
-                  {d.externalId} — {String(d.data.title)}
-                </option>
-              ))}
+              <option value="REPLACES">Thay thế</option>
+              <option value="AMENDS">Sửa đổi</option>
             </select>
           </label>
-        ))}
-        <label className="text-sm">
-          Quan hệ
-          <select
-            value={type}
-            onChange={(e) => setType(e.target.value)}
-            className={`${inputClass} mt-2`}
-          >
-            <option value="REPLACES">Thay thế</option>
-            <option value="AMENDS">Sửa đổi</option>
-          </select>
-        </label>
-        <label className="text-sm">
-          Ngày bắt đầu quan hệ
-          <input
-            type="date"
-            required
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            className={`${inputClass} mt-2`}
-          />
-        </label>
-        <label className="sm:col-span-2 text-sm">
-          Phạm vi/căn cứ
-          <input
-            required
-            maxLength={1000}
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            className={`${inputClass} mt-2`}
-          />
-        </label>
-        <Button disabled={task.busy} type="submit">
-          Lưu quan hệ
-        </Button>
-      </form>
+          <label className="text-sm">
+            Ngày bắt đầu quan hệ
+            <input
+              type="date"
+              required
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              className={`${inputClass} mt-2`}
+            />
+          </label>
+          <label className="sm:col-span-2 text-sm">
+            Phạm vi/căn cứ
+            <input
+              required
+              maxLength={1000}
+              value={note}
+              onChange={(e) => setNote(e.target.value)}
+              className={`${inputClass} mt-2`}
+            />
+          </label>
+        </form>
+      </Modal>
     </section>
   )
 }
@@ -689,6 +794,11 @@ export function ImportPanel({
   const [parameters] = useSearchParams()
   const graphContext = sourceGraphContext(parameters)
   const { notify } = useAdmin()
+  const sets = useData<QuestionSet[]>("/admin/questions/sets")
+  const [questionSetId, setQuestionSetId] = useState("")
+  const selectedSet =
+    questionSetId ||
+    (sets.value?.length === 1 ? sets.value[0].set_id : "")
   const [rows, setRows] = useState<unknown[]>([]),
     [preview, setPreview] = useState<{
       row: number
@@ -706,6 +816,7 @@ export function ImportPanel({
     setPreview([])
     setMessage("")
     setUpdate(false)
+    setQuestionSetId("")
   }, [kind])
 
   function downloadSample() {
@@ -748,11 +859,56 @@ export function ImportPanel({
         <p className="text-xs text-muted">
           Dữ liệu được kiểm tra trên server, lưu nháp và chỉ xuất bản sau khi duyệt.
         </p>
+        {kind === "questions" && <Notice {...sets} retry={sets.reload} />}
         <Notice error={task.error} />
         {message && (
           <p role="status" className="my-3 text-sm text-emerald-700 whitespace-pre-line">
             {message}
           </p>
+        )}
+        {kind === "questions" && (
+          <div className="my-3 space-y-2 text-sm">
+            <label className="block">
+              Bộ câu hỏi nhận dữ liệu
+              <select
+                aria-label="Bộ câu hỏi nhận dữ liệu"
+                className={`${inputClass} mt-1 max-w-md`}
+                value={selectedSet}
+                onChange={(e) => {
+                  const nextSet = e.target.value
+                  setQuestionSetId(nextSet)
+                  if (rows.length && nextSet) {
+                    void task.run(async () => {
+                      setPreview(
+                        await api(
+                          "/admin/imports/questions/preview",
+                          send("POST", {
+                            rows,
+                            updateExisting: update,
+                            questionSetId: nextSet,
+                          }),
+                        ),
+                      )
+                    })
+                  }
+                }}
+              >
+                <option value="">Chọn bộ câu hỏi đã tạo</option>
+                {sets.value?.map((s) => (
+                  <option key={s.set_id} value={s.set_id}>
+                    {s.release_code} / {s.set_name}
+                  </option>
+                ))}
+              </select>
+            </label>
+            <p className="text-xs text-muted">
+              Chưa có bộ phù hợp? Mở tab{" "}
+              <Link className="underline" to="/admin/questions?tab=sets">
+                Bộ câu hỏi & Quy tắc thi
+              </Link>{" "}
+              để tạo bộ 250 hoặc 600 câu trước khi nhập.
+            </p>
+          </div>
         )}
         <label className="block my-4 text-sm">
           Tệp CSV, Excel (.xlsx) hoặc JSON
@@ -769,6 +925,8 @@ export function ImportPanel({
               setRows([])
               setPreview([])
               task.run(async () => {
+                if (kind === "questions" && !selectedSet)
+                  throw new Error("Chọn bộ câu hỏi trước khi tải tệp câu hỏi.")
                 if (file.size > 10 * 1024 * 1024)
                   throw new Error("Tệp dữ liệu tối đa 10 MB.")
                 let input: unknown
@@ -785,7 +943,11 @@ export function ImportPanel({
                 setPreview(
                   await api(
                     `/admin/imports/${kind}/preview`,
-                    send("POST", { rows: input, updateExisting: update }),
+                    send("POST", {
+                      rows: input,
+                      updateExisting: update,
+                      ...(kind === "questions" ? { questionSetId: selectedSet } : {}),
+                    }),
                   ),
                 )
                 setMessage("Đã kiểm tra tệp.")
@@ -806,7 +968,11 @@ export function ImportPanel({
                   setPreview(
                     await api(
                       `/admin/imports/${kind}/preview`,
-                      send("POST", { rows, updateExisting: nextUpdate }),
+                      send("POST", {
+                        rows,
+                        updateExisting: nextUpdate,
+                        ...(kind === "questions" ? { questionSetId: selectedSet } : {}),
+                      }),
                     ),
                   )
                 })
@@ -822,7 +988,12 @@ export function ImportPanel({
         </p>
         <Button
           variant="dark"
-          disabled={task.busy || !rows.length || preview.some((r) => !r.valid)}
+          disabled={
+            task.busy ||
+            !rows.length ||
+            preview.some((r) => !r.valid) ||
+            (kind === "questions" && !selectedSet)
+          }
           onClick={() =>
             task.run(async () => {
               const result = await api<{
@@ -831,7 +1002,11 @@ export function ImportPanel({
                 skipped: number
               }>(
                 `/admin/imports/${kind}/confirm`,
-                send("POST", { rows, updateExisting: update }),
+                send("POST", {
+                  rows,
+                  updateExisting: update,
+                  ...(kind === "questions" ? { questionSetId: selectedSet } : {}),
+                }),
               )
               setRows([])
               setPreview([])
@@ -889,14 +1064,20 @@ export function ImportPanel({
                 const files = Array.from(e.target.files || [])
                 if (!files.length) return
                 task.run(async () => {
+                  if (kind === "questions" && !selectedSet)
+                    throw new Error("Chọn bộ câu hỏi trước khi ghép ảnh câu hỏi.")
                   const messages = []
+                  const zipUrl =
+                    kind === "questions"
+                      ? `/admin/questions/images-zip?questionSetId=${encodeURIComponent(selectedSet)}`
+                      : `/admin/${kind}/images-zip`
                   for (const file of files) {
                     const body = new FormData()
                     body.append("file", file)
                     const result = await api<{
                       matched: string[]
                       unmatched: string[]
-                    }>(`/admin/${kind}/images-zip`, { method: "POST", body })
+                    }>(zipUrl, { method: "POST", body })
                     messages.push(
                       `${file.name}: ghép ${result.matched.length} ảnh; chưa khớp ${result.unmatched.join(", ") || "không có"}`,
                     )

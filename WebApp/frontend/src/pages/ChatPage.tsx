@@ -1,7 +1,7 @@
 import { useLocation, useSearchParams } from 'react-router-dom'
 import { api, send as request } from '../api'
 import { useAdmin } from '../admin/store'
-import { Badge } from '../admin/ui'
+import { Badge, NavLinkButton } from '../admin/ui'
 import { Notice, useTask } from './server/shared'
 import { createChat, chatView, loadCitationSource } from './server/chat-state'
 import LogoMark from '../components/LogoMark'
@@ -307,10 +307,6 @@ export default function ChatPage() {
             <Icon d={ic.clip} />
             <Badge tone="gray">Đang phát triển</Badge>
           </button>
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11.5px] font-medium text-text-secondary bg-sidebar border border-line">
-            <span className="w-1.5 h-1.5 rounded-full bg-accent" aria-hidden />
-            Hạng B
-          </span>
         </div>
         {thinking && (
           <button
@@ -341,24 +337,39 @@ export default function ChatPage() {
       {showList && (
         <aside aria-label="Lịch sử câu hỏi" className="absolute inset-y-0 left-0 z-10 w-64 max-w-full md:static shrink-0 flex flex-col border-r border-line bg-bg shadow-lg md:shadow-none">
           <div className="p-3 space-y-2">
-            <button type="button" onClick={() => setShowList(false)} className="md:hidden w-full border border-line rounded-lg px-3 py-2">
-              Đóng lịch sử
-            </button>
             <Notice loading={data.loading} error={data.error} retry={chat.load} />
-            <button type="button" disabled={thinking} onClick={chat.load} className="text-xs underline">
-              Tải lại lịch sử
-            </button>
-            <button
-              type="button"
-              onClick={newChat}
-              className="w-full flex items-center gap-2 px-3 py-2 rounded-lg text-sm text-navy hover:bg-selected transition-colors"
-            >
-              <span className="w-5 h-5 grid place-items-center rounded-full bg-accent text-navy">
-                <Icon d={ic.plus} className="w-3.5 h-3.5" />
-              </span>
-              Cuộc trò chuyện mới
-            </button>
-            <label className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-line bg-surface text-muted">
+            <div className="flex items-center gap-1">
+              <button
+                type="button"
+                onClick={() => setShowList(false)}
+                aria-label="Ẩn lịch sử"
+                title="Ẩn lịch sử"
+                aria-expanded={true}
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-navy cursor-pointer hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong"
+              >
+                <Icon d={ic.panel} className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                disabled={thinking || data.loading}
+                onClick={chat.load}
+                aria-label="Tải lại lịch sử"
+                title="Tải lại lịch sử"
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-navy cursor-pointer hover:bg-selected disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent-strong"
+              >
+                <Icon d={ic.retry} className="w-4 h-4" />
+              </button>
+              <button
+                type="button"
+                onClick={newChat}
+                aria-label="Cuộc trò chuyện mới"
+                title="Cuộc trò chuyện mới"
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-navy cursor-pointer hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong"
+              >
+                <Icon d={ic.plus} className="w-4 h-4" />
+              </button>
+            </div>
+            <label className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-line bg-surface text-muted focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/30">
               <Icon d={ic.search} className="w-3.5 h-3.5" />
               <input
                 aria-label="Tìm cuộc trò chuyện"
@@ -434,14 +445,18 @@ export default function ChatPage() {
       <div className="flex-1 flex flex-col min-w-0">
         <header className="h-14 shrink-0 flex items-center justify-between px-4 border-b border-line/70 bg-bg/85 backdrop-blur">
           <div className="flex items-center gap-2 min-w-0">
-            <button
-              type="button"
-              onClick={() => setShowList((v) => !v)}
-              className="p-2 rounded-lg text-muted hover:bg-selected"
-              title={showList ? 'Ẩn danh sách' : 'Hiện danh sách'}
-            >
-              <Icon d={ic.panel} />
-            </button>
+            {!showList && (
+              <button
+                type="button"
+                onClick={() => setShowList(true)}
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-muted cursor-pointer hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong"
+                title="Hiện lịch sử"
+                aria-label="Hiện lịch sử"
+                aria-expanded={false}
+              >
+                <Icon d={ic.panel} />
+              </button>
+            )}
             <h1 className="font-sans font-semibold text-[15px] text-navy truncate">{active?.title ?? 'Cuộc trò chuyện mới'}</h1>
           </div>
         </header>
@@ -459,8 +474,9 @@ export default function ChatPage() {
           /* Empty state */
           <div className="flex-1 flex flex-col items-center justify-center px-4 pb-24">
             <div className="w-full max-w-2xl">
-              <h2 className="font-sans font-semibold text-[34px] tracking-normal text-center text-navy mb-8">
-                <span className="text-accent-strong">✻</span> Hôm nay bạn muốn tra cứu gì?
+              <h2 className="flex items-center justify-center gap-3 font-sans font-semibold text-2xl sm:text-3xl tracking-normal text-center text-navy mb-8">
+                <Icon d={ic.book} className="h-7 w-7 shrink-0 text-accent-strong" />
+                Tra cứu luật giao thông
               </h2>
               {composer}
               <div className="mt-4 flex flex-wrap justify-center gap-2">
@@ -536,29 +552,25 @@ export default function ChatPage() {
                           { d: ic.copy, t: 'Sao chép' },
                           { d: ic.up, t: 'Hữu ích' },
                           { d: ic.retry, t: 'Tạo lại' },
-                          { d: ic.up, t: 'WRONG' },
-                          { d: ic.up, t: 'NO_BASIS' },
-                          { d: ic.up, t: 'OUTDATED' },
+                          { d: ic.up, t: 'WRONG', label: 'Câu trả lời sai' },
+                          { d: ic.up, t: 'NO_BASIS', label: 'Thiếu căn cứ' },
+                          { d: ic.up, t: 'OUTDATED', label: 'Thông tin lỗi thời' },
                         ].map((a) => (
                           <button
                             type="button"
                             disabled={blocked}
                             onClick={() => messageAction(a.t, m.text)}
                             key={a.t}
-                            aria-label={a.t}
-                            title={a.t}
+                            aria-label={a.label ?? a.t}
+                            title={a.label ?? a.t}
                             className="p-1.5 rounded-md hover:bg-selected hover:text-navy"
                           >
                             <Icon d={a.d} className="w-3.5 h-3.5" />
                           </button>
                         ))}
-                        <button
-                          type="button"
-                          onClick={() => notify('Chức năng đang phát triển')}
-                          className="ml-auto inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-line text-xs font-medium text-accent-strong hover:bg-selected hover:border-accent/60"
-                        >
-                          <span aria-hidden>✻</span> Tạo 5 câu luyện tập <Badge tone="gray">Đang phát triển</Badge>
-                        </button>
+                        <NavLinkButton to="/on-thi" size="sm" className="ml-auto rounded-lg">
+                          Ôn tập theo chương
+                        </NavLinkButton>
                       </div>
                     </div>
                   ),

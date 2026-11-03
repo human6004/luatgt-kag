@@ -41,17 +41,12 @@ Danh sách lấy từ nội dung đã xuất bản. Danh sách rỗng không kh�
 
 ## USER — Ôn và thi thử
 
-### Học theo chương
+**Bước 1:** mở **Ôn thi theo chương**, chọn bộ câu hỏi rồi **Tiếp tục học/Ôn tập lại**. Chọn một phương án để backend chấm ngay, đọc giải thích rồi **Câu tiếp theo**. Kết quả và tiến độ được lưu; chương rỗng cần ADMIN nhập/duyệt câu hỏi.
 
-Mở **Ôn thi theo chương** → **Tiếp tục học/Ôn tập lại**. Chọn đáp án để được chấm, đọc giải thích rồi **Câu tiếp theo**. Tiến độ được lưu. Chương rỗng cần người quản lý nhập và xuất bản câu hỏi.
+**Bước 2:** tại `/exam`, chọn bộ, hạng và quy tắc đang hiệu lực rồi **Bắt đầu thi**. Số câu, thời gian, ngưỡng đạt và điều kiện điểm liệt lấy từ cấu hình đã duyệt. Backend chỉ dùng câu đã xuất bản trong đúng bộ. Thi thử không thay kỳ sát hạch chính thức.
 
-### Thi đề ngẫu nhiên
+**Bước 3:** chọn đáp án, điều hướng theo số câu, **Nộp bài** và xác nhận; hết giờ server kiểm thời hạn. Xem điểm, lời giải, lọc câu sai và **Lịch sử thi**; bài cũ có thể mở lại bằng **Xem bài**.
 
-1. Mở `/exam`, chọn **B → Đề ngẫu nhiên → Bắt đầu thi**. Cần đủ câu hỏi đã xuất bản.
-2. Chọn đáp án, điều hướng theo số câu, **Nộp bài** và xác nhận.
-3. Xem điểm và **Lịch sử thi**; mục **Bài thi server** là bài được lưu ở backend.
-
-Cấu hình luyện tập hiện tại: 30 câu, 20 phút, đạt từ 27 câu đúng và không sai/bỏ trống câu điểm liệt. Server kiểm thời hạn; đây không thay kỳ sát hạch chính thức và không tự cập nhật theo quy định mới.
 
 ## ADMIN/POLICE — Nội dung
 
@@ -65,19 +60,17 @@ Xuất bản trên WebApp không tự cập nhật graph KAG. Nguồn chatbot ph
 
 ### Nhập nhiều bản ghi
 
-1. Mở menu **Nhập dữ liệu hàng loạt**; màn **Nhập dữ liệu** cho chọn loại dữ liệu và file JSON/CSV/XLSX. Đọc bản xem trước, lỗi và lựa chọn cập nhật bản ghi đã có.
-2. Bấm **Xác nhận nhập … dòng hợp lệ**. Kết quả báo số thêm/cập nhật/bỏ qua; bản ghi vẫn là nháp.
-3. Bổ sung ảnh PNG/JPEG theo mã sau khi nhập bản ghi, kiểm ảnh chưa ghép được rồi kiểm duyệt/xuất bản:
-   - **Biển báo:** tải ZIP ngay tại màn **Nhập dữ liệu**.
-   - **Câu hỏi:** mở `/admin/content-imports?type=questions` → **Ghép ảnh qua ZIP**, hoặc tải từng ảnh trong form sửa câu hỏi.
+1. Với câu hỏi, vào **Ngân hàng câu hỏi → Bộ câu hỏi và quy tắc đề thi** để tạo bộ riêng cho 250 và 600 câu. Ngày ban hành/hiệu lực chưa xác minh có thể để trống. Mở **Nhập dữ liệu hàng loạt**, chọn loại dữ liệu và bộ đích trước khi chọn JSON/CSV/XLSX; xem trước dòng hợp lệ/lỗi và chọn có cập nhật mã đã tồn tại hay không. Hai bộ có thể cùng mã nguồn `Q001` mà không ghi đè nhau.
+2. Với đơn vị pháp lý, chọn loại **Đơn vị pháp lý** trong **Nhập dữ liệu hàng loạt**. Nhập văn bản nguồn trước; `doc_id` phải khớp văn bản đã có và đơn vị cha phải thuộc cùng văn bản. Xem trước dữ liệu trước khi xác nhận.
+3. Chọn **Xác nhận nhập … dòng hợp lệ**. Kết quả báo số thêm/cập nhật/bỏ qua; bản ghi được lưu ở dạng nháp và cần kiểm duyệt trước khi xuất bản.
+4. Với câu hỏi/biển báo, ghép ZIP ảnh PNG/JPEG theo mã sau khi nhập bản ghi rồi kiểm ảnh chưa ghép được. Câu hỏi ghép ảnh vào bộ đã chọn; biển báo ghép ảnh trong màn nhập. Đáp án JSON bắt đầu từ 0; CSV/XLSX dùng 1–4. Ngân hàng nháp đi kèm: [250 câu](../WebApp/docs/250/) và [600 câu](../WebApp/docs/600/); mỗi bộ 250/600 có `questions-draft.json` và `question-images.zip`.
+5. Nhập quy tắc đề theo hạng, bộ và thời kỳ trong **Ngân hàng câu hỏi**. Sáu quota là số câu thường từng chương; cộng số câu điểm liệt phải bằng tổng câu. Không tự lấy quy tắc hạng B áp dụng cho A/A1. Muốn đổi thời kỳ, kết thúc hiệu lực quy tắc cũ vào ngày tương lai và tạo quy tắc mới từ ngày đó; điểm bài cũ không bị chấm lại.
 
-Đáp án JSON bắt đầu từ 0; CSV/XLSX dùng 1–4. Ngân hàng nháp đi kèm ở [`WebApp/docs/imports/`](../WebApp/docs/imports/).
-
-Với đơn vị pháp lý, chọn **Nhập hàng loạt** tại trang **Đơn vị pháp lý**, xem trước rồi **Xác nhận nhập bản nháp**. Nhập văn bản trước các đơn vị; giữ đúng mã văn bản và đơn vị cha.
+Câu/đáp án đã có lượt luyện hoặc thi được giữ nguyên theo phiên bản. Khi sửa nội dung đó, chọn bộ mới trong màn chỉnh sửa trước khi xuất bản. Lượt luyện lưu phương án đã chọn và phiên bản câu; tiến độ được lọc theo bộ. Dữ liệu thi/luyện cũ vẫn đọc được, không tự suy đoán phương án mà lịch sử cũ không lưu.
 
 ### Xử lý phản hồi chat
 
-Tại **Nhật ký chat**, đọc câu hỏi, kết quả và phản hồi; ghi chú rồi đánh dấu đã xử lý. Thao tác này không tự hỏi lại, sửa câu trả lời hoặc cập nhật graph.
+**Bước 1:** tại **Phản hồi chat**, chỉ đọc những lượt hỏi được người dùng báo **Câu trả lời sai**, **Thiếu căn cứ** hoặc **Thông tin lỗi thời**; ghi chú và đánh dấu đã xử lý. Chat chưa được báo cáo và phản hồi **Hữu ích** không hiển thị cho ADMIN/POLICE. Lịch sử riêng vẫn được giữ cho chính người dùng. Thao tác không tự hỏi lại hoặc sửa graph.
 
 ## ADMIN — Tài khoản
 
@@ -133,14 +126,16 @@ Chuyển thất bại giữ graph cũ. Mất phản hồi thì **Tải lại** t
 
 ## Phần Demo
 
-Các phần ghi **Demo** mô phỏng trên trình duyệt, không xác nhận thao tác backend thành công:
+Các khối/nút ghi **Demo** dùng dữ liệu hoặc thao tác mô phỏng, không xác nhận backend thành công; nội dung luật mẫu chưa được xác minh:
 
-- Chat/học: đính kèm ảnh, sinh câu luyện tập, gợi ý học bằng AI.
-- Thi: các lựa chọn chưa nối bài thi server, như hạng ngoài B hoặc đề cố định.
-- Nội dung: dán URL, trích xuất/lập chỉ mục/lưu trữ/xóa văn bản tự động; sinh và xóa câu hỏi mẫu. Nhập metadata, tải tệp và xuất bản bản ghi thật vẫn dùng backend.
-- Người dùng: mời, đặt lại mật khẩu và xóa tài khoản.
-- Graph: Cypher console, xuất/khôi phục dump và kiểm checksum.
-- Đóng gói Docker: form/YAML/Build/Pack/ZIP; không chạy Docker Engine. **Trạng thái dịch vụ · API thật** trên cùng trang vẫn đọc backend.
-- Benchmark: Run/Smoke và số liệu mẫu của các cột so sánh.
+- Chat: đính kèm ảnh, sinh câu luyện tập; học: `+10 câu`, gợi ý thông minh.
+- Thi dùng quy tắc và dữ liệu server cho các hạng đã cấu hình; không còn sinh đề hoặc điểm demo trên trình duyệt.
+- Nội dung: dán URL, trích xuất/reindex/archive/delete; sinh hoặc xóa câu hỏi là thao tác mô phỏng. Nhập metadata, tải tệp và xuất bản bản ghi thật vẫn dùng API backend.
+- Người dùng: vai trò và trạng thái dùng API thật; mời, đặt lại mật khẩu và xóa là Demo.
+- Graph: namespace khác SAMPLE thật, Cypher, export/restore/checksum.
+- Docker: form/YAML, Build/Pack/ZIP là Demo; không chạy Docker Engine. Trạng thái dịch vụ trên cùng trang đọc từ API thật.
+- Pipeline: catalog CLI, chạy toàn bộ, log/lịch sử mẫu; Benchmark: Run/Smoke và cột HybridRAG/NativeRAG.
 
 Không nhầm các phần này với form model tại **Cấu hình** hoặc Builder: hai luồng đó dùng API thật và có thể phát sinh thay đổi/phí theo thao tác xác nhận.
+
+Cài mới cần dữ liệu được duyệt và [graph/provider đã chuẩn bị](../docker/README.md#cấu-hình-chatbot); container healthy không đủ để dùng chatbot.

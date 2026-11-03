@@ -68,6 +68,38 @@ class OperationsTest {
         pending=body(mvc.perform(get("/api/admin/chatlogs?pending=true").header("Authorization","Bearer "+admin)).andReturn()); assertFalse(pending.toString().contains(c.id.toString()));
         mvc.perform(get("/api/admin/reports").header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andExpect(jsonPath("$.pendingChats").isNumber());
     }
+    @Test void moderationOnlyExposesExplicitProblemReportsAndPreservesPrivateHistory() throws Exception {
+        long before=body(mvc.perform(get("/api/admin/reports").header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andReturn()).path("chatMessages").asLong();
+        var privateChats=new ArrayList<ChatMessage>();
+        for(String state:List.of("ANSWERED","KAG_ABSTAINED","UNAVAILABLE","PROCESSING","HELPFUL")) {
+            var c=new ChatMessage();c.ownerId=userId;c.question="Private question "+UUID.randomUUID();c.answer="Private answer";c.state=state.equals("HELPFUL")?"ANSWERED":state;c.feedback=state.equals("HELPFUL")?"HELPFUL":null;privateChats.add(chats.saveAndFlush(c));
+        }
+        var reports=new ArrayList<ChatMessage>();
+        for(String feedback:List.of("WRONG","NO_BASIS","OUTDATED")) {
+            var c=new ChatMessage();c.ownerId=userId;c.question="Reported question "+feedback;c.state="ANSWERED";c.feedback=feedback;reports.add(chats.saveAndFlush(c));
+        }
+        var resolved=new ChatMessage();resolved.ownerId=userId;resolved.question="Resolved report";resolved.state="ANSWERED";resolved.feedback="OUTDATED";resolved.resolved=true;resolved=chats.saveAndFlush(resolved);
+        for(String query:List.of("","?pending=false","?pending=true")) {
+            var visible=body(mvc.perform(get("/api/admin/chatlogs"+query).header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andReturn());
+            for(var c:privateChats)assertFalse(visible.toString().contains(c.id.toString()));
+            for(var c:reports)assertTrue(visible.toString().contains(c.id.toString()));
+            assertEquals(!query.equals("?pending=true"),visible.toString().contains(resolved.id.toString()));
+            for(var row:visible)assertTrue(Set.of("WRONG","NO_BASIS","OUTDATED").contains(row.path("feedback").asText()));
+        }
+        mvc.perform(get("/api/admin/reports").header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andExpect(jsonPath("$.chatMessages").value(before+4));
+        for(var c:privateChats) {
+            mvc.perform(post("/api/admin/chatlogs/"+c.id+"/resolve").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"note\":\"Must not access private chat\"}")).andExpect(status().isNotFound());
+            assertFalse(chats.findById(c.id).orElseThrow().resolved);
+        }
+        var own=body(mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn());
+        for(var c:privateChats)assertTrue(own.toString().contains(c.id.toString()));
+        mvc.perform(get("/api/admin/chatlogs").header("Authorization","Bearer "+user)).andExpect(status().isForbidden());
+        var withdrawn=reports.getFirst();
+        mvc.perform(post("/api/chat/"+withdrawn.id+"/feedback").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"feedback\":\"HELPFUL\"}")).andExpect(status().isOk());
+        var visible=body(mvc.perform(get("/api/admin/chatlogs?pending=false").header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andReturn());
+        assertFalse(visible.toString().contains(withdrawn.id.toString()));
+        mvc.perform(post("/api/admin/chatlogs/"+withdrawn.id+"/resolve").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"note\":\"Must no longer access withdrawn report\"}")).andExpect(status().isNotFound());
+    }
     @Test void batchReviewCannotPublishMissingImageAndHistoryKeepsPreviousMetadata() throws Exception {
         var q=new Content(); q.kind="questions"; q.externalId="TEST-"+UUID.randomUUID(); q.data=json.writeValueAsString(Map.of("externalId",q.externalId,"text","Câu hỏi thử","chapter",1,"options",List.of("A","B"),"correctAnswer",0,"critical",false,"source","test-only","imageRequired",true)); q=contents.save(q);
         mvc.perform(post("/api/admin/questions/publication-batch").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("rows",List.of(Map.of("id",q.id,"version",q.version)),"reviewed",true,"published",true)))).andExpect(status().isBadRequest());

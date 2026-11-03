@@ -14,7 +14,7 @@ public class MediaController {
     public MediaController(MediaService service) { this.service=service; }
     @PostMapping("/admin/content/{id}/media") Map<String,Object> upload(@PathVariable UUID id,@RequestPart MultipartFile file) throws IOException { return service.upload(id,file); }
     @PostMapping("/admin/signs/images-zip") Map<String,Object> zip(@RequestPart MultipartFile file) throws IOException { return service.zip(file); }
-    @PostMapping("/admin/questions/images-zip") Map<String,Object> questionsZip(@RequestPart MultipartFile file) throws IOException { return service.zip(file,"questions"); }
+    @PostMapping("/admin/questions/images-zip") Map<String,Object> questionsZip(@RequestPart MultipartFile file,@RequestParam(required=false) UUID questionSetId) throws IOException { return service.zip(file,"questions",questionSetId); }
     @GetMapping("/content/{id}/media") ResponseEntity<byte[]> download(@PathVariable UUID id,JwtAuthenticationToken auth) {
         boolean canReadDrafts=auth.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN")||a.getAuthority().equals("ROLE_POLICE"));
         var result=service.download(id,canReadDrafts);

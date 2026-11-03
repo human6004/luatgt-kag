@@ -108,6 +108,7 @@ export default function App() {
                 <Route path="/admin/documents" element={<RedirectWithParams to="/admin/content" defaults={{ tab: 'documents' }} mapKey={{ source_id: 'q' }} />} />
                 <Route path="/admin/units" element={<RedirectWithParams to="/admin/content" defaults={{ tab: 'units' }} mapKey={{ source_id: 'q' }} />} />
                 <Route path="/admin/signs" element={<RedirectWithParams to="/admin/content" defaults={{ tab: 'signs' }} mapKey={{ source_id: 'q' }} />} />
+                <Route path="/admin/question-bank-settings" element={<RedirectWithParams to="/admin/questions" defaults={{ tab: 'sets' }} />} />
                 <Route path="/admin/imports" element={<ImportsRedirect defaultType="signs" />} />
                 <Route path="/admin/content-imports" element={<ImportsRedirect defaultType="questions" />} />
                 <Route path="/admin/chatlogs" element={<RedirectWithParams to="/admin/users" defaults={{ tab: 'logs' }} />} />

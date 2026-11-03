@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Navigate, useSearchParams } from 'react-router-dom'
+import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../auth'
 import { homeFor } from '../auth-policy'
 import LogoMark from '../components/LogoMark'
@@ -37,10 +37,10 @@ export default function LoginPage() {
   return (
     <main className="min-h-dvh bg-bg lg:grid lg:grid-cols-2">
       <section className="bg-sidebar border-b lg:border-r border-line px-6 py-8 lg:p-16 flex flex-col justify-between">
-        <a href="/login" className="inline-flex items-center gap-3 text-2xl font-semibold">
+        <Link to="/login" className="inline-flex items-center gap-3 text-2xl font-semibold">
           <LogoMark size={30} />
           LuậtGT
-        </a>
+        </Link>
         <div className="hidden lg:block max-w-lg py-20">
           <h1 className="text-5xl font-semibold leading-tight">
             An tâm trên
@@ -113,8 +113,16 @@ export default function LoginPage() {
             type="button"
             className="mt-6 min-h-10 text-sm underline underline-offset-4"
             onClick={() => {
+              setParams(
+                (prev) => {
+                  const next = new URLSearchParams(prev)
+                  if (registration) next.delete('mode')
+                  else next.set('mode', 'register')
+                  return next
+                },
+                { replace: true },
+              )
               setError('')
-              setParams(registration ? {} : { mode: 'register' })
             }}
           >
             {registration ? 'Đã có tài khoản? Đăng nhập' : 'Chưa có tài khoản? Đăng ký'}

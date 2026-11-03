@@ -36,6 +36,9 @@ class CoreTest {
     @Autowired ObjectMapper json;
     @Autowired ContentRepository contents;
     @Autowired ExamRepository exams;
+    @Autowired LearningCatalogRepository catalog;
+    @Autowired SignCatalogRepository signCatalog;
+    @Autowired org.springframework.jdbc.core.JdbcTemplate jdbc;
     @Autowired ContentHistoryRepository history;
     @Autowired LawRelationRepository relations;
     @Autowired PenaltyRepository penalties;
@@ -120,7 +123,7 @@ class CoreTest {
         when(storage.get("police-draft-image")).thenReturn(new byte[]{1,2,3});
         var draft=new Content(); draft.kind="signs"; draft.externalId="DRAFT-"+UUID.randomUUID(); draft.data="{\"imageKey\":\"police-draft-image\",\"imageMime\":\"image/png\"}"; draft=contents.saveAndFlush(draft);
         mvc.perform(get("/api/content/"+draft.id+"/media").header("Authorization","Bearer "+police)).andExpect(status().isOk()).andExpect(content().bytes(new byte[]{1,2,3}));
-        var message=new ChatMessage(); message.ownerId=UUID.fromString(id); message.question="Kiểm tra nội dung"; message.state="UNAVAILABLE"; message=chats.saveAndFlush(message);
+        var message=new ChatMessage(); message.ownerId=UUID.fromString(id); message.question="Kiểm tra nội dung"; message.state="UNAVAILABLE"; message.feedback="WRONG"; message=chats.saveAndFlush(message);
         mvc.perform(post("/api/admin/chatlogs/"+message.id+"/resolve").header("Authorization","Bearer "+police).contentType(MediaType.APPLICATION_JSON).content("{\"note\":\"Đã kiểm tra\"}")).andExpect(status().isOk());
         assertTrue(chats.findById(message.id).orElseThrow().resolved);
         for(String path:List.of("users","infrastructure","kag/status","kag/schema","kag/config","kag/config/models","kag/config/retrieval","kag/builder/status"))
@@ -208,17 +211,20 @@ class CoreTest {
         mvc.perform(post("/api/admin/imports/questions/confirm").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"rows\":[{\"externalId\":\"valid-first\",\"text\":\"Câu hỏi\",\"chapter\":1,\"options\":[\"A\",\"B\"]},{\"externalId\":\"invalid\"}]}")).andExpect(status().isBadRequest());
         assertEquals(count,contents.count());
     }
-    @Test void all600PdfDraftsAreAcceptedForPreviewButNotPublished() throws Exception {
-        var rows=json.readTree(java.nio.file.Files.readString(java.nio.file.Path.of("../docs/imports/questions-draft.json")));
-        assertEquals(600,rows.size());
-        var result=body(mvc.perform(post("/api/admin/imports/questions/preview").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("rows",rows)))).andExpect(status().isOk()).andReturn());
-        assertEquals(600,result.size());
-        for(var row:result) assertTrue(row.path("valid").asBoolean(),row.toString());
+    @Test void providedPdfDraftsAreAcceptedForPreviewButNotPublished() throws Exception {
+        long count=contents.count();
+        for(int size:List.of(250,600)) {
+            var rows=json.readTree(java.nio.file.Files.readString(java.nio.file.Path.of("../docs/"+size+"/questions-draft.json")));
+            assertEquals(size,rows.size());
+            var result=body(mvc.perform(post("/api/admin/imports/questions/preview").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("rows",rows)))).andExpect(status().isOk()).andReturn());
+            assertEquals(size,result.size());for(var row:result)assertTrue(row.path("valid").asBoolean(),row.toString());
+        }
+        assertEquals(count,contents.count());
     }
     @Test void zipMatchesCodeAndRejectsTraversal() throws Exception {
         var sign=new Content(); sign.kind="signs"; sign.externalId="ZIP-TEST"; sign.data="{\"externalId\":\"ZIP-TEST\",\"code\":\"DP.127\",\"name\":\"Biển thử\",\"group\":\"Biển hết cấm\"}"; contents.save(sign);
         // Remove another sign with the same code so the archive has an unambiguous match.
-        for(var c:contents.findByKindOrderByExternalId("signs")) if(!c.id.equals(sign.id)) contents.delete(c);
+        for(var c:contents.findByKindOrderByExternalId("signs")) if(!c.id.equals(sign.id)) {jdbc.update("DELETE FROM signs WHERE content_id=?",LearningCatalogRepository.binary(c.id));contents.delete(c);}
         var png=new java.io.ByteArrayOutputStream(); javax.imageio.ImageIO.write(new java.awt.image.BufferedImage(10,10,java.awt.image.BufferedImage.TYPE_INT_RGB),"png",png);
         var archive=new java.io.ByteArrayOutputStream();
         try(var zip=new java.util.zip.ZipOutputStream(archive)) { zip.putNextEntry(new java.util.zip.ZipEntry("DP.127.png")); zip.write(png.toByteArray()); zip.closeEntry(); }
@@ -231,20 +237,98 @@ class CoreTest {
     }
     void bank() throws Exception {
         penalties.deleteAllInBatch(); relations.deleteAllInBatch(); history.deleteAllInBatch();
-        contents.deleteAllInBatch();
+        jdbc.update("DELETE FROM signs");contents.deleteAllInBatch();
         for(int chapter=1;chapter<=6;chapter++) for(int i=0;i<12;i++) {
             var c=new Content(); c.kind="questions"; c.externalId="C"+chapter+"Q"+i; c.published=true;
             c.data=json.writeValueAsString(Map.of("externalId",c.externalId,"text","Câu hỏi "+i,"chapter",chapter,"options",List.of("Đúng","Sai"),"correctAnswer",0,"critical",i==0,"reviewed",true,"source","test","answerCandidates",List.of(0),"imageKey","snapshot-image")); contents.save(c);
         }
     }
-    @Test void examHasQuotasOwnershipSnapshotAndCriticalFailure() throws Exception {
+    @Test @Transactional void signCatalogKeepsVersionedIdentityAndRejectsCrossVersionParents() throws Exception {
+        var rows=json.createArrayNode();
+        for(String version:List.of("TEST-v1","TEST-v2")) rows.addObject().put("sign_id",version+"::P.1").put("ma_bien","P.1").put("ten","Test sign").put("nhom","Test group").put("qcvn",version).put("record_type","family").putArray("note").add("test-only");
+        mvc.perform(post("/api/admin/imports/signs/confirm").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("rows",rows)))).andExpect(status().isOk()).andExpect(jsonPath("$.inserted").value(2));
+        assertEquals(2,jdbc.queryForObject("SELECT COUNT(*) FROM signs WHERE ma_bien='P.1' AND qcvn IN ('TEST-v1','TEST-v2')",Integer.class));
+        var missing=json.createObjectNode().put("code","C.1").put("qcvn","TEST-v3").put("parent_code","P.1");
+        assertThrows(ResponseStatusException.class,()->signCatalog.validateRelations(missing));
+        missing.put("qcvn","TEST-v1");signCatalog.validateRelations(missing);
+        missing.put("parent_code","C.1");assertThrows(ResponseStatusException.class,()->signCatalog.validateRelations(missing));
+        var invalid=rows.get(0).deepCopy();((ObjectNode)invalid).put("children_codes","wrong type");
+        mvc.perform(post("/api/admin/imports/signs/preview").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("rows",List.of(invalid))))).andExpect(status().isOk()).andExpect(jsonPath("$[0].valid").value(false));
+    }
+
+    @Test void catalogMigrationBackfillsWithoutChangingLegacyHistory() throws Exception {
+        String url="jdbc:h2:mem:migration_"+UUID.randomUUID()+";MODE=MySQL;DB_CLOSE_DELAY=-1";
+        org.flywaydb.core.Flyway.configure().dataSource(url,"sa","").target("4").load().migrate();
+        var db=new org.springframework.jdbc.core.JdbcTemplate(new org.springframework.jdbc.datasource.DriverManagerDataSource(url,"sa",""));
+        UUID owner=UUID.randomUUID(),question=UUID.randomUUID(),exam=UUID.randomUUID(),study=UUID.randomUUID();
+        db.update("INSERT INTO accounts VALUES (?,?,?,?,?,?,?)",LearningCatalogRepository.binary(owner),"migration@test.vn","test-only","Test","USER",true,0);
+        var q=json.createObjectNode().put("externalId","LEGACY-Q").put("text","Migration test").put("chapter",1).put("critical",true).put("correctAnswer",0).put("source","test-only");q.putArray("options").add("A").add("B");
+        db.update("INSERT INTO content VALUES (?,?,?,?,?,?)",LearningCatalogRepository.binary(question),"questions","LEGACY-Q",q.toString(),true,0);
+        db.update("INSERT INTO exams(id,owner_id,started_at,expires_at,snapshot,answers) VALUES (?,?,?,?,?,?)",LearningCatalogRepository.binary(exam),LearningCatalogRepository.binary(owner),java.sql.Timestamp.from(Instant.now()),java.sql.Timestamp.from(Instant.now().plusSeconds(60)),"[]","{}");
+        db.update("INSERT INTO study_attempts VALUES (?,?,?,?,?,?)",LearningCatalogRepository.binary(study),LearningCatalogRepository.binary(owner),LearningCatalogRepository.binary(question),1,true,java.sql.Timestamp.from(Instant.now()));
+        org.flywaydb.core.Flyway.configure().dataSource(url,"sa","").load().migrate();
+        assertEquals(q.toString(),db.queryForObject("SELECT data FROM content",String.class));assertEquals(1,db.queryForObject("SELECT COUNT(*) FROM question_revision",Integer.class));assertEquals(1,db.queryForObject("SELECT COUNT(*) FROM set_question",Integer.class));assertEquals(1,db.queryForObject("SELECT COUNT(*) FROM exams",Integer.class));assertEquals(1,db.queryForObject("SELECT COUNT(*) FROM study_attempts",Integer.class));assertEquals(0,db.queryForObject("SELECT COUNT(*) FROM study_attempt",Integer.class));
+    }
+
+    @Test @Transactional void scopedQuestionBanksKeepIdsMediaAndStudyRevisionsSeparate() throws Exception {
+        String user=register();
+        var police=new Account();police.email=UUID.randomUUID()+"@test.vn";police.name="Police";police.role="POLICE";police.password=new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder().encode("TEST-only-user-password");accounts.saveAndFlush(police);
+        String officer=token(police.email,"TEST-only-user-password");
+        var ids=new ArrayList<String>();
+        for(String code:List.of("250","600")) {
+            var created=body(mvc.perform(post("/api/admin/questions/sets").header("Authorization","Bearer "+officer).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("releaseCode","TEST-"+code,"releaseTitle","Test only","setCode",code,"setName","Test "+code)))).andExpect(status().isOk()).andReturn());
+            String set=created.path("id").asText();ids.add(set);
+            var question=json.createObjectNode().put("externalId","Q001").put("number",1).put("text","Test "+code).put("chapter",1).put("correctAnswer",0).put("critical",false).put("source","test-only").put("reviewed",true);question.putArray("options").add("A").add("B");
+            mvc.perform(post("/api/admin/imports/questions/confirm").header("Authorization","Bearer "+officer).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("rows",List.of(question),"questionSetId",set)))).andExpect(status().isOk()).andExpect(jsonPath("$.inserted").value(1));
+            var c=contents.findByKindAndExternalId("questions",set+"::Q001").orElseThrow();
+            var png=new ByteArrayOutputStream();javax.imageio.ImageIO.write(new java.awt.image.BufferedImage(2,2,java.awt.image.BufferedImage.TYPE_INT_RGB),"png",png);
+            var archive=new ByteArrayOutputStream();try(var zip=new java.util.zip.ZipOutputStream(archive)){zip.putNextEntry(new java.util.zip.ZipEntry("Q001.png"));zip.write(png.toByteArray());zip.closeEntry();}
+            when(storage.put(any(),eq("image/png"))).thenReturn("test-image-"+code);
+            mvc.perform(multipart("/api/admin/questions/images-zip").file(new org.springframework.mock.web.MockMultipartFile("file","images.zip","application/zip",archive.toByteArray())).param("questionSetId",set).header("Authorization","Bearer "+officer)).andExpect(status().isOk()).andExpect(jsonPath("$.matched[0]").value("Q001"));
+            c=contents.findById(c.id).orElseThrow();
+            mvc.perform(post("/api/admin/questions/publication-batch").header("Authorization","Bearer "+officer).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("rows",List.of(Map.of("id",c.id,"version",c.version)),"reviewed",true,"published",true)))).andExpect(status().isOk());
+        }
+        assertNotEquals(ids.get(0),ids.get(1));
+        var first=body(mvc.perform(get("/api/questions").param("questionSetId",ids.getFirst()).header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn());
+        assertEquals("test-image-250",first.get(0).path("data").path("imageKey").asText());assertEquals(1,first.size());assertEquals("Test 250",first.get(0).path("data").path("text").asText());assertFalse(first.toString().contains("correctAnswer"));assertFalse(first.toString().contains("optionIds"));
+        var multiple=json.createObjectNode().put("externalId","MULTI").put("text","Test").put("chapter",1).put("choiceMode","multiple");multiple.putArray("options").add("A").add("B");
+        mvc.perform(post("/api/admin/imports/questions/preview").header("Authorization","Bearer "+officer).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("rows",List.of(multiple))))).andExpect(status().isOk()).andExpect(jsonPath("$[0].valid").value(false));
+        String question=first.get(0).path("id").asText();
+        mvc.perform(post("/api/study/"+question+"/answer").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("selected",0,"questionSetId",ids.getFirst())))).andExpect(status().isOk()).andExpect(jsonPath("$.correct").value(true));
+        mvc.perform(post("/api/study/"+question+"/answer").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("selected",0,"questionSetId",ids.get(1))))).andExpect(status().isNotFound());
+        var progress=body(mvc.perform(get("/api/progress").param("questionSetId",ids.getFirst()).header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn());assertEquals(1,progress.get(0).path("practiced").asInt());
+        var empty=body(mvc.perform(get("/api/progress").param("questionSetId",ids.get(1)).header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn());assertEquals(0,empty.get(0).path("practiced").asInt());
+        var q0=catalog.questions(UUID.fromString(ids.getFirst())).getFirst();var q1=catalog.questions(UUID.fromString(ids.get(1))).getFirst();
+        var rulePayload=json.createObjectNode().put("setId",ids.getFirst()).put("license","A1").put("validFrom","2000-01-01").put("totalQuestions",1).put("durationMinutes",1).put("minimumCorrect",1).put("criticalSlots",0).put("failOnCritical",true);rulePayload.set("quotas",json.valueToTree(new int[]{1,0,0,0,0,0}));
+        var rule=body(mvc.perform(post("/api/admin/questions/rules").header("Authorization","Bearer "+officer).contentType(MediaType.APPLICATION_JSON).content(rulePayload.toString())).andExpect(status().isOk()).andReturn());
+        mvc.perform(post("/api/admin/questions/rules").header("Authorization","Bearer "+officer).contentType(MediaType.APPLICATION_JSON).content(rulePayload.toString())).andExpect(status().isBadRequest());
+        var started=body(mvc.perform(post("/api/exams").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("ruleId",rule.path("rule_id").asText())))).andExpect(status().isOk()).andExpect(jsonPath("$.license").value("A1")).andReturn());
+        assertEquals(1,started.path("questions").size());assertFalse(started.toString().contains("correctAnswer"));
+        mvc.perform(put("/api/exams/"+started.path("id").asText()+"/answers/"+q1.path("questionId").asText()).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"selected\":0}")).andExpect(status().isNotFound());
+        mvc.perform(put("/api/exams/"+started.path("id").asText()+"/answers/"+question).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"selected\":0}")).andExpect(status().isOk());
+        mvc.perform(post("/api/exams/"+started.path("id").asText()+"/submit").header("Authorization","Bearer "+user)).andExpect(status().isOk()).andExpect(jsonPath("$.passed").value(true));
+        String tomorrow=java.time.LocalDate.now().plusDays(1).toString();
+        mvc.perform(post("/api/admin/questions/rules/"+rule.path("rule_id").asText()+"/end").header("Authorization","Bearer "+officer).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("validTo",tomorrow)))).andExpect(status().isOk());
+        rulePayload.put("validFrom",tomorrow);
+        mvc.perform(post("/api/admin/questions/rules").header("Authorization","Bearer "+officer).contentType(MediaType.APPLICATION_JSON).content(rulePayload.toString())).andExpect(status().isOk());
+        mvc.perform(get("/api/exams/"+started.path("id").asText()).header("Authorization","Bearer "+user)).andExpect(status().isOk()).andExpect(jsonPath("$.score").value(1));
+        var wrongOption=LearningCatalogRepository.binary(UUID.fromString(q1.path("optionIds").get(0).asText()));
+        assertThrows(org.springframework.dao.DataIntegrityViolationException.class,()->jdbc.update("INSERT INTO study_attempt VALUES (?,?,?,?,?,?,?)",LearningCatalogRepository.binary(UUID.randomUUID()),LearningCatalogRepository.binary(UUID.fromString(json.readTree(new String(java.util.Base64.getUrlDecoder().decode(user.split("\\.")[1]),java.nio.charset.StandardCharsets.UTF_8)).path("sub").asText())),LearningCatalogRepository.binary(UUID.fromString(q0.path("set_question_id").asText())),wrongOption,LearningCatalogRepository.binary(UUID.fromString(q0.path("revision_id").asText())),true,java.sql.Timestamp.from(Instant.now())));
+        var c=contents.findById(UUID.fromString(question)).orElseThrow();var changed=(ObjectNode)json.readTree(c.data);changed.put("text","Changed after study");
+        mvc.perform(put("/api/admin/content/"+c.id).header("Authorization","Bearer "+officer).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("version",c.version,"data",changed)))).andExpect(status().isOk());
+        c=contents.findById(c.id).orElseThrow();
+        mvc.perform(post("/api/admin/content/"+c.id+"/publication").header("Authorization","Bearer "+officer).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("version",c.version,"published",true)))).andExpect(status().isBadRequest());
+        mvc.perform(post("/api/admin/questions/sets").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{}")).andExpect(status().isForbidden());
+    }
+
+    @Test @Transactional void examHasQuotasOwnershipSnapshotAndCriticalFailure() throws Exception {
         // No studies refer to these questions in this test database.
         bank(); String user=register(), other=register();
         var publicQuestions=body(mvc.perform(get("/api/questions").header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn());
         assertFalse(publicQuestions.toString().contains("answerCandidates")); assertFalse(publicQuestions.toString().contains("correctAnswer"));
         var start=body(mvc.perform(post("/api/exams").header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn());
         assertEquals(30,start.path("questions").size()); assertFalse(start.toString().contains("correctAnswer")); assertFalse(start.toString().contains("critical")); assertFalse(start.toString().contains("answerCandidates"));
-        UUID id=UUID.fromString(start.path("id").asText()); var stored=exams.findById(id).orElseThrow(); var questions=json.readTree(stored.snapshot);
+        UUID id=UUID.fromString(start.path("id").asText()); var questions=json.valueToTree(catalog.attemptQuestions(id));
         assertEquals(1,questions.findValues("critical").stream().filter(JsonNode::asBoolean).count());
         int[] quotas={8,1,1,1,9,9};
         for(int ch=1;ch<=6;ch++) { final int chapter=ch; var stream=new ArrayList<JsonNode>(); questions.forEach(stream::add); assertEquals(quotas[ch-1],stream.stream().filter(q -> q.path("chapter").asInt()==chapter&&!q.path("critical").asBoolean()).count()); }
@@ -264,14 +348,14 @@ class CoreTest {
         mvc.perform(put("/api/exams/"+id+"/answers/"+questions.get(0).path("questionId").asText()).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"selected\":0}")).andExpect(status().isConflict());
         var passing=body(mvc.perform(post("/api/exams").header("Authorization","Bearer "+user)).andReturn()); UUID passingId=UUID.fromString(passing.path("id").asText());
         int wrong=0;
-        for(var q:json.readTree(exams.findById(passingId).orElseThrow().snapshot)) {
+        for(var q:json.valueToTree(catalog.attemptQuestions(passingId))) {
             int choice=q.path("correctAnswer").asInt();
             if(!q.path("critical").asBoolean()&&wrong<3) { choice=1-choice; wrong++; }
             mvc.perform(put("/api/exams/"+passingId+"/answers/"+q.path("questionId").asText()).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"selected\":"+choice+"}")).andExpect(status().isOk());
         }
         mvc.perform(post("/api/exams/"+passingId+"/submit").header("Authorization","Bearer "+user)).andExpect(jsonPath("$.score").value(27)).andExpect(jsonPath("$.passed").value(true));
         var expiring=body(mvc.perform(post("/api/exams").header("Authorization","Bearer "+user)).andReturn()); UUID expiredId=UUID.fromString(expiring.path("id").asText());
-        var expired=exams.findById(expiredId).orElseThrow(); expired.expiresAt=Instant.now().minusSeconds(1); exams.save(expired);
+        jdbc.update("UPDATE exam_attempt SET expires_at=? WHERE attempt_id=?",java.sql.Timestamp.from(Instant.now().minusSeconds(1)),LearningCatalogRepository.binary(expiredId));
         mvc.perform(put("/api/exams/"+expiredId+"/answers/"+expiring.path("questions").get(0).path("questionId").asText()).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"selected\":0}")).andExpect(status().isConflict());
         mvc.perform(get("/api/exams/"+expiredId).header("Authorization","Bearer "+user)).andExpect(jsonPath("$.score").value(0));
     }

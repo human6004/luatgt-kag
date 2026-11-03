@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { Link } from 'react-router-dom'
 
 export function Page({ title, subtitle, actions, children }: { title: string; subtitle?: string; actions?: React.ReactNode; children: React.ReactNode }) {
   return (
@@ -8,28 +9,48 @@ export function Page({ title, subtitle, actions, children }: { title: string; su
           <h1 className="text-2xl font-semibold text-navy">{title}</h1>
           {subtitle && <p className="mt-1 text-[13px] text-muted">{subtitle}</p>}
         </div>
-        {actions && <div className="flex max-w-full flex-wrap items-center gap-2">{actions}</div>}
+        {actions && <div className="flex w-full max-w-full flex-wrap items-center gap-2 sm:w-auto">{actions}</div>}
       </div>
       {children}
     </div>
   )
 }
 
-export function Card({ title, right, className = '', children }: { title?: string; right?: React.ReactNode; className?: string; children: React.ReactNode }) {
+export function Card({ title, right, className = '', children, flush = false }: { title?: string; right?: React.ReactNode; className?: string; children: React.ReactNode; flush?: boolean }) {
+  const surfaceClass = 'min-w-0 overflow-x-auto [overflow-wrap:anywhere] bg-surface rounded-2xl border border-line shadow-[0_1px_2px_rgba(53,45,36,0.04)]'
+  if (!title) return <section className={`${surfaceClass} ${className}`}>{children}</section>
   return (
-    <section className={`min-w-0 [overflow-wrap:anywhere] bg-surface rounded-2xl border border-line shadow-[0_1px_2px_rgba(53,45,36,0.04)] ${className}`}>
-      {title && (
-        <header className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 px-5 pt-4 pb-3">
-          <h2 className="min-w-0 break-words text-sm leading-6 font-semibold text-navy">{title}</h2>
-          {right && <div className="flex max-w-full flex-wrap items-center gap-2">{right}</div>}
-        </header>
-      )}
-      {children}
+    <section className={`min-w-0 flex flex-col gap-3 ${className}`}>
+      <header className="flex min-w-0 flex-wrap items-start justify-between gap-3 sm:items-center">
+        <h2 className="min-w-0 break-words text-base sm:text-lg leading-6 font-semibold text-navy">{title}</h2>
+        {right && <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2">{right}</div>}
+      </header>
+      <div className={`${surfaceClass} flex-1 ${flush ? '' : 'pt-5'}`}>{children}</div>
     </section>
   )
 }
 
 type BtnVariant = 'primary' | 'dark' | 'ghost' | 'outline' | 'danger'
+export function NavLinkButton({ to, children, size = 'md', className = '' }: { to: string; children: React.ReactNode; size?: 'sm' | 'md'; className?: string }) {
+  return <Link to={to} className={`inline-flex max-w-full items-center justify-center gap-2 rounded-xl border border-line bg-surface text-center font-semibold text-navy transition-colors hover:bg-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-strong focus-visible:ring-offset-2 ${size === 'sm' ? 'min-h-9 px-3 py-1.5 text-xs' : 'min-h-10 px-4 py-2 text-[13px]'} ${className}`}>
+    <span>{children}</span>
+    <svg aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-accent-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+  </Link>
+}
+
+export function FilterTabs<T extends string>({ label, value, items, onChange, disabled = false, className = '' }: {
+  label: string; value: T; items: readonly { value: T; label: React.ReactNode }[];
+  onChange: (value: T) => void; disabled?: boolean; className?: string;
+}) {
+  return <div role="group" aria-label={label} className={`flex min-w-0 max-w-full items-center gap-5 overflow-x-auto border-b border-line ${className}`}>
+    {items.map(item => <button key={item.value} type="button" aria-pressed={value === item.value} disabled={disabled}
+      onClick={() => onChange(item.value)}
+      className={`min-h-10 shrink-0 whitespace-nowrap border-b-2 py-2 text-sm font-medium transition-colors cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent-strong ${value === item.value ? 'border-navy text-navy' : 'border-transparent text-muted hover:text-navy'}`}>
+      {item.label}
+    </button>)}
+  </div>
+}
+
 const btn: Record<BtnVariant, string> = {
   primary: 'bg-accent text-navy hover:bg-accent-hover',
   dark: 'bg-navy text-bg hover:bg-navy-light',
@@ -65,23 +86,43 @@ export function Badge({ tone = 'gray', children }: { tone?: Tone; children: Reac
 }
 
 export function Modal({ open, title, onClose, children, footer }: { open: boolean; title: string; onClose: () => void; children: React.ReactNode; footer?: React.ReactNode }) {
-  const dialog = useRef<HTMLDialogElement>(null)
+  const dialogRef = useRef<HTMLDialogElement>(null)
   useEffect(() => {
-    if (!open || !dialog.current) return
-    const element = dialog.current, previous = document.activeElement instanceof HTMLElement ? document.activeElement : null
-    element.showModal()
-    return () => { element.close(); if (previous?.isConnected) previous.focus() }
+    if (!open || !dialogRef.current) return
+    const dialog = dialogRef.current
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null
+    dialog.showModal()
+    const firstInput = dialog.querySelector<HTMLElement>('input:not(:disabled):not([type="hidden"]), select:not(:disabled), textarea:not(:disabled)')
+    firstInput?.focus({ preventScroll: true })
+    return () => {
+      dialog.close()
+      if (opener?.isConnected) opener.focus({ preventScroll: true })
+    }
   }, [open])
   if (!open) return null
   return (
-    <dialog ref={dialog} aria-label={title} className="fixed inset-0 m-0 w-screen h-screen max-w-none max-h-none border-0 grid place-items-center p-4 bg-navy/30 backdrop-blur-[2px] backdrop:bg-transparent text-inherit" onCancel={event => { event.preventDefault(); onClose() }} onMouseDown={event => { if (event.target === event.currentTarget) onClose() }}>
-      <div className="w-full max-w-lg max-h-[90vh] flex flex-col rounded-2xl bg-bg border border-line shadow-2xl" onMouseDown={(e) => e.stopPropagation()}>
-        <div className="flex items-start justify-between gap-3 px-5 py-4 border-b border-line">
+    <dialog ref={dialogRef} aria-label={title} aria-modal="true"
+      className="fixed inset-0 m-auto w-[calc(100%_-_2rem)] max-w-lg max-h-[90dvh] border-0 bg-transparent p-0 text-navy backdrop:bg-navy/30 backdrop:backdrop-blur-[2px]"
+      onCancel={e => { e.preventDefault(); onClose() }}
+      onKeyDown={e => {
+        if (e.key !== 'Tab') return
+        const controls = Array.from(e.currentTarget.querySelectorAll<HTMLElement>('button:not(:disabled), a[href], input:not(:disabled):not([type="hidden"]), select:not(:disabled), textarea:not(:disabled), [tabindex]:not([tabindex="-1"])')).filter(node => node.getClientRects().length > 0)
+        const first = controls[0], last = controls[controls.length - 1]
+        if (!first) { e.preventDefault(); return }
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault(); last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault(); first.focus()
+        }
+      }}
+      onMouseDown={e => { if (e.target === e.currentTarget) onClose() }}>
+      <div className="max-h-[90dvh] flex flex-col rounded-2xl bg-bg border border-line shadow-2xl">
+        <div className="shrink-0 flex items-start justify-between gap-3 px-5 py-4 border-b border-line">
           <h3 className="min-w-0 break-words text-[15px] leading-6 font-semibold text-navy">{title}</h3>
           <button onClick={onClose} aria-label="Đóng" className="shrink-0 p-1.5 rounded-lg text-muted hover:bg-selected hover:text-navy">✕</button>
         </div>
-        <div className="min-w-0 p-5 overflow-y-auto [overflow-wrap:anywhere]">{children}</div>
-        {footer && <div className="flex flex-wrap items-center justify-end gap-2 px-5 py-3 border-t border-line">{footer}</div>}
+        <div className="min-h-0 min-w-0 p-5 overflow-y-auto overscroll-contain [overflow-wrap:anywhere]">{children}</div>
+        {footer && <div className="shrink-0 flex flex-wrap items-center justify-end gap-2 px-5 py-3 border-t border-line">{footer}</div>}
       </div>
     </dialog>
   )

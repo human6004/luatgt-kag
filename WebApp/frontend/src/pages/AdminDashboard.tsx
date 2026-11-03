@@ -4,7 +4,7 @@ import { useInspection } from './server/KagManagement'
 import { builderStateLabel, loadKagStatus, loadBuilderStatus, loadServing, type KagCheck } from './server/kag-inspection'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAdmin } from '../admin/store'
-import { Badge, Button, Card, Page } from '../admin/ui'
+import { Badge, Button, Card, NavLinkButton, Page } from '../admin/ui'
 
 const checkText = (check: KagCheck) =>
   check.httpStatus === 504 || check.code?.includes('TIMEOUT')
@@ -54,8 +54,7 @@ export default function AdminDashboard() {
     ...r,
     status: r.feedback === 'WRONG' ? 'Phản hồi sai' : r.feedback === 'OUTDATED' ? 'Văn bản hết hiệu lực' : r.state === 'ANSWERED' && r.feedback !== 'NO_BASIS' ? 'Đã trả lời' : r.state === 'KAG_ABSTAINED' || r.feedback === 'NO_BASIS' ? 'Không có căn cứ' : r.state,
   }))
-  const issues = logs.filter(l => l.status !== 'Đã trả lời' && !l.resolved), rated = logs.filter(l => l.feedback)
-  const helpful = rated.length ? Math.round(rated.filter(l => l.feedback === 'HELPFUL').length / rated.length * 100) : null
+  const issues = logs.filter(l => !l.resolved)
 
   const stats = [
     {
@@ -71,9 +70,9 @@ export default function AdminDashboard() {
       warn: !serving.loading && !kag.loading && ((!!serving.value && !active) || (!serving.value && !shortReleaseId && !runtimeReady && kag.value?.release.state !== 'READY')),
     },
     {
-      label: 'Lượt hỏi gần đây',
-      value: data.value ? logs.length : '—',
-      sub: `Phản hồi hữu ích: ${helpful === null ? 'Chưa đo' : helpful + '%'} (${data.value ? rated.length : '—'} lượt)`,
+      label: 'Chat được báo cáo',
+      value: report.value?.chatMessages ?? '—',
+      sub: report.value ? `Đã xử lý: ${report.value.chatMessages - report.value.pendingChats}` : 'Chỉ các phản hồi sai, thiếu căn cứ, lỗi thời',
     },
     {
       label: 'Câu cần xử lý',
@@ -103,7 +102,15 @@ export default function AdminDashboard() {
       </div>
 
       <div className="grid gap-5 xl:grid-cols-[minmax(0,1fr)_320px]">
-        <Card title="Câu hỏi cần bổ sung tri thức" right={<button onClick={() => nav('/admin/users?tab=logs')} className="text-xs font-medium text-accent-strong hover:underline">Xem nhật ký →</button>}>
+        <Card
+          title="Câu hỏi cần bổ sung tri thức"
+          flush
+          right={
+            <Link to="/admin/users?tab=logs" className="text-xs font-medium text-accent-strong underline underline-offset-4 hover:text-navy">
+              Xem nhật ký →
+            </Link>
+          }
+        >
           <div className="overflow-x-auto">
             <table className="w-full min-w-[520px]">
               <thead>
@@ -119,8 +126,30 @@ export default function AdminDashboard() {
                     <td className="px-5 py-3 text-[13.5px] text-navy">{row.question}</td>
                     <td className="px-5 py-3"><Badge tone={row.status === 'Phản hồi sai' ? 'red' : row.status === 'Không có căn cứ' ? 'amber' : 'gray'}>{row.status}</Badge></td>
                     <td className="px-5 py-3 text-right whitespace-nowrap">
-                      <Button size="sm" variant="outline" onClick={() => nav(row.status === 'Phản hồi sai' ? `/admin/users?tab=logs&log=${encodeURIComponent(row.id)}` : '/admin/content?tab=documents')}>{actionFor(row.status)}</Button>
-                      <Button size="sm" variant="ghost" onClick={() => { void task.run(async () => { await api(`/admin/chatlogs/${row.id}/resolve`, send('POST', { note: '' })); data.reload(); report.reload(); notify('Đã đánh dấu đã xử lý') }) }}>✓</Button>
+                      <div className="inline-flex items-center gap-2">
+                        <NavLinkButton
+                          size="sm"
+                          to={row.status === 'Phản hồi sai' ? `/admin/users?tab=logs&log=${encodeURIComponent(row.id)}` : '/admin/content?tab=documents'}
+                        >
+                          {actionFor(row.status)}
+                        </NavLinkButton>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          disabled={task.busy}
+                          title="Đánh dấu báo cáo đã xử lý"
+                          onClick={() => {
+                            void task.run(async () => {
+                              await api(`/admin/chatlogs/${row.id}/resolve`, send('POST', { note: '' }))
+                              data.reload()
+                              report.reload()
+                              notify('Đã đánh dấu đã xử lý')
+                            })
+                          }}
+                        >
+                          Hoàn tất
+                        </Button>
+                      </div>
                     </td>
                   </tr>
                 ))}

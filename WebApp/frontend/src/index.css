@@ -10,7 +10,7 @@
   --color-accent-hover: #caa537;
   --color-accent-strong: #80651a;
   --color-bg: #fffdf7;
-  --color-surface: #fffcf4;
+  --color-surface: #ffffff;
   --color-sidebar: #fff9e8;
   --color-selected: #fff2c9;
   --color-line: #f3e7c7;
@@ -27,4 +27,14 @@ body {
   font-family: var(--font-sans);
   background-color: var(--color-bg);
   color: var(--color-text);
+}
+
+@layer base {
+  thead {
+    background-color: var(--color-sidebar);
+    border-bottom: 1px solid var(--color-line);
+  }
+  thead th {
+    white-space: nowrap;
+  }
 }

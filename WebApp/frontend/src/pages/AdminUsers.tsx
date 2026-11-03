@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import { api, send } from '../api'
 import { useAuth } from '../auth'
 import { useAdmin } from '../admin/store'
-import { Badge, Button, Card, Page, Td, Th, Toggle, inputCls, type Tone } from '../admin/ui'
+import { Badge, Button, Card, FilterTabs, Page, Td, Th, Toggle, inputCls, type Tone } from '../admin/ui'
 import { Notice, useData, useTask } from './server/shared'
 
 type UserRoleLabel = 'Người học' | 'Cảnh sát' | 'Quản trị viên'
@@ -44,7 +44,8 @@ export default function AdminUsers() {
   const [q, setQ] = useState(urlQ)
   const role = params.get('role') ?? 'all'
   const rawFilter = params.get('filter')
-  const logFilter: 'all' | 'issue' | 'down' = rawFilter === 'issue' || rawFilter === 'down' ? rawFilter : 'all'
+  const logFilter: 'all' | 'issue' | 'resolved' =
+    rawFilter === 'issue' || rawFilter === 'resolved' ? rawFilter : rawFilter === 'down' ? 'issue' : 'all'
   const userFilter = params.get('user') ?? ''
   const selectedLogId = params.get('log') ?? ''
 
@@ -124,10 +125,8 @@ export default function AdminUsers() {
     return counts
   }, [logs])
 
-  const issueCount = useMemo(
-    () => logs.filter((x) => x.status !== 'Đã trả lời' && !x.resolved).length,
-    [logs],
-  )
+  const issueCount = useMemo(() => logs.filter((x) => !x.resolved).length, [logs])
+  const resolvedCount = useMemo(() => logs.filter((x) => x.resolved).length, [logs])
 
   function updateUrl(patch: Record<string, string | null>, replace = false) {
     setParams(
@@ -170,8 +169,8 @@ export default function AdminUsers() {
     () =>
       logs.filter((l) => {
         if (userFilter && l.user !== userFilter) return false
-        if (logFilter === 'issue' && (l.status === 'Đã trả lời' || l.resolved)) return false
-        if (logFilter === 'down' && l.feedback !== 'down') return false
+        if (logFilter === 'issue' && l.resolved) return false
+        if (logFilter === 'resolved' && !l.resolved) return false
         const u = userMap.get(l.user)
         const haystack = `${l.question} ${l.user} ${u?.name || ''} ${u?.email || ''}`.toLowerCase()
         return haystack.includes(q.toLowerCase())
@@ -201,16 +200,16 @@ export default function AdminUsers() {
 
   function exportCsv() {
     const rows = [
-      ['thời gian', 'người dùng', 'email', 'câu hỏi', 'trạng thái', 'phản hồi'],
+      ['thời gian', 'người dùng', 'email', 'câu hỏi', 'báo cáo', 'trạng thái xử lý'],
       ...shownLogs.map((l) => {
         const u = userMap.get(l.user)
-        return [l.time, u?.name || l.user, u?.email || '', l.question, l.status, l.feedback ?? '']
+        return [l.time, u?.name || l.user, u?.email || '', l.question, l.status, l.resolved ? 'Đã xử lý' : 'Cần xử lý']
       }),
     ]
     const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n')
     const a = document.createElement('a')
     a.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type: 'text/csv' }))
-    a.download = 'nhat-ky-chat.csv'
+    a.download = 'bao-cao-chat.csv'
     a.click()
   }
 
@@ -225,7 +224,7 @@ export default function AdminUsers() {
       subtitle={
         tab === 'users'
           ? `${rawUsers ? users.length : '—'} tài khoản · ${rawUsers ? users.filter((u) => u.active).length : '—'} đang hoạt động`
-          : 'Theo dõi câu hỏi, đánh giá phản hồi và chuyển câu chưa trả lời được sang bổ sung tri thức.'
+          : 'Theo dõi báo cáo phản hồi của người dùng và chuyển câu chưa trả lời được sang bổ sung tri thức.'
       }
       actions={
         tab === 'users' ? (
@@ -280,6 +279,7 @@ export default function AdminUsers() {
           </div>
           <div className="flex flex-wrap gap-3 mb-4">
             <input
+              aria-label="Tìm người dùng"
               className={`${inputCls} max-w-xs`}
               placeholder="Tìm tên, email…"
               value={q}
@@ -307,7 +307,7 @@ export default function AdminUsers() {
                 <tr>
                   <Th>Người dùng</Th>
                   <Th>Vai trò</Th>
-                  <Th>Lượt hỏi</Th>
+                  <Th>Báo cáo chat</Th>
                   <Th>Hoạt động</Th>
                   <Th className="text-right">Thao tác</Th>
                 </tr>
@@ -386,28 +386,10 @@ export default function AdminUsers() {
           <Notice {...logsData} retry={logsData.reload} />
           <div className="grid items-start gap-5 xl:grid-cols-[minmax(0,1fr)_360px]">
             <div className="min-w-0">
-              <div className="flex flex-wrap items-center gap-3 mb-4">
-                <div className="flex max-w-full flex-wrap rounded-xl border border-line bg-surface p-0.5">
-                  {([
-                    ['all', 'Tất cả'],
-                    ['issue', 'Cần xử lý'],
-                    ['down', 'Đánh giá 👎'],
-                  ] as const).map(([k, l]) => (
-                    <button
-                      key={k}
-                      type="button"
-                      onClick={() => updateUrl({ filter: k === 'all' ? null : k })}
-                      className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-colors ${
-                        logFilter === k ? 'bg-selected text-navy' : 'text-muted hover:text-navy'
-                      }`}
-                    >
-                      {l}
-                      {k === 'issue' && <span className="ml-1 text-accent-strong">{issueCount}</span>}
-                    </button>
-                  ))}
-                </div>
+              <div className="space-y-3 mb-4">
                 <input
-                  className={`${inputCls} max-w-xs`}
+                  aria-label="Tìm báo cáo"
+                  className={`${inputCls} w-full`}
                   placeholder="Tìm câu hỏi, tên, email…"
                   value={q}
                   onChange={(e) => {
@@ -416,21 +398,33 @@ export default function AdminUsers() {
                     updateUrl({ q: v || null }, true)
                   }}
                 />
-                {userFilter && (
-                  <span className="inline-flex items-center gap-2 rounded-full border border-navy/30 bg-selected px-3 py-1 text-xs text-navy">
-                    <span>
-                      Đang lọc: <strong>{filteredUser ? `${filteredUser.name} (${filteredUser.email})` : userFilter}</strong>
+                <div className="flex flex-wrap items-center gap-3">
+                  <FilterTabs
+                    label="Lọc trạng thái báo cáo"
+                    value={logFilter}
+                    onChange={(k) => updateUrl({ filter: k === 'all' ? null : k })}
+                    items={[
+                      { value: 'all', label: `Tất cả báo cáo (${logs.length})` },
+                      { value: 'issue', label: `Cần xử lý (${issueCount})` },
+                      { value: 'resolved', label: `Đã xử lý (${resolvedCount})` },
+                    ]}
+                  />
+                  {userFilter && (
+                    <span className="inline-flex items-center gap-2 rounded-full border border-navy/30 bg-selected px-3 py-1 text-xs text-navy">
+                      <span>
+                        Đang lọc: <strong>{filteredUser ? `${filteredUser.name} (${filteredUser.email})` : userFilter}</strong>
+                      </span>
+                      <button
+                        type="button"
+                        aria-label="Bỏ lọc người dùng"
+                        onClick={() => updateUrl({ user: null, log: null })}
+                        className="font-bold hover:text-red-700"
+                      >
+                        ✕
+                      </button>
                     </span>
-                    <button
-                      type="button"
-                      aria-label="Bỏ lọc người dùng"
-                      onClick={() => updateUrl({ user: null, log: null })}
-                      className="font-bold hover:text-red-700"
-                    >
-                      ✕
-                    </button>
-                  </span>
-                )}
+                  )}
+                </div>
               </div>
               <Card>
                 <ul className="divide-y divide-line/70">
@@ -455,8 +449,7 @@ export default function AdminUsers() {
                           </Badge>
                         </div>
                         <p className="mt-1 break-words text-[12px] leading-5 text-muted">
-                          {displayUser(l.user)} · {l.time}
-                          {l.feedback === 'up' ? ' · 👍' : l.feedback === 'down' ? ' · 👎' : ''}
+                          {displayUser(l.user)} · {l.time} · {l.status}
                         </p>
                       </button>
                     </li>
@@ -482,7 +475,7 @@ export default function AdminUsers() {
                   <dl className="grid grid-cols-3 gap-2 text-center">
                     {[
                       ['Độ trễ', 'Chưa đo'],
-                      ['Phản hồi', cur.feedback === 'up' ? '👍' : cur.feedback === 'down' ? '👎' : '—'],
+                      ['Báo cáo', cur.status],
                       ['Người dùng', userMap.get(cur.user)?.email || '@' + cur.user],
                     ].map(([k, v]) => (
                       <div key={k} className="rounded-xl border border-line bg-bg py-2">

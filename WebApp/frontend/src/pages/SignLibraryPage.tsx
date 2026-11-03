@@ -1,4 +1,5 @@
 import { type ContentRecord } from '../api'
+import { FilterTabs } from '../admin/ui'
 import { Asset, Notice, useData } from './server/shared'
 import { useEffect, useState, useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
@@ -40,7 +41,7 @@ export default function SignLibraryPage() {
         meaning: String(r.data.meaning || ''),
         applicableCases: String(r.data.applicableCases || 'Chưa có thông tin từ backend'),
         relatedViolations: [],
-        imageKey: r.data.imageKey ? String(r.data.imageKey) : undefined,
+        imageKey: r.data.image_status === 'verified' && r.data.imageKey ? String(r.data.imageKey) : undefined,
         source: r.data,
       })),
     [data.value],
@@ -114,7 +115,6 @@ export default function SignLibraryPage() {
 
       {/* Search & Category Filter */}
       <div className="bg-surface rounded-2xl border border-line shadow-xs p-5 mb-8 space-y-4">
-        {/* Search Bar */}
         <div className="relative">
           <input
             type="text"
@@ -129,7 +129,9 @@ export default function SignLibraryPage() {
             className="w-full bg-bg border border-line rounded-xl pl-10 pr-4 py-3 text-sm text-navy placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all"
           />
           <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-muted">
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
           </div>
           {searchQuery && (
             <button
@@ -140,34 +142,19 @@ export default function SignLibraryPage() {
               }}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted hover:text-navy"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
             </button>
           )}
         </div>
 
-        {/* Category Pills */}
-        <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-selected">
-          <span className="text-xs font-semibold uppercase tracking-wider text-muted mr-1">
-            Phân loại:
-          </span>
-          {categories.map((cat) => {
-            const isActive = activeCategory === cat.key
-            return (
-              <button
-                key={cat.key}
-                type="button"
-                onClick={() => updateUrl({ cat: cat.key === 'all' ? null : cat.key, sign: null })}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-medium transition-all ${
-                  isActive
-                    ? 'bg-navy text-white shadow-2xs'
-                    : 'bg-bg text-text-secondary border border-line hover:bg-selected'
-                }`}
-              >
-                {cat.label}
-              </button>
-            )
-          })}
-        </div>
+        <FilterTabs
+          label="Phân loại biển báo"
+          value={activeCategory}
+          onChange={(key) => updateUrl({ cat: key === 'all' ? null : key, sign: null })}
+          items={categories.map((category) => ({ value: category.key, label: category.label }))}
+        />
       </div>
 
       {/* Grid of Signs */}
@@ -193,25 +180,25 @@ export default function SignLibraryPage() {
             >
               <div>
                 <div className="w-24 h-24 mx-auto mb-4 p-2 bg-bg rounded-xl border border-selected flex items-center justify-center group-hover:scale-105 transition-transform">
-                  {sign.imageKey ? <Asset id={sign.id} alt={sign.name} className="h-full w-full object-contain" /> : <p className="text-center text-xs text-muted">Chưa có ảnh nguồn</p>}
+                  {sign.imageKey ? (
+                    <Asset id={sign.id} alt={sign.name} className="h-full w-full object-contain" />
+                  ) : (
+                    <p className="text-center text-xs text-muted">Chưa có ảnh nguồn</p>
+                  )}
                 </div>
 
                 <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
                   <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-semibold bg-navy text-white">
                     {sign.code}
                   </span>
-                  <span className="text-[11px] font-medium text-muted">
-                    {sign.categoryLabel}
-                  </span>
+                  <span className="text-[11px] font-medium text-muted">{sign.categoryLabel}</span>
                 </div>
 
                 <h3 className="font-sans text-[17px] font-semibold text-navy group-hover:text-accent-strong transition-colors leading-snug mb-2">
                   {sign.name}
                 </h3>
 
-                <p className="text-xs text-muted line-clamp-2 leading-relaxed">
-                  {sign.shortDesc}
-                </p>
+                <p className="text-xs text-muted line-clamp-2 leading-relaxed">{sign.shortDesc}</p>
               </div>
 
               <div className="mt-4 pt-3 border-t border-selected flex flex-wrap items-center justify-between gap-2 text-[11px] leading-5 text-muted">
@@ -235,9 +222,7 @@ export default function SignLibraryPage() {
                   {selectedSign.code}
                 </span>
                 <div className="min-w-0">
-                  <h3 className="break-words font-sans text-lg font-semibold text-navy">
-                    {selectedSign.name}
-                  </h3>
+                  <h3 className="break-words font-sans text-lg font-semibold text-navy">{selectedSign.name}</h3>
                   <p className="text-[11px] text-muted">{selectedSign.categoryLabel} · dữ liệu backend</p>
                 </div>
               </div>
@@ -247,27 +232,42 @@ export default function SignLibraryPage() {
                 onClick={() => updateUrl({ sign: null })}
                 className="shrink-0 p-1 rounded-lg text-muted hover:bg-selected hover:text-navy transition-colors"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
               </button>
             </div>
 
             <div className="p-6 max-h-[75vh] overflow-y-auto space-y-6">
               <div className="flex flex-col sm:flex-row gap-5 items-start bg-surface p-4 rounded-xl border border-line">
                 <div className="w-28 h-28 shrink-0 mx-auto sm:mx-0 p-3 bg-bg rounded-xl border border-selected flex items-center justify-center">
-                  {selectedSign.imageKey ? <Asset id={selectedSign.id} alt={selectedSign.name} className="h-full w-full object-contain" /> : <p className="text-center text-xs text-muted">Chưa có ảnh nguồn</p>}
+                  {selectedSign.imageKey ? (
+                    <Asset id={selectedSign.id} alt={selectedSign.name} className="h-full w-full object-contain" />
+                  ) : (
+                    <p className="text-center text-xs text-muted">Chưa có ảnh nguồn</p>
+                  )}
                 </div>
                 <div className="space-y-2">
-                  <h4 className="text-xs uppercase tracking-wider font-semibold text-muted">
-                    Ý nghĩa biển báo
-                  </h4>
-                  <p className="text-sm text-navy leading-relaxed">
-                    {selectedSign.meaning}
-                  </p>
+                  <h4 className="text-xs uppercase tracking-wider font-semibold text-muted">Ý nghĩa biển báo</h4>
+                  <p className="text-sm text-navy leading-relaxed">{selectedSign.meaning}</p>
                 </div>
               </div>
 
               <dl className="text-xs space-y-2">
-                {['qcvn', 'so_hieu', 'doc_id', 'unit_id', 'ngay_hieu_luc', 'ngay_het_hieu_luc', 'bien_phu_variant'].map((k) => (
+                {[
+                  'qcvn',
+                  'so_hieu',
+                  'doc_id',
+                  'unit_id',
+                  'ngay_hieu_luc',
+                  'ngay_het_hieu_luc',
+                  'bien_phu_variant',
+                  'record_type',
+                  'parent_code',
+                  'children_codes',
+                  'description_scope',
+                  'note',
+                ].map((k) => (
                   <div key={k}>
                     <dt>{k}</dt>
                     <dd className="break-words">{String(selectedSign.source?.[k] || 'Chưa có thông tin')}</dd>
@@ -279,20 +279,23 @@ export default function SignLibraryPage() {
                 <h4 className="text-xs uppercase tracking-wider font-semibold text-muted">
                   Trường hợp áp dụng & Vị trí đặt biển
                 </h4>
-                <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">
-                  {selectedSign.applicableCases}
-                </p>
+                <p className="text-xs sm:text-sm text-text-secondary leading-relaxed">{selectedSign.applicableCases}</p>
               </div>
 
               <div className="space-y-3">
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <h4 className="text-xs uppercase tracking-wider font-semibold text-navy flex items-center gap-1.5">
-                    <svg className="w-4 h-4 text-accent-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                    <svg className="w-4 h-4 text-accent-strong" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                      />
+                    </svg>
                     Lỗi vi phạm liên quan & Mức phạt (NĐ 168/2024)
                   </h4>
-                  <span className="text-[11px] text-muted">
-                    Chưa có API liên kết
-                  </span>
+                  <span className="text-[11px] text-muted">Chưa có API liên kết</span>
                 </div>
 
                 {selectedSign.relatedViolations.length === 0 ? (
@@ -325,10 +328,19 @@ export default function SignLibraryPage() {
             <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-3.5 bg-sidebar border-t border-line">
               <Link
                 to="/chat"
-                state={{ initialQuery: `Giải thích chi tiết quy chuẩn và tình huống thực tế của biển báo ${selectedSign.code} (${selectedSign.name})` }}
+                state={{
+                  initialQuery: `Giải thích chi tiết quy chuẩn và tình huống thực tế của biển báo ${selectedSign.code} (${selectedSign.name})`,
+                }}
                 className="text-xs text-navy hover:text-accent-strong font-medium inline-flex items-center gap-1.5"
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                  />
+                </svg>
                 Hỏi Chatbot KAG về biển này
               </Link>
               <button
