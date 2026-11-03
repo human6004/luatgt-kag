@@ -1,20 +1,17 @@
-import { useEffect, useRef, useState } from "react"
-import { Link, useSearchParams } from "react-router-dom"
-import { Button, Card, Field, inputCls } from "../../admin/ui"
-import { Notice } from "./shared"
-import { inspectionError } from "./kag-inspection"
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
+import { Button, Card, Field, Modal, Td, Th, inputCls } from '../../admin/ui'
+import { Notice } from './shared'
 import {
-  loadBuilderStatus,
-  runBuilderAction,
-  builderStateLabel,
-  loadBuilderInputs, loadBuilderConfiguration, saveBuilderConfiguration, checkBuilderReadiness,
-  loadBuilderProjects, builderNeo4jLink, loadBuilderStructure, prepareBuilderStructure,
-  previewBuilderSelection,
-  loadBuilderClear, clearBuilderData,
-  loadBuilderPackages, packageReason,
-} from "./kag-inspection"
-import type { BuilderStatus, BuilderConfiguration, BuilderInputs, BuilderStage, BuilderStructure, BuilderSelection, SelectionRequest, SelectionSummary, BuilderClear, VectorPackageReference } from "./kag-inspection"
-import { ApiError } from "../../api"
+  inspectionError, loadBuilderStatus, runBuilderAction, builderStateLabel, loadBuilderInputs,
+  loadBuilderConfiguration, checkBuilderReadiness, loadBuilderProjects, builderNeo4jLink,
+  previewBuilderSelection, loadBuilderPackages, packageReason, loadServing, changeServing,
+  loadBuilderPackageExport, exportBuilderPackage, loadGraphProject, runGraphRetrieval,
+  selectionVectorCount, startBuilderGraph,
+} from './kag-inspection'
+import type { BuilderStatus, BuilderConfiguration, BuilderSelection, SelectionRequest,
+  BuilderProjects, BuilderPackages, BuilderPackageExport, ServingCatalog, ServingPreview, GraphRetrieval } from './kag-inspection'
+import { servingReasons } from './kag-inspection'
 
 export function useInspection<T>(load: (signal?: AbortSignal) => Promise<T>) {
   const [value, setValue] = useState<T>(),
@@ -42,7 +39,6 @@ export function useInspection<T>(load: (signal?: AbortSignal) => Promise<T>) {
 }
 
 function builderIssue(code: string | null) {
-  if (code?.startsWith('PACKAGE_')) return packageReason(code)
   if (code?.startsWith('PACKAGE_')) return packageReason(code)
   const messages: Record<string, string> = {
     CONFIG: 'Kiểm tra đích lưu và cấu hình Embedding, lưu lại cấu hình dựng rồi kiểm tra sẵn sàng.',
@@ -77,421 +73,283 @@ function builderIssue(code: string | null) {
   }
   return code ? messages[code] ?? 'Điều kiện dựng chưa đạt. Kiểm tra cấu hình và chi tiết kỹ thuật trước khi thử lại.' : ''
 }
-function builderTime(value: string) { return new Date(value).toLocaleString('vi-VN') }
+type LibraryRun = ServingCatalog['runs'][number]
 
-function BuilderResult({ status, link = true, links }: { status: BuilderStatus; link?: boolean; links?: BuilderConfiguration['links'] }) {
-  if (status.state === 'CLEARED') return <p>Dữ liệu đích đã được yêu cầu xóa. Kết quả phiên cũ chỉ là lịch sử, không chứng minh graph hiện tại. Xem kết quả xóa rồi cấu hình phiên mới.</p>
-  if (status.state === 'ABANDONED') return <p>Đã bỏ phiên; graph và điểm lưu được giữ. Phiên này không thể tiếp tục và chưa có kết quả xác minh hoàn tất.</p>
-  if (status.contract_version === 'builder-control-v1' || status.binding?.scope !== 'PRODUCTION' || status.state !== 'COMPLETE' || !status.result)
-    return <p>Chưa có kết quả xác minh của phiên dựng dữ liệu ứng dụng.</p>
-  const { binding, result } = status
-  return <div className="space-y-4 text-sm">
-    <p className="break-words">Đích đã xác minh: {binding.database} · project {binding.project_id}</p>
-    <p>{binding.node_limit ? `Phạm vi giới hạn tối đa ${binding.node_limit} nội dung; chưa dựng và chưa xác minh toàn corpus.` : 'Phạm vi: toàn bộ corpus đã chốt cho phiên.'}</p>
-    <dl className="grid grid-cols-3 gap-3">
-      {([['Nội dung đã xác minh', result.nodes], ['Quan hệ đã xác minh', result.edges], ['Vector đã xác minh', result.vectors]] as const).map(([label, count]) =>
-        <div key={label}><dt className="text-muted">{label}</dt><dd className="text-xl font-semibold tabular-nums mt-1">{count.toLocaleString('vi-VN')}</dd></div>)}
-    </dl>
-    <p>Xác minh lúc {builderTime(result.verified_at)} · {result.indexes} chỉ mục, {result.dimension} chiều.</p>
-    <p>Build không tự kích hoạt Chat. Chọn phiên và dùng cho Chat ở Bước ③ ngay bên cạnh.</p>
-    {link && <Link className="underline inline-block font-semibold text-accent-strong" to={`/admin/chatbot?step=3&project_id=${binding.project_id}&run_id=${encodeURIComponent(binding.run_id)}&tab=chat`}>Tiếp tục: ③ Dùng cho Chat →</Link>}
-    {links && <a className="underline block" target="_blank" rel="noreferrer" href={builderNeo4jLink(links, binding.database)}>Mở Neo4j · {binding.database}</a>}
-    <p>Nếu Browser chưa chọn đúng database, chạy <code>:use {binding.database}</code>.</p>
-    <p>Xem tối đa 25 node hoặc quan hệ bằng truy vấn chỉ đọc:</p>
-    <pre className="overflow-x-auto text-xs"><code>{'MATCH (n) RETURN n LIMIT 25;\nMATCH (a)-[r]->(b) RETURN a, r, b LIMIT 25;'}</code></pre>
-    <p>Knowledge Model trong OpenSPG hiển thị cấu trúc. Neo4j Browser hiển thị dữ liệu sau Build.</p>
-    <details><summary className="cursor-pointer underline">Chi tiết kỹ thuật kết quả</summary><dl className="mt-3 space-y-2 break-all">
-      {Object.entries(binding).map(([name, value]) => <div key={name}><dt className="font-medium">{name}</dt><dd>{value}</dd></div>)}
-      <div><dt className="font-medium">Fingerprint</dt><dd>{result.fingerprint}</dd></div>
-    </dl></details>
-  </div>
-}
-
-export function BuilderGraph({ runId }: { runId: string }) {
-  const data = useInspection(loadBuilderStatus)
-  const configuration = useInspection(loadBuilderConfiguration)
-  return <div className="space-y-4">
-    <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-base font-semibold text-navy">Xác minh đồ thị ({runId})</h2><Link to="/admin/chatbot?step=2" className="underline text-sm">← Về các bước dựng đồ thị</Link></div>
-    <Notice {...data} retry={data.reload} />
-    {data.value && (data.value.run_id !== runId ? <p role="alert">Phiên được yêu cầu không khớp kết quả hiện tại.</p> :
-      <Card title="Kết quả xác minh"><div className="px-5 pb-5"><BuilderResult status={data.value} link={false} links={configuration.value?.links} /></div></Card>)}
-    <p className="text-sm text-muted">Đây là kết quả lần xác minh đã lưu. Trang này không truy vấn lại toàn bộ graph.</p>
-  </div>
-}
-
-const builderRows: { label: string; stages: [BuilderStage, string, string][] }[] = [
-  { label: 'Chuẩn bị dữ liệu', stages: [['preflight', 'Kiểm điều kiện', 'lần kiểm'], ['plan', 'Kế hoạch nguồn', 'kế hoạch']] },
-  { label: 'Tạo vector', stages: [['vectorize', 'Tạo vector', 'nội dung'], ['export-artifact', 'Lưu vector', 'batch']] },
-  { label: 'Ghi nội dung', stages: [['write-nodes', 'Ghi nội dung', 'nội dung'], ['verify-nodes', 'Kiểm nội dung', 'nội dung']] },
-  { label: 'Ghi quan hệ', stages: [['write-edges', 'Ghi quan hệ', 'quan hệ']] },
-  { label: 'Xác minh kết quả', stages: [['verify', 'Kiểm graph trong phạm vi phiên', 'lần kiểm'], ['release', 'Lưu kết quả', 'kết quả']] },
-]
-const stageLabels = { PENDING: 'Chưa thực hiện', RUNNING: 'Đang xử lý', COMPLETE: 'Đã đạt', STOPPED: 'Đã dừng', BLOCKED: 'Cần xử lý' }
-type BuilderSnapshot = { inputs: BuilderInputs; config: BuilderConfiguration; status: BuilderStatus }
-const sourceTypeLabels: Record<string, string> = { LegalDocument: 'Văn bản pháp luật', LegalUnit: 'Đơn vị nội dung', TrafficSign: 'Biển báo' }
-function ScopeCounts({ summary }: { summary: SelectionSummary }) {
-  return <div className="space-y-2"><dl className="grid gap-2 sm:grid-cols-3">{Object.entries(summary.node_counts).map(([name, count]) => <div key={name}><dt className="text-muted">{sourceTypeLabels[name] ?? name}</dt><dd className="font-medium tabular-nums">{count.toLocaleString('vi-VN')}</dd></div>)}</dl>
-    <p>{summary.nodes.toLocaleString('vi-VN')} nội dung · {summary.edges.toLocaleString('vi-VN')} quan hệ · {summary.excluded_edges.toLocaleString('vi-VN')} quan hệ ngoài phạm vi.</p>
-    <details><summary className="underline cursor-pointer">Số lượng theo quan hệ</summary><dl className="mt-2 space-y-1 break-words">{Object.entries(summary.edge_counts).map(([name, count]) => <div key={name}>{name}: {count.toLocaleString('vi-VN')}</div>)}</dl></details></div>
-}
-
-export function BuilderControls() {
+export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
   const [parameters, setParameters] = useSearchParams()
-  const rawBstep = parameters.get('bstep')
-  const selected = rawBstep && /^[0-4]$/.test(rawBstep) ? Number(rawBstep) : null
-  function setSelected(next: number | null) {
-    const np = new URLSearchParams(parameters)
-    if (next === null) np.delete('bstep')
-    else np.set('bstep', String(next))
-    setParameters(np)
-  }
-  const [snapshot, setSnapshot] = useState<BuilderSnapshot>(), [connectionError, setConnectionError] = useState(''),
-    [actionError, setActionError] = useState(''), [busy, setBusy] = useState(false), [version, setVersion] = useState(0),
-    [batch, setBatch] = useState('64'), [limit, setLimit] = useState(''), [vectorPackage, setVectorPackage] = useState<VectorPackageReference | null>(null),
-    [confirmation, setConfirmation] = useState<BuilderSnapshot>(), [nodeLimit, setNodeLimit] = useState(''),
-    [scopeMode, setScopeMode] = useState<SelectionRequest['mode']>('ALL'), [scopePreview, setScopePreview] = useState<BuilderSelection>(),
-    [receivedAt, setReceivedAt] = useState(''),
-    [confirmAction, setConfirmAction] = useState<'build' | 'abandon'>('build'),
-    [clearState, setClearState] = useState<BuilderClear>(), [clearConfirmation, setClearConfirmation] = useState<BuilderClear>(), [clearDatabase, setClearDatabase] = useState(''),
-    [unlimited, setUnlimited] = useState(true), [projectId, setProjectId] = useState(''),
-    [structure, setStructure] = useState<BuilderStructure>(), [structureConfirmation, setStructureConfirmation] = useState<BuilderStructure>()
-  const catalog = useInspection(loadBuilderProjects)
-  const packages = useInspection(loadBuilderPackages)
-  const acting = useRef(false), dialog = useRef<HTMLDialogElement>(null)
-  const structureDialog = useRef<HTMLDialogElement>(null)
-  const progressRegion = useRef<HTMLDivElement>(null)
-  const clearDialog = useRef<HTMLDialogElement>(null)
-  const inputs = snapshot?.inputs, config = snapshot?.config, status = snapshot?.status, source = inputs?.source_validation
+  const [catalog, setCatalog] = useState<BuilderProjects>()
+  const [serving, setServing] = useState<ServingCatalog>()
+  const [config, setConfig] = useState<BuilderConfiguration>()
+  const [status, setStatus] = useState<BuilderStatus>()
+  const [packages, setPackages] = useState<BuilderPackages>()
+  const [exportState, setExportState] = useState<BuilderPackageExport>()
+  const [error, setError] = useState(''), [detailError, setDetailError] = useState('')
+  const [readError, setReadError] = useState('')
+  const [busy, setBusy] = useState(false), [version, setVersion] = useState(0)
+  const [mode, setMode] = useState<'build' | 'import' | null>(null)
+  const [projectId, setProjectId] = useState(''), [scope, setScope] = useState('ALL'), [percent, setPercent] = useState('10')
+  const [packageName, setPackageName] = useState(''), [selection, setSelection] = useState<BuilderSelection>()
+  const [planSha256, setPlanSha256] = useState(''), [sourceLoading, setSourceLoading] = useState(false)
+  const [progress, setProgress] = useState(''), [preview, setPreview] = useState<ServingPreview>()
+  const [view, setView] = useState<LibraryRun>()
+  const acting = useRef(false), choosing = useRef(0)
+  const selectedPackage = packages?.packages.find(row => row.name === packageName)
+  const requestedScope: SelectionRequest = mode === 'import'
+    ? selectedPackage?.manifest?.selection === null ? { mode: 'ALL', value: null }
+      : { mode: 'COUNT', value: Number(selectedPackage?.manifest?.selection?.value) }
+    : scope === 'ALL' ? { mode: 'ALL', value: null } : { mode: 'PERCENT', value: Number(percent) }
+  const requestKey = JSON.stringify(requestedScope)
+  const building = status && ['RUNNING', 'STOPPING', 'STOPPED'].includes(status.state)
   useEffect(() => {
     if (busy) return
     const controller = new AbortController(); let timer: ReturnType<typeof setTimeout>
     async function refresh() {
       try {
-        const [inputs, config, status, structure, clear] = await Promise.all([loadBuilderInputs(controller.signal), loadBuilderConfiguration(controller.signal), loadBuilderStatus(controller.signal), loadBuilderStructure(controller.signal), loadBuilderClear(controller.signal)])
-        if (!controller.signal.aborted) { setSnapshot({ inputs, config, status }); setStructure(structure); setClearState(clear); setConnectionError(''); setReceivedAt(new Date().toISOString()) }
+        const [projects, serving, config, status, exported] = await Promise.all([
+          loadBuilderProjects(controller.signal), loadServing(controller.signal), loadBuilderConfiguration(controller.signal),
+          loadBuilderStatus(controller.signal), loadBuilderPackageExport(controller.signal),
+        ])
+        if (controller.signal.aborted) return
+        setCatalog(projects); setServing(serving); setConfig(config); setStatus(status); setExportState(exported)
+        setReadError('')
       } catch (failure) {
-        if (!controller.signal.aborted) setConnectionError(inspectionError(failure))
+        if (!controller.signal.aborted) { setReadError('Chưa đọc được thư viện đồ thị. Tải lại hoặc đăng nhập OpenSPG rồi thử tiếp.'); setDetailError(inspectionError(failure)) }
       } finally { if (!controller.signal.aborted) timer = setTimeout(refresh, 3000) }
     }
-    refresh()
+    void refresh()
     return () => { controller.abort(); clearTimeout(timer) }
-  }, [version, busy])
-  useEffect(() => { if (config) { setBatch(String(config.batch_size)); setLimit(config.request_limit === null ? '' : String(config.request_limit)); setUnlimited(config.request_limit === null); setVectorPackage(config.vector_package ?? null); const request = config.selection?.request ?? { mode: config.selection?.node_limit == null ? 'ALL' : 'COUNT', value: config.selection?.node_limit ?? null }; setScopeMode(request.mode); setNodeLimit(request.value == null ? '' : String(request.value)); setScopePreview(undefined); setProjectId(!status || ['RUNNING','STOPPING','STOPPED'].includes(status.state) ? String(config.target?.project_id ?? '') : parameters.get('project_id') ?? String(config.target?.project_id ?? '')) } }, [config?.revision])
-  useEffect(() => { packages.reload() }, [config?.revision, config?.embedding?.revision, config?.embedding?.tested, config?.embedding?.dimension, source?.plan_sha256, source?.state])
+  }, [busy, version])
   useEffect(() => {
-    if (confirmation && !dialog.current?.open) dialog.current?.showModal()
-    if (!confirmation && dialog.current?.open) dialog.current.close()
-  }, [confirmation])
+    if (!mode) return
+    const controller = new AbortController()
+    loadBuilderPackages(controller.signal).then(value => { if (!controller.signal.aborted) setPackages(value) })
+      .catch(failure => { if (!controller.signal.aborted) { setError('Không đọc được danh sách gói. Tải lại sau khi chuẩn bị dữ liệu nguồn.'); setDetailError(inspectionError(failure)) } })
+    return () => controller.abort()
+  }, [mode, version])
   useEffect(() => {
-    if (structureConfirmation && !structureDialog.current?.open) structureDialog.current?.showModal()
-    if (!structureConfirmation && structureDialog.current?.open) structureDialog.current.close()
-  }, [structureConfirmation])
+    const id = ++choosing.current
+    setSelection(undefined); setSourceLoading(false)
+    if (!mode || !config || mode === 'import' && !selectedPackage?.compatible) return
+    if (requestedScope.mode !== 'ALL' && (!Number.isInteger(requestedScope.value) || requestedScope.value! < 1 || requestedScope.value! > (requestedScope.mode === 'PERCENT' ? 100 : 2147483647))) return
+    setSourceLoading(true)
+    async function readSelection() {
+      try {
+        const inputs = await loadBuilderInputs()
+        if (inputs.source_validation.state !== 'VALID') throw new Error('Nguồn chưa sẵn sàng')
+        const value = await previewBuilderSelection(config!.revision, requestedScope)
+        if (id === choosing.current) { setSelection(value); setPlanSha256(inputs.source_validation.plan_sha256!); setError(''); setDetailError('') }
+      } catch (failure) {
+        if (id === choosing.current) { setError('Chưa đọc được phạm vi dữ liệu. Kiểm tra dữ liệu nguồn rồi tải lại.'); setDetailError(inspectionError(failure)) }
+      } finally { if (id === choosing.current) setSourceLoading(false) }
+    }
+    void readSelection()
+    return () => { choosing.current++ }
+  }, [mode, config?.revision, requestKey, selectedPackage?.sha256, version])
+  const refresh = () => setVersion(value => value + 1)
+  async function act(operation: () => Promise<unknown>) {
+    if (acting.current) return
+    acting.current = true; setBusy(true); setError(''); setDetailError('')
+    try { await operation() }
+    catch (failure) { setError('Thao tác chưa hoàn tất. Tải lại trạng thái trước khi thử tiếp.'); setDetailError(inspectionError(failure)) }
+    finally { acting.current = false; setBusy(false); refresh() }
+  }
+  function openFlow(next: 'build' | 'import') {
+    setMode(next); setProgress(''); setProjectId(''); setPackageName(''); setScope('ALL'); setSelection(undefined)
+  }
+  async function begin() {
+    if (!mode || !selection || !projectId || sourceLoading || mode === 'import' && (!selectedPackage?.compatible || !selectedPackage.sha256)) return
+    const vectorPackage = mode === 'import' ? { name: selectedPackage!.name, sha256: selectedPackage!.sha256! } : undefined
+    await act(async () => {
+      setStatus(await startBuilderGraph({ projectId: Number(projectId), selection, planSha256, vectorPackage }, setProgress))
+      setMode(null); setProgress('')
+    })
+  }
+  async function resume() {
+    if (!status?.run_id || !config) return
+    await act(async () => {
+      let checked = await checkBuilderReadiness()
+      while (checked.readiness.state === 'CHECKING') { await new Promise(resolve => setTimeout(resolve, 1500)); checked = await loadBuilderConfiguration() }
+      if (checked.readiness.state !== 'READY' || checked.target?.project_id !== status.target?.project_id || checked.revision !== config.revision) throw new Error('Cấu hình đã đổi')
+      setStatus(await runBuilderAction('resume', status.run_id!, checked.revision))
+    })
+  }
+  const rows = (serving?.runs ?? []).filter((row, index, all) => all.findIndex(other => other.database === row.database) === index)
   useEffect(() => {
-    if (clearConfirmation && !clearDialog.current?.open) { setClearDatabase(''); clearDialog.current?.showModal() }
-    if (!clearConfirmation && clearDialog.current?.open) clearDialog.current.close()
-  }, [clearConfirmation])
-  const full = !!status && status.contract_version !== 'builder-control-v1' && status.production_write === 'CONFIGURED'
-  const preparingStructure = structure?.state === 'APPLYING'
-  const clearing = !!clearState && ['APPLYING','PARTIAL','INTERRUPTED'].includes(clearState.state)
-  const active = clearing || preparingStructure || !!status && ['RUNNING', 'STOPPING', 'STOPPED'].includes(status.state)
-  const sourceReady = source?.state === 'VALID', ready = config?.readiness.state === 'READY'
-  const choice = catalog.value?.projects.find(row => String(row.project_id) === projectId)
-  const scopeRequest: SelectionRequest = { mode: scopeMode, value: scopeMode === 'ALL' ? null : Number(nodeLimit) }
-  const savedRequest = config?.selection?.request ?? { mode: config?.selection?.node_limit == null ? 'ALL' : 'COUNT', value: config?.selection?.node_limit ?? null }
-  const vectorDirty = !!config && (vectorPackage?.name !== config.vector_package?.name || vectorPackage?.sha256 !== config.vector_package?.sha256)
-  const dirty = !!config && (vectorDirty || projectId !== String(config.target?.project_id ?? '') || batch !== String(config.batch_size) || unlimited !== (config.request_limit === null) || !unlimited && limit !== String(config.request_limit) || scopeRequest.mode !== savedRequest.mode || scopeRequest.value !== savedRequest.value)
-  const selectedPackage = packages.value?.packages.find(row => row.name === vectorPackage?.name)
-  const packageModelCurrent = !!packages.value?.current_model && packages.value.current_model.provider === config?.embedding?.provider && packages.value.current_model.model === config.embedding.model && packages.value.current_model.dimension === config.embedding.dimension
-  const vectorAllowed = !vectorPackage || config?.contract_version === 'builder-configuration-v5' && !packages.loading && !packages.error && packageModelCurrent && selectedPackage?.compatible === true && selectedPackage.sha256 === vectorPackage.sha256
-  const previewMatches = sourceReady && scopePreview?.revision === config?.revision && scopePreview?.request.mode === scopeRequest.mode && scopePreview?.request.value === scopeRequest.value
-  const modelReady = !!config?.embedding?.tested && config.embedding.key_configured && config.embedding.dimension !== null && config.embedding.dimension >= 1 && config.embedding.dimension <= 65536
-  const disabled = busy || !!connectionError || !snapshot
-  const recommended = preparingStructure ? 1 : status?.state === 'COMPLETE' && full ? 4 : active ? 3 : !sourceReady ? 0 : !config?.saved ? 1 : !ready ? 2 : 3
-  const step = selected ?? recommended
-  const canBuild = !disabled && !dirty && vectorAllowed && full && sourceReady && ready && status.actions.build
-  const canAbandon = !disabled && !preparingStructure && status?.actions.abandon === true
-  const validNumbers = /^\d+$/.test(batch) && Number(batch) >= 1 && Number(batch) <= 4096 &&
-    (unlimited || /^\d+$/.test(limit) && Number(limit) >= 1 && Number(limit) <= 1000000) &&
-    (scopeMode === 'ALL' || /^\d+$/.test(nodeLimit) && Number(nodeLimit) >= (scopeMode === 'COUNT' ? 3 : 1) && Number(nodeLimit) <= (scopeMode === 'COUNT' ? source?.nodes ?? 0 : 100))
-  const confirmationKey = (value?: BuilderSnapshot) => JSON.stringify([value?.config.revision, value?.config.target, value?.config.embedding, value?.config.selection, value?.config.vector_package, value?.inputs.source_validation.plan_sha256,value?.status.run_id,value?.status.state])
-  const structureMatches = !!structure?.report && structure.report.target.project_id === Number(projectId) && structure.revision === config?.revision
-  const canPrepareStructure = !disabled && !active && structureMatches && structure?.can_apply === true && !!structure.report?.index_changes
-  const canPreviewClear = !disabled && config?.saved && !dirty && !preparingStructure && clearState?.state !== 'APPLYING' && !!status && ['IDLE','COMPLETE','ABANDONED','CLEARED'].includes(status.state)
-  const canApplyClear = canPreviewClear && clearState?.state === 'PREVIEW' && clearState.revision === config?.revision && clearState.report?.target.project_id === config?.target?.project_id
-  async function changeClear(action: 'preview' | 'apply') {
-    if (acting.current || !config || !canPreviewClear || action === 'apply' && (!canApplyClear || clearConfirmation?.preview_id !== clearState?.preview_id || clearDatabase !== clearState?.report?.target.database)) return
-    acting.current = true; setBusy(true); setActionError(''); setClearConfirmation(undefined)
-    try { setClearState(await clearBuilderData(action, config.revision, action === 'apply' ? clearState?.preview_id ?? undefined : undefined, action === 'apply' ? clearDatabase : undefined)) }
-    catch (failure) { setActionError('Chưa xác định kết quả xóa. Tải lại trạng thái trước khi thử tiếp. ' + inspectionError(failure)) }
-    finally { acting.current = false; setBusy(false); setVersion(value => value + 1) }
-  }
-  async function changeStructure(action: 'preview' | 'apply') {
-    if (acting.current || !config || !choice || action === 'apply' && (!canPrepareStructure || structureConfirmation?.preview_id !== structure?.preview_id)) return
-    acting.current = true; setBusy(true); setActionError(''); setStructureConfirmation(undefined)
-    try { setStructure(await prepareBuilderStructure(action, choice.project_id, config.revision, action === 'apply' ? structure?.preview_id ?? undefined : undefined)) }
-    catch (failure) { setActionError('Chưa xác định kết quả. Tải lại trạng thái để đọc kết quả server trước khi thử lại. ' + inspectionError(failure)) }
-    finally { acting.current = false; setBusy(false); setVersion(value => value + 1) }
-  }
-  async function mutate(action: 'prepare' | 'preview' | 'save' | 'check' | 'build' | 'stop' | 'resume' | 'abandon') {
-    if (acting.current || !snapshot) return
-    if (action === 'build' && (!canBuild || confirmationKey(confirmation) !== confirmationKey(snapshot))) return
-    if (action === 'abandon' && (!canAbandon || confirmationKey(confirmation) !== confirmationKey(snapshot))) return
-    acting.current = true; setBusy(true); setActionError(''); setConfirmation(undefined)
-    try {
-      if (action === 'prepare') {
-        const value = await loadBuilderInputs(undefined, true)
-        setSnapshot(current => current && { ...current, inputs: value }); setSelected(null)
-      } else if (action === 'preview' && config) {
-        setScopePreview(await previewBuilderSelection(config.revision, scopeRequest))
-      } else if (action === 'save' && config?.embedding && previewMatches && vectorAllowed) {
-        const value = await saveBuilderConfiguration({ revision: config.revision, embedding_revision: config.embedding.revision, project_id: Number(projectId), batch_size: Number(batch), request_limit: unlimited ? null : Number(limit), selection_preview_id: scopePreview!.preview_id, ...(config.contract_version === 'builder-configuration-v5' ? { vector_package: vectorPackage } : {}) })
-        setSnapshot(current => current && { ...current, config: value }); setSelected(value.vector_package ? 0 : 2)
-      } else if (action === 'check') {
-        const value = await checkBuilderReadiness()
-        setSnapshot(current => current && { ...current, config: value }); setSelected(null)
-      } else if (action === 'build' || action === 'stop' || action === 'resume' || action === 'abandon') {
-        const runId = action === 'build' ? `build-${crypto.randomUUID()}` : status?.run_id
-        if (!runId) return
-        const value = await runBuilderAction(action, runId, action === 'stop' ? undefined : config?.revision)
-        setSnapshot(current => current && { ...current, status: value }); setSelected(action === 'abandon' ? 1 : 3)
-        if (action === 'build' || action === 'resume') progressRegion.current?.focus()
-      }
-    } catch (failure) {
-      const latest = failure instanceof ApiError && failure.status === 409 ? await loadBuilderStatus().catch(() => status) : status
-      const lockCode = latest?.error_code ?? config?.readiness.checks.find(row => row.name === 'lock' && row.state === 'BLOCKED')?.code
-      setActionError(failure instanceof ApiError && failure.status === 409 ?
-        lockCode && ['LOCK', 'UNCERTAIN_WRITE'].includes(lockCode) ? builderIssue(lockCode) : 'Trạng thái hoặc cấu hình đã đổi. Tải lại, kiểm tra sẵn sàng rồi xác nhận lại.' :
-        'Chưa xác định kết quả thao tác. Đợi trạng thái cập nhật; không gửi lại yêu cầu khi phiên đang chạy. ' + inspectionError(failure))
-    } finally { acting.current = false; setBusy(false); setVersion(value => value + 1) }
-  }
-  const runModel = status && status.contract_version !== 'builder-control-v1' && status.binding ? status.binding.model_identity.split('|').at(-1) : config?.embedding?.model
-  const headline = full && status?.run_id ? builderStateLabel(status.state) : ready && !dirty ? 'Sẵn sàng dựng đồ thị' : source?.state === 'CHECKING' ? 'Đang chuẩn bị dữ liệu' : 'Chuẩn bị dựng đồ thị'
-  const steps = ['Dữ liệu', 'Cấu hình', 'Sẵn sàng', 'Đang dựng', 'Kết quả']
-  const stepStates = [sourceReady ? 'Đã đạt' : source?.state === 'CHECKING' ? 'Đang xử lý' : ['INVALID', 'UNAVAILABLE'].includes(source?.state ?? '') ? 'Cần xử lý' : 'Chưa thực hiện',
-    dirty ? 'Có thay đổi chưa lưu' : config?.saved ? 'Đã lưu' : 'Chưa lưu', dirty ? 'Cần lưu lại cấu hình' : ready ? 'Đã đạt' : config?.readiness.state === 'CHECKING' ? 'Đang kiểm tra' : config?.readiness.state === 'BLOCKED' ? 'Cần xử lý' : 'Chưa kiểm tra',
-    status?.run_id && full ? builderStateLabel(status.state) : 'Chưa thực hiện', status?.state === 'COMPLETE' && full ? 'Đã xác minh' : 'Chưa có kết quả']
-  const runDetail = status && status.contract_version !== 'builder-control-v1' ? status : undefined
-  return <div className="space-y-5 min-w-0">
-    <div className="flex flex-wrap justify-between items-start gap-3 text-sm">
-      <div className="min-w-0"><p role="status" className="font-semibold">{headline}</p>
-        {sourceReady && <p className="text-muted mt-1">Dự kiến: {(config?.selection?.nodes ?? source.nodes)?.toLocaleString('vi-VN')} nội dung · {(config?.selection?.edges ?? source.edges)?.toLocaleString('vi-VN')} quan hệ trong phạm vi {config?.selection?.node_limit ? 'giới hạn' : 'toàn bộ nguồn'}</p>}</div>
-      <Button disabled={busy} onClick={() => setVersion(value => value + 1)}>Tải lại trạng thái</Button>
+    const requested = parameters.get('project_id')
+    if (requested && !view) {
+      const row = rows.find(row => String(row.project_id) === requested && (!parameters.get('run_id') || row.run_id === parameters.get('run_id')))
+      if (row) setView(row)
+    }
+  }, [parameters, serving])
+  function closeView() { setView(undefined); const next = new URLSearchParams(parameters); ['project_id','run_id','verify_run','bstep'].forEach(key => next.delete(key)); setParameters(next, { replace: true }) }
+  return <section id="graph-library" className="space-y-5 mt-6" aria-label="Đồ thị">
+    <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-xl font-semibold">Đồ thị</h2><div className="flex flex-wrap gap-3">
+      <Button variant="primary" disabled={busy || !!building || !!readError || !config} onClick={() => openFlow('build')}>+ Dựng đồ thị mới</Button>
+      <Button disabled={busy || !!building || !!readError || !config} onClick={() => openFlow('import')}>+ Nhập từ gói</Button>
+      <Button disabled={busy} onClick={refresh}>Tải lại danh sách</Button>
+    </div></div>
+    <Card title={serving?.active ? `Đang dùng cho Chat: ${serving.active.project_name}` : 'Chưa chọn đồ thị'} right={<Button onClick={() => document.getElementById('graph-table')?.focus()}>Chọn đồ thị</Button>}>
+      <div className="px-5 pb-5 text-sm space-y-3"><p>{serving?.active && serving.runtime_ready && !serving.chat_blockers.length ? 'Chat đang dùng đồ thị này để tìm căn cứ trả lời.' : 'Chọn đồ thị sẵn sàng để Chat tìm căn cứ trả lời.'}</p>
+        {serving?.chat_blockers.filter(code => code !== 'GRAPH_REQUIRED').map(code => <p key={code}>{servingReasons[code] ?? 'Đồ thị chưa sẵn sàng. Mở Xem để kiểm tra.'}</p>)}
+        <details><summary className="underline cursor-pointer">Tùy chọn tìm kiếm</summary><div className="mt-4">{searchOptions}</div></details>
+      </div>
+    </Card>
+    {(error || readError) && <div role="alert" className="text-sm space-y-2"><p>{error || readError}</p><details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><pre className="whitespace-pre-wrap break-all">{detailError}</pre></details></div>}
+    <div id="graph-table" tabIndex={-1} className="overflow-x-auto rounded-2xl border border-line bg-surface">
+      <table className="w-full text-sm" aria-label="Thư viện đồ thị"><thead><tr>{['Tên','Phạm vi','Nội dung','Liên kết','Vector','Trạng thái','Thao tác'].map(label => <Th key={label}>{label}</Th>)}</tr></thead><tbody>
+        {building && <tr><Td>{catalog?.projects.find(row => row.project_id === status.target?.project_id)?.project_name ?? 'Đồ thị đang dựng'}</Td><Td>{status.contract_version !== 'builder-control-v1' && status.binding?.node_limit ? 'Một phần' : 'Toàn bộ'}</Td><td colSpan={3} className="px-5 py-3"><p>{builderStateLabel(status.state)}</p>{status.progress && <p>{status.progress.done.toLocaleString('vi-VN')}/{status.progress.total.toLocaleString('vi-VN')}</p>}</td><Td>{status.state === 'STOPPED' ? 'Đã dừng' : 'Đang dựng'}</Td><Td><div className="flex gap-2">
+          <Button disabled={busy || !status.actions.stop} onClick={() => void act(async () => setStatus(await runBuilderAction('stop', status.run_id!)))}>Dừng</Button>
+          <Button disabled={busy || !status.actions.resume} onClick={() => void resume()}>Tiếp tục</Button></div></Td></tr>}
+        {rows.map(row => <tr key={`${row.project_id}:${row.run_id}`} className="border-t border-line"><Td>{row.project_name}</Td><Td>{row.partial ? 'Một phần' : 'Toàn bộ'}</Td><Td>{row.nodes.toLocaleString('vi-VN')}</Td><Td>{row.edges.toLocaleString('vi-VN')}</Td><Td>{row.vectors.toLocaleString('vi-VN')}</Td><Td>{serving?.active?.database === row.database ? 'Đang dùng cho Chat' : 'Đã dựng'}</Td><Td><div className="flex flex-wrap gap-2">
+          <Button variant="primary" disabled={busy || serving?.busy || serving?.active?.database === row.database} onClick={() => void act(async () => setPreview(await changeServing('preview', row.project_id, row.run_id)))}>Dùng cho Chat</Button>
+          <Button disabled={busy || exportState?.state === 'RUNNING'} onClick={() => void act(async () => setExportState(await exportBuilderPackage(row.project_id, row.run_id)))}>Xuất gói</Button>
+          <Button disabled={busy} onClick={() => setView(row)}>Xem</Button>
+        </div></Td></tr>)}
+        {!rows.length && !building && <tr><td colSpan={7} className="px-5 py-3">{serving ? 'Chưa có đồ thị đã dựng. Dựng mới hoặc nhập từ gói để bắt đầu.' : 'Đang đọc danh sách đồ thị…'}</td></tr>}
+      </tbody></table>
     </div>
-    {connectionError && <p role="alert" className="border-l-2 border-amber-600 pl-3 text-sm">Đang kết nối lại. {snapshot ? `Giữ số liệu lúc ${builderTime(receivedAt)}. ` : ''}{connectionError}</p>}
-    {actionError && <p role="alert" className="text-sm text-red-700">{actionError}</p>}
-    {status?.state === 'ABANDONED' && <p role="status" className="text-sm">Phiên {status.run_id} đã bỏ, không thể tiếp tục. Graph, vectors, checkpoint và lịch sử được giữ. Bạn có thể cấu hình phiên mới.</p>}
-    <nav aria-label="Các bước dựng đồ thị" className="grid grid-cols-2 sm:grid-cols-5 border-b border-line gap-1 pb-3">
-      {steps.map((label, index) => <button key={label} type="button" aria-current={step === index ? 'step' : undefined} onClick={() => setSelected(index)}
-        className={`text-left px-3 py-3 rounded-lg min-w-0 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-strong ${step === index ? 'bg-selected text-navy' : 'text-muted hover:bg-selected/50'}`}>
-        <span className="block text-sm font-semibold">{index + 1}. {label}</span><span className="text-xs block mt-1">{stepStates[index]}</span>
-      </button>)}
-    </nav>
-    <Card title={`${step + 1}. ${steps[step]}`}><div className="px-5 pb-5 space-y-4 text-sm">
-      {step === 0 && <>
-        <p>Nguồn: dữ liệu luật giao thông và schema đi kèm phiên bản ứng dụng.</p>
-        <p className="text-muted">Chuẩn bị kế hoạch từ nguồn cố định trước khi cấu hình và ghi vào đích graph.</p>
-        {sourceReady && source.summary && <ScopeCounts summary={source.summary} />}
-        {source?.state === 'CHECKING' && <p>Đang chuẩn bị dữ liệu. Bạn có thể rời trang rồi quay lại theo dõi.</p>}
-        {source?.state === 'INVALID' && <p role="alert">{config?.vector_package ? 'Gói vector hỏng, đã thay đổi hoặc không khớp nguồn/phạm vi. Kiểm tra dữ liệu và model tại Chia sẻ đồ thị, chọn lại gói rồi lưu và chuẩn bị lại.' : 'Nguồn dữ liệu không hợp lệ. Kiểm tra phiên bản dữ liệu đi kèm rồi chuẩn bị lại.'}</p>}
-        {source?.state === 'UNAVAILABLE' && <p role="alert">Không đọc được nguồn. Kiểm tra quyền đọc và dung lượng state của Worker rồi thử lại.</p>}
-        {config?.vector_package && <p>Gói đã chọn: {config.vector_package.name}. Kiểm tra và chuẩn bị nhập vector trong nền; không gọi Embedding. Chọn đúng phạm vi của gói trước khi Dựng.</p>}
-        {vectorDirty && <p>Lưu thay đổi nguồn vector ở Cấu hình trước khi chuẩn bị.</p>}
-        <Button disabled={disabled || vectorDirty || source?.state === 'CHECKING' || !!status && ['RUNNING', 'STOPPING'].includes(status.state)} onClick={() => mutate('prepare')}>{status?.state === 'STOPPED' ? 'Kiểm tra lại dữ liệu' : 'Kiểm tra và chuẩn bị'}</Button>
-        {sourceReady && <Button onClick={() => setSelected(1)}>Đến cấu hình</Button>}
-      </>}
-      {step === 1 && <>
-        <h3 className="font-semibold">Nơi lưu</h3>
-        <div className="flex flex-wrap items-end gap-3"><div className="flex-1 min-w-0"><Field label="Project OpenSPG" hint="Danh sách project bạn sở hữu trong phiên đăng nhập OpenSPG."><select className={inputCls} value={projectId} disabled={active || busy || catalog.loading} onChange={event => { const v = event.target.value; setProjectId(v); const np = new URLSearchParams(parameters); if (v) np.set('project_id', v); else np.delete('project_id'); setParameters(np) }}>
-          <option value="">Chọn project</option>
-          {projectId && !choice && <option value={projectId}>Project đã lưu #{projectId} · chưa có trong danh sách</option>}
-          {catalog.value?.projects.map(row => <option key={row.project_id} value={row.project_id} disabled={row.state !== 'AVAILABLE'}>{row.project_name}{catalog.value!.projects.some(other => other.project_id !== row.project_id && other.project_name === row.project_name) ? ` · #${row.project_id}` : ''} · {row.database ?? 'chưa có kết nối'}{row.state === 'SERVING_PROTECTED' ? ' · đang phục vụ' : row.state === 'CONNECTION_NOT_CONFIGURED' ? ' · chưa cấp kết nối' : ''}</option>)}
-        </select></Field></div><Button disabled={catalog.loading || busy} onClick={catalog.reload}>Tải lại danh sách</Button></div>
-        {catalog.error && <p role="alert">{catalog.error}</p>}
-        {catalog.value?.state === 'EMPTY' && <p>Chưa có project bạn sở hữu. Tạo Knowledge Base trong OpenSPG rồi tải lại danh sách.</p>}
-        {catalog.value?.state === 'FORBIDDEN' && <p role="alert">Cần đăng nhập OpenSPG bằng cùng địa chỉ máy chủ với LuậtGT, rồi tải lại. Tài khoản LuậtGT không tự cấp quyền project OpenSPG.</p>}
-        {catalog.value?.state === 'NOT_CONFIGURED' && <p role="alert">Deployment chưa cấp kết nối OpenSPG/Neo4j cho Worker. Xem hướng dẫn Builder.</p>}
-        {catalog.value?.state === 'UNAVAILABLE' && <p role="alert">Không đọc được catalog OpenSPG. Kiểm dịch vụ và quyền kết nối, rồi tải lại.</p>}
-        {config?.links?.openspg && <a href={config.links.openspg} target="_blank" rel="noreferrer" className="underline inline-block">Mở OpenSPG</a>}
-        {(choice ?? config?.target) && <><p className="break-words">Đích chọn: {(choice ?? config?.target)?.project_name} · database {(choice ?? config?.target)?.database}</p><details><summary className="underline cursor-pointer">Chi tiết project</summary><p className="break-words">ID {(choice ?? config?.target)?.project_id} · namespace {(choice ?? config?.target)?.namespace}</p></details></>}
-        <section aria-label="Chuẩn bị cấu trúc LuậtGT" className="border-y border-line py-4 space-y-3 min-w-0">
-          <details open={!(structureMatches && structure?.report?.build_ready && !structure.can_apply)}><summary className="underline cursor-pointer font-semibold">{structureMatches && structure?.report?.build_ready && !structure.can_apply ? 'Cấu trúc dữ liệu đã sẵn sàng · Xem chi tiết' : 'Chuẩn bị cấu trúc LuậtGT'}</summary><div className="space-y-3 mt-3">
-          <p>Xem schema/index hiện có và thay đổi cần thiết. Chưa dựng graph, chưa tạo embeddings; thao tác không gọi model.</p>
-          <Button disabled={disabled || active || choice?.state !== 'AVAILABLE'} onClick={() => changeStructure('preview')}>Xem thay đổi</Button>
-          {active && <p>Phiên hoặc tác vụ chưa kết thúc. Chờ hoàn tất trước khi thay đổi cấu trúc.</p>}
-          {!choice && <p>Chọn project có quyền sở hữu trước khi xem thay đổi.</p>}
-          {preparingStructure && <p role="status">Đang chuẩn bị cấu trúc. Có thể tải lại trang để theo dõi; không gửi lại thao tác.</p>}
-          {structureMatches && structure?.report && <>
-            <p>Đã đọc lúc {structure.checked_at ? builderTime(structure.checked_at) : 'chưa xác định'}: {structure.report.counts.nodes} node · {structure.report.counts.edges} quan hệ trong database. {structure.report.dimension} chiều.</p>
-            {!structure.report.counts.nodes && <p>Database rỗng là bình thường trước Build.</p>}
-            <p>{structure.report.build_ready ? 'Hiện đủ cấu trúc để Build.' : 'Chưa xác minh đủ cấu trúc để Build.'} {(structure.report.default_types?.length ?? 0) > 0 ? ` Còn ${structure.report.default_types!.length} loại mặc định OpenSPG; chưa thay cấu trúc mặc định.` : structure.report.default_types ? ' Không còn loại mặc định OpenSPG được nhận diện.' : ' Bấm Xem thay đổi để cập nhật bản xem trước.'}</p>
-            <p>Schema: {structure.report.changes.filter(row => row.action !== 'KEEP').length} mục thay đổi. Chỉ xóa định nghĩa khớp mẫu mặc định trên database rỗng sau xác nhận.</p>
-            {structure.report.changes.length > 0 && <details><summary className="underline cursor-pointer">Chi tiết xóa / giữ / thêm schema</summary><ul className="list-disc pl-5 break-words">{structure.report.changes.map((row, index) => <li key={index}>{({ ADD: 'Thêm', UPDATE: 'Bổ sung', REMOVE: 'Xóa', KEEP: 'Giữ' })[row.action]} {({ type: 'loại', property: 'thuộc tính', relation: 'quan hệ' })[row.kind]}: {row.name}</li>)}</ul></details>}
-            <ul className="list-disc pl-5 break-words">{structure.report.indexes.map(row => <li key={row.label + row.property}>{row.label}.{row.property}: {({ ADD: 'cần thêm', KEEP: 'đúng, giữ nguyên', REBUILD: 'đúng; native sync sẽ tạo lại trên database rỗng', BLOCKED: 'không tương thích hoặc chưa ONLINE' })[row.action]}</li>)}</ul>
-            {structure.report.index_changes && <details><summary className="underline cursor-pointer">Tác động từng index</summary><ul className="list-disc pl-5 break-words">{structure.report.index_changes.map(row => <li key={row.name}>{({ ADD: 'Tạo mới', KEEP: 'Giữ', REMOVE: 'Xóa index mặc định', REBUILD: 'Tạo lại qua OpenSPG', BLOCKED: 'Chặn: chưa rõ tác động' })[row.action]}: {row.name} · {row.type} · {row.labels.join(', ') || 'hệ thống'} · {row.properties.join(', ')}</li>)}</ul></details>}
-            {structure.report.native_rebuild.length > 0 && <details><summary className="underline cursor-pointer">Index hệ thống OpenSPG sẽ tạo lại trên database rỗng ({structure.report.native_rebuild.length})</summary><p className="break-words">{structure.report.native_rebuild.join(', ')}</p></details>}
-            {structure.report.conflicts.length > 0 && <p className="break-words">Xung đột: {structure.report.conflicts.join(', ')}</p>}
-            {structure.report.code && <p role="alert">{builderIssue(structure.report.code)}</p>}
-            {structure.state === 'COMPLETE' && structure.report.index_changes && structure.report.build_ready && <p role="status">Đã đọc lại OpenSPG/Neo4j: cấu trúc LuậtGT đầy đủ, bốn index ONLINE; schema mặc định trong phạm vi xác nhận đã loại bỏ. Chưa Build, chưa embedding.</p>}
-            {structure.state === 'PREVIEW' && structure.report.build_ready && !structure.report.code && !structure.can_apply && <p role="status">Đủ cấu trúc để Build; không còn thay đổi cần áp dụng. Lưu cấu hình và kiểm sẵn sàng.</p>}
-            <p>Tên label cũ có thể còn trong sidebar Neo4j do metadata lịch sử; không đồng nghĩa còn schema hoặc dữ liệu. Thao tác này không xóa label tokens.</p>
-            {structure.state === 'PARTIAL' && <p role="alert">Chưa hoàn tất. Phía trên là kết quả đọc lại; phần còn thiếu chưa được xác nhận. Không rollback nguyên tử. Xem thay đổi lại trước khi thử tiếp.</p>}
-            {structure.can_apply && <Button disabled={!canPrepareStructure} onClick={() => setStructureConfirmation(structure)}>Chuẩn bị cấu trúc LuậtGT</Button>}
-          </>}
-          {structure?.code && <p role="alert">{builderIssue(structure.code)}</p>}
-          </div></details>
-        </section>
-        {active && <p>Phiên chưa kết thúc: giữ nguyên cấu hình để tiếp tục đúng điểm lưu.</p>}
-        <p className="text-muted">Cấu hình đã lưu áp dụng cho phiên dựng mới. Tiếp tục dựng giữ cấu hình và hạn mức của phiên cũ.</p>
-        <form onSubmit={event => { event.preventDefault(); if (!disabled && validNumbers && previewMatches && modelReady && sourceReady && vectorAllowed && choice?.state === 'AVAILABLE' && !active) mutate('save') }} className="space-y-4">
-          <fieldset disabled={active || busy} className="space-y-3"><legend className="font-semibold mb-2">Phạm vi dữ liệu</legend>
-            <Field label="Dữ liệu sẽ dựng"><select className={inputCls} value={scopeMode === 'ALL' ? 'ALL' : 'PARTIAL'} onChange={event => { setScopeMode(event.target.value === 'ALL' ? 'ALL' : 'COUNT'); setScopePreview(undefined) }}><option value="ALL">Toàn bộ dữ liệu</option><option value="PARTIAL">Một phần dữ liệu</option></select></Field>
-            {scopeMode !== 'ALL' && <div className="grid sm:grid-cols-2 gap-3"><Field label="Cách chọn"><select className={inputCls} value={scopeMode} onChange={event => { setScopeMode(event.target.value as 'COUNT' | 'PERCENT'); setNodeLimit(''); setScopePreview(undefined) }}><option value="COUNT">Số lượng nội dung</option><option value="PERCENT">Tỷ lệ nội dung (%)</option></select></Field>
-              <Field label={scopeMode === 'COUNT' ? 'Số nội dung' : 'Tỷ lệ (%)'} hint={scopeMode === 'COUNT' ? `Từ 3 đến ${source?.nodes?.toLocaleString('vi-VN') ?? 'tổng nguồn'}.` : '1–100%. Số nội dung làm tròn lên; quá nhỏ sẽ bị từ chối.'}><input className={inputCls} type="number" min={scopeMode === 'COUNT' ? 3 : 1} max={scopeMode === 'COUNT' ? source?.nodes ?? undefined : 100} step={1} required value={nodeLimit} onChange={event => { setNodeLimit(event.target.value); setScopePreview(undefined) }} /></Field></div>}
-            <p className="text-muted">Một phần: chọn cố định, ưu tiên nội dung ngắn, giữ văn bản nguồn, đơn vị cha và hai đầu quan hệ trong giới hạn. Không phải mẫu ngẫu nhiên hay đại diện thống kê. Mức quá nhỏ để giữ đủ nguồn và các loại sẽ bị từ chối.</p>
-            <Button type="button" disabled={disabled || !validNumbers || !sourceReady} onClick={() => mutate('preview')}>Xem trước phạm vi</Button>
-            {previewMatches && scopePreview && <div role="status" className="space-y-2"><p className="font-medium">{scopeMode === 'PERCENT' ? `${nodeLimit}% → ${scopePreview.summary.nodes.toLocaleString('vi-VN')} nội dung (làm tròn lên)` : scopeMode === 'ALL' ? 'Toàn bộ nguồn đã xác thực' : 'Phạm vi đã chọn'}</p><ScopeCounts summary={scopePreview.summary} /></div>}
-            {!previewMatches && <p className="text-muted">Xem trước phạm vi trước khi lưu. Hạn mức request không thay đổi tập dữ liệu được chọn.</p>}
-          </fieldset>
-          <section className="space-y-2"><h3 className="font-semibold">Dịch vụ tạo vector</h3>
-            {config?.embedding ? <><p className="break-words">Embedding: {config.embedding.model}</p><p>API key: {config.embedding.key_configured ? 'Đã lưu, được che' : 'Chưa lưu'} · {config.embedding.tested ? 'Đã kiểm kết nối' : 'Chưa kiểm kết nối'}</p></> : <p>Chưa lưu cấu hình Embedding.</p>}
-            <Link className="underline inline-block" to={`/admin/chatbot?step=1${projectId ? `&project_id=${encodeURIComponent(projectId)}` : ""}`}>Cấu hình và kiểm kết nối Embedding</Link>
-            <p className="text-muted">Kiểm model tại Cấu hình gửi request thật và có thể tính phí. Builder dùng Embedding đã lưu; không cần áp dụng cho Chat.</p>
-          </section>
-          <section className="space-y-3"><h3 className="font-semibold">Nguồn vector</h3>
-            <div className="flex flex-wrap items-end gap-3"><div className="flex-1 min-w-0"><Field label="Nguồn vector"><select aria-label="Nguồn vector" className={inputCls} value={vectorPackage?.name ?? ''} disabled={active || busy || config?.contract_version !== 'builder-configuration-v5' || packages.loading} onChange={event => {
-              const row = packages.value?.packages.find(row => row.name === event.target.value && row.compatible && row.sha256)
-              setVectorPackage(row?.sha256 ? { name: row.name, sha256: row.sha256 } : null)
-            }}>
-              <option value="">API mặc định</option>
-              {vectorPackage && !selectedPackage && <option value={vectorPackage.name} disabled>Gói đã lưu: {vectorPackage.name} · chưa có trong danh sách</option>}
-              {packages.value?.packages.map(row => <option key={row.name} value={row.name} disabled={!row.compatible || !row.sha256 || !packageModelCurrent}>{row.compatible ? 'Dùng gói đã nhập: ' : 'Chưa tương thích: '}{row.name}</option>)}
-            </select></Field></div><Button type="button" disabled={busy || packages.loading} onClick={packages.reload}>Tải lại gói</Button></div>
-            {packages.error && <p role="alert">{packages.error}</p>}
-            <p>Máy hiện tại: {config?.embedding ? `${config.embedding.provider} · ${config.embedding.model} · ${config.embedding.dimension ?? 'chưa kiểm'} chiều` : 'chưa cấu hình Embedding.'}</p>
-            <ul className="space-y-2">{packages.value?.packages.map(row => <li key={row.name} className="break-words"><strong>{row.name}</strong> · {packageReason(row.reason)}{row.manifest && <> · Gói yêu cầu: {row.manifest.model_identity.provider} · {row.manifest.model_identity.model} · {row.manifest.model_identity.dimension} chiều · {row.manifest.selection === null ? 'toàn bộ dữ liệu' : `${row.manifest.nodes.toLocaleString('vi-VN')} nội dung; chọn đúng phạm vi gói`}</>}</li>)}</ul>
-            {vectorPackage && !vectorAllowed && <p role="alert">Gói đã chọn chưa tương thích hoặc đã thay đổi. Tải lại, kiểm nguồn/model rồi chọn lại gói trước khi lưu hoặc dựng.</p>}
-            <p className="text-muted">Lưu cấu hình chỉ lưu tên và SHA-256, chưa giải nén. Sau khi lưu gói, bấm Kiểm tra và chuẩn bị ở Dữ liệu để nhập nền; sau đó tự Dựng vào project mới, trống.</p>
-            <Link className="underline inline-block" to="/admin/graph-share">Chia sẻ đồ thị · xem thư mục và gói ZIP</Link>
-          </section>
-          <details><summary className="cursor-pointer underline">Cấu hình nâng cao</summary><div className="grid gap-4 sm:grid-cols-2 mt-4">
-            <Field label="Kích thước batch" hint="1–4096 nội dung hoặc quan hệ xử lý mỗi batch."><input className={inputCls} type="number" min={1} max={4096} step={1} required value={batch} disabled={active || busy} onChange={event => setBatch(event.target.value)} /></Field>
-            <div className="space-y-2">
-              <Field label="Hạn mức request Embedding" hint="1–1.000.000 lần gửi request tạo vector cho cả phiên, gồm retry. Tiếp tục không đặt lại hạn mức."><input className={inputCls} type="number" min={1} max={1000000} step={1} required={!unlimited} value={limit} disabled={active || busy || unlimited} onChange={event => setLimit(event.target.value)} /></Field>
-              <label className="flex items-center gap-2"><input type="checkbox" checked={unlimited} disabled={active || busy} onChange={event => setUnlimited(event.target.checked)} />Không giới hạn</label>
-            </div>
-            {config?.embedding && <p className="break-all sm:col-span-2 text-muted">Endpoint: {config.embedding.base_url} · {config.embedding.dimension ?? 'Chưa kiểm'} chiều</p>}
-          </div></details>
-          {!/^\d+$/.test(batch) || Number(batch) < 1 || Number(batch) > 4096 ? <p role="alert">Kích thước batch phải là số nguyên 1–4096.</p> : null}
-          {!unlimited && (!/^\d+$/.test(limit) || Number(limit) < 1 || Number(limit) > 1000000) && <p role="alert">Hạn mức request phải là số nguyên 1–1.000.000 hoặc chọn Không giới hạn.</p>}
-          {scopeMode !== 'ALL' && !validNumbers && <p role="alert">Nhập số nguyên trong phạm vi cho phép, rồi xem trước.</p>}
-          <Button type="submit" disabled={disabled || !validNumbers || !previewMatches || !modelReady || !sourceReady || !vectorAllowed || choice?.state !== 'AVAILABLE' || active}>Lưu cấu hình dựng</Button>
-          {(!sourceReady || !modelReady) && <p className="text-muted">Cần chuẩn bị dữ liệu và kiểm cấu hình Embedding trước khi lưu.</p>}
-          {!choice && <p className="text-muted">Chọn project có quyền sở hữu và kết nối được deployment cấp.</p>}
-          {choice && choice.state !== 'AVAILABLE' && <p role="alert">{builderIssue(choice.state)}</p>}
-        </form>
-      </>}
-      {step === 2 && <>
-        <p role="status" className="font-medium">{config?.readiness.state === 'CHECKING' ? 'Đang kiểm tra điều kiện dựng.' : ready && !dirty ? 'Đã đạt điều kiện. Bạn có thể sang bước dựng.' : config?.readiness.state === 'BLOCKED' ? 'Chưa thể dựng. Xử lý các mục bên dưới rồi kiểm tra lại.' : 'Chưa kiểm tra sẵn sàng.'}</p>
-        <p>Kiểm nguồn, model đã lưu, danh tính đích, chỉ mục và khóa ghi. Thao tác này chỉ đọc, không gọi provider hoặc tạo graph.</p>
-        <dl className="divide-y divide-line">{(['source', 'embedding', 'target', 'lock'] as const).map(name => {
-          const row = config?.readiness.checks.find(value => value.name === name)
-          return <div key={name} className="py-3"><div className="flex flex-wrap justify-between gap-2"><dt>{({ source: 'Dữ liệu', embedding: 'Embedding', target: 'Đích lưu và chỉ mục', lock: 'Quyền ghi và khóa' })[name]}</dt><dd>{row?.state === 'READY' ? 'Đã đạt' : row?.state === 'BLOCKED' ? 'Cần xử lý' : 'Chưa kiểm tra'}</dd></div>
-            {row?.code && <p className="text-muted mt-1">{row.state === 'NOT_CHECKED' ? ({ WAIT_SOURCE: 'Chờ dữ liệu nguồn hợp lệ.', WAIT_EMBEDDING: 'Chờ cấu hình Embedding hợp lệ.', WAIT_TARGET: 'Chờ schema, chỉ mục và danh tính đích hợp lệ.' } as Record<string, string>)[row.code] : builderIssue(row.code)}</p>}
-            {row?.state === 'BLOCKED' && (name === 'embedding' ? <Link className="underline inline-block mt-2" to={`/admin/chatbot?step=1${projectId ? `&project_id=${encodeURIComponent(projectId)}` : ""}`}>Mở cấu hình Embedding</Link> : name !== 'lock' ? <Button onClick={() => setSelected(name === 'source' ? 0 : 1)}>{name === 'source' ? 'Về Dữ liệu' : 'Về Cấu hình và cấu trúc'}</Button> :
-              <p className="mt-2 break-words">{row.owner ? `Khóa do phiên ${row.owner.run_id} · project ${row.owner.project_id} giữ. ${status?.run_id === row.owner.run_id && status.target?.project_id === row.owner.project_id ? 'Trạng thái Worker: ' + builderStateLabel(status.state) + '.' : 'Worker này chưa xác minh trạng thái của phiên đó.'}` : 'Chưa đọc được danh tính phiên giữ khóa.'} Giữ nguyên khóa; kiểm trạng thái Worker, không xóa khóa để ép chạy.</p>)}
-          </div>
-        })}</dl>
-        <p className="text-muted">Kết quả chỉ phản ánh thời điểm kiểm. Runner sẽ kiểm lại trước khi ghi.</p>
-        <Button disabled={disabled || preparingStructure || !config?.saved || !sourceReady || dirty || config.readiness.state === 'CHECKING' || !!status && ['RUNNING', 'STOPPING'].includes(status.state)} onClick={() => mutate('check')}>Kiểm tra sẵn sàng</Button>
-        {ready && !dirty && <Button onClick={() => setSelected(3)}>Đến bước dựng</Button>}
-        {(!config?.saved || dirty) && <p>Lưu cấu hình dựng trước khi kiểm tra.</p>}
-        {!sourceReady && <p>Chuẩn bị dữ liệu ở bước Dữ liệu trước khi kiểm tra.</p>}
-        {preparingStructure && <p>Chờ chuẩn bị cấu trúc hoàn tất trước khi kiểm tra.</p>}
-      </>}
-      {step === 3 && <>
-        <p className="break-words">Đích ghi: {status?.target?.database ?? config?.target?.database ?? 'Chưa cấu hình'} · model {runModel ?? 'Chưa cấu hình'}</p>
-        {status?.state === 'COMPLETE' && full && <p>Phiên dựng đã kết thúc. Mở Kết quả để xem số liệu đã xác minh và đồ thị.</p>}
-        {status?.error_code && <p role={status.state === 'STOPPED' ? 'status' : 'alert'}>{builderIssue(status.error_code)}</p>}
-        {status?.state === 'STOPPING' && <p>Đợi batch và điểm lưu hoàn thành; không tắt Worker hoặc xóa khóa.</p>}
-        <div className="flex flex-wrap gap-3">
-          <Button variant="primary" disabled={!canBuild} onClick={() => { setConfirmAction('build'); setConfirmation(snapshot) }}>Bắt đầu dựng</Button>
-          <Button disabled={disabled || !status?.actions.stop} onClick={() => mutate('stop')}>Dừng an toàn</Button>
-          <Button disabled={disabled || !full || !status?.actions.resume || dirty} onClick={() => mutate('resume')}>Tiếp tục dựng</Button>
-          {status?.actions.abandon !== undefined && <Button disabled={!canAbandon} onClick={() => { setConfirmAction('abandon'); setConfirmation(snapshot) }}>Bỏ phiên</Button>}
-          {status?.state === 'COMPLETE' && full && <Button onClick={() => setSelected(4)}>Xem kết quả đã xác minh</Button>}
-        </div>
-        {!active && !canBuild && <p className="text-muted">Cần dữ liệu, cấu hình đã lưu và kết quả kiểm sẵn sàng hiện hành; Worker quyết định quyền bắt đầu.</p>}
-        {status?.state === 'STOPPED' && !status.actions.resume && <p>Kiểm tra lại dữ liệu và sẵn sàng để tiếp tục phiên này.</p>}
-        {status?.state === 'STOPPED' && <p>Bỏ phiên chấm dứt khả năng tiếp tục, giữ dữ liệu graph và điểm lưu. Xóa dữ liệu là thao tác riêng.</p>}
-        {status && status.contract_version === 'builder-control-v1' && <p>Worker chưa cung cấp luồng dựng dữ liệu ứng dụng. Kiểm tra cấu hình hoặc cập nhật Worker.</p>}
-      </>}
-      {step === 4 && <>{status ? <BuilderResult status={status} links={config?.links} /> : <p>Chưa có kết quả.</p>}<Button onClick={() => setSelected(3)}>Về tiến trình phiên</Button></>}
-    </div></Card>
-    {step === 3 && <div ref={progressRegion} tabIndex={-1} aria-label="Theo dõi phiên dựng" className="focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-strong"><Card title="Tiến trình phiên dựng">
-      <div className="px-5 pb-3 text-xs text-muted space-y-1">{runDetail?.timing ? <><p>Bắt đầu: {builderTime(runDetail.timing.started_at)}</p><p>Lần cập nhật từ Worker: {builderTime(runDetail.timing.updated_at)}</p></> : <p>Các công đoạn sẽ cập nhật từ điểm lưu của Worker khi phiên bắt đầu.</p>}</div>
-      <div className="overflow-x-auto"><table aria-label="Tiến trình dựng đồ thị" className="w-full text-sm table-fixed"><thead><tr className="border-b border-line"><th className="text-left px-5 py-3 w-2/5">Công đoạn</th><th className="text-left px-3 py-3">Tiến trình đã ghi nhận</th></tr></thead><tbody>
-        {builderRows.map(group => <tr key={group.label} className="border-b border-line last:border-0"><th scope="row" className="text-left align-top px-5 py-4 font-medium break-words">{group.label}</th><td className="align-top px-3 py-3 space-y-3 break-words">{group.stages.map(([name, label, unit]) => {
-          const row = runDetail?.stages.find(value => value.name === name)
-          return <div key={name} className={row?.state === 'RUNNING' ? 'font-semibold text-navy' : ''}><p>{label}: {row ? stageLabels[row.state] : 'Chưa thực hiện'}</p>{row?.done !== null && row?.done !== undefined && <><p className="text-xs text-muted tabular-nums">{row.done.toLocaleString('vi-VN')}/{row.total?.toLocaleString('vi-VN')} {unit}</p>{!!row.total && <progress aria-label={label} max={row.total} value={row.done} className="w-full h-2 accent-navy" />}</>}{row?.error_code && row.error_code !== status?.error_code && <p className="text-xs text-muted">{builderIssue(row.error_code)}</p>}</div>
-        })}</td></tr>)}
-      </tbody></table></div>
-      {runDetail?.binding && <details className="px-5 py-4 text-xs"><summary className="cursor-pointer underline">Chi tiết kỹ thuật phiên</summary><dl className="mt-3 space-y-2 break-all">{Object.entries(runDetail.binding).map(([name, value]) => <div key={name}><dt className="font-medium">{name}</dt><dd>{value}</dd></div>)}</dl>{status?.error_code && <p className="mt-3">Mã lỗi: {status.error_code}</p>}</details>}
-    </Card></div>}
-    <details className="text-sm border-t border-line py-4 space-y-3"><summary className="font-semibold underline cursor-pointer">Xóa dữ liệu để dựng lại</summary><div className="space-y-3 mt-4">
-      <p>Xóa toàn bộ node, vector nằm trên node và quan hệ trong database chuyên dụng đã được deployment cấp quyền. Không xóa theo riêng một run.</p>
-      <p>Giữ project, database, tài khoản, credentials, schema, index và lịch sử/checkpoint. Điểm lưu cũ không còn được Resume; không có rollback nguyên tử hoặc khôi phục tự động.</p>
-      <Button disabled={!canPreviewClear} onClick={() => changeClear('preview')}>Xem trước xóa dữ liệu</Button>
-      {status?.state === 'STOPPED' && <p>Dừng đã hoàn tất. Bỏ phiên trước khi xem trước xóa.</p>}
-      {clearState?.report && <div className="space-y-2 break-words"><p>Project {clearState.report.target.project_name} · database <strong>{clearState.report.target.database}</strong>.</p>
-        <p>Toàn bộ database tại lần xem trước: {clearState.report.counts.nodes.toLocaleString('vi-VN')} node · {clearState.report.counts.edges.toLocaleString('vi-VN')} quan hệ. Batch xóa tối đa {clearState.report.batch_size} mục.</p>
-        <details><summary className="underline cursor-pointer">Danh tính đích</summary><p>ID {clearState.report.target.project_id} · namespace {clearState.report.target.namespace} · physical database {clearState.report.database_id}</p></details></div>}
-      {clearState && ['APPLYING','PARTIAL','INTERRUPTED','COMPLETE'].includes(clearState.state) && <p role="status">Đã nhận xác nhận xóa {clearState.deleted.nodes.toLocaleString('vi-VN')} node · {clearState.deleted.edges.toLocaleString('vi-VN')} quan hệ. {clearState.state === 'APPLYING' ? 'Đang xóa và xác minh; không tắt Worker.' : clearState.state === 'COMPLETE' ? 'Đã đọc lại: database rỗng, schema/index được giữ. Chuẩn bị cấu trúc, cấu hình và kiểm sẵn sàng cho phiên mới.' : 'Chưa hoàn tất. Các số trên chỉ gồm batch đã được xác nhận; chưa biết chắc phần còn lại. Xem trước lại để đọc hiện trạng.'}</p>}
-      {clearState?.code && <p role="alert">{builderIssue(clearState.code)}</p>}
-      {canApplyClear && <Button onClick={() => setClearConfirmation(clearState)}>Xóa dữ liệu đồ thị</Button>}
-      {clearState?.state === 'COMPLETE' && <Button onClick={() => setSelected(1)}>Về cấu hình phiên mới</Button>}
-    </div></details>
-    <dialog ref={clearDialog} aria-labelledby="clear-confirm-title" onCancel={() => setClearConfirmation(undefined)} className="m-auto w-[calc(100%_-_2rem)] max-w-lg max-h-[90vh] overflow-auto rounded-2xl border border-line bg-bg p-5 text-sm text-navy backdrop:bg-navy/30">
-      <form onSubmit={event => { event.preventDefault(); changeClear('apply') }} className="space-y-4">
-        <h2 id="clear-confirm-title" className="text-lg font-semibold">Xác nhận xóa dữ liệu đồ thị</h2>
-        <p className="break-words">Xóa toàn bộ {clearConfirmation?.report?.counts.nodes.toLocaleString('vi-VN')} node và {clearConfirmation?.report?.counts.edges.toLocaleString('vi-VN')} quan hệ trong project {clearConfirmation?.report?.target.project_name}, database <strong>{clearConfirmation?.report?.target.database}</strong>.</p>
-        <p>Giữ schema/index và database. Phiên cũ chỉ là lịch sử, không thể Resume. Xóa theo batch, không có rollback nguyên tử. Không tự Build hay chuyển Chat.</p>
-        <Field label="Nhập đúng tên database để xác nhận"><input className={inputCls} required value={clearDatabase} onChange={event => setClearDatabase(event.target.value)} autoComplete="off" /></Field>
-        {(!canApplyClear || clearConfirmation?.preview_id !== clearState?.preview_id) && <p role="alert">Trạng thái đã thay đổi. Xem trước lại.</p>}
-        <div className="flex flex-wrap justify-end gap-3"><Button type="button" onClick={() => setClearConfirmation(undefined)}>Quay lại</Button><Button type="submit" disabled={!canApplyClear || clearConfirmation?.preview_id !== clearState?.preview_id || clearDatabase !== clearState?.report?.target.database}>Xóa dữ liệu trong {clearConfirmation?.report?.target.database}</Button></div>
-      </form>
-    </dialog>
-    <dialog ref={structureDialog} aria-labelledby="structure-confirm-title" onCancel={() => setStructureConfirmation(undefined)} className="m-auto w-[calc(100%_-_2rem)] max-w-lg max-h-[90vh] overflow-auto rounded-2xl border border-line bg-bg p-5 text-sm text-navy backdrop:bg-navy/30">
-      <form className="space-y-4" onSubmit={event => { event.preventDefault(); changeStructure('apply') }}>
-        <h2 id="structure-confirm-title" className="text-lg font-semibold">Xác nhận chuẩn bị cấu trúc LuậtGT</h2>
-        <p className="break-words">Project {structureConfirmation?.report?.target.project_name} · #{structureConfirmation?.report?.target.project_id} · namespace {structureConfirmation?.report?.target.namespace} · database {structureConfirmation?.report?.target.database}.</p>
-        <p>{structureConfirmation?.report?.counts.nodes} node · {structureConfirmation?.report?.counts.edges} quan hệ hiện có. Áp dụng {structureConfirmation?.report?.changes.filter(row => row.action !== 'KEEP').length} mục schema như bản xem trước.</p>
-        <ul className="list-disc pl-5 break-words">{structureConfirmation?.report?.changes.filter(row => row.action === 'REMOVE').map(row => <li key={row.kind + row.name}>Xóa {row.kind === 'relation' ? 'quan hệ' : 'loại'} mặc định: {row.name}</li>)}</ul>
-        <ul className="list-disc pl-5 break-words">{structureConfirmation?.report?.index_changes?.filter(row => row.action === 'REMOVE').map(row => <li key={row.name}>Xóa index mặc định: {row.name}</li>)}</ul>
-        {(structureConfirmation?.report?.native_rebuild.length ?? 0) > 0 && <p>OpenSPG sẽ tạo lại {structureConfirmation?.report?.native_rebuild.length} index hệ thống trên database rỗng như bản xem trước.</p>}
-        <p>Chưa Build, chưa tạo embeddings, không gọi model. Không có rollback nguyên tử; lỗi sẽ đọc lại và báo phần còn thiếu.</p>
-        {(!canPrepareStructure || structureConfirmation?.preview_id !== structure?.preview_id) && <p role="alert">Đích hoặc bản xem trước đã đổi. Quay lại xem thay đổi.</p>}
-        <div className="flex flex-wrap justify-end gap-3"><Button type="button" onClick={() => setStructureConfirmation(undefined)}>Quay lại</Button><Button type="submit" variant="primary" disabled={!canPrepareStructure || structureConfirmation?.preview_id !== structure?.preview_id}>Xác nhận chuẩn bị</Button></div>
-      </form>
-    </dialog>
-    <dialog ref={dialog} aria-labelledby="builder-confirm-title" onCancel={() => setConfirmation(undefined)} className="m-auto w-[calc(100%_-_2rem)] max-w-lg max-h-[90vh] overflow-auto rounded-2xl border border-line bg-bg p-5 text-sm text-navy backdrop:bg-navy/30">
-      <form onSubmit={event => { event.preventDefault(); mutate(confirmAction) }} className="space-y-4">
-        <h2 id="builder-confirm-title" className="text-lg font-semibold">{confirmAction === 'abandon' ? 'Xác nhận bỏ phiên' : 'Xác nhận dựng đồ thị'}</h2>
-        <p className="break-words">Project {confirmation?.config.target?.project_name} · database {confirmation?.config.target?.database}.</p>
-        {confirmAction === 'abandon' ? <p className="break-words">Bỏ phiên {confirmation?.status.run_id}: không thể Resume. Giữ graph, vectors, checkpoint và lịch sử. Không xóa dữ liệu và không tự bắt đầu phiên mới.</p> : <>
-        <p className="break-words">Embedding: {confirmation?.config.embedding?.model}.</p>
-        <p>Dự kiến: {(confirmation?.config.selection?.nodes ?? confirmation?.inputs.source_validation.nodes)?.toLocaleString('vi-VN')} nội dung · {(confirmation?.config.selection?.edges ?? confirmation?.inputs.source_validation.edges)?.toLocaleString('vi-VN')} quan hệ. Phạm vi: {confirmation?.config.selection?.node_limit ? 'giới hạn, chưa phải toàn corpus' : 'toàn bộ corpus'}.</p>
-        <p>Kích thước batch: {confirmation?.config.batch_size}. Hạn mức request Embedding: {confirmation?.config.request_limit ?? 'Không giới hạn'}.</p>
-        <p>Embedding có thể tính phí. Graph mới chưa tự dùng cho Chat.</p>
-        </>}
-        <details><summary className="underline cursor-pointer">Chi tiết kỹ thuật xác nhận</summary><dl className="mt-2 space-y-1 break-all">
-          <div><dt>Project ID</dt><dd>{confirmation?.config.target?.project_id}</dd></div>
-          <div><dt>Namespace</dt><dd>{confirmation?.config.target?.namespace}</dd></div>
-          <div><dt>Số chiều vector</dt><dd>{confirmation?.config.embedding?.dimension}</dd></div>
-        </dl></details>
-        {confirmationKey(confirmation) !== confirmationKey(snapshot) && <p role="alert">Cấu hình đã thay đổi. Đóng xác nhận và kiểm tra lại.</p>}
-        <div className="flex flex-wrap gap-3 justify-end"><Button type="button" onClick={() => setConfirmation(undefined)}>Quay lại</Button><Button variant="primary" type="submit" disabled={!(confirmAction === 'abandon' ? canAbandon : canBuild) || confirmationKey(confirmation) !== confirmationKey(snapshot)}>{confirmAction === 'abandon' ? 'Xác nhận bỏ phiên' : 'Xác nhận bắt đầu'}</Button></div>
-      </form>
-    </dialog>
-  </div>
+    {status && (building || status.state === 'BLOCKED') && <div className="text-sm space-y-2">{status.contract_version !== 'builder-control-v1' && status.stages.map(stage => <p key={stage.name}>{({ preflight:'Kiểm tra điều kiện',plan:'Chuẩn bị dữ liệu',vectorize:'Tạo vector','export-artifact':'Lưu vector','write-nodes':'Ghi nội dung','verify-nodes':'Kiểm nội dung','write-edges':'Ghi liên kết',verify:'Xác minh đồ thị',release:'Lưu kết quả' } as Record<string,string>)[stage.name]}: {({PENDING:'Chưa thực hiện',RUNNING:'Đang xử lý',COMPLETE:'Hoàn tất',STOPPED:'Đã dừng',BLOCKED:'Cần xử lý'})[stage.state]} {stage.done !== null ? `${stage.done}/${stage.total}` : ''}</p>)}
+      {status.error_code && <p role="alert">{builderIssue(status.error_code)}</p>}<details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><pre className="whitespace-pre-wrap break-all">{JSON.stringify(status,null,2)}</pre></details></div>}
+    {exportState?.state === 'RUNNING' && <p role="status">Đang xuất gói…</p>}
+    {exportState?.state === 'COMPLETE' && <p role="status" className="text-sm break-words">Đã xuất {exportState.name}. Lấy tệp tại {exportState.directory} để chép sang máy khác.</p>}
+    {exportState?.state === 'FAILED' && <p role="alert">Xuất gói chưa hoàn tất. {packageReason(exportState.code ?? '')}</p>}
+    <Modal open={mode !== null} title={mode === 'import' ? 'Nhập từ gói' : 'Dựng đồ thị mới'} onClose={() => { if (!busy) setMode(null) }} footer={<><Button disabled={busy} onClick={() => setMode(null)}>Hủy</Button><Button variant="primary" disabled={busy || !projectId || !selection || sourceLoading || !!building || mode === 'import' && !selectedPackage?.compatible} onClick={() => void begin()}>{mode === 'import' ? 'Xác nhận nhập' : 'Xác nhận dựng'}</Button></>}>
+      <div className="space-y-4 text-sm">
+        <p>Tạo một đồ thị trống trong OpenSPG, sau đó tải lại danh sách để chọn.</p>
+        <div className="flex gap-3">{config?.links?.openspg && <a className="underline" target="_blank" rel="noreferrer" href={config.links.openspg}>Mở OpenSPG</a>}<Button disabled={busy} onClick={refresh}>Tải lại danh sách</Button></div>
+        <Field label="Đồ thị trống"><select className={inputCls} value={projectId} disabled={busy} onChange={event => setProjectId(event.target.value)}><option value="">Chọn đồ thị</option>{catalog?.projects.filter(row => row.state === 'AVAILABLE').map(row => <option key={row.project_id} value={row.project_id}>{row.project_name}</option>)}</select></Field>
+        {mode === 'import' ? <><p>Chép ZIP vào thư mục {packages?.directory ?? 'graph-packages'} rồi tải lại.</p><Field label="Gói đồ thị"><select className={inputCls} value={packageName} disabled={busy} onChange={event => setPackageName(event.target.value)}><option value="">Chọn gói</option>{packages?.packages.map(row => <option key={row.name} value={row.name} disabled={!row.compatible}>{row.compatible ? '✓' : '✗'} {row.name}</option>)}</select></Field>
+          {packages?.packages.filter(row => !row.compatible).map(row => <p key={row.name}>{row.name}: {packageReason(row.reason)}</p>)}
+          {selectedPackage?.manifest && <p>Phạm vi từ gói: {selectedPackage.manifest.selection === null ? 'toàn bộ' : 'một phần'} · {selectedPackage.manifest.nodes.toLocaleString('vi-VN')} nội dung. Nhập vào đồ thị trống đã có không gọi embedding.</p>}</>
+          : <><Field label="Phạm vi"><select className={inputCls} value={scope} disabled={busy} onChange={event => setScope(event.target.value)}><option value="ALL">Toàn bộ dữ liệu</option><option value="PERCENT">Một phần dữ liệu</option></select></Field>{scope === 'PERCENT' && <Field label="Tỷ lệ dữ liệu (%)"><input className={inputCls} type="number" min={1} max={100} value={percent} disabled={busy} onChange={event => setPercent(event.target.value)} /></Field>}{scope === 'PERCENT' && <p>Bản thử {percent}%</p>}</>}
+        {sourceLoading ? <p>Đang đọc phạm vi…</p> : selection && <p>{selection.summary.nodes.toLocaleString('vi-VN')} nội dung · {selection.summary.edges.toLocaleString('vi-VN')} liên kết.{mode === 'build' && ` Cần tạo khoảng ${selectionVectorCount(selection.summary).toLocaleString('vi-VN')} vector.`}</p>}
+        {mode === 'build' && <p>Tạo vector có thể phát sinh phí embedding. Dựng xong chưa tự dùng cho Chat.</p>}
+        {!selection && !sourceLoading && <Button disabled={busy} onClick={() => void act(async () => {
+          let value=await loadBuilderInputs(undefined,true)
+          while(value.source_validation.state==='CHECKING'){await new Promise(resolve=>setTimeout(resolve,1500));value=await loadBuilderInputs()}
+          if(value.source_validation.state!=='VALID')throw new Error('Nguồn chưa sẵn sàng')
+        })}>Chuẩn bị dữ liệu nguồn</Button>}
+        {progress && <p role="status">{progress}</p>}{error && <p role="alert">{error}</p>}
+      </div>
+    </Modal>
+    {preview && <Modal open title="Dùng đồ thị cho Chat" onClose={() => { if (!busy) setPreview(undefined) }} footer={<><Button disabled={busy} onClick={() => setPreview(undefined)}>Hủy</Button><Button variant="primary" disabled={busy || !preview.chat_ready} onClick={() => void act(async () => { await changeServing('activate',preview.project_id,preview.run_id,preview.preview_id);setPreview(undefined) })}>Xác nhận dùng cho Chat</Button></>}>
+      <div className="space-y-3 text-sm"><p>Chuyển từ {preview.previous?.project_name ?? 'chưa chọn'} sang {preview.project_name}.</p><p>{preview.counts.nodes.toLocaleString('vi-VN')} nội dung · {preview.counts.edges.toLocaleString('vi-VN')} liên kết.</p>{preview.chat_blockers.map(code => <p key={code}>{servingReasons[code] ?? 'Chưa thể dùng đồ thị. Kiểm tra model và dữ liệu.'}</p>)}<details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><pre className="whitespace-pre-wrap break-all">{JSON.stringify(preview,null,2)}</pre></details>{error && <p role="alert">{error}</p>}</div>
+    </Modal>}
+    {view && <Modal open title={view.project_name} onClose={closeView}><div className="space-y-5"><SelectedGraph projectId={view.project_id} links={config?.links} /><details><summary className="underline cursor-pointer">Thử tìm kiếm</summary><div className="mt-4"><TrialGraph projectId={view.project_id} runId={view.run_id} modelPath="/admin/chatbot?step=1" /></div></details><details><summary className="underline cursor-pointer">Chi tiết kỹ thuật phiên</summary><pre className="whitespace-pre-wrap break-all text-xs">{JSON.stringify(view,null,2)}</pre></details></div></Modal>}
+  </section>
 }
 
+function TrialGraph({ projectId, runId, modelPath }: { projectId: number; runId: string; modelPath: string }) {
+  const location = useLocation(), saved = location.state?.trialDraft
+  const draft = saved?.projectId === projectId && saved?.runId === runId ? saved : undefined
+  const [question, setQuestion] = useState(typeof draft?.question === 'string' ? draft.question.slice(0, 4000) : '')
+  const [topK, setTopK] = useState(Number.isInteger(draft?.topK) && draft.topK >= 1 && draft.topK <= 10 ? draft.topK : 5)
+  const [expand, setExpand] = useState(draft?.expand === true)
+  const [result, setResult] = useState<GraphRetrieval>()
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const pending = useRef(false)
+  async function retrieve() {
+    if (pending.current || !question.trim()) return
+    pending.current = true
+    setBusy(true)
+    setError('')
+    setResult(undefined)
+    try {
+      setResult(await runGraphRetrieval(projectId, runId, question, topK, expand))
+    } catch (failure) {
+      setError(failure instanceof Error ? failure.message : 'Chưa thử được đồ thị. Kiểm model và kết nối.')
+    } finally {
+      pending.current = false
+      setBusy(false)
+    }
+  }
+  return (
+    <section className="space-y-4 text-sm">
+      <p>Tìm nguồn trong đồ thị đang xem; không tạo câu trả lời và không đổi đồ thị Chat. Gửi câu thử có thể tính phí Embedding.</p>
+      <form className="space-y-4" onSubmit={event => { event.preventDefault(); void retrieve() }}>
+        <Field label="Câu hỏi thử">
+          <textarea className={inputCls} maxLength={4000} required rows={3} value={question} onChange={event => setQuestion(event.target.value)} />
+        </Field>
+        <div className="flex flex-wrap gap-4 items-end">
+          <Field label="Số kết quả nguồn">
+            <input className={inputCls} type="number" min={1} max={10} value={topK} onChange={event => setTopK(Number(event.target.value))} />
+          </Field>
+          <label className="flex gap-2 items-center min-h-10">
+            <input type="checkbox" checked={expand} onChange={event => setExpand(event.target.checked)} />
+            Tìm thêm nội dung liên quan
+          </label>
+        </div>
+        <Button type="submit" disabled={busy || !question.trim() || !Number.isInteger(topK) || topK < 1 || topK > 10}>
+          {busy ? 'Đang tìm nguồn…' : 'Thử truy xuất'}
+        </Button>
+      </form>
+      {error && <p role="alert">{error}</p>}
+      <Link className="underline inline-block" to={modelPath} state={{ trialDraft: { projectId, runId, question, topK, expand } }}>
+        Chỉnh model
+      </Link>
+      {result && (
+        <>
+          <p role="status">Tìm thấy {result.items.length} kết quả trong đồ thị đang chọn.</p>
+          {result.items.map(item => (
+            <article key={`${item.entity_type}-${item.entity_id}`} className="border-t border-line py-4 space-y-3">
+              <h3 className="font-semibold break-words">{item.doc_id} · {item.unit_id ?? item.sign_id ?? 'Văn bản'}</h3>
+              {Object.entries(item.source_texts).map(([field, text]) => (
+                <p key={field} className="whitespace-pre-wrap break-words">{text}</p>
+              ))}
+              <details>
+                <summary className="underline cursor-pointer">Chi tiết kỹ thuật và quan hệ</summary>
+                <pre className="whitespace-pre-wrap break-all text-xs mt-3">{JSON.stringify(item, null, 2)}</pre>
+              </details>
+            </article>
+          ))}
+        </>
+      )}
+    </section>
+  )
+}
+
+function SelectedGraph({ projectId, links }: { projectId: number; links: BuilderConfiguration['links'] }) {
+  const load = useCallback((signal?: AbortSignal) => loadGraphProject(projectId, signal), [projectId])
+  const data = useInspection(load), value = data.value, neo4j = value && builderNeo4jLink(links, value.target.database)
+  return (
+    <section className="space-y-4 text-sm">
+      <Notice {...data} retry={data.reload} />
+      {value && (
+        <>
+          <h3 className="font-semibold text-lg break-words">{value.target.project_name}</h3>
+          <dl className="grid grid-cols-3 gap-3">
+            {([
+              ['Nội dung', value.counts.nodes],
+              ['Liên kết', value.counts.edges],
+              ['Vector', value.counts.vectors],
+            ] as const).map(([label, count]) => (
+              <div key={label}>
+                <dt>{label}</dt>
+                <dd className="text-xl font-semibold">{count.toLocaleString('vi-VN')}</dd>
+              </div>
+            ))}
+          </dl>
+          <p className="text-muted">Đọc từ nơi lưu lúc {new Date(value.measured_at).toLocaleString('vi-VN')}. Số liệu có thể thay đổi khi đang dựng.</p>
+          <details>
+            <summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary>
+            <div className="mt-3 space-y-3">
+              <p className="break-all">
+                Project #{value.target.project_id} · database {value.target.database} · namespace {value.target.namespace} · {value.database_id}
+              </p>
+              {neo4j && (
+                <a className="underline" target="_blank" rel="noreferrer" href={neo4j}>
+                  Mở Neo4j
+                </a>
+              )}
+              <pre className="whitespace-pre-wrap break-all text-xs">{JSON.stringify({ labels: value.labels, relations: value.relations, indexes: value.indexes }, null, 2)}</pre>
+            </div>
+          </details>
+        </>
+      )}
+      <Button disabled={data.loading} onClick={data.reload}>
+        Tải lại số liệu
+      </Button>
+    </section>
+  )
+}

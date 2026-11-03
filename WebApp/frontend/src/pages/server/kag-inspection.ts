@@ -47,7 +47,7 @@ export function packageReason(code: string) {
     PACKAGE_VECTORS: 'Vector thiếu, sai kích thước hoặc không hợp lệ.',
     PACKAGE_UNAVAILABLE: 'Không đọc được ZIP. Kiểm tra quyền đọc và chép lại tệp.',
   }
-  return reasons[code] ?? `Chưa thể dùng gói (${code}). Kiểm tra cấu hình rồi tải lại.`
+  return reasons[code] ?? 'Chưa thể dùng gói. Kiểm tra cấu hình rồi tải lại.'
 }
 const packageModel = (value: PackageModel) => shape(value, ['provider', 'model', 'dimension']) && typeof value.provider === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(value.provider) &&
   typeof value.model === 'string' && /^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(value.model) && count(value.dimension, 65536) && value.dimension > 0
@@ -458,6 +458,55 @@ export async function saveBuilderConfiguration(change: BuilderConfigurationChang
 }
 export async function checkBuilderReadiness(): Promise<BuilderConfiguration> {
   return validateBuilderConfiguration(await api<BuilderConfiguration>('/admin/kag/builder/preflight', { method: 'POST' }))
+}
+export function selectionVectorCount(summary: SelectionSummary): number {
+  return Object.entries(summary.node_counts).reduce((total, [name, count]) =>
+    total + count * (name.split('.').pop() === 'TrafficSign' ? 2 : ['LegalDocument', 'LegalUnit'].includes(name.split('.').pop()!) ? 1 : 0), 0)
+}
+export async function startBuilderGraph(options: {
+  projectId: number; selection: BuilderSelection; planSha256: string; vectorPackage?: VectorPackageReference
+}, onProgress: (step: string) => void): Promise<BuilderStatus> {
+  onProgress('Kiểm tra đồ thị trống')
+  const graph = await loadGraphProject(options.projectId)
+  if (graph.counts.nodes || graph.counts.edges) throw new ApiError('Đồ thị còn dữ liệu. Chọn đồ thị trống khác.', 409)
+  let config = await loadBuilderConfiguration()
+  if (config.revision !== options.selection.revision || !config.embedding?.tested) throw new ApiError('Cấu hình đã đổi. Tải lại rồi xác nhận lại.', 409)
+  onProgress('Chuẩn bị cấu trúc')
+  let structure = await prepareBuilderStructure('preview', options.projectId, config.revision)
+  if (!structure.report || structure.code || structure.report.code || structure.report.counts.nodes || structure.report.counts.edges) {
+    throw new ApiError('Chưa chuẩn bị được cấu trúc. Xem chi tiết rồi chọn đồ thị trống phù hợp.', 409)
+  }
+  if (structure.can_apply) {
+    structure = await prepareBuilderStructure('apply', options.projectId, config.revision, structure.preview_id!)
+    while (structure.state === 'APPLYING') {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      structure = await loadBuilderStructure()
+    }
+    if (structure.state !== 'COMPLETE' || structure.report?.target.project_id !== options.projectId) throw new ApiError('Chuẩn bị cấu trúc chưa hoàn tất. Tải lại trạng thái trước khi thử tiếp.', 409)
+  } else if (!structure.report.build_ready) throw new ApiError('Cấu trúc chưa sẵn sàng. Mở chi tiết để kiểm tra.', 409)
+  onProgress('Lưu phạm vi và cấu hình')
+  const selected = await previewBuilderSelection(config.revision, options.selection.request)
+  if (JSON.stringify(selected.summary) !== JSON.stringify(options.selection.summary)) throw new ApiError('Dữ liệu hoặc phạm vi đã đổi. Tải lại rồi xác nhận lại.', 409)
+  config = await saveBuilderConfiguration({ revision: config.revision, embedding_revision: config.embedding!.revision,
+    project_id: options.projectId, batch_size: config.batch_size, request_limit: config.request_limit,
+    selection_preview_id: selected.preview_id, vector_package: options.vectorPackage ?? null })
+  const savedRevision = config.revision
+  onProgress(options.vectorPackage ? 'Kiểm tra và nhập gói' : 'Kiểm tra dữ liệu nguồn')
+  let inputs = await loadBuilderInputs(undefined, true)
+  while (inputs.source_validation.state === 'CHECKING') {
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    inputs = await loadBuilderInputs()
+  }
+  if (inputs.source_validation.state !== 'VALID' || inputs.source_validation.plan_sha256 !== options.planSha256) throw new ApiError('Nguồn hoặc gói không khớp. Tải lại dữ liệu rồi xác nhận lại.', 409)
+  onProgress('Kiểm tra sẵn sàng')
+  config = await checkBuilderReadiness()
+  while (config.readiness.state === 'CHECKING') {
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    config = await loadBuilderConfiguration()
+  }
+  if (config.readiness.state !== 'READY' || config.target?.project_id !== options.projectId || config.revision !== savedRevision) throw new ApiError('Đồ thị chưa sẵn sàng hoặc cấu hình đã đổi. Tải lại trước khi thử tiếp.', 409)
+  onProgress('Bắt đầu dựng đồ thị')
+  return runBuilderAction('build', `build-${crypto.randomUUID()}`, config.revision)
 }
 export type BuilderProjects = {
   contract_version: 'builder-projects-v1'
