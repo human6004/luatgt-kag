@@ -72,6 +72,23 @@ public class KagController {
             throw vn.luatgt.exception.ApiErrors.bad("Cấu hình Builder không nhận tham số tùy ý");
         return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderConfiguration());
     }
+    @GetMapping("/admin/kag/builder/packages")
+    org.springframework.http.ResponseEntity<JsonNode> builderPackages(@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)
+            throw vn.luatgt.exception.ApiErrors.bad("Danh sách gói không nhận đường dẫn hoặc tham số tùy ý");
+        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderPackages());
+    }
+    @GetMapping("/admin/kag/builder/packages/export")
+    org.springframework.http.ResponseEntity<JsonNode> builderPackageExport(@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)
+            throw vn.luatgt.exception.ApiErrors.bad("Trạng thái xuất gói không nhận đường dẫn hoặc tham số tùy ý");
+        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderPackageExport(null));
+    }
+    @PostMapping("/admin/kag/builder/packages/export")
+    org.springframework.http.ResponseEntity<JsonNode> exportBuilderPackage(@RequestBody JsonNode change,@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Xuất gói chỉ nhận project và phiên đã xác minh");
+        return org.springframework.http.ResponseEntity.accepted().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderPackageExport(change));
+    }
     @GetMapping("/admin/kag/graph/{projectId}")
     org.springframework.http.ResponseEntity<JsonNode> graphProject(@PathVariable int projectId,
             @RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {

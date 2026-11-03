@@ -11,8 +11,9 @@ import {
   loadBuilderProjects, builderNeo4jLink, loadBuilderStructure, prepareBuilderStructure,
   previewBuilderSelection,
   loadBuilderClear, clearBuilderData,
+  loadBuilderPackages, packageReason,
 } from "./kag-inspection"
-import type { BuilderStatus, BuilderConfiguration, BuilderInputs, BuilderStage, BuilderStructure, BuilderSelection, SelectionRequest, SelectionSummary, BuilderClear } from "./kag-inspection"
+import type { BuilderStatus, BuilderConfiguration, BuilderInputs, BuilderStage, BuilderStructure, BuilderSelection, SelectionRequest, SelectionSummary, BuilderClear, VectorPackageReference } from "./kag-inspection"
 import { ApiError } from "../../api"
 
 export function useInspection<T>(load: (signal?: AbortSignal) => Promise<T>) {
@@ -41,6 +42,8 @@ export function useInspection<T>(load: (signal?: AbortSignal) => Promise<T>) {
 }
 
 function builderIssue(code: string | null) {
+  if (code?.startsWith('PACKAGE_')) return packageReason(code)
+  if (code?.startsWith('PACKAGE_')) return packageReason(code)
   const messages: Record<string, string> = {
     CONFIG: 'Kiểm tra đích lưu và cấu hình Embedding, lưu lại cấu hình dựng rồi kiểm tra sẵn sàng.',
     INDEX: 'Thiếu hoặc sai chỉ mục vector. Về Cấu hình → Xem thay đổi để kiểm schema/index; index không tương thích cần project riêng hoặc quản trị di chuyển có chủ đích.',
@@ -64,7 +67,9 @@ function builderIssue(code: string | null) {
     UNCERTAIN_WRITE: 'Lần ghi trước bị gián đoạn, chưa xác định đã ghi xong. Cần kiểm tra trước khi tiếp tục.',
     LOCK_MOUNT: 'Chưa có volume khóa dùng chung hợp lệ. Kiểm tra cài đặt Worker rồi thử lại.',
     INTEGRITY: 'Dữ liệu hoặc điểm lưu không khớp. Giữ nguyên phiên và kiểm tra phiên bản nguồn, cấu hình và đích lưu.',
-    VECTORS: 'Chưa tạo đủ vector. Kiểm tra model Embedding và lỗi dịch vụ trước khi xử lý phiên này.',
+    PLAN: 'Nguồn hoặc phạm vi không khớp gói vector/kế hoạch. Chọn đúng phiên bản dữ liệu và phạm vi của gói rồi chuẩn bị lại.',
+    PROVENANCE: 'Nguồn gốc vector không khớp model, số chiều hoặc dữ liệu. Kiểm tra gói đã chọn; không thể bỏ qua phép kiểm này.',
+    VECTORS: 'Chưa đủ vector khớp dữ liệu. Nếu dùng gói, kiểm tra nguồn/phạm vi rồi Kiểm tra và chuẩn bị lại; chế độ này không gọi API để bù vector.',
     PROVIDER_BUDGET: 'Đã chạm giới hạn request của phiên. Không thể làm mới hạn mức bằng Tiếp tục.',
     INTERRUPTED: 'Điểm dừng đã được lưu. Kiểm tra sẵn sàng rồi tiếp tục đúng phiên.',
     RUNTIME: 'Dịch vụ dựng gặp lỗi. Giữ nguyên phiên và kiểm tra Worker trước khi xử lý.',
@@ -142,7 +147,7 @@ export function BuilderControls() {
   }
   const [snapshot, setSnapshot] = useState<BuilderSnapshot>(), [connectionError, setConnectionError] = useState(''),
     [actionError, setActionError] = useState(''), [busy, setBusy] = useState(false), [version, setVersion] = useState(0),
-    [batch, setBatch] = useState('64'), [limit, setLimit] = useState(''),
+    [batch, setBatch] = useState('64'), [limit, setLimit] = useState(''), [vectorPackage, setVectorPackage] = useState<VectorPackageReference | null>(null),
     [confirmation, setConfirmation] = useState<BuilderSnapshot>(), [nodeLimit, setNodeLimit] = useState(''),
     [scopeMode, setScopeMode] = useState<SelectionRequest['mode']>('ALL'), [scopePreview, setScopePreview] = useState<BuilderSelection>(),
     [receivedAt, setReceivedAt] = useState(''),
@@ -151,6 +156,7 @@ export function BuilderControls() {
     [unlimited, setUnlimited] = useState(true), [projectId, setProjectId] = useState(''),
     [structure, setStructure] = useState<BuilderStructure>(), [structureConfirmation, setStructureConfirmation] = useState<BuilderStructure>()
   const catalog = useInspection(loadBuilderProjects)
+  const packages = useInspection(loadBuilderPackages)
   const acting = useRef(false), dialog = useRef<HTMLDialogElement>(null)
   const structureDialog = useRef<HTMLDialogElement>(null)
   const progressRegion = useRef<HTMLDivElement>(null)
@@ -170,7 +176,8 @@ export function BuilderControls() {
     refresh()
     return () => { controller.abort(); clearTimeout(timer) }
   }, [version, busy])
-  useEffect(() => { if (config) { setBatch(String(config.batch_size)); setLimit(config.request_limit === null ? '' : String(config.request_limit)); setUnlimited(config.request_limit === null); const request = config.selection?.request ?? { mode: config.selection?.node_limit == null ? 'ALL' : 'COUNT', value: config.selection?.node_limit ?? null }; setScopeMode(request.mode); setNodeLimit(request.value == null ? '' : String(request.value)); setScopePreview(undefined); setProjectId(!status || ['RUNNING','STOPPING','STOPPED'].includes(status.state) ? String(config.target?.project_id ?? '') : parameters.get('project_id') ?? String(config.target?.project_id ?? '')) } }, [config?.revision])
+  useEffect(() => { if (config) { setBatch(String(config.batch_size)); setLimit(config.request_limit === null ? '' : String(config.request_limit)); setUnlimited(config.request_limit === null); setVectorPackage(config.vector_package ?? null); const request = config.selection?.request ?? { mode: config.selection?.node_limit == null ? 'ALL' : 'COUNT', value: config.selection?.node_limit ?? null }; setScopeMode(request.mode); setNodeLimit(request.value == null ? '' : String(request.value)); setScopePreview(undefined); setProjectId(!status || ['RUNNING','STOPPING','STOPPED'].includes(status.state) ? String(config.target?.project_id ?? '') : parameters.get('project_id') ?? String(config.target?.project_id ?? '')) } }, [config?.revision])
+  useEffect(() => { packages.reload() }, [config?.revision, config?.embedding?.revision, config?.embedding?.tested, config?.embedding?.dimension, source?.plan_sha256, source?.state])
   useEffect(() => {
     if (confirmation && !dialog.current?.open) dialog.current?.showModal()
     if (!confirmation && dialog.current?.open) dialog.current.close()
@@ -191,18 +198,22 @@ export function BuilderControls() {
   const choice = catalog.value?.projects.find(row => String(row.project_id) === projectId)
   const scopeRequest: SelectionRequest = { mode: scopeMode, value: scopeMode === 'ALL' ? null : Number(nodeLimit) }
   const savedRequest = config?.selection?.request ?? { mode: config?.selection?.node_limit == null ? 'ALL' : 'COUNT', value: config?.selection?.node_limit ?? null }
-  const dirty = !!config && (projectId !== String(config.target?.project_id ?? '') || batch !== String(config.batch_size) || unlimited !== (config.request_limit === null) || !unlimited && limit !== String(config.request_limit) || scopeRequest.mode !== savedRequest.mode || scopeRequest.value !== savedRequest.value)
+  const vectorDirty = !!config && (vectorPackage?.name !== config.vector_package?.name || vectorPackage?.sha256 !== config.vector_package?.sha256)
+  const dirty = !!config && (vectorDirty || projectId !== String(config.target?.project_id ?? '') || batch !== String(config.batch_size) || unlimited !== (config.request_limit === null) || !unlimited && limit !== String(config.request_limit) || scopeRequest.mode !== savedRequest.mode || scopeRequest.value !== savedRequest.value)
+  const selectedPackage = packages.value?.packages.find(row => row.name === vectorPackage?.name)
+  const packageModelCurrent = !!packages.value?.current_model && packages.value.current_model.provider === config?.embedding?.provider && packages.value.current_model.model === config.embedding.model && packages.value.current_model.dimension === config.embedding.dimension
+  const vectorAllowed = !vectorPackage || config?.contract_version === 'builder-configuration-v5' && !packages.loading && !packages.error && packageModelCurrent && selectedPackage?.compatible === true && selectedPackage.sha256 === vectorPackage.sha256
   const previewMatches = sourceReady && scopePreview?.revision === config?.revision && scopePreview?.request.mode === scopeRequest.mode && scopePreview?.request.value === scopeRequest.value
   const modelReady = !!config?.embedding?.tested && config.embedding.key_configured && config.embedding.dimension !== null && config.embedding.dimension >= 1 && config.embedding.dimension <= 65536
   const disabled = busy || !!connectionError || !snapshot
   const recommended = preparingStructure ? 1 : status?.state === 'COMPLETE' && full ? 4 : active ? 3 : !sourceReady ? 0 : !config?.saved ? 1 : !ready ? 2 : 3
   const step = selected ?? recommended
-  const canBuild = !disabled && !dirty && full && sourceReady && ready && status.actions.build
+  const canBuild = !disabled && !dirty && vectorAllowed && full && sourceReady && ready && status.actions.build
   const canAbandon = !disabled && !preparingStructure && status?.actions.abandon === true
   const validNumbers = /^\d+$/.test(batch) && Number(batch) >= 1 && Number(batch) <= 4096 &&
     (unlimited || /^\d+$/.test(limit) && Number(limit) >= 1 && Number(limit) <= 1000000) &&
     (scopeMode === 'ALL' || /^\d+$/.test(nodeLimit) && Number(nodeLimit) >= (scopeMode === 'COUNT' ? 3 : 1) && Number(nodeLimit) <= (scopeMode === 'COUNT' ? source?.nodes ?? 0 : 100))
-  const confirmationKey = (value?: BuilderSnapshot) => JSON.stringify([value?.config.revision, value?.config.target, value?.config.embedding, value?.config.selection, value?.inputs.source_validation.plan_sha256,value?.status.run_id,value?.status.state])
+  const confirmationKey = (value?: BuilderSnapshot) => JSON.stringify([value?.config.revision, value?.config.target, value?.config.embedding, value?.config.selection, value?.config.vector_package, value?.inputs.source_validation.plan_sha256,value?.status.run_id,value?.status.state])
   const structureMatches = !!structure?.report && structure.report.target.project_id === Number(projectId) && structure.revision === config?.revision
   const canPrepareStructure = !disabled && !active && structureMatches && structure?.can_apply === true && !!structure.report?.index_changes
   const canPreviewClear = !disabled && config?.saved && !dirty && !preparingStructure && clearState?.state !== 'APPLYING' && !!status && ['IDLE','COMPLETE','ABANDONED','CLEARED'].includes(status.state)
@@ -232,9 +243,9 @@ export function BuilderControls() {
         setSnapshot(current => current && { ...current, inputs: value }); setSelected(null)
       } else if (action === 'preview' && config) {
         setScopePreview(await previewBuilderSelection(config.revision, scopeRequest))
-      } else if (action === 'save' && config?.embedding && previewMatches) {
-        const value = await saveBuilderConfiguration({ revision: config.revision, embedding_revision: config.embedding.revision, project_id: Number(projectId), batch_size: Number(batch), request_limit: unlimited ? null : Number(limit), selection_preview_id: scopePreview!.preview_id })
-        setSnapshot(current => current && { ...current, config: value }); setSelected(2)
+      } else if (action === 'save' && config?.embedding && previewMatches && vectorAllowed) {
+        const value = await saveBuilderConfiguration({ revision: config.revision, embedding_revision: config.embedding.revision, project_id: Number(projectId), batch_size: Number(batch), request_limit: unlimited ? null : Number(limit), selection_preview_id: scopePreview!.preview_id, ...(config.contract_version === 'builder-configuration-v5' ? { vector_package: vectorPackage } : {}) })
+        setSnapshot(current => current && { ...current, config: value }); setSelected(value.vector_package ? 0 : 2)
       } else if (action === 'check') {
         const value = await checkBuilderReadiness()
         setSnapshot(current => current && { ...current, config: value }); setSelected(null)
@@ -281,9 +292,11 @@ export function BuilderControls() {
         <p className="text-muted">Chuẩn bị kế hoạch từ nguồn cố định trước khi cấu hình và ghi vào đích graph.</p>
         {sourceReady && source.summary && <ScopeCounts summary={source.summary} />}
         {source?.state === 'CHECKING' && <p>Đang chuẩn bị dữ liệu. Bạn có thể rời trang rồi quay lại theo dõi.</p>}
-        {source?.state === 'INVALID' && <p role="alert">Nguồn dữ liệu không hợp lệ. Kiểm tra phiên bản dữ liệu đi kèm rồi chuẩn bị lại.</p>}
+        {source?.state === 'INVALID' && <p role="alert">{config?.vector_package ? 'Gói vector hỏng, đã thay đổi hoặc không khớp nguồn/phạm vi. Kiểm tra dữ liệu và model tại Chia sẻ đồ thị, chọn lại gói rồi lưu và chuẩn bị lại.' : 'Nguồn dữ liệu không hợp lệ. Kiểm tra phiên bản dữ liệu đi kèm rồi chuẩn bị lại.'}</p>}
         {source?.state === 'UNAVAILABLE' && <p role="alert">Không đọc được nguồn. Kiểm tra quyền đọc và dung lượng state của Worker rồi thử lại.</p>}
-        <Button disabled={disabled || source?.state === 'CHECKING' || !!status && ['RUNNING', 'STOPPING'].includes(status.state)} onClick={() => mutate('prepare')}>{status?.state === 'STOPPED' ? 'Kiểm tra lại dữ liệu' : 'Kiểm tra và chuẩn bị'}</Button>
+        {config?.vector_package && <p>Gói đã chọn: {config.vector_package.name}. Kiểm tra và chuẩn bị nhập vector trong nền; không gọi Embedding. Chọn đúng phạm vi của gói trước khi Dựng.</p>}
+        {vectorDirty && <p>Lưu thay đổi nguồn vector ở Cấu hình trước khi chuẩn bị.</p>}
+        <Button disabled={disabled || vectorDirty || source?.state === 'CHECKING' || !!status && ['RUNNING', 'STOPPING'].includes(status.state)} onClick={() => mutate('prepare')}>{status?.state === 'STOPPED' ? 'Kiểm tra lại dữ liệu' : 'Kiểm tra và chuẩn bị'}</Button>
         {sourceReady && <Button onClick={() => setSelected(1)}>Đến cấu hình</Button>}
       </>}
       {step === 1 && <>
@@ -329,7 +342,7 @@ export function BuilderControls() {
         </section>
         {active && <p>Phiên chưa kết thúc: giữ nguyên cấu hình để tiếp tục đúng điểm lưu.</p>}
         <p className="text-muted">Cấu hình đã lưu áp dụng cho phiên dựng mới. Tiếp tục dựng giữ cấu hình và hạn mức của phiên cũ.</p>
-        <form onSubmit={event => { event.preventDefault(); if (!disabled && validNumbers && previewMatches && modelReady && sourceReady && choice?.state === 'AVAILABLE' && !active) mutate('save') }} className="space-y-4">
+        <form onSubmit={event => { event.preventDefault(); if (!disabled && validNumbers && previewMatches && modelReady && sourceReady && vectorAllowed && choice?.state === 'AVAILABLE' && !active) mutate('save') }} className="space-y-4">
           <fieldset disabled={active || busy} className="space-y-3"><legend className="font-semibold mb-2">Phạm vi dữ liệu</legend>
             <Field label="Dữ liệu sẽ dựng"><select className={inputCls} value={scopeMode === 'ALL' ? 'ALL' : 'PARTIAL'} onChange={event => { setScopeMode(event.target.value === 'ALL' ? 'ALL' : 'COUNT'); setScopePreview(undefined) }}><option value="ALL">Toàn bộ dữ liệu</option><option value="PARTIAL">Một phần dữ liệu</option></select></Field>
             {scopeMode !== 'ALL' && <div className="grid sm:grid-cols-2 gap-3"><Field label="Cách chọn"><select className={inputCls} value={scopeMode} onChange={event => { setScopeMode(event.target.value as 'COUNT' | 'PERCENT'); setNodeLimit(''); setScopePreview(undefined) }}><option value="COUNT">Số lượng nội dung</option><option value="PERCENT">Tỷ lệ nội dung (%)</option></select></Field>
@@ -344,6 +357,22 @@ export function BuilderControls() {
             <Link className="underline inline-block" to={`/admin/chatbot?step=1${projectId ? `&project_id=${encodeURIComponent(projectId)}` : ""}`}>Cấu hình và kiểm kết nối Embedding</Link>
             <p className="text-muted">Kiểm model tại Cấu hình gửi request thật và có thể tính phí. Builder dùng Embedding đã lưu; không cần áp dụng cho Chat.</p>
           </section>
+          <section className="space-y-3"><h3 className="font-semibold">Nguồn vector</h3>
+            <div className="flex flex-wrap items-end gap-3"><div className="flex-1 min-w-0"><Field label="Nguồn vector"><select aria-label="Nguồn vector" className={inputCls} value={vectorPackage?.name ?? ''} disabled={active || busy || config?.contract_version !== 'builder-configuration-v5' || packages.loading} onChange={event => {
+              const row = packages.value?.packages.find(row => row.name === event.target.value && row.compatible && row.sha256)
+              setVectorPackage(row?.sha256 ? { name: row.name, sha256: row.sha256 } : null)
+            }}>
+              <option value="">API mặc định</option>
+              {vectorPackage && !selectedPackage && <option value={vectorPackage.name} disabled>Gói đã lưu: {vectorPackage.name} · chưa có trong danh sách</option>}
+              {packages.value?.packages.map(row => <option key={row.name} value={row.name} disabled={!row.compatible || !row.sha256 || !packageModelCurrent}>{row.compatible ? 'Dùng gói đã nhập: ' : 'Chưa tương thích: '}{row.name}</option>)}
+            </select></Field></div><Button type="button" disabled={busy || packages.loading} onClick={packages.reload}>Tải lại gói</Button></div>
+            {packages.error && <p role="alert">{packages.error}</p>}
+            <p>Máy hiện tại: {config?.embedding ? `${config.embedding.provider} · ${config.embedding.model} · ${config.embedding.dimension ?? 'chưa kiểm'} chiều` : 'chưa cấu hình Embedding.'}</p>
+            <ul className="space-y-2">{packages.value?.packages.map(row => <li key={row.name} className="break-words"><strong>{row.name}</strong> · {packageReason(row.reason)}{row.manifest && <> · Gói yêu cầu: {row.manifest.model_identity.provider} · {row.manifest.model_identity.model} · {row.manifest.model_identity.dimension} chiều · {row.manifest.selection === null ? 'toàn bộ dữ liệu' : `${row.manifest.nodes.toLocaleString('vi-VN')} nội dung; chọn đúng phạm vi gói`}</>}</li>)}</ul>
+            {vectorPackage && !vectorAllowed && <p role="alert">Gói đã chọn chưa tương thích hoặc đã thay đổi. Tải lại, kiểm nguồn/model rồi chọn lại gói trước khi lưu hoặc dựng.</p>}
+            <p className="text-muted">Lưu cấu hình chỉ lưu tên và SHA-256, chưa giải nén. Sau khi lưu gói, bấm Kiểm tra và chuẩn bị ở Dữ liệu để nhập nền; sau đó tự Dựng vào project mới, trống.</p>
+            <Link className="underline inline-block" to="/admin/graph-share">Chia sẻ đồ thị · xem thư mục và gói ZIP</Link>
+          </section>
           <details><summary className="cursor-pointer underline">Cấu hình nâng cao</summary><div className="grid gap-4 sm:grid-cols-2 mt-4">
             <Field label="Kích thước batch" hint="1–4096 nội dung hoặc quan hệ xử lý mỗi batch."><input className={inputCls} type="number" min={1} max={4096} step={1} required value={batch} disabled={active || busy} onChange={event => setBatch(event.target.value)} /></Field>
             <div className="space-y-2">
@@ -355,7 +384,7 @@ export function BuilderControls() {
           {!/^\d+$/.test(batch) || Number(batch) < 1 || Number(batch) > 4096 ? <p role="alert">Kích thước batch phải là số nguyên 1–4096.</p> : null}
           {!unlimited && (!/^\d+$/.test(limit) || Number(limit) < 1 || Number(limit) > 1000000) && <p role="alert">Hạn mức request phải là số nguyên 1–1.000.000 hoặc chọn Không giới hạn.</p>}
           {scopeMode !== 'ALL' && !validNumbers && <p role="alert">Nhập số nguyên trong phạm vi cho phép, rồi xem trước.</p>}
-          <Button type="submit" disabled={disabled || !validNumbers || !previewMatches || !modelReady || !sourceReady || choice?.state !== 'AVAILABLE' || active}>Lưu cấu hình dựng</Button>
+          <Button type="submit" disabled={disabled || !validNumbers || !previewMatches || !modelReady || !sourceReady || !vectorAllowed || choice?.state !== 'AVAILABLE' || active}>Lưu cấu hình dựng</Button>
           {(!sourceReady || !modelReady) && <p className="text-muted">Cần chuẩn bị dữ liệu và kiểm cấu hình Embedding trước khi lưu.</p>}
           {!choice && <p className="text-muted">Chọn project có quyền sở hữu và kết nối được deployment cấp.</p>}
           {choice && choice.state !== 'AVAILABLE' && <p role="alert">{builderIssue(choice.state)}</p>}

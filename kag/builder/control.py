@@ -172,7 +172,7 @@ def _builder_target():
         raise RunBlocked('CONFIG') from None
 
 
-def _builder_config(state_dir, target, model, revision, batch_size, request_limit, node_limit=None, scope_preview=None, *, plan_sha256):
+def _builder_config(state_dir, target, model, revision, batch_size, request_limit, node_limit=None, scope_preview=None, *, plan_sha256, vector_package=None):
     config = json.loads((Path(__file__).resolve().parents[1]/'config/runner.example.json').read_bytes())
     if not isinstance(plan_sha256,str) or not re.fullmatch('[0-9a-f]{64}',plan_sha256):raise RunBlocked('PLAN')
     manifest = Path(state_dir)/'plans'/plan_sha256/'manifest.json'
@@ -204,6 +204,16 @@ def _builder_config(state_dir, target, model, revision, batch_size, request_limi
                     target['namespace']+'.'+key[3].rsplit('.',1)[-1],key[4]] for key in config['selection']['edge_tuples']]
         finally:
             data['index'].close()
+    if vector_package is not None:
+        from kag.builder import packages
+        if (type(vector_package) is not dict or set(vector_package) != {'name','sha256'}
+                or not isinstance(vector_package['sha256'],str) or not packages.HASH.fullmatch(vector_package['sha256'])):
+            raise RunBlocked('CONFIG')
+        path = packages.package_path(vector_package['name'])
+        packages.compatible(packages.read_manifest(path),model,plan_sha256)
+        config.update(vector_policy='replay-existing',embedding_model=None,vector_package=copy.deepcopy(vector_package))
+        config['paths']['graph_package'] = str(path)
+        config['input_sha256']['graph_package'] = vector_package['sha256']
     return _config(config)
 
 
@@ -540,6 +550,7 @@ def create_app(*, control=None, token=None, state_dir=None):
     checked_files=()
     checked_config=None
     source_task=None
+    package_export=dict(contract_version='builder-package-export-v1',state='NOT_RUN',name=None,size=None,code=None)
     readiness = dict(state='NOT_RUN',checks=[],checked_at=None)
     ready_binding = None
     scope_preview = None
@@ -630,7 +641,8 @@ def create_app(*, control=None, token=None, state_dir=None):
             raise RunBlocked('CONFIG')
         if not checked_files or any(_input_version(path)!=version for path,version in checked_files):
             raise RunBlocked('INTEGRITY')
-        return (_spec_hash(configuration), model['revision'], model['test'], _builder_policy(),
+        return (_spec_hash(configuration), model['revision'], model['test'],
+                _builder_policy() if configuration['vector_policy']=='provider' else None,
                 source_result['state'], source_result['plan_sha256'])
 
     def configuration_view():
@@ -655,10 +667,11 @@ def create_app(*, control=None, token=None, state_dir=None):
                 readiness = dict(state='NOT_RUN',checks=[],checked_at=None)
                 ready_binding = None
         selection = configuration.get('selection') if setup else None
-        return dict(contract_version='builder-configuration-v4',revision=setup['revision'] if setup else 0,
+        return dict(contract_version='builder-configuration-v5',revision=setup['revision'] if setup else 0,
             saved=setup is not None,error_code=setup_error,target=target,embedding=embedding,
             batch_size=configuration['batch_size'] if setup else 64,
             request_limit=configuration.get('request_limit') if setup else None,readiness=copy.deepcopy(readiness),
+            vector_package=configuration.get('vector_package') if setup else None,
             links=browser_links(),selection=dict(node_limit=selection['node_limit'] if selection else None,
                 nodes=selection['summary']['nodes'] if selection and 'summary' in selection else len(selection['node_keys']) if selection else source_result['nodes'],
                 edges=selection['summary']['edges'] if selection and 'summary' in selection else len(selection['edge_tuples']) if selection else source_result['edges'],
@@ -944,14 +957,52 @@ def create_app(*, control=None, token=None, state_dir=None):
         snapshot = copy.deepcopy(configuration)
         source_result=dict(state='CHECKING',error_code=None,plan_sha256=None,nodes=None,edges=None)
         async def check():
-            nonlocal source_result,checked_files
+            nonlocal source_result,checked_files,checked_config,configuration,setup,control,readiness,ready_binding
+            from kag.builder import packages
+            validated,versions = None,()
             try:
                 validated, versions = await asyncio.to_thread(
                     prepare_source_inputs if state_dir and not stopped else check_source_inputs,
                     state_dir if state_dir and not stopped else snapshot)
                 if checked_config != _spec_hash(configuration):
                     raise ValueError('Configuration changed during validation')
+                if state_dir and snapshot and snapshot.get('vector_package'):
+                    try:model = _builder_model(secrets)
+                    except (OSError,ValueError,KeyError,TypeError):raise packages.PackageError('PACKAGE_MODEL') from None
+                    if model['revision'] != setup['embedding_revision']:raise packages.PackageError('PACKAGE_MODEL')
+                    destination = Path(state_dir)/'package-imports'/snapshot['vector_package']['sha256']/_spec_hash(
+                        [snapshot['namespace'],snapshot['model_identity']])
+                    paths = await asyncio.to_thread(packages.prepare_package,snapshot['paths']['graph_package'],destination,
+                        model=model,plan_sha256=validated['plan_sha256'],namespace=snapshot['namespace'],
+                        expected_sha256=snapshot['vector_package']['sha256'])
+                    prepared = copy.deepcopy(snapshot)
+                    prepared['paths'].update(paths)
+                    for name,path in paths.items():prepared['input_sha256'][name] = await asyncio.to_thread(packages.checksum,path)
+                    prepared = _config(prepared)
+                    if (checked_config != _spec_hash(configuration) or model['revision'] != _builder_model(secrets)['revision']
+                            or any(_input_version(path)!=version for path,version in versions)):
+                        raise RunBlocked('INTEGRITY')
+                    next_control = await asyncio.to_thread(BuilderControl,prepared)
+                    updated = dict(setup,runner=prepared)
+                    atomic_json(setup_path,updated,mode=0o600)
+                    setup,configuration,control = updated,prepared,next_control
+                    checked_config = _spec_hash(prepared)
+                    versions = (*versions,*[(Path(path),_input_version(path)) for name,path in prepared['paths'].items()
+                        if path and name not in ('run_root','lock_root','c3_manifest','selection')])
                 source_result, checked_files = validated, versions
+            except packages.PackageError as error:
+                stable = False
+                try:stable = validated is not None and all(_input_version(path)==version for path,version in versions)
+                except OSError:pass
+                if stable:
+                    source_result,checked_files = validated,versions
+                    readiness = dict(state='BLOCKED',checked_at=datetime.now(timezone.utc).isoformat(),checks=[
+                        dict(name='source',state='READY',code=None),dict(name='embedding',state='BLOCKED',code=error.code),
+                        dict(name='target',state='NOT_CHECKED',code='WAIT_EMBEDDING'),dict(name='lock',state='NOT_CHECKED',code='WAIT_TARGET')])
+                    ready_binding = None
+                else:
+                    source_result=dict(state='INVALID',error_code='INTEGRITY',plan_sha256=None,nodes=None,edges=None)
+                    checked_files=()
             except ValueError:
                 source_result=dict(state='INVALID',error_code='INTEGRITY',plan_sha256=None,nodes=None,edges=None)
             except Exception:
@@ -1022,6 +1073,54 @@ def create_app(*, control=None, token=None, state_dir=None):
             result['actions'].update(build=False,resume=False)
         return result
 
+    @app.get('/v1/builder/packages')
+    async def graph_packages(request: Request):
+        authenticate_request(request)
+        from kag.builder import packages
+        try:model = _builder_model(secrets)
+        except (OSError,ValueError,KeyError,TypeError):model = None
+        plan = source_result['plan_sha256'] if source_result['state']=='VALID' else None
+        return await asyncio.to_thread(packages.catalog,model,plan)
+
+    @app.get('/v1/builder/packages/export')
+    async def graph_export_status(request: Request):
+        authenticate_request(request)
+        from kag.builder.packages import host_directory
+        return dict(package_export,directory=host_directory())
+
+    @app.post('/v1/builder/packages/export',status_code=202)
+    async def graph_export(request: Request):
+        nonlocal source_task,package_export
+        authenticate_request(request)
+        from kag.builder import packages,serving
+        try:
+            change = json.loads(await bounded_body(request))
+            if (type(change) is not dict or set(change) != {'project_id','run_id'}
+                    or type(change['project_id']) is not int or not 1<=change['project_id']<=2147483647
+                    or not isinstance(change['run_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,127}',change['run_id'])):
+                raise ValueError
+        except (ValueError,TypeError):raise ApiFailure('INVALID_REQUEST') from None
+        if not structure_idle():raise HTTPException(409,'SOURCE_CHECK_BLOCKED')
+        session = session_token(request)
+        owned = await asyncio.to_thread(serving.runs,session)
+        if not any(row['run_id']==change['run_id'] and row['project_id']==change['project_id'] for row in owned):
+            raise ApiFailure('SCOPE_DENIED')
+        if not structure_idle():raise HTTPException(409,'SOURCE_CHECK_BLOCKED')
+        package_export=dict(package_export,state='RUNNING',name=None,size=None,code=None)
+        async def export():
+            nonlocal package_export
+            try:
+                path,receipt = await asyncio.to_thread(serving._run_directory,change['run_id'],change['project_id'])
+                result = await asyncio.to_thread(packages.export_package,path,receipt,_builder_model(secrets),packages.directory(),
+                    application_version=os.environ.get('KAG_APPLICATION_VERSION','0.1.0'))
+                package_export=dict(package_export,state='COMPLETE',code=None,**result)
+            except packages.PackageError as error:
+                package_export=dict(package_export,state='FAILED',name=None,size=None,code=error.code)
+            except Exception:
+                package_export=dict(package_export,state='FAILED',name=None,size=None,code='PACKAGE_UNAVAILABLE')
+        source_task = asyncio.create_task(export())
+        return await graph_export_status(request)
+
     @app.get('/v1/builder/configuration')
     async def get_configuration(request: Request):
         authenticate_request(request)
@@ -1029,13 +1128,13 @@ def create_app(*, control=None, token=None, state_dir=None):
 
     @app.post('/v1/builder/configuration',status_code=202)
     async def save_configuration(request: Request):
-        nonlocal setup, setup_error, configuration, control, checked_config, checked_files, readiness, ready_binding, failure
+        nonlocal setup, setup_error, configuration, control, checked_config, checked_files, readiness, ready_binding, failure,source_result
         authenticate_request(request)
         try:
             body = json.loads(await bounded_body(request))
             if (not state_dir or type(body) is not dict
                     or not {'revision','embedding_revision','batch_size','request_limit'} <= set(body)
-                    or set(body)-{'revision','embedding_revision','batch_size','request_limit','node_limit','project_id','selection_preview_id'}
+                    or set(body)-{'revision','embedding_revision','batch_size','request_limit','node_limit','project_id','selection_preview_id','vector_package'}
                     or any(type(body[name]) is not int for name in ('revision','embedding_revision','batch_size'))
                     or not 1<=body['batch_size']<=4096
                     or body['request_limit'] is not None and (type(body['request_limit']) is not int or not 1<=body['request_limit']<=1000000)
@@ -1064,7 +1163,8 @@ def create_app(*, control=None, token=None, state_dir=None):
             target = await asyncio.to_thread(selected_target,project_id,session_token(request))
             next_revision = body['revision']+1
             config = await asyncio.to_thread(_builder_config,state_dir,target,model,next_revision,
-                body['batch_size'],body['request_limit'],body.get('node_limit'),chosen,plan_sha256=source_result['plan_sha256'])
+                body['batch_size'],body['request_limit'],body.get('node_limit'),chosen,plan_sha256=source_result['plan_sha256'],
+                vector_package=body.get('vector_package'))
             if (body['revision']!=(setup['revision'] if setup else 0)
                     or source_task is not None and not source_task.done()
                     or source_result['state']!='VALID'
@@ -1086,6 +1186,9 @@ def create_app(*, control=None, token=None, state_dir=None):
         setup, configuration, control = updated, config, next_control
         setup_error, failure = None, None
         checked_config = _spec_hash(configuration)
+        if config.get('vector_package'):
+            source_result=inspect_inputs(None)['source_validation']
+            checked_files=()
         if config['paths'].get('selection'):
             path=Path(config['paths']['selection'])
             checked_files=(*checked_files,(path,_input_version(path)))
@@ -1122,7 +1225,7 @@ def create_app(*, control=None, token=None, state_dir=None):
                 model = _builder_model(secrets)
                 from kag.http_api.provider_budget import provider_route
                 try:
-                    provider_route(model['config'],'embedding',_builder_policy())
+                    if snapshot['vector_policy']=='provider':provider_route(model['config'],'embedding',_builder_policy())
                     valid = bool(model['test'] and model['test']['status']=='PASS' and model['test']['dimension']==snapshot['vector_dimensions'])
                 except Exception:
                     valid = False
@@ -1213,7 +1316,7 @@ def create_app(*, control=None, token=None, state_dir=None):
                     if await asyncio.to_thread(binding,session_token(request))!=ready_binding:raise ValueError
                     model = _builder_model(secrets)
                     if model['revision']!=setup['embedding_revision']:raise ValueError
-                    control.runner = _builder_runner(model)
+                    control.runner = _builder_runner(model) if configuration['vector_policy']=='provider' else run
                 except (OSError,ValueError,KeyError,TypeError):
                     raise HTTPException(409,'BUILDER_CONFIGURATION_CHANGED') from None
             control.start(body['run_id'], resume=action == 'resume')

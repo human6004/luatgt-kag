@@ -251,6 +251,8 @@ services:
       KAG_QUERY_TIMEOUT_SECONDS: ${KAG_QUERY_TIMEOUT_SECONDS:-180}
       KAG_BUILDER_STATE_DIR: /builder-state
       KAG_BUILDER_RUN_ROOT: /builder-runs
+      KAG_GRAPH_PACKAGES_DIR: /graph-packages
+      KAG_GRAPH_PACKAGES_HOST_DIR: ${KAG_STATE_DIR:-../luatgt-state}/graph-packages
       KAG_BUILDER_TOKEN_FILE: /run/secrets/builder_token
       KAG_HTTP_INSPECT_SECRET_FILE: /run/secrets/inspect_token
       KAG_HTTP_CONFIG_APPLY_SECRET_FILE: /run/secrets/config_apply_token
@@ -299,6 +301,10 @@ services:
         source: ${KAG_STATE_DIR:-../luatgt-state}/builder-input
         target: /builder-input
         read_only: true
+        bind: {create_host_path: true}
+      - type: bind
+        source: ${KAG_STATE_DIR:-../luatgt-state}/graph-packages
+        target: /graph-packages
         bind: {create_host_path: true}
       - type: volume
         source: kag-builder-runs

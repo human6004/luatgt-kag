@@ -15,7 +15,7 @@ import Users from './pages/AdminUsers'
 import Questions from './pages/AdminQuestions'
 import Sources from './pages/AdminSources'
 import Benchmark from './pages/AdminBenchmark'
-import Docker from './pages/AdminDocker'
+import GraphShare from './pages/AdminGraphShare'
 import { Infrastructure } from './pages/server/OperationsPages'
 import KagSchemaPage from './pages/server/KagSchemaPage'
 
@@ -97,7 +97,8 @@ export default function App() {
                 <Route path="/admin/infrastructure" element={<Infrastructure />} />
                 <Route path="/admin/sources" element={<Sources />} />
                 <Route path="/admin/schema" element={<KagSchemaPage />} />
-                <Route path="/admin/docker" element={<Docker />} />
+                <Route path="/admin/graph-share" element={<GraphShare />} />
+                <Route path="/admin/docker" element={<RedirectWithParams to="/admin/graph-share" />} />
                 <Route path="/admin/benchmark" element={<Benchmark />} />
 
                 {/* Legacy route redirects (preserving query string) */}

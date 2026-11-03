@@ -15,7 +15,7 @@ const advancedItems: [string, string][] = [
   ["/admin/infrastructure", "Kết nối & chẩn đoán"],
   ["/admin/sources", "Dữ liệu nguồn KAG"],
   ["/admin/schema", "Schema"],
-  ["/admin/docker", "Đóng gói Docker"],
+  ["/admin/graph-share", "Chia sẻ đồ thị"],
   ["/admin/benchmark", "Benchmark"],
 ]
 

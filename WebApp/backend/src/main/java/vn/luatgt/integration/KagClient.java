@@ -95,6 +95,14 @@ public class KagClient {
     public JsonNode checkBuilderInputs() {return builderRequest("check-inputs",null);}
     public JsonNode builderConfiguration() {return builderRequest("configuration",null);}
     public JsonNode builderProjects() {return builderRequest("projects",null);}
+    public JsonNode builderPackages() {return builderRequest("packages",null);}
+    public JsonNode builderPackageExport(JsonNode change) {
+        if(change==null)return builderRequest("packages/export",null);
+        if(!fields(change).equals(Set.of("project_id","run_id"))||!bounded(change.path("project_id"),1,Integer.MAX_VALUE)||
+            !change.path("run_id").isTextual()||!change.path("run_id").asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}"))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Chọn project và phiên đã xác minh để xuất gói");
+        return builderRequest("packages/export",change);
+    }
     public JsonNode graphProject(int projectId) {
         if(projectId<1)throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"ID project không hợp lệ");
         return builderRequest("graph/"+projectId,null);
@@ -153,13 +161,14 @@ public class KagClient {
         return builderRequest("structure-"+action,change);
     }
     public JsonNode saveBuilderConfiguration(JsonNode change) {
-        var allowed=Set.of("revision","embedding_revision","batch_size","request_limit","node_limit","project_id","selection_preview_id");
+        var allowed=Set.of("revision","embedding_revision","batch_size","request_limit","node_limit","project_id","selection_preview_id","vector_package");
         if(!fields(change).containsAll(Set.of("revision","embedding_revision","batch_size","request_limit"))||!allowed.containsAll(fields(change))||
             !bounded(change.path("revision"),0,Integer.MAX_VALUE-1)||!bounded(change.path("embedding_revision"),1,Integer.MAX_VALUE)||
             !bounded(change.path("batch_size"),1,4096)||!change.path("request_limit").isNull()&&!bounded(change.path("request_limit"),1,1000000)||
             change.has("node_limit")&&!change.path("node_limit").isNull()&&!bounded(change.path("node_limit"),3,128)||
             change.has("selection_preview_id")&&!change.path("selection_preview_id").asText().matches("[0-9a-f]{64}")||
-            change.has("project_id")&&!bounded(change.path("project_id"),1,Integer.MAX_VALUE))
+            change.has("project_id")&&!bounded(change.path("project_id"),1,Integer.MAX_VALUE)||
+            change.has("vector_package")&&!change.path("vector_package").isNull()&&!packageReference(change.path("vector_package")))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Cấu hình Builder không hợp lệ");
         return builderRequest("save-configuration",change);
     }
@@ -206,23 +215,26 @@ public class KagClient {
             boolean graph=action!=null&&action.matches("graph/[1-9][0-9]{0,9}");
             boolean sources=action!=null&&action.startsWith("sources/");
             boolean dataset=action!=null&&action.startsWith("dataset/");
-            boolean read=graph||sources||dataset||action==null||Set.of("inputs","configuration","projects","structure","clear").contains(action);
+            boolean packages="packages".equals(action)||"packages/export".equals(action);
+            boolean export="packages/export".equals(action);
+            boolean read=graph||sources||dataset||packages&&payload==null||action==null||Set.of("inputs","configuration","projects","structure","clear").contains(action);
             boolean structure=action!=null&&action.startsWith("structure");
             boolean clear=action!=null&&action.startsWith("clear");
             boolean inputs="inputs".equals(action)||"check-inputs".equals(action);
             boolean configuration=Set.of("configuration","save-configuration","preflight").contains(action==null?"":action);
             String path=action==null?"status":inputs?"inputs":action.equals("save-configuration")?"configuration":structure||clear?action.replace('-', '/'):action;
-            var transport=graph||sources||structure||clear||Set.of("save-configuration","projects","selection","abandon").contains(action==null?"":action)?builderConfigurationClient:builderClient;
+            var transport=graph||sources||structure||clear||packages||Set.of("save-configuration","projects","selection","abandon").contains(action==null?"":action)?builderConfigurationClient:builderClient;
             RestClient.RequestHeadersSpec<?> request=read?transport.get().uri("/v1/builder/"+path):
                 transport.post().uri("/v1/builder/"+path).contentType(MediaType.APPLICATION_JSON).body(payload==null?Map.of():payload);
             if(revision!=null)request.header(HttpHeaders.IF_MATCH,revision);
-            if(graph||sources||structure||clear||Set.of("projects","save-configuration","preflight","build","resume","abandon").contains(action==null?"":action)) {
-                String session=openSpgSession();
+            String packageSession=export?openSpgSession():null;
+            if(graph||sources||structure||clear||export||Set.of("projects","save-configuration","preflight","build","resume","abandon").contains(action==null?"":action)) {
+                String session=export?packageSession:openSpgSession();
                 if(session!=null)request.header("X-OpenSPG-Session",session);
             }
             return request.header(HttpHeaders.AUTHORIZATION,"Bearer "+token).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
                 int code=res.getStatusCode().value();
-                if((graph||sources)&&(code==403||code==404))throw new ResponseStatusException(code==403?HttpStatus.FORBIDDEN:HttpStatus.NOT_FOUND,
+                if((graph||sources||export)&&(code==403||code==404))throw new ResponseStatusException(code==403?HttpStatus.FORBIDDEN:HttpStatus.NOT_FOUND,
                     code==403?"Đăng nhập lại OpenSPG và kiểm quyền sở hữu project":"Project không còn thuộc danh sách được phép xem; hãy tải lại");
                 if(code==409) {
                     if("selection".equals(action)&&inspectionBody(res,token).path("detail").asText().equals("BUILDER_SELECTION_INVALID"))
@@ -234,8 +246,9 @@ public class KagClient {
                 JsonNode body;
                 try { body=inspectionBody(res,token,sources?32*1024*1024:245760); }
                 catch(IOException e) { if(sources&&"Response too large".equals(e.getMessage()))throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"Danh sách nguồn vượt giới hạn 32 MiB; chưa thể xem hoặc nhập qua màn này");throw e; }
-                if(dataset)validateDataset(body,action);else if(sources)validateBuilderSources(body,action);else if(graph)validateGraphProject(body,Integer.parseInt(action.substring(6)));else if(structure)validateBuilderStructure(body);else if(clear)validateBuilderClear(body);else if("selection".equals(action))validateBuilderSelection(body);else if("projects".equals(action))validateBuilderProjects(body);else if(inputs)validateBuilderInputs(body);else if(configuration)validateBuilderConfiguration(body);else validateBuilder(body);
-                if(!read&&!inputs&&!configuration&&!structure&&!clear&&!"selection".equals(action)&&!body.path("run_id").asText().equals(((Map<?,?>)payload).get("run_id")))throw new IOException();
+                if(packageSession!=null&&body.toString().contains(packageSession))throw new IOException();
+                if(packages)validateBuilderPackages(body,export);else if(dataset)validateDataset(body,action);else if(sources)validateBuilderSources(body,action);else if(graph)validateGraphProject(body,Integer.parseInt(action.substring(6)));else if(structure)validateBuilderStructure(body);else if(clear)validateBuilderClear(body);else if("selection".equals(action))validateBuilderSelection(body);else if("projects".equals(action))validateBuilderProjects(body);else if(inputs)validateBuilderInputs(body);else if(configuration)validateBuilderConfiguration(body);else validateBuilder(body);
+                if(!read&&!packages&&!inputs&&!configuration&&!structure&&!clear&&!"selection".equals(action)&&!body.path("run_id").asText().equals(((Map<?,?>)payload).get("run_id")))throw new IOException();
                 return body;
             });
         } catch(ResponseStatusException e) {throw e;}
@@ -400,18 +413,72 @@ public class KagClient {
         if(body.path("state").asText().equals("AVAILABLE")==body.path("projects").isEmpty())throw new IOException();
         if(!body.path("state").asText().equals("AVAILABLE")&&!body.path("projects").isEmpty())throw new IOException();
     }
+    private static boolean packageName(JsonNode value) {
+        return value.isTextual()&&value.asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,119}\\.zip");
+    }
+    private static boolean packageReference(JsonNode value) {
+        return fields(value).equals(Set.of("name","sha256"))&&packageName(value.path("name"))&&
+            value.path("sha256").isTextual()&&value.path("sha256").asText().matches("[0-9a-f]{64}");
+    }
+    private static boolean packageSize(JsonNode value) {
+        return value.isIntegralNumber()&&value.canConvertToLong()&&value.asLong()>=0&&value.asLong()<=32L*1024*1024*1024;
+    }
+    private void validatePackageModel(JsonNode model) throws IOException {
+        if(!fields(model).equals(Set.of("provider","model","dimension"))||!model.path("provider").asText().equals("openai-compatible")||
+            !model.path("model").isTextual()||!model.path("model").asText().matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}")||
+            !bounded(model.path("dimension"),1,65536))throw new IOException();
+    }
+    private void validatePackageManifest(JsonNode manifest) throws IOException {
+        if(!fields(manifest).equals(Set.of("format_version","plan_sha256","selection","model_identity","nodes","edges","vectors","fingerprint","application_version"))||
+            !manifest.path("format_version").asText().equals("luatgt-vector-package-v1")||
+            !manifest.path("plan_sha256").isTextual()||!manifest.path("plan_sha256").asText().matches("[0-9a-f]{64}")||
+            !manifest.path("fingerprint").isTextual()||!manifest.path("fingerprint").asText().matches("[0-9a-f]{64}")||
+            !manifest.path("application_version").isTextual()||!manifest.path("application_version").asText().matches("[A-Za-z0-9][A-Za-z0-9._+-]{0,127}"))throw new IOException();
+        validatePackageModel(manifest.path("model_identity"));
+        for(String key:List.of("nodes","edges","vectors"))if(!bounded(manifest.path(key),0,Integer.MAX_VALUE))throw new IOException();
+        var selection=manifest.path("selection");
+        if(!selection.isNull()&&(!fields(selection).equals(Set.of("mode","value"))||!selection.path("mode").asText().equals("COUNT")||
+            !bounded(selection.path("value"),1,Integer.MAX_VALUE)||!selection.path("value").equals(manifest.path("nodes"))))throw new IOException();
+    }
+    private void validateBuilderPackages(JsonNode body,boolean export) throws IOException {
+        if(!text(body.path("directory"),1024,true)||body.path("directory").asText().chars().anyMatch(Character::isISOControl))throw new IOException();
+        if(export) {
+            String state=body.path("state").asText();
+            if(!fields(body).equals(Set.of("contract_version","state","name","size","code","directory"))||
+                !body.path("contract_version").asText().equals("builder-package-export-v1")||!Set.of("NOT_RUN","RUNNING","COMPLETE","FAILED").contains(state)||
+                (state.equals("COMPLETE")?!packageName(body.path("name"))||!packageSize(body.path("size")):!body.path("name").isNull()||!body.path("size").isNull())||
+                (state.equals("FAILED")?!body.path("code").isTextual()||!body.path("code").asText().matches("[A-Z_]{1,64}"):!body.path("code").isNull()))throw new IOException();
+            return;
+        }
+        if(!fields(body).equals(Set.of("contract_version","directory","current_model","packages"))||!body.path("contract_version").asText().equals("builder-packages-v1")||
+            !body.path("packages").isArray()||body.path("packages").size()>1024)throw new IOException();
+        var model=body.path("current_model");if(!model.isNull())validatePackageModel(model);
+        var names=new HashSet<String>();
+        for(var row:body.path("packages")) {
+            if(!fields(row).equals(Set.of("name","sha256","size","compatible","reason","manifest"))||!text(row.path("name"),255,true)||
+                row.path("name").asText().contains("/")||row.path("name").asText().contains("\\")||row.path("name").asText().chars().anyMatch(Character::isISOControl)||
+                !names.add(row.path("name").asText())||!row.path("size").isIntegralNumber()||!row.path("size").canConvertToLong()||
+                row.path("size").asLong()<0||row.path("size").asLong()>9007199254740991L||!row.path("compatible").isBoolean()||!text(row.path("reason"),512,false)||
+                !row.path("sha256").isNull()&&(!row.path("sha256").isTextual()||!row.path("sha256").asText().matches("[0-9a-f]{64}")))throw new IOException();
+            var manifest=row.path("manifest");if(!manifest.isNull())validatePackageManifest(manifest);
+            if(row.path("compatible").asBoolean()&&(!packageName(row.path("name"))||!packageSize(row.path("size"))||manifest.isNull()||row.path("sha256").isNull()||model.isNull()||!model.equals(manifest.path("model_identity"))))throw new IOException();
+        }
+    }
     private void validateBuilderConfiguration(JsonNode body) throws IOException {
-        boolean extended=body.path("contract_version").asText().equals("builder-configuration-v4");
+        boolean packages=body.path("contract_version").asText().equals("builder-configuration-v5");
+        boolean extended=packages||body.path("contract_version").asText().equals("builder-configuration-v4");
         boolean projects=extended||body.path("contract_version").asText().equals("builder-configuration-v3");
         boolean selected=projects||body.path("contract_version").asText().equals("builder-configuration-v2");
         var expected=new HashSet<>(Set.of("contract_version","revision","saved","error_code","target","embedding","batch_size","request_limit","readiness"));
         if(selected)expected.add("selection");
         if(projects)expected.add("links");
+        if(packages)expected.add("vector_package");
         if(!fields(body).equals(expected)||
-            !Set.of("builder-configuration-v1","builder-configuration-v2","builder-configuration-v3","builder-configuration-v4").contains(body.path("contract_version").asText())||!bounded(body.path("revision"),0,Integer.MAX_VALUE)||
+            !Set.of("builder-configuration-v1","builder-configuration-v2","builder-configuration-v3","builder-configuration-v4","builder-configuration-v5").contains(body.path("contract_version").asText())||!bounded(body.path("revision"),0,Integer.MAX_VALUE)||
             !body.path("saved").isBoolean()||body.path("saved").asBoolean()!=(body.path("revision").asInt()>0)||
             !bounded(body.path("batch_size"),1,4096)||!body.path("request_limit").isNull()&&!bounded(body.path("request_limit"),1,1000000)||
             !body.path("error_code").isNull()&&!body.path("error_code").asText().equals("CONFIG"))throw new IOException();
+        if(packages&&!body.path("vector_package").isNull()&&!packageReference(body.path("vector_package")))throw new IOException();
         if(selected) {
             var selection=body.path("selection");
             if(!fields(selection).equals(extended?Set.of("node_limit","nodes","edges","request","summary"):Set.of("node_limit","nodes","edges"))||
@@ -485,7 +552,7 @@ public class KagClient {
                 !target.path("namespace").asText().matches("[A-Za-z][A-Za-z0-9_]{0,63}"))throw new IOException();
         } else if(!target.isNull()||!body.path("scope").isNull())throw new IOException();
         var inputs=body.path("inputs");var names=new HashSet<String>();
-        var expected=Set.of("c3_manifest","sample_manifest","vector_artifact","provenance","chunk_manifest","source_checkpoint","selection");
+        var expected=Set.of("c3_manifest","sample_manifest","vector_artifact","provenance","chunk_manifest","source_checkpoint","selection","graph_package");
         if(!inputs.isArray()||(configured?inputs.isEmpty()||inputs.size()>expected.size()||body.path("scope").asText().equals("FRESH_SAMPLE")&&inputs.size()!=6:!inputs.isEmpty()))throw new IOException();
         for(var input:inputs) {
             String name=input.path("name").asText();

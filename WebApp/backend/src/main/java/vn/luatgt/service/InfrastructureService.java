@@ -41,6 +41,8 @@ public class InfrastructureService {
     public JsonNode checkBuilderInputs() { return kag.checkBuilderInputs(); }
     public JsonNode builderConfiguration() { return kag.builderConfiguration(); }
     public JsonNode builderProjects() { return kag.builderProjects(); }
+    public JsonNode builderPackages() { return kag.builderPackages(); }
+    public JsonNode builderPackageExport(JsonNode change) { return kag.builderPackageExport(change); }
     public JsonNode graphProject(int projectId) { return kag.graphProject(projectId); }
     public JsonNode graphSources(int projectId,String runId) {return legalUnits.sourceComparison(kag.builderSources(projectId,runId));}
     @org.springframework.beans.factory.annotation.Autowired private LegalUnitService legalUnits;

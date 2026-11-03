@@ -89,7 +89,7 @@ Giữ các biến mapping khi cập nhật:
 - `KAG_NEO4J_STORAGE_REVISION`: hậu tố volume Neo4j data.
 - `KAG_GRAPH_LOCK_VOLUME`: volume khóa chung cho mọi writer cùng physical database, không đổi để né khóa.
 
-`.env.example` đặt `KAG_STATE_DIR=./.secrets` và ba đường token riêng cùng thư mục: state nằm trong repo local, được loại khỏi Git và Docker build context. Giữ bảy token và các thư mục `release`, `api-credentials`, `broker-credentials`, `builder-input`. Cài đặt cũ vẫn dùng đường dẫn trong `.env`; khi không đặt biến này, Compose dùng `../luatgt-state` để giữ tương thích. Runs/locks/provider counters nằm trong named volumes. Windows dùng dấu `/` trong đường dẫn `.env`.
+`.env.example` đặt `KAG_STATE_DIR=./.secrets` và ba đường token riêng cùng thư mục: state nằm trong repo local, được loại khỏi Git và Docker build context. Giữ bảy token và các thư mục `release`, `api-credentials`, `broker-credentials`, `builder-input`, `graph-packages`. Cài đặt cũ vẫn dùng đường dẫn trong `.env`; khi không đặt biến này, Compose dùng `../luatgt-state` để giữ tương thích. Runs/locks/provider counters nằm trong named volumes. Windows dùng dấu `/` trong đường dẫn `.env`.
 
 Ba token lưu/kiểm/áp dụng model lấy từ các biến `KAG_*_SECRET_FILE` riêng theo [INSTALL](../docs/INSTALL.md#3-tạo-cấu-hình-và-secrets). Key lưu qua UI ở file riêng quyền `0600` trong provider state; không trả key qua API và không mã hóa tại chỗ. Bảo vệ cả volume và mọi bản sao.
 
@@ -228,6 +228,12 @@ Deployment cấp `KAG_BUILDER_OPENSPG_URL=http://openspg-server:8887`, `KAG_BUIL
 Corpus/schema được đóng gói trong image. **Kiểm tra và chuẩn bị** dùng volume `kag-builder-state` tại `/builder-state` (`KAG_BUILDER_STATE_DIR`), tách khỏi run history và source checkout. Giữ volume này khi cập nhật/backup; không mount workspace phát triển vào sản phẩm.
 
 Config sản phẩm lưu tại `/builder-state/configuration.json`; mỗi revision giữ run root riêng dưới `/builder-runs`, khóa tại `/run/kag-locks`. `builder-input/runner.json` chỉ dành cho cấu hình Runner thủ công cũ khi chưa lưu cấu hình sản phẩm. Giữ cả Builder state, runs, locks và provider state khi backup/update. Sau restart, kiểm lại nguồn/sẵn sàng trước Resume; kết quả đã xác minh vẫn xem được khi cấu hình hiện tại thiếu hoặc đã đổi.
+
+### Chia sẻ đồ thị
+
+Compose tạo `${KAG_STATE_DIR:-../luatgt-state}/graph-packages` bằng `create_host_path`, bind đọc/ghi tại `/graph-packages` **chỉ cho kag-builder**. Trên Linux host, bảo đảm UID/GID10001 của Worker được ghi thư mục này; Compose không tự đổi quyền host. Trong **Nâng cao → Chia sẻ đồ thị**, xuất ZIP từ run PASS thuộc project đang sở hữu rồi chép file sang cùng thư mục trên máy nhận. Gói dùng ZIP64, chứa vector/provenance và manifest nguồn/phạm vi/model/chiều; không chứa endpoint, credential hoặc định danh database/project máy xuất. Tên ZIP dùng chữ/số ASCII, dấu chấm, gạch ngang hoặc gạch dưới; giữ tên do ứng dụng xuất để chọn được gói.
+
+Máy nhận cần cùng corpus và Embedding provider/model/dimension. Thẻ Nhập hiện lý do nếu không khớp. Tại Bước ②, chọn gói và phạm vi phù hợp rồi lưu cấu hình; thao tác này chưa giải nén. **Kiểm tra và chuẩn bị** chạy nhập/chuyển đổi replay trong nền vào volume `kag-builder-state`, có polling như kiểm nguồn. Giới hạn giải nén tính theo counts/dimension trong manifest, trần 32 GiB và vẫn đếm byte khi stream; cần đủ dung lượng state cho vector, checkpoint và bản chuyển đổi tạm. Sau khi kiểm sẵn sàng, người vận hành tự Dựng vào project/database mới, trống. Replay không tạo provider client hoặc gọi Embedding; GraphLock, identity, PLAN/PROVENANCE/VECTORS, verify và Dùng cho Chat giữ nguyên. Không dump/load Neo4j và không tự chuyển Chat.
 
 Mặc định thiếu đích/model nên Builder chưa sẵn sàng và báo lý do; không lấy target thử thay thế. Đích cần identity vật lý, schema và bốn vector indexes phù hợp. Chọn phạm vi, dừng/tiếp tục, bỏ phiên và dựng lại theo runner; không dùng graph serving làm đích Build.
 

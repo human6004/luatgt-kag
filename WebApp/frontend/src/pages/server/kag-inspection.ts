@@ -21,6 +21,72 @@ export async function loadServing(signal?: AbortSignal): Promise<ServingCatalog>
       [row.nodes, row.edges, row.vectors, row.dimension].some(n => !Number.isInteger(n) || n < 0))) throw new ApiError('Trạng thái đồ thị phục vụ không hợp lệ', 502)
   return value
 }
+export type PackageModel = { provider: string; model: string; dimension: number }
+export type VectorPackageManifest = { format_version: 'luatgt-vector-package-v1'; plan_sha256: string; selection: Record<string, unknown> | null; model_identity: PackageModel; nodes: number; edges: number; vectors: number; fingerprint: string; application_version: string }
+export type VectorPackageReference = { name: string; sha256: string }
+export type BuilderPackages = { contract_version: 'builder-packages-v1'; directory: string; current_model: PackageModel | null; packages: { name: string; sha256: string | null; size: number; compatible: boolean; reason: string; manifest: VectorPackageManifest | null }[] }
+export type BuilderPackageExport = { contract_version: 'builder-package-export-v1'; state: 'NOT_RUN' | 'RUNNING' | 'COMPLETE' | 'FAILED'; name: string | null; size: number | null; code: string | null; directory: string }
+const packageName = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,119}\.zip$/.test(value)
+const listedPackageName = (value: unknown): value is string => typeof value === 'string' && value.length > 0 && value.length <= 255 && !/[\/\\\x00-\x1f\x7f]/.test(value)
+export function packageReason(code: string) {
+  const reasons: Record<string, string> = {
+    PACKAGE_READY: 'Tương thích để nhập', COMPATIBLE: 'Tương thích để nhập',
+    PACKAGE_NAME: 'Đổi tên ZIP: chỉ dùng chữ/số ASCII, dấu chấm, gạch ngang hoặc gạch dưới; tối đa 124 ký tự.',
+    PACKAGE_PLAN: 'Gói khác phiên bản dữ liệu nguồn. Cài đúng corpus rồi kiểm tra và chuẩn bị lại.',
+    PACKAGE_MODEL: 'Provider, model hoặc số chiều khác máy hiện tại. Cấu hình và kiểm đúng Embedding của gói.', MODEL_MISMATCH: 'Model hoặc số chiều không khớp.',
+    PACKAGE_SOURCE: 'Cần kiểm tra và chuẩn bị nguồn trước khi chọn gói.',
+    PACKAGE_SELECTION: 'Phạm vi dữ liệu không khớp. Chọn đúng phạm vi của gói.',
+    PACKAGE_CHANGED: 'ZIP đã thay đổi. Tải lại danh sách rồi chọn và lưu lại.',
+    PACKAGE_PATH: 'Thư mục hoặc tệp ZIP không hợp lệ; không dùng liên kết tượng trưng.',
+    PACKAGE_SIZE: 'ZIP vượt giới hạn kích thước hoặc số lượng đã khai báo.',
+    PACKAGE_MANIFEST: 'Thông tin mô tả gói không hợp lệ.',
+    PACKAGE_FILES: 'ZIP chứa tệp thiếu, thừa hoặc đường dẫn không hợp lệ.',
+    PACKAGE_INVALID: 'ZIP hoặc dữ liệu vector không hợp lệ.',
+    PACKAGE_INTEGRITY: 'Nội dung gói không khớp dữ liệu nguồn đã chốt.',
+    PACKAGE_PROVENANCE: 'Thiếu hoặc sai thông tin nguồn của vector.',
+    PACKAGE_VECTORS: 'Vector thiếu, sai kích thước hoặc không hợp lệ.',
+    PACKAGE_UNAVAILABLE: 'Không đọc được ZIP. Kiểm tra quyền đọc và chép lại tệp.',
+  }
+  return reasons[code] ?? `Chưa thể dùng gói (${code}). Kiểm tra cấu hình rồi tải lại.`
+}
+const packageModel = (value: PackageModel) => shape(value, ['provider', 'model', 'dimension']) && typeof value.provider === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(value.provider) &&
+  typeof value.model === 'string' && /^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(value.model) && count(value.dimension, 65536) && value.dimension > 0
+const packageReference = (value: VectorPackageReference) => shape(value, ['name', 'sha256']) && packageName(value.name) && hash(value.sha256)
+const packageDirectory = (value: unknown) => typeof value === 'string' && value.length > 0 && value.length <= 4096 && !/[\x00-\x1f\x7f]/.test(value)
+export async function loadBuilderPackages(signal?: AbortSignal): Promise<BuilderPackages> {
+  const value = await api<BuilderPackages>('/admin/kag/builder/packages', { signal, cache: 'no-store' })
+  const invalid = () => { throw new ApiError('Danh sách gói vector không hợp lệ', 502) }
+  if (!shape(value, ['contract_version', 'directory', 'current_model', 'packages']) || value.contract_version !== 'builder-packages-v1' || !packageDirectory(value.directory) ||
+    value.current_model !== null && !packageModel(value.current_model) || !Array.isArray(value.packages) || value.packages.length > 10000) invalid()
+  const names = new Set<string>()
+  for (const row of value.packages) {
+    if (!shape(row, ['name', 'sha256', 'size', 'compatible', 'reason', 'manifest']) || !listedPackageName(row.name) || names.has(row.name) ||
+      row.sha256 !== null && !hash(row.sha256) || !count(row.size, Number.MAX_SAFE_INTEGER) || typeof row.compatible !== 'boolean' ||
+      typeof row.reason !== 'string' || row.reason.length > 1024 || row.compatible && (!packageName(row.name) || row.size > 32 * 1024 ** 3 || !row.sha256 || !row.manifest || !value.current_model)) invalid()
+    const m = row.manifest
+    if (m !== null && (!shape(m, ['format_version', 'plan_sha256', 'selection', 'model_identity', 'nodes', 'edges', 'vectors', 'fingerprint', 'application_version']) ||
+      m.format_version !== 'luatgt-vector-package-v1' || !hash(m.plan_sha256) || !hash(m.fingerprint) || !packageModel(m.model_identity) ||
+      m.selection !== null && (typeof m.selection !== 'object' || Array.isArray(m.selection)) || [m.nodes, m.edges, m.vectors].some(n => !count(n, Number.MAX_SAFE_INTEGER)) ||
+      typeof m.application_version !== 'string' || !m.application_version || m.application_version.length > 255)) invalid()
+    if (row.compatible && m && ['provider', 'model', 'dimension'].some(key => m.model_identity[key as keyof PackageModel] !== value.current_model![key as keyof PackageModel])) invalid()
+    names.add(row.name)
+  }
+  return value
+}
+function validatePackageExport(value: BuilderPackageExport) {
+  if (!shape(value, ['contract_version', 'state', 'name', 'size', 'code', 'directory']) || value.contract_version !== 'builder-package-export-v1' ||
+    !['NOT_RUN', 'RUNNING', 'COMPLETE', 'FAILED'].includes(value.state) || !packageDirectory(value.directory) || value.name !== null && !packageName(value.name) ||
+    value.size !== null && !count(value.size, Number.MAX_SAFE_INTEGER) || value.code !== null && (typeof value.code !== 'string' || !/^[A-Z0-9_]{1,64}$/.test(value.code)) ||
+    value.state === 'COMPLETE' && (value.name === null || value.size === null || value.size > 32 * 1024 ** 3 || value.code !== null)) throw new ApiError('Trạng thái xuất gói không hợp lệ', 502)
+  return value
+}
+export async function loadBuilderPackageExport(signal?: AbortSignal): Promise<BuilderPackageExport> {
+  return validatePackageExport(await api<BuilderPackageExport>('/admin/kag/builder/packages/export', { signal, cache: 'no-store' }))
+}
+export async function exportBuilderPackage(project_id: number, run_id: string): Promise<BuilderPackageExport> {
+  if (!count(project_id, 2147483647) || project_id < 1 || typeof run_id !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(run_id)) throw new ApiError('Project hoặc phiên xuất không hợp lệ', 400)
+  return validatePackageExport(await api<BuilderPackageExport>('/admin/kag/builder/packages/export', send('POST', { project_id, run_id })))
+}
 export async function changeServing(action: 'preview' | 'activate', project_id: number, run_id: string, preview_id?: string): Promise<ServingPreview> {
   const value = await api<ServingPreview>(`/admin/kag/serving/${action}`, send('POST', { project_id, run_id, ...(action === 'activate' ? { preview_id } : {}) }))
   if (value.project_id !== project_id || value.run_id !== run_id || !/^[0-9a-f]{64}$/.test(value.preview_id) ||
@@ -230,7 +296,8 @@ export async function loadBuilderStatus(signal?: AbortSignal): Promise<BuilderSt
   return validateBuilder(await api<BuilderStatus>('/admin/kag/builder/status', { signal, cache: 'no-store' }))
 }
 export type BuilderConfiguration = {
-  contract_version: 'builder-configuration-v1' | 'builder-configuration-v2' | 'builder-configuration-v3' | 'builder-configuration-v4'; revision: number; saved: boolean; error_code: 'CONFIG' | null
+  contract_version: 'builder-configuration-v1' | 'builder-configuration-v2' | 'builder-configuration-v3' | 'builder-configuration-v4' | 'builder-configuration-v5'; revision: number; saved: boolean; error_code: 'CONFIG' | null
+  vector_package?: VectorPackageReference | null
   target: { project_id: number; project_name: string; database: string; namespace: string } | null
   embedding: { provider: 'openai-compatible'; base_url: string; model: string; revision: number; key_configured: boolean; tested: boolean; dimension: number | null } | null
   batch_size: number; request_limit: number | null
@@ -238,7 +305,7 @@ export type BuilderConfiguration = {
   links?: { openspg: string; neo4j: string; bolt: string } | null
   readiness: { state: 'NOT_RUN' | 'CHECKING' | 'READY' | 'BLOCKED'; checks: { name: 'source' | 'embedding' | 'target' | 'lock'; state: 'READY' | 'BLOCKED' | 'NOT_CHECKED'; code: string | null; owner?: { run_id: string; project_id: number } }[]; checked_at: string | null }
 }
-export type BuilderConfigurationChange = Pick<BuilderConfiguration, 'revision' | 'batch_size' | 'request_limit'> & { embedding_revision: number; node_limit?: number | null; project_id?: number; selection_preview_id?: string }
+export type BuilderConfigurationChange = Pick<BuilderConfiguration, 'revision' | 'batch_size' | 'request_limit' | 'vector_package'> & { embedding_revision: number; node_limit?: number | null; project_id?: number; selection_preview_id?: string }
 export type SelectionRequest = { mode: 'ALL' | 'COUNT' | 'PERCENT'; value: number | null }
 export type SelectionSummary = { nodes: number; edges: number; node_counts: Record<string, number>; edge_counts: Record<string, number>; excluded_edges: number }
 export type BuilderSelection = { contract_version: 'builder-selection-v1'; revision: number; preview_id: string; node_limit: number | null; request: SelectionRequest; summary: SelectionSummary }
@@ -334,11 +401,11 @@ export async function clearBuilderData(action: 'preview' | 'apply', revision: nu
 }
 function validateBuilderConfiguration(value: BuilderConfiguration): BuilderConfiguration {
   const invalid = () => { throw new ApiError('Cấu hình Builder không hợp lệ', 502) }
-  const extended = value.contract_version === 'builder-configuration-v4', projects = extended || value.contract_version === 'builder-configuration-v3', selected = projects || value.contract_version === 'builder-configuration-v2'
-  if (!shape(value, ['contract_version', 'revision', 'saved', 'error_code', 'target', 'embedding', 'batch_size', 'request_limit', 'readiness', ...(selected ? ['selection'] : []), ...(projects ? ['links'] : [])]) ||
-    !['builder-configuration-v1', 'builder-configuration-v2', 'builder-configuration-v3', 'builder-configuration-v4'].includes(value.contract_version) || !count(value.revision) || value.revision > 2147483647 || typeof value.saved !== 'boolean' || value.saved !== (value.revision > 0) ||
+  const packaged = value.contract_version === 'builder-configuration-v5', extended = packaged || value.contract_version === 'builder-configuration-v4', projects = extended || value.contract_version === 'builder-configuration-v3', selected = projects || value.contract_version === 'builder-configuration-v2'
+  if (!shape(value, ['contract_version', 'revision', 'saved', 'error_code', 'target', 'embedding', 'batch_size', 'request_limit', 'readiness', ...(selected ? ['selection'] : []), ...(projects ? ['links'] : []), ...(packaged ? ['vector_package'] : [])]) ||
+    !['builder-configuration-v1', 'builder-configuration-v2', 'builder-configuration-v3', 'builder-configuration-v4', 'builder-configuration-v5'].includes(value.contract_version) || !count(value.revision) || value.revision > 2147483647 || typeof value.saved !== 'boolean' || value.saved !== (value.revision > 0) ||
     ![null, 'CONFIG'].includes(value.error_code) || !count(value.batch_size) || value.batch_size < 1 || value.batch_size > 4096 ||
-    value.request_limit !== null && (!count(value.request_limit) || value.request_limit < 1 || value.request_limit > 1000000)) invalid()
+    value.request_limit !== null && (!count(value.request_limit) || value.request_limit < 1 || value.request_limit > 1000000) || packaged && value.vector_package !== null && !packageReference(value.vector_package!)) invalid()
   if (selected) {
     const selection = value.selection
     if (!shape(selection, ['node_limit', 'nodes', 'edges', ...(extended ? ['request', 'summary'] : [])]) || selection!.node_limit !== null && (!count(selection!.node_limit) || selection!.node_limit! < 3 || selection!.node_limit! > (extended ? 2147483647 : 128)) ||
@@ -455,6 +522,7 @@ export const builderInputLabels = {
   chunk_manifest: 'Manifest phân đoạn',
   source_checkpoint: 'Checkpoint nguồn',
   selection: 'Phạm vi nguồn đã chốt',
+  graph_package: 'Gói vector đã chọn',
 }
 export type BuilderInputs = {
   contract_version: 'builder-inputs-v1' | 'builder-inputs-v2' | 'builder-inputs-v3'

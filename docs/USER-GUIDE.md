@@ -116,6 +116,12 @@ Nhánh dataset mới không phụ thuộc nhập/xuất bản lại corpus vào 
 
 Chuyển thất bại giữ graph cũ. Mất phản hồi thì **Tải lại** trạng thái trước khi thử lại. Chi tiết runtime, revision, fingerprint và JSON nằm trong **Chi tiết kỹ thuật**. Xem [hướng dẫn chọn graph](runner.md#chọn-graph-phục-vụ-truy-xuấtchat).
 
+### Chia sẻ đồ thị
+
+Mở **Nâng cao → Chia sẻ đồ thị**, chọn phiên đã dựng PASS thuộc project của bạn rồi **Xuất gói**. Chép ZIP từ thư mục hiển thị sang thư mục `graph-packages` của máy nhận; không upload/download bằng trình duyệt. Gói chỉ chứa vector và provenance cần dựng lại, không chứa database hoặc thông tin kết nối/bí mật của máy xuất.
+
+Ở thẻ **Nhập**, tải lại danh sách và đọc ✓/✗ cùng lý do. Gói phải cùng phiên bản dữ liệu nguồn, provider/model và số chiều với Embedding đã cấu hình. Chọn project/database **mới, trống**, chọn đúng phạm vi của gói rồi chọn **Dùng gói đã nhập** tại Bước ②. **Lưu cấu hình dựng** chỉ lưu lựa chọn; **Kiểm tra và chuẩn bị** mới nhập gói trong nền. Sau khi kiểm sẵn sàng, tự bấm **Dựng** như bình thường. Chế độ này tái sử dụng vector, không gọi API Embedding; các kiểm nguồn/provenance, khóa và bảo vệ graph đang phục vụ Chat giữ nguyên. Dựng xong chưa tự đổi graph dùng cho Chat.
+
 ### Kiểm kết nối và thử truy xuất
 
 1. Mở **Cài đặt hệ thống → Kết nối & chẩn đoán → Kiểm tra lại**. Kết nối API được chưa chứng minh khả năng trả lời luật.
@@ -133,7 +139,6 @@ Các khối/nút ghi **Demo** dùng dữ liệu hoặc thao tác mô phỏng, kh
 - Nội dung: dán URL, trích xuất/reindex/archive/delete; sinh hoặc xóa câu hỏi là thao tác mô phỏng. Nhập metadata, tải tệp và xuất bản bản ghi thật vẫn dùng API backend.
 - Người dùng: vai trò và trạng thái dùng API thật; mời, đặt lại mật khẩu và xóa là Demo.
 - Graph: namespace khác SAMPLE thật, Cypher, export/restore/checksum.
-- Docker: form/YAML, Build/Pack/ZIP là Demo; không chạy Docker Engine. Trạng thái dịch vụ trên cùng trang đọc từ API thật.
 - Pipeline: catalog CLI, chạy toàn bộ, log/lịch sử mẫu; Benchmark: Run/Smoke và cột HybridRAG/NativeRAG.
 
 Không nhầm các phần này với form model tại **Cấu hình** hoặc Builder: hai luồng đó dùng API thật và có thể phát sinh thay đổi/phí theo thao tác xác nhận.

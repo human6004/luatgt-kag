@@ -19,7 +19,7 @@ from kag.run_state import (ROOT, STAGES, RunBlocked, RunState, GraphLock, atomic
 
 
 FIELDS = {'scope', 'runtime_location', 'endpoints', 'database', 'project_id', 'project_name', 'namespace',
-    'vector_dimensions', 'confirmation', 'paths', 'input_sha256', 'batch_size', 'heartbeat_seconds',
+    'vector_dimensions', 'confirmation', 'paths', 'input_sha256', 'batch_size', 'heartbeat_seconds', 'vector_package',
     'write_mode', 'vector_policy', 'model_identity', 'embedding_model', 'fallback_config', 'credential_env', 'request_limit', 'selection'}
 PATH_FIELDS = {'c3_manifest', 'sample_manifest', 'vector_artifact', 'provenance', 'chunk_manifest',
                'source_checkpoint', 'run_root', 'lock_root'}
@@ -106,8 +106,20 @@ def _config(value):
             graph_location = 'host'
         c3._endpoint(config['endpoints']['neo4j_http'], ('http', 'https'), graph_location)
         c3._endpoint(config['endpoints']['neo4j_uri'], ('bolt', 'neo4j', 'bolt+s', 'neo4j+s'), graph_location)
-        if (set(config['paths']) not in (PATH_FIELDS, PATH_FIELDS | {'selection'})
+        if (set(config['paths']) not in (PATH_FIELDS, PATH_FIELDS | {'selection'}, PATH_FIELDS | {'graph_package'}, PATH_FIELDS | {'selection','graph_package'})
                 or not isinstance(config['input_sha256'], dict)):
+            raise RunBlocked('CONFIG')
+        package = config.get('vector_package')
+        if package is not None:
+            from kag.builder.packages import NAME, HASH
+            if (type(package) is not dict or set(package) != {'name','sha256'}
+                    or not isinstance(package['name'],str) or not NAME.fullmatch(package['name'])
+                    or not isinstance(package['sha256'],str) or not HASH.fullmatch(package['sha256'])
+                    or config['scope'] != 'PRODUCTION' or config['vector_policy'] != 'replay-existing'
+                    or Path(config['paths'].get('graph_package','')).name != package['name']
+                    or config['input_sha256'].get('graph_package') != package['sha256']):
+                raise RunBlocked('CONFIG')
+        elif 'graph_package' in config['paths']:
             raise RunBlocked('CONFIG')
         selection = config.get('selection')
         if selection is not None and 'request' in selection:
@@ -120,6 +132,8 @@ def _config(value):
         elif 'selection' in config['paths']:
             raise RunBlocked('CONFIG')
         for name, path in config['paths'].items():
+            if package and path is None and name in ('vector_artifact','provenance','chunk_manifest','source_checkpoint'):
+                continue
             if name in ('run_root', 'lock_root', 'c3_manifest') or config['vector_policy'] == 'replay-existing':
                 if name == 'sample_manifest' and config['scope'] == 'PRODUCTION' and path is None:
                     continue
@@ -303,6 +317,9 @@ def _check_target_layout(config, contract, reader, database_id):
 
 def preflight(config, *, project_client, reader, backend_transport=None):
     config = _config(config)
+    if config['vector_policy']=='replay-existing' and any(not config['paths'][name] for name in
+            ('vector_artifact','provenance','chunk_manifest','source_checkpoint')):
+        raise RunBlocked('VECTORS')
     mount = _paths(config)
     source_index = None
     backend_session = None
