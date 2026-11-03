@@ -68,6 +68,31 @@ def protect_active(reader,physical):
     except Exception: raise RunBlocked('SCOPE') from None
 
 
+def deactivate(change,token):
+    """Unselect only the owned physical target; clearing takes its own lock later."""
+    from kag.builder.structure import target_state, clear_permissions, clear_runs
+    from kag.run_state import graph_lock_status
+    a._keys(change,('project_id','database_id'))
+    if type(change['project_id']) is not int or not 1<=change['project_id']<=2147483647:a._invalid()
+    a._identity(change['database_id'])
+    with target_state(change['project_id'],token,for_write=False) as state:
+        proof=state['proof'];target=state['target']
+        if proof.physical_database_id!=change['database_id']:raise ApiFailure('CONFIG_CONFLICT')
+        clear_permissions(state,detached=False)
+        clear_runs(proof.physical_database_id)
+        lock=GraphLock(os.environ.get('KAG_BUILDER_LOCK_ROOT','/run/kag-locks'),proof.physical_database_id,
+            dict(scope='PRODUCTION',project_id=target['project_id'],namespace=target['namespace'],database=target['database']),
+            backend_proof=proof,backend_session=state['identity'])
+        if graph_lock_status(lock.path)['state']!='FREE':raise RunBlocked('LOCK')
+        store=model_store();models=store._llm_config;selected=(models or {}).get('serving')
+        if selected and (selected['database_id']==proof.physical_database_id
+                or state['reader'].protected_database_identity(selected['database'])==proof.physical_database_id):
+            updated=deepcopy(models);updated['revision']+=1;updated['serving']=None
+            state['identity'].validate(proof)
+            store._persist_llm(updated)
+    return dict(project_id=change['project_id'],database_id=change['database_id'],status='INACTIVE')
+
+
 def chat_blockers(release):
     if a.dataset_sources(release):
         return [] if release.records else ['SOURCE_MISSING']

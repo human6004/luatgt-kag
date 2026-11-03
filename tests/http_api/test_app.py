@@ -213,10 +213,10 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
             return value
         self.app = create_app(ApiSettings(native.SECRETS),runtime_factory=factory,
                               enable_sample_routes=self.enable_sample_routes)
-        # Only tests install synthetic authorities; normal app has none.
+        await self.stack.enter_async_context(self.app.router.lifespan_context(self.app))
+        # Startup clears an absent serving selection; install synthetic authority afterward.
         self.app.state.serving_release = self.release
         self.app.state.runtime_settings = self.fixture.settings()
-        await self.stack.enter_async_context(self.app.router.lifespan_context(self.app))
         self.client = await self.stack.enter_async_context(httpx.AsyncClient(
             transport=httpx.ASGITransport(app=self.app),base_url='http://asgi.invalid'))
         self.supervisor = self.app.state.runtime_supervisor
@@ -953,8 +953,6 @@ class RetrieveHTTPTests(unittest.IsolatedAsyncioTestCase):
             return result
         options = {'enable_sample_routes':True} if 'enable_sample_routes' in inspect.signature(create_app).parameters else {}
         self.app = create_app(ApiSettings(native.SECRETS),runtime_factory=factory,**options)
-        self.app.state.serving_release = self.release
-        self.app.state.runtime_settings = self.fixture.retrieve_settings()
         from kag.vector_contract import TARGETS
         def search(kind,prop,vector,k):
             self.assertEqual((len(vector),k),(3072,10))
@@ -965,6 +963,8 @@ class RetrieveHTTPTests(unittest.IsolatedAsyncioTestCase):
         self.stack.enter_context(patch.object(self.reader,'expand',return_value=[
             {k:v for k,v in self.reader.relation.items() if k!='properties'}]))
         await self.stack.enter_async_context(self.app.router.lifespan_context(self.app))
+        self.app.state.serving_release = self.release
+        self.app.state.runtime_settings = self.fixture.retrieve_settings()
         self.client = await self.stack.enter_async_context(httpx.AsyncClient(
             transport=httpx.ASGITransport(app=self.app),base_url='http://asgi.invalid'))
         self.supervisor = self.app.state.runtime_supervisor

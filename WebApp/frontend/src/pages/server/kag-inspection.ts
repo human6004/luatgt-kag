@@ -234,7 +234,7 @@ export async function loadKagConfiguration(signal?: AbortSignal): Promise<KagCon
 export type BuilderState = 'IDLE' | 'RUNNING' | 'STOPPING' | 'STOPPED' | 'COMPLETE' | 'BLOCKED' | 'ABANDONED' | 'CLEARED'
 export const builderStages = ['preflight', 'plan', 'vectorize', 'export-artifact', 'write-nodes', 'verify-nodes', 'write-edges', 'verify', 'release'] as const
 export type BuilderStage = typeof builderStages[number]
-export type BuilderStatus = { state: BuilderState; run_id: string | null; target: { project_id: number; database: string; namespace: string } | null; progress: { stage: string; done: number; total: number } | null; error_code: string | null; actions: { build: boolean; stop: boolean; resume: boolean; abandon?: boolean; delete: false }; delete_reason: 'DELETE_NOT_AUTHORIZED'; production_write: 'BLOCKED' | 'CONFIGURED' } & (
+export type BuilderStatus = { state: BuilderState; run_id: string | null; target: { project_id: number; database: string; namespace: string } | null; progress: { stage: string; done: number; total: number } | null; error_code: string | null; actions: { build: boolean; stop: boolean; resume: boolean; abandon?: boolean; delete: false }; delete_reason: string | null; production_write: 'BLOCKED' | 'CONFIGURED' } & (
   { contract_version: 'builder-control-v1' } | {
     contract_version: 'builder-control-v2' | 'builder-control-v3'
     stages: { name: BuilderStage; state: 'PENDING' | 'RUNNING' | 'COMPLETE' | 'STOPPED' | 'BLOCKED'; done: number | null; total: number | null; error_code: string | null }[]
@@ -248,7 +248,7 @@ export function builderStateLabel(state: BuilderState) {
 function validateBuilder(value: BuilderStatus): BuilderStatus {
   const extended = value?.contract_version === 'builder-control-v3', detail = extended || value?.contract_version === 'builder-control-v2'
   if (!shape(value, ['contract_version', 'state', 'run_id', 'target', 'progress', 'error_code', 'actions', 'delete_reason', 'production_write', ...(detail ? ['stages', 'timing', 'binding', 'result'] : [])]) ||
-    !['builder-control-v1', 'builder-control-v2', 'builder-control-v3'].includes(value.contract_version) || !['IDLE', 'RUNNING', 'STOPPING', 'STOPPED', 'COMPLETE', 'BLOCKED', ...(extended ? ['ABANDONED','CLEARED'] : [])].includes(value.state) || !['BLOCKED', 'CONFIGURED'].includes(value.production_write) || value.delete_reason !== 'DELETE_NOT_AUTHORIZED' ||
+    !['builder-control-v1', 'builder-control-v2', 'builder-control-v3'].includes(value.contract_version) || !['IDLE', 'RUNNING', 'STOPPING', 'STOPPED', 'COMPLETE', 'BLOCKED', ...(extended ? ['ABANDONED','CLEARED'] : [])].includes(value.state) || !['BLOCKED', 'CONFIGURED'].includes(value.production_write) || value.delete_reason !== null && (typeof value.delete_reason !== 'string' || !/^[A-Z_]{1,64}$/.test(value.delete_reason)) ||
     !value.actions || Object.keys(value.actions).sort().join() !== ['build', 'stop', 'resume', 'delete', ...(extended ? ['abandon'] : [])].sort().join() ||
     typeof value.actions.build !== 'boolean' || typeof value.actions.resume !== 'boolean' ||
     (detail ? value.actions.build && !['IDLE', 'COMPLETE', ...(extended ? ['ABANDONED','CLEARED'] : [])].includes(value.state) || value.actions.resume && value.state !== 'STOPPED' : value.actions.build !== ['IDLE', 'COMPLETE'].includes(value.state) || value.actions.resume !== (value.state === 'STOPPED')) ||
@@ -390,14 +390,15 @@ function validateBuilderClear(value: BuilderClear) {
     !shape(report.target, ['project_id','project_name','namespace','database']) || !count(report.target.project_id) || report.target.project_id < 1 ||
     typeof report.target.project_name !== 'string' || !report.target.project_name.trim() || report.target.project_name.length > 255 ||
     !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(report.target.namespace) || !/^[a-z][a-z0-9.-]{0,62}$/.test(report.target.database) ||
-    !shape(report.counts, ['nodes','edges']) || !count(report.counts.nodes) || !count(report.counts.edges) || value.preview_id === null) invalid()
+    !shape(report.counts, ['nodes','edges']) || !count(report.counts.nodes) || !count(report.counts.edges)) invalid()
   return value
 }
 export async function loadBuilderClear(signal?: AbortSignal): Promise<BuilderClear> {
   return validateBuilderClear(await api<BuilderClear>('/admin/kag/builder/clear', { signal, cache: 'no-store' }))
 }
-export async function clearBuilderData(action: 'preview' | 'apply', revision: number, preview_id?: string, database?: string): Promise<BuilderClear> {
-  return validateBuilderClear(await api<BuilderClear>('/admin/kag/builder/clear/'+action, send('POST', { revision, ...(action === 'apply' ? { preview_id, database } : {}) })))
+export async function clearBuilderData(project_id: number, database_id: string): Promise<BuilderClear> {
+  if (!count(project_id,2147483647) || project_id < 1 || !/^[A-Za-z0-9._:-]{1,128}$/.test(database_id)) throw new ApiError('Đích đồ thị không hợp lệ. Tải lại danh sách.',400)
+  return validateBuilderClear(await api<BuilderClear>('/admin/kag/builder/clear/apply', send('POST', { project_id, database_id })))
 }
 function validateBuilderConfiguration(value: BuilderConfiguration): BuilderConfiguration {
   const invalid = () => { throw new ApiError('Cấu hình Builder không hợp lệ', 502) }

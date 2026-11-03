@@ -1,11 +1,13 @@
 """Prepare LuậtGT through the pinned SDK; replace only proven, unused native defaults."""
-from contextlib import contextmanager
+from contextlib import contextmanager, closing
 import copy
 import hashlib
 import json
 import os
 from pathlib import Path
 import re
+import sqlite3
+from datetime import datetime, timezone
 import time
 
 from kag.backend_identity import BackendIdentitySession, NativeBackendTransport, _store, bound_sdk_requests
@@ -356,37 +358,16 @@ def apply(project_id, token, expected, lock_root):
     return preview(project_id,token)
 
 
-def clear_permissions(state):
-    """Deployment grants destruction independently from OWNER and schema preparation."""
+def clear_permissions(state, *, detached=True):
+    """Require a dedicated owned target, currently detached from Chat."""
     from kag.backend_identity import _field
     from kag.builder.projects import _project_client
     target=state['target'];physical=state['proof'].physical_database_id
     from kag.builder.serving import protect_active
-    try:protect_active(state['reader'],physical)
-    except RunBlocked:raise RunBlocked('CLEAR_SERVING') from None
-    try:
-        grants=json.loads(os.environ.get('KAG_BUILDER_CLEAR_TARGETS','[]'))
-        if (type(grants) is not list or len(grants)>256 or any(type(row) is not dict
-                or set(row)!={'project_id','database_id'} or type(row['project_id']) is not int
-                or not 1<=row['project_id']<=2147483647 or not isinstance(row['database_id'],str)
-                or not re.fullmatch(r'[A-Za-z0-9._:-]{1,128}',row['database_id']) for row in grants)
-                or dict(project_id=target['project_id'],database_id=physical) not in grants):
-            raise ValueError
-    except (ValueError,TypeError):raise RunBlocked('CLEAR_DENIED') from None
+    if detached:
+        try:protect_active(state['reader'],physical)
+        except RunBlocked:raise RunBlocked('CLEAR_SERVING') from None
     reader=state['reader']
-    if reader.protected_database_identity(os.environ.get('KAG_BUILDER_SERVING_DATABASE','neo4j'))==physical:
-        raise RunBlocked('CLEAR_SERVING')
-    # The query runtime selects only this operator-configured immutable release.
-    release_id=os.environ.get('KAG_HTTP_RELEASE_ID')
-    if release_id:
-        try:
-            from kag.http_api.artifacts import load_release
-            release=load_release(Path(os.environ['KAG_HTTP_RELEASE_ROOT']),release_id)
-            if (release.descriptor['database_id']==physical
-                    or reader.protected_database_identity(release.descriptor['database'])==physical):
-                raise RunBlocked('CLEAR_SERVING')
-        except RunBlocked:raise
-        except Exception:raise RunBlocked('CLEAR_SERVING') from None
     endpoint=urlsplit(target['endpoints']['neo4j_uri'])
     records=_project_client(target['endpoints']['openspg'])._rest_client.project_get()
     try:
@@ -400,14 +381,33 @@ def clear_permissions(state):
     except RunBlocked:raise
     except Exception:raise RunBlocked('CLEAR_SHARED') from None
     state['identity'].validate(state['proof'])
-    return grants
+
+
+def clear_runs(physical,*,mark=False):
+    root=Path(os.environ.get('KAG_BUILDER_RUN_ROOT','/builder-runs')).resolve()
+    for ledger in [*root.glob('*/ledger.sqlite3'),*root.glob('revision-*/*/ledger.sqlite3')]:
+        if ledger.is_symlink() or not ledger.resolve().is_relative_to(root):raise RunBlocked('INTEGRITY')
+        with closing(sqlite3.connect(ledger if mark else ledger.as_uri()+'?mode=ro',uri=not mark,timeout=2)) as db:
+            db.execute('BEGIN IMMEDIATE' if mark else 'BEGIN')
+            meta=dict(db.execute("SELECT key,value FROM run_meta WHERE key IN ('identity','status','disposition')"))
+            identity=json.loads(meta['identity'])
+            if identity.get('database_id')!=physical:continue
+            status=json.loads(meta['status']);disposition=json.loads(meta['disposition']) if 'disposition' in meta else None
+            if (db.execute("SELECT 1 FROM run_batches WHERE state='INTENT' AND stage IN ('write-nodes','write-edges') LIMIT 1").fetchone()
+                    or not (disposition and disposition['state'] in ('ABANDONED','CLEARED')
+                        or status['state']=='PASS' and status['stage']=='release'
+                        or status['state']=='ERROR' and status.get('error_code')=='INTERRUPTED')):raise RunBlocked('LOCK')
+            if mark:
+                db.execute('INSERT OR REPLACE INTO run_meta VALUES (?,?)',('disposition',json.dumps(dict(
+                    state='CLEARED',run_id=identity['run_id'],config_hash=identity['config_hash'],updated_at=datetime.now(timezone.utc).isoformat()))))
+                db.commit()
 
 
 def clear_snapshot(state):
     from neo4j import GraphDatabase, Query, READ_ACCESS
     from knext.schema.client import SchemaSession
     state['session']=SchemaSession(state['session']._rest_client,state['target']['project_id'])
-    grants=clear_permissions(state)
+    clear_permissions(state)
     digest=hashlib.sha256();counts=dict(nodes=0,edges=0)
     store=state['store'];target=state['target']
     with GraphDatabase.driver(target['endpoints']['neo4j_uri'],auth=(store['user'],store['password']),
@@ -427,33 +427,24 @@ def clear_snapshot(state):
     report=dict(target={k:target[k] for k in ('project_id','project_name','namespace','database')},
         database_id=state['proof'].physical_database_id,counts=counts,batch_size=500)
     return dict(report=report,structure_signature=structure_signature,
-        signature=_spec_hash(dict(report=report,structure=structure_signature,data=digest.hexdigest(),grants=grants)))
-
-
-def preview_clear(project_id,token,lock_root):
-    with target_state(project_id,token) as state:
-        proof=state['proof']
-        lock=GraphLock(lock_root,proof.physical_database_id,
-            dict(scope='PRODUCTION',project_id=project_id,namespace=state['target']['namespace'],database=state['target']['database']),
-            backend_proof=proof,backend_session=state['identity'])
-        _acquire_lock(lock)
-        try:return clear_snapshot(state)
-        finally:lock.release()
+        signature=_spec_hash(dict(report=report,structure=structure_signature,data=digest.hexdigest())))
 
 
 def apply_clear(project_id,token,expected,lock_root,*,started,progress):
-    """Empty only an explicitly dedicated database; retain all schema and run files."""
+    """Empty a dedicated database after unselecting Chat; retain schema and history."""
     from neo4j import GraphDatabase,Query
-    with target_state(project_id,token) as state:
+    with target_state(project_id,token,for_write=False,check_structure=True) as state:
         proof=state['proof'];target=state['target']
         lock=GraphLock(lock_root,proof.physical_database_id,
             dict(scope='PRODUCTION',project_id=project_id,namespace=target['namespace'],database=target['database']),
             backend_proof=proof,backend_session=state['identity'])
         _acquire_lock(lock);uncertain=False
         try:
+            from kag.builder.serving import protect_active
+            protect_active(state['reader'],proof.physical_database_id)
+            if proof.physical_database_id!=expected:raise RunBlocked('CLEAR_STALE')
             before=clear_snapshot(state)
-            if before['signature']!=expected:raise RunBlocked('CLEAR_STALE')
-            if selected_target(project_id,token)!=target:raise RunBlocked('CLEAR_STALE')
+            if selected_target(project_id,token,for_write=False)!=target:raise RunBlocked('CLEAR_STALE')
             started(proof.physical_database_id)
             store=state['store'];deleted=dict(nodes=0,edges=0)
             with GraphDatabase.driver(target['endpoints']['neo4j_uri'],auth=(store['user'],store['password']),
@@ -463,7 +454,7 @@ def apply_clear(project_id,token,expected,lock_root,*,started,progress):
                             ('nodes','MATCH (n) WITH n LIMIT $batch DETACH DELETE n RETURN count(*) AS deleted')]:
                         while True:
                             clear_permissions(state)
-                            if selected_target(project_id,token)!=target:raise RunBlocked('CLEAR_STALE')
+                            if selected_target(project_id,token,for_write=False)!=target:raise RunBlocked('CLEAR_STALE')
                             lock.assert_owned(proof.physical_database_id)
                             uncertain=True
                             row=session.run(Query(query,timeout=60),batch=before['report']['batch_size']).single(strict=True)

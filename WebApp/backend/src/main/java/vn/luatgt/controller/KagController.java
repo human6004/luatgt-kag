@@ -127,7 +127,7 @@ public class KagController {
         if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Trạng thái xóa không nhận tham số");
         return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderClear(null,null));
     }
-    @PostMapping("/admin/kag/builder/clear/{action:preview|apply}")
+    @PostMapping("/admin/kag/builder/clear/{action:apply}")
     org.springframework.http.ResponseEntity<JsonNode> builderClearAction(@PathVariable String action,@RequestBody JsonNode change,@RequestParam Map<String,String> parameters) {
         if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Xóa dữ liệu không nhận tham số tùy ý");
         return org.springframework.http.ResponseEntity.accepted().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderClear(action,change));

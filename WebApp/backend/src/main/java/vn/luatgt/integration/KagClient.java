@@ -113,8 +113,11 @@ public class KagClient {
     }
     public JsonNode serving(String action,JsonNode change,JsonNode publication) {
         try {
-            boolean read=action==null;
-            if(!read&&(!Set.of("preview","activate").contains(action)||
+            boolean read=action==null,deactivate="deactivate".equals(action);
+            if(deactivate&&(!fields(change).equals(Set.of("project_id","database_id"))||!bounded(change.path("project_id"),1,Integer.MAX_VALUE)||
+                !change.path("database_id").asText().matches("[A-Za-z0-9._:-]{1,128}")))
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Đích đồ thị không hợp lệ; tải lại danh sách");
+            if(!read&&!deactivate&&(!Set.of("preview","activate").contains(action)||
                 !fields(change).equals(action.equals("activate")?Set.of("project_id","run_id","preview_id"):Set.of("project_id","run_id"))||
                 !bounded(change.path("project_id"),1,Integer.MAX_VALUE)||!change.path("run_id").asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}")||
                 action.equals("activate")&&!change.path("preview_id").asText().matches("[0-9a-f]{64}")))
@@ -132,7 +135,7 @@ public class KagClient {
                     String code=errorCode(body);
                     String reason=switch(code) {
                         case "CONFIG_CONFLICT" -> "Bản xem trước đã cũ. Tải lại và xem trước lần nữa";
-                        case "CONFIG_BUSY" -> "Dịch vụ đang xử lý yêu cầu khác. Chờ rồi tải lại trạng thái";
+                        case "CONFIG_BUSY" -> deactivate?"Đồ thị đang dựng hoặc có thao tác khác. Dừng dựng trước rồi tải lại":"Dịch vụ đang xử lý yêu cầu khác. Chờ rồi tải lại trạng thái";
                         case "SCOPE_DENIED" -> "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project";
                         case "RELEASE_MISMATCH" -> "Model Embedding hoặc số chiều không khớp phiên dựng. Chọn lại và kiểm tra model";
                         case "SOURCE_VALIDATION_FAILED" -> "Nguồn graph chưa đầy đủ hoặc khác bản đã xác minh. Kiểm văn bản nguồn và phạm vi dựng trước khi xuất bản";
@@ -143,6 +146,9 @@ public class KagClient {
                 if(read) {
                     if(!body.path("contract_version").asText().equals("builder-serving-v1")||!body.path("runs").isArray()||
                         !body.path("busy").isBoolean()||!body.path("runtime_ready").isBoolean()||!body.path("chat_blockers").isArray())throw new IOException();
+                } else if(deactivate) {
+                    if(!fields(body).equals(Set.of("project_id","database_id","status"))||!body.path("status").asText().equals("INACTIVE")||
+                        !body.path("project_id").equals(change.path("project_id"))||!body.path("database_id").equals(change.path("database_id")))throw new IOException();
                 } else if(!body.path("preview_id").asText().matches("[0-9a-f]{64}")||!body.path("chat_blockers").isArray()||
                     !body.path("project_id").equals(change.path("project_id"))||action.equals("activate")&&!body.path("status").asText().equals("ACTIVE"))throw new IOException();
                 return body;
@@ -186,10 +192,10 @@ public class KagClient {
     }
     public JsonNode builderClear(String action,JsonNode change) {
         if(action==null)return builderRequest("clear",null);
-        if(!Set.of("preview","apply").contains(action)||!fields(change).equals(action.equals("preview")?Set.of("revision"):Set.of("revision","preview_id","database"))||
-            !bounded(change.path("revision"),1,Integer.MAX_VALUE)||action.equals("apply")&&
-                (!change.path("preview_id").asText().matches("[0-9a-f]{64}")||!change.path("database").asText().matches("[a-z][a-z0-9.-]{0,62}")))
+        if(!action.equals("apply")||!fields(change).equals(Set.of("project_id","database_id"))||
+            !bounded(change.path("project_id"),1,Integer.MAX_VALUE)||!change.path("database_id").asText().matches("[A-Za-z0-9._:-]{1,128}"))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Yêu cầu xóa dữ liệu không hợp lệ");
+        serving("deactivate",change,null);
         return builderRequest("clear-"+action,change);
     }
     public JsonNode builderAction(String action,String runId) {
@@ -385,7 +391,7 @@ public class KagClient {
             !bounded(target.path("project_id"),1,Integer.MAX_VALUE)||!target.path("project_name").isTextual()||target.path("project_name").asText().isBlank()||target.path("project_name").asText().length()>255||
             !target.path("namespace").asText().matches("[A-Za-z][A-Za-z0-9_]{0,63}")||!target.path("database").asText().matches("[a-z][a-z0-9.-]{0,62}")||
             !fields(counts).equals(Set.of("nodes","edges"))||!bounded(counts.path("nodes"),0,Integer.MAX_VALUE)||!bounded(counts.path("edges"),0,Integer.MAX_VALUE)||
-            body.path("preview_id").isNull())throw new IOException();
+            !body.path("preview_id").isNull()&&!body.path("preview_id").asText().matches("[0-9a-f]{64}"))throw new IOException();
     }
     private String openSpgSession() throws IOException {
         var context=org.springframework.web.context.request.RequestContextHolder.getRequestAttributes();
@@ -608,7 +614,8 @@ public class KagClient {
         var expected=new HashSet<>(Set.of("contract_version","state","run_id","target","progress","error_code","actions","delete_reason","production_write"));
         if(detail)expected.addAll(Set.of("stages","timing","binding","result"));
         if(!fields(body).equals(expected)||!Set.of("builder-control-v1","builder-control-v2","builder-control-v3").contains(body.path("contract_version").asText())||!Set.of("IDLE","RUNNING","STOPPING","STOPPED","COMPLETE","BLOCKED","ABANDONED","CLEARED").contains(state)||!extended&&Set.of("ABANDONED","CLEARED").contains(state)||
-            !fields(actions).equals(extended?Set.of("build","stop","resume","delete","abandon"):Set.of("build","stop","resume","delete"))||!body.path("delete_reason").asText().equals("DELETE_NOT_AUTHORIZED")||!Set.of("BLOCKED","CONFIGURED").contains(body.path("production_write").asText()))throw new IOException();
+            !fields(actions).equals(extended?Set.of("build","stop","resume","delete","abandon"):Set.of("build","stop","resume","delete"))||
+            !body.path("delete_reason").isNull()&&!body.path("delete_reason").asText().matches("[A-Z_]{1,64}")||!Set.of("BLOCKED","CONFIGURED").contains(body.path("production_write").asText()))throw new IOException();
         for(String name:fields(actions)) {
             boolean allowed=switch(name){case "build"->Set.of("IDLE","COMPLETE","ABANDONED","CLEARED").contains(state);case "stop"->state.equals("RUNNING");case "resume","abandon"->state.equals("STOPPED");default->false;};
             if(!actions.path(name).isBoolean()||(detail&&Set.of("build","resume").contains(name)?actions.path(name).asBoolean()&&!allowed:actions.path(name).asBoolean()!=allowed))throw new IOException();

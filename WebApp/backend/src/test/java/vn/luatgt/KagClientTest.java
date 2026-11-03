@@ -231,7 +231,8 @@ class KagClientTest {
                 exchange.sendResponseHeaders(exchange.getRequestMethod().equals("POST")?202:200,bytes.length);
                 try(var out=exchange.getResponseBody()){out.write(bytes);}
             });
-            var client=client(f,Map.of("app.kag-builder-url",f.url(),"app.kag-builder-token-file",builderSecret.toString()),null);
+            var applySecret=temporary.resolve("clear-apply.key");Files.writeString(applySecret,"c".repeat(43));
+            var client=client(f,Map.of("app.kag-builder-url",f.url(),"app.kag-builder-token-file",builderSecret.toString(),"app.kag-config-apply-token-file",applySecret.toString()),null);
             var request=new org.springframework.mock.web.MockHttpServletRequest();
             request.setCookies(new jakarta.servlet.http.Cookie("OPEN_SPG_TOKEN","native-session"));
             org.springframework.web.context.request.RequestContextHolder.setRequestAttributes(new org.springframework.web.context.request.ServletRequestAttributes(request));
@@ -270,18 +271,30 @@ class KagClientTest {
                      "checked_at":"2026-10-18T00:00:00Z","code":null,"deleted":{"nodes":0,"edges":0},
                      "report":{"target":{"project_id":2,"project_name":"Isolated","namespace":"Road","database":"road"},"database_id":"fixture","counts":{"nodes":3,"edges":1},"batch_size":500}}
                     """);
+                var deactivated=new java.util.concurrent.atomic.AtomicBoolean();
+                f.server.createContext("/v1/serving/deactivate",exchange->{
+                    assertEquals("native-session",exchange.getRequestHeaders().getFirst("X-OpenSPG-Session"));
+                    assertEquals("Bearer "+"c".repeat(43),exchange.getRequestHeaders().getFirst("Authorization"));
+                    var deactivateChange=json.readTree(exchange.getRequestBody().readAllBytes());
+                    assertEquals(2,deactivateChange.path("project_id").asInt());assertEquals("fixture",deactivateChange.path("database_id").asText());
+                    deactivated.set(true);
+                    byte[] bytes="{\"project_id\":2,\"database_id\":\"fixture\",\"status\":\"INACTIVE\"}".getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                    exchange.getResponseHeaders().set("Content-Type","application/json");exchange.sendResponseHeaders(200,bytes.length);
+                    try(var out=exchange.getResponseBody()){out.write(bytes);}
+                });
                 f.server.createContext("/v1/builder/clear",exchange->{
                     assertEquals("native-session",exchange.getRequestHeaders().getFirst("X-OpenSPG-Session"));
                     assertEquals("Bearer "+"b".repeat(43),exchange.getRequestHeaders().getFirst("Authorization"));
+                    if(exchange.getRequestMethod().equals("POST"))assertTrue(deactivated.get());
                     f.received=exchange.getRequestMethod().equals("POST")?json.readTree(exchange.getRequestBody().readAllBytes()):null;
                     byte[] bytes=clear.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
                     exchange.getResponseHeaders().set("Content-Type","application/json");exchange.sendResponseHeaders(exchange.getRequestMethod().equals("POST")?202:200,bytes.length);
                     try(var out=exchange.getResponseBody()){out.write(bytes);}
                 });
                 assertEquals(clear,client.builderClear(null,null));
-                var deletion=json.createObjectNode().put("revision",1).put("preview_id","a".repeat(64)).put("database","road");
+                var deletion=json.createObjectNode().put("project_id",2).put("database_id","fixture");
                 assertEquals(clear,client.builderClear("apply",deletion));assertEquals(deletion,f.received);
-                deletion.put("database","../other");
+                deletion.put("database_id","../other");
                 assertEquals(400,assertThrows(ResponseStatusException.class,()->client.builderClear("apply",deletion)).getStatusCode().value());
                 clear.putNull("report");
                 assertEquals(503,assertThrows(ResponseStatusException.class,()->client.builderClear(null,null)).getStatusCode().value());

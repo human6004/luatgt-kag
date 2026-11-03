@@ -436,7 +436,7 @@ class BuilderControl:
                 progress=progress, error_code=code,
                 actions=dict(build=state in ('IDLE', 'COMPLETE', 'ABANDONED','CLEARED'), stop=state == 'RUNNING',
                              resume=state == 'STOPPED', abandon=state == 'STOPPED', delete=False),
-                delete_reason='DELETE_NOT_AUTHORIZED',
+                delete_reason=None,
                 production_write='CONFIGURED' if self.config['scope']=='PRODUCTION' else 'BLOCKED',**detail)
 
     def start(self, run_id, *, resume=False):
@@ -603,27 +603,11 @@ def create_app(*, control=None, token=None, state_dir=None):
 
     def store_clear(value):
         nonlocal setup,clear_result
-        updated=dict(setup,clear=value)
-        atomic_json(setup_path,updated,mode=0o600)
-        setup=updated;clear_result=value
-
-    def clear_runs(physical,*,mark=False):
-        root=Path(os.environ.get('KAG_BUILDER_RUN_ROOT','/builder-runs')).resolve()
-        for ledger in [*root.glob('*/ledger.sqlite3'),*root.glob('revision-*/*/ledger.sqlite3')]:
-            if ledger.is_symlink() or not ledger.resolve().is_relative_to(root):raise RunBlocked('INTEGRITY')
-            with closing(sqlite3.connect(ledger if mark else ledger.as_uri()+'?mode=ro',uri=not mark,timeout=2)) as db:
-                db.execute('BEGIN IMMEDIATE' if mark else 'BEGIN')
-                meta=dict(db.execute("SELECT key,value FROM run_meta WHERE key IN ('identity','status','disposition')"))
-                identity=json.loads(meta['identity'])
-                if identity.get('database_id')!=physical:continue
-                status=json.loads(meta['status']);disposition=json.loads(meta['disposition']) if 'disposition' in meta else None
-                if (db.execute("SELECT 1 FROM run_batches WHERE state='INTENT' AND stage IN ('write-nodes','write-edges') LIMIT 1").fetchone()
-                        or not (disposition and disposition['state'] in ('ABANDONED','CLEARED')
-                            or status['state']=='PASS' and status['stage']=='release')):raise RunBlocked('LOCK')
-                if mark:
-                    db.execute('INSERT OR REPLACE INTO run_meta VALUES (?,?)',('disposition',json.dumps(dict(
-                        state='CLEARED',run_id=identity['run_id'],config_hash=identity['config_hash'],updated_at=datetime.now(timezone.utc).isoformat()))))
-                    db.commit()
+        if setup:
+            updated=dict(setup,clear=value)
+            atomic_json(setup_path,updated,mode=0o600)
+            setup=updated
+        clear_result=value
 
     def binding(session=None):
         model = _builder_model(secrets)
@@ -732,15 +716,18 @@ def create_app(*, control=None, token=None, state_dir=None):
     @app.post('/v1/serving/{action}')
     async def serving_action(action: str,request: Request):
         nonlocal serving_busy
-        if action not in ('preview','activate','read','trial'):raise ApiFailure('INVALID_REQUEST')
-        serving_auth(request,write=action in ('preview','activate'))
-        from kag.builder.serving import prepare,fixed_read,trial
+        if action not in ('preview','activate','deactivate','read','trial'):raise ApiFailure('INVALID_REQUEST')
+        serving_auth(request,write=action in ('preview','activate','deactivate'))
+        from kag.builder.serving import prepare,fixed_read,trial,deactivate
+        if action=='deactivate' and control is not None and control.status()['state'] in ('RUNNING','STOPPING'):
+            raise HTTPException(409,'LOCK')
         if action!='read' and serving_busy:raise ApiFailure('CONFIG_BUSY')
         if action!='read':serving_busy=True
         try:
             body=json.loads(await bounded_body(request,limit=32*1024*1024 if action!='read' else 256*1024))
             value=(await asyncio.to_thread(trial,body,session_token(request)) if action=='trial' else
                 await asyncio.to_thread(fixed_read,body) if action=='read' else
+                await asyncio.to_thread(deactivate,body,session_token(request)) if action=='deactivate' else
                 await asyncio.to_thread(prepare,body,session_token(request),activate=action=='activate'))
             return value
         except (ProjectCatalogError,RunBlocked) as error:
@@ -786,58 +773,46 @@ def create_app(*, control=None, token=None, state_dir=None):
         authenticate_request(request)
         return copy.deepcopy(clear_result)
 
-    @app.post('/v1/builder/clear/{operation}',status_code=202)
-    async def clear_operation(operation: str,request: Request):
+    @app.post('/v1/builder/clear/apply',status_code=202)
+    async def clear_operation(request: Request):
         nonlocal source_task,readiness,ready_binding
         authenticate_request(request)
         try:
             body=json.loads(await bounded_body(request))
-            if (operation not in ('preview','apply') or type(body) is not dict
-                    or set(body)!=({'revision'} if operation=='preview' else {'revision','preview_id','database'})
-                    or type(body['revision']) is not int or not setup or body['revision']!=setup['revision']
-                    or operation=='apply' and (body['database']!=configuration['database']
-                        or not isinstance(body['preview_id'],str) or not re.fullmatch('[0-9a-f]{64}',body['preview_id']))):raise ValueError
+            if (type(body) is not dict or set(body)!={'project_id','database_id'}
+                    or type(body['project_id']) is not int or not 1<=body['project_id']<=2147483647
+                    or not isinstance(body['database_id'],str) or not re.fullmatch(r'[A-Za-z0-9._:-]{1,128}',body['database_id'])):raise ValueError
         except (ValueError,TypeError):raise ApiFailure('INVALID_REQUEST') from None
-        if not structure_idle():raise HTTPException(409,'BUILDER_CLEAR_BUSY')
+        if (not state_dir or source_task is not None and not source_task.done()
+                or control is not None and control.status()['state'] in ('RUNNING','STOPPING')
+                or clear_result['state'] in ('PARTIAL','INTERRUPTED') and clear_result['report']
+                    and clear_result['report']['database_id']!=body['database_id']):
+            raise HTTPException(409,'LOCK')
         from kag.builder import structure
-        token=session_token(request);revision=setup['revision'];config_hash=_spec_hash(configuration)
-        def envelope(snapshot,state,code=None,deleted=None):
-            return dict(contract_version='builder-clear-v1',state=state,revision=revision,
-                preview_id=_spec_hash(dict(revision=revision,config=config_hash,signature=snapshot['signature'])) if snapshot else None,
-                report=copy.deepcopy(snapshot['report']) if snapshot else None,deleted=deleted or dict(nodes=0,edges=0),
-                checked_at=datetime.now(timezone.utc).isoformat(),code=code)
-        def snapshot():
-            result=structure.preview_clear(configuration['project_id'],token,configuration['paths']['lock_root'])
-            clear_runs(result['report']['database_id'])
-            if setup['revision']!=revision or _spec_hash(configuration)!=config_hash:raise RunBlocked('CLEAR_STALE')
-            return result
-        if operation=='preview':
-            source_task=asyncio.current_task()
-            try:store_clear(envelope(await asyncio.to_thread(snapshot),'PREVIEW'))
-            except Exception as error:
-                store_clear(envelope(None,'BLOCKED',error.code if isinstance(error,(RunBlocked,ProjectCatalogError)) else 'RUNTIME'))
-            finally:source_task=None
-            return copy.deepcopy(clear_result)
-        previous=copy.deepcopy(clear_result)
-        if (previous['state']=='COMPLETE' and previous['revision']==revision and previous['preview_id']==body['preview_id']):
-            return previous
-        if (previous['state']!='PREVIEW' or previous['revision']!=revision or previous['preview_id']!=body['preview_id']):
-            raise HTTPException(409,'BUILDER_CLEAR_STALE')
+        token=session_token(request)
+        try:
+            with structure.target_state(body['project_id'],token,for_write=False) as state:
+                if state['proof'].physical_database_id!=body['database_id']:raise RunBlocked('CLEAR_STALE')
+                counts=state['reader']._query('structure_counts')[0]
+                report=dict(target={k:state['target'][k] for k in ('project_id','project_name','namespace','database')},
+                    database_id=body['database_id'],counts=counts,batch_size=500)
+        except (ProjectCatalogError,RunBlocked) as error:raise HTTPException(409,error.code) from None
         readiness,ready_binding=dict(state='NOT_RUN',checks=[],checked_at=None),None
-        store_clear(dict(previous,state='APPLYING',code=None))
+        store_clear(dict(contract_version='builder-clear-v1',state='APPLYING',revision=setup['revision'] if setup else 0,
+            preview_id=None,report=report,deleted=dict(nodes=0,edges=0),checked_at=datetime.now(timezone.utc).isoformat(),code=None))
         async def clear():
             try:
-                fresh=await asyncio.to_thread(snapshot)
-                if envelope(fresh,'PREVIEW')['preview_id']!=body['preview_id']:raise RunBlocked('CLEAR_STALE')
                 def progress(counts):store_clear(dict(clear_result,deleted=counts,checked_at=datetime.now(timezone.utc).isoformat()))
-                result=await asyncio.to_thread(structure.apply_clear,configuration['project_id'],token,fresh['signature'],
-                    configuration['paths']['lock_root'],started=lambda physical:clear_runs(physical,mark=True),progress=progress)
+                await asyncio.to_thread(structure.apply_clear,body['project_id'],token,body['database_id'],
+                    os.environ.get('KAG_BUILDER_LOCK_ROOT','/run/kag-locks'),
+                    started=lambda physical:structure.clear_runs(physical,mark=True),progress=progress)
                 store_clear(dict(clear_result,state='COMPLETE',code=None,checked_at=datetime.now(timezone.utc).isoformat()))
             except Exception as error:
                 code=error.code if isinstance(error,(RunBlocked,ProjectCatalogError)) else 'RUNTIME'
                 store_clear(dict(clear_result,state='PARTIAL',code=code,checked_at=datetime.now(timezone.utc).isoformat()))
         source_task=asyncio.create_task(clear())
         return copy.deepcopy(clear_result)
+
 
     @app.post('/v1/builder/structure/{operation}',status_code=202)
     async def structure_operation(operation: str,request: Request):
@@ -1066,7 +1041,7 @@ def create_app(*, control=None, token=None, state_dir=None):
             return dict(contract_version='builder-control-v3', state='BLOCKED', run_id=None,
                 target=None, progress=None, error_code=failure,
                 actions=dict(build=False, stop=False, resume=False, abandon=False,delete=False),
-                delete_reason='DELETE_NOT_AUTHORIZED', production_write='BLOCKED',
+                delete_reason=None, production_write='BLOCKED',
                 stages=[],timing=None,binding=None,result=None)
         result = await asyncio.to_thread(control.status)
         if state_dir and (not setup or configuration_view()['readiness']['state']!='READY'):
@@ -1280,8 +1255,6 @@ def create_app(*, control=None, token=None, state_dir=None):
     @app.post('/v1/builder/{action}', status_code=202)
     async def action(action: str, request: Request):
         authenticate_request(request)
-        if action == 'delete':
-            raise HTTPException(409, 'DELETE_NOT_AUTHORIZED')
         if action not in ('build', 'stop', 'resume','abandon'):
             raise HTTPException(404, 'UNKNOWN_ACTION')
         if action != 'stop' and source_task is not None and not source_task.done():

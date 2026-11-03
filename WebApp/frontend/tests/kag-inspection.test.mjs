@@ -168,12 +168,12 @@ test('abandoned sessions retain their binding and cannot expose Resume', async (
   wire({...abandoned,actions:{...abandoned.actions,abandon:true}});await assert.rejects(loadBuilderStatus())
 })
 
-test('database clear has an explicit target confirmation and cannot expose stale run success', async () => {
-  const value={contract_version:'builder-clear-v1',state:'PREVIEW',revision:1,preview_id:'a'.repeat(64),checked_at:'2026-10-18T00:00:00Z',code:null,
+test('database clear binds one confirmation to the owned physical target and cannot expose stale run success', async () => {
+  const value={contract_version:'builder-clear-v1',state:'APPLYING',revision:1,preview_id:null,checked_at:'2026-10-18T00:00:00Z',code:null,
     deleted:{nodes:0,edges:0},report:{target:builderConfig.target,database_id:'physical-fixture',counts:{nodes:3,edges:1},batch_size:500}}
   wire(value);assert.deepEqual(await loadBuilderClear(),value)
-  await clearBuilderData('apply',1,value.preview_id,value.report.target.database)
-  assert.deepEqual(JSON.parse(calls.at(-1).body),{revision:1,preview_id:value.preview_id,database:value.report.target.database})
+  await clearBuilderData(37,value.report.database_id)
+  assert.deepEqual(JSON.parse(calls.at(-1).body),{project_id:37,database_id:value.report.database_id})
   for(const bad of [{...value,report:null},{...value,report:{...value.report,batch_size:0}},{...value,deleted:{nodes:-1,edges:0}},{...value,api_key:'private'}]) {
     wire(bad);await assert.rejects(loadBuilderClear())
   }

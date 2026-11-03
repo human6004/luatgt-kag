@@ -292,7 +292,9 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
         from kag.builder.serving import release_root
         supervisor=application.state.runtime_supervisor
         selected=(supervisor._llm_config or {}).get('serving')
-        if selected is None:return
+        if selected is None:
+            application.state.serving_release=None;application.state.runtime_settings=None
+            return
         try:
             release=artifacts.load_release(release_root(selected['release_id']),selected['release_id'])
             application.state.serving_release=release
@@ -321,7 +323,10 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
             if len(raw)>245760:raise ApiFailure('RESULT_LIMIT_EXCEEDED')
             return artifacts._json(raw)
         except HTTPError as error:
-            try:code=artifacts._json(error.read(65537)).get('error',{}).get('code')
+            try:
+                failure=artifacts._json(error.read(65537))
+                code=failure.get('error',{}).get('code') or failure.get('detail')
+                if code=='LOCK':code='CONFIG_BUSY'
             except Exception:code=None
             raise ApiFailure(code if code in ('CONFIG_BUSY','CONFIG_CONFLICT','SCOPE_DENIED','RELEASE_MISMATCH','NOT_READY') else 'NOT_READY') from None
 
@@ -428,16 +433,16 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
     @app.post('/v1/serving/{action}')
     async def serving_action(action: str,request: Request):
         authorize(request_principal(request),'config-apply',None)
-        if action not in ('preview','activate') or request.query_params:raise ApiFailure('INVALID_REQUEST')
+        if action not in ('preview','activate','deactivate') or request.query_params:raise ApiFailure('INVALID_REQUEST')
         body=artifacts._json(await bounded_body(request,limit=32*1024*1024))
         supervisor=app.state.runtime_supervisor
-        if supervisor.busy or supervisor._provider_test_task or supervisor._serving_action:raise ApiFailure('CONFIG_BUSY')
+        if (action!='deactivate' and supervisor.busy) or supervisor._provider_test_task or supervisor._serving_action:raise ApiFailure('CONFIG_BUSY')
         supervisor._serving_action=True
         async def operation():
             try:
                 return await asyncio.to_thread(worker_request,'/'+action,request,body)
             except ApiFailure:raise
-            except Exception:
+            except (Exception,asyncio.CancelledError):
                 supervisor._serving_uncertain=True;supervisor.closed=True
                 raise ApiFailure('BACKEND_UNAVAILABLE') from None
             finally:
@@ -446,7 +451,7 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                     app.state.runtime_settings=supervisor.restore_llm_runtime(app.state.runtime_settings,
                         app.state.serving_release,app.state.provider_test_policy)
                     supervisor._serving_action=False
-        try:return await supervisor.supervise(operation,time.monotonic()+180)
+        try:return await operation() if action=='deactivate' else await supervisor.supervise(operation,time.monotonic()+180)
         except Exception:
             if not supervisor.busy and not getattr(supervisor,'_serving_uncertain',False):supervisor._serving_action=False
             raise
