@@ -1033,7 +1033,9 @@ def _execute(config, run_id, resume, project_client, reader, vectorizer_factory,
                 release_lock = False
             state.close()
         try:
-            if lock is not None and lock.acquired and release_lock: lock.release()
+            if lock is not None and lock.acquired:
+                if release_lock: lock.release()
+                else: lock.retain()
         finally:
             if verified is not None:
                 verified['backend_session'].close()

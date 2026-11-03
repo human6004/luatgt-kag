@@ -375,7 +375,7 @@ function validateBuilderConfiguration(value: BuilderConfiguration): BuilderConfi
     if (!shape(row, row.owner === undefined ? ['name', 'state', 'code'] : ['name', 'state', 'code', 'owner']) || !['source', 'embedding', 'target', 'lock'].includes(row.name) || names.has(row.name) ||
       !['READY', 'BLOCKED', 'NOT_CHECKED'].includes(row.state) || row.state === 'NOT_CHECKED' && !['WAIT_SOURCE', 'WAIT_EMBEDDING', 'WAIT_TARGET'].includes(row.code ?? '') ||
       (row.state === 'READY' ? row.code !== null : typeof row.code !== 'string' || !/^[A-Z_]{1,32}$/.test(row.code))) invalid()
-    if (row.owner !== undefined && (row.name !== 'lock' || row.state !== 'BLOCKED' || row.code !== 'LOCK' ||
+    if (row.owner !== undefined && (row.name !== 'lock' || row.state !== 'BLOCKED' || !['LOCK', 'UNCERTAIN_WRITE'].includes(row.code ?? '') ||
       !shape(row.owner, ['run_id', 'project_id']) || typeof row.owner.run_id !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(row.owner.run_id) ||
       !count(row.owner.project_id) || row.owner.project_id < 1 || row.owner.project_id > 2147483647)) invalid()
     names.add(row.name)

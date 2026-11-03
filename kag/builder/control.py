@@ -21,7 +21,7 @@ from kag.builder.production_scope import (ProductionSettings, _input_version, _s
     validate_c3_manifest, selection_limit, selection_summary, select_bounded_sources)
 from kag.http_api.contract import ApiFailure
 from kag.http_api.security import ServiceSecrets, authenticate, bounded_body
-from kag.run_state import MESSAGES, STAGES, RunBlocked, GraphLock, _shared_lock_root, atomic_json, validate_run_directory
+from kag.run_state import MESSAGES, STAGES, RunBlocked, GraphLock, graph_lock_status, _shared_lock_root, atomic_json, validate_run_directory
 from kag.runner import _clients, _config, _files, _provider, preflight as runner_preflight, run
 from kag.builder.projects import read_projects, selected_target, ProjectCatalogError
 
@@ -286,7 +286,7 @@ class BuilderControl:
             records = [(self._record(path.name), path.name) for path in root.iterdir()]
             if records:
                 self.run_id = max(records, key=lambda row: row[0][0]['updated_at'])[1]
-                self.failed = any(uncertain or not (
+                self.failed = any(not (
                     status['state'] in ('ABANDONED','CLEARED')
                     or
                     status['state'] == 'PASS' and status['stage'] == 'release'
@@ -373,7 +373,10 @@ class BuilderControl:
                         or disposition['config_hash']!=identity['config_hash']
                         or datetime.fromisoformat(disposition['updated_at']).tzinfo is None):raise ValueError
                 status=dict(status,state=disposition['state'])
-            return status, pending or lock.exists() or lock.is_symlink(), detail
+            lock_state = graph_lock_status(lock)['state']
+            uncertain = ('UNCERTAIN_WRITE' if pending or lock_state == 'RETAINED'
+                         else 'LOCK' if lock_state == 'HELD' else None)
+            return status, uncertain, detail
         except (OSError, sqlite3.Error, ValueError, KeyError, TypeError):
             raise RunBlocked('INTEGRITY') from None
 
@@ -398,12 +401,12 @@ class BuilderControl:
                         durable, uncertain, detail = self._record(self.run_id)
                         progress = {key: durable[key] for key in ('stage', 'done', 'total')}
                         code = durable['error_code']
+                        if uncertain:
+                            raise RunBlocked(uncertain)
                         if self.failed:
                             raise RunBlocked(code or 'INTEGRITY')
                         if self.result is not None and durable == self.previous_status:
                             raise RunBlocked('SCOPE' if self.result == 2 else 'RUNTIME')
-                        if uncertain:
-                            raise RunBlocked(code or 'LOCK')
                         if self.result == 2:
                             state, code = 'BLOCKED', code or 'SCOPE'
                         elif durable['state'] in ('ABANDONED','CLEARED'):
@@ -1131,7 +1134,8 @@ def create_app(*, control=None, token=None, state_dir=None):
                     _indexes(reader,verified['contract'],snapshot['vector_dimensions'])
                     record('target',True,None)
                     lock = Path(snapshot['paths']['lock_root'])/(hashlib.sha256(verified['database_id'].encode()).hexdigest()+'.lock')
-                    if not record('lock',not lock.exists() and not lock.is_symlink(),'LOCK'):
+                    lock_state = graph_lock_status(lock)['state']
+                    if not record('lock',lock_state == 'FREE','UNCERTAIN_WRITE' if lock_state == 'RETAINED' else 'LOCK'):
                         try:
                             if lock.is_symlink():raise ValueError
                             with lock.open('rb') as stream:metadata = json.loads(stream.read(8193))

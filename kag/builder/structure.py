@@ -13,7 +13,7 @@ from kag.builder.codec import canonical_json
 from kag.builder.production_scope import target_contract, _spec_hash
 from kag.builder.projects import selected_target
 from urllib.parse import urlsplit
-from kag.run_state import GraphLock, RunBlocked
+from kag.run_state import GraphLock, RunBlocked, graph_lock_status
 from kag.verify import Neo4jReadClient, _valid_index, _indexes
 from kag.vector_contract import TARGETS
 
@@ -24,6 +24,15 @@ DEFAULT_TYPES = dict(Chunk='文本块', ArtificialObject='人造物体', Astrono
     Building='建筑', Creature='生物', Concept='概念', Date='日期', GeographicLocation='地理位置',
     Keyword='关键词', Medicine='药物', NaturalScience='自然科学', Organization='组织机构',
     Person='人物', Transport='运输', Works='作品', Event='事件', Others='其他', SemanticConcept='语义概念')
+
+
+def _acquire_lock(lock):
+    try:
+        lock.acquire()
+    except RunBlocked as error:
+        if error.code == 'LOCK' and graph_lock_status(lock.path)['state'] == 'RETAINED':
+            raise RunBlocked('UNCERTAIN_WRITE') from None
+        raise
 
 
 def _default_type(actual, namespace):
@@ -273,7 +282,7 @@ def apply(project_id, token, expected, lock_root):
         lock=GraphLock(lock_root,proof.physical_database_id,
             dict(scope='PRODUCTION',project_id=project_id,namespace=state['target']['namespace'],database=state['target']['database']),
             backend_proof=proof,backend_session=state['identity'])
-        lock.acquire()
+        _acquire_lock(lock)
         uncertain=False
         try:
             from kag.builder.serving import protect_active
@@ -342,7 +351,8 @@ def apply(project_id, token, expected, lock_root):
             state['identity'].validate(proof)
         finally:
             # A lost native sync response can leave remote index work in flight, as with Runner writes.
-            if not uncertain:lock.release()
+            if uncertain:lock.retain()
+            else:lock.release()
     return preview(project_id,token)
 
 
@@ -426,7 +436,7 @@ def preview_clear(project_id,token,lock_root):
         lock=GraphLock(lock_root,proof.physical_database_id,
             dict(scope='PRODUCTION',project_id=project_id,namespace=state['target']['namespace'],database=state['target']['database']),
             backend_proof=proof,backend_session=state['identity'])
-        lock.acquire()
+        _acquire_lock(lock)
         try:return clear_snapshot(state)
         finally:lock.release()
 
@@ -439,7 +449,7 @@ def apply_clear(project_id,token,expected,lock_root,*,started,progress):
         lock=GraphLock(lock_root,proof.physical_database_id,
             dict(scope='PRODUCTION',project_id=project_id,namespace=target['namespace'],database=target['database']),
             backend_proof=proof,backend_session=state['identity'])
-        lock.acquire();uncertain=False
+        _acquire_lock(lock);uncertain=False
         try:
             before=clear_snapshot(state)
             if before['signature']!=expected:raise RunBlocked('CLEAR_STALE')
@@ -470,4 +480,5 @@ def apply_clear(project_id,token,expected,lock_root,*,started,progress):
             if uncertain:raise RunBlocked('CLEAR_UNCERTAIN') from None
             raise
         finally:
-            if not uncertain:lock.release()
+            if uncertain:lock.retain()
+            else:lock.release()

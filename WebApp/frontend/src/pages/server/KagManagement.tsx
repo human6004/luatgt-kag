@@ -60,7 +60,8 @@ function builderIssue(code: string | null) {
     NOT_FOUND: 'Project đã bị xóa hoặc không còn thuộc quyền sở hữu. Tải lại danh sách và chọn lại.',
     CONNECTION_NOT_CONFIGURED: 'graph_store đã đổi hoặc chưa thuộc kết nối deployment cấp. Quản trị cần kiểm cấu hình hạ tầng.',
     SERVING_PROTECTED: 'Database này đang dành cho Chat. Chọn project trên database khác.',
-    LOCK: 'Đích đang bị khóa hoặc lần ghi trước chưa rõ kết quả. Giữ nguyên khóa; nhờ quản trị kiểm tra trước khi tiếp tục.',
+    LOCK: 'Đồ thị đang có thao tác khác. Chờ thao tác đó xong rồi bấm Tải lại trạng thái.',
+    UNCERTAIN_WRITE: 'Lần ghi trước bị gián đoạn, chưa xác định đã ghi xong. Cần kiểm tra trước khi tiếp tục.',
     LOCK_MOUNT: 'Chưa có volume khóa dùng chung hợp lệ. Kiểm tra cài đặt Worker rồi thử lại.',
     INTEGRITY: 'Dữ liệu hoặc điểm lưu không khớp. Giữ nguyên phiên và kiểm tra phiên bản nguồn, cấu hình và đích lưu.',
     VECTORS: 'Chưa tạo đủ vector. Kiểm tra model Embedding và lỗi dịch vụ trước khi xử lý phiên này.',
@@ -245,7 +246,10 @@ export function BuilderControls() {
         if (action === 'build' || action === 'resume') progressRegion.current?.focus()
       }
     } catch (failure) {
-      setActionError(failure instanceof ApiError && failure.status === 409 ? 'Trạng thái hoặc cấu hình đã đổi. Tải lại, kiểm tra sẵn sàng rồi xác nhận lại.' :
+      const latest = failure instanceof ApiError && failure.status === 409 ? await loadBuilderStatus().catch(() => status) : status
+      const lockCode = latest?.error_code ?? config?.readiness.checks.find(row => row.name === 'lock' && row.state === 'BLOCKED')?.code
+      setActionError(failure instanceof ApiError && failure.status === 409 ?
+        lockCode && ['LOCK', 'UNCERTAIN_WRITE'].includes(lockCode) ? builderIssue(lockCode) : 'Trạng thái hoặc cấu hình đã đổi. Tải lại, kiểm tra sẵn sàng rồi xác nhận lại.' :
         'Chưa xác định kết quả thao tác. Đợi trạng thái cập nhật; không gửi lại yêu cầu khi phiên đang chạy. ' + inspectionError(failure))
     } finally { acting.current = false; setBusy(false); setVersion(value => value + 1) }
   }

@@ -462,7 +462,7 @@ public class KagClient {
                 (row.path("state").asText().equals("READY")?!row.path("code").isNull():!row.path("code").asText().matches("[A-Z_]{1,32}")))throw new IOException();
             if(row.has("owner")) {
                 var owner=row.path("owner");
-                if(!row.path("name").asText().equals("lock")||!row.path("state").asText().equals("BLOCKED")||!row.path("code").asText().equals("LOCK")||
+                if(!row.path("name").asText().equals("lock")||!row.path("state").asText().equals("BLOCKED")||!Set.of("LOCK","UNCERTAIN_WRITE").contains(row.path("code").asText())||
                     !fields(owner).equals(Set.of("run_id","project_id"))||!owner.path("run_id").isTextual()||!owner.path("run_id").asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}")||
                     !bounded(owner.path("project_id"),1,Integer.MAX_VALUE))throw new IOException();
             }

@@ -10,6 +10,8 @@ import sqlite3
 import threading
 import uuid
 
+import portalocker
+
 from kag.builder.codec import canonical_json
 
 
@@ -29,6 +31,7 @@ MESSAGES = {'CONFIG': 'Invalid runner configuration.', 'SCOPE': 'Scope verificat
     'SCHEMA': 'Target schema is missing or incompatible with the supplied LuatGT schema.',
     'TARGET_MODEL': 'Existing target vectors lack matching model and exact readback provenance. Use an empty project or the original model and run history.',
     'INTEGRITY': 'Run or artifact integrity verification refused.', 'LOCK': 'Database writer lock unavailable.',
+    'UNCERTAIN_WRITE': 'A previous write has an uncertain result; operator reconciliation is required.',
     'LOCK_MOUNT': 'Shared graph lock requires the canonical writable Docker named volume.',
     'PLAN': 'Source plan verification refused.', 'VECTORS': 'Required vectors are not verified.',
     'PROVIDER_BUDGET': 'Configured embedding request limit reached.',
@@ -107,6 +110,29 @@ def _shared_lock_root(path):
     raise RunBlocked('LOCK_MOUNT')
 
 
+def graph_lock_status(path):
+    """Probe the OS lock without changing its inode or holder metadata."""
+    path = Path(path)
+    if path.is_symlink():
+        return dict(state='HELD', owner=None)
+    try:
+        with path.open('r+', encoding='utf-8') as stream:
+            try:
+                portalocker.lock(stream, portalocker.LOCK_EX | portalocker.LOCK_NB)
+            except portalocker.exceptions.LockException:
+                state = 'HELD'
+            else:
+                state = 'FREE'
+            metadata = json.loads(stream.read(8193) or '{}')
+            if state == 'FREE' and metadata.get('retained'):
+                state = 'RETAINED'
+            return dict(state=state, owner=metadata.get('owner'))
+    except FileNotFoundError:
+        return dict(state='FREE', owner=None)
+    except (OSError, ValueError, TypeError, AttributeError):
+        return dict(state='HELD', owner=None)
+
+
 class GraphLock:
     def __init__(self, lock_root, database_id, owner, *, backend_proof=None, backend_session=None,
                  shared=True):
@@ -127,6 +153,7 @@ class GraphLock:
                          'pid': os.getpid(), 'hostname': socket.gethostname(), 'created_at': _utc(),
                          'owner': {k: owner[k] for k in allowed if k in owner}}
         self.acquired = False
+        self._stream = None
 
     def _validate_backend(self, database_id):
         from kag.backend_identity import BackendIdentitySession, BackendIdentityProof
@@ -147,20 +174,37 @@ class GraphLock:
             _shared_lock_root(self.path.parent)
         else:
             self.path.parent.mkdir(parents=True, exist_ok=True)
+        stream = None
         try:
-            fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
-        except OSError:
-            raise RunBlocked('LOCK') from None
-        with os.fdopen(fd, 'w', encoding='utf-8', newline='\n') as stream:
+            if self.acquired or self.path.is_symlink():
+                raise RunBlocked('LOCK')
+            fd = os.open(self.path, os.O_CREAT | os.O_RDWR | getattr(os, 'O_NOFOLLOW', 0), 0o600)
+            stream = os.fdopen(fd, 'r+', encoding='utf-8', newline='\n')
+            portalocker.lock(stream, portalocker.LOCK_EX | portalocker.LOCK_NB)
+            previous = json.loads(stream.read(8193) or '{}')
+            if previous.get('retained'):
+                raise RunBlocked('LOCK')
+            stream.seek(0)
+            stream.truncate()
             stream.write(canonical_json(self.metadata) + '\n')
             stream.flush()
             os.fsync(stream.fileno())
+        except (OSError, ValueError, TypeError, AttributeError, portalocker.exceptions.LockException):
+            if stream is not None:
+                stream.close()
+            raise RunBlocked('LOCK') from None
+        self._stream = stream
         self.acquired = True
 
     def assert_owned(self, database_id):
         if self.shared:
             _shared_lock_root(self.path.parent)
         try:
+            if self.path.is_symlink() or self._stream is None or self._stream.closed:
+                raise RunBlocked('LOCK')
+            held, current = os.fstat(self._stream.fileno()), self.path.stat()
+            if (held.st_dev, held.st_ino) != (current.st_dev, current.st_ino):
+                raise RunBlocked('LOCK')
             actual = json.loads(self.path.read_bytes())
         except (OSError, ValueError):
             raise RunBlocked('LOCK') from None
@@ -169,9 +213,36 @@ class GraphLock:
             raise RunBlocked('LOCK')
 
     def release(self):
-        self.assert_owned(self.metadata['database_id'])
-        self.path.unlink()
-        self.acquired = False
+        try:
+            self.assert_owned(self.metadata['database_id'])
+            self._stream.seek(0)
+            self._stream.truncate()
+            self._stream.flush()
+            os.fsync(self._stream.fileno())
+        finally:
+            self._close()
+
+    def retain(self):
+        try:
+            self.assert_owned(self.metadata['database_id'])
+            self._stream.seek(0)
+            self._stream.truncate()
+            self._stream.write(canonical_json(dict(self.metadata, retained='UNCERTAIN_WRITE')) + '\n')
+            self._stream.flush()
+            os.fsync(self._stream.fileno())
+        finally:
+            self._close()
+
+    def _close(self):
+        try:
+            if self._stream is not None:
+                try:
+                    portalocker.unlock(self._stream)
+                finally:
+                    self._stream.close()
+        finally:
+            self._stream = None
+            self.acquired = False
 
 
 class RunState:
