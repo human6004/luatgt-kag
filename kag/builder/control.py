@@ -742,6 +742,26 @@ def create_app(*, control=None, token=None, state_dir=None):
         authenticate_request(request)
         return await asyncio.to_thread(read_projects,session_token(request))
 
+    @app.post('/v1/builder/projects',status_code=202)
+    async def create_builder_project(request: Request):
+        nonlocal source_task
+        authenticate_request(request)
+        try:
+            body=json.loads(await bounded_body(request))
+            if type(body) is not dict or set(body)!={'name'}:raise ValueError
+        except (ValueError,TypeError):raise ApiFailure('INVALID_REQUEST') from None
+        if not structure_idle() or clear_result['state'] in ('APPLYING','PARTIAL','INTERRUPTED'):
+            raise HTTPException(409,'LOCK')
+        from kag.builder.projects import create_project
+        async def create():
+            try:return await asyncio.to_thread(create_project,body['name'],session_token(request),_builder_model(secrets),_builder_policy())
+            except (ProjectCatalogError,RunBlocked) as error:return error
+            except Exception:return ProjectCatalogError('CREATE_UNCERTAIN')
+        source_task=asyncio.create_task(create())
+        result=await asyncio.shield(source_task)
+        if isinstance(result,(ProjectCatalogError,RunBlocked)):raise HTTPException(409,result.code)
+        return result
+
     @app.get('/v1/builder/graph/{project_id}')
     async def graph_project(project_id: int, request: Request):
         authenticate_request(request)

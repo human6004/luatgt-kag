@@ -66,6 +66,11 @@ public class KagController {
             throw vn.luatgt.exception.ApiErrors.bad("Danh sách project không nhận tham số tùy ý");
         return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderProjects());
     }
+    @PostMapping("/admin/kag/builder/projects")
+    org.springframework.http.ResponseEntity<JsonNode> createBuilderProject(@RequestBody JsonNode change,@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Tạo đồ thị chỉ nhận tên");
+        return org.springframework.http.ResponseEntity.accepted().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.createBuilderProject(change));
+    }
     @GetMapping("/admin/kag/builder/configuration")
     org.springframework.http.ResponseEntity<JsonNode> builderConfiguration(@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
         if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)

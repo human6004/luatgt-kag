@@ -41,6 +41,7 @@ public class InfrastructureService {
     public JsonNode checkBuilderInputs() { return kag.checkBuilderInputs(); }
     public JsonNode builderConfiguration() { return kag.builderConfiguration(); }
     public JsonNode builderProjects() { return kag.builderProjects(); }
+    public JsonNode createBuilderProject(JsonNode change) { return kag.createBuilderProject(change); }
     public JsonNode builderPackages() { return kag.builderPackages(); }
     public JsonNode builderPackageExport(JsonNode change) { return kag.builderPackageExport(change); }
     public JsonNode graphProject(int projectId) { return kag.graphProject(projectId); }

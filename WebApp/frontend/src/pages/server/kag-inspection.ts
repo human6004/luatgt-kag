@@ -8,10 +8,10 @@ export const servingReasons: Record<string, string> = {
   GRAPH_REQUIRED: 'Chọn một đồ thị rồi bấm Dùng cho Chat.',
   SOURCE_MISSING: 'Bản nguồn của đồ thị chưa đầy đủ. Chọn lại phiên dựng và kiểm tra nguồn đi kèm.',
   SOURCE_NOT_PUBLISHED: 'Nguồn còn là bản nháp. Kiểm duyệt và xuất bản văn bản, đơn vị pháp lý tương ứng.',
-  SOURCE_TEXT_MISMATCH: 'Nội dung hoặc ngày hiệu lực trong WebApp khác nguồn dựng graph. Kiểm và nhập lại đúng nguồn.',
+  SOURCE_TEXT_MISMATCH: 'Nội dung hoặc ngày hiệu lực khác nguồn dựng đồ thị. Kiểm tra và nhập lại đúng nguồn.',
   SOURCE_NOT_EFFECTIVE: 'Nguồn chưa có hiệu lực, đã hết hiệu lực hoặc đã bị thay thế; chưa đủ điều kiện Chat.',
-  CHAT_MODEL_REQUIRED: 'Chưa có Chat model đã kiểm tra. Lưu và kiểm tra Chat trong Cấu hình, rồi xem trước lại.',
-  CHAT_MODEL_NOT_APPLIED: 'Chat đã kiểm tra nhưng chưa áp dụng cho đồ thị phục vụ. Chọn phiên, xem trước và xác nhận kích hoạt để dùng.',
+  CHAT_MODEL_REQUIRED: 'Chưa có model Chat đã kiểm tra. Lưu và kiểm tra tại Model & API key rồi thử lại.',
+  CHAT_MODEL_NOT_APPLIED: 'Model Chat chưa áp dụng cho đồ thị này. Bấm Dùng cho Chat rồi xác nhận để dùng.',
 }
 export async function loadServing(signal?: AbortSignal): Promise<ServingCatalog> {
   const value = await api<ServingCatalog>('/admin/kag/serving', { signal, cache: 'no-store' })
@@ -32,11 +32,11 @@ export function packageReason(code: string) {
   const reasons: Record<string, string> = {
     PACKAGE_READY: 'Tương thích để nhập', COMPATIBLE: 'Tương thích để nhập',
     PACKAGE_NAME: 'Đổi tên ZIP: chỉ dùng chữ/số ASCII, dấu chấm, gạch ngang hoặc gạch dưới; tối đa 124 ký tự.',
-    PACKAGE_PLAN: 'Gói khác phiên bản dữ liệu nguồn. Cài đúng corpus rồi kiểm tra và chuẩn bị lại.',
-    PACKAGE_MODEL: 'Provider, model hoặc số chiều khác máy hiện tại. Cấu hình và kiểm đúng Embedding của gói.', MODEL_MISMATCH: 'Model hoặc số chiều không khớp.',
-    PACKAGE_SOURCE: 'Cần kiểm tra và chuẩn bị nguồn trước khi chọn gói.',
-    PACKAGE_SELECTION: 'Phạm vi dữ liệu không khớp. Chọn đúng phạm vi của gói.',
-    PACKAGE_CHANGED: 'ZIP đã thay đổi. Tải lại danh sách rồi chọn và lưu lại.',
+    PACKAGE_PLAN: 'Gói dùng phiên bản dữ liệu khác. Cài đúng dữ liệu nguồn rồi tải lại.',
+    PACKAGE_MODEL: 'Model của gói không khớp cấu hình hiện tại. Lưu và kiểm tra đúng Embedding rồi tải lại.', MODEL_MISMATCH: 'Model của gói không khớp cấu hình hiện tại.',
+    PACKAGE_SOURCE: 'Chưa đọc được dữ liệu nguồn. Tải lại trước khi chọn gói.',
+    PACKAGE_SELECTION: 'Phạm vi dữ liệu không khớp gói. Chọn lại gói hoặc kiểm tra dữ liệu nguồn.',
+    PACKAGE_CHANGED: 'Tệp ZIP đã thay đổi. Tải lại danh sách rồi chọn lại.',
     PACKAGE_PATH: 'Thư mục hoặc tệp ZIP không hợp lệ; không dùng liên kết tượng trưng.',
     PACKAGE_SIZE: 'ZIP vượt giới hạn kích thước hoặc số lượng đã khai báo.',
     PACKAGE_MANIFEST: 'Thông tin mô tả gói không hợp lệ.',
@@ -515,7 +515,15 @@ export type BuilderProjects = {
   projects: { project_id: number; project_name: string; namespace: string; database: string | null; state: 'AVAILABLE' | 'CONNECTION_NOT_CONFIGURED' | 'SERVING_PROTECTED' }[]
 }
 export async function loadBuilderProjects(signal?: AbortSignal): Promise<BuilderProjects> {
-  const value = await api<BuilderProjects>('/admin/kag/builder/projects', { signal, cache: 'no-store' })
+  return validateBuilderProjects(await api<BuilderProjects>('/admin/kag/builder/projects', { signal, cache: 'no-store' }))
+}
+export async function createBuilderProject(name: string): Promise<number> {
+  if (!name.trim() || name.length > 255 || /[\x00-\x1f\x7f-\x9f]/.test(name)) throw new ApiError('Nhập tên đồ thị, tối đa 255 ký tự', 400)
+  const value = validateBuilderProjects(await api<BuilderProjects>('/admin/kag/builder/projects', { method: 'POST', body: JSON.stringify({ name: name.trim() }) }))
+  if (value.projects.length !== 1 || value.projects[0].state !== 'AVAILABLE' || value.projects[0].project_name !== name.trim()) throw new ApiError('Chưa xác định đồ thị đã tạo. Tải lại danh sách trước khi thử tiếp.', 502)
+  return value.projects[0].project_id
+}
+function validateBuilderProjects(value: BuilderProjects): BuilderProjects {
   const invalid = () => { throw new ApiError('Danh sách project không hợp lệ', 502) }
   if (!shape(value, ['contract_version', 'state', 'projects']) || value.contract_version !== 'builder-projects-v1' ||
     !['AVAILABLE', 'EMPTY', 'FORBIDDEN', 'NOT_CONFIGURED', 'UNAVAILABLE'].includes(value.state) || !Array.isArray(value.projects) || value.projects.length > 10000) invalid()
@@ -669,6 +677,14 @@ export async function runGraphRetrieval(projectId: number, runId: string, messag
   return value
 }
 export type DatasetPage = { contract_version: 'builder-dataset-v1'; dataset: string; group: string; source: string; offset: number; limit: number; total: number; items: Record<string, unknown>[] }
+export type GraphSources = { contract_version: 'builder-sources-v1'; target: { project_id: number }; run_id: string; documents: { source_id: string; import_data: Record<string, unknown> }[]; units: { source_id: string; import_data: Record<string, unknown> }[] }
+export async function loadGraphSources(projectId: number, runId: string, signal?: AbortSignal): Promise<GraphSources> {
+  if (!Number.isSafeInteger(projectId) || projectId < 1 || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(runId)) throw new ApiError('Chọn đồ thị hợp lệ', 422)
+  const value = await api<GraphSources>(`/admin/kag/sources/${projectId}/${encodeURIComponent(runId)}`, { signal, cache: 'no-store' })
+  if (value?.contract_version !== 'builder-sources-v1' || value.target?.project_id !== projectId || value.run_id !== runId ||
+    [value.documents, value.units].some(rows => !Array.isArray(rows) || rows.some(row => !row || typeof row.source_id !== 'string' || !row.import_data || typeof row.import_data !== 'object' || Array.isArray(row.import_data)))) throw new ApiError('Nguồn không thuộc lần dựng đang xem', 502)
+  return value
+}
 export async function loadDataset(group: string, offset = 0, signal?: AbortSignal): Promise<DatasetPage> {
   if (!['documents','units','signs','penalties','relations','xrefs'].includes(group) || !Number.isSafeInteger(offset) || offset < 0) throw new ApiError('Loại nguồn hoặc trang không hợp lệ',400)
   const value=await api<DatasetPage>(`/admin/kag/dataset/${group}?offset=${offset}&limit=25`,{signal,cache:'no-store'})

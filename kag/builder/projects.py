@@ -20,11 +20,12 @@ class _NoRedirect(HTTPRedirectHandler):
         return None
 
 
-def _native_get(endpoint, path, token):
+def _native_request(endpoint, path, token, body=None):
     request = Request(endpoint.rstrip('/') + path,
-        headers={'Cookie': 'OPEN_SPG_TOKEN=' + token, 'Accept': 'application/json'})
+        data=json.dumps(body).encode() if body is not None else None,
+        headers={'Cookie': 'OPEN_SPG_TOKEN=' + token, 'Accept': 'application/json', 'Content-Type':'application/json'})
     try:
-        with build_opener(ProxyHandler({}), _NoRedirect()).open(request, timeout=10) as response:
+        with build_opener(ProxyHandler({}), _NoRedirect()).open(request, timeout=90 if body is not None else 10) as response:
             raw = response.read(1048577)
         if len(raw) > 1048576:
             raise ValueError
@@ -40,7 +41,7 @@ def owned_project_ids(endpoint, token, *, page_size=100):
         raise ProjectCatalogError('FORBIDDEN')
     identities, total, page = set(), None, 1
     while True:
-        value = _native_get(endpoint, '/v1/projects/list?' + urlencode(
+        value = _native_request(endpoint, '/v1/projects/list?' + urlencode(
             dict(isOwner='true', pageNo=page, pageSize=page_size)), token)
         if not isinstance(value, dict) or value.get('success') is not True:
             raise ProjectCatalogError('FORBIDDEN')
@@ -144,6 +145,58 @@ def read_projects(token):
         return dict(contract_version='builder-projects-v1', state=error.code, projects=[])
     except Exception:
         return dict(contract_version='builder-projects-v1', state='UNAVAILABLE', projects=[])
+
+
+def create_project(name, token, model, policy):
+    """Native login owns creation; reuse one visible, matching OpenSPG model without copying secrets."""
+    from uuid import uuid4
+    from kag.http_api.provider_budget import provider_route, BudgetError
+    if (not isinstance(name,str) or not name.strip() or len(name)>255
+            or any(ord(c)<32 or 127<=ord(c)<160 for c in name)):
+        raise ProjectCatalogError('INVALID_REQUEST')
+    if not isinstance(token,str) or not re.fullmatch(r'[A-Za-z0-9._~+/=%:-]{1,8192}',token):
+        raise ProjectCatalogError('FORBIDDEN')
+    if not model.get('test') or model['test']['status']!='PASS':raise ProjectCatalogError('CONFIG')
+    try:provider_route(model['config'],'embedding',policy)
+    except (BudgetError,ValueError,KeyError):raise ProjectCatalogError('CONFIG') from None
+    endpoints,_=deployment_endpoints()
+    response=_native_request(endpoints['openspg'],'/v1/model/list/EMBEDDING',token)
+    if (type(response) is not dict or response.get('success') is not True
+            or type(response.get('result')) is not list):raise ProjectCatalogError('UNAVAILABLE')
+    matches=[]
+    for group in response['result']:
+        if type(group) is not dict or group.get('provider')!='OpenAI' or type(group.get('model')) is not list:continue
+        for row in group.get('model',[]):
+            if type(row) is not dict:continue
+            custom=row.get('customize') or {}
+            if type(custom) is not dict or any(type(v) in (dict,list) for v in custom.values()):continue
+            value=dict(row,**custom)
+            dimension=value.get('vector_dimensions')
+            if (value.get('type')=='openai' and value.get('modelType')=='EMBEDDING'
+                    and isinstance(value.get('base_url'),str) and value['base_url'].rstrip('/')==model['config']['base_url'].rstrip('/')
+                    and value.get('model')==model['config']['model']
+                    and str(dimension)==str(model['test']['dimension'])
+                    and isinstance(value.get('modelId'),str) and re.fullmatch(r'[a-f0-9]{32}@[^\s@]{1,255}',value['modelId'])):
+                matches.append(value['modelId'])
+    if len(matches)!=1:raise ProjectCatalogError('MODEL_NOT_UNIQUE')
+    namespace='LuatGT'+uuid4().hex
+    request=dict(name=name.strip(),namespace=namespace,tag='LOCAL',visibility='PRIVATE',autoSchema=False,
+        config=dict(vectorizer=dict(modelId=matches[0]),graph_store=dict(uri=endpoints['neo4j_uri'],database=namespace.lower())))
+    # A lost response is uncertain: never retry POST or remove a partially created project/database.
+    result=_native_request(endpoints['openspg'],'/v1/projects',token,request)
+    identity=result.get('result') if type(result) is dict and result.get('success') is True else None
+    if type(identity) not in (int,str) or not str(identity).isdigit() or not 1<=int(identity)<=2147483647:
+        raise ProjectCatalogError('CREATE_UNCERTAIN')
+    from kag.builder.structure import target_state
+    with target_state(int(identity),token) as state:
+        target=state['target']
+        counts=state['reader']._query('structure_counts')
+        if (target['namespace']!=namespace or target['database']!=namespace.lower()
+                or target['project_name']!=name.strip() or state['dimension']!=model['test']['dimension']
+                or counts!=[dict(nodes=0,edges=0)]):raise ProjectCatalogError('CREATE_UNCERTAIN')
+        state['identity'].validate(state['proof'])
+    return dict(contract_version='builder-projects-v1',state='AVAILABLE',projects=[dict(
+        {k:target[k] for k in ('project_id','project_name','namespace','database')},state='AVAILABLE')])
 
 
 def selected_target(project_id, token, *, for_write=True):
