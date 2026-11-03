@@ -38,7 +38,7 @@ public class LearningCatalogRepository {
         UUID id=UUID.randomUUID(); db.update("INSERT INTO bank_release(release_id,release_code,title) VALUES (?,?,?)",binary(id),code,title); return id;
     }
     public List<ObjectNode> sets() {
-        return query("SELECT s.set_id,s.set_code,s.set_name,b.release_code,b.title,b.issued_on,b.effective_from,b.effective_to,b.source_url FROM question_set s JOIN bank_release b ON b.release_id=s.release_id ORDER BY b.release_code,s.set_code");
+        return query("SELECT s.set_id,s.set_code,s.set_name,b.release_code,b.title,b.issued_on,b.effective_from,b.effective_to,b.source_url,(SELECT COUNT(*) FROM set_question sq WHERE sq.set_id=s.set_id) AS question_count,(SELECT COUNT(*) FROM exam_rule r WHERE r.set_id=s.set_id) AS rule_count FROM question_set s JOIN bank_release b ON b.release_id=s.release_id ORDER BY b.release_code,s.set_code");
     }
     public ObjectNode createSet(ObjectNode n) {
         UUID release=catalog(n.path("releaseCode").asText(),n.path("releaseTitle").asText());
@@ -54,6 +54,21 @@ public class LearningCatalogRepository {
         return json.createObjectNode().put("id",set.toString());
     }
     public ObjectNode set(UUID set) { return query("SELECT s.*,b.release_code FROM question_set s JOIN bank_release b ON b.release_id=s.release_id WHERE s.set_id=? FOR UPDATE",binary(set)).stream().findFirst().orElseThrow(ApiErrors::missing); }
+    public void updateSet(UUID set,ObjectNode n) {
+        var current=set(set); UUID release=id(current,"release_id");
+        if(!query("SELECT release_id FROM bank_release WHERE release_code=? AND release_id<>?",n.path("releaseCode").asText(),binary(release)).isEmpty())throw ApiErrors.bad("Mã đợt ban hành đã được sử dụng");
+        if(!query("SELECT set_id FROM question_set WHERE release_id=? AND set_code=? AND set_id<>?",binary(release),n.path("setCode").asText(),binary(set)).isEmpty())throw ApiErrors.bad("Mã bộ đã tồn tại trong đợt ban hành");
+        db.update("UPDATE bank_release SET release_code=? WHERE release_id=?",n.path("releaseCode").asText(),binary(release));
+        db.update("UPDATE question_set SET set_code=?,set_name=? WHERE set_id=?",n.path("setCode").asText(),n.path("setName").asText(),binary(set));
+    }
+    public void deleteSet(UUID set) {
+        set(set);
+        long questions=db.queryForObject("SELECT COUNT(*) FROM set_question WHERE set_id=?",Long.class,binary(set));
+        long rules=db.queryForObject("SELECT COUNT(*) FROM exam_rule WHERE set_id=?",Long.class,binary(set));
+        long drafts=db.queryForObject("SELECT COUNT(*) FROM content WHERE kind='questions' AND data LIKE ?",Long.class,"%"+set+"%");
+        if(questions>0||rules>0||drafts>0)throw ApiErrors.bad("Không thể xóa bộ đã có câu hỏi, bản nháp hoặc quy tắc. Hãy sửa thông tin bộ hoặc kết thúc hiệu lực quy tắc.");
+        db.update("DELETE FROM question_set WHERE set_id=?",binary(set));
+    }
     public UUID legacySet() {
         UUID release=catalog("LEGACY","Dữ liệu hiện có; chưa xác minh đợt ban hành");
         var existing=query("SELECT set_id FROM question_set WHERE release_id=? AND set_code='LEGACY'",binary(release));
@@ -103,12 +118,12 @@ public class LearningCatalogRepository {
         if(!assets.isEmpty()) {q.put("imageKey",assets.getFirst().path("media_url").asText());q.put("imageMime",assets.getFirst().path("mime_type").asText());}
     }
     public List<ObjectNode> rules(boolean active) {
-        String sql="SELECT r.*,s.set_name,b.release_code,l.class_code,l.class_name FROM exam_rule r JOIN question_set s ON s.set_id=r.set_id JOIN bank_release b ON b.release_id=s.release_id JOIN license_class l ON l.class_id=r.class_id";
+        String sql="SELECT r.*,s.set_name,b.release_code,l.class_code,l.class_name,(SELECT COUNT(*) FROM exam_attempt a WHERE a.rule_id=r.rule_id) AS attempt_count FROM exam_rule r JOIN question_set s ON s.set_id=r.set_id JOIN bank_release b ON b.release_id=s.release_id JOIN license_class l ON l.class_id=r.class_id";
         if(!active)return query(sql+" ORDER BY l.class_code,r.valid_from DESC");
         var today=LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")).toString();
         return query(sql+" WHERE r.valid_from<=? AND (r.valid_to IS NULL OR r.valid_to>?) AND (b.effective_from IS NULL OR b.effective_from<=?) AND (b.effective_to IS NULL OR b.effective_to>?) ORDER BY l.class_code,r.valid_from DESC",today,today,today,today);
     }
-    public ObjectNode rule(UUID rule) { return rules(false).stream().filter(n->n.path("rule_id").asText().equals(rule.toString())).findFirst().orElseThrow(ApiErrors::missing); }
+    public ObjectNode rule(UUID rule) { return query("SELECT r.*,s.set_name,b.release_code,l.class_code,l.class_name,(SELECT COUNT(*) FROM exam_attempt a WHERE a.rule_id=r.rule_id) AS attempt_count FROM exam_rule r JOIN question_set s ON s.set_id=r.set_id JOIN bank_release b ON b.release_id=s.release_id JOIN license_class l ON l.class_id=r.class_id WHERE r.rule_id=? FOR UPDATE",binary(rule)).stream().findFirst().orElseThrow(ApiErrors::missing); }
     public void endRule(UUID rule,LocalDate until) {
         var r=rule(rule);set(id(r,"set_id"));
         if(!until.isAfter(LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")))||!until.isAfter(LocalDate.parse(r.path("valid_from").asText()))||r.hasNonNull("valid_to")&&until.isAfter(LocalDate.parse(r.path("valid_to").asText())))throw ApiErrors.bad("Chỉ được kết thúc quy tắc vào ngày tương lai, sau ngày bắt đầu; không gia hạn quy tắc cũ");
@@ -130,7 +145,30 @@ public class LearningCatalogRepository {
         }
         return rule(rule);
     }
+    public ObjectNode updateRule(UUID rule,ObjectNode n) {
+        var current=rule(rule);
+        if(current.path("attempt_count").asLong()>0)throw ApiErrors.bad("Quy tắc đã có bài thi nên không thể sửa; hãy kết thúc hiệu lực và thêm quy tắc mới để giữ lịch sử.");
+        UUID set=id(current,"set_id"), license=id(current,"class_id");
+        String start=n.path("validFrom").asText(), until=n.hasNonNull("validTo")?n.path("validTo").asText():null;
+        if(db.queryForObject("SELECT COUNT(*) FROM exam_rule WHERE class_id=? AND set_id=? AND rule_id<>? AND (valid_to IS NULL OR valid_to>?) AND (? IS NULL OR valid_from<?)",Long.class,binary(license),binary(set),binary(rule),start,until,until)>0)throw ApiErrors.bad("Khoảng hiệu lực quy tắc bị chồng trong cùng bộ và hạng");
+        UUID release=id(set(set),"release_id");
+        db.update("UPDATE exam_rule SET valid_from=?,valid_to=?,total_questions=?,duration_minutes=?,minimum_correct=?,critical_slots=?,fail_on_critical=? WHERE rule_id=?",start,until,n.path("totalQuestions").asInt(),n.path("durationMinutes").asInt(),n.path("minimumCorrect").asInt(),n.path("criticalSlots").asInt(),n.path("failOnCritical").asBoolean(),binary(rule));
+        db.update("DELETE FROM exam_rule_topic WHERE rule_id=?",binary(rule));
+        for(int ch=1;ch<=6;ch++) {
+            var topics=query("SELECT topic_id FROM topic WHERE release_id=? AND chapter=?",binary(release),ch); UUID topic=topics.isEmpty()?UUID.randomUUID():id(topics.getFirst(),"topic_id");
+            if(topics.isEmpty()) db.update("INSERT INTO topic VALUES (?,?,?,?,?)",binary(topic),binary(release),"CH"+ch,"Chương "+ch,ch);
+            db.update("INSERT INTO exam_rule_topic VALUES (?,?,?)",binary(rule),binary(topic),n.path("quotas").get(ch-1).asInt());
+        }
+        return rule(rule);
+    }
+    public void deleteRule(UUID rule) {
+        if(rule(rule).path("attempt_count").asLong()>0)throw ApiErrors.bad("Quy tắc đã có bài thi nên không thể xóa để giữ lịch sử; hãy kết thúc hiệu lực.");
+        db.update("DELETE FROM exam_rule_topic WHERE rule_id=?",binary(rule));
+        if(db.update("DELETE FROM exam_rule WHERE rule_id=?",binary(rule))==0)throw ApiErrors.missing();
+    }
     public UUID createAttempt(UUID owner,ObjectNode rule,List<ObjectNode> questions) {
+        UUID ruleId=id(rule,"rule_id");
+        if(query("SELECT rule_id FROM exam_rule WHERE rule_id=? FOR UPDATE",binary(ruleId)).isEmpty())throw ApiErrors.missing();
         UUID attempt=UUID.randomUUID();Instant now=Instant.now();byte[] set=binary(id(rule,"set_id"));
         db.update("INSERT INTO exam_attempt(attempt_id,user_id,rule_id,set_id,started_at,expires_at) VALUES (?,?,?,?,?,?)",binary(attempt),binary(owner),binary(id(rule,"rule_id")),set,Timestamp.from(now),Timestamp.from(now.plusSeconds(rule.path("duration_minutes").asLong()*60)));
         for(int i=0;i<questions.size();i++) {var q=questions.get(i);db.update("INSERT INTO attempt_question VALUES (?,?,?,?,?,?)",binary(UUID.randomUUID()),binary(attempt),binary(id(q,"set_question_id")),set,binary(id(q,"revision_id")),i);}

@@ -146,15 +146,15 @@ export default function AdminDocker() {
           </Card>
 
           <Card title="So với compose gốc của OpenSPG" flush>
-            <div className="overflow-x-auto px-5 pb-4">
+            <div className="overflow-x-auto pb-4">
               <table className="w-full min-w-[560px] text-[12.5px]">
-                <thead><tr className="text-left text-muted"><th className="py-2 font-medium">Hạng mục</th><th className="py-2 font-medium">docker-compose-west.yml</th><th className="py-2 font-medium">deploy/ của mình</th></tr></thead>
+                <thead><tr className="bg-sidebar text-left text-muted"><th className="px-5 py-2 font-medium">Hạng mục</th><th className="px-5 py-2 font-medium">docker-compose-west.yml</th><th className="px-5 py-2 font-medium">deploy/ của mình</th></tr></thead>
                 <tbody>
                   {compare.map(([k, a, b]) => (
                     <tr key={k} className="border-t border-line/60 align-top">
-                      <td className="py-2 pr-3 font-medium text-navy">{k}</td>
-                      <td className="py-2 pr-3 text-muted">{a}</td>
-                      <td className="py-2 text-text-secondary">{b}</td>
+                      <td className="px-5 py-2 font-medium text-navy">{k}</td>
+                      <td className="px-5 py-2 text-muted">{a}</td>
+                      <td className="px-5 py-2 text-text-secondary">{b}</td>
                     </tr>
                   ))}
                 </tbody>

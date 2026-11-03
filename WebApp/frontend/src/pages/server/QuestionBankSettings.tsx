@@ -23,6 +23,10 @@ export type QuestionSet = {
   set_name: string
 
   release_code: string
+
+  question_count: number
+
+  rule_count: number
 }
 
 export type ExamRule = {
@@ -47,7 +51,26 @@ export type ExamRule = {
   critical_slots: number
 
   fail_on_critical: boolean
+
+  attempt_count: number
+
+  quotas: { chapter: number; question_quota: number }[]
 }
+
+type RuleForm = {
+  setId: string
+  license: string
+  validFrom: string
+  validTo: string
+  totalQuestions: string
+  durationMinutes: string
+  minimumCorrect: string
+  criticalSlots: string
+  failOnCritical: boolean
+  quotas: string[]
+}
+
+const emptyRule = (): RuleForm => ({ setId: "", license: "", validFrom: "", validTo: "", totalQuestions: "", durationMinutes: "", minimumCorrect: "", criticalSlots: "", failOnCritical: true, quotas: ["", "", "", "", "", ""] })
 
 export default function QuestionBankSettings() {
   const sets = useData<QuestionSet[]>("/admin/questions/sets"),
@@ -55,6 +78,12 @@ export default function QuestionBankSettings() {
     task = useTask()
 
   const [dialog, setDialog] = useState<"set" | "rule" | null>(null)
+
+  const [editingSet, setEditingSet] = useState<QuestionSet | null>(null)
+
+  const [editingRule, setEditingRule] = useState<ExamRule | null>(null)
+
+  const [pendingDelete, setPendingDelete] = useState<{ kind: "set" | "rule"; id: string; label: string } | null>(null)
 
   const [endingRule, setEndingRule] = useState<ExamRule | null>(null)
 
@@ -78,7 +107,7 @@ export default function QuestionBankSettings() {
     sourceUrl: "",
   })
 
-  const [rule, setRule] = useState({
+  const [rule, setRule] = useState<RuleForm>({
     setId: "",
 
     license: "",
@@ -113,11 +142,11 @@ export default function QuestionBankSettings() {
       subtitle="Quản lý bộ nhận dữ liệu và cấu hình đề thi theo từng hạng giấy phép lái xe."
     >
       <div className="space-y-6">
-        <Notice error={!dialog && !endingRule ? task.error : undefined} />
+        <Notice error={!dialog && !endingRule && !pendingDelete ? task.error : undefined} />
         <section aria-labelledby="created-sets-heading" className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 id="created-sets-heading" className="text-lg font-semibold text-navy">Bộ đã tạo</h2>
-            <Button variant="primary" disabled={task.busy} onClick={() => { task.clearError(); setDialog("set") }}>Thêm bộ câu hỏi</Button>
+            <Button variant="primary" disabled={task.busy} onClick={() => { task.clearError(); setEditingSet(null); setSet({ releaseCode: "", releaseTitle: "", setCode: "", setName: "", issuedOn: "", effectiveFrom: "", effectiveTo: "", sourceUrl: "" }); setDialog("set") }}>Thêm bộ câu hỏi</Button>
           </div>
           <Notice {...sets} retry={sets.reload}/>
           {sets.value && <Card className="overflow-hidden"><div className="overflow-x-auto">
@@ -127,6 +156,7 @@ export default function QuestionBankSettings() {
                         <Th>Mã đợt ban hành</Th>
                         <Th>Mã bộ</Th>
                         <Th>Tên bộ</Th>
+                        <Th>Thao tác</Th>
                       </tr>
                     </thead>
                     <tbody>
@@ -135,12 +165,24 @@ export default function QuestionBankSettings() {
                           <Td>{s.release_code}</Td>
                           <Td>{s.set_code}</Td>
                           <Td>{s.set_name}</Td>
+                          <Td>
+                            <div className="flex flex-wrap gap-2">
+                              <Button size="sm" disabled={task.busy} onClick={() => {
+                                task.clearError()
+                                setEditingSet(s)
+                                setSet({ releaseCode: s.release_code, releaseTitle: "", setCode: s.set_code, setName: s.set_name, issuedOn: "", effectiveFrom: "", effectiveTo: "", sourceUrl: "" })
+                                setDialog("set")
+                              }}>Chỉnh sửa</Button>
+                              <Button size="sm" variant="danger" disabled={task.busy || s.question_count > 0 || s.rule_count > 0} title={s.question_count > 0 || s.rule_count > 0 ? "Bộ đã có câu hỏi hoặc quy tắc" : "Xóa bộ câu hỏi"} onClick={() => { task.clearError(); setPendingDelete({ kind: "set", id: s.set_id, label: `${s.release_code} / ${s.set_code}` }) }}>Xóa</Button>
+                            </div>
+                            {(s.question_count > 0 || s.rule_count > 0) && <p className="mt-1 text-xs text-muted">Đã có {s.question_count} câu hỏi · {s.rule_count} quy tắc; không thể xóa.</p>}
+                          </Td>
                         </tr>
                       ))}
                       {!sets.value.length && (
                         <tr>
                           <td
-                            colSpan={3}
+                            colSpan={4}
                             className="px-4 py-6 text-center text-sm text-muted"
                           >
                             Chưa có bộ câu hỏi. Bấm “Thêm bộ câu hỏi” để tạo bộ
@@ -155,7 +197,7 @@ export default function QuestionBankSettings() {
         <section aria-labelledby="created-rules-heading" className="space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <h2 id="created-rules-heading" className="text-lg font-semibold text-navy">Quy tắc đã tạo</h2>
-            <Button variant="primary" disabled={task.busy || sets.loading || !sets.value?.length} onClick={() => { task.clearError(); setDialog("rule") }}>Thêm quy tắc đề thi</Button>
+            <Button variant="primary" disabled={task.busy || sets.loading || !sets.value?.length} onClick={() => { task.clearError(); setEditingRule(null); setRule(emptyRule()); setDialog("rule") }}>Thêm quy tắc đề thi</Button>
           </div>
           <p className="text-xs leading-6 text-muted">Giữ quy tắc cũ để chấm bài thi đã lưu. Khi thay đổi, thêm quy tắc cho thời kỳ mới; khoảng hiệu lực trong cùng bộ và hạng không được chồng nhau.</p>
           <Notice {...rules} retry={rules.reload}/>
@@ -205,17 +247,32 @@ export default function QuestionBankSettings() {
                             </p>
                           </Td>
                           <Td>
-                            <Button
-                              size="sm"
-                              disabled={task.busy || (!!r.valid_to && r.valid_to < nextDay(today > r.valid_from ? today : r.valid_from))}
-                              onClick={() => {
+                            <div className="flex flex-wrap gap-2">
+                              <Button size="sm" disabled={task.busy || r.attempt_count > 0} title={r.attempt_count > 0 ? "Đã có bài thi nên khóa sửa để giữ lịch sử" : "Chỉnh sửa quy tắc"} onClick={() => {
+                                task.clearError()
+                                setEditingRule(r)
+                                setRule({
+                                  setId: r.set_id,
+                                  license: r.class_code,
+                                  validFrom: r.valid_from,
+                                  validTo: r.valid_to || "",
+                                  totalQuestions: String(r.total_questions),
+                                  durationMinutes: String(r.duration_minutes),
+                                  minimumCorrect: String(r.minimum_correct),
+                                  criticalSlots: String(r.critical_slots),
+                                  failOnCritical: r.fail_on_critical,
+                                  quotas: Array.from({ length: 6 }, (_, i) => String(r.quotas.find(q => q.chapter === i + 1)?.question_quota ?? 0)),
+                                })
+                                setDialog("rule")
+                              }}>Chỉnh sửa</Button>
+                              <Button size="sm" variant="danger" disabled={task.busy || r.attempt_count > 0} title={r.attempt_count > 0 ? "Đã có bài thi nên không thể xóa" : "Xóa quy tắc"} onClick={() => { task.clearError(); setPendingDelete({ kind: "rule", id: r.rule_id, label: `${r.set_name} · Hạng ${r.class_code}` }) }}>Xóa</Button>
+                              <Button size="sm" disabled={task.busy || (!!r.valid_to && r.valid_to < nextDay(today > r.valid_from ? today : r.valid_from))} onClick={() => {
                                 task.clearError()
                                 setEndDate("")
                                 setEndingRule(r)
-                              }}
-                            >
-                              Kết thúc hiệu lực
-                            </Button>
+                              }}>Kết thúc hiệu lực</Button>
+                            </div>
+                            {r.attempt_count > 0 && <p className="mt-1 text-xs text-muted">Đã có {r.attempt_count} bài thi; khóa sửa/xóa để giữ lịch sử.</p>}
                           </Td>
                         </tr>
                       ))}
@@ -237,13 +294,13 @@ export default function QuestionBankSettings() {
       </div>
       <Modal
         open={dialog === "set"}
-        title="Thêm bộ câu hỏi"
+        title={editingSet ? "Chỉnh sửa bộ câu hỏi" : "Thêm bộ câu hỏi"}
         onClose={() => {
-          if (!task.busy) setDialog(null)
+          if (!task.busy) { setDialog(null); setEditingSet(null) }
         }}
         footer={
           <>
-            <Button disabled={task.busy} onClick={() => setDialog(null)}>
+            <Button disabled={task.busy} onClick={() => { setDialog(null); setEditingSet(null) }}>
               Hủy
             </Button>
             <Button
@@ -252,7 +309,7 @@ export default function QuestionBankSettings() {
               variant="primary"
               disabled={task.busy}
             >
-              Tạo bộ câu hỏi
+              {editingSet ? "Lưu thay đổi" : "Tạo bộ câu hỏi"}
             </Button>
           </>
         }
@@ -262,31 +319,30 @@ export default function QuestionBankSettings() {
           Tạo bộ riêng cho 250 và 600 câu trước khi nhập dữ liệu. Các trường có
           dấu * là bắt buộc.
         </p>
+        {editingSet && <p className="mb-4 text-xs text-muted">Mã đợt ban hành dùng chung cho các bộ cùng đợt.</p>}
         <form
           id="create-question-set"
           onSubmit={(e) => {
             e.preventDefault()
 
             void task.run(async () => {
-              await api(
-                "/admin/questions/sets",
-                send(
-                  "POST",
-                  Object.fromEntries(
-                    Object.entries(set).filter(([, v]) => v !== ""),
-                  ),
-                ),
-              )
+              const body = editingSet ? { releaseCode: set.releaseCode, setCode: set.setCode, setName: set.setName } : Object.fromEntries(Object.entries(set).filter(([, v]) => v !== ""))
+              await api(editingSet ? `/admin/questions/sets/${editingSet.set_id}` : "/admin/questions/sets", send(editingSet ? "PUT" : "POST", body))
 
               sets.reload()
               setSet(current => ({ ...current, releaseCode: '', releaseTitle: '', setCode: '', setName: '', issuedOn: '', effectiveFrom: '', effectiveTo: '', sourceUrl: '' }))
+              setEditingSet(null)
               setDialog(null)
             })
           }}
         >
           <fieldset disabled={task.busy} className="min-w-0 space-y-5">
             <div className="grid gap-4 sm:grid-cols-2">
-              {Object.entries({
+              {Object.entries(editingSet ? {
+                releaseCode: "Mã đợt ban hành",
+                setCode: "Mã bộ",
+                setName: "Tên bộ",
+              } : {
                 releaseCode: "Mã đợt ban hành",
                 releaseTitle: "Tên đợt ban hành",
                 setCode: "Mã bộ",
@@ -305,7 +361,7 @@ export default function QuestionBankSettings() {
                 </Field>
               ))}
             </div>
-            <fieldset className="min-w-0 border-t border-line pt-4">
+            {!editingSet && <fieldset className="min-w-0 border-t border-line pt-4">
               <legend className="pr-3 text-sm font-medium text-navy">
                 Nguồn và hiệu lực
               </legend>
@@ -343,19 +399,19 @@ export default function QuestionBankSettings() {
                   </Field>
                 </div>
               </div>
-            </fieldset>
+            </fieldset>}
           </fieldset>
         </form>
       </Modal>
       <Modal
         open={dialog === "rule"}
-        title="Thêm quy tắc đề thi"
+        title={editingRule ? "Chỉnh sửa quy tắc đề thi" : "Thêm quy tắc đề thi"}
         onClose={() => {
-          if (!task.busy) setDialog(null)
+          if (!task.busy) { setDialog(null); setEditingRule(null) }
         }}
         footer={
           <>
-            <Button disabled={task.busy} onClick={() => setDialog(null)}>
+            <Button disabled={task.busy} onClick={() => { setDialog(null); setEditingRule(null) }}>
               Hủy
             </Button>
             <Button
@@ -364,15 +420,14 @@ export default function QuestionBankSettings() {
               variant="primary"
               disabled={task.busy || sets.loading || !sets.value?.length || allocationMismatch}
             >
-              Thêm quy tắc đề
+              {editingRule ? "Lưu thay đổi" : "Thêm quy tắc đề"}
             </Button>
           </>
         }
       >
         <Notice error={task.error} />
         <p className="mb-5 text-sm text-muted">
-          Nhập cấu hình theo nguồn đã kiểm duyệt. Chỉ tiêu chương tính câu
-          thường; câu điểm liệt tính riêng. Các trường có dấu * là bắt buộc.
+          {editingRule ? "Chỉ sửa quy tắc chưa có bài thi. Bộ và hạng áp dụng được giữ nguyên." : "Nhập cấu hình theo nguồn đã kiểm duyệt. Chỉ tiêu chương tính câu thường; câu điểm liệt tính riêng."} Các trường có dấu * là bắt buộc.
         </p>
         <form
           id="create-exam-rule"
@@ -381,9 +436,7 @@ export default function QuestionBankSettings() {
             if (allocationMismatch) return
 
             void task.run(async () => {
-              await api(
-                "/admin/questions/rules",
-                send("POST", {
+              const body = {
                   ...rule,
                   validTo: rule.validTo || null,
 
@@ -393,11 +446,12 @@ export default function QuestionBankSettings() {
                   minimumCorrect: Number(rule.minimumCorrect),
                   criticalSlots: Number(rule.criticalSlots),
                   quotas: rule.quotas.map(Number),
-                }),
-              )
+              }
+              await api(editingRule ? `/admin/questions/rules/${editingRule.rule_id}` : "/admin/questions/rules", send(editingRule ? "PUT" : "POST", body))
 
               rules.reload()
-              setRule({ setId: '', license: '', validFrom: '', validTo: '', totalQuestions: '', durationMinutes: '', minimumCorrect: '', criticalSlots: '', failOnCritical: true, quotas: ['', '', '', '', '', ''] })
+              setRule(emptyRule())
+              setEditingRule(null)
               setDialog(null)
             })
           }}
@@ -412,6 +466,7 @@ export default function QuestionBankSettings() {
                   required
                   className={inputCls}
                   aria-label="Bộ áp dụng"
+                  disabled={!!editingRule}
                   value={rule.setId}
                   onChange={(e) =>
                     setRule((r) => ({ ...r, setId: e.target.value }))
@@ -430,6 +485,7 @@ export default function QuestionBankSettings() {
                   required
                   className={inputCls}
                   aria-label="Hạng GPLX"
+                  disabled={!!editingRule}
                   placeholder="Ví dụ: A1, A, B"
                   value={rule.license}
                   onChange={(e) =>
@@ -605,6 +661,28 @@ export default function QuestionBankSettings() {
             </Field>
           </form>
         )}
+      </Modal>
+      <Modal
+        open={!!pendingDelete}
+        title={pendingDelete?.kind === "set" ? "Xóa bộ câu hỏi" : "Xóa quy tắc đề thi"}
+        onClose={() => { if (!task.busy) setPendingDelete(null) }}
+        footer={
+          <>
+            <Button disabled={task.busy} onClick={() => setPendingDelete(null)}>Hủy</Button>
+            <Button variant="danger" disabled={task.busy} onClick={() => {
+              if (!pendingDelete) return
+              void task.run(async () => {
+                await api(pendingDelete.kind === "set" ? `/admin/questions/sets/${pendingDelete.id}` : `/admin/questions/rules/${pendingDelete.id}`, send("DELETE"))
+                if (pendingDelete.kind === "set") sets.reload()
+                else rules.reload()
+                setPendingDelete(null)
+              })
+            }}>Xóa</Button>
+          </>
+        }
+      >
+        <Notice error={task.error} />
+        <p className="text-sm text-muted">Bạn sắp xóa “{pendingDelete?.label}”. Chỉ mục chưa được dùng mới có thể xóa; câu hỏi hoặc bài thi đã lưu sẽ được giữ nguyên.</p>
       </Modal>
     </Page>
   )

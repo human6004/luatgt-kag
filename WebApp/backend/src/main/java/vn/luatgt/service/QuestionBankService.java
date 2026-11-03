@@ -15,6 +15,15 @@ public class QuestionBankService {
     public QuestionBankService(LearningCatalogRepository bank,com.fasterxml.jackson.databind.ObjectMapper json) {this.bank=bank;this.json=json;}
     public List<ObjectNode> sets() {return bank.sets();}
     @Transactional public void endRule(UUID id,ObjectNode n) {ContentService.date(n,"validTo",true);bank.endRule(id,LocalDate.parse(n.path("validTo").asText()));}
+    @Transactional public void updateSet(UUID id,ObjectNode n) {
+        for(String field:List.of("releaseCode","setCode")) {
+            ContentService.text(n,field,field.equals("releaseCode")?40:30,true);
+            if(!n.path(field).asText().matches("[A-Za-z0-9._-]+"))throw ApiErrors.bad(field+": chỉ dùng chữ, số, dấu chấm, gạch ngang hoặc gạch dưới");
+        }
+        ContentService.text(n,"setName",500,true);
+        bank.updateSet(id,n);
+    }
+    @Transactional public void deleteSet(UUID id) {bank.deleteSet(id);}
     public List<ObjectNode> rules(boolean active) {
         var rules=bank.rules(active);
         for(var r:rules) r.set("quotas",json.valueToTree(bank.quotas(UUID.fromString(r.path("rule_id").asText()))));
@@ -31,6 +40,18 @@ public class QuestionBankService {
         return bank.createSet(n);
     }
     @Transactional public ObjectNode createRule(ObjectNode n) {
+        validateRule(n);
+        return bank.createRule(n);
+    }
+    @Transactional public ObjectNode updateRule(UUID id,ObjectNode n) {
+        var current=bank.rule(id);
+        n.put("setId",current.path("set_id").asText());
+        n.put("license",current.path("class_code").asText());
+        validateRule(n);
+        return bank.updateRule(id,n);
+    }
+    @Transactional public void deleteRule(UUID id) {bank.deleteRule(id);}
+    private void validateRule(ObjectNode n) {
         try {UUID.fromString(n.path("setId").asText());}catch(IllegalArgumentException e){throw ApiErrors.bad("setId không hợp lệ");}
         ContentService.text(n,"license",12,true);if(!n.path("license").asText().matches("[A-Z][A-Z0-9]*"))throw ApiErrors.bad("Hạng GPLX không hợp lệ");
         ContentService.date(n,"validFrom",true);ContentService.date(n,"validTo",false);
@@ -41,6 +62,5 @@ public class QuestionBankService {
         if(!n.path("quotas").isArray()||n.path("quotas").size()!=6)throw ApiErrors.bad("quotas cần sáu chỉ tiêu câu thường theo chương; câu điểm liệt tính riêng");
         int sum=critical;for(var quota:n.path("quotas")) {if(!quota.isIntegralNumber()||!quota.canConvertToInt()||quota.asInt()<0||quota.asInt()>total)throw ApiErrors.bad("Chỉ tiêu chương không hợp lệ");sum+=quota.asInt();}
         if(sum!=total)throw ApiErrors.bad("Tổng chỉ tiêu câu thường và câu điểm liệt phải bằng tổng số câu");
-        return bank.createRule(n);
     }
 }
