@@ -55,7 +55,7 @@ Mở [FE dev](http://127.0.0.1:5174); `/api` được proxy tới backend ở `1
 
 [`docs/imports/`](docs/imports/) giữ ngân hàng câu hỏi nháp/ZIP ảnh/metadata nguồn. Nhập không tự xuất bản; kiểm đáp án, điểm liệt, ảnh và nguồn trước khi duyệt. Nội dung xuất bản WebApp không tự đồng bộ graph KAG.
 
-Thi thật hạng B dùng server và đáp án đã duyệt; các giới hạn học/thi, chatbot và Builder nằm trong USER-GUIDE. Bản thiết kế [`App-design/`](App-design/src/imports/README.md) là tham chiếu, bộ deploy đi kèm không phải installation sản phẩm.
+Thi thật hạng B dùng server và đáp án đã duyệt; các giới hạn học/thi, chatbot và Builder nằm trong USER-GUIDE.
 
 ## Nhập ngân hàng bằng script
 
@@ -71,4 +71,4 @@ Kết quả: số thêm/bỏ qua và ảnh ghép. Cổng khác mặc định tru
 
 **Bước 2:** mở Ngân hàng câu hỏi, kiểm nguồn/đáp án/điểm liệt/ảnh rồi xuất bản câu thật đủ điều kiện.
 
-`scripts/verify-stack.ps1` là kiểm thử tùy chọn, tạo tài khoản/lịch sử thử; `-WithExam` cần dữ liệu đã xuất bản. Scripts chuẩn hóa ngân hàng có thể ghi lại assets/nháp. Đọc source và chọn môi trường thử riêng trước khi chạy; không phải điều kiện startup.
+`scripts/verify-stack.ps1` là kiểm thử tùy chọn, tạo tài khoản/lịch sử thử; `-WithExam` cần dữ liệu đã xuất bản. Đọc source và chọn môi trường thử riêng trước khi chạy; không phải điều kiện startup.

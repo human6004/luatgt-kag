@@ -14,7 +14,8 @@ initialize()
 from kag.builder.codec import canonical_json, decode_properties
 from kag.interface import ExecutorABC, GeneratorABC, LLMClient, PromptABC, SolverPipelineABC
 from kag.interface.solver.executor_abc import ExecutorResponse
-from kag.legal_prompts import validate_subquery, material_constraints, query_content_terms, CandidateError, LegalDeducePrompt
+from kag.legal_prompts import (validate_subquery, material_constraints, query_content_terms, _reference_bindings, _clauses, CandidateError, UnsafeSubqueryError,
+                               LegalDeducePrompt, legal_trace, legal_timing, document_title_question, document_number_matches, DOCUMENT_CONTENT_PREFIX, qcvn_matches)
 from kag.solver.executor.deduce.kag_deduce_executor import KagDeduceExecutor
 from kag.solver.planner.kag_iterative_planner import KAGIterativePlanner
 from kag.solver.pipeline.kag_iterative_pipeline import KAGIterativePipeline
@@ -24,13 +25,14 @@ from kag.retriever.neo4j import positive_limit
 
 _CONTEXT_KEY = secrets.token_bytes(32)
 _META = {
-    'LegalDocument': {'so_hieu', 'loai', 'scope', 'effective_from', 'effective_to', 'hieu_luc_note',
+    'LegalDocument': {'so_hieu', 'official_so_hieu', 'loai', 'scope', 'effective_from', 'effective_to', 'hieu_luc_note',
                       'het_hieu_luc_note', 'current_status', 'status_hint', 'ngay_hieu_luc_bo_phan',
                       'consolidation_as_of', 'underlying_effective_from'},
     'LegalUnit': {'so_hieu', 'unit_type', 'scope', 'dieu_number', 'khoan_number', 'diem_letter',
                   'parent_id', 'penalty_doi_tuong', 'penalty_hanh_vi', 'penalty_phat_tien_min',
-                  'penalty_phat_tien_max', 'penalty_tru_diem_gplx'},
-    'TrafficSign': {'so_hieu', 'ma_bien', 'ngay_hieu_luc', 'ngay_het_hieu_luc'},
+                  'penalty_phat_tien_max', 'penalty_tru_diem_gplx', 'penalty_source_record', 'source_record'},
+    'TrafficSign': {'so_hieu', 'ma_bien', 'qcvn', 'ngay_hieu_luc', 'ngay_het_hieu_luc',
+                    'record_type', 'description_scope', 'verification_status', 'parent_sign_id'},
 }
 
 
@@ -46,13 +48,25 @@ def _source_texts(payload):
     return tuple(texts)
 
 
-def _unit_references(metadata):
+def _unit_references(metadata, source_text=''):
     references=[]
     for field,label,pattern in (('dieu_number','Điều',r'\d+[a-zđ]?'),
                                 ('khoan_number','khoản',r'\d+[a-zđ]?'),
                                 ('diem_letter','điểm',r'[a-zđ]')):
         value=metadata.get(field)
         if isinstance(value,str) and re.fullmatch(pattern,value,re.I):references.append(label+' '+value)
+    article = metadata.get('dieu_number')
+    if (metadata.get('unit_type') == 'Dieu' and isinstance(article, str)
+            and re.match(r'\s*Điều\s+'+re.escape(article)+r'[.]\s+', source_text, re.I)):
+        locator = metadata.get('source_record')
+        origin = locator.get('origin') if isinstance(locator, dict) else None
+        origin = origin if isinstance(origin, dict) else {}
+        # Quoted replacement paragraphs belong to the amended instrument.
+        numbers = (origin.get('operative_clause_numbers', [])
+                   if origin.get('source_role') == 'amendment_operation' else re.findall(
+                       r'(?m)^\s*(\d+[a-zđ]?)[.)]\s+\S', source_text, re.I))
+        references.extend('khoản '+number for number in numbers
+                          if isinstance(number, str) and re.fullmatch(r'\d+[a-zđ]?', number, re.I))
     return ' '.join(references)
 
 
@@ -66,7 +80,7 @@ def _grounding_sources(payload):
         texts.extend(item[key] for key in ('entity_id','doc_id','unit_id','sign_id')
                      if isinstance(item.get(key),str))
         metadata = item['metadata']
-        references = _unit_references(metadata)
+        references = _unit_references(metadata, item['source_texts'].get('text', ''))
         if references:
             number = payload['documents'].get(item['doc_id'],{}).get('so_hieu') or ''
             texts.append(number+' '+references)
@@ -188,8 +202,13 @@ class LegalRetrieverExecutor(ExecutorABC):
 
     def invoke(self, query, task, context, **kwargs):
         subquery = _task_query(query, task, context)
-        evidence = self.retriever.retrieve(subquery, top_k=self.top_k, expand=self.expand)
-        incoming, documents = self._metadata(evidence)
+        retrieval_query = query if document_title_question(query) else subquery
+        legal_trace('retrieval.input', query=retrieval_query, subquery=subquery, top_k=self.top_k, expand=self.expand)
+        with legal_timing('retrieval.total'):
+            evidence = self.retriever.retrieve(retrieval_query, top_k=self.top_k, expand=self.expand)
+        legal_trace('retrieval.output', evidence=evidence)
+        with legal_timing('retrieval.metadata'):
+            incoming, documents = self._metadata(evidence)
         previous = context.kwargs.get('legal_evidence')
         old = previous.payload() if isinstance(previous, LegalEvidenceResponse) else {'items': [], 'documents': {}}
         if isinstance(previous, LegalEvidenceResponse) and old['original_question'] != query:
@@ -209,6 +228,7 @@ class LegalRetrieverExecutor(ExecutorABC):
                    'items': list(merged.values()), 'documents': prior_docs}
         characters = sum(map(len, _source_texts(payload)))
         payload.update(source_characters=characters, budget_exceeded=characters > self.max_evidence_chars)
+        legal_trace('retrieval.ledger', **payload)
         response = LegalEvidenceResponse(canonical_json(payload))
         context.kwargs['legal_evidence'] = response
         context.kwargs.pop('legal_candidate', None)
@@ -276,21 +296,24 @@ class LegalDeduceExecutor(KagDeduceExecutor):
         evidence = context.kwargs.get('legal_evidence')
         payload = evidence.payload() if isinstance(evidence, LegalEvidenceResponse) else None
         if not payload or not payload['items'] or payload['budget_exceeded']:
+            legal_trace('deduce.skipped', reason='missing evidence or evidence budget exceeded')
             value = {'abstained': True, 'applicability': 'insufficient', 'effectivity': 'uncertain',
                      'conflict': 'none', 'selections': [], 'support_selections': []}
         else:
             if payload['original_question'] != query:
                 raise ValueError('request evidence belongs to another question')
             prompt_evidence = dict(payload, subquery=subquery,
-                authority_scope='DOCUMENT_CONTENT' if document_content_question(query) else 'CURRENT_LAW')
+                authority_scope='DOCUMENT_TITLE' if document_title_question(query) else
+                                'DOCUMENT_CONTENT' if document_content_question(query) else 'CURRENT_LAW')
             try:
-                value = self.llm_module.invoke({'question': query, 'evidence': prompt_evidence, 'as_of': as_of.isoformat()},
-                                               self.deduce_prompt, with_except=True, reporter=None)
+                with legal_timing('deduce.total'):
+                    value = self.llm_module.invoke({'question': query, 'evidence': prompt_evidence, 'as_of': as_of.isoformat()},
+                                                   self.deduce_prompt, with_except=True, reporter=None)
             except RuntimeError as exc:
-                if not isinstance(exc.__context__, CandidateError):
-                    raise
-                value = {'abstained': True, 'applicability': 'insufficient', 'effectivity': 'uncertain',
-                         'conflict': 'none', 'selections': [], 'support_selections': []}
+                if isinstance(exc.__context__, CandidateError):
+                    legal_trace('deduce.rejected', error=str(exc.__context__))
+                raise
+        legal_trace('deduce.candidate', candidate=value)
         result = LegalCandidateResponse(canonical_json({'candidate': value,
                     'evidence_fingerprint': evidence.fingerprint if payload else None,
                     'original_question': query, 'as_of': as_of.isoformat(), 'deduce_task': task.id}))
@@ -345,6 +368,9 @@ def _partial_period(props):
 
 def _current(item, documents, as_of):
     props = documents.get(item['doc_id'], {})
+    # An amended original cannot establish each retained unit's current validity.
+    if str(props.get('current_status') or '').strip().casefold() == 'amended':
+        return False
     if _partial_period(props):
         return False
     notes = ' '.join(str(props.get(k) or '') for k in ('hieu_luc_note', 'het_hieu_luc_note')).casefold()
@@ -369,18 +395,58 @@ def _current(item, documents, as_of):
     return True
 
 
+def _sign_applicable(query, metadata):
+    fields = ('record_type', 'description_scope', 'verification_status')
+    if not isinstance(query, str) or not query.strip():
+        return not any(field in metadata for field in fields)
+    if not qcvn_matches(query, metadata.get('qcvn')):
+        return False
+    if not any(field in metadata for field in fields):
+        return True  # Legacy evidence keeps its existing guards, without assigning new authority.
+    codes = {code.casefold() for code in re.findall(r'\b[A-ZĐ]{1,4}\.\d+[a-z]?(?:-\d+)?\b', query, re.I)}
+    if codes and codes != {str(metadata.get('ma_bien') or '').casefold()}:
+        return False
+    from kag.builder.inputs import SIGN_RECORD_TYPES, SIGN_DESCRIPTION_SCOPES
+    kind, scope = metadata.get('record_type'), metadata.get('description_scope')
+    if (metadata.get('verification_status') != 'verified_pdf' or kind not in SIGN_RECORD_TYPES
+            or kind == 'unverified_code' or scope not in SIGN_DESCRIPTION_SCOPES or scope == 'unverified'):
+        return False
+    group = bool(re.search(r'\b(?:nhóm|họ)\s+(?:biển\b|[A-ZĐ]{1,4}\.)', query, re.I))
+    common = bool(re.search(r'\b(?:quy định|ý nghĩa|nội dung|mô tả)\s+chung\b', query, re.I))
+    if kind == 'family':
+        return group or common
+    if group:
+        return False
+    return scope == 'specific' or common
+
+
 def _applicable(query, item, support, payload):
+    title_number = document_title_question(query)
+    if title_number:
+        documents = [doc_id for doc_id, metadata in payload['documents'].items()
+                     if document_number_matches(metadata, title_number)]
+        return (item['entity_type'].endswith('.LegalDocument')
+                and documents == [item['doc_id']])
     text = '\n'.join(item['source_texts'].values())
     parent = item['metadata'].get('parent_id')
     parents = [(source, citation) for source, citation in support if citation.field == 'text'
                and source['unit_id'] == parent and parent and source['doc_id'] == item['doc_id']]
     context_text = '\n'.join(citation.quote for _, citation in parents)
-    own_scope = material_constraints(text+'\n'+canonical_json(item['metadata'])+'\n'+context_text)['scope']
+    authority_metadata = canonical_json({key: value for key, value in item['metadata'].items()
+                                         if key not in ('penalty_source_record', 'source_record')})
+    own_scope = material_constraints(text+'\n'+authority_metadata+'\n'+context_text)['scope']
     requested = material_constraints(query)
+    sign_context = ''
     if item['sign_id']:
-        codes = {code.casefold() for code in re.findall(r'\b[A-ZĐ]{1,4}\.\d+[a-z]?\b',query,re.I)}
+        if not _sign_applicable(query, item['metadata']):
+            return False
+        codes = {code.casefold() for code in re.findall(r'\b[A-ZĐ]{1,4}\.\d+[a-z]?(?:-\d+)?\b',query,re.I)}
         if codes and codes != {str(item['metadata'].get('ma_bien') or '').casefold()}:
             return False  # Cross-referenced codes do not identify the selected sign.
+        if item['metadata'].get('record_type') == 'family':
+            sign_context = 'nhóm biển'
+        if item['metadata'].get('description_scope') in ('family_shared', 'contextual'):
+            sign_context += ' quy định chung ý nghĩa chung nội dung chung mô tả chung'
     if not requested['scope'] <= own_scope:
         return False
     exclusive_person = {'tổ chức', 'doanh nghiệp', 'cá nhân', 'trẻ em', 'người chưa thành niên', 'người thành niên'}
@@ -391,14 +457,34 @@ def _applicable(query, item, support, payload):
     if requested_vehicles and vehicle_scopes - requested_vehicles:
         return False
     document_number = payload['documents'].get(item['doc_id'], {}).get('so_hieu') or ''
+    if requested['documents'] and {v.casefold() for v in requested['documents']} != {document_number.casefold()}:
+        return False  # Mentioning another document in the source does not change its owner.
+    coordinates = _unit_references(item['metadata'], text)
+    bindings = _reference_bindings(query)
+    if item['entity_type'].endswith('.LegalUnit') and any(b[1] for b in bindings):
+        own_bindings = _reference_bindings(document_number+' '+coordinates)
+        # A verified amendment parent can locate its child in the amended article.
+        for source, citation in parents:
+            if (source['metadata'].get('unit_type') == 'Dieu'
+                    and source['metadata'].get('dieu_number') == item['metadata'].get('dieu_number')
+                    and re.match(r'\s*Điều\s+'+re.escape(str(source['metadata']['dieu_number']))+r'[.]\s+', citation.quote, re.I)):
+                for statement in re.split(r'(?<!\d)[;.!?\n](?!\d)', citation.quote):
+                    if re.search(r'\b(?:không|chưa|nếu|khi|trừ|sẽ)\b', statement, re.I):
+                        continue
+                    for target in re.findall(r'\b(?:sửa(?: đổi)?(?:, bổ sung)?|bổ sung)\s+(?:tại\s+)?Điều\s+(\d+[a-zđ]?)\b', statement, re.I):
+                        own_bindings.update((doc, 'điều '+target.casefold(), clause, point)
+                                            for doc, _, clause, point in tuple(own_bindings))
+        if not all(any(all(expected is None or expected.casefold() == (actual or '').casefold() for expected, actual in zip(binding, own))
+                       for own in own_bindings) for binding in bindings):
+            return False
     # Numbered source paragraphs need their verified typed coordinates, as in planner grounding.
-    authority = text+'\n'+canonical_json(item['metadata'])+'\n'+document_number+'\n'+context_text+'\n'+_unit_references(item['metadata'])
+    authority = text+'\n'+authority_metadata+'\n'+document_number+'\n'+context_text+'\n'+coordinates+'\n'+sign_context
     if not query_content_terms(query) <= {word.casefold() for word in re.findall(r'[^\W\d_]+', authority)}:
         return False
     provided = material_constraints(authority)
     for kind in ('documents', 'references', 'negation'):
-        required={v.casefold() for v in requested[kind]} if kind=='references' else requested[kind]
-        available={v.casefold() for v in provided[kind]} if kind=='references' else provided[kind]
+        required={v.casefold() for v in requested[kind]} if kind in ('references', 'documents') else requested[kind]
+        available={v.casefold() for v in provided[kind]} if kind in ('references', 'documents') else provided[kind]
         if not required <= available:
             return False
     if parent and not parents:
@@ -408,6 +494,20 @@ def _applicable(query, item, support, payload):
     if re.search(r'\bphạt\b|\bđồng\b', text, re.I) and not own_scope:
         return False
     return True
+
+
+def _question_parts(query):
+    parts = [part.strip() for part in _clauses(query) if query_content_terms(part)]
+    documents = material_constraints(query)['documents']
+    articles = {v.casefold() for v in material_constraints(query)['references'] if v.casefold().startswith('điều ')}
+    for i, part in enumerate(parts):
+        # A single explicit document remains context for the following question clauses.
+        if len(documents) == 1 and not material_constraints(part)['documents']:
+            parts[i] += ' '+next(iter(documents))
+        if len(documents) <= 1 and len(articles) == 1 and not any(
+                v.casefold().startswith('điều ') for v in material_constraints(part)['references']):
+            parts[i] += ' '+next(iter(articles))
+    return parts
 
 
 def _support_linked(item, citation, facts, payload, value):
@@ -422,7 +522,7 @@ def _support_linked(item, citation, facts, payload, value):
             return True
         if value['conflict'] == 'resolved' and citation.field == 'text':
             relations = [rel for source in payload['items'] for rel in source['graph_context']]
-            if any(rel['predicate'] in ('amends', 'repeals') and rel['from'][1] == fact['doc_id']
+            if any(rel['predicate'] in ('amends', 'repeals', 'replaces') and rel['from'][1] == fact['doc_id']
                    and rel['to'][1] != fact['doc_id'] for rel in relations):
                 return True  # Resolution text/target/polarity are checked separately below.
     return False
@@ -449,7 +549,7 @@ def _conflict_resolved(query, value, facts, support, payload, as_of):
         field = 'text' if item['entity_type'].endswith('.LegalUnit') else 'moTa' if item['sign_id'] else None
         if not field or (item['doc_id'], item['unit_id']) in linked_parents:
             continue
-        if not _applicable(query, item, support, payload):
+        if not any(_applicable(part, item, support, payload) for part in _question_parts(query)):
             continue
         if not _current(item, payload['documents'], as_of):
             props = payload['documents'].get(item['doc_id'], {})
@@ -478,7 +578,7 @@ def _conflict_resolved(query, value, facts, support, payload, as_of):
     proven = set()
     for relation in (rel for item in payload['items'] for rel in item['graph_context']):
         target_id = relation['to'][1]
-        if relation['predicate'] not in ('amends', 'repeals') or relation['from'][1] != winner or target_id not in targets:
+        if relation['predicate'] not in ('amends', 'repeals', 'replaces') or relation['from'][1] != winner or target_id not in targets:
             continue
         target = payload['documents'].get(target_id, {}).get('so_hieu')
         if target and any(item['doc_id'] == winner and citation.field == 'text'
@@ -487,12 +587,14 @@ def _conflict_resolved(query, value, facts, support, payload, as_of):
     return targets <= proven
 
 
-DOCUMENT_CONTENT_PREFIX = 'Trích nội dung văn bản: '
 DOCUMENT_CONTENT_ANSWER = 'Trích nội dung nguồn (không xác nhận hiệu lực hiện hành):\n'
 
 
 def document_content_question(query):
     """Explicit document lookup intent never asserts applicability at as_of."""
+    from kag.legal_prompts import exact_source_question
+    if exact_source_question(query):
+        return query.removeprefix(DOCUMENT_CONTENT_PREFIX).strip()
     if type(query) is not str or not query.startswith(DOCUMENT_CONTENT_PREFIX):return None
     question=query[len(DOCUMENT_CONTENT_PREFIX):].strip()
     if (not question or len(material_constraints(question)['documents'])!=1
@@ -501,7 +603,125 @@ def document_content_question(query):
     return question
 
 
+def _consolidation_note(unit):
+    """Detached consolidation notes are outside the operative text field."""
+    from collections.abc import Mapping
+    locator = unit.get('source_record')
+    evidence = locator.get('origin') if isinstance(locator, Mapping) else unit.get('legal_metadata')
+    return (unit.get('unit_type') == 'Muc' and isinstance(evidence, Mapping)
+            and evidence.get('source_role') == 'consolidation_footnote')
+
+
+def _complete_partial_unit(record):
+    """A corpus selection may omit descendants; inspect its hash-bound original unit family."""
+    from collections.abc import Mapping
+    from kag.builder.inputs import SOURCE_FILES
+    from kag.builder.production_scope import ROOT
+    locator=record.metadata.get('source_record')
+    relative=dict(SOURCE_FILES)['units']
+    if (not isinstance(locator,Mapping) or locator.get('source_path')!=relative
+            or type(locator.get('line')) is not int or locator['line']<1):
+        return False
+    digest=hashlib.sha256();units=[];origin=None
+    try:
+        with (ROOT/relative).open('rb') as stream:
+            for number,line in enumerate(stream,1):
+                digest.update(line)
+                if not line.strip():continue
+                row=json.loads(line)
+                if type(row) is not dict:raise ValueError('invalid original unit')
+                if number==locator['line']:origin=row
+                if row.get('doc_id')==record.doc_id:units.append(row)
+    except OSError:
+        return False
+    if digest.hexdigest()!=locator.get('file_sha256'):
+        return False
+    if (origin is None or origin.get('unit_id')!=record.entity_id or origin.get('doc_id')!=record.doc_id
+            or origin.get('text')!=record.source_text
+            or any(origin.get(key)!=record.metadata.get(key) for key in (
+                'unit_type','parent_id','dieu_number','khoan_number','diem_letter'))):
+        raise ValueError('source origin does not match sealed unit')
+    if len({row.get('unit_id') for row in units})!=len(units):
+        raise ValueError('duplicate original unit identity')
+    children={}
+    for row in units:
+        if row.get('parent_id') and not _consolidation_note(row):
+            children.setdefault(row['parent_id'],[]).append(row)
+    pending=[origin];seen=set()
+    while pending:
+        unit=pending.pop()
+        if unit['unit_id'] in seen or not unit.get('text') or unit['text'] not in record.source_text:
+            return False
+        seen.add(unit['unit_id']);pending.extend(children.get(unit['unit_id'],()))
+    return True
+
+
+def exact_source_answer(query, *, source_records, contract, partial=False):
+    """Quote a complete sealed source field; final source readback remains mandatory."""
+    from kag.legal_prompts import exact_source_question
+    if not exact_source_question(query):
+        return None
+    lookup={}
+    for record in source_records:
+        key=record.entity_type,record.entity_id,record.field
+        if key in lookup:
+            raise ValueError('duplicate source identity')
+        lookup[key]=record
+    retriever=Retriever(None,None,contract,source_records=source_records)
+    keys=retriever._exact_keys(query,retriever.search_k)
+    if not keys:
+        return None
+    entity_type,identity=keys[0]
+    field='title' if entity_type.endswith('.LegalDocument') else 'text'
+    record=lookup.get((entity_type,identity,field))
+    if record is None:
+        return None
+    document=lookup.get((contract['namespace']+'.LegalDocument',record.doc_id,'title'))
+    if document is None:
+        return None
+    kind=document.metadata.get('loai')
+    number=document_title_question(query) or document.metadata.get('so_hieu')
+    if (not kind or not number or not re.search(r'(?:văn bản|'+re.escape(kind.casefold())+
+            r')(?: số)?\s+'+re.escape(number.casefold())+r'(?!\w)',query.casefold())):
+        return None
+    if field=='text':
+        if partial and not _complete_partial_unit(record):
+            return None
+        unit_type=record.metadata.get('unit_type')
+        number=str(record.metadata.get({'Dieu':'dieu_number','Khoan':'khoan_number','Diem':'diem_letter'}.get(unit_type,'')) or '')
+        if unit_type=='Dieu':
+            lines=record.source_text.split('\n',1)
+            if (len(lines)!=2 or not lines[1].strip()
+                    or not re.match(r'\s*điều\s+'+re.escape(number)+r'(?:\.|\s|$)',lines[0],re.I)):
+                return None
+        elif unit_type in ('Khoan','Diem'):
+            label='khoản' if unit_type=='Khoan' else 'điểm'
+            if not re.match(r'\s*(?:'+label+r'\s+)?'+re.escape(number)+r'[.)]\s+\S',record.source_text,re.I):
+                return None
+        else:
+            return None
+        # A parent heading alone cannot stand in for its separately stored descendants.
+        children={}
+        for child in source_records:
+            if child.entity_type==entity_type and child.field=='text' and child.metadata.get('parent_id') and not _consolidation_note(child.metadata):
+                children.setdefault(child.metadata['parent_id'],[]).append(child)
+        pending=[record];seen=set()
+        while pending:
+            parent=pending.pop()
+            if parent.entity_id in seen:
+                return None
+            seen.add(parent.entity_id)
+            for child in children.get(parent.entity_id,()):
+                if child.doc_id!=record.doc_id or child.source_text not in record.source_text:
+                    return None
+                pending.append(child)
+    citation=Citation(record.doc_id,record.unit_id,record.sign_id,record.evidence_id,
+                      record.field,0,len(record.source_text),record.source_text)
+    return AnswerResult(DOCUMENT_CONTENT_ANSWER+record.source_text,(citation,),False)
+
+
 class SafeLegalGenerator(GeneratorABC):
+    @legal_timing('generator.total')
     def invoke(self, query, context, **kwargs):
         evidence = context.kwargs.get('legal_evidence')
         response = context.kwargs.get('legal_candidate')
@@ -524,15 +744,34 @@ class SafeLegalGenerator(GeneratorABC):
             index = _span_index(payload)
             facts = [_resolve(span, index) for span in value['selections']]
             support = [_resolve(span, index) for span in value['support_selections']]
+            for item, _ in (() if content_question else facts+support):
+                source = item['metadata'].get('source_record') or {}
+                if not isinstance(source, dict) or not isinstance(source.get('origin') or {}, dict):
+                    return _abstain('invalid source provenance')
+                if (source.get('origin') or {}).get('source_discrepancies'):
+                    return _abstain('unresolved source discrepancy')
+                penalty = item['metadata'].get('penalty_source_record') or {}
+                if not isinstance(penalty, dict) or not isinstance(penalty.get('record') or {}, dict):
+                    return _abstain('invalid penalty source record')
+                rule = (penalty.get('record') or {}).get('fine_rule') or {}
+                if not isinstance(rule, dict) or rule.get('source_discrepancy'):
+                    return _abstain('unresolved penalty source discrepancy')
+            parts = _question_parts(content_question or query)
+            covered = set()
             if any((not content_question and not _current(item, payload['documents'], as_of))
                    or not _support_linked(item, citation, facts, payload, value) for item, citation in support):
                 return _abstain('unverified support applicability/effectivity')
             for item, citation in facts:
                 factual = (item['entity_type'].endswith('.LegalUnit') and citation.field == 'text'
-                           or item['entity_type'].endswith('.TrafficSign') and citation.field == 'moTa')
+                           or item['entity_type'].endswith('.TrafficSign') and citation.field == 'moTa'
+                           or document_title_question(query) and item['entity_type'].endswith('.LegalDocument') and citation.field == 'title')
+                matched = {i for i, part in enumerate(parts) if _applicable(part, item, support, payload)}
                 if (not factual or (not content_question and not _current(item, payload['documents'], as_of))
-                        or not _applicable(content_question or query, item, support, payload)):
+                        or not matched):
                     return _abstain('unverified source applicability/effectivity')
+                covered.update(matched)
+            if not parts or covered != set(range(len(parts))):
+                return _abstain('incomplete question coverage')
             if not content_question and not _conflict_resolved(query, value, facts, support, payload, as_of):
                 return _abstain('unresolved legal conflict')
         except (CandidateError, KeyError, TypeError, ValueError):
@@ -553,7 +792,47 @@ class _ThreadedPlannerClient(LLMClient):
         self.model = delegate.model
 
     def invoke(self, variables, prompt_op, **kwargs):
-        return self.delegate.invoke(variables, prompt_op, **kwargs)
+        context = kwargs.get('context')
+        last = context.last_task() if context is not None else None
+        response = context.kwargs.get('legal_candidate') if context is not None else None
+        if (last is not None and last.executor == 'Deduce'
+                and isinstance(response, LegalCandidateResponse) and last.result is response
+                and response.payload()['deduce_task'] == last.id):
+            result = SafeLegalGenerator().invoke(variables['query'], context, as_of=kwargs.get('as_of'))
+            if not result.abstained or result.reason == 'evidence exceeds demo source budget':
+                # The cumulative ledger cannot shrink through another retrieval.
+                legal_trace('planner.finish', reason=result.reason or 'verified candidate')
+                return prompt_op.parse_response({'executor': {'name': 'Finish', 'arguments': {}}},
+                                                query=variables['query'], context=variables.get('context'))
+        legal_trace('planner.input', query=variables.get('query'), executors=variables.get('executors'))
+        with legal_timing('planner.total'):
+            try:
+                tasks = self.delegate.invoke(variables, prompt_op, **kwargs)
+            except RuntimeError as exc:
+                rejected = exc.__context__
+                if not isinstance(rejected, UnsafeSubqueryError):
+                    raise
+                # Discard the unsafe proposal; the original question must pass the same guard.
+                legal_trace('planner.query_fallback', reason=str(rejected))
+                tasks = prompt_op.parse_response({'executor': {'name': rejected.executor,
+                    'arguments': {'query': variables['query']}}}, **variables)
+        tried = {t.arguments.get('query') for t in context.gen_task() if t.executor == 'Retriever'} if context is not None else set()
+        if (last is not None and last.executor == 'Retriever' and isinstance(last.result, LegalEvidenceResponse)
+                and last.result is context.kwargs.get('legal_evidence')
+                and last.result.payload()['original_question'] == variables['query']
+                and tasks[0].executor == 'Retriever' and tasks[0].arguments.get('query') in tried):
+            legal_trace('planner.assess', reason='repeated retrieval with unassessed evidence')
+            return prompt_op.parse_response({'executor': {'name': 'Deduce',
+                'arguments': {'query': variables['query']}}}, query=variables['query'], context=variables.get('context'))
+        if (last is not None and isinstance(response, LegalCandidateResponse)
+                and last.executor == 'Deduce' and last.result is response
+                and response.payload()['deduce_task'] == last.id):
+            task = tasks[0]
+            if task.executor == 'Deduce' or task.executor == 'Retriever' and task.arguments.get('query') in tried:
+                legal_trace('planner.finish', reason='no new retrieval direction after checked candidate')
+                return prompt_op.parse_response({'executor': {'name': 'Finish', 'arguments': {}}},
+                                                query=variables['query'], context=variables.get('context'))
+        return tasks
 
     async def ainvoke(self, variables, prompt_op, **kwargs):
         return await asyncio.to_thread(self.invoke, variables, prompt_op, **kwargs)

@@ -9,7 +9,7 @@ from pathlib import Path
 import tempfile
 import unittest
 
-from test_inputs import CONTRACT, ledger_record, synthetic_inputs, wrap, xref_record
+from test_inputs import CONTRACT, synthetic_inputs, wrap, xref_record
 
 
 class GraphPlanTest(unittest.TestCase):
@@ -57,15 +57,14 @@ class GraphPlanTest(unittest.TestCase):
                            penalties=tuple(reversed(self.raw.penalties)),
                            signs=tuple(reversed(self.raw.signs)),
                            relations=tuple(reversed(self.raw.relations)),
-                           xrefs=tuple(reversed(self.raw.xrefs)),
-                           ledger=tuple(reversed(self.raw.ledger)))
+                           xrefs=tuple(reversed(self.raw.xrefs)))
         validated = self.inputs_module.validate_input_integrity(shuffled, CONTRACT)
         other = self.gp.build_graph_plan(validated, CONTRACT, project_root=self.root)
         self.assertEqual(self.gp.plan_hash(self.plan), self.gp.plan_hash(other))
 
     def test_duplicate_group_counts_and_all_evidence_are_preserved(self):
         pairs = (('D::1', 'D::2'), ('D::2', 'E::1'), ('E::1', 'D::1'))
-        xrefs, ledger = [], []
+        xrefs = []
         line = 1
         for from_id, to_id in pairs:
             for evidence in ('Evidence A', 'Evidence B'):
@@ -73,12 +72,8 @@ class GraphPlanTest(unittest.TestCase):
                                      to_unit_id=to_id, to_doc_id=to_id.split('::')[0],
                                      evidence=evidence)
                 xrefs.append(wrap(self.inputs_module, record, 'xrefs', line))
-                ledger_row = ledger_record(self.inputs_module, record)
-                ledger.append(self.inputs_module.SourceRecord(
-                    ledger_row, dict(source_path='xref_a3g2_final_ledger.jsonl',
-                                     file_sha256='b' * 64, line=line)))
                 line += 1
-        raw = replace(self.raw, xrefs=tuple(xrefs), ledger=tuple(ledger))
+        raw = replace(self.raw, xrefs=tuple(xrefs))
         validated = self.inputs_module.validate_input_integrity(raw, CONTRACT)
         plan = self.gp.build_graph_plan(validated, CONTRACT, project_root=self.root)
         self.assertEqual(plan.collapsed_counts, {'rows': 3, 'groups': 3})

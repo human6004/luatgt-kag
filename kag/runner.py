@@ -20,7 +20,7 @@ from kag.run_state import (ROOT, STAGES, RunBlocked, RunState, GraphLock, atomic
 
 FIELDS = {'scope', 'runtime_location', 'endpoints', 'database', 'project_id', 'project_name', 'namespace',
     'vector_dimensions', 'confirmation', 'paths', 'input_sha256', 'batch_size', 'heartbeat_seconds',
-    'write_mode', 'vector_policy', 'model_identity', 'embedding_model', 'fallback_config', 'credential_env'}
+    'write_mode', 'vector_policy', 'model_identity', 'embedding_model', 'fallback_config', 'credential_env', 'request_limit', 'selection'}
 PATH_FIELDS = {'c3_manifest', 'sample_manifest', 'vector_artifact', 'provenance', 'chunk_manifest',
                'source_checkpoint', 'run_root', 'lock_root'}
 SOURCE_ONLY = 'SOURCE_ONLY_DRY_RUN'
@@ -64,18 +64,22 @@ def _config(value):
         config.setdefault('write_mode', 'DENY')
         if config['scope'] not in ('C4_3A_MANIFEST_SAMPLE', 'PRODUCTION', 'FRESH_SAMPLE'):
             raise RunBlocked('SCOPE')
+        if 'selection' in config and (config['scope'] != 'PRODUCTION' or not isinstance(config['selection'], dict)):
+            raise RunBlocked('CONFIG')
         if (config['runtime_location'] not in ('host', 'container')
                 or config['write_mode'] not in ('NO_OP', 'WRITE')
                 or config['vector_policy'] not in ('replay-existing', 'provider')
                 or type(config['project_id']) is not int or config['project_id'] < 1
                 or not isinstance(config['project_name'], str) or not config['project_name'].strip()
-                or config['namespace'] != 'VietRoadTraffic'
-                or type(config['vector_dimensions']) is not int or config['vector_dimensions'] != 3072
+                or not isinstance(config['namespace'], str) or not re.fullmatch(r'[A-Za-z][A-Za-z0-9_]{0,63}', config['namespace'])
+                or type(config['vector_dimensions']) is not int or not 1 <= config['vector_dimensions'] <= 65536
                 or type(config['batch_size']) is not int or config['batch_size'] < 1
                 or type(config['heartbeat_seconds']) not in (int, float)
                 or not math.isfinite(config['heartbeat_seconds']) or config['heartbeat_seconds'] <= 0
                 or not re.fullmatch(r'[a-z][a-z0-9.-]{0,62}', config['database'])):
             raise RunBlocked('CONFIG')
+        if config['scope'] != 'PRODUCTION' and (config['namespace'] != 'VietRoadTraffic' or config['vector_dimensions'] != 3072):
+            raise RunBlocked('SCOPE')
         if (config['scope'] == 'C4_3A_MANIFEST_SAMPLE' and
                 (config['project_id'] != 2 or config['project_name'] != 'VietRoadTrafficC43A10Pct'
                  or config['write_mode'] != 'NO_OP' or config['vector_policy'] != 'replay-existing')):
@@ -87,6 +91,8 @@ def _config(value):
                 or config['vector_policy'] != 'replay-existing' or config['batch_size'] > 32):
             raise RunBlocked('SCOPE')
         if set(config['endpoints']) != {'openspg', 'neo4j_http', 'neo4j_uri'}:
+            raise RunBlocked('CONFIG')
+        if config.get('request_limit') is not None and (type(config['request_limit']) is not int or not 1 <= config['request_limit'] <= 1000000):
             raise RunBlocked('CONFIG')
         location = config['runtime_location']
         # C4's localhost restriction remains intact, including shared container network namespaces.
@@ -100,7 +106,18 @@ def _config(value):
             graph_location = 'host'
         c3._endpoint(config['endpoints']['neo4j_http'], ('http', 'https'), graph_location)
         c3._endpoint(config['endpoints']['neo4j_uri'], ('bolt', 'neo4j', 'bolt+s', 'neo4j+s'), graph_location)
-        if set(config['paths']) != PATH_FIELDS or not isinstance(config['input_sha256'], dict):
+        if (set(config['paths']) not in (PATH_FIELDS, PATH_FIELDS | {'selection'})
+                or not isinstance(config['input_sha256'], dict)):
+            raise RunBlocked('CONFIG')
+        selection = config.get('selection')
+        if selection is not None and 'request' in selection:
+            if (set(selection) != {'node_limit', 'request', 'summary'}
+                    or set(selection['request']) != {'mode', 'value'}
+                    or type(selection['summary']) is not dict
+                    or set(selection['summary']) != {'nodes','edges','node_counts','edge_counts','excluded_edges'}
+                    or (selection['node_limit'] is not None) != bool(config['paths'].get('selection'))):
+                raise RunBlocked('CONFIG')
+        elif 'selection' in config['paths']:
             raise RunBlocked('CONFIG')
         for name, path in config['paths'].items():
             if name in ('run_root', 'lock_root', 'c3_manifest') or config['vector_policy'] == 'replay-existing':
@@ -137,7 +154,7 @@ def _config(value):
         if not isinstance(config['fallback_config'], dict):
             raise RunBlocked('CONFIG')
         from kag.builder.resilient_vectorizer import ResilientVectorizer
-        validator = ResilientVectorizer(None, model_identity=config['model_identity'], dimension=3072,
+        validator = ResilientVectorizer(None, model_identity=config['model_identity'], dimension=config['vector_dimensions'],
                                        embedding_fallback=config['fallback_config'])
         validator.close()
         return config
@@ -179,13 +196,9 @@ def _files(config):
 
 def _sample_sources(data, manifest):
     if manifest.get('kind') == 'FRESH_SAMPLE':
-        keys = [tuple(k) for k in manifest['selected_node_keys']]
-        tuples = [tuple(k) for k in manifest['selected_edge_tuples']]
-        if (not 1 <= len(keys) <= 128 or len(keys) != len(set(keys))
-                or not 1 <= len(tuples) <= 256 or len(tuples) != len(set(tuples))
-                or any(k not in data['node_hashes'] for k in keys)
-                or any(k not in data['edge_hashes'] or k[:2] not in keys or k[3:] not in keys for k in tuples)
-                or manifest['c3_sha256'] != {k:c3.C3_IDENTITY[v] for k,v in
+        keys, tuples = c3.selected_hashes(data['node_hashes'], data['edge_hashes'],
+            dict(node_limit=128,node_keys=manifest['selected_node_keys'],edge_tuples=manifest['selected_edge_tuples']))
+        if (manifest['c3_sha256'] != {k:data['manifest'][v] for k,v in
                     (('nodes','nodes_jsonl_sha256'),('edges','edges_jsonl_sha256'),('plan','plan_sha256'))}):
             raise RunBlocked('PLAN')
         return ([n for n in data['nodes'] if (n['type'],n['id']) in keys],
@@ -202,11 +215,90 @@ def _sample_sources(data, manifest):
     keys = {(n['type'], n['id']) for n in nodes}
     edges = [e for e in data['edges'] if (e['tuple'][0], e['tuple'][1]) in keys
              and (e['tuple'][3], e['tuple'][4]) in keys]
-    expected = {'nodes': c3.C3_IDENTITY['nodes_jsonl_sha256'], 'edges': c3.C3_IDENTITY['edges_jsonl_sha256'],
-                'plan': c3.C3_IDENTITY['plan_sha256']}
+    expected = {'nodes': data['manifest']['nodes_jsonl_sha256'], 'edges': data['manifest']['edges_jsonl_sha256'],
+                'plan': data['manifest']['plan_sha256']}
     if manifest['c3_sha256'] != expected:
         raise RunBlocked('PLAN')
     return nodes, edges
+
+
+def validate_target_schema(types, contract):
+    for local, rows in contract['node_properties'].items():
+        target = types.get(contract['namespace'] + '.' + local)
+        if target is None:
+            raise RunBlocked('SCHEMA')
+        for row in rows:
+            if row.get('intrinsic'):
+                continue
+            prop = target.properties.get(row['schema_name'])
+            if prop is None or prop.object_type_name != row['physical_type']:
+                raise RunBlocked('SCHEMA')
+    for name, relation in contract['relations'].items():
+        target = types[contract['namespace'] + '.' + relation['from_type']]
+        edge = target.relations.get(name + '_' + contract['namespace'] + '.' + relation['to_type'])
+        if edge is None or edge.object_type_name != contract['namespace'] + '.' + relation['to_type']:
+            raise RunBlocked('SCHEMA')
+        for row in contract['relation_properties'][name]:
+            prop = edge.sub_properties.get(row['schema_name'])
+            if prop is None or prop.object_type_name != row['physical_type']:
+                raise RunBlocked('SCHEMA')
+
+
+def _check_schema(config, contract):
+    from knext.schema.client import SchemaClient, SchemaSession
+    from kag.backend_identity import bound_sdk_requests
+    client = SchemaClient(config['endpoints']['openspg'], config['project_id'])
+    bound_sdk_requests(client)
+    # Fresh read avoids the SDK process-wide schema cache after a project changes.
+    validate_target_schema(SchemaSession(client._rest_client, config['project_id']).spg_types, contract)
+
+
+def _check_target_model(config, contract, reader, database_id):
+    if config['write_mode'] != 'WRITE':
+        return
+    from contextlib import ExitStack, closing
+    from kag.verify import _node
+    history = Path(os.environ.get('KAG_BUILDER_RUN_ROOT', config['paths']['run_root'])).resolve()
+    if not Path(config['paths']['run_root']).resolve().is_relative_to(history):
+        raise RunBlocked('CONFIG')
+    with ExitStack() as stack:
+        known = None
+        for batch in reader.iter_nodes(config['namespace'], config['batch_size']):
+            if known is None:
+                known = []
+                # Reuse the run ledger and exact vector readback index; dimension alone is insufficient.
+                ledgers = list(history.glob('*/ledger.sqlite3')) + list(history.glob('revision-*/*/ledger.sqlite3'))
+                for ledger in ledgers:
+                    expected = ledger.with_name('expected.sqlite3')
+                    if any(p.is_symlink() or not p.resolve().is_relative_to(history) for p in (ledger, expected)) or not expected.is_file():
+                        continue
+                    try:
+                        with closing(sqlite3.connect(ledger.resolve().as_uri() + '?mode=ro', uri=True)) as db:
+                            identity = json.loads(db.execute("SELECT value FROM run_meta WHERE key='identity'").fetchone()[0])
+                        if any(identity.get(key) != value for key, value in (
+                                ('database_id', database_id), ('namespace', config['namespace']),
+                                ('model_identity', config['model_identity']), ('dimension', config['vector_dimensions']))):
+                            continue
+                        db = stack.enter_context(closing(sqlite3.connect(expected.resolve().as_uri() + '?mode=ro', uri=True)))
+                        summary = json.loads(db.execute("SELECT value FROM expected_meta WHERE key='summary'").fetchone()[0])
+                        if (summary['model_identity'] == config['model_identity']
+                                and summary['vectors']['dimension'] == config['vector_dimensions']
+                                and summary['schema_hash'] == c3._spec_hash(contract)):
+                            known.append(db)
+                    except (sqlite3.Error, OSError, ValueError, KeyError, TypeError):
+                        raise RunBlocked('TARGET_MODEL') from None
+            for node in batch:
+                key, digest, _ = _node(node, contract, config['vector_dimensions'])
+                if not any(db.execute('SELECT 1 FROM expected_nodes WHERE key=? AND payload_hash=?',
+                                      (key, digest)).fetchone() for db in known):
+                    raise RunBlocked('TARGET_MODEL')
+
+
+def _check_target_layout(config, contract, reader, database_id):
+    from kag.verify import _indexes
+    _check_schema(config, contract)
+    _indexes(reader, contract, config['vector_dimensions'])
+    _check_target_model(config, contract, reader, database_id)
 
 
 def preflight(config, *, project_client, reader, backend_transport=None):
@@ -229,6 +321,7 @@ def preflight(config, *, project_client, reader, backend_transport=None):
             openspg_endpoint=config['endpoints']['openspg'])
         contract = json.loads((ROOT / 'kag/schema/schema_contract.json').read_bytes())
         if config['scope'] == 'PRODUCTION':
+            contract = c3.target_contract(config['namespace'])
             settings = c3.ProductionSettings(scope=config['scope'], runtime_location=config['runtime_location'],
                 host_addr=config['endpoints']['openspg'], neo4j_uri=config['endpoints']['neo4j_uri'],
                 project_name=config['project_name'], namespace=config['namespace'], expected_project_id=config['project_id'],
@@ -236,12 +329,39 @@ def preflight(config, *, project_client, reader, backend_transport=None):
             writer_config = discover_production_project(project_client, settings, contract,
                 config['paths']['c3_manifest'], backend_session=backend_session)
             proof = writer_config.production_scope
+            source_index = proof.node_hashes.index
+            source_identity = dict(proof.identity)
+            if 'selection' in config:
+                selection = config['selection']
+                if 'request' in selection:
+                    total_nodes, total_edges = len(proof.node_hashes), len(proof.edge_hashes)
+                    limit = c3.selection_limit(total_nodes, **dict(
+                        mode=selection['request']['mode'], value=selection['request']['value']))
+                    if limit != selection['node_limit']:raise RunBlocked('PLAN')
+                    if limit is not None:
+                        path = Path(config['paths']['selection'])
+                        with path.open('rb') as stream:raw=stream.read(67108865)
+                        if len(raw)>67108864:raise RunBlocked('PLAN')
+                        selected = json.loads(raw)
+                        # Saved artifacts use the source namespace; each target maps identically to its C3 proof.
+                        selected['node_keys'] = [[config['namespace']+'.'+k[0].rsplit('.',1)[-1],k[1]] for k in selected['node_keys']]
+                        selected['edge_tuples'] = [[config['namespace']+'.'+k[0].rsplit('.',1)[-1],k[1],k[2],
+                            config['namespace']+'.'+k[3].rsplit('.',1)[-1],k[4]] for k in selected['edge_tuples']]
+                        if selected['node_limit']!=limit:raise RunBlocked('PLAN')
+                        proof=proof.restrict(selected)
+                    summary=dict(nodes=len(proof.node_hashes),edges=len(proof.edge_hashes),
+                        node_counts=dict(Counter(k[0].rsplit('.',1)[-1] for k in proof.node_hashes)),
+                        edge_counts=dict(Counter(k[2] for k in proof.edge_hashes)),excluded_edges=total_edges-len(proof.edge_hashes))
+                    if summary!=selection['summary']:raise RunBlocked('PLAN')
+                else:
+                    proof = proof.restrict(selection)
+                writer_config = replace(writer_config, production_scope=proof)
             node_hashes, edge_hashes = proof.node_hashes, proof.edge_hashes
-            source_index = node_hashes.index
             checksums.extend(proof.file_checksums)
         else:
             data = c3.validate_c3_manifest(contract, config['paths']['c3_manifest'])
             source_index = data['index']
+            source_identity = {key:data['manifest'][key] for key in c3.IDENTITY_FIELDS}
             manifest = json.loads(Path(config['paths']['sample_manifest']).read_bytes())
             nodes, edges = _sample_sources(data, manifest)
             discovery = discover_fresh_sample_project if config['scope'] == 'FRESH_SAMPLE' else discover_manifest_project
@@ -250,21 +370,27 @@ def preflight(config, *, project_client, reader, backend_transport=None):
             node_hashes = {(n['type'], n['id']): data['node_hashes'][(n['type'], n['id'])] for n in nodes}
             edge_hashes = {tuple(e['tuple']): data['edge_hashes'][tuple(e['tuple'])] for e in edges}
             checksums.extend(data['file_checksums'])
-        # Identity is necessary, but never opens the production execution gate.
-        if config['write_mode'] == 'WRITE' and config['scope'] != 'FRESH_SAMPLE': raise RunBlocked('SCOPE')
+        if config['write_mode'] == 'WRITE' and config['scope'] not in ('FRESH_SAMPLE', 'PRODUCTION'):
+            raise RunBlocked('SCOPE')
         backend_proof = writer_config.backend_proof
         if backend_proof.canonical_database_name != config['database']:
             raise RunBlocked('SCOPE')
         database_id = backend_proof.physical_database_id
+        if config['scope'] == 'PRODUCTION':
+            serving = os.environ.get('KAG_BUILDER_SERVING_DATABASE')
+            if serving and (config['database'] == serving.lower()
+                    or reader.protected_database_identity(serving) == database_id):
+                raise RunBlocked('SCOPE')
+            _check_target_layout(config, contract, reader, database_id)
         if not isinstance(database_id, str) or not database_id.strip():
             raise RunBlocked('LOCK')
         identity = {'scope': config['scope'], 'project_id': writer_config.project_id,
             'project_name': writer_config.project_name, 'namespace': writer_config.namespace,
             'endpoints': config['endpoints'], 'database': config['database'], 'database_id': database_id,
-            'batch_size': config['batch_size'], 'model_identity': config['model_identity'], 'dimension': 3072,
+            'batch_size': config['batch_size'], 'model_identity': config['model_identity'], 'dimension': config['vector_dimensions'],
             'write_mode': config['write_mode'], 'vector_policy': config['vector_policy'],
             'config_hash': c3._spec_hash(config), 'input_hashes': dict(config['input_sha256']),
-            'c3': dict(c3.C3_IDENTITY), 'python': '3.10.16',
+            'c3': source_identity, 'python': '3.10.16',
             'vendor_commit': 'fdab15b3929d2ee40dfcdd388f90233096a6afc9', 'common_lock': mount,
             'backend_identity': backend_proof.to_receipt()}
         return {'writer_config': writer_config, 'contract': contract, 'identity': identity, 'database_id': database_id,
@@ -335,9 +461,11 @@ def plan_sources(config, *, db_path, verified):
             for kind, hashes in (('nodes', verified['node_hashes']), ('edges', verified['edge_hashes'])):
                 count, digest = 0, hashlib.sha256()
                 for spec in _jsonl(directory / (kind + '.jsonl')):
+                    if config['scope'] == 'PRODUCTION':
+                        spec = c3.map_spec(spec, config['namespace'])
                     key = (spec['type'], spec['id']) if kind == 'nodes' else tuple(spec['tuple'])
                     if key not in hashes:
-                        if config['scope'] in ('PRODUCTION', SOURCE_ONLY): raise RunBlocked('PLAN')
+                        if config['scope'] in ('PRODUCTION', SOURCE_ONLY) and 'selection' not in config: raise RunBlocked('PLAN')
                         continue
                     source_hash = c3._spec_hash(spec)
                     if hashes[key] != source_hash or (kind == 'nodes' and any(k.startswith('_') for k in spec['properties'])):
@@ -395,14 +523,14 @@ def _clients(config, project_client, reader):
     return project_client, reader
 
 
-def _provider(config, verified):
+def _provider(config, verified, *, api_key=None):
     from kag.common.vectorize_model.openai_model import OpenAIVectorizeModel
     from kag.builder.component.vectorizer.batch_vectorizer import BatchVectorizer
     from kag.vector_contract import TARGETS
-    key = os.environ.get(config['credential_env']['embedding_key'])
+    key = api_key or os.environ.get(config['credential_env']['embedding_key'])
     if not key: raise RunBlocked('CONFIG')
     model = dict(config['embedding_model']); model.pop('type')
-    adapter = OpenAIVectorizeModel(**model, api_key=key, vector_dimensions=3072)
+    adapter = OpenAIVectorizeModel(**model, api_key=key, vector_dimensions=config['vector_dimensions'])
     # Upstream constructor reads global KAG config. Supply its exact attributes explicitly,
     # as the existing scoped writer does; retain upstream generator/adapter behavior.
     batch = BatchVectorizer.__new__(BatchVectorizer)
@@ -447,7 +575,7 @@ def _replay_index(config, state, verified):
         db.execute('CREATE TABLE IF NOT EXISTS replay_jobs (key TEXT PRIMARY KEY,payload TEXT)')
         provenance = json.loads(Path(config['paths']['provenance']).read_bytes())
         chunks = json.loads(Path(config['paths']['chunk_manifest']).read_bytes())
-        if provenance['model_identity'] != config['model_identity'] or provenance['dimension'] != 3072:
+        if provenance['model_identity'] != config['model_identity'] or provenance['dimension'] != config['vector_dimensions']:
             raise RunBlocked('PROVENANCE')
         aggregates = [job['fallback'] for job in provenance['jobs'] if job.get('embedding_method') == 'CHUNK_AGGREGATED']
         if (chunks['source_count'] != len(aggregates) or
@@ -470,7 +598,8 @@ def _replay_index(config, state, verified):
         def nodes():
             for (payload,) in db.execute('SELECT payload FROM replay_nodes ORDER BY key'): yield json.loads(payload)
         index_expected(state._owned_file('expected.sqlite3'), nodes(), (e for b in iter_source_batches(state.run_dir / 'ledger.sqlite3',
-            'edges', config['batch_size']) for e in b), contract=verified['contract'], provenance=iter(provenance['jobs']))
+            'edges', config['batch_size']) for e in b), contract=verified['contract'], provenance=iter(provenance['jobs']),
+            dimension=config['vector_dimensions'])
     except (KeyError, sqlite3.DatabaseError, ValueError, TypeError) as error:
         if isinstance(error, RunBlocked): raise
         raise RunBlocked('PROVENANCE') from None
@@ -535,6 +664,7 @@ def _vectorize(config, state, verified, replay_path, factory, stop):
     if not state.completed_stage('vectorize'):
         state.update('vectorize', 'RUNNING', _confirmed_progress(state, 'vectorize'), total)
     engine = None
+    budget_exhausted = False
     try:
         for ordinal, originals in enumerate(iter_source_batches(state.run_dir / 'ledger.sqlite3', 'nodes', config['batch_size'])):
             _stop(stop, 'vectorize', -1)
@@ -545,10 +675,17 @@ def _vectorize(config, state, verified, replay_path, factory, stop):
                 continue
             if engine is None:
                 batch = None if replay_path else (factory or _provider)(config, verified)
-                engine = ResilientVectorizer(batch, model_identity=config['model_identity'], dimension=3072,
+                engine = ResilientVectorizer(batch, model_identity=config['model_identity'], dimension=config['vector_dimensions'],
                     checkpoint_path=state._owned_file('vectors.sqlite3'), embedding_fallback=config['fallback_config'])
                 adapter_call = engine._adapter_call
                 def counted_call(texts, timeout):
+                    nonlocal budget_exhausted
+                    if config.get('request_limit') is not None:
+                        used = state.db.execute("SELECT COALESCE(SUM(json_extract(result,'$.embedding_calls')),0) "
+                            "FROM run_batches WHERE stage='vectorize'").fetchone()[0]
+                        if used >= config['request_limit']:
+                            budget_exhausted = True
+                            raise RunBlocked('PROVIDER_BUDGET')
                     state.record_attempt('vectorize', str(ordinal), 'embedding_calls')
                     return adapter_call(texts, timeout)
                 engine._adapter_call = counted_call
@@ -556,11 +693,11 @@ def _vectorize(config, state, verified, replay_path, factory, stop):
             if replay_path:
                 cached, jobs = _cached_batch(config, replay_path, originals)
                 engine.import_successes(originals, cached, artifact_model_identity=config['model_identity'],
-                                        artifact_dimension=3072, artifact_jobs=jobs)
+                                        artifact_dimension=config['vector_dimensions'], artifact_jobs=jobs)
             try:
                 result = engine.run(originals); result.require_complete()
             except IncompleteVectorization:
-                raise RunBlocked('VECTORS') from None
+                raise RunBlocked('PROVIDER_BUDGET' if budget_exhausted else 'VECTORS') from None
             output = _publish_jsonl(state._owned_file(f'vectors-{ordinal}.jsonl'), result.iter_nodes())
             sidecar = _publish_jsonl(state._owned_file(f'jobs-{ordinal}.jsonl'), iter(jobs if jobs is not None else result.jobs))
             records = jobs if jobs is not None else result.jobs
@@ -575,7 +712,7 @@ def _vectorize(config, state, verified, replay_path, factory, stop):
         for _, result in _batch_rows(state, 'vectorize'):
             methods.update(result['provenance'])
             counts.update({k: result[k] for k in ('count', 'embedding_calls', 'candidates', 'nonempty', 'skipped_empty')})
-        receipt = dict(counts, provenance=dict(methods), dimension=3072)
+        receipt = dict(counts, provenance=dict(methods), dimension=config['vector_dimensions'])
         if not state.completed_stage('vectorize'): state.finish_stage('vectorize', receipt)
         elif state.completed_stage('vectorize') != receipt: raise RunBlocked('INTEGRITY')
     finally:
@@ -630,7 +767,7 @@ def _graph_batches(config, state, verified, reader, writer, kind, output, stop):
         existed = state.db.execute('SELECT state FROM run_batches WHERE stage=? AND key=?', (stage, key)).fetchone()
         prior = state.begin_batch(stage, key, digest)
         if prior['state'] == 'CONFIRMED':
-            result = verify_batch(reader, specs, kind=kind, contract=verified['contract'])
+            result = verify_batch(reader, specs, kind=kind, contract=verified['contract'], dimension=config['vector_dimensions'])
             if any(prior['result'].get(k) != v for k, v in result.items()):
                 raise RunBlocked('INTEGRITY')
             continue
@@ -643,7 +780,7 @@ def _graph_batches(config, state, verified, reader, writer, kind, output, stop):
                 writes = state.record_attempt(stage, key, 'graph_writes')
                 writer.write_subgraph(graph, kind)
         # Any prior INTENT is uncertain: readback only; never blind resend.
-        result = verify_batch(reader, specs, kind=kind, contract=verified['contract'])
+        result = verify_batch(reader, specs, kind=kind, contract=verified['contract'], dimension=config['vector_dimensions'])
         state.confirm_batch(stage, key, dict(result, count=len(specs), graph_writes=writes))
         state.update(stage, 'RUNNING', _confirmed_progress(state, stage), total)
         _stop(stop, stage, ordinal)
@@ -687,9 +824,14 @@ def _execute_source(config, directory, run_id, resume, stop, verify_only):
         from kag.bootstrap import initialize, VENDOR_COMMIT
         initialize()
         _files(config)
+        try:
+            manifest = json.loads(Path(config['paths']['c3_manifest']).read_bytes())
+            source_identity = {key:manifest[key] for key in c3.IDENTITY_FIELDS}
+        except (OSError, ValueError, TypeError, KeyError):
+            raise RunBlocked('INTEGRITY') from None
         identity = {'scope': SOURCE_ONLY, 'run_id': run_id, 'batch_size': config['batch_size'],
             'write_mode': 'NO_OP', 'config_hash': c3._spec_hash(config),
-            'input_hashes': config['input_sha256'], 'c3': dict(c3.C3_IDENTITY),
+            'input_hashes': config['input_sha256'], 'c3': source_identity,
             'python': '3.10.16', 'vendor_commit': VENDOR_COMMIT}
         # Source-only takes a per-run local lock, never a graph database lock.
         lock = GraphLock(Path(config['paths']['run_root']) / '.source-locks',
@@ -701,6 +843,9 @@ def _execute_source(config, directory, run_id, resume, stop, verify_only):
         contract = json.loads((ROOT / 'kag/schema/schema_contract.json').read_bytes())
         data = c3.validate_c3_manifest(contract, config['paths']['c3_manifest'],
                                       db_path=state._owned_file('source-validation.sqlite3'))
+        if source_identity != {key:data['manifest'][key] for key in c3.IDENTITY_FIELDS}:
+            raise RunBlocked('INTEGRITY')
+        _files(config)
         verified = dict(data, identity=identity, contract=contract)
         preflight_result = {'identity_hash': c3._spec_hash(identity), 'source_only': True}
         if not state.completed_stage('preflight'):
@@ -722,10 +867,10 @@ def _execute_source(config, directory, run_id, resume, stop, verify_only):
         # Rehash protected inputs and durable source payloads before publishing source PASS.
         if plan_sources(config, db_path=state._owned_file('ledger.sqlite3'), verified=verified) != plan:
             raise RunBlocked('INTEGRITY')
-        if (plan['nodes_hash'] != c3.C3_IDENTITY['nodes_jsonl_sha256']
-                or plan['edges_hash'] != c3.C3_IDENTITY['edges_jsonl_sha256']):
+        if (plan['nodes_hash'] != data['manifest']['nodes_jsonl_sha256']
+                or plan['edges_hash'] != data['manifest']['edges_jsonl_sha256']):
             raise RunBlocked('INTEGRITY')
-        source_proof = {'nodes': nodes, 'edges': edges, 'c3': dict(c3.C3_IDENTITY), 'graph_verified': False}
+        source_proof = {'nodes': nodes, 'edges': edges, 'c3': source_identity, 'graph_verified': False}
         previous = state.completed_stage('source-verify')
         if previous is None:
             state.update('source-verify', 'RUNNING', 1, 1)
@@ -783,6 +928,10 @@ def _execute(config, run_id, resume, project_client, reader, vectorizer_factory,
             openspg_endpoint=config['endpoints']['openspg'], neo4j_endpoint=config['endpoints']['neo4j_http']),
             backend_proof=verified['backend_proof'], backend_session=verified['backend_session'])
         lock.acquire()
+        if config['scope'] == 'PRODUCTION':
+            from kag.builder.serving import protect_active
+            protect_active(reader,verified['database_id'])
+            _check_target_model(config, verified['contract'], reader, verified['database_id'])
         verified['writer_config'] = replace(verified['writer_config'], graph_lock=lock)
         state = RunState(directory, identity, resume=resume)
         state.start_heartbeat(config['heartbeat_seconds'])
@@ -808,7 +957,7 @@ def _execute(config, run_id, resume, project_client, reader, vectorizer_factory,
         expected_path = state._owned_file('expected.sqlite3')
         expected = index_expected(expected_path, _jsonl(_check_output(state, output['nodes'])),
             (e for b in iter_source_batches(state.run_dir / 'ledger.sqlite3', 'edges', config['batch_size']) for e in b),
-            contract=verified['contract'], provenance=_jsonl(_check_output(state, output['jobs'])))
+            contract=verified['contract'], provenance=_jsonl(_check_output(state, output['jobs'])), dimension=config['vector_dimensions'])
         if verify_only:
             result = verify_graph(reader, db_path=expected_path, contract=verified['contract'],
                                   batch_size=config['batch_size'])
@@ -823,6 +972,8 @@ def _execute(config, run_id, resume, project_client, reader, vectorizer_factory,
             writer = (writer_factory or NativeIntegerKGWriter)(verified['writer_config'])
         _graph_batches(config, state, verified, reader, writer, 'nodes', output, stop)
         # Recheck the full barrier on resume before any remaining edge dispatch.
+        if not state.completed_stage('verify-nodes'):
+            state.update('verify-nodes', 'RUNNING', 0, plan['nodes'])
         barrier = verify_graph(reader, db_path=expected_path, contract=verified['contract'],
                                batch_size=config['batch_size'], nodes_only=True)
         if not state.completed_stage('verify-nodes'):
@@ -833,6 +984,8 @@ def _execute(config, run_id, resume, project_client, reader, vectorizer_factory,
             for batch in iter_source_batches(state.run_dir / 'ledger.sqlite3', 'nodes', config['batch_size']):
                 writer._mark_nodes_verified(batch)
         _graph_batches(config, state, verified, reader, writer, 'edges', output, stop)
+        if not state.completed_stage('verify'):
+            state.update('verify', 'RUNNING', 0, 1)
         result = verify_graph(reader, db_path=expected_path, contract=verified['contract'],
                               batch_size=config['batch_size'])
         if not state.completed_stage('verify'):

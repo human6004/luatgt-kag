@@ -32,6 +32,9 @@ export default function AdminImports() {
   const [params, setParams] = useSearchParams()
   const requestedKind = params.get('type')
   const kind: ImportKind = requestedKind === 'questions' || requestedKind === 'documents' || requestedKind === 'units' ? requestedKind : 'signs'
+  const projectId = params.get('project_id') || '', runId = params.get('run_id') || ''
+  const graphHref = /^[1-9][0-9]{0,9}$/.test(projectId) && /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(runId)
+    ? `/admin/graph?project_id=${projectId}&run_id=${encodeURIComponent(runId)}` : ''
   const {notify}=useAdmin(), data=useData<ContentRecord[]>(`/admin/${kind}`)
   const sets=useData<QuestionSet[]>('/admin/questions/sets')
   const [questionSetId,setQuestionSetId]=useState('')
@@ -56,7 +59,11 @@ export default function AdminImports() {
   const imageMatches = signs.filter((sign) => images[sign.code.toUpperCase()])
 
   function switchKind(next: ImportKind) {
-    setParams({ type: next })
+    setParams(previous => {
+      const updated = new URLSearchParams(previous)
+      updated.set('type', next)
+      return updated
+    })
   }
 
   useEffect(() => {
@@ -139,6 +146,7 @@ export default function AdminImports() {
 
   return (
     <Page title="Nhập dữ liệu" subtitle="Chọn loại dữ liệu, tải tệp và kiểm tra trước khi xác nhận nhập." actions={<Button onClick={downloadSample}>Tải CSV mẫu</Button>}>
+      {graphHref && <p className="mb-4 text-sm text-muted"><Link className="underline underline-offset-4" to={graphHref}>Quay lại đồ thị và kiểm tra lại nguồn</Link>. Dữ liệu nhập vẫn là bản nháp; kiểm duyệt và xuất bản trước khi quay lại.</p>}
       <FilterTabs label="Loại dữ liệu" value={kind} onChange={switchKind} disabled={busy} className="mb-6"
         items={(Object.keys(titles) as ImportKind[]).map(value => ({value, label: titles[value]}))}/>
       {kind === 'questions' && <div className="mb-6 space-y-3">

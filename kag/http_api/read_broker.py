@@ -21,7 +21,7 @@ from urllib.request import ProxyHandler, Request, build_opener
 from kag.builder.codec import canonical_json
 from kag.retriever.neo4j import APPROVED, READS, Neo4jRetrievalClient
 from kag.vector_contract import TARGETS, valid_vector
-from kag.verify import QUERIES, _NoRedirect
+from kag.verify import QUERIES, _NoRedirect, GraphResponseTooLarge
 
 DATABASE = 'vietroadtraffic'
 NAMESPACE = 'VietRoadTraffic'
@@ -43,6 +43,10 @@ class BrokerFailure(Exception):
         super().__init__('Sample read denied.')
 
 
+class _OversizedResponse(BrokerFailure, GraphResponseTooLarge):
+    pass
+
+
 def _exact(value,keys):
     if type(value) is not dict or set(value) != set(keys):
         raise BrokerFailure()
@@ -61,17 +65,17 @@ def _identity(value):
     except UnicodeError: raise BrokerFailure() from None
 
 
-def _keys(value,*,edges=False):
+def _keys(value,*,edges=False,labels=LABELS,maximum=None):
     if type(value) is not list:
         raise BrokerFailure()
-    _integer(len(value),1,22 if edges else 32)
+    _integer(len(value),1,maximum or (22 if edges else 32))
     seen = set()
     for key in value:
         if type(key) is not list or len(key) != (5 if edges else 2):
             raise BrokerFailure()
         positions = (0,3) if edges else (0,)
         for offset in positions:
-            if key[offset] not in LABELS:
+            if key[offset] not in labels:
                 raise BrokerFailure()
             _identity(key[offset+1])
         if edges and key[2] not in APPROVED:
@@ -82,37 +86,45 @@ def _keys(value,*,edges=False):
         seen.add(item)
 
 
-def _parameters(operation,value):
-    if type(operation) is not str or operation not in {*QUERIES,*READS,'readonly_state'}:
+def _parameters(operation,value,*,database=DATABASE,namespace=NAMESPACE,dimension=3072,production=False):
+    labels=tuple(namespace+'.'+kind for kind in TARGETS)
+    if production and operation=='verify_graph':
+        _exact(value,())
+        return
+    if type(operation) is not str or operation not in {
+            *set(QUERIES).difference(('structure_counts','graph_counts','graph_labels','graph_relations')),
+            *READS,'readonly_state'}:
+        raise BrokerFailure()
+    if production and operation not in {'indexes','database_metadata','nodes','edges','batch_nodes','batch_edges',*READS}:
         raise BrokerFailure()
     if operation in ('indexes','reader_identity','reader_privileges','readonly_state'):
         _exact(value,())
     elif operation in ('databases','database_metadata'):
         _exact(value,('database',))
-        if value['database'] != DATABASE: raise BrokerFailure()
+        if value['database'] != database: raise BrokerFailure()
     elif operation in ('nodes','edges'):
         _exact(value,('namespace','cursor','limit'))
-        if value['namespace'] != NAMESPACE+'.': raise BrokerFailure()
+        if value['namespace'] != namespace+'.': raise BrokerFailure()
         _integer(value['cursor'],-1,2**63-1)
-        _integer(value['limit'],1,32)
+        _integer(value['limit'],1,1000 if production else 32)
     elif operation in ('batch_nodes','batch_edges'):
         _exact(value,('keys','limit'))
-        _keys(value['keys'],edges=operation=='batch_edges')
+        _keys(value['keys'],edges=operation=='batch_edges',labels=labels,maximum=1000 if production else None)
         _integer(value['limit'],len(value['keys'])+1,len(value['keys'])+1)
     elif operation == 'retrieval_vector':
         _exact(value,('index','label','k','vector'))
         _identity(value['index'])
-        if value['label'] not in LABELS or not valid_vector(value['vector'],3072):
+        if value['label'] not in labels or not valid_vector(value['vector'],dimension):
             raise BrokerFailure()
         _integer(value['k'],1,10)
     else:
         _exact(value,('keys','predicates','labels','limit'))
-        _keys(value['keys'])
-        for field,allowed in (('labels',LABELS),('predicates',APPROVED)):
+        _keys(value['keys'],labels=labels,maximum=1000 if production else None)
+        for field,allowed in (('labels',labels),('predicates',APPROVED)):
             items = value[field]
             if (type(items) is not list or not items or any(type(v) is not str for v in items)
                     or len(items) != len(set(items)) or set(items)-set(allowed)
-                    or field=='labels' and set(items) != set(LABELS)):
+                    or field=='labels' and set(items) != set(labels)):
                 raise BrokerFailure()
         _integer(value['limit'],1,50)
 
@@ -174,7 +186,8 @@ class ReadBroker:
             raise BrokerFailure()
         if (index.get('state') != 'ONLINE' or type(config.get('vector.dimensions')) is not int
                 or config['vector.dimensions'] != 3072
-                or str(config.get('vector.similarity_function','cosine')).lower() != 'cosine'):
+                or not isinstance(config.get('vector.similarity_function'), str)
+                or config['vector.similarity_function'].lower() != 'cosine'):
             raise BrokerFailure(503)
 
     def read(self,value,authorization):
@@ -211,8 +224,11 @@ class _BoundedOpener:
     def open(self,request,*,timeout):
         with self._opener.open(request,timeout=timeout) as response:
             raw = response.read(RESPONSE_LIMIT+1)
-        if len(raw)>RESPONSE_LIMIT: raise BrokerFailure(503)
+        if len(raw)>RESPONSE_LIMIT: raise _OversizedResponse(503)
         with io.BytesIO(raw) as result: yield result
+
+    def close(self):
+        self._opener.close()
 
 
 class BrokerNeo4jClient(Neo4jRetrievalClient):

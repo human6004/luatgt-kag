@@ -9,9 +9,8 @@ import httpx
 
 from kag.vector_contract import valid_vector
 from . import artifacts as a
-from .provider_budget import BudgetError, ProviderBudget
+from .provider_budget import BudgetError, ProviderBudget, GATEWAY, GatewayTransport, AsyncGatewayTransport
 
-GATEWAY = 'http://kag-ingress:8898/v1'
 EMBEDDING_URL = 'https://api.vilao.ai/v1'
 EMBEDDING_MODEL = 'dg/text-embedding-3-large'
 CHAT_URL = 'http://127.0.0.1:8317/v1'
@@ -56,19 +55,21 @@ def _model_route(policy):
 
 def response_model_matches(settings, observed):
     if observed==settings.chat_model:return True
+    tested = getattr(settings,'chat_response_model',None)
+    if tested is not None and observed==tested:return True
     policy=settings.development_policy
     if not policy or 'model_route' not in policy:return False
     route=_model_route(policy)
     return settings.chat_model==route['requested_model'] and observed==route['response_version']
 
 
-def load_cache(raw, expected_sha256):
+def load_cache(raw, expected_sha256, *, model=EMBEDDING_MODEL):
     if hashlib.sha256(raw).hexdigest()!=expected_sha256:a._invalid()
     value=a._json(raw)
     a._keys(value,('question','question_sha256','model','endpoint','dimension','vector'))
     if (type(value['question']) is not str or not value['question'].strip()
             or hashlib.sha256(value['question'].encode()).hexdigest()!=value['question_sha256']
-            or value['model']!=EMBEDDING_MODEL or value['endpoint']!=EMBEDDING_URL
+            or value['model']!=model or value['endpoint']!=EMBEDDING_URL
             or type(value['dimension']) is not int or value['dimension']!=3072
             or not valid_vector(value['vector'],3072)):a._invalid()
     return value
@@ -89,8 +90,7 @@ def load_proof(settings, release, *, capability='query'):
     if (release.release_kind!='SAMPLE' or release.descriptor['release_kind']!='SAMPLE' or not settings.query_proof_sha256
             or not re.fullmatch('[0-9a-f]{64}',settings.query_proof_sha256)
             or settings.reader_username or settings.reader_password or not settings.broker_url
-            or (settings.embedding_url,settings.embedding_model,settings.chat_url,settings.chat_model)!=
-                (EMBEDDING_URL,EMBEDDING_MODEL,CHAT_URL,CHAT_MODEL)
+            or (settings.embedding_url,settings.chat_url,settings.chat_model)!=(EMBEDDING_URL,CHAT_URL,CHAT_MODEL)
             or settings.provider_gateway!=GATEWAY or not settings.provider_gateway_token
             or not re.fullmatch('[A-Za-z0-9_-]{43,128}',settings.provider_gateway_token)
             or settings.attempt_ledger!='/provider-state/attempts.json'):a._invalid()
@@ -113,8 +113,9 @@ def load_proof(settings, release, *, capability='query'):
             or proof['gateway_config_sha256']!=hashlib.sha256(a._read(release.root,'provider-gateway.cfg')).hexdigest()):a._invalid()
     address=ip_address(proof['gateway_ip'])
     if address.version!=4 or not address.is_private or address.is_loopback or address.is_unspecified:a._invalid()
-    cache=load_cache(a._read(release.root,'query-embedding.json'),proof['cache_sha256'])
+    cache=load_cache(a._read(release.root,'query-embedding.json'),proof['cache_sha256'],model=settings.embedding_model)
     a.load_sample_proof(release,settings.sample_proof_sha256,None)
+    a._verify_sample_provenance(release.root,model_identity=settings.embedding_url+'|'+settings.embedding_model)
     budget=provider_budget(settings)
     if budget.binding!=proof['ledger_binding_sha256']:a._invalid()
     counts=budget.counts()
@@ -138,33 +139,6 @@ def verify_gateway(settings, proof):
         if response.status_code!=200 or len(response.content)>131072:a._invalid()
         body=a._json(response.content)
         if type(body.get('data')) is not list or not any(type(x) is dict and x.get('id')==CHAT_MODEL for x in body['data']):a._invalid()
-
-
-def _forward(request, gateway, token, upstream):
-    if gateway!=GATEWAY or request.url!=httpx.URL(upstream):
-        raise BudgetError('PROVIDER_REQUEST_DENIED')
-    suffix='/embeddings' if request.url.path.endswith('/embeddings') else '/chat/completions'
-    headers=request.headers.copy()
-    headers.pop('host',None)
-    headers['X-KAG-Provider-Token']=token
-    return httpx.Request(request.method,gateway+suffix,headers=headers,content=request.content,
-                         extensions=request.extensions)
-
-
-class GatewayTransport(httpx.BaseTransport):
-    def __init__(self, transport, gateway, token, upstream):
-        self.transport,self.gateway,self.token,self.upstream=transport,gateway,token,upstream
-    def handle_request(self,request):
-        return self.transport.handle_request(_forward(request,self.gateway,self.token,self.upstream))
-    def close(self):self.transport.close()
-
-
-class AsyncGatewayTransport(httpx.AsyncBaseTransport):
-    def __init__(self, transport, gateway, token, upstream):
-        self.transport,self.gateway,self.token,self.upstream=transport,gateway,token,upstream
-    async def handle_async_request(self,request):
-        return await self.transport.handle_async_request(_forward(request,self.gateway,self.token,self.upstream))
-    async def aclose(self):await self.transport.aclose()
 
 
 def configure_model(settings, model, kind, *, component='direct_runner', request_id=None):

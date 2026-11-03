@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import asyncio
 from contextvars import ContextVar
+from concurrent.futures import CancelledError as TransportCancelled
 from dataclasses import dataclass, field, replace
 from copy import deepcopy
 from datetime import datetime
@@ -32,8 +33,17 @@ from .artifacts import (ArtifactFailure, ServingRelease, VerificationState,
 from .contract import ApiFailure, RetrieveRequest, SampleVectorRequest
 from .security import admit_request, authorize, request_principal
 
-REQUEST_SECONDS = 25.0
 TRANSPORT_SECONDS = 5.0
+
+
+def _request_seconds():
+    try: seconds=int(os.environ.get('KAG_QUERY_TIMEOUT_SECONDS','180'))
+    except ValueError: raise ValueError('KAG_QUERY_TIMEOUT_SECONDS must be an integer from 30 to 180') from None
+    if not 30<=seconds<=180:raise ValueError('KAG_QUERY_TIMEOUT_SECONDS must be an integer from 30 to 180')
+    return seconds-TRANSPORT_SECONDS
+
+
+REQUEST_SECONDS = _request_seconds()
 CHAT_CONFIG_PATH = Path('/provider-state/admin-config.json')
 LLM_CONFIG_PATH = Path('/provider-state/llm-credentials.json')
 _CURRENT = ContextVar('kag_admitted_runtime', default=None)
@@ -71,6 +81,7 @@ class RuntimeSettings(ApiSettings):
     chat_url: str | None = None
     chat_model: str | None = None
     chat_key: str | None = None
+    chat_response_model: str | None = None
     sample_proof_sha256: str | None = None
     broker_url: str | None = None
     broker_token: str | None = None
@@ -79,6 +90,8 @@ class RuntimeSettings(ApiSettings):
     provider_gateway_token: str | None = None
     attempt_ledger: str | None = None
     development_policy: dict | None = None
+    production: bool = False
+    dimension: int = 3072
 
 
 class _Budget:
@@ -106,11 +119,12 @@ class _Budget:
 
 
 class _ReaderBoundary:
-    def __init__(self, opener, budget):
+    def __init__(self, opener, budget, *, transport_seconds=TRANSPORT_SECONDS):
         self.opener, self.budget = opener, budget
+        self.transport_seconds=transport_seconds
 
     def open(self, request, *, timeout):
-        return self.opener.open(request,timeout=min(timeout,TRANSPORT_SECONDS,self.budget.remaining()))
+        return self.opener.open(request,timeout=min(timeout,self.transport_seconds,self.budget.remaining()))
 
     def close(self):
         close = getattr(self.opener,'close',None)
@@ -124,13 +138,69 @@ def _timeout(request, budget):
         'read':remaining,'write':remaining,'pool':remaining}
 
 
+async def _await_budget(awaitable, budget):
+    operation = asyncio.ensure_future(awaitable)
+    try:
+        while not operation.done():
+            left = budget.deadline-budget.clock()
+            if left <= 0:
+                raise httpx.ReadTimeout('Request deadline exceeded.')
+            if budget.stopped.is_set():
+                raise TransportCancelled()
+            budget.remaining()
+            await asyncio.wait({operation}, timeout=min(.05, left))
+        return operation.result()
+    finally:
+        if not operation.done():
+            operation.cancel()
+        await asyncio.gather(operation, return_exceptions=True)
+
+
+class _CancellableTransport(httpx.BaseTransport):
+    """Keep the pinned sync SDK; cancel its actual HTTP I/O through HTTPX async transport."""
+    def __init__(self, budget, *, response_limit=None):
+        self.budget, self.response_limit = budget, response_limit
+
+    def handle_request(self, request):
+        async def exchange():
+            async with httpx.AsyncHTTPTransport(retries=0) as transport:
+                outgoing = httpx.Request(request.method, request.url, headers=request.headers,
+                    content=request.content, extensions=request.extensions)
+                response = await transport.handle_async_request(outgoing)
+                try:
+                    body = bytearray()
+                    async for chunk in response.aiter_raw():
+                        body.extend(chunk)
+                        if self.response_limit is not None and len(body) > self.response_limit:
+                            raise httpx.ProtocolError('Provider response exceeds limit.')
+                    return httpx.Response(response.status_code, headers=response.headers,
+                        stream=httpx.ByteStream(bytes(body)), extensions=response.extensions)
+                finally:
+                    await response.aclose()
+        return asyncio.run(_await_budget(exchange(), self.budget))
+
+
 class _DeadlineTransport(httpx.BaseTransport):
     def __init__(self, transport, budget):
         self.transport, self.budget = transport, budget
 
     def handle_request(self, request):
         _timeout(request,self.budget)
-        return self.transport.handle_request(request)
+        response = self.transport.handle_request(request)
+        stream, budget = response.stream, self.budget
+        class Stream(httpx.SyncByteStream):
+            def __iter__(self):
+                try:
+                    budget.remaining()
+                    for chunk in stream:
+                        budget.remaining()
+                        yield chunk
+                finally:
+                    stream.close()
+            def close(self):
+                stream.close()
+        response.stream = Stream()
+        return response
 
     def close(self):
         self.transport.close()
@@ -142,7 +212,26 @@ class _AsyncDeadlineTransport(httpx.AsyncBaseTransport):
 
     async def handle_async_request(self, request):
         _timeout(request,self.budget)
-        return await self.transport.handle_async_request(request)
+        response = await _await_budget(self.transport.handle_async_request(request), self.budget)
+        stream, budget = response.stream, self.budget
+        class Stream(httpx.AsyncByteStream):
+            async def __aiter__(self):
+                try:
+                    budget.remaining()
+                    iterator = stream.__aiter__()
+                    while True:
+                        try:
+                            chunk = await _await_budget(iterator.__anext__(), budget)
+                        except StopAsyncIteration:
+                            break
+                        budget.remaining()
+                        yield chunk
+                finally:
+                    await stream.aclose()
+            async def aclose(self):
+                await stream.aclose()
+        response.stream = Stream()
+        return response
 
     async def aclose(self):
         await self.transport.aclose()
@@ -186,6 +275,16 @@ def _today():
 def _require_configuration(settings, *, capability='query'):
     if type(settings) is not RuntimeSettings or capability not in ('query','retrieve','retrieve-vector'):
         raise ApiFailure('NOT_READY')
+    if settings.production:
+        if capability=='retrieve-vector' or type(settings.dimension) is not int or not 1<=settings.dimension<=65536:
+            raise ApiFailure('NOT_READY')
+        fields=('release_id','source_snapshot_id','broker_url','broker_token','embedding_url','embedding_model','embedding_key')
+        if capability=='query':fields+=('chat_url','chat_model','chat_key')
+        if any(not isinstance(getattr(settings,name),str) or not getattr(settings,name).strip() for name in fields):
+            raise ApiFailure('NOT_READY')
+        if settings.broker_url!='http://openspg-server:8010' or settings.reader_username or settings.reader_password:
+            raise ApiFailure('NOT_READY')
+        return
     if settings.development_policy is not None and not settings.query_proof_sha256:
         raise ApiFailure('NOT_READY')
     if settings.query_proof_sha256 and capability in ('query','retrieve'):
@@ -211,7 +310,8 @@ def _require_configuration(settings, *, capability='query'):
     query_only = {'webapp_snapshot_id','chat_url','chat_model','chat_key'} if capability=='retrieve' else set()
     for name in RuntimeSettings.__dataclass_fields__:
         if name not in ('secrets','sample_proof_sha256','broker_url','broker_token','query_proof_sha256',
-                        'provider_gateway','provider_gateway_token','attempt_ledger','development_policy') and name not in query_only:
+                          'provider_gateway','provider_gateway_token','attempt_ledger','development_policy','chat_response_model',
+                          'production','dimension') and name not in query_only:
             value = getattr(settings,name)
             if type(value) is not str or not value.strip() or len(value) > 4096:
                 raise ApiFailure('NOT_READY')
@@ -225,6 +325,16 @@ def _require_configuration(settings, *, capability='query'):
 
 
 def _require_operational_proof(settings, release, *, capability='query'):
+    if settings.production:
+        from kag.builder.serving import validate_active_release
+        validate_active_release(release)
+        if (release.descriptor['model_identity']!=settings.embedding_url.rstrip('/')+'|'+settings.embedding_model
+                or release.descriptor['dimension']!=settings.dimension):
+            raise RuntimeFailure('RELEASE_MISMATCH')
+        if capability=='query':
+            from kag.builder.serving import chat_blockers
+            if chat_blockers(release):raise ApiFailure('NOT_READY')
+        return
     if capability == 'retrieve-vector':
         return load_sample_proof(release,settings.sample_proof_sha256,settings.reader_username)
     if settings.query_proof_sha256:
@@ -256,17 +366,20 @@ def _identity(request, settings, release, parsed, as_of=None, *, capability='que
             raise ArtifactFailure(VerificationState.UNAVAILABLE) from None
         return None
     as_of = _today() if as_of is None else as_of
+    from .artifacts import dataset_sources
+    dataset=dataset_sources(release)
     for name, expected, code in (
             ('x-kag-release-id',settings.release_id,'RELEASE_MISMATCH'),
-            ('x-webapp-snapshot-id',settings.webapp_snapshot_id,'SOURCE_SNAPSHOT_MISMATCH'),
+            ('x-kag-source-snapshot-id' if dataset else 'x-webapp-snapshot-id',
+                settings.source_snapshot_id if dataset else settings.webapp_snapshot_id,'SOURCE_SNAPSHOT_MISMATCH'),
             ('x-kag-as-of',as_of.isoformat(),'DATE_MISMATCH')):
         values = request.headers.getlist(name)
         if values != [expected]:
             raise RuntimeFailure(code)
     publication = release.publication
     from .artifacts import publication_covers
-    if (publication is None or publication['snapshot_id'] != settings.webapp_snapshot_id
-            or not publication_covers(publication,as_of) or not release.records):
+    if (not release.records or not dataset and (publication is None or publication['snapshot_id'] != settings.webapp_snapshot_id
+            or not publication_covers(publication,as_of))):
         raise ApiFailure('NOT_READY')
     try:
         _unchanged(release)
@@ -289,6 +402,8 @@ class RequestRuntime:
     capability: str = 'query'
     request_id: str | None = None
     chat_retrieval: dict | None = None
+    provider_budget: object = field(default=None,repr=False)
+    provider_temporary: object = field(default=None,repr=False)
 
     async def close(self):
         if self.closed:
@@ -308,11 +423,58 @@ class RequestRuntime:
                 except Exception:
                     failed = True
         self.closed = not failed
+        if self.provider_temporary is not None:self.provider_temporary.cleanup()
         if failed:
             raise ApiFailure('INTERNAL_ERROR')
 
 
+def _configure_production_model(settings,model,role,runtime):
+    import tempfile
+    from .provider_budget import ProviderBudget,GatewayTransport,AsyncGatewayTransport,GATEWAY,provider_route,BudgetError
+    from .server import provider_test_policy
+    policy=provider_test_policy()
+    config=dict(provider='openai-compatible',base_url=getattr(settings,role+'_url'),model=getattr(settings,role+'_model'))
+    route=provider_route(config,role,policy)
+    if runtime.provider_budget is None:
+        runtime.provider_temporary=tempfile.TemporaryDirectory(prefix='provider-')
+        runtime.provider_budget=ProviderBudget(Path(runtime.provider_temporary.name)/'attempts.json',
+            embedding_url=settings.embedding_url+'/embeddings',embedding_model=settings.embedding_model,
+            chat_url=(settings.chat_url or settings.embedding_url)+'/chat/completions',
+            chat_model=settings.chat_model or settings.embedding_model,limits=dict(embedding=3,chat=7))
+        runtime.provider_budget.source_component='kag.'+runtime.capability
+        runtime.provider_budget.request_id=runtime.request_id
+        from kag.legal_prompts import _LEGAL_TRACE
+        runtime.provider_budget.trace_id = runtime.request_id if _LEGAL_TRACE.get() is not None else None
+    upstream=config['base_url']+('/embeddings' if role=='embedding' else '/chat/completions')
+    for name,wrapper,transport in (('client',GatewayTransport,_CancellableTransport(runtime.budget)),
+            ('aclient',AsyncGatewayTransport,httpx.AsyncHTTPTransport(retries=0))):
+        client=getattr(model,name)._client
+        client._transport=wrapper(transport,GATEWAY,policy['token'],upstream,route);client._mounts={}
+    runtime.provider_budget.configure_sdk(model,role)
+    _guard_sdk(model,runtime.budget)
+    if role=='chat':
+        def check(response):
+            response.read()
+            if response.is_success and response.json().get('model')!=settings.chat_response_model:
+                raise BudgetError('PROVIDER_RESPONSE_MODEL_MISMATCH')
+            if response.is_success:
+                from kag.legal_prompts import legal_trace
+                body=response.json()
+                for choice in body.get('choices', []):
+                    legal_trace('model.output', content=choice.get('message', {}).get('content'),
+                                finish_reason=choice.get('finish_reason'), model=body.get('model'))
+        async def acheck(response):
+            await response.aread();check(response)
+        model.client._client.event_hooks['response'].append(check)
+        model.aclient._client.event_hooks['response'].append(acheck)
+
+
 def _new_reader(settings, release, budget):
+    if settings.production:
+        from .community import WorkerRetrievalClient
+        reader=WorkerRetrievalClient(release,settings.broker_token,timeout=TRANSPORT_SECONDS)
+        reader._opener=_ReaderBoundary(reader._opener,budget,transport_seconds=REQUEST_SECONDS)
+        return reader
     if settings.broker_url:
         from .community import BrokerRetrievalClient
         proof=load_sample_proof(release,settings.sample_proof_sha256,None)
@@ -365,7 +527,9 @@ def _new_embedding(settings, runtime):
     from kag.common.vectorize_model.openai_model import OpenAIVectorizeModel
     model = _sdk_instance(OpenAIVectorizeModel,runtime,model=settings.embedding_model,
         api_key=settings.embedding_key,base_url=settings.embedding_url,
-        vector_dimensions=3072,timeout=TRANSPORT_SECONDS)
+        vector_dimensions=settings.dimension,timeout=TRANSPORT_SECONDS)
+    if settings.production:
+        _configure_production_model(settings,model,'embedding',runtime)
     if settings.query_proof_sha256:
         from .sample_query import configure_model
         configure_model(settings,model,'embedding',component='kag.'+getattr(runtime,'capability','query'),request_id=getattr(runtime,'request_id',None))
@@ -379,7 +543,7 @@ def _new_embedding(settings, runtime):
             runtime.budget.remaining()
             response=model.client.embeddings.create(input=question,model=settings.embedding_model)
             vector=response.data[0].embedding if len(response.data)==1 else None
-            if not valid_vector(vector,3072):
+            if not valid_vector(vector,settings.dimension):
                 raise ValueError('INVALID_VECTOR')
             runtime.budget.remaining()
             return vector
@@ -394,6 +558,8 @@ def _new_llm(settings, runtime):
     from kag.common.llm.openai_client import OpenAIClient
     model = _sdk_instance(OpenAIClient,runtime,name='kag-'+uuid4().hex,model=settings.chat_model,
         api_key=settings.chat_key,base_url=settings.chat_url,enable_check=False,timeout=TRANSPORT_SECONDS)
+    if settings.production:
+        _configure_production_model(settings,model,'chat',runtime)
     if settings.query_proof_sha256:
         from .sample_query import configure_model, provider_budget, response_model_matches
         configure_model(settings,model,'chat',component='kag.query',request_id=runtime.request_id)
@@ -406,7 +572,7 @@ def _new_llm(settings, runtime):
                 body=response.json();observed_model=body.get('model')
             except (ValueError,AttributeError,IndexError,TypeError):observed_model=None
             accepted=response_model_matches(settings,observed_model)
-            safe_model=observed_model if observed_model in (settings.chat_model,'gemini-3.8-flash-n') else 'UNVERIFIED'
+            safe_model=observed_model if observed_model in (settings.chat_model,settings.chat_response_model,'gemini-3.8-flash-n') else 'UNVERIFIED'
             responses.append({'status':response.status_code,'model_matches_config':observed_model==settings.chat_model,
                 'observed_model':safe_model,'route_version_matches_policy':accepted,
                 'attempts':provider_budget(settings).counts()})
@@ -472,10 +638,10 @@ def make_runtime(settings: ApiSettings, release: ServingRelease, deadline: float
         from kag.legal_solver import build_pipeline
         llm = _new_llm(settings,runtime)
         runtime.budget.remaining()
-    runtime.retriever = Retriever(runtime.reader,embed,_json(release.contract_bytes))
+    runtime.retriever = Retriever(runtime.reader,embed,_json(release.contract_bytes),source_records=release.records)
     if runtime.capability=='query':
         runtime.pipeline = build_pipeline(runtime.retriever,llm,retrieval=runtime.chat_retrieval)
-        if settings.query_proof_sha256:
+        if settings.query_proof_sha256 or settings.production:
             from .provider_budget import disable_instance_retries
             disable_instance_retries(runtime.pipeline,llm)
     return runtime
@@ -515,18 +681,70 @@ def _query_failure_diagnostic(exc):
     return value
 
 
+def _diagnostic_sink(runtime):
+    import json
+    started = time.monotonic()
+    used = 0
+    timing_only = os.environ.get('KAG_CHAT_TRACE_QUESTION') == '*timings*'
+
+    def clean(value):
+        if isinstance(value, dict):
+            return {key: clean(item) for key, item in value.items()
+                    if not re.search(r'key|token|password|secret|authorization|reasoning_content|signature', str(key), re.I)}
+        if isinstance(value, (tuple, list)):
+            return [clean(item) for item in value]
+        if isinstance(value, str):
+            for model in runtime.sdk_models:
+                secret = getattr(getattr(model, 'client', None), 'api_key', None)
+                if isinstance(secret, str) and secret:
+                    value = value.replace(secret, '[REDACTED]')
+            return re.sub(r'(?i)Bearer\s+\S+', 'Bearer [REDACTED]', value)
+        return value
+
+    def emit(stage, data):
+        nonlocal used
+        if timing_only:
+            if stage == 'request.closed':
+                data = {}
+            elif (set(data) != {'duration_ms', 'outcome'}
+                  or type(data['duration_ms']) not in (int, float)
+                  or data['outcome'] not in ('ok', 'error')):
+                return
+        if used >= 4 * 1024 * 1024 - 1024:
+            return
+        raw = json.dumps(clean(data), ensure_ascii=False, default=str)
+        limit = min(1024 * 1024, 4 * 1024 * 1024 - used) - 1024
+        encoded = raw.encode('utf-8')
+        truncated = len(encoded) > limit
+        payload = {'prefix': encoded[:limit//2].decode('utf-8', errors='ignore')} if truncated else json.loads(raw)
+        line = json.dumps(dict(request_id=runtime.request_id, stage=stage, data=payload,
+                               elapsed_ms=round((time.monotonic()-started)*1000, 3),
+                               truncated=truncated), ensure_ascii=False)
+        used += len(line.encode('utf-8'))
+        print('LEGAL_TRACE ' + line, flush=True)
+    return emit
+
+
 async def run_query(runtime: RequestRuntime, question: str, as_of):
     runtime.budget.remaining()
     if runtime.closed or question != runtime.question or as_of != runtime.as_of:
         raise ApiFailure('NOT_READY')
     from kag.legal_solver import aanswer
+    from kag.legal_prompts import _LEGAL_TRACE, legal_trace
+    selected = os.environ.get('KAG_CHAT_TRACE_QUESTION', '')
+    token = None if _LEGAL_TRACE.get() is not None else _LEGAL_TRACE.set(
+        _diagnostic_sink(runtime) if selected and selected in (question, '*timings*') else None)
     try:
         result = await aanswer(question,pipeline=runtime.pipeline,as_of=as_of)
+        legal_trace('generator.result', **result.to_dict(), reason=result.reason)
     except Exception as exc:
         import json
         print('SAMPLE_QUERY_FAILURE '+json.dumps(_query_failure_diagnostic(exc)),flush=True)
         runtime.budget.remaining()
         raise RuntimeFailure('PROVIDER_ERROR') from None
+    finally:
+        if token is not None:
+            _LEGAL_TRACE.reset(token)
     runtime.budget.remaining()
     return result
 
@@ -561,13 +779,14 @@ class RuntimeSupervisor:
         self._llm_bound = {}
         self._llm_runtime_error = None
         self._llm_base_settings = None
+        self._serving_action = False
 
-    def _config_storage(self, path, *, private=False):
+    def _config_storage(self, path, *, private=False, writable=True):
         root = path.parent
         info = root.lstat()
         if (not stat.S_ISDIR(info.st_mode) or root.resolve() != root or info.st_uid != os.geteuid()
                 or info.st_mode & (0o077 if private else 0o022)
-                or not os.access(root, os.R_OK | os.W_OK | os.X_OK)):
+                or not os.access(root, os.R_OK | os.X_OK | (os.W_OK if writable else 0))):
             raise OSError('Configuration directory unavailable')
         if path.exists() or path.is_symlink():
             info = path.lstat()
@@ -650,12 +869,16 @@ class RuntimeSupervisor:
     def _validate_llm_state(self, state):
         from .contract import llm_options
         legacy = {'revision', 'chat', 'embedding'}
-        if (type(state) is not dict or set(state) not in (legacy, legacy | {'role_revisions', 'tested', 'active', 'blocked'})
+        fields=legacy | {'role_revisions','tested','active','blocked'}
+        if (type(state) is not dict or set(state) not in (legacy, fields, fields|{'serving'})
                 or type(state['revision']) is not int or not 1 <= state['revision'] <= 2147483647):
             raise ApiFailure('INVALID_REQUEST')
         if set(state) == legacy:
             state = dict(state, role_revisions={role: state['revision'] if state[role] else None for role in ('chat','embedding')},
                          tested=dict(chat=None, embedding=None), active=dict(chat=None, embedding=None), blocked=dict(chat=None, embedding=None))
+        if 'serving' in state:
+            from kag.builder.serving import validate_selection
+            validate_selection(state['serving'])
         for role in ('chat', 'embedding'):
             if state[role] is None:
                 continue
@@ -692,8 +915,10 @@ class RuntimeSupervisor:
                     'VECTOR_IDENTITY_MISMATCH','ACTIVE_CONFIG_INVALID','PROXY_POLICY_UNVERIFIED','BLOCKED'):
                 raise ApiFailure('INVALID_REQUEST')
         secrets = (*self._llm_secrets, *(item['api_key'] for item in configured))
-        if any(secret in item[field] for secret in secrets for item in configured
-               for field in ('model', 'base_url')):
+        if (any(secret in item[field] for secret in secrets for item in configured for field in ('model', 'base_url'))
+                or any(test and test['observed_model'] and secret in test['observed_model']
+                    for secret in secrets for role in ('chat','embedding')
+                    for test in (state['tested'][role],state['active'][role]['test'] if state['active'][role] else None))):
             raise ApiFailure('INVALID_REQUEST')
         return state
 
@@ -709,13 +934,13 @@ class RuntimeSupervisor:
                 or type(value['output_chars']) is not int or not 0 <= value['output_chars'] <= 262144
                 or value['dimension'] is not None and (type(value['dimension']) is not int or not 0 <= value['dimension'] <= 262144)
                 or value['observed_model'] is not None and (type(value['observed_model']) is not str
-                    or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._/-]{0,199}', value['observed_model']))
+                    or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}', value['observed_model']))
                 or type(value['tested_at']) is not str or not re.fullmatch(r'\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\+00:00', value['tested_at'])
                 or value['status'] == 'PASS' and (value['client_attempts'] != 1 or
-                    (value['dimension'] != 3072 if role == 'embedding' else value['output_chars'] < 1))):
+                    (value['dimension'] is None or not 1 <= value['dimension'] <= 65536 if role == 'embedding' else value['output_chars'] < 1))):
             raise ApiFailure('INVALID_REQUEST')
 
-    def load_llm_config(self, secrets):
+    def load_llm_config(self, secrets, *, read_only=False):
         self._llm_config, self._llm_error = None, None
         self._llm_secrets = (*secrets.query_tokens, *secrets.inspect_tokens, *secrets.credentials_write_tokens,
                             *secrets.provider_test_tokens, *secrets.config_apply_tokens)
@@ -723,7 +948,7 @@ class RuntimeSupervisor:
         self._llm_test_allowed, self._llm_apply_allowed = bool(secrets.provider_test_tokens), bool(secrets.config_apply_tokens)
         self._llm_bound, self._llm_runtime_error = {}, None
         try:
-            self._config_storage(LLM_CONFIG_PATH, private=True)
+            self._config_storage(LLM_CONFIG_PATH, private=True, writable=not read_only)
             if LLM_CONFIG_PATH.exists():
                 with LLM_CONFIG_PATH.open('rb') as stream:
                     raw = stream.read(65537)
@@ -762,21 +987,30 @@ class RuntimeSupervisor:
                 'chat': metadata(state['chat']) if state else None, 'embedding': metadata(state['embedding']) if state else None,
                 'applied': any(row['status']=='APPLIED' for row in roles.values()),
                 'connection_tested': any(row['test'] and row['test']['status']=='PASS' for row in roles.values()),
-                'save_allowed': self._llm_write_allowed and self._llm_error is None and revision < 2147483647,
+                'save_allowed': self._llm_write_allowed and self._llm_error is None and revision < 2147483647 and not self._serving_action,
                 'error_code': self._llm_error, 'roles': roles,
-                'build_config': dict(state='NOT_SUPPORTED', reason='BUILDER_REPLAY_ONLY')}
+                'build_config': dict(state='SEPARATE', reason='BUILDER_CONFIGURATION_API')}
 
     def _persist_llm(self, updated):
         from kag.run_state import atomic_json
+        import portalocker
         updated = self._validate_llm_state(deepcopy(updated))
         try:
             self._config_storage(LLM_CONFIG_PATH, private=True)
-            atomic_json(LLM_CONFIG_PATH, updated, mode=0o600)
+            # API model edits and Worker activation share this existing configuration.
+            with portalocker.Lock(str(LLM_CONFIG_PATH)+'.lock',mode='a+',timeout=0):
+                if LLM_CONFIG_PATH.exists():
+                    current=self._validate_llm_state(_json(LLM_CONFIG_PATH.read_bytes()))
+                    if current!=self._llm_config:raise ApiFailure('CONFIG_CONFLICT')
+                atomic_json(LLM_CONFIG_PATH, updated, mode=0o600)
+        except portalocker.exceptions.LockException:
+            raise ApiFailure('CONFIG_BUSY') from None
         except OSError:
             raise ApiFailure('CONFIG_STORAGE_UNAVAILABLE') from None
         self._llm_config = updated
 
     def save_llm_config(self, change):
+        if self._serving_action:raise ApiFailure('CONFIG_BUSY')
         if self._llm_error:
             raise ApiFailure(self._llm_error)
         state = self._llm_config
@@ -813,7 +1047,7 @@ class RuntimeSupervisor:
     async def test_llm_config(self, role, revision, policy):
         from datetime import timezone
         self._llm_revision(role, revision)
-        if self._provider_test_task is not None:
+        if self._provider_test_task is not None or self._serving_action:
             raise ApiFailure('CONFIG_BUSY')
         config = dict(self._llm_config[role])
         role_revision = self._llm_config['role_revisions'][role]
@@ -837,7 +1071,7 @@ class RuntimeSupervisor:
             self._provider_test_task = None
         task.add_done_callback(done)
         try:
-            await asyncio.wait_for(asyncio.shield(task), timeout=22)
+            await asyncio.wait_for(asyncio.shield(task), timeout=REQUEST_SECONDS+1)
             return self.llm_config_view()
         except asyncio.TimeoutError:
             raise ApiFailure('QUERY_TIMEOUT') from None
@@ -846,8 +1080,13 @@ class RuntimeSupervisor:
         values = {}
         for role, item in active.items():
             if item is not None:
+                # Serving must use the dimension measured for the selected graph.
+                if role == 'embedding' and item['test']['dimension'] != settings.dimension:
+                    raise RuntimeFailure('RELEASE_MISMATCH')
                 config = item['config']
                 values.update({role+'_url':config['base_url'], role+'_model':config['model'], role+'_key':config['api_key']})
+                if role == 'chat':
+                    values['chat_response_model'] = item['test']['observed_model']
         return replace(settings, **values)
 
     def restore_llm_runtime(self, settings, release, policy=None):
@@ -858,13 +1097,16 @@ class RuntimeSupervisor:
         active = self._llm_config['active'] if self._llm_config else {}
         if not any(active.values()):
             return settings
+        if settings is None or release is None:
+            self._llm_runtime_error = 'RELEASE_UNAVAILABLE'
+            return None
         try:
             from .provider_budget import BudgetError, provider_route
             for role, item in active.items():
                 if item is not None:
                     provider_route(item['config'], role, policy)
             candidate = self._active_settings(settings, active)
-            capability = 'query' if active.get('chat') else 'retrieve'
+            capability = 'retrieve' if candidate.production else 'query' if active.get('chat') else 'retrieve'
             _require_configuration(candidate, capability=capability)
             _require_operational_proof(candidate, release, capability=capability)
         except (ApiFailure, ArtifactFailure, RuntimeFailure, BudgetError, ValueError, TypeError, OSError):
@@ -895,7 +1137,7 @@ class RuntimeSupervisor:
                     if item is not None:
                         provider_route(item['config'], consumer, policy)
                 candidate = self._active_settings(base, active)
-                capability = 'query' if active.get('chat') else 'retrieve'
+                capability = 'retrieve' if candidate.production else 'query' if active.get('chat') else 'retrieve'
                 _require_configuration(candidate, capability=capability)
                 _require_operational_proof(candidate, release, capability=capability)
                 _unchanged(release)
@@ -958,19 +1200,23 @@ class RuntimeSupervisor:
         async def operation():
             reader=None
             try:
-                from .artifacts import publication_covers
-                if capability=='query' and (type(release) is not ServingRelease or not publication_covers(release.publication,_today())):
+                from .artifacts import publication_covers,dataset_sources
+                if capability=='query' and (type(release) is not ServingRelease or
+                        not dataset_sources(release) and not publication_covers(release.publication,_today())):
                     raise ApiFailure('NOT_READY')
-                proof,_,_=await asyncio.to_thread(_require_operational_proof,settings,release,capability=capability)
+                proof=await asyncio.to_thread(_require_operational_proof,settings,release,capability=capability)
                 initialize_runtime()
                 reader=await asyncio.to_thread(_new_reader,settings,release,self._budget)
-                await asyncio.to_thread(verify_sample_backend,release,settings.sample_proof_sha256,None,reader)
-                from .sample_query import verify_gateway
-                await asyncio.to_thread(verify_gateway,settings,proof)
+                if settings.production:
+                    await asyncio.to_thread(_backend,reader,release)
+                else:
+                    from .sample_query import verify_gateway
+                    await asyncio.to_thread(verify_sample_backend,release,settings.sample_proof_sha256,None,reader)
+                    await asyncio.to_thread(verify_gateway,settings,proof[0])
                 _unchanged(release)
                 return {'status':'ready','capability':'query-v1' if capability=='query' else 'retrieve',
                     'checks':dict(auth='pass',runtime='pass',sources='pass',admission='pass'),
-                    'release_kind':'SAMPLE','release_id':release.release_id,'provider_transport':'metadata_verified',
+                    'release_kind':release.release_kind,'release_id':release.release_id,'provider_transport':'metadata_verified',
                     'production_write':'blocked'}
             finally:
                 if reader is not None:
@@ -1016,7 +1262,7 @@ class RuntimeSupervisor:
             raise
 
     async def query(self, request, settings, release, *, finalize=None, factory=None):
-        # Entry precedes body consumption, so upload and every subsequent gate share 25s.
+        # Upload, inference and source checks share the configured request deadline.
         deadline = time.monotonic()+(180.0 if settings.query_proof_sha256 else REQUEST_SECONDS)
         received_date = _today()
         request.state.request_deadline = deadline
@@ -1039,10 +1285,15 @@ class RuntimeSupervisor:
             runtime.request_id=getattr(request.state,'request_id',None)
             token = None
             meter_context = None
+            from kag.legal_prompts import _LEGAL_TRACE, legal_trace, legal_timing
+            trace_token = _LEGAL_TRACE.set(_diagnostic_sink(runtime) if
+                os.environ.get('KAG_CHAT_TRACE_QUESTION') in (parsed.message, '*timings*') else None)
             try:
-                as_of = await asyncio.to_thread(_identity,request,settings,release,parsed,received_date)
+                with legal_timing('request.identity'):
+                    as_of = await asyncio.to_thread(_identity,request,settings,release,parsed,received_date)
                 runtime.as_of = as_of
                 if settings.query_proof_sha256:runtime.budget.transport_seconds=60.0
+                if settings.production:runtime.budget.transport_seconds=REQUEST_SECONDS
                 runtime.budget.remaining()
                 _require_operational_proof(settings,release)
                 initialize_runtime()
@@ -1058,24 +1309,45 @@ class RuntimeSupervisor:
                         proof,_,_=load_proof(settings,release)
                         verify_gateway(settings,proof)
                     _backend(runtime.reader,release)
-                    _readback(runtime.reader,release.records,_json(release.contract_bytes))
-                    _backend(runtime.reader,release)
+                    from .artifacts import dataset_sources
+                    # Dataset graphs were verified at activation; citations are read back before response.
+                    if not (settings.production and dataset_sources(release)):
+                        _readback(runtime.reader,release.records,_json(release.contract_bytes))
+                        _backend(runtime.reader,release)
                     _unchanged(release)
                     runtime.budget.remaining()
-                await asyncio.to_thread(preflight)
+                with legal_timing('request.preflight'):
+                    await asyncio.to_thread(preflight)
                 if _today() != as_of:
                     raise ApiFailure('DATE_BOUNDARY_CHANGED')
                 token = _CURRENT.set((settings,release,runtime))
-                runtime = await asyncio.to_thread(factory or make_runtime,settings,release,deadline)
+                from kag.legal_solver import exact_source_answer
+                with legal_timing('request.exact'):
+                    try:
+                        result=await asyncio.to_thread(exact_source_answer,parsed.message,
+                            source_records=release.records,contract=_json(release.contract_bytes),
+                            partial=release.descriptor.get('partial',False))
+                    except (ValueError,TypeError,KeyError):
+                        raise ApiFailure('SOURCE_VALIDATION_FAILED') from None
+                runtime.budget.remaining()
+                if result is None:
+                    with legal_timing('request.runtime'):
+                        runtime = await asyncio.to_thread(factory or make_runtime,settings,release,deadline)
                 if _today() != as_of:
                     raise ApiFailure('DATE_BOUNDARY_CHANGED')
-                result = await run_query(runtime,parsed.message,as_of)
+                if result is None:
+                    with legal_timing('request.solver'):
+                        result = await run_query(runtime,parsed.message,as_of)
+                if settings.production:
+                    with legal_timing('request.postflight'):
+                        await asyncio.to_thread(_backend,runtime.reader,release)
                 if settings.query_proof_sha256:
                     await asyncio.to_thread(verify_sample_backend,release,settings.sample_proof_sha256,None,runtime.reader)
                     from dataclasses import asdict
                     import json
                     Path('/tmp/sample-answer.json').write_text(json.dumps(asdict(result),ensure_ascii=False),encoding='utf-8')
-                return result if finalize is None else await finalize(runtime,result,parsed)
+                with legal_timing('request.finalize'):
+                    return result if finalize is None else await finalize(runtime,result,parsed)
             finally:
                 if token is not None:
                     _CURRENT.reset(token)
@@ -1091,6 +1363,9 @@ class RuntimeSupervisor:
                 except Exception:
                     self.closed = True
                     raise ApiFailure('INTERNAL_ERROR') from None
+                finally:
+                    legal_trace('request.closed')
+                    _LEGAL_TRACE.reset(trace_token)
 
         return await self.supervise(operation,deadline)
 

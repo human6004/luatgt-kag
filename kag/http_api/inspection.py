@@ -22,7 +22,7 @@ def configuration_view(environment, provider_keys, secrets=()):
     for role in ('chat', 'embedding'):
         prefix = 'KAG_HTTP_' + role.upper()
         raw_model, raw_url = environment.get(prefix + '_MODEL'), environment.get(prefix + '_URL')
-        model = text(raw_model, r'[A-Za-z0-9][A-Za-z0-9._/-]{0,199}')
+        model = text(raw_model, r'[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}')
         endpoint, valid_url = None, False
         if raw_url:
             try:
@@ -84,7 +84,7 @@ def validate_config(value):
         model = value['models'][role]
         if (not shape(model, 'state model endpoint')
                 or model['state'] not in ('CONFIGURED', 'NOT_CONFIGURED', 'INCOMPLETE', 'INVALID')
-                or not optional_text(model['model'], r'[A-Za-z0-9][A-Za-z0-9._/-]{0,199}')
+                or not optional_text(model['model'], r'[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}')
                 or not optional_text(model['endpoint'], r'https?://[A-Za-z0-9.\[\]:-]{1,260}')
                 or model['state'] == 'CONFIGURED' and None in (model['model'], model['endpoint'])
                 or model['state'] == 'NOT_CONFIGURED' and (model['model'] is not None or model['endpoint'] is not None)):

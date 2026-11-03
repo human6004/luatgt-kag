@@ -102,4 +102,72 @@ public class LegalUnitService {
     public boolean citation(String docId,String unitId,String quote) {
         return units.findByUnitId(unitId).filter(u -> u.published&&read(u).path("doc_id").asText().equals(docId)&&!quote.isBlank()&&read(u).path("text").asText().contains(quote)).isPresent();
     }
+    @Transactional(readOnly=true)
+    public JsonNode sourceComparison(JsonNode source) {
+        var result=(ObjectNode)source.deepCopy(); var summary=result.putObject("summary");
+        result.putObject("import_limits").put("rows",ImportRequest.MAX_ROWS).put("bytes",vn.luatgt.config.RequestLimits.JSON_BYTES);
+        var existingDocs=new HashMap<String,Content>();
+        for(var row:documents.findByKindOrderByExternalId("documents"))existingDocs.put(row.externalId,row);
+        var existingUnits=new HashMap<String,LegalUnit>();
+        for(var row:units.findAll())existingUnits.put(row.unitId,row);
+        for(String group:List.of("documents","units")) {
+            boolean doc=group.equals("documents"); var output=content.mapper().createArrayNode();
+            var released=new HashMap<String,JsonNode>();
+            for(var row:source.path("release").path(group))released.put(row.path(doc?"doc_id":"unit_id").asText(),row);
+            int missing=0,unpublished=0,mismatch=0,ineffective=0,releaseMissing=0;
+            for(var input:source.path(group)) {
+                var n=schema.normalize(group,(ObjectNode)input); String id=KagSchema.exactId(n,doc?"doc_id":"unit_id",doc?250:500);
+                var d=doc?existingDocs.get(id):null; var u=doc?null:existingUnits.get(id);
+                var current=d!=null?content.read(d):u!=null?read(u):null;
+                boolean exists=current!=null,published=doc?d!=null&&d.published:u!=null&&u.published;
+                String status=!exists?"MISSING":doc?
+                    (!Objects.equals(n.path("title"),current.path("title"))||!sameDate(n,current,"ngay_hieu_luc")||!sameDate(n,current,"ngay_het_hieu_luc")?"CONTENT_MISMATCH":
+                        !published?"UNPUBLISHED":!content.isEffective(d)?"NOT_EFFECTIVE":"PUBLISHED"):
+                    (!n.path("doc_id").equals(current.path("doc_id"))||!n.path("text").equals(current.path("text"))?"CONTENT_MISMATCH":!published?"UNPUBLISHED":"PUBLISHED");
+                var sealed=released.get(id); boolean inRelease=exists&&published&&sealed!=null&&sealed.path("published").asBoolean(false)&&
+                    sealed.path("version").asText().equals(Long.toString(doc?d.version:u.version))&&
+                    (doc?sameDate(n,sealed,"ngay_hieu_luc","effective_from")&&sameDate(n,sealed,"ngay_het_hieu_luc","effective_to"):
+                        sealed.path("doc_id").equals(n.path("doc_id"))&&sealed.path("text_sha256").asText().equals(textHash(n.path("text").asText())));
+                if(!status.equals("PUBLISHED"))inRelease=false;
+                switch(status) {case "MISSING" -> missing++;case "UNPUBLISHED" -> unpublished++;case "CONTENT_MISMATCH" -> mismatch++;case "NOT_EFFECTIVE" -> ineffective++;default -> {}}
+                if(!inRelease)releaseMissing++;
+                var row=output.addObject().put("source_id",id).put("status",status).put("release_published",inRelease);
+                if(exists)row.put("record_id",(doc?d.id:u.id).toString());else row.putNull("record_id");
+                n.remove(List.of("published","version","id"));n.put("reviewed",false);row.set("import_data",n);
+            }
+            result.set(group,output);
+            summary.putObject(group).put("total",output.size()).put("missing",missing).put("unpublished",unpublished)
+                .put("mismatch",mismatch).put("ineffective",ineffective).put("release_missing",releaseMissing);
+        }
+        if(!source.path("release").isNull())result.set("release",content.mapper().createObjectNode().put("release_id",source.path("release").path("release_id").asText()));
+        return result;
+    }
+    private static boolean sameDate(JsonNode a,JsonNode b,String field) {return sameDate(a,b,field,field);}
+    private static boolean sameDate(JsonNode a,JsonNode b,String from,String to) {return Objects.equals(a.path(from).asText(null),b.path(to).asText(null));}
+    private static String textHash(String value) {
+        try {return HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(value.getBytes(java.nio.charset.StandardCharsets.UTF_8)));}
+        catch(java.security.NoSuchAlgorithmException e) {throw new IllegalStateException(e);}
+    }
+    @Transactional(readOnly=true)
+    public JsonNode servingPublication() {
+        var result=content.mapper().createObjectNode().put("as_of",java.time.LocalDate.now(java.time.ZoneId.of("Asia/Saigon")).toString());
+        var docs=result.putArray("documents");
+        for(var d:documents.findByKindOrderByExternalId("documents")) {
+            var n=content.read(d);
+            var row=docs.addObject().put("doc_id",d.externalId).put("published",d.published).put("version",Long.toString(d.version))
+                .put("current_effective",ContentService.effective(n)).put("replaces_eligible",content.isEffective(d));
+            row.set("effective_from",n.path("ngay_hieu_luc").isMissingNode()?content.mapper().nullNode():n.path("ngay_hieu_luc"));
+            row.set("effective_to",n.path("ngay_het_hieu_luc").isMissingNode()?content.mapper().nullNode():n.path("ngay_het_hieu_luc"));
+        }
+        var rows=result.putArray("units");
+        for(var u:units.findAll().stream().sorted(Comparator.comparing(v -> v.unitId)).toList()) {
+            var n=read(u);
+            try {
+                String hash=HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(n.path("text").asText().getBytes(java.nio.charset.StandardCharsets.UTF_8)));
+                rows.addObject().put("doc_id",n.path("doc_id").asText()).put("unit_id",u.unitId).put("published",u.published)
+                    .put("version",Long.toString(u.version)).put("text_sha256",hash);
+            } catch(java.security.NoSuchAlgorithmException e) {throw new IllegalStateException(e);}
+        }
+        return result;
+    }
 }

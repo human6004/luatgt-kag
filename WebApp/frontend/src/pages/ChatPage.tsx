@@ -82,11 +82,12 @@ export default function ChatPage() {
     const view = chatView(row)
     return { id: row.id, title: row.question, group: 'Hôm nay', pinned: pinned.has(row.id), messages: [
       { role: 'user', text: row.question },
-      { role: 'bot', text: view.answer, status: view.status, rich: !!view.answer, citations: view.citations.map(c => ({title:c.doc_id, clause:c.unit_id, label:`${c.doc_id} · ${c.unit_id}`, raw:c})) },
+      { role: 'bot', text: view.answer, status: view.status, rich: !!view.answer, citations: view.citations.map(c => ({title:c.doc_id, clause:c.unit_id ?? c.sign_id ?? '', label:`${c.doc_id}${c.unit_id || c.sign_id ? ` · ${c.unit_id ?? c.sign_id}` : ''}`, raw:c})) },
     ] }
   })
   // Backend stores one question per record and exposes no session date/grouping.
-  useEffect(() => { void chat.load(); return () => chat.cancel() }, [chat])
+  useEffect(() => { void chat.load(); return () => chat.dispose() }, [chat])
+  useEffect(() => { if (data.currentId) setActiveId(data.currentId) }, [data.currentId])
   useEffect(() => { const q=location.state?.initialQuery; if(typeof q==='string') setInput(q) }, [location.state])
   const [activeId, setActiveId] = useState<string | null>(null)
   const [input, setInput] = useState('')
@@ -191,7 +192,7 @@ export default function ChatPage() {
             <Icon d={ic.clip} />
           </button>
         </div>
-        {thinking && <button onClick={chat.cancel} className="border border-line rounded-lg px-3 py-2 text-xs">Dừng chờ</button>}
+        {thinking && <button onClick={() => void chat.cancel()} disabled={data.stopping} className="border border-line rounded-lg px-3 py-2 text-xs disabled:opacity-50">{data.stopping ? 'Đang dừng…' : 'Dừng'}</button>}
         <button
           onClick={() => void send()}
           disabled={!input.trim() || blocked}

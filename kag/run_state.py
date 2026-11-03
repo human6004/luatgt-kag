@@ -20,9 +20,18 @@ ROOT = Path(__file__).resolve().parents[1]
 ZERO = '0' * 64
 GRAPH_LOCK_VOLUME = 'kag-builder-graph-locks'
 MESSAGES = {'CONFIG': 'Invalid runner configuration.', 'SCOPE': 'Scope verification refused.',
+    'CLEAR_DENIED': 'Deployment has not granted data deletion for this exact project and physical database.',
+    'CLEAR_SHARED': 'Another project shares this physical database or its connection cannot be ruled out.',
+    'CLEAR_SERVING': 'The database is referenced by the configured serving runtime or release.',
+    'CLEAR_STALE': 'Target, data, structure or deployment grant changed. Preview deletion again.',
+    'CLEAR_UNCERTAIN': 'A delete transaction may still be active. The graph lock is retained; operator reconciliation is required.',
+    'STRUCTURE_STALE': 'Target, schema, indexes or model changed. Preview the structure again.',
+    'SCHEMA': 'Target schema is missing or incompatible with the supplied LuatGT schema.',
+    'TARGET_MODEL': 'Existing target vectors lack matching model and exact readback provenance. Use an empty project or the original model and run history.',
     'INTEGRITY': 'Run or artifact integrity verification refused.', 'LOCK': 'Database writer lock unavailable.',
     'LOCK_MOUNT': 'Shared graph lock requires the canonical writable Docker named volume.',
     'PLAN': 'Source plan verification refused.', 'VECTORS': 'Required vectors are not verified.',
+    'PROVIDER_BUDGET': 'Configured embedding request limit reached.',
     'NODES': 'Node verification refused.', 'EDGES': 'Edge verification refused.',
     'INDEX': 'Vector index verification refused.', 'PROVENANCE': 'Vector provenance verification refused.',
     'INTERRUPTED': 'Run interrupted at a durable batch boundary.',
@@ -194,6 +203,8 @@ class RunState:
                     emitted INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(log,sequence));
             ''')
             if resume:
+                if self.db.execute("SELECT 1 FROM run_meta WHERE key='disposition'").fetchone():
+                    raise RunBlocked('INTEGRITY')
                 if self._meta('identity') != canonical_json(self.identity):
                     raise RunBlocked('INTEGRITY')
                 self.status = json.loads(self._meta('status'))

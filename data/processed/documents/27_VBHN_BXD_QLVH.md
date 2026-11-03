@@ -1,10 +1,8 @@
+Ký bởi: CÔNG BÁO NƯỚC CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
+Cơ quan: VĂN PHÒNG CHÍNH PHỦ
+Ngày ký: 2026-06-18 14:46:09 +07:00
 
-2
- 
- 
- 
- 
-   CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM 
+CỘNG HOÀ XÃ HỘI CHỦ NGHĨA VIỆT NAM 
  Độc lập – Tự do – Hạnh phúc 
  
  
@@ -40,15 +38,8 @@ phủ quy định việc quản lý, sử dụng và khai thác tài sản kết
 Theo đề nghị của Vụ trưởng Vụ Kết cấu hạ tầng giao thông và Cục trưởng 
 Cục Đường bộ Việt Nam; 
 Bộ trưởng Bộ Giao thông vận tải ban hành Thông tư quy định về quản lý, 
-vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ.1 
+vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ.[^vbhn27-1] 
  
-1 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung 
-một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
-Ký bởi: CÔNG BÁO NƯỚC CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Ngày ký: 2026-06-18 14:46:09 +07:00
-
-3
  
  
 ### CHƯƠNG I 
@@ -64,45 +55,8 @@ giữa các cơ quan, tổ chức, cá nhân có liên quan để bảo đảm t
 thông, an toàn khi thi công;  
 3. Quản lý, vận hành, khai thác, bảo trì kết cấu hạ tầng đường bộ; 
 4. Hoạt động của công trình kiểm soát tải trọng xe. 
- 
-tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, 
-điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 
-40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
-phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
-cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
-vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
-chở hành khách và xe ô tô có căn cứ ban hành như sau:  
-“Căn cứ Luật Đường bộ số 35/2024/QH15;  
-Căn cứ Luật Trật tự, an toàn giao thông đường bộ số 36/2024/QH15;  
-Căn cứ Luật Xây dựng số 50/2014/QH13;  
-Căn cứ Luật sửa đổi, bổ sung một số điều của Luật Xây dựng số 62/2020/QH14;  
-Căn cứ Luật Phòng, chống thiên tai số 33/2013/QH13;  
-Căn cứ Luật sửa đổi, bổ sung một số điều của Luật Đê điều và Luật Phòng, chống thiên tai số 
-60/2020/QH14;  
-Căn cứ Nghị định số 33/2025/NĐ-CP ngày 25 tháng 02 năm 2025 của Chính phủ quy định chức năng, 
-nhiệm vụ, quyền hạn và cơ cấu tổ chức của Bộ Xây dựng;  
-Căn cứ Nghị định số 06/2021/NĐ-CP ngày 26 tháng 01 năm 2021 của Chính phủ quy định chi tiết một số 
-nội dung về quản lý chất lượng, thi công xây dựng và bảo trì công trình xây dựng;  
-Căn cứ Nghị định số 66/2021/NĐ-CP ngày 06 tháng 7 năm 2021 của Chính phủ quy định chi tiết thi hành 
-một điều của Luật Phòng, chống thiên tai và Luật sửa đổi, bổ sung một số điều của Luật Đê điều và Luật Phòng, 
-chống thiên tai; 
-Căn cứ Nghị định số 44/2024/NĐ-CP ngày 24 tháng 4 năm 2024 của Chính phủ quy định việc quản lý, sử 
-dụng và khai thác tài sản kết cấu hạ tầng giao thông đường bộ;  
-Căn cứ Nghị định số 165/2024/NĐ-CP ngày 26 tháng 12 năm 2024 của Chính phủ quy định chi tiết, hướng 
-dẫn thi hành một số điều của Luật Đường bộ và Điều 77 Luật Trật tự, an toàn giao thông đường bộ;  
-Theo đề nghị của Cục trưởng Cục Đường bộ Việt Nam; 
-Bộ trưởng Bộ Xây dựng ban hành Thông tư sửa đổi, bổ sung một số điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
-vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
-trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TTBGTVT ngày 15 tháng 11 năm 
-2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong 
-lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
-vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ; Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
-khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô”. 
+  
 
-4
  
  
 ##### Điều 2. Đối tượng áp dụng 
@@ -121,7 +75,7 @@ THÁC; CẤP GIẤY PHÉP THI CÔNG CÔNG TRÌNH TRÊN ĐƯỜNG BỘ
  
 ##### Điều 3. Chấp thuận thiết kế nút giao đấu nối vào đường quốc lộ đang 
 khai thác 
-1.2 Chủ đầu tư dự án xây dựng nút giao đấu nối vào đường quốc lộ đang 
+1.[^vbhn27-2] Chủ đầu tư dự án xây dựng nút giao đấu nối vào đường quốc lộ đang 
 khai thác gửi 01 bộ hồ sơ đề nghị chấp thuận thiết kế nút giao đấu nối vào đường 
 quốc lộ đang khai thác theo hình thức trực tiếp hoặc qua hệ thống bưu điện hoặc 
 qua cổng dịch vụ công trực tuyến đến cơ quan có thẩm quyền quy định tại khoản 
@@ -138,19 +92,8 @@ c) Một trong các văn bản sau để xác định chủ đầu tư đấu n�
 làm chủ đầu tư nút giao đấu nối, hoặc quyết định chủ trương đầu tư hoặc quyết 
 định duyệt dự án đầu tư đường nhánh đấu nối vào đường quốc lộ đang khai thác; 
  
-2 Khoản này được sửa đổi, bổ sung bởi khoản 1 Điều 10 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
-năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025. 
+ 
 
-5
  
  
 d) Thành phần hồ sơ quy định tại điểm a khoản này là bản chính hoặc biểu 
@@ -160,11 +103,11 @@ một trong các trường hợp sau: bản chính, bản sao có chứng thực
 theo bản chính để đối chiếu. Số lượng 01 bộ 
 2. Cơ quan có thẩm quyền chấp thuận thiết kế nút giao đấu nối vào đường 
 quốc lộ đang khai thác: 
-a) Đối với quốc lộ do Bộ Xây dựng3 tải quản lý, Cục Đường bộ Việt Nam 
+a) Đối với quốc lộ do Bộ Xây dựng[^vbhn27-3] tải quản lý, Cục Đường bộ Việt Nam 
 chấp thuận thiết kế nút giao đấu nối vào đường cao tốc, đường quốc lộ được quy 
 hoạch thành cao tốc; Khu Quản lý đường bộ thực hiện đối với các đường quốc lộ 
 còn lại thuộc phạm vi quản lý; 
-b)4 Đối với quốc lộ do Ủy ban nhân dân cấp tỉnh quản lý, Sở Xây dựng chấp 
+b)[^vbhn27-4] Đối với quốc lộ do Ủy ban nhân dân cấp tỉnh quản lý, Sở Xây dựng chấp 
 thuận thiết kế nút giao đấu nối vào đường quốc lộ đang khai thác. 
 3. Cơ quan có thẩm quyền thực hiện tiếp nhận, kiểm tra hồ sơ và xử lý như sau: 
 a) Đối với hồ sơ nộp trực tiếp, cơ quan có thẩm quyền thực hiện kiểm tra hồ 
@@ -173,103 +116,40 @@ không đủ thành phần thì hướng dẫn chủ đầu tư hoàn thiện h�
 b) Đối với hồ sơ nộp gián tiếp, trong thời hạn 02 ngày làm việc kể từ ngày nhận 
 được hồ sơ, cơ quan có thẩm quyền kiểm tra thành phần hồ sơ, nếu đủ thì tiếp nhận, 
 nếu không đủ, có văn bản thông báo đến tổ chức, cá nhân để bổ sung, hoàn thiện; 
-c)5 Trong thời hạn 05 ngày làm việc kể từ khi nhận đủ hồ sơ theo quy định, 
+c)[^vbhn27-5] Trong thời hạn 05 ngày làm việc kể từ khi nhận đủ hồ sơ theo quy định, 
 cơ quan có thẩm quyền tiến hành xem xét hồ sơ, nếu đủ điều kiện thì có văn bản 
  
-3 Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
-1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
-sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
-vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
-nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
-số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
-phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
-cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
-vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
-chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
-4 Điểm này được sửa đổi, bổ sung bởi khoản 2 Điều 10 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
-năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025. 
-5 Điểm này được sửa đổi, bổ sung bởi điểm a khoản 3 Điều 10 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
-vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
-trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
-năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
-
-6
+ 
+ 
  
  
 chấp thuận thiết kế nút giao đấu nối vào đường quốc lộ đang khai thác theo quy 
 định tại mẫu số 02 Phụ lục I ban hành kèm theo Thông tư này; trường hợp không 
 chấp thuận thì phải có văn bản trả lời và nêu rõ lý do.  
-d)6 Trả kết quả giải quyết thủ tục hành chính cho tổ chức, cá nhân bằng bản 
+d)[^vbhn27-6] Trả kết quả giải quyết thủ tục hành chính cho tổ chức, cá nhân bằng bản 
 giấy và bản điện tử hợp lệ; đồng thời tích hợp trên VNeID 
-4.7 Nếu quá thời hạn 18 tháng kể từ ngày ban hành văn bản chấp thuận thiết 
+4.[^vbhn27-7] Nếu quá thời hạn 18 tháng kể từ ngày ban hành văn bản chấp thuận thiết 
 kế nút giao đấu nối vào quốc lộ đang khai thác mà chủ đầu tư chưa gửi hồ sơ đề 
 nghị chấp thuận thiết kế nút giao đấu nối vào đường quốc lộ đang khai thác theo 
 quy định tại Điều 4 Thông tư này hoặc có thay đổi về quy mô nút giao đấu nối so 
 với hồ sơ thiết kế đã được chấp thuận thì phải thực hiện lại thủ tục chấp thuận 
 thiết kế nút giao theo quy định tại các khoản 1, khoản 2 và khoản 3 Điều này. 
 5. Đối với kết nối giao thông thuộc dự án đầu tư xây dựng đường bộ do Thủ 
-tướng Chính phủ, Bộ trưởng Bộ Xây dựng8 là người có thẩm quyền quyết định 
+tướng Chính phủ, Bộ trưởng Bộ Xây dựng[^vbhn27-8] là người có thẩm quyền quyết định 
 đầu tư, việc quyết định thiết kế nút giao đấu nối vào quốc lộ đang khai thác thực 
 hiện trong quyết định phê duyệt dự án và không phải thực hiện quy định tại các 
 khoản 1, 2, 3 và 4 Điều này. 
  
-trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
-khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
-từ ngày 31 tháng 12 năm 2025. 
-6 Điểm này được bổ sung bởi điểm b khoản 3 Điều 10 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
-năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025. 
-7 Khoản này được sửa đổi, bổ sung bởi khoản 4 Điều 10 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
-năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025. 
-8 Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
-1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
-sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
-vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
-nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
-số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
-phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
-cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
-vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
-chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
+ 
+ 
+ 
 
-7
  
  
 ##### Điều 4. Cấp phép thi công nút giao đấu nối vào đường quốc lộ đang 
 khai thác 
-1.9 Chủ đầu tư dự án xây dựng nút giao đấu nối vào đường quốc lộ đang 
+1.[^vbhn27-9] Chủ đầu tư dự án xây dựng nút giao đấu nối vào đường quốc lộ đang 
 khai thác gửi 01 bộ hồ sơ đề nghị cấp phép thi công nút giao đấu nối vào đường 
 quốc lộ đang khai thác theo hình thức trực tiếp hoặc qua hệ thống bưu điện hoặc 
 qua cổng dịch vụ công trực tuyến đến cơ quan có thẩm quyền quy định tại khoản 
@@ -286,39 +166,13 @@ gốc, bản sao điện tử được chứng thực từ bản chính, bản s
 để đối chiếu. Số lượng 01 bộ. 
 2. Cơ quan có thẩm quyền cấp phép thi công nút giao đấu nối vào đường 
 quốc lộ đang khai thác:  
-a) Đối với quốc lộ do Bộ Xây dựng10 quản lý, Khu Quản lý đường bộ thực 
+a) Đối với quốc lộ do Bộ Xây dựng[^vbhn27-10] quản lý, Khu Quản lý đường bộ thực 
 hiện cấp phép thi công đấu nối vào đường quốc lộ thuộc phạm vi quản lý; 
-b)11 Đối với quốc lộ do Ủy ban nhân dân cấp tỉnh quản lý, Sở Xây dựng 
+b)[^vbhn27-11] Đối với quốc lộ do Ủy ban nhân dân cấp tỉnh quản lý, Sở Xây dựng 
 thực hiện việc cấp phép thi công nút giao đấu nối vào quốc lộ đang khai thác.   
  
-9 Khoản này được sửa đổi, bổ sung bởi khoản 1 Điều 11 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
-năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025. 
-10 Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
-1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
-sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
-vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
-nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
-số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
-phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
-cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
-vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
-chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
-11 Điểm này được sửa đổi, bổ sung bởi khoản 2 Điều 11 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
-năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-
-8
+ 
+ 
  
  
 3. Cơ quan có thẩm quyền thực hiện tiếp nhận, kiểm tra hồ sơ và xử lý như sau: 
@@ -329,12 +183,12 @@ b) Đối với hồ sơ nộp gián tiếp, trong thời hạn 02 ngày làm vi
 nhận được hồ sơ, cơ quan có thẩm quyền kiểm tra thành phần hồ sơ, nếu đủ thì 
 tiếp nhận, nếu không đủ có văn bản thông báo đến tổ chức, cá nhân để bổ sung, 
 hoàn thiện; 
-c)12 Trong thời hạn 05 ngày làm việc kể từ khi nhận đủ hồ sơ theo quy định, 
+c)[^vbhn27-12] Trong thời hạn 05 ngày làm việc kể từ khi nhận đủ hồ sơ theo quy định, 
 cơ quan có thẩm quyền tiến hành xem xét hồ sơ, nếu đủ điều kiện thì cấp giấy 
 phép thi công nút giao đấu nối theo quy định tại mẫu số 04 Phụ lục I ban hành 
 kèm theo Thông tư này, trường hợp không chấp thuận thì phải có văn bản trả lời 
 và nêu rõ lý do.  
-d)13 Trả kết quả giải quyết thủ tục hành chính cho tổ chức, cá nhân bằng 
+d)[^vbhn27-13] Trả kết quả giải quyết thủ tục hành chính cho tổ chức, cá nhân bằng 
 bản giấy và bản điện tử hợp lệ; đồng thời tích hợp trên VneID. 
 4. Thời hạn có hiệu lực của giấy phép thi công nút giao đấu nối vào đường 
 quốc lộ đang khai thác: 
@@ -342,37 +196,10 @@ a) Đối với nút giao đấu nối thuộc dự án đầu tư công, đầu
 đối tác công tư, hiệu lực của giấy phép thi công nút giao đấu nối bằng tiến độ thực 
 hiện dự án;  
  
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025. 
-12 Điểm này được sửa đổi, bổ sung bởi điểm a khoản 3 Điều 11 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
-vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
-trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
-năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
-trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
-khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
-từ ngày 31 tháng 12 năm 2025. 
-13 Điểm này được bổ sung bởi điểm b khoản 3 Điều 11 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
-năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025. 
+ 
+ 
+ 
 
-9
  
  
 b) Đối với các trường hợp không thuộc quy định tại điểm a khoản này, thời 
@@ -388,11 +215,11 @@ thác
 thác theo hình thức trực tiếp hoặc gửi gián tiếp (qua hệ thống bưu điện hoặc qua 
 cổng dịch vụ công trực tuyến) đến cơ quan có thẩm quyền quy định tại khoản 3 
 Điều này. Hồ sơ đề nghị bao gồm: 
-a)14 Đơn đề nghị theo quy định tại Mẫu số 01 Phụ lục II ban hành kèm theo 
+a)[^vbhn27-14] Đơn đề nghị theo quy định tại Mẫu số 01 Phụ lục II ban hành kèm theo 
 Thông tư này; 
 b) Hồ sơ tài liệu phục vụ cấp giấy phép quy định tại khoản 2 Điều này. 
 2. Hồ sơ tài liệu phục vụ cấp giấy phép bao gồm:  
-a)15 Bản vẽ thiết kế thi công có các thông tin về: vị trí, lý trình đường bộ, 
+a)[^vbhn27-15] Bản vẽ thiết kế thi công có các thông tin về: vị trí, lý trình đường bộ, 
 kích thước công trình trên mặt bằng công trình đường bộ và trong phạm vi đất 
 dành cho kết cấu hạ tầng đường bộ; mặt đứng và khoảng cách theo phương thẳng 
 đứng từ công trình bên trên hoặc bên dưới đến bề mặt công trình đường bộ, khoảng 
@@ -400,33 +227,7 @@ cách theo phương ngang từ cột, tuyến đường dây, đường ống, b
 công trình đề nghị cấp phép đến mép ngoài rãnh thoát nước dọc, mép mặt đường 
 xe chạy hoặc mép ngoài cùng của mặt đường bộ; bộ phận công trình đường bộ 
 phải đào, khoan khi xây dựng công trình;  
- 
-14 Điểm này được sửa đổi, bổ sung bởi khoản 1 Điều 12 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
-năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025. 
-15 Điểm này được sửa đổi, bổ sung bởi điểm a khoản 2 Điều 12 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
-vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
-trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
-năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
-trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
-khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
-từ ngày 31 tháng 12 năm 2025. 
 
-10
- 
- 
 b) Đối với công trình đề nghị cấp giấy phép thi công trong phạm vi dải phân 
 cách giữa của đường bộ, ngoài hồ sơ quy định tại điểm a khoản này phải có thông 
 tin về khoảng cách theo phương thẳng đứng, phương ngang từ mép công trình đề 
@@ -439,12 +240,12 @@ quy định của pháp luật về xây dựng thực hiện;
 d) Bản vẽ thiết kế hoàn trả công trình đường bộ bị ảnh hưởng; bản vẽ và 
 thuyết minh: biện pháp tổ chức thi công, biện pháp bảo đảm giao thông trong thời 
 gian thi công trên đường bộ đang khai thác. 
-đ)16 Thành phần hồ sơ quy định tại điểm a khoản 1 Điều này là bản chính 
+đ)[^vbhn27-16] Thành phần hồ sơ quy định tại điểm a khoản 1 Điều này là bản chính 
 hoặc biểu mẫu điện tử; thành phần hồ sơ quy định tại các điểm a, b, c và d khoản 
 này là một trong các trường hợp sau: bản chính, bản sao có chứng thực, bản sao 
 điện tử được cấp từ sổ gốc, bản sao điện tử được chứng thực từ bản chính, bản sao 
 kèm theo bản chính để đối chiếu. Số lượng 01 bộ. 
-3. Cơ quan có thẩm quyền cấp giấy phép thi công công trình trên đường 
+3.[^vbhn27-17] Cơ quan có thẩm quyền cấp giấy phép thi công công trình trên đường 
 bộ đang khai thác: Khu Quản lý đường bộ, Sở Xây dựng, Ủy ban nhân dân cấp xã 
 cấp giấy phép thi công công trình trên đường bộ đang khai thác thuộc phạm vi 
 quản lý.  
@@ -453,94 +254,31 @@ a) Đối với hồ sơ nộp trực tiếp, cơ quan có thẩm quyền thực
 hồ sơ, nếu đủ thành phần theo quy định tại khoản 1 và khoản 2 Điều này thì tiếp 
 nhận và viết phiếu hẹn trả kết quả, nếu không đủ thành phần thì hướng dẫn chủ 
 đầu tư hoàn thiện hồ sơ theo quy định; 
- 
-16 Điểm này được bổ sung bởi điểm b khoản 2 Điều 12 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
-năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025. 
-17 Khoản này được sửa đổi, bổ sung bởi khoản 3 Điều 12 Thông tư số 72/2025/TT-BXD ngày 31 tháng 
-12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải 
-bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, 
-thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
-của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh 
-vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
-tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT 
-ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ 
-ngày 31 tháng 12 năm 2025 
 
-11
- 
- 
 b) Đối với hồ sơ nộp gián tiếp, trong thời hạn 02 ngày làm việc kể từ ngày nhận 
 được hồ sơ, cơ quan có thẩm quyền kiểm tra thành phần hồ sơ, nếu đủ thì tiếp nhận, 
 nếu không đủ, có văn bản thông báo đến tổ chức, cá nhân để bổ sung, hoàn thiện; 
-c)18 Trong thời hạn 05 ngày làm việc kể từ khi nhận đủ hồ sơ theo quy định, 
+c)[^vbhn27-18] Trong thời hạn 05 ngày làm việc kể từ khi nhận đủ hồ sơ theo quy định, 
 cơ quan có thẩm quyền tiến hành xem xét hồ sơ, nếu đủ điều kiện thì cấp giấy 
 phép thi công theo quy định tại mẫu số 02 Phụ lục II ban hành kèm theo Thông tư 
 này, trường hợp không cấp phép thì phải có văn bản trả lời và nêu rõ lý do.  
-d)19 Trả kết quả giải quyết thủ tục hành chính cho tổ chức, cá nhân bằng 
+d)[^vbhn27-19] Trả kết quả giải quyết thủ tục hành chính cho tổ chức, cá nhân bằng 
 bản giấy và bản điện tử hợp lệ; tích hợp trên VneID. 
 5. Giấy phép thi công có thời hạn 24 tháng, hết thời hạn nêu trên mà chưa 
 hoàn thành thi công công trình trên đường bộ đang khai thác thì phải thực hiện lại 
 từ đầu thủ tục cấp phép thi công công trình trên đường bộ đang khai thác. 
-6. Trường hợp chấp thuận xây dựng, gia cường hiện đồng thời với cấp 
+6.[^vbhn27-20] Trường hợp chấp thuận xây dựng, gia cường hiện đồng thời với cấp 
 giấy phép thi công công trình trên đường bộ đang khai thác thì thực hiện theo quy 
 định tại Nghị định của Chính phủ quy định chi tiết, hướng dẫn thi hành một số 
 điều của Luật Đường bộ và Điều 77 Luật Trật tự, an toàn giao thông đường bộ. 
 Trường hợp thi công nút giao đấu nối vào đường bộ đang khai thác thì 
 không thực hiện thủ tục cấp giấy phép thi công trên đường bộ đang khai thác quy 
- 
-18 Điểm này được sửa đổi, bổ sung bởi điểm a khoản 4 Điều 12 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
-vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
-trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
-năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
-trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
-khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
-từ ngày 31 tháng 12 năm 2025. 
-19 Điểm này được bổ sung bởi điểm b khoản 4 Điều 12 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
-năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025. 
-20 Khoản này được bổ sung bởi khoản 5 Điều 12 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 
-2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe 
-ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025. 
 
-12
- 
- 
 định tại các khoản 1, 2, 3, 4 và 5 Điều này. Việc cấp phép thi công nút giao đấu 
 nối thực hiện theo quy định tại Điều 4 Thông tư này. 
 ##### Điều 6. Cung cấp thông tin và cơ chế phối hợp giữa các cơ quan, tổ 
 chức, cá nhân khi thi công trên đường bộ đang khai thác 
- 1. Trách nhiệm của tổ chức, cá nhân thi công công trình trên đường bộ 
+ 1.[^vbhn27-21] Trách nhiệm của tổ chức, cá nhân thi công công trình trên đường bộ 
 đang khai thác, thi công nút giao đấu nối, thi công đấu nối tạm vào đường bộ đang 
 khai thác: 
 a) Trước khi thi công công trình trên đường bộ đang khai thác, chủ đầu tư 
@@ -568,25 +306,10 @@ trên đường bộ đang khai thác có trách nhiệm thực hiện theo quy 
 a) Thực hiện theo quy định tại điểm a khoản 1 Điều này, trừ các trường hợp 
 thi công xây dựng công trình quy định tại các điểm a, đ, e và k khoản 3 Điều 32 
 Luật Đường bộ; 
- 
-21 Khoản này được sửa đổi, bổ sung bởi khoản 1 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 tháng 
-12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải 
-bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, 
-thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
-của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh 
-vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
-tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT 
-ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ 
-ngày 31 tháng 12 năm 2025. 
 
-13
- 
- 
 b) Thực hiện theo quy định tại điểm b khoản 1 Điều này trừ các trường hợp 
 quy định tại các điểm a, đ, e và k khoản 3 Điều 32 Luật Đường bộ.  
- 3. Trách nhiệm của cơ quan quản lý đường bộ trực tiếp quản lý tuyến đường, 
+ 3.[^vbhn27-22] Trách nhiệm của cơ quan quản lý đường bộ trực tiếp quản lý tuyến đường, 
 người quản lý, sử dụng đường bộ: 
  
 a) Kiểm tra việc thực hiện các quy định tại Điều 21, Điều 32, Điều 33, Điều 
@@ -617,22 +340,7 @@ a) Các tài liệu quy định tại khoản 8 Điều 34 Nghị định số 0
 quy chuẩn, tiêu chuẩn kỹ thuật về bảo trì công trình kết cấu hạ tầng đường bộ;  
 b) Các quy định về giám sát, nghiệm thu kết quả bảo trì tài sản kết cấu hạ 
 tầng đường bộ theo chất lượng thực hiện. 
- 
-22 Khoản này được sửa đổi, bổ sung bởi khoản 3 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 tháng 
-12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải 
-bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, 
-thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
-của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh 
-vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
-tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT 
-ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ 
-ngày 31 tháng 12 năm 2025. 
 
-14
- 
- 
 2. Chủ đầu tư có trách nhiệm lập, phê duyệt quy trình bảo trì công trình kết 
 cấu hạ tầng đường bộ trong bước thiết kế kỹ thuật hoặc thiết kế bản vẽ thi công, 
 trừ trường hợp quy định tại khoản 1 Điều 8 Thông tư này.  
@@ -648,7 +356,7 @@ hưởng đến công trình kết cấu hạ tầng đường bộ.
 4. Việc điều chỉnh quy trình bảo trì công trình thuộc kết cấu hạ tầng đường 
 bộ thực hiện theo quy định tại khoản 6 Điều 31 Nghị định số 06/2021/NĐ-CP. Đối 
 với quốc lộ quy định tại khoản 3 Điều 8 Luật Đường bộ và các kết cấu hạ tầng 
-đường bộ là tài sản công do Bộ Xây dựng23 quản lý, Cục Đường bộ Việt Nam có 
+đường bộ là tài sản công do Bộ Xây dựng[^vbhn27-23] quản lý, Cục Đường bộ Việt Nam có 
 trách nhiệm tổ chức lập, phê duyệt điều chỉnh quy trình bảo trì công trình. 
 ##### Điều 8. Sử dụng tiêu chuẩn kỹ thuật về bảo trì, quy trình bảo trì của 
 công trình tương tự để thực hiện bảo trì kết cấu hạ tầng đường bộ  
@@ -665,19 +373,8 @@ mục công trình này.
 năm theo quy định của mẫu số 01 Phụ lục III ban hành kèm theo Thông tư này. 
 Các công việc trong kế hoạch bảo trì kết cấu hạ tầng đường bộ bao gồm: 
  
-23 Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
-1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
-sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
-vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
-nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
-số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
-phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
-cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
-vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
-chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
 
-15
  
  
 a) Bảo dưỡng, sửa chữa định kỳ, sửa chữa đột xuất, công trình chuyển tiếp 
@@ -687,14 +384,14 @@ vụ quản lý, vận hành, khai thác đường bộ;
 b) Quản lý, vận hành, khai thác, sử dụng công trình đường bộ, hệ thống 
 chiếu sáng trên đường bộ và các hạng mục, bộ phận, thiết bị gắn với đường bộ 
 phục vụ khai thác công trình đường bộ;  
-c)24 Xây dựng, quản lý, vận hành, bảo trì, khai thác hệ thống hạ tầng kỹ 
+c)[^vbhn27-24] Xây dựng, quản lý, vận hành, bảo trì, khai thác hệ thống hạ tầng kỹ 
 thuật, phần mềm và cơ sở dữ liệu về đường bộ; khảo sát, thu thập và cập nhật 
 thông tin dữ liệu đường bộ; quản lý, vận hành, khai thác và sử dụng hệ thống giao 
 thông thông minh; 
 d) Xây dựng quy chuẩn, tiêu chuẩn, định mức về quản lý, vận hành, khai 
 thác, bảo trì kết cấu hạ tầng đường bộ; quy trình bảo trì, quy trình vận hành, khai 
 thác kết cấu hạ tầng đường bộ; 
-đ)25 Mua sắm, bảo quản, bảo trì vật tư, thiết bị dự phòng và các công việc 
+đ)[^vbhn27-25] Mua sắm, bảo quản, bảo trì vật tư, thiết bị dự phòng và các công việc 
 khác liên quan đến nhiệm vụ phòng, chống, ứng phó, khắc phục hậu quả thiên tai, 
 cứu nạn và đảm bảo giao thông đường bộ, trừ các công việc thực hiện theo quy 
 định của pháp luật về phòng, chống thiên tai và quy định của Bộ trưởng Bộ Xây 
@@ -706,33 +403,12 @@ g) Hỗ trợ giá (phần chưa được kết cấu vào giá) đối với d�
 sửa chữa, thay thế, bổ sung phà, phương tiện, thiết bị vượt sông; mua sắm bổ sung 
 thiết bị, vật tư dự phòng cho phà và phương tiện thiết bị vượt sông; 
  
-24 Điểm này được sửa đổi, bổ sung bởi điểm a khoản 1 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
-vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
-trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
-năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
-trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
-khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
-từ ngày 31 tháng 12 năm 2025. 
-25 Điểm này được sửa đổi, bổ sung bởi điểm b khoản 1 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
-vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
-trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
-năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
-trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
-khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
-từ ngày 31 tháng 12 năm 2025. 
+ 
+ 
 
-16
  
  
-h)26 Mua sắm, sửa chữa thiết bị, phương tiện, trang phục để thực hiện công 
+h)[^vbhn27-26] Mua sắm, sửa chữa thiết bị, phương tiện, trang phục để thực hiện công 
 tác tuần kiểm; hỗ trợ công tác kiểm tra kết cấu hạ tầng giao thông đường bộ; mua 
 sắm ôtô, mô tô chuyên dùng, xe máy, phương tiện, thiết bị để thực hiện nhiệm vụ 
 của cơ quan quản lý đường bộ, người quản lý, sử dụng đường bộ đối với các công 
@@ -740,56 +416,25 @@ việc: tổ chức giao thông và bảo đảm an toàn giao thông trên đư
 thác; thực hiện công tác phòng, chống, khắc phục hậu quả thiên tai và tìm kiếm 
 cứu nạn trong lĩnh vực đường bộ và các công việc khác liên quan đến quản lý, 
 khai thác, bảo trì kết cấu hạ tầng đường bộ; 
-i)27 Trực đảm bảo giao thông, trực chốt theo phương án tổ chức giao thông, 
+i)[^vbhn27-27] Trực đảm bảo giao thông, trực chốt theo phương án tổ chức giao thông, 
 quy trình bảo trì, quy trình vận hành khai thác hoặc trong trường hợp khẩn cấp 
 cần bảo đảm an toàn giao thông và khắc phục ùn tắc giao thông theo yêu cầu của 
 cơ quan quản lý đường bộ; thực hiện thẩm tra an toàn giao thông đối với công 
 trình đường bộ đang khai thác; 
-k)28 (Được bãi bỏ) 
+k)[^vbhn27-28] (Được bãi bỏ) 
 l) Quản lý, khai thác, bảo trì đối với dự án đầu tư theo phương thức đối tác 
 công tư tiếp nhận từ nhà đầu tư sau khi chấm dứt hợp đồng dự án theo thời hạn 
 quy định của hợp đồng hoặc khi chấm dứt hợp đồng trước thời hạn theo quy định 
 của pháp luật về đầu tư theo phương thức đối tác công tư mà chưa hoàn thành các 
 thủ tục xác lập quyền sở hữu toàn dân;  
  
-26 Điểm này được sửa đổi, bổ sung bởi điểm c khoản 1 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
-vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
-trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
-năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
-trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
-khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
-từ ngày 31 tháng 12 năm 2025. 
-27 Điểm này được sửa đổi, bổ sung bởi điểm d khoản 1 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
-vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
-trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
-năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
-trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
-khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
-từ ngày 31 tháng 12 năm 2025. 
-28 Điểm này được bãi bỏ theo quy định tại khoản 3 Điều 18 Thông tư Thông tư số 72/2025/TT-BXD ngày 
-31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
-vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
-trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
-năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
-trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
-khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành từ 
-ngày 31 tháng 12 năm 2025. 
+ 
+ 
+ 
 
-17
  
  
-m)29 Các công việc để phục vụ cho việc lập kế hoạch và dự toán bảo trì 
+m)[^vbhn27-29] Các công việc để phục vụ cho việc lập kế hoạch và dự toán bảo trì 
 công trình đường bộ hàng năm (kể cả chi phí sử dụng hệ thống công nghệ khảo 
 sát dữ liệu mặt đường); các công việc khác để chủ sở hữu hoặc người quản lý sử 
 dụng công trình đường bộ tổ chức thực hiện công tác giám sát, nghiệm thu công 
@@ -799,53 +444,22 @@ n) Các công việc khác theo quy định của pháp luật.
 2. Trách nhiệm lập, phê duyệt, điều chỉnh kế hoạch bảo trì kết cấu hạ tầng 
 đường bộ:  
 a) Trách nhiệm lập, phê duyệt, điều chỉnh kế hoạch bảo trì kết cấu hạ tầng 
-đường bộ do Bộ Xây dựng30 quản lý sử dụng vốn ngân sách Trung ương thực hiện 
+đường bộ do Bộ Xây dựng[^vbhn27-30] quản lý sử dụng vốn ngân sách Trung ương thực hiện 
 theo quy định tại khoản 3 và khoản 4 Điều này; 
-b)31 Ủy ban nhân dân cấp tỉnh quy định việc tổ chức lập, phê duyệt, điều 
+b)[^vbhn27-31] Ủy ban nhân dân cấp tỉnh quy định việc tổ chức lập, phê duyệt, điều 
 chỉnh kế hoạch quản lý, vận hành, khai thác, bảo trì kết cấu hạ tầng đường bộ 
 thuộc phạm vi quản lý; 
 c) Nhà đầu tư, doanh nghiệp nhận quyền chuyển nhượng, cho thuê tài sản 
 kết cấu hạ tầng đường bộ lập, phê duyệt, điều chỉnh kế hoạch bảo trì kết cấu hạ 
 tầng đường bộ theo quy định tại khoản 1 Điều này và quy định của hợp đồng; 
  
-29 Điểm này được sửa đổi, bổ sung bởi điểm đ khoản 1 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
-vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
-trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
-năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
-trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
-khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
-từ ngày 31 tháng 12 năm 2025. 
-30 Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
-1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
-sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
-vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
-nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
-số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
-phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
-cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
-vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
-chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
-31 Điểm này được sửa đổi, bổ sung bởi điểm a khoản 2 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
-vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
-trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
-năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
-trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
-khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
-từ ngày 31 tháng 12 năm 2025. 
+ 
+ 
+ 
 
-18
  
  
-d)32 Doanh nghiệp đầu tư xây dựng, quản lý, vận hành, kinh doanh, khai 
+d)[^vbhn27-32] Doanh nghiệp đầu tư xây dựng, quản lý, vận hành, kinh doanh, khai 
 thác, bảo trì kết cấu hạ tầng đường bộ được Nhà nước giao, ký kết hợp đồng 
 chuyển nhượng, hợp đồng cho thuê tài sản kết cấu hạ tầng đường bộ và hợp đồng 
 đầu tư theo phương thức đối tác công tư có trách nhiệm: lập, phê duyệt, điều chỉnh 
@@ -863,41 +477,16 @@ cơ sập đổ công trình, sự cố công trình theo quy định của phá
 các trường hợp khẩn cấp khác; thỏa thuận với Cơ quan có thẩm quyền ký hợp 
 đồng điều chỉnh, bổ sung vào hợp đồng các công việc và chi phí phát sinh ngoài 
 hợp đồng; 
-đ)33 Chủ sở hữu, người quản lý, sử dụng đường chuyên dùng, đường nội bộ 
+đ)[^vbhn27-33] Chủ sở hữu, người quản lý, sử dụng đường chuyên dùng, đường nội bộ 
 và đường khác không quy định tại các điểm a, b, c và d khoản này, có trách nhiệm 
 lập, phê duyệt, điều chỉnh kế hoạch quản lý, vận hành, khai thác, bảo trì kết cấu 
 hạ tầng đường bộ thuộc phạm vi quản lý. 
-3. Lập, phê duyệt nhu cầu và kế hoạch quản lý, vận hành, khai thác, bảo 
+3.[^vbhn27-34] Lập, phê duyệt nhu cầu và kế hoạch quản lý, vận hành, khai thác, bảo 
 trì kết cấu hạ tầng đường bộ sử dụng nguồn vốn ngân sách Trung ương do Bộ Xây 
 dựng quản lý cho kế hoạch năm sau: 
  
-32 Điểm này được sửa đổi, bổ sung bởi điểm b khoản 2 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
-vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
-trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
-năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
-trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
-khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
-từ ngày 31 tháng 12 năm 2025. 
-33 Điểm này được sửa đổi, bổ sung bởi điểm c khoản 2 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
-vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
-trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
-năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
-trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
-khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
-từ ngày 31 tháng 12 năm 2025. 
-34 Khoản này được sửa đổi, bổ sung bởi khoản 3 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 tháng 
-12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải 
-
-19
+ 
+ 
  
  
 a) Căn cứ vào tình trạng kỹ thuật, các thông tin về quy mô và kết cấu công 
@@ -935,23 +524,15 @@ kết cấu hạ tầng đường bộ, Cục Đường bộ Việt Nam, tổng 
 trình Bộ Xây dựng kế hoạch quản lý, vận hành, khai thác, bảo trì kết cấu hạ tầng 
 đường bộ năm sau trước ngày 30 tháng 9 hàng năm. 
  
-bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, 
-thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
-của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh 
-vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
-tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT 
-ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ 
-ngày 31 tháng 12 năm 2025. 
+ 
 
-20
  
  
 đ) Trong thời hạn 30 ngày, kể từ ngày Cục Đường bộ Việt Nam trình Bộ 
 Xây dựng kế hoạch quản lý, vận hành, khai thác, bảo trì kết cấu hạ tầng đường bộ 
 theo quy định tại điểm d khoản này, Bộ xây dựng phê duyệt kế hoạch quản lý, vận 
 hành, khai thác, bảo trì kết cấu hạ tầng đường bộ năm sau. 
-4. 4. Điều chỉnh, bổ sung danh mục, công việc quản lý, vận hành, khai 
+4.[^vbhn27-35] 4. Điều chỉnh, bổ sung danh mục, công việc quản lý, vận hành, khai 
 thác, bảo trì kết cấu hạ tầng đường bộ; điều chỉnh kế hoạch quản lý, vận hành, 
 khai thác, bảo trì kết cấu hạ tầng đường bộ sử dụng vốn ngân sách trung ương do 
 Bộ Xây dựng quản lý trong năm kế hoạch: 
@@ -976,24 +557,10 @@ c) Cục Đường bộ Việt Nam chịu trách nhiệm tổng hợp các trư�
 định tại điểm c khoản 3, điểm a và điểm b khoản này; phê duyệt điều chỉnh kế 
 hoạch quản lý, vận hành, khai thác, bảo trì kết cấu hạ tầng đường bộ, đảm bảo 
 không để nợ đọng.  
-5. Các trường hợp phải sửa chữa đột xuất hoặc thực hiện các công việc 
+5.[^vbhn27-36] Các trường hợp phải sửa chữa đột xuất hoặc thực hiện các công việc 
 đột xuất, cấp bách khác được thực hiện ngoài kế hoạch quản lý, vận hành, khai 
  
-35 Khoản này được sửa đổi, bổ sung bởi khoản 4 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 tháng 
-12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải 
-bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, 
-thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
-của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh 
-vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
-tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT 
-ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ 
-ngày 31 tháng 12 năm 2025. 
-36 Khoản này được bổ sung bởi khoản 5 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 
-2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 
-
-21
+ 
  
  
 thác, bảo trì kết cấu hạ tầng đường bộ sử dụng vốn ngân sách trung ương do Bộ 
@@ -1015,7 +582,7 @@ an toàn công trình (sửa chữa điểm tiềm ẩn nguy cơ mất an toàn 
 chỉnh, bổ sung công trình an toàn giao thông, báo hiệu đường bộ, điều chỉnh, bổ 
 sung tổ chức giao thông và các công việc khác theo quy định tại các Điều 23, Điều 
 24, Điều 25 và các quy định khác của Luật Đường bộ, quy định của pháp luật về 
-đường bộ; thực hiện các kiến nghị của theo quy định tại Điều 79 và các quy định 
+đường bộ; thực hiện các kiến nghị theo quy định tại Điều 79 và các quy định 
 khác của Luật Trật tự, an toàn giao thông đường bộ; thực hiện sửa chữa đột xuất 
 hoặc các công việc đột xuất khác liên quan đến quản lý, vận hành, khai thác, bảo 
 trì) thì việc cho phép chuẩn bị đầu tư và phải được thực hiện kịp thời theo các quy 
@@ -1029,17 +596,8 @@ thực hiện.
 đường bộ 
 1. Quy định về báo cáo: 
  
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe 
-ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025. 
+ 
 
-22
  
  
  a) Báo cáo kết quả thực hiện kế hoạch bảo trì kết cấu hạ tầng đường bộ  
@@ -1053,7 +611,7 @@ trước 10 ngày so với thời hạn báo cáo quy định tại điểm b kh
 2. Trách nhiệm báo cáo: 
 a) Đối với quốc lộ quy định tại khoản 3 Điều 8 Luật Đường bộ: Cục Đường 
 bộ Việt Nam, Khu Quản lý đường bộ, đơn vị được phân cấp thực hiện báo cáo Bộ 
-Xây dựng37 các trường hợp sử dụng vốn ngân sách nhà nước; 
+Xây dựng[^vbhn27-37] các trường hợp sử dụng vốn ngân sách nhà nước; 
 b) Đối với đường bộ quy định tại khoản 2, khoản 4 Điều 8 Luật Đường bộ: 
 cơ quan quản lý đường bộ của địa phương báo cáo Ủy ban nhân dân cấp tỉnh kết 
 quả thực hiện trong phạm vi được giao quản lý, bảo trì; 
@@ -1069,25 +627,11 @@ của cơ quan có thẩm quyền.
 BẢO TRÌ KẾT CẤU HẠ TẦNG ĐƯỜNG BỘ 
 ##### Điều 11. Giám sát, nghiệm thu kết quả bảo trì công trình kết cấu hạ 
 tầng đường bộ; thời hạn hợp đồng bảo trì theo chất lượng thực hiện; lập hồ 
-sơ và ghi chép kết quả bảo dưỡng kết cấu hạ tầng đường bộ 
+sơ và ghi chép kết quả bảo dưỡng kết cấu hạ tầng đường bộ[^vbhn27-38] 
  1. Bảo trì thực hiện theo chất lượng thực hiện được áp dụng đối với hoạt 
 động bảo dưỡng thường xuyên công trình thuộc kết cấu hạ tầng đường bộ; việc 
  
-37 Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
-1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
-sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
-vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
-nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
-số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
-phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
-cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
-vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
-chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
-38 Tên Điều này được sửa đổi bởi khoản 1 Điều 15 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 
-2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 
-
-23
+ 
  
  
 giám sát công tác bảo dưỡng thường xuyên được thực hiện thông qua tuần kiểm 
@@ -1097,7 +641,7 @@ tháng hoặc quý.
 2. Tiêu chí giám sát, nghiệm thu kết quả bảo trì theo chất lượng thực hiện 
 được thực hiện theo quy định tại mẫu số 01 Phụ lục số IV ban hành kèm theo 
 Thông tư này. 
-3. Người quản lý, sử dụng đường bộ có trách nhiệm tổ chức thực hiện 
+3.[^vbhn27-39] Người quản lý, sử dụng đường bộ có trách nhiệm tổ chức thực hiện 
 giám sát, nghiệm thu kết quả thực hiện bảo trì công trình thuộc tài sản kết cấu hạ 
 tầng đường bộ; việc giám sát, nghiệm thu kết quả bảo trì theo khối lượng thực tế 
 thực hiện theo quy định của pháp luật về xây dựng. 
@@ -1115,29 +659,9 @@ nhân công, tiêu chuẩn và các thay đổi khác theo quy định của ph�
 thường xuyên công trình thuộc tài sản kết cấu hạ tầng đường bộ bao gồm:  
 a) Nhật ký tuần đường thực hiện theo quy định tại khoản 4 Điều 19 Thông 
 tư này; 
+  
  
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe 
-ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025. 
-39 Khoản này được sửa đổi bởi khoản 2 Điều 15 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 
-2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe 
-ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025. 
 
-24
  
  
 b) Kết quả thực hiện bảo dưỡng thường xuyên công trình thuộc tài sản kết 
@@ -1182,7 +706,6 @@ về xây dựng.
 3. Thẩm quyền tiếp nhận và cho ý kiến về kết quả đánh giá an toàn công 
 trình theo quy định tại khoản 4 Điều 39 Nghị định số 06/2021/NĐ-CP. 
 
-25
  
  
 4. Danh mục công trình đường bộ phải được cơ quan có thẩm quyền xem 
@@ -1226,7 +749,6 @@ vẽ sơ đồ khu vực, ảnh chụp khu vực hay xảy ra tai nạn giao th�
 nhiệm tổng hợp theo các tiêu chí: số vụ tai nạn giao thông, số người tử vong và 
 số người bị thương do tai nạn giao thông; thiệt hại đối với kết cấu hạ tầng, phương 
 
-26
  
  
 tiện tham gia giao thông; tình hình trật tự, an toàn giao thông đường bộ hàng năm; 
@@ -1259,22 +781,11 @@ a) Đối với điểm hay xảy ra tai nạn giao thông trên các quốc l�
 khoản 3 Điều 8 Luật Đường bộ nhưng chưa có trong kế hoạch bảo trì kết cấu hạ 
 tầng đường bộ được duyệt, Cục Đường bộ Việt Nam quyết định cho phép chuẩn 
 bị đầu tư (hoặc báo cáo kinh tế kỹ thuật) và tổ chức thực hiện kịp thời để bảo đảm 
-an toàn giao thông đường bộ; cập nhật và trình Bộ Xây dựng40 phê duyệt điều 
+an toàn giao thông đường bộ; cập nhật và trình Bộ Xây dựng[^vbhn27-40] phê duyệt điều 
 chỉnh kế hoạch bảo trì kết cấu hạ tầng đường bộ; 
  
-40 Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
-1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
-sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
-vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
-nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
-số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
-phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
-cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
-vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
-chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
 
-27
  
  
 b) Uỷ ban nhân dân các cấp quyết định tổ chức thực hiện xử lý điểm hay 
@@ -1287,7 +798,7 @@ bảo trì kết cấu hạ tầng đường bộ đã được phê duyệt, c�
 người quản lý, sử dụng đường bộ đề nghị cơ quan có thẩm quyền phê duyệt kế 
 hoạch bảo trì cho phép chuẩn bị đầu tư dự án sửa chữa đột xuất, trừ quy định tại 
 điểm b và điểm c khoản 4 Điều 9 Thông tư này đối với các quốc lộ do Bộ Xây 
-dựng41 quản lý để khắc phục điểm tiềm ẩn tai nạn giao thông đường bộ. 
+dựng[^vbhn27-41] quản lý để khắc phục điểm tiềm ẩn tai nạn giao thông đường bộ. 
 5. Cơ quan quản lý đường bộ, người quản lý, sử dụng đường bộ thông báo 
 kết quả xử lý điểm hay xảy ra tai nạn giao thông đường bộ, điểm tiềm ẩn tai nạn 
 giao thông đường bộ đến các tổ chức, cá nhân đã kiến nghị.  
@@ -1308,19 +819,8 @@ cáo kết quả khảo sát xây dựng công trình; các kết quả quan tr�
 chất lượng công trình, thí nghiệm khả năng chịu lực kết cấu công trình (nếu có) 
 trong quá trình thi công, danh mục các thiết bị, phụ tùng, vật tư dự trữ; 
  
-41 Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
-1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
-sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
-vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
-nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
-số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
-phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
-cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
-vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
-chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
 
-28
  
  
 b) Thiết kế bản vẽ thi công đã được chủ đầu tư xác nhận (có danh mục kèm 
@@ -1359,7 +859,6 @@ b) Đối với công trình đường bộ đang khai thác, nhà thầu bảo 
 thầu quản lý vận hành công trình đường bộ chịu trách nhiệm lập hồ sơ tài liệu theo 
 quy định tại các điểm k, l và điểm n khoản 1 Điều này, chủ sở hữu hoặc người 
 
-29
  
  
 quản lý sử dụng công trình đường bộ kiểm tra nhà thầu bảo dưỡng, nhà thầu quản 
@@ -1400,7 +899,6 @@ tải trọng xe báo cáo cơ quan quản lý đường bộ về kết quả k
 về: số phương tiện được kiểm tra tải trọng; số phương tiện vi phạm tải trọng; tỷ lệ 
 phần trăm (%) phương tiện vi phạm trên tổng số phương tiện kiểm tra.  
 
-30
  
  
 ##### Điều 19. Tuần đường phục vụ quản lý, vận hành, khai thác và bảo trì 
@@ -1413,7 +911,7 @@ a) Phát hiện, ngăn chặn kịp thời tổ chức, cá nhân có hành vi v
 quản lý, sử dụng kết cấu hạ tầng đường bộ, đấu nối trái phép vào đường bộ, xây 
 dựng, lắp đặt biển quảng cáo, biển thông tin cổ động, tuyên truyền chính trị, xây 
 dựng công trình hạ tầng, công trình hạ tầng kỹ thuật sử dụng chung trái quy định;  
-b)42 Đề nghị tổ chức, cá nhân có thẩm quyền lập biên bản vi phạm hành 
+b)[^vbhn27-42] Đề nghị tổ chức, cá nhân có thẩm quyền lập biên bản vi phạm hành 
 chính quy định về quản lý, sử dụng và bảo vệ kết cấu hạ tầng đường bộ; 
 c) Tổng hợp tình hình vi phạm bảo vệ kết cấu hạ tầng đường bộ, kết quả xử 
 lý, khắc phục vi phạm kết cấu hạ tầng đường bộ, công tác giải tỏa vi phạm và cưỡng 
@@ -1436,18 +934,8 @@ Trường hợp cần thiết thông báo cho lực lượng cảnh sát giao th
 phục vụ điều khiển giao thông.  
 3. Thực hiện công tác bảo đảm an toàn giao thông: 
  
-42 Điểm này được sửa đổi bởi Điều 16 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ 
-trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 
-2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt 
-động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, 
-trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông 
-tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, 
-vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 
-2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách 
-ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
 
-31
  
  
 a) Thông báo ngay khi có vụ tai nạn cho: lực lượng cảnh sát giao thông trên 
@@ -1489,7 +977,6 @@ b) Người tuần đường đang tham gia cứu hộ, cứu nạn tai nạn gi
 tham gia tìm kiếm cứu nạn khi có thiên tai, tham gia giải quyết, khắc phục sự cố 
 công trình, sự cố cháy, nổ và các trường hợp bất khả kháng khác. 
 
-32
  
  
 ##### Điều 20. Tuần kiểm phục vụ quản lý, vận hành, khai thác và bảo trì 
@@ -1498,7 +985,7 @@ công trình, sự cố cháy, nổ và các trường hợp bất khả kháng 
 định tại phần II, mục II Phụ lục VIII ban hành kèm theo Thông tư này; phương 
 tiện, trang thiết bị phục vụ tuần kiểm theo quy định tại phần III Phụ lục VIII ban 
 hành kèm theo Thông tư này. 
-2.43 Người quản lý, sử dụng đường bộ có trách nhiệm tổ chức thực hiện tuần 
+2.[^vbhn27-43] Người quản lý, sử dụng đường bộ có trách nhiệm tổ chức thực hiện tuần 
 kiểm đường bộ để thực hiện các công việc sau: 
 a) Kiểm tra, giám sát việc thực hiện công tác: quản lý, bảo trì kết cấu hạ 
 tầng đường bộ của nhà thầu hoặc tổ chức, cá nhân được giao quản lý, bảo dưỡng 
@@ -1525,25 +1012,14 @@ hiện tuần đường và kiến nghị của tổ chức, cá nhân khác đ�
 quản lý, sử dụng kết cấu hạ tầng đường bộ; tổ chức giao thông và trật tự, an toàn 
 giao thông đường bộ. 
  
-43 Điểm này được sửa đổi, bổ sung bởi Điều 17 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 
-2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe 
-ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
-đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
-bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
-tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
-phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
-tháng 12 năm 2025 
+ 
 
-33
  
  
 ### CHƯƠNG VI 
-ĐIỀU KHOẢN THI HÀNH44 
+ĐIỀU KHOẢN THI HÀNH[^44] 
  
-##### Điều 21. Điều khoản chuyển tiếp 
+##### Điều 21. Điều khoản chuyển tiếp[^45] 
 1. Các hoạt động bảo dưỡng kết cấu hạ tầng đường bộ đã ký kết hợp đồng 
 trước ngày Thông tư này có hiệu lực thì thực hiện theo hợp đồng đã ký kết; trường 
 hợp đã tổ chức đấu thầu nhưng chưa ký kết hợp đồng trước ngày Thông tư này có 
@@ -1554,6 +1030,8 @@ chưa có quy trình bảo trì phải hoàn thành việc lập, phê duyệt q
 trước ngày 31 tháng 12 năm 2025 trừ công trình cấp III trở xuống và quy định tại 
 Điều 8 Thông tư này. 
  
+###### Chú thích 44 — Chương VI
+
 44 Điều 24 Thông tư số 72/TT-BGTVT ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, 
 bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
 thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm 
@@ -1575,6 +1053,8 @@ quá trình triển khai thi hành báo cáo Ủy ban nhân dân cấp tỉnh, B
 quyền; 
 3. Ủy ban nhân dân cấp xã có trách nhiệm tổ chức thực hiện nhiệm vụ, quyền hạn được giao theo quy 
 định tại Thông tư này.”. 
+###### Chú thích 45 — Điều 21
+
 45 Khoản 2 Điều 25 Thông tư số 72/TT-BGTVT ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng 
 sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng 
 Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ 
@@ -1593,9 +1073,6 @@ tư này. Các cơ quan có thẩm quyền tiếp tục giải quyết theo quy 
 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải và Thông tư số 09/2025/TT-BXD ngày 13 tháng 6 năm 
 2025 của Bộ trưởng Bộ Xây dựng” 
 
-34
- 
- 
 ##### Điều 22. Hiệu lực thi hành  
  
 1. Thông tư này có hiệu lực thi hành kể từ ngày 01 tháng 01 năm 2025; 
@@ -1629,22 +1106,7 @@ b) Điều 1 Thông tư số 25/2024/TT-BGTVT ngày 28 tháng 06 năm 2024
 sửa đổi, bổ sung một số điều của Thông tư số 50/2015/TT-BGTVT ngày 23 tháng 
 9 năm 2015 của Bộ trưởng Bộ giao thông vận tải hướng dẫn thực hiện một số điều 
  
-46 Điều 23 Thông tư số 72/TT-BGTVT ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, 
-bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm 
-dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, 
-Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về 
-công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo 
-trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao 
-thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một 
-lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025 quy định như sau: 
-“Điều 23. Hiệu lực thi hành  
-1. Thông tư này có hiệu lực thi hành kể từ ngày ký ban hành.  
-2. Bãi bỏ Điều 27 và Điều 28 Thông tư số 09/2025/TT-BXD ngày 13 tháng 6 năm 2025 của Bộ trưởng 
-Bộ Xây dựng về sửa đổi, bổ sung một số điều của các Thông tư thuộc lĩnh vực quản lý nhà nước của Bộ Xây dựng 
-liên quan đến sắp xếp tổ chức bộ máy, thực hiện chính quyền địa phương hai cấp và phân cấp cho chính quyền 
-địa phương.”. 
+ 
 
 35
  
@@ -1708,7 +1170,26 @@ Lê Anh Tuấn
 37
  
  
-Phụ lục I 
+> **Chú thích 46 của nguồn** (PDF trang 33, số trang in 34; nội dung trích dẫn văn bản khác):
+> 
+> 46 Điều 23 Thông tư số 72/TT-BGTVT ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, 
+> bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+> thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm 
+> dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, 
+> Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về 
+> công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT 
+> ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo 
+> trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao 
+> thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một 
+> lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025 quy định như sau: 
+> “Điều 23. Hiệu lực thi hành  
+> 1. Thông tư này có hiệu lực thi hành kể từ ngày ký ban hành.  
+> 2. Bãi bỏ Điều 27 và Điều 28 Thông tư số 09/2025/TT-BXD ngày 13 tháng 6 năm 2025 của Bộ trưởng 
+> Bộ Xây dựng về sửa đổi, bổ sung một số điều của các Thông tư thuộc lĩnh vực quản lý nhà nước của Bộ Xây dựng 
+> liên quan đến sắp xếp tổ chức bộ máy, thực hiện chính quyền địa phương hai cấp và phân cấp cho chính quyền 
+> địa phương.”.
+
+## Phụ lục I
 (Ban hành kèm theo Thông tư số 41/2024/TT-BGTVT ngày 15  tháng 11  năm 
 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai 
 thác và bảo trì kết cấu hạ tầng đường bộ) 
@@ -1718,7 +1199,7 @@ KẾ NÚT GIAO ĐẤU NỐI VÀO ĐƯỜNG QUỐC LỘ ĐANG KHAI THÁC; MẪU
 ĐƠN ĐỀ NGHỊ CẤP PHÉP THI CÔNG VÀ MẪU GIẤY PHÉP THI CÔNG NÚT 
 GIAO ĐẤU NỐI VÀO ĐƯỜNG QUỐC LỘ ĐANG KHAI THÁC  
  
-Mẫu số 01.47 Đơn đề nghị chấp thuận thiết kế nút giao đấu nối vào đường 
+### Mẫu số 01.[^vbhn27-47] Đơn đề nghị chấp thuận thiết kế nút giao đấu nối vào đường 
 quốc lộ đang khai thác 
 ………. (1)  
 ------- 
@@ -1739,21 +1220,8 @@ Căn cứ Nghị định số 165/2024/NĐ-CP ngày 26 tháng 12 năm 2024 của
 Chính phủ quy định chi tiết, hướng dẫn thi hành một số điều của Luật Đường bộ 
 và Điều 77 Luật Trật tự, an toàn giao thông đường bộ và Nghị định số     
  
-47 Mẫu này được thay thế bởi Mẫu số 01 Phụ lục III Thông tư số 72/2025/TT-BXD theo quy định tại điểm 
-a khoản 2 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
-sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
-vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
-nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
-số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
-phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
-cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
-vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
-chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
 
-38
- 
- 
 /202…/NĐ-CP ngày … tháng …năm 20… của Chính phủ sửa đổi, bổ sung các 
 Nghị định trong lĩnh vực đường bộ; 
 Căn cứ Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của 
@@ -1783,9 +1251,6 @@ Nơi nhận:
 - ………….. 
 ………….. ( 8)  
 
-39
- 
- 
 Hướng dẫn nội dung ghi trong đơn đề nghị chấp thuận thiết kế nút giao 
 đấu nối vào đường quốc lộ đang khai thác: 
 (1) Ghi cơ quan cấp trên nếu có, sau đó ghi tên chủ đầu tư (tổ chức, cá nhân) 
@@ -1808,10 +1273,7 @@ của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số điều
 lĩnh vực đường bộ. 
 (8) Cơ quan, tổ chức, cá nhân (6) ký đơn, ghi rõ họ tên và đóng dấu nếu có. 
 
-40
- 
- 
-Mẫu số 02. Văn bản chấp thuận thiết kế nút giao đấu nối vào đường quốc lộ 
+### Mẫu số 02. Văn bản chấp thuận thiết kế nút giao đấu nối vào đường quốc lộ 
 đang khai thác 
  
 (1) 
@@ -1856,9 +1318,6 @@ a) ..
 b) … 
 c) … 
 
-41
- 
- 
 (Phần ghi các yêu cầu: sửa đổi bổ sung thiết kế nút giao đấu nối, sửa đổi, 
 bổ sung đầy đủ báo hiệu đường bộ và công trình an toàn giao thông tại nút giao 
 đấu nối; thực hiện các thủ tục cấp giấy phép thi công nút giao đấu nối trước khi 
@@ -1890,10 +1349,7 @@ Hướng dẫn nội dung ghi
 giao đấu nối. 
 (2) Tên cơ quan chấp thuận thiết kế nút giao đấu nối. 
 
-42
- 
- 
-Mẫu số 03.48 Đơn đề nghị cấp phép thi công nút giao đấu nối vào đường quốc 
+### Mẫu số 03.[^vbhn27-48] Đơn đề nghị cấp phép thi công nút giao đấu nối vào đường quốc 
 lộ đang khai thác 
 ………. (1) 
 ------- 
@@ -1924,21 +1380,8 @@ năm ...;
 …………... (6) cam kết thi công theo đúng Giấy phép thi công và quy định 
 của pháp luật. 
  
-48 Mẫu này được thay thể bởi Mẫu số 02 Phụ lục III Thông tư số 72/2025/TT-BXD theo quy định tại điểm 
-a khoản 2 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
-sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
-vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
-nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
-số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
-phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
-cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
-vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
-chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
 
-43
- 
- 
 Địa chỉ liên hệ:……………… 
 + Số điện thoại: …………(nếu có); Email …. (nếu có); 
 + Mã số định danh VNeID của cơ quan, tổ chức, cá nhân đề nghị cấp: …. 
@@ -1955,9 +1398,6 @@ sung địa chỉ nhận vào văn bản đề nghị).
 - ………….. 
 ………….. (6)  
 
-44
- 
- 
 Hướng dẫn nội dung ghi trong đơn đề nghị cấp phép thi công nút giao 
 đấu nối vào đường quốc lộ đang khai thác: 
 (1) Ghi cơ quan cấp trên nếu có, sau đó ghi tên tổ chức đề nghị cấp phép. 
@@ -1977,10 +1417,7 @@ an toàn giao thông đường bộ; dự án đầu tư xây dựng có nút gi
 giao chủ đầu tư xây dựng nút giao đấu nối). 
 (6) Ghi tổ chức, cá nhân ký đơn đề nghị cấp phép thi công đấu nối. 
 
-45
- 
- 
-Mẫu số 04. Giấy phép thi công nút giao đấu nối 
+### Mẫu số 04. Giấy phép thi công nút giao đấu nối 
  
 TÊN CƠ QUAN CẤP TRÊN 
 TÊN CƠ QUAN CẤP PHÉP  
@@ -2023,9 +1460,6 @@ bộ khi thi công trong phạm vi bảo vệ kết cấu hạ tầng đường 
 an toàn giao thông, chịu sự kiểm tra, kiểm soát của người quản lý, sử dụng đường 
 bộ và cơ quan có thẩm quyền khác; 
 
-46
- 
- 
 - Kể từ ngày nhận bàn giao mặt bằng, nếu đơn vị thi công không thực hiện 
 việc tổ chức giao thông, gây mất an toàn giao thông sẽ bị đình chỉ thi công; mọi 
 trách nhiệm liên quan đến tai nạn giao thông và chi phí thiệt hại khác (nếu có) đơn 
@@ -2051,10 +1485,7 @@ Nơi nhận:
 (2): Ghi tên cơ quan thẩm quyền chấp thuận thiết kế. 
 (3): Ghi tên tổ chức, cá nhân đề nghị cấp giấy phép thi công. 
 
-47
- 
- 
-Phụ lục II 
+## Phụ lục II
 MẪU ĐƠN ĐỀ NGHỊ CẤP PHÉP THI CÔNG CÔNG TRÌNH TRÊN 
 ĐƯỜNG BỘ ĐANG KHAI THÁC; MẪU GIẤY PHÉP THI CÔNG CÔNG 
 TRÌNH TRÊN ĐƯỜNG BỘ 
@@ -2063,7 +1494,7 @@ TRÌNH TRÊN ĐƯỜNG BỘ
 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai 
 thác và bảo trì kết cấu hạ tầng đường bộ) 
  
-Mẫu số 01.49 Đơn đề nghị cấp phép thi công công trình trên đường bộ đang 
+### Mẫu số 01.[^vbhn27-49] Đơn đề nghị cấp phép thi công công trình trên đường bộ đang 
 khai thác  
  (1)  
 (2) 
@@ -2087,21 +1518,8 @@ Nghị định trong lĩnh vực đường bộ;
 Căn cứ Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của 
 Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo 
  
-49 Mẫu này được thay thể bởi Mẫu số 03 Phụ lục III Thông tư số 72/2025/TT-BXD theo quy định tại điểm 
-c khoản 2 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa 
-đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, 
-trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, 
-Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về 
-công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo 
-trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao 
-thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một 
-lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
 
-48
- 
- 
 trì kết cấu hạ tầng đường bộ và Thông tư số …. /2025/TT-BXD ngày ….  tháng 
 …  năm 2025 của Bộ trưởng Bộ Xây dựng về việc sửa đổi, bổ sung …; 
 Căn cứ khác có liên quan; 
@@ -2139,9 +1557,6 @@ Nơi nhận:
 QUYỀN HẠN, CHỨC VỤ CỦA NGƯỜI KÝ 
 (Ký, ghi rõ họ tên và đóng dấu) 
 
-49
- 
- 
 Hướng dẫn nội dung ghi: 
 (1) Tên tổ chức hoặc cơ quan cấp trên của đơn vị hoặc tổ chức đứng Đơn 
 đề nghị (nếu có). 
@@ -2162,10 +1577,7 @@ thi công.
 (8) Chủ đầu tư hoặc cơ quan có thẩm quyền (trường hợp chủ đầu tư không 
 đủ năng lực phê duyệt thiết kế). 
 
-50
- 
- 
-Mẫu số 02. Giấy phép thi công công trình trên đường bộ đang khai thác 
+### Mẫu số 02. Giấy phép thi công công trình trên đường bộ đang khai thác 
  
 TÊN CƠ QUAN CẤP TRÊN 
 TÊN CƠ QUAN CẤP PHÉP 
@@ -2207,9 +1619,6 @@ về bảo đảm an toàn giao thông khi thi công trong phạm vi bảo vệ 
 an toàn giao thông, chịu sự kiểm tra, kiểm soát của đơn vị quản lý đường bộ và 
 cơ quan có thẩm quyền khác; 
 
-51
- 
- 
 - Kể từ ngày nhận bàn giao mặt bằng, nếu đơn vị thi công không thực hiện 
 việc tổ chức giao thông, gây mất an toàn giao thông sẽ bị đình chỉ thi công; mọi 
 trách nhiệm liên quan đến tai nạn giao thông và chi phí thiệt hại khác (nếu có) đơn 
@@ -2266,10 +1675,7 @@ hạ tầng kỹ thuật sử dụng chung) trong phạm vi bảo vệ kết c�
 QUYỀN HẠN, CHỨC VỤ CỦA NGƯỜI KÝ 
 (Ký, ghi rõ họ tên và đóng dấu) 
 
-52
- 
- 
-Phụ lục III 
+## Phụ lục III
 MẪU NHU CẦU/KẾ HOẠCH BẢO TRÌ KẾT CẤU HẠ TẦNG ĐƯỜNG 
 BỘ/MẪU BÁO CÁO THỰC HIỆN KẾ HOẠCH BẢO TRÌ KẾT CẤU HẠ 
 TẦNG ĐƯỜNG BỘ 
@@ -2278,7 +1684,7 @@ TẦNG ĐƯỜNG BỘ
 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai 
 thác và bảo trì kết cấu hạ tầng đường bộ) 
   
-Mẫu số 01.50 Nhu cầu/kế hoạch bảo trì kết cấu hạ tầng đường bộ 
+### Mẫu số 01.[^vbhn27-50] Nhu cầu/kế hoạch bảo trì kết cấu hạ tầng đường bộ 
 CƠ QUAN LẬP/ PHÊ 
 DUYỆT NHU CẦU/KẾ 
 HOẠCH  
@@ -2295,255 +1701,52 @@ KHAI THÁC
 NGUỒN VỐN …. NĂM… 
 Đơn vị được giao tổ chức thực hiện kế hoạch ………………. 
  
-TT 
-Công trình, hạng mục 
-công trình 
-Quy mô, 
-giải pháp 
-và khối 
-lượng/cô
-Kinh 
-phí 
-thực 
-hiện 
-Thời 
-gian 
-thực 
-Phương 
-thức 
-thực 
-hiện 
-Mức 
-độ ưu 
-tiên 
-Ghi 
-chú 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=51">
+  <thead>
+    <tr>
+      <th>TT</th>
+      <th>Công trình, hạng mục công trình</th>
+      <th>Quy mô, giải pháp và khối lượng/công việc chủ yếu</th>
+      <th>Kinh phí thực hiện (triệu đồng)</th>
+      <th>Thời gian thực hiện (Năm)</th>
+      <th>Phương thức thực hiện</th>
+      <th>Mức độ ưu tiên</th>
+      <th>Ghi chú</th>
+    </tr>
+    <tr>
+      <th>(1)</th><th>(2)</th><th>(3</th><th>(4)</th><th>(5)</th><th>(6)</th><th>(7)</th><th>(8)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td></td><td>TỔNG SỐ</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>I</td><td>Quản lý, vận hành, bảo dưỡng</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>II</td><td>Sửa chữa định kỳ</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>II.1</td><td>Công trình chuyển tiếp</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>II.2</td><td>Công trình mới</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>III</td><td>Sửa chữa đột xuất</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>IV</td><td>Công tác khác</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td>CHI TIẾT</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>I</td><td>Quản lý, vận hành, bảo dưỡng</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>1</td><td>Tên quốc lộ, đoạn quốc lộ</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>1.1</td><td>Quản lý, vận hành, bảo dưỡng đường</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>1.2</td><td>Quản lý, vận hành, bảo dưỡng cầu</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td>….</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>II</td><td>Sửa chữa định kỳ</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>1</td><td>Tên quốc lộ</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td>Công trình chuyển tiếp</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td>Công trình mới</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td>…………………..</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>III</td><td>Sửa chữa đột xuất</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>1</td><td>Tên quốc lộ</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td>…………</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>IV</td><td>Công tác khác</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td>…………</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </tbody>
+</table> 
  
-50 Mẫu này được thay thế bởi Mẫu số 04 Phụ lục III Thông tư số 72/2025/TT-BXD theo quy định tại điểm 
-d khoản 2 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa 
-đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, 
-trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, 
-Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về 
-công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo 
-trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao 
-thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một 
-lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
 
-53
- 
- 
-ng việc 
-chủ yếu 
-(triệu 
-đồng) 
-hiện 
-(Năm) 
-(1) 
-(2) 
-(3 
-(4) 
-(5) 
-(6) 
-(7) 
-(8) 
-  
-TỔNG SỐ 
-  
-  
-  
-  
-  
-  
-I 
-Quản lý, vận hành, bảo 
-dưỡng  
-  
-  
-  
-  
-  
-  
-II 
-Sửa chữa định kỳ 
-  
-  
-  
-  
-  
-  
-II.1 
-Công trình chuyển tiếp 
-  
-  
-  
-  
-  
-  
-II.2 
-Công trình mới 
-  
-  
-  
-  
-  
-  
-III 
-Sửa chữa đột xuất 
-  
-  
-  
-  
-  
-  
-IV 
-Công tác khác 
-  
-  
-  
-  
-  
-  
- 
- 
- 
- 
- 
- 
- 
- 
-  
-CHI TIẾT 
-  
-  
-  
-  
-  
-  
-I 
-Quản lý, vận hành, bảo 
-dưỡng 
-  
-  
-  
-  
-  
-  
-1 
-Tên quốc lộ, đoạn quốc 
-lộ 
-  
-  
-  
-  
-  
-  
- 1.1 
-Quản lý, vận hành, bảo 
-dưỡng đường 
-  
-  
-  
-  
-  
-  
- 1.2 
-Quản lý, vận hành, bảo 
-dưỡng cầu 
-  
-  
-  
-  
-  
-  
-  
-…. 
-  
-  
-  
-  
-  
-  
-II 
-Sửa chữa định kỳ 
-
-54
- 
- 
-1 
-Tên quốc lộ 
-  
-  
-  
-  
-  
-  
- 
-Công trình chuyển tiếp 
- 
- 
- 
- 
- 
- 
-  
-Công trình mới 
-  
-  
-  
-  
-  
-  
-  
-………………….. 
-  
-  
-  
-  
-  
-  
-III 
-Sửa chữa đột xuất 
-  
-  
-  
-  
-  
-  
-1 
-Tên quốc lộ 
-  
-  
-  
-  
-  
-  
-  
-………… 
-  
-  
-  
-  
-  
-  
-IV 
-Công tác khác 
-  
-  
-  
-  
-  
-  
-  
-………… 
-  
-  
-  
-  
-  
-  
- 
 1. Cột (7) phân loại mức độ ưu tiên căn cứ theo quy định tại điểm a khoản 3 
 Điều 9 Thông tư này và chỉ áp dụng đối với nhu cầu bảo trì công trình đường bộ. 
 2. Cột (4) kinh phí thực hiện: đối với danh mục, công trình chuyển tiếp lấy 
@@ -2561,9 +1764,6 @@ b) Kinh phí sửa chữa định kỳ: căn cứ khối lượng cần thực h
 quản lý chi phí xây dựng của cơ quan có thẩm quyền; hoặc ước tính theo suất đầu 
 tư các công trình tương tự để xác định; hoặc lấy theo đơn giá, giá dịch vụ, dự toán 
 
-55
- 
- 
 năm trước liền kề (trường hợp được giao nhiệm vụ, đặt hàng), đấu thầu năm liền 
 kề trước (trường hợp đấu thầu) và dự kiến biến động các yếu tố chi phí đầu vào. 
 c) Kinh phí sửa chữa đột xuất: căn cứ suất đầu tư sửa chữa công trình tương 
@@ -2596,9 +1796,6 @@ tư trong năm kế hoạch); kinh phí công trình được duyệt và kinh p
 kế đến năm xây dựng kế hoạch đối với công trình chuyển tiếp (là công trình thuộc 
 năm trước kế hoạch kéo dài sang năm kế hoạch). 
 
-56
- 
- 
 c) Kinh phí công tác khác: căn cứ dự toán kinh phí được cấp có thẩm quyền 
 phê duyệt để xác định. 
 3. Tài liệu kèm theo khi trình nhu cầu, kế hoạch bảo trì kết cấu hạ tầng 
@@ -2631,87 +1828,39 @@ b) Quyết định cho phép chuẩn bị đầu tư hoặc Quyết định phê
 c) Đối với dự án sửa chữa mặt đường, gia cố lề đường... có lý trình sửa chữa 
 tổng thể trùng với lý trình sửa chữa công trình các năm trước: ngoài hồ sơ cung 
 
-57
- 
- 
 cấp tại điểm a khoản này, cần bổ sung thuyết minh, hồ sơ để làm rõ về việc không 
 trùng với các vị trí đã sửa chữa trước đây. 
 d) Đối với công tác khác theo Quyết định phê duyệt chủ trương đầu tư/dự 
 toán kinh phí của cấp có thẩm quyền. 
 
-58
- 
- 
-Mẫu số 02. Báo cáo kết quả thực hiện kế hoạch bảo trì kết cầu hạ tầng đường bộ  
+### Mẫu số 02. Báo cáo kết quả thực hiện kế hoạch bảo trì kết cầu hạ tầng đường bộ  
  
 Đơn vị thực hiện:….. 
 Thời kỳ báo cáo: từ … đến 
 Đơn vị: triệu đồng 
-TT 
-Hạng mục công trình, công 
-việc thực hiện 
- KHBT 
-được phê 
-duyệt  
- Dự toán 
-chi được 
-giao 
-  
- Giá trị khối 
-lượng thực 
-hiện (đã 
-nghiệm thu) 
- Giải ngân  Ghi chú  
-(1) 
-(2) 
-(3) 
-(4) 
-(5) 
-(6) 
-(7) 
-  
-Tổng số  
-  
-  
-  
-  
-  
-A  Bảo dưỡng thường xuyên 
-- 
-- 
-- 
-- 
-- 
-B 
-Sửa chữa định kỳ  
- 
- 
- 
- 
- 
-  
- - Công trình chuyển tiếp 
- 
- 
- 
- 
- 
-  
- - Công trình mới  
- 
- 
- 
- 
- 
-C 
-Sửa chữa đột xuất 
- 
- 
- 
- 
- 
-D 
-Công tác khác 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=57">
+  <thead>
+    <tr>
+      <th>TT</th>
+      <th>Hạng mục công trình, công việc thực hiện</th>
+      <th>KHBT được phê duyệt</th>
+      <th>Dự toán chi được giao</th>
+      <th>Giá trị khối lượng thực hiện (đã nghiệm thu)</th>
+      <th>Giải ngân</th>
+      <th>Ghi chú</th>
+    </tr>
+    <tr><th>(1)</th><th>(2)</th><th>(3)</th><th>(4)</th><th>(5)</th><th>(6)</th><th>(7)</th></tr>
+  </thead>
+  <tbody>
+    <tr><td></td><td>Tổng số</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>A</td><td>Bảo dưỡng thường xuyên</td><td>-</td><td>-</td><td>-</td><td>-</td><td>-</td></tr>
+    <tr><td>B</td><td>Sửa chữa định kỳ</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td>- Công trình chuyển tiếp</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td></td><td>- Công trình mới</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>C</td><td>Sửa chữa đột xuất</td><td></td><td></td><td></td><td></td><td></td></tr>
+    <tr><td>D</td><td>Công tác khác</td><td></td><td></td><td></td><td></td><td></td></tr>
+  </tbody>
+</table> 
  
  
  
@@ -2723,10 +1872,7 @@ hay xảy ra tai nạn giao thông, điểm tiềm ẩn an toàn giao thông đ�
 thống thoát nước; số lượng cầu được sửa chữa; hệ thống an toàn giao thông) và 
 kết quả công tác phê duyệt tại điểm c khoản 3 Điều 9 Thông tư này. 
 
-59
- 
- 
-Phụ lục IV 
+## Phụ lục IV
 QUY ĐỊNH VỀ TIÊU CHÍ GIÁM SÁT, NGHIỆM THU, PHƯƠNG PHÁP 
 ĐÁNH GIÁ, KHẤU TRỪ KINH PHÍ HOẠT ĐỘNG BẢO DƯỠNG 
 THƯỜNG XUYÊN CÔNG TRÌNH THUỘC TÀI SẢN KẾT CẤU HẠ 
@@ -2737,7 +1883,7 @@ THỰC HIỆN
 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai 
 thác và bảo trì kết cấu hạ tầng đường bộ) 
  
-Mẫu số 01.51 Quy định về tiêu chí giám sát, nghiệm thu, phương pháp đánh 
+### Mẫu số 01.[^vbhn27-51] Quy định về tiêu chí giám sát, nghiệm thu, phương pháp đánh 
 giá, khấu trừ kinh phí hoạt động bảo dưỡng thường xuyên công trình thuộc 
 tài sản kết cấu hạ tầng đường bộ theo chất lượng thực hiện  
 I.  TIÊU CHÍ YÊU CẦU VỀ KỸ THUẬT CHẤT LƯỢNG ĐỐI VỚI BẢO 
@@ -2747,4466 +1893,515 @@ SÁT, NGHIỆM THU
 A. Đối với đường bộ (trừ đường cao tốc) 
 1. Công tác quản lý đường bộ   
  
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-1.1 
-Lập, quản 
-lý hồ sơ và 
-cập nhật hồ 
-Thực hiện đầy đủ 
-các nội dung quy 
-định tại Khoản 6 
-a) Có đủ các hồ sơ, tài liệu theo 
-yêu cầu của hợp đồng; thể hiện 
-đầy đủ, chính xác các số liệu so 
-a) Các thay đổi 
-công 
-trình 
-đường bộ phải 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=58">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td>1.1</td><td>Lập, quản<br>lý hồ sơ và<br>cập nhật hồ</td><td>Thực hiện đầy đủ<br>các nội dung quy<br>định tại Khoản 6</td><td>a) Có đủ các hồ sơ, tài liệu theo<br>yêu cầu của hợp đồng; thể hiện<br>đầy đủ, chính xác các số liệu so</td><td>a) Các thay đổi<br>công trình<br>đường bộ phải</td></tr>
+</tbody>
+</table> 
  
-51 Mẫu này được thay thế bởi Mẫu số 05 Phụ lục III Thông tư số 72/2025/TT-BXD theo quy định tại điểm 
-c khoản 2 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa 
-đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, 
-trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, 
-Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về 
-công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo 
-trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao 
-thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một 
-lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
 
-60
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-sơ tài liệu 
-trong thời 
-gian 
-thực 
-hiện 
-bảo 
-dưỡng 
-công trình 
-Điều 11 Thông tư 
-này và Mục 4.2.1 
-của Tiêu chuẩn 
-quốc gia TCVN 
-14182:2024 Bảo 
-dưỡng 
-thường 
-xuyên đường bộ 
-(sau đây viết tắt là 
-TCVN 
-14182:2024) 
-với hiện trường và quy định; cập 
-nhật, bổ sung những thay đổi của 
-công trình vào hồ sơ, tài liệu. 
-b) Lưu giữ, bảo quản có hệ thống, 
-không mất, hư hỏng hồ sơ. Cung 
-cấp hồ sơ, tài liệu kịp thời khi cơ 
-quan quản lý đường bộ (cơ quan 
-ký kết hợp đồng - Bên A) yêu cầu. 
-c) Đối với việc quản lý cầu bằng 
-phần mềm quản lý và các công 
-việc khác đã quy định sử dụng 
-phần mềm quản lý phải được cập 
-nhật và lưu trữ thường xuyên trên 
-phần mềm quản lý. 
-được cập nhật 
-không quá 15 
-ngày.  
-b) Các nội dung 
-khác: 15 ngày 
-kể từ ngày có 
-thông báo về 
-tồn tại trong 
-công tác này 
-của cơ quan ký 
-hợp đồng. 
-  
-1.2 
-Công tác ghi chép kết quả bảo 
-dưỡng kết cấu hạ tầng đường bộ 
-và việc thực hiện tuần đường 
- 
- 
- 
-1.2.1 
-– 
-Công 
-tác 
-ghi 
-chép 
-kết quả bảo 
-dưỡng 
-Việc ghi chép kết 
-quả thực hiện bảo 
-dưỡng phải được 
-thực hiện sau khi 
-hoàn thành các 
-công 
-tác 
-bảo 
-dưỡng, bao gồm: 
-(1) Công tác cắt 
-cỏ lề đường, cắt 
-cây (ghi thời gian, 
-đoạn đường thực 
-Yêu cầu về ghi chép kết quả bảo 
-dưỡng kết cấu hạ tầng đường bộ 
-1.1. Tổ chức, cá nhân thực hiện 
-bảo dưỡng kết cấu hạ tầng đường 
-bộ có trách nhiệm ghi chép kết 
-quả bảo dưỡng ngay sau khi hoàn 
-thành công việc bảo dưỡng. 
-Trường hợp công việc bảo dưỡng 
-kéo dài nhiều ngày, thì việc ghi 
-chép kết quả bảo dưỡng được 
-thực hiện khi hoàn thành bảo 
-dưỡng một hoặc một số bộ phận, 
-a) Đối với công 
-việc hoàn thành 
-trong ngày yêu 
-cầu ghi kết quả 
-thực hiện vào 
-cuối ngày. 
-b) Đối với các 
-công việc kéo 
-hơn 01 ngày: 
-ghi chép kết 
-quả bảo dưỡng 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=59">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td>sơ tài liệu<br>trong thời<br>gian thực<br>hiện bảo<br>dưỡng<br>công trình</td><td>Điều 11 Thông tư<br>này và Mục 4.2.1<br>của Tiêu chuẩn<br>quốc gia TCVN<br>14182:2024 Bảo<br>dưỡng thường<br>xuyên đường bộ<br>(sau đây viết tắt là<br>TCVN<br>14182:2024)</td><td>với hiện trường và quy định; cập<br>nhật, bổ sung những thay đổi của<br>công trình vào hồ sơ, tài liệu.<br>b) Lưu giữ, bảo quản có hệ thống,<br>không mất, hư hỏng hồ sơ. Cung<br>cấp hồ sơ, tài liệu kịp thời khi cơ<br>quan quản lý đường bộ (cơ quan<br>ký kết hợp đồng - Bên A) yêu cầu.<br>c) Đối với việc quản lý cầu bằng<br>phần mềm quản lý và các công<br>việc khác đã quy định sử dụng<br>phần mềm quản lý phải được cập<br>nhật và lưu trữ thường xuyên trên<br>phần mềm quản lý.</td><td>được cập nhật<br>không quá 15<br>ngày.<br>b) Các nội dung<br>khác: 15 ngày<br>kể từ ngày có<br>thông báo về<br>tồn tại trong<br>công tác này<br>của cơ quan ký<br>hợp đồng.</td></tr>
+<tr><td>1.2</td><td colspan="2">Công tác ghi chép kết quả bảo<br>dưỡng kết cấu hạ tầng đường bộ<br>và việc thực hiện tuần đường</td><td></td><td></td></tr>
+<tr><td></td><td>1.2.1 –<br>Công tác<br>ghi chép<br>kết quả bảo<br>dưỡng</td><td>Việc ghi chép kết<br>quả thực hiện bảo<br>dưỡng phải được<br>thực hiện sau khi<br>hoàn thành các<br>công tác bảo<br>dưỡng, bao gồm:<br>(1) Công tác cắt<br>cỏ lề đường, cắt<br>cây (ghi thời gian,<br>đoạn đường thực</td><td>Yêu cầu về ghi chép kết quả bảo<br>dưỡng kết cấu hạ tầng đường bộ<br>1.1. Tổ chức, cá nhân thực hiện<br>bảo dưỡng kết cấu hạ tầng đường<br>bộ có trách nhiệm ghi chép kết<br>quả bảo dưỡng ngay sau khi hoàn<br>thành công việc bảo dưỡng.<br>Trường hợp công việc bảo dưỡng<br>kéo dài nhiều ngày, thì việc ghi<br>chép kết quả bảo dưỡng được<br>thực hiện khi hoàn thành bảo<br>dưỡng một hoặc một số bộ phận,</td><td>a) Đối với công<br>việc hoàn thành<br>trong ngày yêu<br>cầu ghi kết quả<br>thực hiện vào<br>cuối ngày.<br>b) Đối với các<br>công việc kéo<br>hơn 01 ngày:<br>ghi chép kết<br>quả bảo dưỡng</td></tr>
+</tbody>
+</table> 
 
-61
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-hiện, kết quả chủ 
-yếu); 
-(2) Quét vệ sinh 
-mặt đường; vá ổ 
-gà, sửa mặt đường 
-(ghi 
-thời 
-gian, 
-đoạn đường thực 
-hiện, kết quả chủ 
-yếu); 
-(3) Nạo vét đoạn 
-rãnh (ghi đoạn 
-rãnh và thời gian 
-thực hiện, kết quả 
-chủ yếu); 
-(4) Sơn bổ sung 
-báo hiệu đường bộ 
-(ghi vị trí sơn bổ 
-sung và kết quả 
-chủ yếu); 
-(5) Khơi thông 
-cống, rãnh (ghi 
-thời gian, kết quả 
-chủ yếu); 
-(6) Sửa chữa lề 
-đường (ghi thời 
-gian 
-và 
-đoạn 
-tuyến thực hiện, 
-kết quả chủ yếu); 
-(7) Hót sụt (ghi 
-thời gian, đoạn, vị 
-hạng mục công trình kết cấu hạ 
-tầng đường bộ, thiết bị phục vụ 
-quản lý, vận hành, khai thác và 
-thiết bị lắp đặt vào kết cấu hạ tầng 
-đường bộ. Nội dung ghi chép kết 
-quả bảo dưỡng, bao gồm: 
-a) Công trình, hạng mục công 
-trình, thiết bị được bảo dưỡng; 
-b) Công việc bảo dưỡng đã thực 
-hiện; 
-c) Thời gian bắt đầu và kết thúc 
-công việc bảo dưỡng; 
-d) Tóm tắt quá trình thực hiện 
-công việc bảo dưỡng; 
-đ) Kết quả thực hiện bảo dưỡng; 
-e) Nhận xét về tình trạng công 
-trình kết cấu hạ tầng, thiết bị, 
-công nghệ sau khi bảo dưỡng và 
-các thông tin cần thiết khác. 
-vào ngày cuối 
-hoàn thành. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=60">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td>hiện, kết quả chủ<br>yếu);<br>(2) Quét vệ sinh<br>mặt đường; vá ổ<br>gà, sửa mặt đường<br>(ghi thời gian,<br>đoạn đường thực<br>hiện, kết quả chủ<br>yếu);<br>(3) Nạo vét đoạn<br>rãnh (ghi đoạn<br>rãnh và thời gian<br>thực hiện, kết quả<br>chủ yếu);<br>(4) Sơn bổ sung<br>báo hiệu đường bộ<br>(ghi vị trí sơn bổ<br>sung và kết quả<br>chủ yếu);<br>(5) Khơi thông<br>cống, rãnh (ghi<br>thời gian, kết quả<br>chủ yếu);<br>(6) Sửa chữa lề<br>đường (ghi thời<br>gian và đoạn<br>tuyến thực hiện,<br>kết quả chủ yếu);<br>(7) Hót sụt (ghi<br>thời gian, đoạn, vị</td><td>hạng mục công trình kết cấu hạ<br>tầng đường bộ, thiết bị phục vụ<br>quản lý, vận hành, khai thác và<br>thiết bị lắp đặt vào kết cấu hạ tầng<br>đường bộ. Nội dung ghi chép kết<br>quả bảo dưỡng, bao gồm:<br>a) Công trình, hạng mục công<br>trình, thiết bị được bảo dưỡng;<br>b) Công việc bảo dưỡng đã thực<br>hiện;<br>c) Thời gian bắt đầu và kết thúc<br>công việc bảo dưỡng;<br>d) Tóm tắt quá trình thực hiện<br>công việc bảo dưỡng;<br>đ) Kết quả thực hiện bảo dưỡng;<br>e) Nhận xét về tình trạng công<br>trình kết cấu hạ tầng, thiết bị,<br>công nghệ sau khi bảo dưỡng và<br>các thông tin cần thiết khác.</td><td>vào ngày cuối<br>hoàn thành.</td></tr>
+</tbody>
+</table> 
 
-62
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-trí và khối lượng, 
-kết quả chủ yếu); 
-(8) Bảo dưỡng 
-báo hiệu đường 
-bộ; 
-(9) Công tác bảo 
-dưỡng các hạng 
-mục công trình 
-khác ghi tương tự 
-như các tiết (1) 
-đến (8); 
-(10) Đối với bảo 
-dưỡng thiết bị, ghi 
-lại thời gian và 
-công việc thực 
-hiện. Ví dụ: bảo 
-dưỡng vệ sinh, bôi 
-mỡ kết cấu thép, 
-gối cầu thép; bảo 
-dưỡng máy tính; 
-bảo dưỡng thiết bị 
-điện và các thiết bị 
-khác. 
- 
-1.2.2- Việc 
-thực 
-hiện 
-tuần đường 
-Thực hiện theo 
-Điều 19 Thông tư 
-này và các nội 
-dung Mục 4.2.8 
-của 
-TCVN 
-14182:2024  
-a) Bố trí đủ lực lượng, phương 
-tiện, thiết bị và trang phục phục 
-vụ nhiệm vụ tuần đường, xử lý 
-kịp thời các kiến nghị trong quá 
-trình tuần đường, cập nhật kết 
-quả tổ chức khắc phục hư hỏng, 
-xuống cấp của công trình, bộ 
-a) Cho phép 
-thời gian khắc 
-phục khi chưa 
-đủ trang thiết bị 
-phục vụ tuần 
-đường là 01 
-tháng kể từ khi 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=61">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td>trí và khối lượng,<br>kết quả chủ yếu);<br>(8) Bảo dưỡng<br>báo hiệu đường<br>bộ;<br>(9) Công tác bảo<br>dưỡng các hạng<br>mục công trình<br>khác ghi tương tự<br>như các tiết (1)<br>đến (8);<br>(10) Đối với bảo<br>dưỡng thiết bị, ghi<br>lại thời gian và<br>công việc thực<br>hiện. Ví dụ: bảo<br>dưỡng vệ sinh, bôi<br>mỡ kết cấu thép,<br>gối cầu thép; bảo<br>dưỡng máy tính;<br>bảo dưỡng thiết bị<br>điện và các thiết bị<br>khác.</td><td></td><td></td></tr>
+<tr><td></td><td>1.2.2- Việc<br>thực hiện<br>tuần đường</td><td>Thực hiện theo<br>Điều 19 Thông tư<br>này và các nội<br>dung Mục 4.2.8<br>của TCVN<br>14182:2024</td><td>a) Bố trí đủ lực lượng, phương<br>tiện, thiết bị và trang phục phục<br>vụ nhiệm vụ tuần đường, xử lý<br>kịp thời các kiến nghị trong quá<br>trình tuần đường, cập nhật kết<br>quả tổ chức khắc phục hư hỏng,<br>xuống cấp của công trình, bộ</td><td>a) Cho phép<br>thời gian khắc<br>phục khi chưa<br>đủ trang thiết bị<br>phục vụ tuần<br>đường là 01<br>tháng kể từ khi</td></tr>
+</tbody>
+</table> 
 
-63
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-phận, hạng mục công trình, tham 
-gia xử lý tai nạn, khắc phục bão 
-lũ, bảo vệ công trình và hành lang 
-an toàn đường bộ, báo cáo theo 
-quy định.  
-b) Sổ nhật ký tuần đường thể hiện 
-đầy đủ kết quả hoạt động tuần 
-đường, nhận xét, ý kiến xử lý của 
-nhà thầu theo quy định tại Điều 
-19 Thông tư này. 
-c) Các quy định khác:  
-- Phát hiện kịp tình trạng bất 
-thường, sự cố của công trình 
-đường bộ, các công trình khác 
-ảnh hưởng đến an toàn giao thông 
-và 
-tai 
-nạn, 
-ùn 
-tắc 
-giao 
-thông (chụp ảnh hiện trạng hư 
-hỏng, tai nạn và báo cáo kịp thời). 
-- Thống kê, nắm rõ số lượng, vị 
-trí, tình trạng chi tiết của công 
-trình đường bộ trong đoạn tuyến 
-được giao; phát hiện hư hỏng, sự 
-xâm hại công trình; xử lý hoặc 
-báo cáo để có biện pháp xử lý. 
-- Theo dõi tai nạn giao thông và 
-xử lý theo quy định. 
-- Phát hiện kịp thời, lập biên bản 
-xác nhận hành vi vi phạm công 
-tác quản lý, bảo vệ phạm vi đất 
-ký 
-kết 
-hợp 
-đồng.  
-b) Đối với các 
-lỗi không đáp 
-ứng còn lại: 
-thời gian khắc 
-phục 
-tối 
-đa 
-không quá 01 
-ngày kể từ khi 
-phát hiện. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=62">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>phận, hạng mục công trình, tham<br>gia xử lý tai nạn, khắc phục bão<br>lũ, bảo vệ công trình và hành lang<br>an toàn đường bộ, báo cáo theo<br>quy định.<br>b) Sổ nhật ký tuần đường thể hiện<br>đầy đủ kết quả hoạt động tuần<br>đường, nhận xét, ý kiến xử lý của<br>nhà thầu theo quy định tại Điều<br>19 Thông tư này.<br>c) Các quy định khác:<br>- Phát hiện kịp tình trạng bất<br>thường, sự cố của công trình<br>đường bộ, các công trình khác<br>ảnh hưởng đến an toàn giao thông<br>và tai nạn, ùn tắc giao<br>thông (chụp ảnh hiện trạng hư<br>hỏng, tai nạn và báo cáo kịp thời).<br>- Thống kê, nắm rõ số lượng, vị<br>trí, tình trạng chi tiết của công<br>trình đường bộ trong đoạn tuyến<br>được giao; phát hiện hư hỏng, sự<br>xâm hại công trình; xử lý hoặc<br>báo cáo để có biện pháp xử lý.<br>- Theo dõi tai nạn giao thông và<br>xử lý theo quy định.<br>- Phát hiện kịp thời, lập biên bản<br>xác nhận hành vi vi phạm công<br>tác quản lý, bảo vệ phạm vi đất</td><td>ký kết hợp<br>đồng.<br>b) Đối với các<br>lỗi không đáp<br>ứng còn lại:<br>thời gian khắc<br>phục tối đa<br>không quá 01<br>ngày kể từ khi<br>phát hiện.</td></tr>
+</tbody>
+</table> 
 
-64
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-của đường bộ, báo cáo Bên A xử 
-lý theo quy định. 
-1.3 
-Đếm xe 
-Thực hiện việc 
-đếm xe theo Mục 
-4.2.5 của TCVN 
-14182:2024 hoặc 
-ý kiến chỉ đạo của 
-cơ quan quản lý 
-đường bộ. 
-a) Phiếu đếm xe chi tiết thể hiện 
-đầy đủ, chính xác kết quả đếm xe 
-được phân loại theo yêu cầu của 
-hợp đồng hoặc tiêu chuẩn kỹ 
-thuật, thời gian đếm xe. Báo cáo 
-tổng hợp kết quả đếm xe của đợt 
-đếm cụ thể từng ngày, số ca đếm 
-trong ngày, số xe được phân loại 
-cụ thể theo các chiều. 
-b) Chế độ báo cáo, tổng hợp, lưu 
-trữ và các nội dung khác thực 
-hiện theo quy định do cơ quan có 
-thẩm quyền ban hành, quy định 
-trong hợp đồng bảo trì.  
-a) Ngày đếm xe 
-được phép lùi 
-(hoặc 
-tiến) 
-không quá 5 
-ngày so với quy 
-định nếu trùng 
-vào dịp Lễ, Tết 
-hoặc sự kiện, sự 
-cố ảnh hưởng 
-làm thay đổi đột 
-ngột lưu lượng.  
-b) 
-Công 
-tác 
-tổng hợp, lưu 
-trữ và báo cáo 
-kết quả đếm xe 
-cho phép chậm 
-không quá 10 
-ngày kể từ ngày 
-phải đếm xe. 
-1.4 
-Công 
-tác 
-quản 
-lý, 
-bảo vệ kết 
-cấu hạ tầng 
-đường bộ 
-Thực 
-hiện 
-các 
-công việc quản lý, 
-bảo vệ hành lang 
-an toàn đường bộ, 
-đất của đường bộ, 
-công trình đường 
-bộ và kết cấu hạ 
-tầng đường bộ 
-quy định tại Nghị 
-a) Phát hiện, xử lý theo quy định, 
-ngăn chặn kịp thời các vi phạm 
-hành lang và kết cấu hạ tầng 
-đường bộ. 
-b) Phối hợp chặt chẽ với người 
-quản lý, sử dụng đường bộ, cơ 
-quan quản lý đường bộ, chính 
-quyền địa phương và công an 
-15 ngày kể từ 
-ngày có thông 
-báo về tồn tại 
-trong công tác 
-này 
-của 
-cơ 
-quan ký hợp 
-đồng. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=63">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>của đường bộ, báo cáo Bên A xử<br>lý theo quy định.</td><td></td></tr>
+<tr><td>1.3</td><td>Đếm xe</td><td>Thực hiện việc<br>đếm xe theo Mục<br>4.2.5 của TCVN<br>14182:2024 hoặc<br>ý kiến chỉ đạo của<br>cơ quan quản lý<br>đường bộ.</td><td>a) Phiếu đếm xe chi tiết thể hiện<br>đầy đủ, chính xác kết quả đếm xe<br>được phân loại theo yêu cầu của<br>hợp đồng hoặc tiêu chuẩn kỹ<br>thuật, thời gian đếm xe. Báo cáo<br>tổng hợp kết quả đếm xe của đợt<br>đếm cụ thể từng ngày, số ca đếm<br>trong ngày, số xe được phân loại<br>cụ thể theo các chiều.<br>b) Chế độ báo cáo, tổng hợp, lưu<br>trữ và các nội dung khác thực<br>hiện theo quy định do cơ quan có<br>thẩm quyền ban hành, quy định<br>trong hợp đồng bảo trì.</td><td>a) Ngày đếm xe<br>được phép lùi<br>(hoặc tiến)<br>không quá 5<br>ngày so với quy<br>định nếu trùng<br>vào dịp Lễ, Tết<br>hoặc sự kiện, sự<br>cố ảnh hưởng<br>làm thay đổi đột<br>ngột lưu lượng.<br>b) Công tác<br>tổng hợp, lưu<br>trữ và báo cáo<br>kết quả đếm xe<br>cho phép chậm<br>không quá 10<br>ngày kể từ ngày<br>phải đếm xe.</td></tr>
+<tr><td>1.4</td><td>Công tác<br>quản lý,<br>bảo vệ kết<br>cấu hạ tầng<br>đường bộ</td><td>Thực hiện các<br>công việc quản lý,<br>bảo vệ hành lang<br>an toàn đường bộ,<br>đất của đường bộ,<br>công trình đường<br>bộ và kết cấu hạ<br>tầng đường bộ<br>quy định tại Nghị</td><td>a) Phát hiện, xử lý theo quy định,<br>ngăn chặn kịp thời các vi phạm<br>hành lang và kết cấu hạ tầng<br>đường bộ.<br>b) Phối hợp chặt chẽ với người<br>quản lý, sử dụng đường bộ, cơ<br>quan quản lý đường bộ, chính<br>quyền địa phương và công an</td><td>15 ngày kể từ<br>ngày có thông<br>báo về tồn tại<br>trong công tác<br>này của cơ<br>quan ký hợp<br>đồng.</td></tr>
+</tbody>
+</table> 
 
-65
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-định quy định chi 
-tiết và hướng dẫn 
-thi hành một số 
-điều 
-của 
-Luật 
-Đường bộ, Điều 
-77 Luật Trật tự an 
-toàn giao thông 
-đường bộ và tại 
-khoản 1 Điều 19 
-Thông 
-tư 
-này; 
-thực hiện quy định 
-tại Mục 4.2.2 và 
-Mục 
-4.3.3 
-của 
-TCVN 
-14182:2024  
-trong công tác bảo dưỡng, bảo vệ 
-kết cấu hạ tầng đường bộ. 
-Cập nhật đầy đủ, kịp thời kết quả 
-kiểm tra cột mốc giải phóng mặt 
-bằng, mốc lộ giới, mốc đất của 
-đường bộ vào hồ sơ quản lý hành 
-lang an toàn đường bộ. 
-c) Tổng hợp, báo cáo kết quả xử 
-lý vi phạm đầy đủ, đúng quy định. 
-1.5 
-Công 
-tác 
-bảo đảm an 
-toàn 
-giao 
-thông 
-  
-Theo dõi tình hình 
-tai nạn giao thông, 
-tham gia xử lý, 
-báo cáo theo quy 
-định tại khoản 3 
-Điều 19 Thông tư 
-này và Mục 4.2.6, 
-4.2.7 của TCVN 
-14182:2024  
-a) Khi có tai nạn giao thông, phải 
-thông báo ngay cho lực lượng 
-chức năng, xử lý ùn tắc giao 
-thông, tham gia hướng dẫn giao 
-thông (nếu cần), tham gia cứu nạn 
-cứu hộ, bảo vệ hiện trường. 
-Phát hiện, phối hợp kịp thời với 
-lực lượng chức năng lập biên bản 
-xác nhận thiệt hại đối với các vụ 
-tai nạn giao thông gây hư hỏng 
-công trình đường bộ. 
-b) Phát hiện, theo dõi kịp thời các 
-tồn tại trong tổ chức giao thông, 
-điểm hay xảy ra tai nạn giao 
-a) Đối với công 
-tác báo cáo: cho 
-phép 
-chậm 
-không quá 02 
-ngày theo quy 
-định, 
-nhưng 
-trước 
-khi 
-nghiệm 
-thu 
-tháng phải báo 
-cáo đầy đủ kết 
-quả thực hiện 
-công tác đảm 
-bảo trật tự an 
-toàn 
-giao 
-thông. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=64">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td>định quy định chi<br>tiết và hướng dẫn<br>thi hành một số<br>điều của Luật<br>Đường bộ, Điều<br>77 Luật Trật tự an<br>toàn giao thông<br>đường bộ và tại<br>khoản 1 Điều 19<br>Thông tư này;<br>thực hiện quy định<br>tại Mục 4.2.2 và<br>Mục 4.3.3 của<br>TCVN<br>14182:2024</td><td>trong công tác bảo dưỡng, bảo vệ<br>kết cấu hạ tầng đường bộ.<br>Cập nhật đầy đủ, kịp thời kết quả<br>kiểm tra cột mốc giải phóng mặt<br>bằng, mốc lộ giới, mốc đất của<br>đường bộ vào hồ sơ quản lý hành<br>lang an toàn đường bộ.<br>c) Tổng hợp, báo cáo kết quả xử<br>lý vi phạm đầy đủ, đúng quy định.</td><td></td></tr>
+<tr><td>1.5</td><td>Công tác<br>bảo đảm an<br>toàn giao<br>thông</td><td>Theo dõi tình hình<br>tai nạn giao thông,<br>tham gia xử lý,<br>báo cáo theo quy<br>định tại khoản 3<br>Điều 19 Thông tư<br>này và Mục 4.2.6,<br>4.2.7 của TCVN<br>14182:2024</td><td>a) Khi có tai nạn giao thông, phải<br>thông báo ngay cho lực lượng<br>chức năng, xử lý ùn tắc giao<br>thông, tham gia hướng dẫn giao<br>thông (nếu cần), tham gia cứu nạn<br>cứu hộ, bảo vệ hiện trường.<br>Phát hiện, phối hợp kịp thời với<br>lực lượng chức năng lập biên bản<br>xác nhận thiệt hại đối với các vụ<br>tai nạn giao thông gây hư hỏng<br>công trình đường bộ.<br>b) Phát hiện, theo dõi kịp thời các<br>tồn tại trong tổ chức giao thông,<br>điểm hay xảy ra tai nạn giao</td><td>a) Đối với công<br>tác báo cáo: cho<br>phép chậm<br>không quá 02<br>ngày theo quy<br>định, nhưng<br>trước khi<br>nghiệm thu<br>tháng phải báo<br>cáo đầy đủ kết<br>quả thực hiện<br>công tác đảm<br>bảo trật tự an<br>toàn giao<br>thông.</td></tr>
+</tbody>
+</table> 
 
-66
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-thông đường bộ, điểm tiềm ẩn tai 
-nạn giao thông đường bộ.  
-c) Báo cáo định kỳ, đột xuất theo 
-quy định. 
-b) Các nội dung 
-khác: 15 ngày 
-kể từ ngày có 
-thông báo về 
-tồn tại trong 
-công tác này 
-của cơ quan ký 
-hợp đồng. 
-1.6 
-Trực đảm 
-bảo 
-giao 
-thông, 
-xử 
-lý khi có 
-bão, lũ lụt, 
-mưa, sạt lở 
-Trực 
-đảm 
-bảo 
-giao thông khi có 
-bão lụt, tổ chức 
-đảm 
-bảo 
-giao 
-thông theo quy 
-định Mục 4.2.3 
-của 
-TCVN 
-14182:2024; xử lý 
-khi có bão, lũ lụt, 
-mưa, sạt lở theo 
-quy 
-định 
-tại 
-Thông tư quy định 
-về 
-công 
-tác 
-phòng, chống và 
-khắc phục hậu quả 
-thiên tai trong lĩnh 
-vực đường bộ  
-a) Trực đảm bảo giao thông khi 
-có bão, lũ lụt, mưa lớn; nắm bắt 
-tình hình thiệt hại; ghi chép đầy 
-đủ diễn biến thời tiết, các hư hỏng 
-công trình đường bộ được giao 
-quản lý trong ca trực. 
-b) Báo cáo ngay khi có sự cố, 
-tham gia xử lý các sự cố, đảm bảo 
-thông đường theo điều kiện hợp 
-đồng, quy định về công tác 
-phòng, chống và khắc phục hậu 
-quả thiên tai trong lĩnh vực đường 
-bộ của Bộ trưởng Bộ Xây dựng. 
-a) Đối với công 
-tác báo cáo: báo 
-cáo Bên A ngay 
-khi xảy ra sự 
-cố.  
-b) Các nội dung 
-khác: 15 ngày 
-kể từ ngày có 
-thông báo về 
-tồn tại trong 
-công tác này 
-của Bên A. 
-1.7 
-Kiểm 
-tra, 
-xử lý hư 
-hỏng công 
-trình 
-kết 
-Tổ chức kiểm tra 
-định kỳ, đột xuất, 
-cập nhật và tổng 
-hợp báo cáo theo 
-quy định tại khoản 
-a) Phát hiện kịp thời các hư hỏng, 
-dấu hiệu hư hỏng công trình 
-đường bộ, thiết bị lắp đặt vào 
-công trình đường bộ theo quy 
-định hợp đồng. 
-a) 
-Việc 
-cập 
-nhật các thay 
-đổi công trình 
-đường 
-bộ: 
-không quá 15 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=65">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>thông đường bộ, điểm tiềm ẩn tai<br>nạn giao thông đường bộ.<br>c) Báo cáo định kỳ, đột xuất theo<br>quy định.</td><td>b) Các nội dung<br>khác: 15 ngày<br>kể từ ngày có<br>thông báo về<br>tồn tại trong<br>công tác này<br>của cơ quan ký<br>hợp đồng.</td></tr>
+<tr><td>1.6</td><td>Trực đảm<br>bảo giao<br>thông, xử<br>lý khi có<br>bão, lũ lụt,<br>mưa, sạt lở</td><td>Trực đảm bảo<br>giao thông khi có<br>bão lụt, tổ chức<br>đảm bảo giao<br>thông theo quy<br>định Mục 4.2.3<br>của TCVN<br>14182:2024; xử lý<br>khi có bão, lũ lụt,<br>mưa, sạt lở theo<br>quy định tại<br>Thông tư quy định<br>về công tác<br>phòng, chống và<br>khắc phục hậu quả<br>thiên tai trong lĩnh<br>vực đường bộ</td><td>a) Trực đảm bảo giao thông khi<br>có bão, lũ lụt, mưa lớn; nắm bắt<br>tình hình thiệt hại; ghi chép đầy<br>đủ diễn biến thời tiết, các hư hỏng<br>công trình đường bộ được giao<br>quản lý trong ca trực.<br>b) Báo cáo ngay khi có sự cố,<br>tham gia xử lý các sự cố, đảm bảo<br>thông đường theo điều kiện hợp<br>đồng, quy định về công tác<br>phòng, chống và khắc phục hậu<br>quả thiên tai trong lĩnh vực đường<br>bộ của Bộ trưởng Bộ Xây dựng.</td><td>a) Đối với công<br>tác báo cáo: báo<br>cáo Bên A ngay<br>khi xảy ra sự<br>cố.<br>b) Các nội dung<br>khác: 15 ngày<br>kể từ ngày có<br>thông báo về<br>tồn tại trong<br>công tác này<br>của Bên A.</td></tr>
+<tr><td>1.7</td><td>Kiểm tra,<br>xử lý hư<br>hỏng công<br>trình kết</td><td>Tổ chức kiểm tra<br>định kỳ, đột xuất,<br>cập nhật và tổng<br>hợp báo cáo theo<br>quy định tại khoản</td><td>a) Phát hiện kịp thời các hư hỏng,<br>dấu hiệu hư hỏng công trình<br>đường bộ, thiết bị lắp đặt vào<br>công trình đường bộ theo quy<br>định hợp đồng.</td><td>a) Việc cập<br>nhật các thay<br>đổi công trình<br>đường bộ:<br>không quá 15</td></tr>
+</tbody>
+</table> 
 
-67
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-cấu hạ tầng 
-đường bộ 
-2 Điều 19 Thông 
-tư này và Mục 
-4.2.9 của TCVN 
-14182:2024 
-b) Trường hợp hư hỏng, xuống 
-cấp nằm ngoài phạm vi hợp đồng, 
-báo cáo kịp thời Bên A để có biện 
-pháp sửa chữa, khắc phục. 
-c) Báo cáo Bên A tình trạng kỹ 
-thuật của các hạng mục công 
-trình, các hiện tượng hư hỏng, 
-xuống cấp của các hạng mục các 
-công trình được giao quản lý theo 
-yêu cầu của TCVN 14182:2024; 
-lưu giữ đầy đủ các biên bản, 
-phiếu kiểm tra. 
-d) Cập nhật đầy đủ vào hồ sơ, tài 
-liệu hoặc các phần mềm quản lý 
-cầu, đường. 
-ngày sau khi có 
-thay đổi. 
-b) Đối với các 
-hư hỏng xuống 
-cấp ảnh hưởng 
-đến 
-an 
-toàn 
-giao thông, an 
-toàn công trình: 
-phát hiện, báo 
-cáo không quá 
-01 ngày khi xảy 
-ra sự cố. 
-c) Đối với các 
-nội dung còn 
-lại: không quá 
-15 ngày. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=66">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td>cấu hạ tầng<br>đường bộ</td><td>2 Điều 19 Thông<br>tư này và Mục<br>4.2.9 của TCVN<br>14182:2024</td><td>b) Trường hợp hư hỏng, xuống<br>cấp nằm ngoài phạm vi hợp đồng,<br>báo cáo kịp thời Bên A để có biện<br>pháp sửa chữa, khắc phục.<br>c) Báo cáo Bên A tình trạng kỹ<br>thuật của các hạng mục công<br>trình, các hiện tượng hư hỏng,<br>xuống cấp của các hạng mục các<br>công trình được giao quản lý theo<br>yêu cầu của TCVN 14182:2024;<br>lưu giữ đầy đủ các biên bản,<br>phiếu kiểm tra.<br>d) Cập nhật đầy đủ vào hồ sơ, tài<br>liệu hoặc các phần mềm quản lý<br>cầu, đường.</td><td>ngày sau khi có<br>thay đổi.<br>b) Đối với các<br>hư hỏng xuống<br>cấp ảnh hưởng<br>đến an toàn<br>giao thông, an<br>toàn công trình:<br>phát hiện, báo<br>cáo không quá<br>01 ngày khi xảy<br>ra sự cố.<br>c) Đối với các<br>nội dung còn<br>lại: không quá<br>15 ngày.</td></tr>
+</tbody>
+</table> 
 
-68
- 
- 
 2. Bảo dưỡng mặt đường 
  
-TT 
-Hạng mục 
-Nội dung yêu 
-cầu kỹ thuật, 
-chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-2.1 
-Mặt đường bê tông nhựa (BTN), láng nhựa 
-  
-2.1.1 Vá ổ gà 
-(gồm cả vá 
-mép 
-mặt 
-đường sứt 
-vỡ) 
-Vá ổ gà theo quy 
-định 
-tại 
-Mục 
-5.4.3.3 
-của 
-TCVN 
-14182:2024. 
-  
-a) Xử lý kịp thời các vị trí ổ gà 
-ngay từ khi phát hiện. 
-b) Các miếng vá phải cùng cao 
-độ với mặt đường xung quanh 
-với dung sai tối đa + 5 mm; 
-những miếng vá có diện tích > 
-0,1 m2 được vá theo hình chữ 
-nhật, hình vuông; các cạnh 
-miếng vá phải song song hoặc 
-vuông góc với tim đường.  
-c) Các miếng vá được vá bằng 
-các vật liệu quy định trong các 
-tiêu chuẩn kỹ thuật. Vật liệu vá 
-phải tương đương hoặc tốt hơn 
-so với vật liệu đã được sử dụng 
-cho mặt đường xung quanh (mặt 
-đường BTN phải được vá bằng 
-BTN nóng, BTN ấm, hoặc BTN 
-nguội; trên các tuyến đường cấp 
-thấp tại những nơi khó khăn 
-trong việc sản xuất, cung ứng 
-các loại BTN, cho phép sử dụng 
-vật liệu carboncor để vá. Mặt 
-đường láng nhựa phải được vá 
-bằng láng nhựa, các loại bê tông 
-nhựa, carboncor, đá dăm đen).  
-Thời 
-gian 
-cho 
-phép khắc phục 
-trong 
-vòng 
-03 
-ngày 
-đối 
-với 
-tuyến đường cấp 
-I, II, 05 ngày đối 
-với 
-các 
-tuyến 
-đường cấp III - VI 
-kể từ khi xuất 
-hiện.  
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=67">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu<br>cầu kỹ thuật,<br>chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td>2.1</td><td colspan="3">Mặt đường bê tông nhựa (BTN), láng nhựa</td><td></td></tr>
+<tr><td>2.1.1</td><td>Vá ổ gà<br>(gồm cả vá<br>mép mặt<br>đường sứt<br>vỡ)</td><td>Vá ổ gà theo quy<br>định tại Mục<br>5.4.3.3 của<br>TCVN<br>14182:2024.</td><td>a) Xử lý kịp thời các vị trí ổ gà<br>ngay từ khi phát hiện.<br>b) Các miếng vá phải cùng cao<br>độ với mặt đường xung quanh<br>với dung sai tối đa + 5 mm;<br>những miếng vá có diện tích &gt;<br>0,1 m2 được vá theo hình chữ<br>nhật, hình vuông; các cạnh<br>miếng vá phải song song hoặc<br>vuông góc với tim đường.<br>c) Các miếng vá được vá bằng<br>các vật liệu quy định trong các<br>tiêu chuẩn kỹ thuật. Vật liệu vá<br>phải tương đương hoặc tốt hơn<br>so với vật liệu đã được sử dụng<br>cho mặt đường xung quanh (mặt<br>đường BTN phải được vá bằng<br>BTN nóng, BTN ấm, hoặc BTN<br>nguội; trên các tuyến đường cấp<br>thấp tại những nơi khó khăn<br>trong việc sản xuất, cung ứng<br>các loại BTN, cho phép sử dụng<br>vật liệu carboncor để vá. Mặt<br>đường láng nhựa phải được vá<br>bằng láng nhựa, các loại bê tông<br>nhựa, carboncor, đá dăm đen).</td><td>Thời gian cho<br>phép khắc phục<br>trong vòng 03<br>ngày đối với<br>tuyến đường cấp<br>I, II, 05 ngày đối<br>với các tuyến<br>đường cấp III - VI<br>kể từ khi xuất<br>hiện.</td></tr>
+</tbody>
+</table>  
 
-69
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu 
-cầu kỹ thuật, 
-chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-d) Mối nối giữa miếng vá với 
-mặt đường xung quanh không 
-được để khe hở rộng quá 03 mm. 
-2.1.2 Vết 
-nứt 
-dọc, 
-nứt 
-ngang đơn 
-lẻ 
-Xử lý theo quy 
-định 
-tại 
-Mục 
-5.4.3.5 
-của 
-TCVN 
-14182:2024. 
-Trên mặt đường không có vết 
-nứt có độ rộng trên 05 mm. 
-Khi xuất hiện vết 
-nứt loại này thì 
-thời 
-gian 
-cho 
-phép sửa chữa 
-trong 
-vòng 
-07 
-ngày đối với mùa 
-mưa, 14 ngày đối 
-với mùa khô. 
-2.1.3 Xử lý nứt 
-mai rùa và 
-các 
-dạng 
-nứt 
-dày 
-đặc khác. 
-Xử lý theo quy 
-định 
-tại 
-Mục 
-5.4.3.4 
-của 
-TCVN 
-14182:2024. 
- 
-Diện tích mặt bị nứt không được 
-vượt quá 10% diện tích mặt 
-đường tính cho 50 m dài đường 
-bất kỳ. 
-  
-Khi xuất hiện vết 
-nứt loại này, thời 
-gian cho phép sửa 
-chữa trong vòng 
-07 ngày đối với 
-mùa mưa, 14 ngày 
-đối với mùa khô. 
-2.1.4 Xử lý lún 
-lõm, 
-đẩy 
-trồi, 
-dồn 
-nhựa, lún 
-vệt 
-bánh 
-xe, 
-bong 
-bật 
-và 
-bong tróc 
-Xử lý theo quy 
-định 
-tại 
-Mục 
-5.4.3.6, 5.4.3.7, 
-5.4.3.8 
-của 
-TCVN 
-14182:2024. 
-a) Không để tình trạng lún lõm 
-quá 25 mm đối với đường bê 
-tông nhựa, không quá 50 mm 
-đối với đường láng nhựa. 
-b) Các hư hỏng đẩy trồi, dồn 
-nhựa không được hư hỏng mức 
-độ M trở lên theo TCVN 
-14182:2024.  
-c) Vật liệu vá và các nội dung 
-khác như đối với công tác vá ổ 
-gà tại Mục 2.1.1. 
-Các chỗ lún lõm 
-vượt quá mức giới 
-hạn phải được 
-loại bỏ không quá 
-10 ngày (không 
-tính các ngày trời 
-mưa, mặt đường 
-ẩm ướt không thi 
-công được). 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=68">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu<br>cầu kỹ thuật,<br>chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>d) Mối nối giữa miếng vá với<br>mặt đường xung quanh không<br>được để khe hở rộng quá 03 mm.</td><td></td></tr>
+<tr><td>2.1.2</td><td>Vết nứt<br>dọc, nứt<br>ngang đơn<br>lẻ</td><td>Xử lý theo quy<br>định tại Mục<br>5.4.3.5 của<br>TCVN<br>14182:2024.</td><td>Trên mặt đường không có vết<br>nứt có độ rộng trên 05 mm.</td><td>Khi xuất hiện vết<br>nứt loại này thì<br>thời gian cho<br>phép sửa chữa<br>trong vòng 07<br>ngày đối với mùa<br>mưa, 14 ngày đối<br>với mùa khô.</td></tr>
+<tr><td>2.1.3</td><td>Xử lý nứt<br>mai rùa và<br>các dạng<br>nứt dày<br>đặc khác.</td><td>Xử lý theo quy<br>định tại Mục<br>5.4.3.4 của<br>TCVN<br>14182:2024.</td><td>Diện tích mặt bị nứt không được<br>vượt quá 10% diện tích mặt<br>đường tính cho 50 m dài đường<br>bất kỳ.</td><td>Khi xuất hiện vết<br>nứt loại này, thời<br>gian cho phép sửa<br>chữa trong vòng<br>07 ngày đối với<br>mùa mưa, 14 ngày<br>đối với mùa khô.</td></tr>
+<tr><td>2.1.4</td><td>Xử lý lún<br>lõm, đẩy<br>trồi, dồn<br>nhựa, lún<br>vệt bánh<br>xe, bong<br>bật và<br>bong tróc</td><td>Xử lý theo quy<br>định tại Mục<br>5.4.3.6, 5.4.3.7,<br>5.4.3.8 của<br>TCVN<br>14182:2024.</td><td>a) Không để tình trạng lún lõm<br>quá 25 mm đối với đường bê<br>tông nhựa, không quá 50 mm<br>đối với đường láng nhựa.<br>b) Các hư hỏng đẩy trồi, dồn<br>nhựa không được hư hỏng mức<br>độ M trở lên theo TCVN<br>14182:2024.<br>c) Vật liệu vá và các nội dung<br>khác như đối với công tác vá ổ<br>gà tại Mục 2.1.1.</td><td>Các chỗ lún lõm<br>vượt quá mức giới<br>hạn phải được<br>loại bỏ không quá<br>10 ngày (không<br>tính các ngày trời<br>mưa, mặt đường<br>ẩm ướt không thi<br>công được).</td></tr>
+</tbody>
+</table> 
 
-70
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu 
-cầu kỹ thuật, 
-chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-2.1.5 Sình lún 
-Xử lý theo quy 
-định 
-tại 
-Mục 
-5.4.3.10 
-của 
-TCVN 
-14182:2024. 
-a) Không được để sình lún phát 
-triển thành rạn nứt lớn và không 
-được để lún lõm quá 25 mm đối 
-với đường bê tông nhựa, 50 mm 
-đối với đường láng nhựa, thấm 
-nhập nhựa. Đồng thời, không 
-được quá 0,5% diện tích mặt 
-đường rạn nứt và lún lõm nhỏ 
-hơn các quy định trên. 
-b) Yêu cầu mức độ đáp ứng khi 
-xử lý sình lún như đối với công 
-tác vá ổ gà tại Mục 2.1.1. 
-Các chỗ sình lún 
-phải được loại bỏ 
-trong 
-vòng 
-10 
-ngày (không tính 
-các 
-ngày 
-trời 
-mưa, mặt đường 
-ẩm ướt không thi 
-công được).  
-2.1.6 Vệ 
-sinh 
-mặt đường 
-Xử lý theo quy 
-định 
-tại 
-Mục 
-5.4.2.1 
-của 
-TCVN 
-14182:2024. 
-Mặt đường (bao gồm cả dải 
-phân cách giữa) và lề đường 
-phải luôn được giữ vệ sinh sạch 
-(không được có rác, cành cây và 
-các chướng ngại vật khác); 
-không để đọng đất, cát trên mặt 
-đường; dải phân cách không để 
-bụi đất bám làm mất tác dụng 
-của sơn báo hiệu; đáp ứng các 
-yêu cầu sau: 
-  
-a) Khắc phục các chướng ngại 
-vật đe dọa tới công tác an toàn 
-giao thông như: đất, đá, động vật 
-chết, vật liệu.  
-01 giờ kể từ khi 
-phát hiện. 
-b) Khắc phục các vật liệu dễ 
-cháy trên mặt đường như: nhiên 
-liệu, dầu hoặc chất hóa học. 
-04 giờ kể từ khi 
-phát hiện. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=69">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu<br>cầu kỹ thuật,<br>chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td>2.1.5</td><td>Sình lún</td><td>Xử lý theo quy<br>định tại Mục<br>5.4.3.10 của<br>TCVN<br>14182:2024.</td><td>a) Không được để sình lún phát<br>triển thành rạn nứt lớn và không<br>được để lún lõm quá 25 mm đối<br>với đường bê tông nhựa, 50 mm<br>đối với đường láng nhựa, thấm<br>nhập nhựa. Đồng thời, không<br>được quá 0,5% diện tích mặt<br>đường rạn nứt và lún lõm nhỏ<br>hơn các quy định trên.<br>b) Yêu cầu mức độ đáp ứng khi<br>xử lý sình lún như đối với công<br>tác vá ổ gà tại Mục 2.1.1.</td><td>Các chỗ sình lún<br>phải được loại bỏ<br>trong vòng 10<br>ngày (không tính<br>các ngày trời<br>mưa, mặt đường<br>ẩm ướt không thi<br>công được).</td></tr>
+<tr><td rowspan="3">2.1.6</td><td rowspan="3">Vệ sinh<br>mặt đường</td><td rowspan="3">Xử lý theo quy<br>định tại Mục<br>5.4.2.1 của<br>TCVN<br>14182:2024.</td><td>Mặt đường (bao gồm cả dải<br>phân cách giữa) và lề đường<br>phải luôn được giữ vệ sinh sạch<br>(không được có rác, cành cây và<br>các chướng ngại vật khác);<br>không để đọng đất, cát trên mặt<br>đường; dải phân cách không để<br>bụi đất bám làm mất tác dụng<br>của sơn báo hiệu; đáp ứng các<br>yêu cầu sau:</td><td></td></tr>
+<tr><td>a) Khắc phục các chướng ngại<br>vật đe dọa tới công tác an toàn<br>giao thông như: đất, đá, động vật<br>chết, vật liệu.</td><td>01 giờ kể từ khi<br>phát hiện.</td></tr>
+<tr><td>b) Khắc phục các vật liệu dễ<br>cháy trên mặt đường như: nhiên<br>liệu, dầu hoặc chất hóa học.</td><td>04 giờ kể từ khi<br>phát hiện.</td></tr>
+</tbody>
+</table> 
 
-71
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu 
-cầu kỹ thuật, 
-chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-c) Khắc phục các mảnh vỡ khác 
-không đe dọa trực tiếp tới an 
-toàn giao thông.  
-07 ngày kể từ khi 
-phát hiện. 
-2.2. 
-Mặt đường bê tông xi măng 
-  
-  
-2.2.1 Xử lý khe 
-co, 
-khe 
-giãn 
-và 
-khe dọc 
-Xử lý theo quy 
-định 
-tại 
-Mục 
-5.4.2.2, 
-5.4.2.3 
-của 
-TCVN 
-14182:2024. 
-Các khe co, khe giãn, khe dọc 
-không bị bong bật mất vật liệu 
-chèn khe có mức độ hư hỏng M 
-trở lên.  
-Phải xử lý trong 
-vòng 07 ngày sau 
-khi 
-phát 
-hiện 
-(không tính các 
-ngày trời mưa, 
-mặt đường ẩm ướt 
-không thi công 
-được).  
-2.2.2 Xử lý vết 
-nứt  
-Xử lý theo quy 
-định 
-tại 
-Mục 
-5.4.2.4 ÷ 5.4.2.7 
-của 
-TCVN 
-14182:2024. 
-Không để xuất hiện vết nứt có 
-mức độ hư hỏng M trở lên. 
-Phải 
-sửa 
-chữa 
-trong 
-vòng 
-07 
-ngày sau khi phát 
-hiện (đối với mùa 
-mưa), 14 ngày 
-(đối với mùa khô) 
-2.2.3 Vệ 
-sinh 
-mặt đường 
-Xử lý theo quy 
-định 
-tại 
-Mục 
-5.4.2.1 
-của 
-TCVN 
-14182:2024. 
-Mặt đường (bao gồm cả dải 
-phân cách giữa) và lề đường 
-phải luôn được giữ vệ sinh sạch 
-(không được có rác, cành cây và 
-các chướng ngại vật khác); 
-không để đọng đất, cát trên mặt 
-đường; dải phân cách không để 
-bụi đất bám làm mất tác dụng 
-của sơn báo hiệu; đáp ứng các 
-yêu cầu sau: 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=70">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu<br>cầu kỹ thuật,<br>chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>c) Khắc phục các mảnh vỡ khác<br>không đe dọa trực tiếp tới an<br>toàn giao thông.</td><td>07 ngày kể từ khi<br>phát hiện.</td></tr>
+<tr><td>2.2.</td><td colspan="2">Mặt đường bê tông xi măng</td><td></td><td></td></tr>
+<tr><td>2.2.1</td><td>Xử lý khe<br>co, khe<br>giãn và<br>khe dọc</td><td>Xử lý theo quy<br>định tại Mục<br>5.4.2.2, 5.4.2.3<br>của TCVN<br>14182:2024.</td><td>Các khe co, khe giãn, khe dọc<br>không bị bong bật mất vật liệu<br>chèn khe có mức độ hư hỏng M<br>trở lên.</td><td>Phải xử lý trong<br>vòng 07 ngày sau<br>khi phát hiện<br>(không tính các<br>ngày trời mưa,<br>mặt đường ẩm ướt<br>không thi công<br>được).</td></tr>
+<tr><td>2.2.2</td><td>Xử lý vết<br>nứt</td><td>Xử lý theo quy<br>định tại Mục<br>5.4.2.4 ÷ 5.4.2.7<br>của TCVN<br>14182:2024.</td><td>Không để xuất hiện vết nứt có<br>mức độ hư hỏng M trở lên.</td><td>Phải sửa chữa<br>trong vòng 07<br>ngày sau khi phát<br>hiện (đối với mùa<br>mưa), 14 ngày<br>(đối với mùa khô)</td></tr>
+<tr><td>2.2.3</td><td>Vệ sinh<br>mặt đường</td><td>Xử lý theo quy<br>định tại Mục<br>5.4.2.1 của<br>TCVN<br>14182:2024.</td><td>Mặt đường (bao gồm cả dải<br>phân cách giữa) và lề đường<br>phải luôn được giữ vệ sinh sạch<br>(không được có rác, cành cây và<br>các chướng ngại vật khác);<br>không để đọng đất, cát trên mặt<br>đường; dải phân cách không để<br>bụi đất bám làm mất tác dụng<br>của sơn báo hiệu; đáp ứng các<br>yêu cầu sau:</td><td></td></tr>
+</tbody>
+</table> 
 
-72
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu 
-cầu kỹ thuật, 
-chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-a) Khắc phục chướng ngại vật đe 
-dọa tới công tác an toàn giao 
-thông như đất, đá, động vật chết, 
-vật liệu bị đổ đi. 
-01 giờ kể từ khi 
-phát hiện. 
-b) Khắc phục các vật liệu dễ 
-cháy trên mặt đường như nhiên 
-liệu, dầu hoặc chất hóa học. 
-04 giờ kể từ khi 
-phát hiện. 
-c) Khắc phục các mảnh vỡ khác 
-với không đe dọa trực tiếp tới an 
-toàn giao thông. 
-07 ngày kể từ khi 
-phát hiện. 
-2.3 
-Đường đá dăm, cấp phối tự 
-nhiên 
-  
-  
-2.3.1 Vá ổ gà, 
-lún 
-lõm 
-cục bộ 
-Xử lý theo quy 
-định 
-tại 
-Mục 
-5.4.4.2, 
-5.4.5.5 
-của 
-TCVN 
-14182:2024. 
-Không có ổ gà, lún lõm cục bộ 
-trên mặt đường đang khai thác. 
-Trường hợp có ổ gà thì phải 
-được vá sửa. Trường hợp gặp 
-trời mưa liên tục hoặc vì lý do 
-bất khả kháng cho phép sửa 
-chữa đảm bảo giao thông tạm 
-bằng vật liệu khác nhưng sau đó 
-phải thực hiện như yêu cầu. 
-Thời 
-gian 
-cho 
-phép khắc phục 
-trong 
-vòng 
-05 
-ngày sau khi phát 
-hiện. 
-2.3.2 Xử lý lún 
-lõm, 
-gồ 
-ghề 
-Xử lý theo quy 
-định 
-tại 
-Mục 
-5.4.4.1 
-của 
-TCVN 
-14182:2024.. 
-Không được để các chỗ lún lõm, 
-trồi lún quá 50 mm hoặc gây ảnh 
-hưởng đến người tham gia giao 
-thông, mặt đường còn nguyên 
-mui luyện, không đọng nước.  
-Thời 
-gian 
-cho 
-phép khắc phục 
-trong 
-vòng 
-10 
-ngày sau khi phát 
-hiện (không tính 
-các 
-ngày 
-trời 
-mưa, mặt đường 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=71">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu<br>cầu kỹ thuật,<br>chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td rowspan="3"></td><td rowspan="3"></td><td rowspan="3"></td><td>a) Khắc phục chướng ngại vật đe<br>dọa tới công tác an toàn giao<br>thông như đất, đá, động vật chết,<br>vật liệu bị đổ đi.</td><td>01 giờ kể từ khi<br>phát hiện.</td></tr>
+<tr><td>b) Khắc phục các vật liệu dễ<br>cháy trên mặt đường như nhiên<br>liệu, dầu hoặc chất hóa học.</td><td>04 giờ kể từ khi<br>phát hiện.</td></tr>
+<tr><td>c) Khắc phục các mảnh vỡ khác<br>với không đe dọa trực tiếp tới an<br>toàn giao thông.</td><td>07 ngày kể từ khi<br>phát hiện.</td></tr>
+<tr><td>2.3</td><td colspan="2">Đường đá dăm, cấp phối tự<br>nhiên</td><td></td><td></td></tr>
+<tr><td>2.3.1</td><td>Vá ổ gà,<br>lún lõm<br>cục bộ</td><td>Xử lý theo quy<br>định tại Mục<br>5.4.4.2, 5.4.5.5<br>của TCVN<br>14182:2024.</td><td>Không có ổ gà, lún lõm cục bộ<br>trên mặt đường đang khai thác.<br>Trường hợp có ổ gà thì phải<br>được vá sửa. Trường hợp gặp<br>trời mưa liên tục hoặc vì lý do<br>bất khả kháng cho phép sửa<br>chữa đảm bảo giao thông tạm<br>bằng vật liệu khác nhưng sau đó<br>phải thực hiện như yêu cầu.</td><td>Thời gian cho<br>phép khắc phục<br>trong vòng 05<br>ngày sau khi phát<br>hiện.</td></tr>
+<tr><td>2.3.2</td><td>Xử lý lún<br>lõm, gồ<br>ghề</td><td>Xử lý theo quy<br>định tại Mục<br>5.4.4.1 của<br>TCVN<br>14182:2024..</td><td>Không được để các chỗ lún lõm,<br>trồi lún quá 50 mm hoặc gây ảnh<br>hưởng đến người tham gia giao<br>thông, mặt đường còn nguyên<br>mui luyện, không đọng nước.</td><td>Thời gian cho<br>phép khắc phục<br>trong vòng 10<br>ngày sau khi phát<br>hiện (không tính<br>các ngày trời<br>mưa, mặt đường</td></tr>
+</tbody>
+</table> 
 
-73
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu 
-cầu kỹ thuật, 
-chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-bị ngập không thi 
-công được). 
-2.3.3 Sình lún 
-Xử lý theo quy 
-định 
-tại 
-Mục 
-5.4.5.6 
-của 
-TCVN 
-14182:2024. 
-Không được để sình lún phát 
-triển thành rạn nứt lớn, lún lõm 
-quá 50mm. Diện tích sình lún 
-không được quá 0,5% diện tích 
-mặt đường. 
-Các chỗ sình lún 
-phải được loại bỏ 
-trong 
-vòng 
-10 
-ngày (không tính 
-các 
-ngày 
-trời 
-mưa, mặt đường 
-ẩm ướt không thi 
-công được). 
-2.3.4 Vệ 
-sinh 
-mặt đường 
-Tùy theo mức độ 
-bẩn 
-của 
-mặt 
-đường để bố trí 
-số lần vệ sinh, 
-tưới nước chống 
-bụi vào những 
-ngày hanh khô. 
-Mặt đường (bao gồm cả dải 
-phân cách giữa) và lề đường 
-không được có rác, cành cây và 
-các chướng ngại vật khác. 
-Khắc phục trong 
-vòng 01 giờ nếu 
-gây nguy hiểm 
-mất an toàn giao 
-thông; trong vòng 
-07 ngày đối với 
-trường hợp còn 
-lại. 
-2.3.5 Các 
-nội 
-dung khác 
-Khi có nước trên 
-mặt đường phải 
-tổ 
-chức 
-khơi 
-thông nước, bổ 
-sung kết cấu mặt 
-bù vào các vị trí 
-lún lõm; 
-Tùy theo điều 
-kiện nguồn vốn 
-và quy định tại 
-hợp đồng để bổ 
-Không để mặt đường đọng 
-nước.  
-Thời 
-gian 
-cho 
-phép khắc phục 
-không quá 24 giờ. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=72">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu<br>cầu kỹ thuật,<br>chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td></td><td>bị ngập không thi<br>công được).</td></tr>
+<tr><td>2.3.3</td><td>Sình lún</td><td>Xử lý theo quy<br>định tại Mục<br>5.4.5.6 của<br>TCVN<br>14182:2024.</td><td>Không được để sình lún phát<br>triển thành rạn nứt lớn, lún lõm<br>quá 50mm. Diện tích sình lún<br>không được quá 0,5% diện tích<br>mặt đường.</td><td>Các chỗ sình lún<br>phải được loại bỏ<br>trong vòng 10<br>ngày (không tính<br>các ngày trời<br>mưa, mặt đường<br>ẩm ướt không thi<br>công được).</td></tr>
+<tr><td>2.3.4</td><td>Vệ sinh<br>mặt đường</td><td>Tùy theo mức độ<br>bẩn của mặt<br>đường để bố trí<br>số lần vệ sinh,<br>tưới nước chống<br>bụi vào những<br>ngày hanh khô.</td><td>Mặt đường (bao gồm cả dải<br>phân cách giữa) và lề đường<br>không được có rác, cành cây và<br>các chướng ngại vật khác.</td><td>Khắc phục trong<br>vòng 01 giờ nếu<br>gây nguy hiểm<br>mất an toàn giao<br>thông; trong vòng<br>07 ngày đối với<br>trường hợp còn<br>lại.</td></tr>
+<tr><td>2.3.5</td><td>Các nội<br>dung khác</td><td>Khi có nước trên<br>mặt đường phải<br>tổ chức khơi<br>thông nước, bổ<br>sung kết cấu mặt<br>bù vào các vị trí<br>lún lõm;<br>Tùy theo điều<br>kiện nguồn vốn<br>và quy định tại<br>hợp đồng để bổ</td><td>Không để mặt đường đọng<br>nước.</td><td>Thời gian cho<br>phép khắc phục<br>không quá 24 giờ.</td></tr>
+</tbody>
+</table> 
 
-74
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu 
-cầu kỹ thuật, 
-chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-sung, điều chỉnh 
-các nội dung phù 
-hợp. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=73">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu<br>cầu kỹ thuật,<br>chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td>sung, điều chỉnh<br>các nội dung phù<br>hợp.</td><td></td><td></td></tr>
+</tbody>
+</table> 
 
-75
- 
- 
 3. Hệ thống an toàn giao thông và hệ thống chiếu sáng  
  
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-3.1 
-Biển báo 
-Thực hiện theo quy 
-định tại Mục 5.12.1 
-của 
-TCVN 
-14182:2024. 
-Bảo quản đầy đủ biển báo từ 
-khi nhận bàn giao; đảm bảo 
-chất lượng, rõ ràng, không bị 
-bẩn, chắc chắn, dễ nhận biết từ 
-xa và phải quan sát được rõ cả 
-ngày và đêm. 
-Đối với hư hỏng, 
-mất phải sửa chữa 
-thay 
-thế 
-trong 
-vòng 01 ngày đối 
-với biển báo cấm, 
-biển hiệu lệnh; 03 
-ngày với các biển 
-còn lại sau khi 
-phát hiện. 
-3.2 
-Vạch sơn 
-kẻ đường, 
-gờ 
-giảm 
-tốc. 
-Thực hiện theo quy 
-định tại Mục 5.12.2 
-của 
-TCVN 
-14182:2024. 
-Duy trì các vạch sơn khi nhận 
-bàn giao, thường xuyên vệ 
-sinh bảo đảm sáng rõ, không bị 
-cát bụi lấp, dễ nhận biết; không 
-bị mờ hoặc bong tróc. 
-Đối với những 
-vạch 
-sơn 
-mặt 
-đường hư hỏng 
-cục bộ phải được 
-sơn dặm trong 
-vòng 28 ngày. 
-3.3 
-Cột Km, 
-cọc H, cọc 
-mốc giải 
-phóng mặt 
-bằng, cọc 
-mốc 
-lộ 
-giới, mốc 
-đất 
-của 
-đường bộ 
-và cọc tiêu 
-Thực hiện theo quy 
-định 
-tại 
-Mục 
-5.12.12 của TCVN 
-14182:2024. 
-Đảm bảo dễ nhận biết, dễ đọc, 
-không xiêu vẹo, đúng quy 
-định; hư hỏng, mất phải được 
-sửa chữa kịp thời. 
-Sửa chữa, thay thế 
-trong 
-vòng 
-07 
-ngày. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=74">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td>3.1</td><td>Biển báo</td><td>Thực hiện theo quy<br>định tại Mục 5.12.1<br>của TCVN<br>14182:2024.</td><td>Bảo quản đầy đủ biển báo từ<br>khi nhận bàn giao; đảm bảo<br>chất lượng, rõ ràng, không bị<br>bẩn, chắc chắn, dễ nhận biết từ<br>xa và phải quan sát được rõ cả<br>ngày và đêm.</td><td>Đối với hư hỏng,<br>mất phải sửa chữa<br>thay thế trong<br>vòng 01 ngày đối<br>với biển báo cấm,<br>biển hiệu lệnh; 03<br>ngày với các biển<br>còn lại sau khi<br>phát hiện.</td></tr>
+<tr><td>3.2</td><td>Vạch sơn<br>kẻ đường,<br>gờ giảm<br>tốc.</td><td>Thực hiện theo quy<br>định tại Mục 5.12.2<br>của TCVN<br>14182:2024.</td><td>Duy trì các vạch sơn khi nhận<br>bàn giao, thường xuyên vệ<br>sinh bảo đảm sáng rõ, không bị<br>cát bụi lấp, dễ nhận biết; không<br>bị mờ hoặc bong tróc.</td><td>Đối với những<br>vạch sơn mặt<br>đường hư hỏng<br>cục bộ phải được<br>sơn dặm trong<br>vòng 28 ngày.</td></tr>
+<tr><td>3.3</td><td>Cột Km,<br>cọc H, cọc<br>mốc giải<br>phóng mặt<br>bằng, cọc<br>mốc lộ<br>giới, mốc<br>đất của<br>đường bộ<br>và cọc tiêu</td><td>Thực hiện theo quy<br>định tại Mục<br>5.12.12 của TCVN<br>14182:2024.</td><td>Đảm bảo dễ nhận biết, dễ đọc,<br>không xiêu vẹo, đúng quy<br>định; hư hỏng, mất phải được<br>sửa chữa kịp thời.</td><td>Sửa chữa, thay thế<br>trong vòng 07<br>ngày.</td></tr>
+</tbody>
+</table> 
 
-76
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-3.4 
-Tường hộ 
-lan, 
-tôn 
-sóng 
-Thực hiện theo quy 
-định tại Mục 5.12.8 
-của 
-TCVN 
-14182:2024. 
-a) Bảo quản đầy đủ tường hộ 
-lan, tôn sóng từ khi nhận bàn 
-giao. 
-b) Đảm bảo dễ nhận biết, 
-không xiêu vẹo, đúng quy 
-định; hư hỏng phải được sửa 
-chữa kịp thời. Trường hợp 
-hỏng do tai nạn giao thông 
-hoặc sự cố hư hỏng lớn phải 
-cảnh báo đảm bảo an toàn giao 
-thông và báo cáo người quản 
-lý, sử dụng đường bộ. 
-Khắc 
-phục 
-hư 
-hỏng hoặc báo cáo 
-trong 
-vòng 
-05 
-ngày 
-khi 
-phát 
-hiện. 
-3.5 
-Dải phân 
-cách bằng 
-trụ 
-bê 
-tông luồn 
-ống thép, 
-khung 
-lưới thép, 
-trụ dẻo 
-Thực hiện theo quy 
-định 
-tại 
-Mục 
-5.12.10 của TCVN 
-14182:2024. 
-Đảm bảo dễ nhận biết, không 
-xiêu vẹo, đúng quy định; hư 
-hỏng, mất phải được sửa chữa 
-kịp thời. Trường hợp hỏng do 
-tai nạn giao thông hoặc sự cố 
-hư hỏng lớn phải cảnh báo đảm 
-bảo an toàn giao thông và báo 
-cáo người quản lý, sử dụng 
-đường bộ. 
-Khắc 
-phục 
-hư 
-hỏng hoặc báo cáo 
-trong 
-vòng 
-05 
-ngày 
-khi 
-phát 
-hiện. 
-3.6 
-Mắt phản 
-quang, 
-đinh phản 
-quang, 
-tấm 
-chống 
-chói, 
-Thực hiện theo quy 
-định 
-tại 
-Mục 
-5.12.4, 
-5.12.5, 
-4.12.13 của TCVN 
-14182:2024. 
-Đảm bảo dễ nhận biết, không 
-xiêu vẹo, đúng quy định; hư 
-hỏng, mất phải được sửa chữa 
-kịp thời. Trường hợp hỏng do 
-tai nạn giao thông hoặc sự cố 
-hư hỏng lớn phải cảnh báo đảm 
-bảo an toàn giao thông và báo 
-Khắc 
-phục 
-hư 
-hỏng hoặc báo cáo 
-trong 
-vòng 
-05 
-ngày 
-khi 
-phát 
-hiện. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=75">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td>3.4</td><td>Tường hộ<br>lan, tôn<br>sóng</td><td>Thực hiện theo quy<br>định tại Mục 5.12.8<br>của TCVN<br>14182:2024.</td><td>a) Bảo quản đầy đủ tường hộ<br>lan, tôn sóng từ khi nhận bàn<br>giao.<br>b) Đảm bảo dễ nhận biết,<br>không xiêu vẹo, đúng quy<br>định; hư hỏng phải được sửa<br>chữa kịp thời. Trường hợp<br>hỏng do tai nạn giao thông<br>hoặc sự cố hư hỏng lớn phải<br>cảnh báo đảm bảo an toàn giao<br>thông và báo cáo người quản<br>lý, sử dụng đường bộ.</td><td>Khắc phục hư<br>hỏng hoặc báo cáo<br>trong vòng 05<br>ngày khi phát<br>hiện.</td></tr>
+<tr><td>3.5</td><td>Dải phân<br>cách bằng<br>trụ bê<br>tông luồn<br>ống thép,<br>khung<br>lưới thép,<br>trụ dẻo</td><td>Thực hiện theo quy<br>định tại Mục<br>5.12.10 của TCVN<br>14182:2024.</td><td>Đảm bảo dễ nhận biết, không<br>xiêu vẹo, đúng quy định; hư<br>hỏng, mất phải được sửa chữa<br>kịp thời. Trường hợp hỏng do<br>tai nạn giao thông hoặc sự cố<br>hư hỏng lớn phải cảnh báo đảm<br>bảo an toàn giao thông và báo<br>cáo người quản lý, sử dụng<br>đường bộ.</td><td>Khắc phục hư<br>hỏng hoặc báo cáo<br>trong vòng 05<br>ngày khi phát<br>hiện.</td></tr>
+<tr><td>3.6</td><td>Mắt phản<br>quang,<br>đinh phản<br>quang,<br>tấm<br>chống<br>chói,</td><td>Thực hiện theo quy<br>định tại Mục<br>5.12.4, 5.12.5,<br>4.12.13 của TCVN<br>14182:2024.</td><td>Đảm bảo dễ nhận biết, không<br>xiêu vẹo, đúng quy định; hư<br>hỏng, mất phải được sửa chữa<br>kịp thời. Trường hợp hỏng do<br>tai nạn giao thông hoặc sự cố<br>hư hỏng lớn phải cảnh báo đảm<br>bảo an toàn giao thông và báo</td><td>Khắc phục hư<br>hỏng hoặc báo cáo<br>trong vòng 05<br>ngày khi phát<br>hiện.</td></tr>
+</tbody>
+</table> 
 
-77
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-gương 
-cầu lồi 
-cáo người quản lý, sử dụng 
-đường bộ. 
-3.7 
-Dải phân 
-cách giữa, 
-đảo giao 
-thông 
-Thực hiện theo quy 
-định 
-tại 
-Mục 
-5.12.6, 5.12.11 của 
-TCVN 
-14182:2024. 
-Đảm bảo sạch, không nứt vỡ 
-hư hỏng; cây cỏ không chườm 
-lên mặt đường, không cho 
-phép cành cây và cỏ chườm ra 
-mặt ngoài hàng vỉa bê tông và 
-không cao quá 1,2 m kể từ cao 
-độ mặt nhựa (đối với cây) và 
-cỏ không cao quá 0,2 m đối với 
-dải phân cách. 
-Khắc 
-phục 
-hư 
-hỏng hoặc báo cáo 
-trong 
-vòng 
-03 
-ngày 
-khi 
-phát 
-hiện. 
-3.8 
-Đường 
-cứu 
-nạn 
-(nếu có) 
-Thực hiện theo quy 
-định tại Mục 5.9 
-của 
-TCVN 
-14182:2024. 
-Đường vào luôn thông thoáng, 
-dễ nhận biết, không có vật cản, 
-đảm bảo thoát nước, có đủ độ 
-xốp, đủ ma sát theo thiết kế 
-ban đầu. 
-Các vật cản trên 
-mặt đường phải 
-được xử lý trong 
-vòng 12 giờ; các 
-tồn tại khác phải 
-khắc phục trong 
-01 ngày. 
-3.9 
-Hệ thống 
-chiếu 
-sáng, đèn 
-tín 
-hiệu 
-giao 
-thông 
-(nếu có) 
-Thực hiện theo quy 
-định 
-tại 
-Mục 
-5.7.1.3 của TCVN 
-14182:2024. 
-a) Bảo quản đầy đủ từ khi nhận 
-bàn giao, đảm bảo thời lượng 
-thắp sáng đúng quy định. Đèn 
-tín hiệu giao thông luôn trong 
-tình trạng hoạt động bình 
-thường.  
-b) Cột đèn cần đèn phải chắc 
-chắn không nghiêng lệch, 
-sạch, không bị rỉ sét, nứt vỡ. 
-a) Bóng đèn hỏng 
-phải sửa chữa, 
-thay 
-thế 
-trong 
-vòng 02 ngày. 
-b) Cột đèn, cần 
-đèn bị hư hỏng 
-phải được khắc 
-phục hoặc báo cáo 
-trong 
-vòng 
-07 
-ngày. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=76">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td>gương<br>cầu lồi</td><td></td><td>cáo người quản lý, sử dụng<br>đường bộ.</td><td></td></tr>
+<tr><td>3.7</td><td>Dải phân<br>cách giữa,<br>đảo giao<br>thông</td><td>Thực hiện theo quy<br>định tại Mục<br>5.12.6, 5.12.11 của<br>TCVN<br>14182:2024.</td><td>Đảm bảo sạch, không nứt vỡ<br>hư hỏng; cây cỏ không chườm<br>lên mặt đường, không cho<br>phép cành cây và cỏ chườm ra<br>mặt ngoài hàng vỉa bê tông và<br>không cao quá 1,2 m kể từ cao<br>độ mặt nhựa (đối với cây) và<br>cỏ không cao quá 0,2 m đối với<br>dải phân cách.</td><td>Khắc phục hư<br>hỏng hoặc báo cáo<br>trong vòng 03<br>ngày khi phát<br>hiện.</td></tr>
+<tr><td>3.8</td><td>Đường<br>cứu nạn<br>(nếu có)</td><td>Thực hiện theo quy<br>định tại Mục 5.9<br>của TCVN<br>14182:2024.</td><td>Đường vào luôn thông thoáng,<br>dễ nhận biết, không có vật cản,<br>đảm bảo thoát nước, có đủ độ<br>xốp, đủ ma sát theo thiết kế<br>ban đầu.</td><td>Các vật cản trên<br>mặt đường phải<br>được xử lý trong<br>vòng 12 giờ; các<br>tồn tại khác phải<br>khắc phục trong<br>01 ngày.</td></tr>
+<tr><td>3.9</td><td>Hệ thống<br>chiếu<br>sáng, đèn<br>tín hiệu<br>giao<br>thông<br>(nếu có)</td><td>Thực hiện theo quy<br>định tại Mục<br>5.7.1.3 của TCVN<br>14182:2024.</td><td>a) Bảo quản đầy đủ từ khi nhận<br>bàn giao, đảm bảo thời lượng<br>thắp sáng đúng quy định. Đèn<br>tín hiệu giao thông luôn trong<br>tình trạng hoạt động bình<br>thường.<br>b) Cột đèn cần đèn phải chắc<br>chắn không nghiêng lệch,<br>sạch, không bị rỉ sét, nứt vỡ.</td><td>a) Bóng đèn hỏng<br>phải sửa chữa,<br>thay thế trong<br>vòng 02 ngày.<br>b) Cột đèn, cần<br>đèn bị hư hỏng<br>phải được khắc<br>phục hoặc báo cáo<br>trong vòng 07<br>ngày.</td></tr>
+</tbody>
+</table> 
 
-78
- 
- 
 4. Nền đường, thoát nước và chăm sóc cây xanh  
  
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-4.1 
-Taluy đắp 
-và 
-taluy 
-đào 
-Thực hiện theo 
-quy định tại Mục 
-5.1.2, 5.1.3, 5.1.4 
-của 
-TCVN 
-14182:2024. 
-Đảm bảo hình dạng ban đầu, 
-không bị xói lở; đảm bảo độ chặt 
-(đối với taluy đất); cụ thể:  
-a) Khi có sạt lở nhỏ phải tổ chức 
-xử lý bảo đảm an toàn giao 
-thông. 
-b) Các hư hỏng lớn vượt quá 
-tiêu chuẩn kỹ thuật và định mức 
-bảo dưỡng thường xuyên do 
-mưa bão, lở đất phải báo cáo kịp 
-thời cho cơ quan được giao quản 
-lý tài sản để được xem xét xử lý. 
-  
-a) Phải hoàn tất sửa 
-chữa trong vòng 01 
-ngày sau khi phát 
-hiện hư hỏng (mùa 
-mưa), 
-03 
-ngày 
-(mùa khô).  
-b) Trường hợp sạt 
-lở khối lượng nhỏ 
-làm ách tắc giao 
-thông phải khắc 
-phục ngay để bảo 
-đảm giao thông 
-trong vòng 06 giờ. 
-c) Hư hỏng lớn 
-phải báo cáo ngay 
-trong vòng 01 giờ. 
-4.2 
-Phát cây, 
-cắt cỏ, tỉa 
-cành 
-Thực hiện theo 
-quy định tại Mục 
-5.1.2.3, 
-5.1.2.4, 
-5.1.2.5 của TCVN 
-14182:2024. 
-  
-a) Không che khuất cọc tiêu, 
-biển báo, cột Km và ảnh hưởng 
-đến thoát nước; không ảnh 
-hưởng tầm nhìn.  
-b) Đối với taluy dương trong 
-phạm vi chiều cao ≤ 4,0 m cây 
-cỏ không được cao quá 0,2 m. 
-c) Đối với taluy âm trong phạm 
-vi 1,0 m từ vai đường trở ra và 
-trong bụng đường cong cây cỏ 
-a) Cây cỏ phải 
-được 
-cắt, 
-phát 
-quang trong vòng 
-03 ngày khi phát 
-hiện. 
-b) Cây đổ ngang 
-đường phải khắc 
-phục để bảo đảm 
-an toàn giao thông 
-trong thời gian 03 
-giờ kể từ khi phát 
-hiện. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=77">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td>4.1</td><td>Taluy đắp<br>và taluy<br>đào</td><td>Thực hiện theo<br>quy định tại Mục<br>5.1.2, 5.1.3, 5.1.4<br>của TCVN<br>14182:2024.</td><td>Đảm bảo hình dạng ban đầu,<br>không bị xói lở; đảm bảo độ chặt<br>(đối với taluy đất); cụ thể:<br>a) Khi có sạt lở nhỏ phải tổ chức<br>xử lý bảo đảm an toàn giao<br>thông.<br>b) Các hư hỏng lớn vượt quá<br>tiêu chuẩn kỹ thuật và định mức<br>bảo dưỡng thường xuyên do<br>mưa bão, lở đất phải báo cáo kịp<br>thời cho cơ quan được giao quản<br>lý tài sản để được xem xét xử lý.</td><td>a) Phải hoàn tất sửa<br>chữa trong vòng 01<br>ngày sau khi phát<br>hiện hư hỏng (mùa<br>mưa), 03 ngày<br>(mùa khô).<br>b) Trường hợp sạt<br>lở khối lượng nhỏ<br>làm ách tắc giao<br>thông phải khắc<br>phục ngay để bảo<br>đảm giao thông<br>trong vòng 06 giờ.<br>c) Hư hỏng lớn<br>phải báo cáo ngay<br>trong vòng 01 giờ.</td></tr>
+<tr><td>4.2</td><td>Phát cây,<br>cắt cỏ, tỉa<br>cành</td><td>Thực hiện theo<br>quy định tại Mục<br>5.1.2.3, 5.1.2.4,<br>5.1.2.5 của TCVN<br>14182:2024.</td><td>a) Không che khuất cọc tiêu,<br>biển báo, cột Km và ảnh hưởng<br>đến thoát nước; không ảnh<br>hưởng tầm nhìn.<br>b) Đối với taluy dương trong<br>phạm vi chiều cao ≤ 4,0 m cây<br>cỏ không được cao quá 0,2 m.<br>c) Đối với taluy âm trong phạm<br>vi 1,0 m từ vai đường trở ra và<br>trong bụng đường cong cây cỏ</td><td>a) Cây cỏ phải<br>được cắt, phát<br>quang trong vòng<br>03 ngày khi phát<br>hiện.<br>b) Cây đổ ngang<br>đường phải khắc<br>phục để bảo đảm<br>an toàn giao thông<br>trong thời gian 03<br>giờ kể từ khi phát<br>hiện.</td></tr>
+</tbody>
+</table> 
 
-79
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-không được cao quá vai đường 
-0,2 m. 
-d) Cây cỏ không được cao quá 
-vai đường 0,2 m và chờm ra mặt 
-đường. 
-4.3 
-Lề đường  Thực hiện theo 
-quy định tại Mục 
-5.2 của TCVN 
-14182:2024. 
-a) Chênh lệch cao độ lề đường 
-so với mép mặt đường không 
-được vượt quá 50 mm. 
-b) Lề đường có gia cố lớp mặt 
-không bị biến dạng, xói lở ổ gà, 
-vỡ mép. Phạm vi lề đường, đất 
-của đường bộ phải thông 
-thoáng, không có vật liệu, chất 
-thải chất đống. 
-Các hư hỏng của 
-lề 
-đường 
-phải 
-được khắc phục 
-trong 
-vòng 
-14 
-ngày sau khi được 
-phát hiện. 
-4.4 
-Rãnh và 
-các công 
-trình thoát 
-nước 
-có 
-gia 
-cố 
-(gạch, đá, 
-bê tông xi 
-măng) 
-Thực hiện theo 
-quy định tại Mục 
-5.3 của TCVN 
-14182:2024. 
-Phải đảm bảo thông thoáng, 
-không được để đọng nước; các 
-bộ phận được gia cố không bị hư 
-hỏng, mất; không xói lở xung 
-quanh kết cấu rãnh. 
-Tắc nghẽn phải 
-được khơi thông 
-trong 
-vòng 
-01 
-ngày sau khi phát 
-hiện đối với mùa 
-mưa, 07 ngày đối 
-với mùa khô. 
-Hư hỏng lớn, mất 
-phải 
-được 
-sửa 
-chữa hoặc báo cáo 
-trong 
-vòng 
-14 
-ngày sau khi được 
-phát hiện. 
-4.5 
-Rãnh và 
-các công 
-Thực hiện theo 
-quy định tại Mục 
-Phải sạch rác và bùn đất, không 
-có vật gây cản trở dòng chảy, 
-Tắc nghẽn phải 
-được khơi thông 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=78">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>không được cao quá vai đường<br>0,2 m.<br>d) Cây cỏ không được cao quá<br>vai đường 0,2 m và chờm ra mặt<br>đường.</td><td></td></tr>
+<tr><td>4.3</td><td>Lề đường</td><td>Thực hiện theo<br>quy định tại Mục<br>5.2 của TCVN<br>14182:2024.</td><td>a) Chênh lệch cao độ lề đường<br>so với mép mặt đường không<br>được vượt quá 50 mm.<br>b) Lề đường có gia cố lớp mặt<br>không bị biến dạng, xói lở ổ gà,<br>vỡ mép. Phạm vi lề đường, đất<br>của đường bộ phải thông<br>thoáng, không có vật liệu, chất<br>thải chất đống.</td><td>Các hư hỏng của<br>lề đường phải<br>được khắc phục<br>trong vòng 14<br>ngày sau khi được<br>phát hiện.</td></tr>
+<tr><td>4.4</td><td>Rãnh và<br>các công<br>trình thoát<br>nước có<br>gia cố<br>(gạch, đá,<br>bê tông xi<br>măng)</td><td>Thực hiện theo<br>quy định tại Mục<br>5.3 của TCVN<br>14182:2024.</td><td>Phải đảm bảo thông thoáng,<br>không được để đọng nước; các<br>bộ phận được gia cố không bị hư<br>hỏng, mất; không xói lở xung<br>quanh kết cấu rãnh.</td><td>Tắc nghẽn phải<br>được khơi thông<br>trong vòng 01<br>ngày sau khi phát<br>hiện đối với mùa<br>mưa, 07 ngày đối<br>với mùa khô.<br>Hư hỏng lớn, mất<br>phải được sửa<br>chữa hoặc báo cáo<br>trong vòng 14<br>ngày sau khi được<br>phát hiện.</td></tr>
+<tr><td>4.5</td><td>Rãnh và<br>các công</td><td>Thực hiện theo<br>quy định tại Mục</td><td>Phải sạch rác và bùn đất, không<br>có vật gây cản trở dòng chảy,</td><td>Tắc nghẽn phải<br>được khơi thông</td></tr>
+</tbody>
+</table> 
 
-80
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-trình thoát 
-nước 
-bằng đất 
-đá 
-tự 
-nhiên 
-5.3 của TCVN 
-14182:2024. 
-không bị hỏng, mất về kết cấu; 
-xung quanh phải được lèn chặt 
-bằng vật liệu thích hợp. 
-trong 
-vòng 
-01 
-ngày sau khi phát 
-hiện đối với mùa 
-mưa, 07 ngày đối 
-với mùa khô.  
-Hư hỏng, sạt lở 
-phải 
-được 
-sửa 
-chữa trong vòng 
-07 ngày sau khi 
-được phát hiện. 
-4.6 
-Hố thu và 
-cống 
-Thực hiện theo 
-quy định tại Mục 
-5.3 của TCVN 
-14182:2024. 
-Phải sạch rác và bùn đất, không 
-có vật gây cản trở dòng chảy, 
-không bị hỏng, mất về kết cấu; 
-xung quanh phải được lèn chặt 
-bằng vật liệu thích hợp. 
-Tắc nghẽn phải 
-được khơi thông 
-trong 
-vòng 
-01 
-ngày sau khi phát 
-hiện (đối với mùa 
-mưa), 07 ngày 
-(đối với mùa khô) 
-Hư 
-hỏng 
-phải 
-được sửa chữa 
-trong 
-vòng 
-14 
-ngày sau khi được 
-phát hiện. 
-4.7 
-Hệ thống 
-cây xanh 
-Thực hiện theo 
-quy định tại Mục 
-5.14 của TCVN 
-14182:2024. 
-a) Cây xanh, thảm cỏ luôn được 
-phát quang, xén tỉa đảm bảo tầm 
-nhìn, mỹ quan, không che khuất 
-tầm nhìn, cọc tiêu, biển báo, cột 
-Km, hộ lan, tường chắn và ảnh 
-hưởng đến việc thoát nước. 
-Cây cỏ phải được 
-cắt 
-tỉa, 
-phát 
-quang, dọn dẹp 
-trong 
-vòng 
-03 
-ngày kể từ khi 
-phát hiện chờm ra 
-mặt đường làm 
-che 
-khuất 
-tầm 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=79">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td>trình thoát<br>nước<br>bằng đất<br>đá tự<br>nhiên</td><td>5.3 của TCVN<br>14182:2024.</td><td>không bị hỏng, mất về kết cấu;<br>xung quanh phải được lèn chặt<br>bằng vật liệu thích hợp.</td><td>trong vòng 01<br>ngày sau khi phát<br>hiện đối với mùa<br>mưa, 07 ngày đối<br>với mùa khô.<br>Hư hỏng, sạt lở<br>phải được sửa<br>chữa trong vòng<br>07 ngày sau khi<br>được phát hiện.</td></tr>
+<tr><td>4.6</td><td>Hố thu và<br>cống</td><td>Thực hiện theo<br>quy định tại Mục<br>5.3 của TCVN<br>14182:2024.</td><td>Phải sạch rác và bùn đất, không<br>có vật gây cản trở dòng chảy,<br>không bị hỏng, mất về kết cấu;<br>xung quanh phải được lèn chặt<br>bằng vật liệu thích hợp.</td><td>Tắc nghẽn phải<br>được khơi thông<br>trong vòng 01<br>ngày sau khi phát<br>hiện (đối với mùa<br>mưa), 07 ngày<br>(đối với mùa khô)<br>Hư hỏng phải<br>được sửa chữa<br>trong vòng 14<br>ngày sau khi được<br>phát hiện.</td></tr>
+<tr><td>4.7</td><td>Hệ thống<br>cây xanh</td><td>Thực hiện theo<br>quy định tại Mục<br>5.14 của TCVN<br>14182:2024.</td><td>a) Cây xanh, thảm cỏ luôn được<br>phát quang, xén tỉa đảm bảo tầm<br>nhìn, mỹ quan, không che khuất<br>tầm nhìn, cọc tiêu, biển báo, cột<br>Km, hộ lan, tường chắn và ảnh<br>hưởng đến việc thoát nước.</td><td>Cây cỏ phải được<br>cắt tỉa, phát<br>quang, dọn dẹp<br>trong vòng 03<br>ngày kể từ khi<br>phát hiện chờm ra<br>mặt đường làm<br>che khuất tầm</td></tr>
+</tbody>
+</table> 
 
-81
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-b) Đối với dải phân cách giữa, 
-đảo giao thông không cho phép 
-cành cây và cỏ chườm ra mặt 
-ngoài hàng vỉa bê tông, cây cao 
-không quá 1,3 m tính từ cao độ 
-mặt vỉa. 
-nhìn và gây cản 
-trở giao thông. 
-Khi có cây đổ 
-ngang đường phải 
-khắc phục để đảm 
-bảo giao thông 
-trong thời gian 03 
-giờ sau khi phát 
-hiện. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=80">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>b) Đối với dải phân cách giữa,<br>đảo giao thông không cho phép<br>cành cây và cỏ chườm ra mặt<br>ngoài hàng vỉa bê tông, cây cao<br>không quá 1,3 m tính từ cao độ<br>mặt vỉa.</td><td>nhìn và gây cản<br>trở giao thông.<br>Khi có cây đổ<br>ngang đường phải<br>khắc phục để đảm<br>bảo giao thông<br>trong thời gian 03<br>giờ sau khi phát<br>hiện.</td></tr>
+</tbody>
+</table> 
 
-82
- 
- 
 5. Cầu và các công trình khác 
  
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời 
-gian 
-cho 
-phép 
-khắc 
-phục 
-tồn tại 
-5.1 
-Công 
-trình 
-có 
-dầm, dàn 
-thép 
-và 
-thép 
-bê 
-tông liên 
-hợp   
-Thực hiện theo 
-quy định tại Mục 
-5.11.8.2 
-của 
-TCVN 
-14182:2024. 
-a) Kết cấu sạch, không đọng nước. Các bộ 
-phận kim loại của toàn bộ công trình phải 
-được sơn hoặc nếu không phải được bảo 
-vệ và không bị xói mòn, rỉ sét. 
-b) Khi công trình bị hư hỏng đe dọa tới tính 
-toàn vẹn kết cấu của công trình, nhà thầu 
-phải thông báo ngay cho cấp có thẩm 
-quyền; đồng thời phải có biện pháp cảnh 
-báo cho người và phương tiện lưu thông 
-trên tuyến; cần thiết phải có biện pháp đảm 
-bảo an toàn cho công trình và an toàn giao 
-thông. 
-Khắc 
-phục hư 
-hỏng 
-hoặc 
-báo cáo 
-trong 
-vòng 07 
-ngày từ 
-khi phát 
-hiện. 
-5.2 
-Công 
-trình 
-có 
-dầm 
-bê 
-tông, 
-đá 
-xây 
-Thực hiện theo 
-quy định tại Mục 
-5.11.8.1 
-của 
-TCVN 
-14182:2024. 
-a) Tình trạng công trình bình thường, vệ 
-sinh sạch sẽ, không đọng nước, các hư 
-hỏng nhỏ phải được sửa chữa hoặc theo 
-dõi. 
-b) Khi công trình bị hư hỏng ảnh hưởng 
-đến an toàn kết cấu của công trình, nhà 
-thầu phải thông báo ngay cho cấp có thẩm 
-quyền; đồng thời phải có biện pháp cảnh 
-báo cho người và phương tiện lưu thông 
-trên tuyến. Cần thiết phải có biện pháp 
-đảm bảo an toàn cho công trình và an toàn 
-giao thông. 
-Khắc 
-phục hư 
-hỏng 
-hoặc 
-báo cáo 
-trong 
-vòng 07 
-ngày từ 
-khi phát 
-hiện. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=81">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời<br>gian<br>cho<br>phép<br>khắc<br>phục<br>tồn tại</td></tr>
+<tr><td>5.1</td><td>Công<br>trình có<br>dầm, dàn<br>thép và<br>thép bê<br>tông liên<br>hợp</td><td>Thực hiện theo<br>quy định tại Mục<br>5.11.8.2 của<br>TCVN<br>14182:2024.</td><td>a) Kết cấu sạch, không đọng nước. Các bộ<br>phận kim loại của toàn bộ công trình phải<br>được sơn hoặc nếu không phải được bảo<br>vệ và không bị xói mòn, rỉ sét.<br>b) Khi công trình bị hư hỏng đe dọa tới tính<br>toàn vẹn kết cấu của công trình, nhà thầu<br>phải thông báo ngay cho cấp có thẩm<br>quyền; đồng thời phải có biện pháp cảnh<br>báo cho người và phương tiện lưu thông<br>trên tuyến; cần thiết phải có biện pháp đảm<br>bảo an toàn cho công trình và an toàn giao<br>thông.</td><td>Khắc<br>phục hư<br>hỏng<br>hoặc<br>báo cáo<br>trong<br>vòng 07<br>ngày từ<br>khi phát<br>hiện.</td></tr>
+<tr><td>5.2</td><td>Công<br>trình có<br>dầm bê<br>tông, đá<br>xây</td><td>Thực hiện theo<br>quy định tại Mục<br>5.11.8.1 của<br>TCVN<br>14182:2024.</td><td>a) Tình trạng công trình bình thường, vệ<br>sinh sạch sẽ, không đọng nước, các hư<br>hỏng nhỏ phải được sửa chữa hoặc theo<br>dõi.<br>b) Khi công trình bị hư hỏng ảnh hưởng<br>đến an toàn kết cấu của công trình, nhà<br>thầu phải thông báo ngay cho cấp có thẩm<br>quyền; đồng thời phải có biện pháp cảnh<br>báo cho người và phương tiện lưu thông<br>trên tuyến. Cần thiết phải có biện pháp<br>đảm bảo an toàn cho công trình và an toàn<br>giao thông.</td><td>Khắc<br>phục hư<br>hỏng<br>hoặc<br>báo cáo<br>trong<br>vòng 07<br>ngày từ<br>khi phát<br>hiện.</td></tr>
+</tbody>
+</table> 
 
-83
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời 
-gian 
-cho 
-phép 
-khắc 
-phục 
-tồn tại 
-5.3 
-Khe 
-co 
-giãn cầu, 
-gối 
-cầu, 
-mố 
-trụ 
-cầu 
-Thực hiện theo 
-quy định tại Mục 
-5.11.7, 
-5.11.9, 
-5.11.10 
-của 
-TCVN 
-14182:2024. 
-a) Sạch đất cát, không bong tróc, mất bu lông 
-và không biến dạng, hư hỏng, đảm bảo trong 
-tình trạng tốt. Gối cầu thép phải được bôi 
-mỡ. 
-b) Đối với các hư hỏng, biến dạng của gối 
-cầu, mố trụ cầu phải được phát hiện, báo 
-cáo và theo dõi thường xuyên. 
-c) Các nguyên nhân dẫn đến việc không 
-đảm bảo yêu cầu phải được thực hiện 
-trong thời gian 14 ngày sau khi nước rút. 
-Khắc 
-phục hư 
-hỏng 
-hoặc 
-báo cáo 
-trong 
-vòng: 
-a) 
-01 
-ngày từ 
-khi phát 
-hiện đối 
-với khe 
-co giãn. 
-b) 
-05 
-ngày từ 
-khi phát 
-hiện với 
-gối, mố, 
-trụ cầu. 
-5.4 
-Mặt cầu, 
-đường 
-đầu cầu 
-Thực hiện theo 
-quy định tại Mục 
-5.11.1, 5.11.4 đến 
-mục 
-5.11.6, 
-5.11.11 
-của 
-a) Không có ổ gà, vệ sinh sạch, thoát nước 
-tốt. Đảm bảo êm thuận phần tiếp giáp đầu 
-cầu. 
-b) Xử lý ổ gà, rạn nứt, trồi lún như quy 
-định đối với mặt đường tương ứng tại 
-điểm 2 Mục A của Phụ lục này. 
-Khắc 
-phục hư 
-hỏng 
-trong 
-vòng 02 
-ngày từ 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=82">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời<br>gian<br>cho<br>phép<br>khắc<br>phục<br>tồn tại</td></tr>
+<tr><td>5.3</td><td>Khe co<br>giãn cầu,<br>gối cầu,<br>mố trụ<br>cầu</td><td>Thực hiện theo<br>quy định tại Mục<br>5.11.7, 5.11.9,<br>5.11.10 của<br>TCVN<br>14182:2024.</td><td>a) Sạch đất cát, không bong tróc, mất bu lông<br>và không biến dạng, hư hỏng, đảm bảo trong<br>tình trạng tốt. Gối cầu thép phải được bôi<br>mỡ.<br>b) Đối với các hư hỏng, biến dạng của gối<br>cầu, mố trụ cầu phải được phát hiện, báo<br>cáo và theo dõi thường xuyên.<br>c) Các nguyên nhân dẫn đến việc không<br>đảm bảo yêu cầu phải được thực hiện<br>trong thời gian 14 ngày sau khi nước rút.</td><td>Khắc<br>phục hư<br>hỏng<br>hoặc<br>báo cáo<br>trong<br>vòng:<br>a) 01<br>ngày từ<br>khi phát<br>hiện đối<br>với khe<br>co giãn.<br>b) 05<br>ngày từ<br>khi phát<br>hiện với<br>gối, mố,<br>trụ cầu.</td></tr>
+<tr><td>5.4</td><td>Mặt cầu,<br>đường<br>đầu cầu</td><td>Thực hiện theo<br>quy định tại Mục<br>5.11.1, 5.11.4 đến<br>mục 5.11.6,<br>5.11.11 của</td><td>a) Không có ổ gà, vệ sinh sạch, thoát nước<br>tốt. Đảm bảo êm thuận phần tiếp giáp đầu<br>cầu.<br>b) Xử lý ổ gà, rạn nứt, trồi lún như quy<br>định đối với mặt đường tương ứng tại<br>điểm 2 Mục A của Phụ lục này.</td><td>Khắc<br>phục hư<br>hỏng<br>trong<br>vòng 02<br>ngày từ</td></tr>
+</tbody>
+</table> 
 
-84
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời 
-gian 
-cho 
-phép 
-khắc 
-phục 
-tồn tại 
-TCVN 
-14182:2024. 
-  
-c) Có biển cảnh báo, giảm tốc độ phù hợp 
-khi có hư hỏng trong thời gian chờ xử lý. 
-d) Các chỗ lún lõm, ổ gà phải được xử lý 
-đảm bảo giao thông ngay sau không quá 02 
-ngày phát hiện. 
-khi phát 
-hiện. 
-5.5 
-Kè 
-dẫn 
-hướng, 
-các 
-kết 
-cấu phòng 
-hộ 
-Thực hiện theo 
-quy định tại Mục 
-5.11.12 
-của 
-TCVN 
-14182:2024. 
-Tình trạng công trình bình thường; không 
-có hư hỏng, không có cây cối ảnh hưởng 
-đến dòng chảy và kết cấu công trình. Hư 
-hỏng lớn ngoài hợp đồng phải báo cáo Bên 
-A để xem xét xử lý. 
-Khắc 
-phục hư 
-hỏng 
-hoặc 
-báo cáo 
-trong 
-vòng 07 
-ngày từ 
-khi phát 
-hiện. 
-5.6 
-Tường 
-chắn, kè 
-Thực hiện theo 
-quy định tại Mục 
-5.5 của TCVN 
-14182:2024. 
-Tình trạng tường chắn bình thường; không 
-có hư hỏng, không có cây cối ảnh hưởng 
-đến dòng chảy và kết cấu công trình, đảm 
-bảo thoát nước bình thường. Hư hỏng lớn 
-ngoài hợp đồng phải báo cáo Bên A để xem 
-xét xử lý. 
-Khắc 
-phục hư 
-hỏng 
-hoặc 
-báo cáo 
-trong 
-vòng 07 
-ngày từ 
-khi phát 
-hiện. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=83">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời<br>gian<br>cho<br>phép<br>khắc<br>phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td>TCVN<br>14182:2024.</td><td>c) Có biển cảnh báo, giảm tốc độ phù hợp<br>khi có hư hỏng trong thời gian chờ xử lý.<br>d) Các chỗ lún lõm, ổ gà phải được xử lý<br>đảm bảo giao thông ngay sau không quá 02<br>ngày phát hiện.</td><td>khi phát<br>hiện.</td></tr>
+<tr><td>5.5</td><td>Kè dẫn<br>hướng,<br>các kết<br>cấu phòng<br>hộ</td><td>Thực hiện theo<br>quy định tại Mục<br>5.11.12 của<br>TCVN<br>14182:2024.</td><td>Tình trạng công trình bình thường; không<br>có hư hỏng, không có cây cối ảnh hưởng<br>đến dòng chảy và kết cấu công trình. Hư<br>hỏng lớn ngoài hợp đồng phải báo cáo Bên<br>A để xem xét xử lý.</td><td>Khắc<br>phục hư<br>hỏng<br>hoặc<br>báo cáo<br>trong<br>vòng 07<br>ngày từ<br>khi phát<br>hiện.</td></tr>
+<tr><td>5.6</td><td>Tường<br>chắn, kè</td><td>Thực hiện theo<br>quy định tại Mục<br>5.5 của TCVN<br>14182:2024.</td><td>Tình trạng tường chắn bình thường; không<br>có hư hỏng, không có cây cối ảnh hưởng<br>đến dòng chảy và kết cấu công trình, đảm<br>bảo thoát nước bình thường. Hư hỏng lớn<br>ngoài hợp đồng phải báo cáo Bên A để xem<br>xét xử lý.</td><td>Khắc<br>phục hư<br>hỏng<br>hoặc<br>báo cáo<br>trong<br>vòng 07<br>ngày từ<br>khi phát<br>hiện.</td></tr>
+</tbody>
+</table> 
 
-85
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời 
-gian 
-cho 
-phép 
-khắc 
-phục 
-tồn tại 
-5.7 
-Đường 
-tràn, 
-đường 
-ngầm 
-Thực hiện theo 
-quy định tại Mục 
-5.6 của TCVN 
-14182:2024. 
-Dễ nhận biết khi bị ngập do lũ lụt, không 
-có hư hỏng; không bị ách tắc dòng chảy, 
-đảm bảo an toàn giao thông. Hư hỏng lớn 
-ngoài hợp đồng phải báo cáo Bên A để 
-xem xét xử lý. 
-Khắc 
-phục hư 
-hỏng 
-hoặc 
-báo cáo 
-trong 
-vòng 07 
-ngày từ 
-khi phát 
-hiện. 
-5.8 
-Hầm 
-đường bộ 
-Thực hiện theo 
-quy định tại Mục 
-5.7 của TCVN 
-14182:2024. 
-a) Đảm bảo mặt đường sạch, thoát nước và 
-đảm bảo chiếu sáng đảm bảo an toàn giao 
-thông. 
-b) Phát hiện kịp thời các hư hỏng, xử lý 
-các hư hỏng nhỏ và theo dõi, báo cáo cấp 
-có thẩm quyền xử lý. 
-Khắc 
-phục hư 
-hỏng 
-hoặc 
-báo cáo 
-trong 
-vòng 05 
-ngày từ 
-khi phát 
-hiện 
-5.9 
-Nhà Hạt 
- Duy trì những 
-đặc trưng kiến 
-trúc, 
-kỹ 
-thuật, 
-thiết bị công trình 
-theo công năng, 
-đảm 
-bảo 
-chất 
-a) Vệ sinh sạch sẽ, vận hành, sử dụng nhà 
-Hạt đúng công năng. 
-b) Kiểm tra nhà Hạt thường xuyên bằng 
-mắt và các phương tiện đơn giản để phát 
-hiện kịp thời dấu hiệu xuống cấp, đồng 
-thời tiến hành bảo dưỡng hoặc sửa chữa 
-Khắc 
-phục hư 
-hỏng 
-nhỏ 
-trong 
-vòng 7 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=84">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời<br>gian<br>cho<br>phép<br>khắc<br>phục<br>tồn tại</td></tr>
+<tr><td>5.7</td><td>Đường<br>tràn,<br>đường<br>ngầm</td><td>Thực hiện theo<br>quy định tại Mục<br>5.6 của TCVN<br>14182:2024.</td><td>Dễ nhận biết khi bị ngập do lũ lụt, không<br>có hư hỏng; không bị ách tắc dòng chảy,<br>đảm bảo an toàn giao thông. Hư hỏng lớn<br>ngoài hợp đồng phải báo cáo Bên A để<br>xem xét xử lý.</td><td>Khắc<br>phục hư<br>hỏng<br>hoặc<br>báo cáo<br>trong<br>vòng 07<br>ngày từ<br>khi phát<br>hiện.</td></tr>
+<tr><td>5.8</td><td>Hầm<br>đường bộ</td><td>Thực hiện theo<br>quy định tại Mục<br>5.7 của TCVN<br>14182:2024.</td><td>a) Đảm bảo mặt đường sạch, thoát nước và<br>đảm bảo chiếu sáng đảm bảo an toàn giao<br>thông.<br>b) Phát hiện kịp thời các hư hỏng, xử lý<br>các hư hỏng nhỏ và theo dõi, báo cáo cấp<br>có thẩm quyền xử lý.</td><td>Khắc<br>phục hư<br>hỏng<br>hoặc<br>báo cáo<br>trong<br>vòng 05<br>ngày từ<br>khi phát<br>hiện</td></tr>
+<tr><td>5.9</td><td>Nhà Hạt</td><td>Duy trì những<br>đặc trưng kiến<br>trúc, kỹ thuật,<br>thiết bị công trình<br>theo công năng,<br>đảm bảo chất</td><td>a) Vệ sinh sạch sẽ, vận hành, sử dụng nhà<br>Hạt đúng công năng.<br>b) Kiểm tra nhà Hạt thường xuyên bằng<br>mắt và các phương tiện đơn giản để phát<br>hiện kịp thời dấu hiệu xuống cấp, đồng<br>thời tiến hành bảo dưỡng hoặc sửa chữa</td><td>Khắc<br>phục hư<br>hỏng<br>nhỏ<br>trong<br>vòng 7</td></tr>
+</tbody>
+</table> 
 
-86
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời 
-gian 
-cho 
-phép 
-khắc 
-phục 
-tồn tại 
-lượng của nhà Hạt 
-phù hợp với cấp 
-công trình trong 
-suốt quá trình sử 
-dụng.  
-nhỏ và theo dõi, báo cáo cấp có thẩm 
-quyền xử lý đối với các hư hỏng đột xuất, 
-hoặc trường hợp hư hỏng có khả năng mất 
-an toàn công trình. 
-c) Đảm bảo không mất mát hư hỏng đất và 
-tài sản, trang thiết bị trong nhà Hạt.  
-ngày từ 
-khi phát 
-hiện. 
-Báo cáo 
-sự 
-cố 
-trong 
-vòng 2 
-ngày. 
-5.10 Bảo quản 
-vật tư dự 
-phòng  
-Bảo đảm không 
-mất mát, hạn chế 
-hư hỏng của vật tư 
-dự phòng 
-a) Kiểm soát số lượng vật tư dự phòng 
-theo quy định, báo cáo định kỳ, đột xuất 
-đảm bảo đúng tiến độ. 
-b) Vệ sinh sạch sẽ, sắp xếp gọn gàng, 
-thuận tiện trong việc nhập, xuất vật tư dự 
-phòng. 
-c) Các loại vật tư dự phòng bằng kim loại 
-phải được phải được sơn hoặc nếu không 
-phải được bảo vệ để tránh rỉ sét, ăn mòn. 
-d) Trường hợp vật tư dự phòng hết hạn sử 
-dụng hoặc bị hư hỏng không còn khả năng 
-sử dụng cần báo cáo cấp có thẩm quyền 
-xem xét, sửa chữa, thanh lý theo quy định. 
-e) Đáp ứng các yêu cầu khác theo Quy chế 
-quản lý vật tư dự phòng. 
-Khắc 
-phục hư 
-hỏng 
-nhỏ 
-trong 
-vòng 7 
-ngày từ 
-khi phát 
-hiện. 
-Báo cáo 
-sự 
-cố 
-trong 
-vòng 2 
-ngày. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=85">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời<br>gian<br>cho<br>phép<br>khắc<br>phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td>lượng của nhà Hạt<br>phù hợp với cấp<br>công trình trong<br>suốt quá trình sử<br>dụng.</td><td>nhỏ và theo dõi, báo cáo cấp có thẩm<br>quyền xử lý đối với các hư hỏng đột xuất,<br>hoặc trường hợp hư hỏng có khả năng mất<br>an toàn công trình.<br>c) Đảm bảo không mất mát hư hỏng đất và<br>tài sản, trang thiết bị trong nhà Hạt.</td><td>ngày từ<br>khi phát<br>hiện.<br>Báo cáo<br>sự cố<br>trong<br>vòng 2<br>ngày.</td></tr>
+<tr><td>5.10</td><td>Bảo quản<br>vật tư dự<br>phòng</td><td>Bảo đảm không<br>mất mát, hạn chế<br>hư hỏng của vật tư<br>dự phòng</td><td>a) Kiểm soát số lượng vật tư dự phòng<br>theo quy định, báo cáo định kỳ, đột xuất<br>đảm bảo đúng tiến độ.<br>b) Vệ sinh sạch sẽ, sắp xếp gọn gàng,<br>thuận tiện trong việc nhập, xuất vật tư dự<br>phòng.<br>c) Các loại vật tư dự phòng bằng kim loại<br>phải được phải được sơn hoặc nếu không<br>phải được bảo vệ để tránh rỉ sét, ăn mòn.<br>d) Trường hợp vật tư dự phòng hết hạn sử<br>dụng hoặc bị hư hỏng không còn khả năng<br>sử dụng cần báo cáo cấp có thẩm quyền<br>xem xét, sửa chữa, thanh lý theo quy định.<br>e) Đáp ứng các yêu cầu khác theo Quy chế<br>quản lý vật tư dự phòng.</td><td>Khắc<br>phục hư<br>hỏng<br>nhỏ<br>trong<br>vòng 7<br>ngày từ<br>khi phát<br>hiện.<br>Báo cáo<br>sự cố<br>trong<br>vòng 2<br>ngày.</td></tr>
+</tbody>
+</table> 
 
-87
- 
- 
 B. Đối với đường bộ cao tốc  
 1. Công tác quản lý công trình đường bộ  
  
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu kỹ 
-thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-1.1 Lập, quản 
-lý hồ sơ 
-và 
-cập 
-nhật hồ sơ 
-tài 
-liệu 
-trong thời 
-gian thực 
-hiện bảo 
-dưỡng 
-công trình 
-Thực hiện đầy đủ 
-theo các nội dung tại 
-khoản 6 Điều 11 
-Thông tư này và Mục 
-4.1.1 của Tiêu chuẩn 
-kỹ thuật bảo dưỡng 
-thường xuyên công 
-trình đường cao tốc 
-TCCS 
-17:2016/TCĐBVN 
-(sau đây viết tắt là 
-TCCS 
-17:2016/TCĐBVN) 
-  
-a) Có đủ các hồ sơ, tài liệu theo 
-yêu cầu của hợp đồng; thể hiện 
-đầy đủ, chính xác các số liệu 
-so với hiện trường và quy 
-định; cập nhật, bổ sung những 
-thay đổi của công trình vào hồ 
-sơ, tài liệu. 
-b) Lưu giữ, bảo quản có hệ 
-thống, không mất, hư hỏng hồ 
-sơ. Cung cấp hồ sơ, tài liệu kịp 
-thời khi người quản lý, sử 
-dụng đường bộ (cơ quan ký kết 
-hợp đồng - Bên A) yêu cầu. 
-c) Đối với việc quản lý cầu 
-bằng phần mềm quản lý và các 
-công việc khác đã quy định sử 
-dụng phần mềm quản lý phải 
-được cập nhật và lưu trữ 
-thường xuyên trên phần mềm 
-quản lý. 
-a) Các thay đổi 
-công trình đường 
-bộ phải được cập 
-nhật không quá 
-15 ngày. 
-b) Các nội dung 
-khác: 15 ngày kể 
-từ ngày có thông 
-báo về tồn tại 
-trong công tác 
-này của cơ quan 
-ký hợp đồng.  
-1.2 Công tác ghi chép kết quả bảo 
-dưỡng công trình thuộc tài sản kết 
-cấu hạ tầng đường bộ và việc thực 
-hiện tuần đường 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=86">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu kỹ<br>thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td>1.1</td><td>Lập, quản<br>lý hồ sơ<br>và cập<br>nhật hồ sơ<br>tài liệu<br>trong thời<br>gian thực<br>hiện bảo<br>dưỡng<br>công trình</td><td>Thực hiện đầy đủ<br>theo các nội dung tại<br>khoản 6 Điều 11<br>Thông tư này và Mục<br>4.1.1 của Tiêu chuẩn<br>kỹ thuật bảo dưỡng<br>thường xuyên công<br>trình đường cao tốc<br>TCCS<br>17:2016/TCĐBVN<br>(sau đây viết tắt là<br>TCCS<br>17:2016/TCĐBVN)</td><td>a) Có đủ các hồ sơ, tài liệu theo<br>yêu cầu của hợp đồng; thể hiện<br>đầy đủ, chính xác các số liệu<br>so với hiện trường và quy<br>định; cập nhật, bổ sung những<br>thay đổi của công trình vào hồ<br>sơ, tài liệu.<br>b) Lưu giữ, bảo quản có hệ<br>thống, không mất, hư hỏng hồ<br>sơ. Cung cấp hồ sơ, tài liệu kịp<br>thời khi người quản lý, sử<br>dụng đường bộ (cơ quan ký kết<br>hợp đồng - Bên A) yêu cầu.<br>c) Đối với việc quản lý cầu<br>bằng phần mềm quản lý và các<br>công việc khác đã quy định sử<br>dụng phần mềm quản lý phải<br>được cập nhật và lưu trữ<br>thường xuyên trên phần mềm<br>quản lý.</td><td>a) Các thay đổi<br>công trình đường<br>bộ phải được cập<br>nhật không quá<br>15 ngày.<br>b) Các nội dung<br>khác: 15 ngày kể<br>từ ngày có thông<br>báo về tồn tại<br>trong công tác<br>này của cơ quan<br>ký hợp đồng.</td></tr>
+<tr><td>1.2</td><td colspan="2">Công tác ghi chép kết quả bảo<br>dưỡng công trình thuộc tài sản kết<br>cấu hạ tầng đường bộ và việc thực<br>hiện tuần đường</td><td></td><td></td></tr>
+</tbody>
+</table> 
 
-88
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu kỹ 
-thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
- 
-1.2.1-
-Công tác 
-ghi chép 
-kết 
-quả 
-bảo 
-dưỡng 
-Việc ghi chép kết quả 
-thực hiện bảo dưỡng 
-phải được thực hiện 
-sau khi hoàn thành 
-các công tác bảo 
-dưỡng, bao gồm: 
-(1) Công tác cắt cỏ lề 
-đường, cắt cây (ghi 
-thời 
-gian, 
-đoạn 
-đường thực hiện, kết 
-quả chủ yếu); 
-(2) Quét vệ sinh mặt 
-đường; vá ổ gà, sửa 
-mặt đường (ghi thời 
-gian, đoạn đường; kết 
-quả chủ yếu); 
-(3) Nạo vét đoạn rãnh 
-(ghi đoạn rãnh và thời 
-gian thực hiện; kết 
-chủ yếu); 
-(4) Sơn bổ sung báo 
-hiệu đường bộ (ghi vị 
-trí sơn bổ sung và kết 
-quả chủ yếu); 
-(5) Khơi thông cống, 
-rãnh: ghi thời gian, 
-kết quả chủ yếu); 
-(6) Sửa chữa lề đường 
-(ghi thời gian và đoạn 
-Yêu cầu về ghi chép kết quả 
-bảo dưỡng kết cấu hạ tầng 
-đường bộ 
-1.1. Tổ chức, cá nhân thực 
-hiện bảo dưỡng kết cấu hạ tầng 
-đường bộ có trách nhiệm ghi 
-chép kết quả bảo dưỡng ngay 
-sau khi hoàn thành công việc 
-bảo dưỡng. Trường hợp công 
-việc bảo dưỡng kéo dài nhiều 
-ngày, thì việc ghi chép kết quả 
-bảo dưỡng được thực hiện khi 
-hoàn thành bảo dưỡng một 
-hoặc một số bộ phận, hạng 
-mục công trình kết cấu hạ tầng 
-đường bộ, thiết bị phục vụ 
-quản lý, vận hành, khai thác và 
-thiết bị lắp đặt vào kết cấu hạ 
-tầng đường bộ. Nội dung ghi 
-chép kết quả bảo dưỡng, bao 
-gồm: 
-a) Công trình, hạng mục công 
-trình, thiết bị được bảo dưỡng; 
-b) Công việc bảo dưỡng đã 
-thực hiện; 
-c) Thời gian bắt đầu và kết 
-thúc công việc bảo dưỡng; 
-d) Tóm tắt quá trình thực hiện 
-công việc bảo dưỡng; 
-a) Đối với công 
-việc hoàn thành 
-trong ngày yêu 
-cầu ghi kết quả 
-thực 
-hiện 
-vào 
-cuối ngày. 
-b) Đối với các 
-công việc kéo 
-hơn 01 ngày: ghi 
-chép kết quả bảo 
-dưỡng vào ngày 
-cuối hoàn thành. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=87">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu kỹ<br>thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td>1.2.1-<br>Công tác<br>ghi chép<br>kết quả<br>bảo<br>dưỡng</td><td>Việc ghi chép kết quả<br>thực hiện bảo dưỡng<br>phải được thực hiện<br>sau khi hoàn thành<br>các công tác bảo<br>dưỡng, bao gồm:<br>(1) Công tác cắt cỏ lề<br>đường, cắt cây (ghi<br>thời gian, đoạn<br>đường thực hiện, kết<br>quả chủ yếu);<br>(2) Quét vệ sinh mặt<br>đường; vá ổ gà, sửa<br>mặt đường (ghi thời<br>gian, đoạn đường; kết<br>quả chủ yếu);<br>(3) Nạo vét đoạn rãnh<br>(ghi đoạn rãnh và thời<br>gian thực hiện; kết<br>chủ yếu);<br>(4) Sơn bổ sung báo<br>hiệu đường bộ (ghi vị<br>trí sơn bổ sung và kết<br>quả chủ yếu);<br>(5) Khơi thông cống,<br>rãnh: ghi thời gian,<br>kết quả chủ yếu);<br>(6) Sửa chữa lề đường<br>(ghi thời gian và đoạn</td><td>Yêu cầu về ghi chép kết quả<br>bảo dưỡng kết cấu hạ tầng<br>đường bộ<br>1.1. Tổ chức, cá nhân thực<br>hiện bảo dưỡng kết cấu hạ tầng<br>đường bộ có trách nhiệm ghi<br>chép kết quả bảo dưỡng ngay<br>sau khi hoàn thành công việc<br>bảo dưỡng. Trường hợp công<br>việc bảo dưỡng kéo dài nhiều<br>ngày, thì việc ghi chép kết quả<br>bảo dưỡng được thực hiện khi<br>hoàn thành bảo dưỡng một<br>hoặc một số bộ phận, hạng<br>mục công trình kết cấu hạ tầng<br>đường bộ, thiết bị phục vụ<br>quản lý, vận hành, khai thác và<br>thiết bị lắp đặt vào kết cấu hạ<br>tầng đường bộ. Nội dung ghi<br>chép kết quả bảo dưỡng, bao<br>gồm:<br>a) Công trình, hạng mục công<br>trình, thiết bị được bảo dưỡng;<br>b) Công việc bảo dưỡng đã<br>thực hiện;<br>c) Thời gian bắt đầu và kết<br>thúc công việc bảo dưỡng;<br>d) Tóm tắt quá trình thực hiện<br>công việc bảo dưỡng;</td><td>a) Đối với công<br>việc hoàn thành<br>trong ngày yêu<br>cầu ghi kết quả<br>thực hiện vào<br>cuối ngày.<br>b) Đối với các<br>công việc kéo<br>hơn 01 ngày: ghi<br>chép kết quả bảo<br>dưỡng vào ngày<br>cuối hoàn thành.</td></tr>
+</tbody>
+</table> 
 
-89
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu kỹ 
-thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-tuyến thực hiện, kết 
-quả chủ yếu); 
-(7) Hót sụt (ghi thời 
-gian, đoạn, vị trí và 
-khối lượng, kết quả 
-chủ yếu); 
-(8) Bảo dưỡng báo 
-hiệu đường bộ; 
-(9) Công tác bảo 
-dưỡng các hạng mục 
-công trình khác ghi 
-tương tự như các tiết 
-(1) đến (8); 
-(10) Đối với bảo 
-dưỡng thiết bị, ghi lại 
-thời gian và công việc 
-thực hiện. Ví dụ: bảo 
-dưỡng vệ sinh, bôi 
-mỡ kết cấu thép, gối 
-cầu thép; bảo dưỡng 
-máy tính; bảo dưỡng 
-thiết bị điện và các 
-thiết bị khác. 
-đ) Kết quả thực hiện bảo 
-dưỡng; 
-e) Nhận xét về tình trạng công 
-trình kết cấu hạ tầng, thiết bị, 
-công nghệ sau khi bảo dưỡng 
-và các thông tin cần thiết khác. 
- 
-1.2.2 
-- 
-Công tác 
-tuần 
-đường 
-Thực hiện đầy đủ 
-theo Điều 18 Thông 
-tư này và các nội 
-dung 
-Tiêu 
-chuẩn 
-quản lý và khai thác 
-đường cao tốc - Tuần 
-đường và xử lý sự cố 
-a) Lập kế hoạch tuần đường; bố 
-trí đủ lực lượng, phương tiện, 
-thiết bị và trang phục phục vụ 
-nhiệm vụ tuần đường, xử lý kịp 
-thời các kiến nghị trong quá 
-trình tuần đường, cập nhật kết 
-quả tổ chức khắc phục hư hỏng, 
-a) Cho phép thời 
-gian khắc phục 
-trang thiết bị của 
-nhân viên tuần 
-đường là 01 tháng 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=88">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu kỹ<br>thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td>tuyến thực hiện, kết<br>quả chủ yếu);<br>(7) Hót sụt (ghi thời<br>gian, đoạn, vị trí và<br>khối lượng, kết quả<br>chủ yếu);<br>(8) Bảo dưỡng báo<br>hiệu đường bộ;<br>(9) Công tác bảo<br>dưỡng các hạng mục<br>công trình khác ghi<br>tương tự như các tiết<br>(1) đến (8);<br>(10) Đối với bảo<br>dưỡng thiết bị, ghi lại<br>thời gian và công việc<br>thực hiện. Ví dụ: bảo<br>dưỡng vệ sinh, bôi<br>mỡ kết cấu thép, gối<br>cầu thép; bảo dưỡng<br>máy tính; bảo dưỡng<br>thiết bị điện và các<br>thiết bị khác.</td><td>đ) Kết quả thực hiện bảo<br>dưỡng;<br>e) Nhận xét về tình trạng công<br>trình kết cấu hạ tầng, thiết bị,<br>công nghệ sau khi bảo dưỡng<br>và các thông tin cần thiết khác.</td><td></td></tr>
+<tr><td></td><td>1.2.2 -<br>Công tác<br>tuần<br>đường</td><td>Thực hiện đầy đủ<br>theo Điều 18 Thông<br>tư này và các nội<br>dung Tiêu chuẩn<br>quản lý và khai thác<br>đường cao tốc - Tuần<br>đường và xử lý sự cố</td><td>a) Lập kế hoạch tuần đường; bố<br>trí đủ lực lượng, phương tiện,<br>thiết bị và trang phục phục vụ<br>nhiệm vụ tuần đường, xử lý kịp<br>thời các kiến nghị trong quá<br>trình tuần đường, cập nhật kết<br>quả tổ chức khắc phục hư hỏng,</td><td>a) Cho phép thời<br>gian khắc phục<br>trang thiết bị của<br>nhân viên tuần<br>đường là 01 tháng</td></tr>
+</tbody>
+</table> 
 
-90
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu kỹ 
-thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-trên đường cao tốc 
-TCCS 
-16:2016/TCĐBVN 
-(sau đây viết tắt là 
-TCCS 
-16:2016/TCĐBVN) 
-xuống cấp của công trình, bộ 
-phận, hạng mục công trình, 
-tham gia xử lý tai nạn, khắc 
-phục bão lũ, bảo vệ công trình 
-và hành lang an toàn đường bộ, 
-báo cáo theo quy định.  
-b) Sổ nhật ký tuần đường thể 
-hiện đầy đủ kết quả hoạt động 
-tuần đường, nhận xét, ý kiến 
-xử lý của nhà thầu BDTX. 
-c) Các quy định khác:  
-- Phát hiện tình trạng bất thường, 
-sự cố của công trình đường bộ, 
-các công trình khác ảnh hưởng 
-đến an toàn giao thông và tai 
-nạn, ùn tắc giao thông (chụp ảnh 
-hiện trạng hư hỏng, tai nạn và 
-báo cáo kịp thời). 
-- Thống kê, nắm rõ số lượng, 
-vị trí, tình trạng chi tiết của 
-công trình đường bộ trong 
-đoạn tuyến được giao; phát 
-hiện hư hỏng, sự xâm hại công 
-trình; xử lý hoặc báo cáo để có 
-biện pháp xử lý. 
-- Theo dõi tai nạn giao thông 
-và xử lý theo quy định. 
-- Công tác quản lý, bảo vệ 
-phạm vi đất của đường bộ: 
-phát hiện kịp thời, lập biên bản 
-kể từ khi ký kết 
-hợp đồng.  
-b) Đối với các lỗi 
-không đáp ứng 
-còn lại: thời gian 
-khắc phục tối đa 
-không 
-quá 
-01 
-ngày kể từ khi 
-phát hiện. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=89">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu kỹ<br>thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td>trên đường cao tốc<br>TCCS<br>16:2016/TCĐBVN<br>(sau đây viết tắt là<br>TCCS<br>16:2016/TCĐBVN)</td><td>xuống cấp của công trình, bộ<br>phận, hạng mục công trình,<br>tham gia xử lý tai nạn, khắc<br>phục bão lũ, bảo vệ công trình<br>và hành lang an toàn đường bộ,<br>báo cáo theo quy định.<br>b) Sổ nhật ký tuần đường thể<br>hiện đầy đủ kết quả hoạt động<br>tuần đường, nhận xét, ý kiến<br>xử lý của nhà thầu BDTX.<br>c) Các quy định khác:<br>- Phát hiện tình trạng bất thường,<br>sự cố của công trình đường bộ,<br>các công trình khác ảnh hưởng<br>đến an toàn giao thông và tai<br>nạn, ùn tắc giao thông (chụp ảnh<br>hiện trạng hư hỏng, tai nạn và<br>báo cáo kịp thời).<br>- Thống kê, nắm rõ số lượng,<br>vị trí, tình trạng chi tiết của<br>công trình đường bộ trong<br>đoạn tuyến được giao; phát<br>hiện hư hỏng, sự xâm hại công<br>trình; xử lý hoặc báo cáo để có<br>biện pháp xử lý.<br>- Theo dõi tai nạn giao thông<br>và xử lý theo quy định.<br>- Công tác quản lý, bảo vệ<br>phạm vi đất của đường bộ:<br>phát hiện kịp thời, lập biên bản</td><td>kể từ khi ký kết<br>hợp đồng.<br>b) Đối với các lỗi<br>không đáp ứng<br>còn lại: thời gian<br>khắc phục tối đa<br>không quá 01<br>ngày kể từ khi<br>phát hiện.</td></tr>
+</tbody>
+</table> 
 
-91
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu kỹ 
-thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-xác nhận hành vi vi phạm, báo 
-cáo Bên A xử lý theo quy định. 
-- Theo dõi việc thi công công 
-trình trên đường bộ đang khai 
-thác, nhắc nhở nhà thầu thi 
-công bảo đảm an toàn giao 
-thông; nếu phát hiện các hành 
-vi gây mất an toàn giao thông 
-báo cáo ngay tuần kiểm viên 
-để xử lý kịp thời. 
-1.3 Đếm xe 
-Thực hiện theo các 
-nội dung Mục 4.1.1.6 
-của 
-Tiêu 
-chuẩn 
-TCCS 
-17:2016/TCĐBVN 
-hoặc ý kiến chỉ đạo 
-của cơ quan quản lý 
-đường bộ. 
-a) Phiếu đếm xe chi tiết thể 
-hiện đầy đủ, chính xác kết quả 
-đếm xe được phân loại theo 
-yêu cầu của hợp đồng hoặc 
-tiêu chuẩn kỹ thuật, thời gian 
-đếm xe. Báo cáo tổng hợp kết 
-quả đếm xe của đợt đếm cụ thể 
-từng ngày, số ca đếm trong 
-ngày, số xe được phân loại cụ 
-thể theo các chiều. 
-b) Chế độ báo cáo, tổng hợp, 
-lưu trữ và các nội dung khác 
-thực hiện theo quy định tại các 
-tiêu chuẩn do cơ quan có thẩm 
-quyền ban hành, quy định 
-trong hợp đồng BDTX. 
-a) Ngày đếm xe 
-được 
-phép 
-lùi 
-(hoặc tiến) không 
-quá 05 ngày so 
-với quy định nếu 
-trùng vào dịp Lễ, 
-Tết hoặc sự kiện, 
-sự cố ảnh hưởng 
-làm thay đổi đột 
-ngột lưu lượng.  
-b) Công tác tổng 
-hợp, lưu trữ và 
-báo cáo kết quả 
-đếm xe cho phép 
-chậm không quá 
-10 ngày kể từ 
-ngày phải đếm xe. 
-1.4 Quản 
-lý 
-bảo 
-vệ 
-hành lang 
-Thực hiện các công 
-việc quản lý, bảo vệ 
-hành lang an toàn 
-a) Phát hiện, xử lý theo quy 
-định, ngăn chặn kịp thời các vi 
-15 ngày kể từ 
-ngày có thông 
-báo về tồn tại 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=90">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu kỹ<br>thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>xác nhận hành vi vi phạm, báo<br>cáo Bên A xử lý theo quy định.<br>- Theo dõi việc thi công công<br>trình trên đường bộ đang khai<br>thác, nhắc nhở nhà thầu thi<br>công bảo đảm an toàn giao<br>thông; nếu phát hiện các hành<br>vi gây mất an toàn giao thông<br>báo cáo ngay tuần kiểm viên<br>để xử lý kịp thời.</td><td></td></tr>
+<tr><td>1.3</td><td>Đếm xe</td><td>Thực hiện theo các<br>nội dung Mục 4.1.1.6<br>của Tiêu chuẩn<br>TCCS<br>17:2016/TCĐBVN<br>hoặc ý kiến chỉ đạo<br>của cơ quan quản lý<br>đường bộ.</td><td>a) Phiếu đếm xe chi tiết thể<br>hiện đầy đủ, chính xác kết quả<br>đếm xe được phân loại theo<br>yêu cầu của hợp đồng hoặc<br>tiêu chuẩn kỹ thuật, thời gian<br>đếm xe. Báo cáo tổng hợp kết<br>quả đếm xe của đợt đếm cụ thể<br>từng ngày, số ca đếm trong<br>ngày, số xe được phân loại cụ<br>thể theo các chiều.<br>b) Chế độ báo cáo, tổng hợp,<br>lưu trữ và các nội dung khác<br>thực hiện theo quy định tại các<br>tiêu chuẩn do cơ quan có thẩm<br>quyền ban hành, quy định<br>trong hợp đồng BDTX.</td><td>a) Ngày đếm xe<br>được phép lùi<br>(hoặc tiến) không<br>quá 05 ngày so<br>với quy định nếu<br>trùng vào dịp Lễ,<br>Tết hoặc sự kiện,<br>sự cố ảnh hưởng<br>làm thay đổi đột<br>ngột lưu lượng.<br>b) Công tác tổng<br>hợp, lưu trữ và<br>báo cáo kết quả<br>đếm xe cho phép<br>chậm không quá<br>10 ngày kể từ<br>ngày phải đếm xe.</td></tr>
+<tr><td>1.4</td><td>Quản lý<br>bảo vệ<br>hành lang</td><td>Thực hiện các công<br>việc quản lý, bảo vệ<br>hành lang an toàn</td><td>a) Phát hiện, xử lý theo quy<br>định, ngăn chặn kịp thời các vi</td><td>15 ngày kể từ<br>ngày có thông<br>báo về tồn tại</td></tr>
+</tbody>
+</table> 
 
-92
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu kỹ 
-thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-an toàn và 
-công trình 
-đường 
-cao tốc 
-đường bộ, đất của 
-đường bộ, công trình 
-đường bộ và kết cấu 
-hạ tầng đường bộ quy 
-định tại Nghị định 
-quy định chi tiết và 
-hướng dẫn thi hành 
-một số điều của Luật 
-Đường bộ, Điều 77 
-Luật Trật tự an toàn 
-giao thông đường bộ 
-và tại khoản 1 Điều 
-18 Thông tư này; quy 
-định tại Mục 4.1.3 và 
-Mục 4.1.3.3 TCCS 
-17:2016/TCĐBVN. 
-phạm hành lang và kết cấu hạ 
-tầng đường bộ. 
-b) Phối hợp chặt chẽ với người 
-quản lý, sử dụng đường bộ, cơ 
-quan quản lý đường bộ, chính 
-quyền địa phương và công an 
-trong công tác bảo dưỡng, vận 
-hành khai thác công trình, bảo 
-vệ kết cấu hạ tầng đường bộ. 
-Cập nhật đầy đủ, kịp thời kết 
-quả kiểm tra cột mốc giải 
-phóng mặt bằng, mốc lộ giới, 
-mốc đất của đường bộ vào hồ 
-sơ quản lý hành lang an toàn 
-đường bộ. 
-c) Tổng hợp, báo cáo kết quả 
-xử lý vi phạm đầy đủ, đúng 
-quy định. 
-trong công tác 
-này của cơ quan 
-ký hợp đồng. 
-  
-1.5 Đảm bảo 
-trật tự an 
-toàn giao 
-thông, xử 
-lý sự cố, 
-tai 
-nạn 
-giao 
-thông 
-  
-Thực hiện báo cáo, 
-xử lý theo quy định 
-tại điểm d khoản 3 
-Điều 19 Thông tư 
-này; Mục 5.2 của 
-Tiêu chuẩn TCCS 
-16:2016/TCĐBVN. 
-  
-a) Khi phát hiện tai nạn giao 
-thông, báo cáo ngay các thông 
-tin ban đầu; tổ chức sơ, cấp 
-cứu ban đầu; bảo vệ hiện 
-trường, tổ chức phân luồng 
-giao thông. 
-Phát hiện, phối hợp kịp thời 
-với lực lượng chức năng lập 
-biên bản xác nhận thiệt hại đối 
-với các sự cố, vụ tai nạn giao 
-a) Báo cáo ngay 
-sau khi phát hiện 
-tai tạn giao thông. 
-b) Đối với công 
-tác báo cáo khác: 
-cho phép chậm 
-không 
-quá 
-02 
-ngày theo quy 
-định nhưng trước 
-khi nghiệm thu 
-tháng phải báo 
-cáo đầy đủ kết 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=91">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu kỹ<br>thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td>an toàn và<br>công trình<br>đường<br>cao tốc</td><td>đường bộ, đất của<br>đường bộ, công trình<br>đường bộ và kết cấu<br>hạ tầng đường bộ quy<br>định tại Nghị định<br>quy định chi tiết và<br>hướng dẫn thi hành<br>một số điều của Luật<br>Đường bộ, Điều 77<br>Luật Trật tự an toàn<br>giao thông đường bộ<br>và tại khoản 1 Điều<br>18 Thông tư này; quy<br>định tại Mục 4.1.3 và<br>Mục 4.1.3.3 TCCS<br>17:2016/TCĐBVN.</td><td>phạm hành lang và kết cấu hạ<br>tầng đường bộ.<br>b) Phối hợp chặt chẽ với người<br>quản lý, sử dụng đường bộ, cơ<br>quan quản lý đường bộ, chính<br>quyền địa phương và công an<br>trong công tác bảo dưỡng, vận<br>hành khai thác công trình, bảo<br>vệ kết cấu hạ tầng đường bộ.<br>Cập nhật đầy đủ, kịp thời kết<br>quả kiểm tra cột mốc giải<br>phóng mặt bằng, mốc lộ giới,<br>mốc đất của đường bộ vào hồ<br>sơ quản lý hành lang an toàn<br>đường bộ.<br>c) Tổng hợp, báo cáo kết quả<br>xử lý vi phạm đầy đủ, đúng<br>quy định.</td><td>trong công tác<br>này của cơ quan<br>ký hợp đồng.</td></tr>
+<tr><td>1.5</td><td>Đảm bảo<br>trật tự an<br>toàn giao<br>thông, xử<br>lý sự cố,<br>tai nạn<br>giao<br>thông</td><td>Thực hiện báo cáo,<br>xử lý theo quy định<br>tại điểm d khoản 3<br>Điều 19 Thông tư<br>này; Mục 5.2 của<br>Tiêu chuẩn TCCS<br>16:2016/TCĐBVN.</td><td>a) Khi phát hiện tai nạn giao<br>thông, báo cáo ngay các thông<br>tin ban đầu; tổ chức sơ, cấp<br>cứu ban đầu; bảo vệ hiện<br>trường, tổ chức phân luồng<br>giao thông.<br>Phát hiện, phối hợp kịp thời<br>với lực lượng chức năng lập<br>biên bản xác nhận thiệt hại đối<br>với các sự cố, vụ tai nạn giao</td><td>a) Báo cáo ngay<br>sau khi phát hiện<br>tai tạn giao thông.<br>b) Đối với công<br>tác báo cáo khác:<br>cho phép chậm<br>không quá 02<br>ngày theo quy<br>định nhưng trước<br>khi nghiệm thu<br>tháng phải báo<br>cáo đầy đủ kết</td></tr>
+</tbody>
+</table> 
 
-93
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu kỹ 
-thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-thông gây hư hỏng công trình 
-đường bộ. 
-b) Phát hiện, theo dõi kịp thời 
-các tồn tại trong tổ chức giao 
-thông,  điểm hay xảy ra tai nạn 
-giao thông, điểm tiềm ẩn tai 
-nạn giao thông đường bộ. 
-c) Báo cáo định kỳ, đột xuất 
-theo quy định. 
-quả 
-thực 
-hiện 
-công tác đảm bảo 
-trật tự an toàn 
-giao thông. 
-c) Các nội dung 
-khác: 15 ngày kể 
-từ ngày có thông 
-báo về tồn tại 
-trong công tác 
-này của cơ quan 
-ký hợp đồng. 
-1.6 Trực đảm 
-bảo giao 
-thông; xử 
-lý khi có 
-bão, 
-lũ 
-lụt, mưa, 
-sạt lở 
-Thực hiện theo quy 
-định của Bộ Xây 
-dựng về công tác 
-phòng, chống và khắc 
-phục hậu quả thiên tai 
-trong lĩnh vực đường 
-bộ; theo quy định của 
-quy trình vận hành, 
-khai 
-thác 
-tuyến 
-đường đã được phê 
-duyệt. 
-a) Đảm bảo đầy đủ số người 
-trực theo ca, vị trí theo quy 
-định; ghi chép đầy đủ nội 
-dung, diễn biến thời tiết, các 
-hư hỏng công trình đường bộ 
-được giao quản lý trong ca 
-trực. 
-b) Có phương án, biện pháp tổ 
-chức ứng phó các sự cố, thiên 
-tai và tìm kiếm cứu nạn. 
-c) Báo cáo ngay khi có sự cố, 
-tham gia xử lý các sự cố, đảm 
-bảo thông đường theo điều 
-kiện hợp đồng, quy định về 
-công tác phòng, chống và khắc 
-phục hậu quả thiên tai trong 
-lĩnh vực đường bộ của Bộ 
-trưởng Bộ Xây dựng.  
-a)   Các phương 
-án, biện pháp tổ 
-chức 
-ứng 
-phó 
-phải 
-được 
-lập 
-trong vòng 20 
-ngày kể từ khi ký 
-hợp đồng. 
-b) Đối với công 
-tác báo cáo: báo 
-cáo Bên A ngay 
-khi xảy ra sự cố.  
-c) Các nội dung 
-khác: 15 ngày kể 
-từ ngày có thông 
-báo về tồn tại 
-trong công tác 
-này của Bên A. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=92">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu kỹ<br>thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>thông gây hư hỏng công trình<br>đường bộ.<br>b) Phát hiện, theo dõi kịp thời<br>các tồn tại trong tổ chức giao<br>thông, điểm hay xảy ra tai nạn<br>giao thông, điểm tiềm ẩn tai<br>nạn giao thông đường bộ.<br>c) Báo cáo định kỳ, đột xuất<br>theo quy định.</td><td>quả thực hiện<br>công tác đảm bảo<br>trật tự an toàn<br>giao thông.<br>c) Các nội dung<br>khác: 15 ngày kể<br>từ ngày có thông<br>báo về tồn tại<br>trong công tác<br>này của cơ quan<br>ký hợp đồng.</td></tr>
+<tr><td>1.6</td><td>Trực đảm<br>bảo giao<br>thông; xử<br>lý khi có<br>bão, lũ<br>lụt, mưa,<br>sạt lở</td><td>Thực hiện theo quy<br>định của Bộ Xây<br>dựng về công tác<br>phòng, chống và khắc<br>phục hậu quả thiên tai<br>trong lĩnh vực đường<br>bộ; theo quy định của<br>quy trình vận hành,<br>khai thác tuyến<br>đường đã được phê<br>duyệt.</td><td>a) Đảm bảo đầy đủ số người<br>trực theo ca, vị trí theo quy<br>định; ghi chép đầy đủ nội<br>dung, diễn biến thời tiết, các<br>hư hỏng công trình đường bộ<br>được giao quản lý trong ca<br>trực.<br>b) Có phương án, biện pháp tổ<br>chức ứng phó các sự cố, thiên<br>tai và tìm kiếm cứu nạn.<br>c) Báo cáo ngay khi có sự cố,<br>tham gia xử lý các sự cố, đảm<br>bảo thông đường theo điều<br>kiện hợp đồng, quy định về<br>công tác phòng, chống và khắc<br>phục hậu quả thiên tai trong<br>lĩnh vực đường bộ của Bộ<br>trưởng Bộ Xây dựng.</td><td>a) Các phương<br>án, biện pháp tổ<br>chức ứng phó<br>phải được lập<br>trong vòng 20<br>ngày kể từ khi ký<br>hợp đồng.<br>b) Đối với công<br>tác báo cáo: báo<br>cáo Bên A ngay<br>khi xảy ra sự cố.<br>c) Các nội dung<br>khác: 15 ngày kể<br>từ ngày có thông<br>báo về tồn tại<br>trong công tác<br>này của Bên A.</td></tr>
+</tbody>
+</table> 
 
-94
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu kỹ 
-thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-1.7 Kiểm tra, 
-xử lý hư 
-hỏng công 
-trình 
-kết 
-cấu 
-hạ 
-tầng 
-đường bộ 
-Thực hiện theo quy 
-định tại khoản 2 Điều 
-19 Thông tư này và 
-Mục 4.4 của TCCS 
-17:2016/TCĐBVN. 
-a) Phát hiện kịp thời các hư 
-hỏng, dấu hiệu hư hỏng công 
-trình đường bộ, thiết bị lắp đặt 
-vào công trình đường bộ xử lý 
-theo quy định Hợp đồng. 
-b) Trường hợp hư hỏng, xuống 
-cấp nằm ngoài phạm vi hợp 
-đồng thì báo cáo kịp thời cho 
-Bên A để có biện pháp sửa 
-chữa khắc phục. 
-c) Báo cáo Bên A tình trạng kỹ 
-thuật của các hạng mục công 
-trình, các hiện tượng hư hỏng, 
-xuống cấp của các hạng mục 
-các công trình được giao quản 
-lý theo yêu cầu của TCCS 
-17:2016/TCĐBVN; lưu giữ 
-đầy đủ các biên bản, phiếu 
-kiểm tra. 
-d) Cập nhật đầy đủ vào hồ sơ, 
-tài liệu hoặc các phần mềm 
-quản lý cầu, đường. 
-a) Việc cập nhật 
-các thay đổi công 
-trình đường bộ: 
-không 
-quá 
-15 
-ngày sau khi có 
-thay đổi. 
-b) Đối với các hư 
-hỏng xuống cấp 
-ảnh hưởng đến an 
-toàn giao thông, 
-an 
-toàn 
-công 
-trình: phát hiện, 
-báo cáo không 
-quá 01 ngày khi 
-xảy ra sự cố. 
-c) Đối với các nội 
-dung 
-còn 
-lại: 
-không 
-quá 
-10 
-ngày. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=93">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu kỹ<br>thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td>1.7</td><td>Kiểm tra,<br>xử lý hư<br>hỏng công<br>trình kết<br>cấu hạ<br>tầng<br>đường bộ</td><td>Thực hiện theo quy<br>định tại khoản 2 Điều<br>19 Thông tư này và<br>Mục 4.4 của TCCS<br>17:2016/TCĐBVN.</td><td>a) Phát hiện kịp thời các hư<br>hỏng, dấu hiệu hư hỏng công<br>trình đường bộ, thiết bị lắp đặt<br>vào công trình đường bộ xử lý<br>theo quy định Hợp đồng.<br>b) Trường hợp hư hỏng, xuống<br>cấp nằm ngoài phạm vi hợp<br>đồng thì báo cáo kịp thời cho<br>Bên A để có biện pháp sửa<br>chữa khắc phục.<br>c) Báo cáo Bên A tình trạng kỹ<br>thuật của các hạng mục công<br>trình, các hiện tượng hư hỏng,<br>xuống cấp của các hạng mục<br>các công trình được giao quản<br>lý theo yêu cầu của TCCS<br>17:2016/TCĐBVN; lưu giữ<br>đầy đủ các biên bản, phiếu<br>kiểm tra.<br>d) Cập nhật đầy đủ vào hồ sơ,<br>tài liệu hoặc các phần mềm<br>quản lý cầu, đường.</td><td>a) Việc cập nhật<br>các thay đổi công<br>trình đường bộ:<br>không quá 15<br>ngày sau khi có<br>thay đổi.<br>b) Đối với các hư<br>hỏng xuống cấp<br>ảnh hưởng đến an<br>toàn giao thông,<br>an toàn công<br>trình: phát hiện,<br>báo cáo không<br>quá 01 ngày khi<br>xảy ra sự cố.<br>c) Đối với các nội<br>dung còn lại:<br>không quá 10<br>ngày.</td></tr>
+</tbody>
+</table> 
 
-95
- 
- 
 2. Bảo dưỡng mặt đường 
  
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-2.1 
-Đường bê tông nhựa (BTN) 
-  
-  
-2.1.1 Vá 
-mặt 
-đường bê 
-tông nhựa 
-(xử lý ổ 
-gà, 
-hố, 
-nứt 
-cục 
-bộ, 
-sụt 
-lún) 
-Vá mặt đường BTN 
-theo quy định tại 
-Mục 
-5.1.2 
-của 
-TCCS 
-17:2016/TCĐBVN. 
-a) Xử lý kịp thời các vị trí hư 
-hỏng ngay từ khi phát hiện. 
-b) Các miếng vá phải cùng cao 
-độ với mặt đường xung quanh 
-với dung sai tối đa + 05 mm; 
-những miếng vá có diện tích > 
-0,1 m2 được vá theo hình chữ 
-nhật, hình vuông; các cạnh 
-miếng vá phải song song hoặc 
-vuông góc với tim đường.  
-c) Các miếng vá được vá bằng 
-các vật liệu quy định trong các 
-tiêu chuẩn kỹ thuật. Vật liệu vá 
-phải tương đương hoặc tốt hơn 
-so với vật liệu đã được sử dụng 
-cho mặt đường xung quanh (mặt 
-đường bê tông nhựa (BTN) phải 
-được vá bằng BTN nóng hoặc 
-BTN ấm hoặc BTN nguội).  
-d) Trong trường hợp khẩn cấp 
-cho phép sử dụng các vật liệu 
-thích hợp như carboncor, vật 
-liệu làm đường có chất kết dính 
-để vá nhằm đảm bảo giao thông. 
-Khi đó nếu cần phải hạn chế tốc 
-độ do chất lượng vị trí vá tạm 
-không tương ứng với toàn 
-Thời 
-gian 
-cho 
-phép khắc phục 
-trong 
-vòng 
-01 
-ngày sau khi xuất 
-hiện đối với ổ gà; 
-05 ngày sau khi 
-xuất hiện đối với 
-các chỗ lún lõm. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=94">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td>2.1</td><td colspan="2">Đường bê tông nhựa (BTN)</td><td></td><td></td></tr>
+<tr><td>2.1.1</td><td>Vá mặt<br>đường bê<br>tông nhựa<br>(xử lý ổ<br>gà, hố,<br>nứt cục<br>bộ, sụt<br>lún)</td><td>Vá mặt đường BTN<br>theo quy định tại<br>Mục 5.1.2 của<br>TCCS<br>17:2016/TCĐBVN.</td><td>a) Xử lý kịp thời các vị trí hư<br>hỏng ngay từ khi phát hiện.<br>b) Các miếng vá phải cùng cao<br>độ với mặt đường xung quanh<br>với dung sai tối đa + 05 mm;<br>những miếng vá có diện tích &gt;<br>0,1 m2 được vá theo hình chữ<br>nhật, hình vuông; các cạnh<br>miếng vá phải song song hoặc<br>vuông góc với tim đường.<br>c) Các miếng vá được vá bằng<br>các vật liệu quy định trong các<br>tiêu chuẩn kỹ thuật. Vật liệu vá<br>phải tương đương hoặc tốt hơn<br>so với vật liệu đã được sử dụng<br>cho mặt đường xung quanh (mặt<br>đường bê tông nhựa (BTN) phải<br>được vá bằng BTN nóng hoặc<br>BTN ấm hoặc BTN nguội).<br>d) Trong trường hợp khẩn cấp<br>cho phép sử dụng các vật liệu<br>thích hợp như carboncor, vật<br>liệu làm đường có chất kết dính<br>để vá nhằm đảm bảo giao thông.<br>Khi đó nếu cần phải hạn chế tốc<br>độ do chất lượng vị trí vá tạm<br>không tương ứng với toàn</td><td>Thời gian cho<br>phép khắc phục<br>trong vòng 01<br>ngày sau khi xuất<br>hiện đối với ổ gà;<br>05 ngày sau khi<br>xuất hiện đối với<br>các chỗ lún lõm.</td></tr>
+</tbody>
+</table> 
 
-96
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-tuyến. Trong vòng 15 ngày phải 
-thay vị trí vá tạm bằng vật liệu 
-tiêu chuẩn dành cho vá đường 
-cao tốc. 
-đ) Mối nối giữa miếng vá với mặt 
-đường xung quanh không được 
-để khe hở rộng quá 03 mm. 
-2.1.2 Trám vá 
-mặt 
-đường bê 
-tông nhựa 
-(xử lý các 
-vết 
-nứt 
-mặt 
-đường) 
-Trám vá mặt đường 
-BTN theo quy định 
-tại Mục 5.1.3 của 
-TCCS 
-17:2016/TCĐBVN. 
-a) Trên mặt đường không có vết 
-nứt có độ rộng trên 05 mm. 
-b) Đối với nứt mai rùa: diện tích 
-mặt đường bị nứt không được 
-vượt quá 10% diện tích mặt 
-đường tính cho 50 m dài đường 
-bất kỳ. 
-Khi xuất hiện vết 
-nứt, thời gian cho 
-phép sửa chữa:  
-a) Đối với chiều 
-rộng vết nứt ≥ 05 
-mm phải vá láng 
-trong 
-vòng 
-03 
-ngày sau khi phát 
-hiện. 
-b) Đối với chiều 
-rộng vết nứt <05 
-mm phải sửa chữa 
-trong 
-vòng 
-05 
-ngày. 
-2.1.3 Vệ 
-sinh 
-mặt 
-đường 
-Thực hiện theo quy 
-định tại Mục 5.1.1 
-của 
-TCCS 
-17:2016/TCĐBVN. 
-Mặt đường phải luôn được giữ 
-vệ sinh sạch (không có rác, cành 
-cây và các chướng ngại vật 
-khác); không tồn tại đất, đá, cát, 
-rác thải trên mặt đường, lề 
-đường, đáp ứng các yêu cầu sau: 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=95">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>tuyến. Trong vòng 15 ngày phải<br>thay vị trí vá tạm bằng vật liệu<br>tiêu chuẩn dành cho vá đường<br>cao tốc.<br>đ) Mối nối giữa miếng vá với mặt<br>đường xung quanh không được<br>để khe hở rộng quá 03 mm.</td><td></td></tr>
+<tr><td>2.1.2</td><td>Trám vá<br>mặt<br>đường bê<br>tông nhựa<br>(xử lý các<br>vết nứt<br>mặt<br>đường)</td><td>Trám vá mặt đường<br>BTN theo quy định<br>tại Mục 5.1.3 của<br>TCCS<br>17:2016/TCĐBVN.</td><td>a) Trên mặt đường không có vết<br>nứt có độ rộng trên 05 mm.<br>b) Đối với nứt mai rùa: diện tích<br>mặt đường bị nứt không được<br>vượt quá 10% diện tích mặt<br>đường tính cho 50 m dài đường<br>bất kỳ.</td><td>Khi xuất hiện vết<br>nứt, thời gian cho<br>phép sửa chữa:<br>a) Đối với chiều<br>rộng vết nứt ≥ 05<br>mm phải vá láng<br>trong vòng 03<br>ngày sau khi phát<br>hiện.<br>b) Đối với chiều<br>rộng vết nứt &lt;05<br>mm phải sửa chữa<br>trong vòng 05<br>ngày.</td></tr>
+<tr><td>2.1.3</td><td>Vệ sinh<br>mặt<br>đường</td><td>Thực hiện theo quy<br>định tại Mục 5.1.1<br>của TCCS<br>17:2016/TCĐBVN.</td><td>Mặt đường phải luôn được giữ<br>vệ sinh sạch (không có rác, cành<br>cây và các chướng ngại vật<br>khác); không tồn tại đất, đá, cát,<br>rác thải trên mặt đường, lề<br>đường, đáp ứng các yêu cầu sau:</td><td></td></tr>
+</tbody>
+</table> 
 
-97
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-a) Khắc phục các chướng ngại 
-vật đe dọa tới công tác an toàn 
-giao thông như: đất, đá, động 
-vật chết, vật liệu bị đổ đi. 
-01 giờ kể từ khi 
-phát hiện. 
-b) Khắc phục các vật liệu dễ 
-cháy trên mặt đường như: nhiên 
-liệu, dầu hoặc chất hóa học. 
-01 giờ kể từ khi 
-phát hiện. 
-c) Khắc phục các mảnh vỡ khác 
-với không đe dọa trực tiếp tới an 
-toàn giao thông. 
-03 ngày kể từ khi 
-phát hiện. 
-2.2. 
-Mặt đường bê tông xi măng 
-  
-  
-2.2.1 Xử lý khe 
-co, 
-khe 
-giãn 
-và 
-khe dọc 
-Xử lý theo quy định 
-tại Mục 5.2.2.2. 
-5.2.2.3 của TCCS 
-17:2016/TCĐBVN. 
-Các khe co, khe giãn, khe dọc 
-không bị bong bật mất vật liệu 
-chèn khe có mức độ hư hỏng L 
-trở lên theo TCVN 14182:2024.  
-  
-Phải xử lý trong 
-vòng 05 ngày sau 
-khi 
-phát 
-hiện 
-(không tính các 
-ngày trời mưa, mặt 
-đường 
-ẩm 
-ướt 
-không 
-thi 
-công 
-được). 
-2.2.2 Xử lý vết 
-nứt  
-Xử lý theo quy định 
-tại Mục 5.2.3 của 
-TCCS 
-17:2016/TCĐBVN. 
-Không để xuất hiện vết nứt có 
-mức độ hư hỏng L trở lên theo 
-TCVN 14182:2024. 
-Phải 
-sửa 
-chữa 
-trong 
-vòng 
-05 
-ngày sau khi phát 
-hiện (đối với mùa 
-mưa), 10 ngày 
-(đối với mùa khô). 
-2.2.3 
-Thực hiện theo quy 
-định tại Mục 2.1.3 
-Mặt đường phải luôn được giữ 
-vệ sinh sạch (không có rác, cành 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=96">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td rowspan="3"></td><td rowspan="3"></td><td rowspan="3"></td><td>a) Khắc phục các chướng ngại<br>vật đe dọa tới công tác an toàn<br>giao thông như: đất, đá, động<br>vật chết, vật liệu bị đổ đi.</td><td>01 giờ kể từ khi<br>phát hiện.</td></tr>
+<tr><td>b) Khắc phục các vật liệu dễ<br>cháy trên mặt đường như: nhiên<br>liệu, dầu hoặc chất hóa học.</td><td>01 giờ kể từ khi<br>phát hiện.</td></tr>
+<tr><td>c) Khắc phục các mảnh vỡ khác<br>với không đe dọa trực tiếp tới an<br>toàn giao thông.</td><td>03 ngày kể từ khi<br>phát hiện.</td></tr>
+<tr><td>2.2.</td><td colspan="2">Mặt đường bê tông xi măng</td><td></td><td></td></tr>
+<tr><td>2.2.1</td><td>Xử lý khe<br>co, khe<br>giãn và<br>khe dọc</td><td>Xử lý theo quy định<br>tại Mục 5.2.2.2.<br>5.2.2.3 của TCCS<br>17:2016/TCĐBVN.</td><td>Các khe co, khe giãn, khe dọc<br>không bị bong bật mất vật liệu<br>chèn khe có mức độ hư hỏng L<br>trở lên theo TCVN 14182:2024.</td><td>Phải xử lý trong<br>vòng 05 ngày sau<br>khi phát hiện<br>(không tính các<br>ngày trời mưa, mặt<br>đường ẩm ướt<br>không thi công<br>được).</td></tr>
+<tr><td>2.2.2</td><td>Xử lý vết<br>nứt</td><td>Xử lý theo quy định<br>tại Mục 5.2.3 của<br>TCCS<br>17:2016/TCĐBVN.</td><td>Không để xuất hiện vết nứt có<br>mức độ hư hỏng L trở lên theo<br>TCVN 14182:2024.</td><td>Phải sửa chữa<br>trong vòng 05<br>ngày sau khi phát<br>hiện (đối với mùa<br>mưa), 10 ngày<br>(đối với mùa khô).</td></tr>
+<tr><td>2.2.3</td><td></td><td>Thực hiện theo quy<br>định tại Mục 2.1.3</td><td>Mặt đường phải luôn được giữ<br>vệ sinh sạch (không có rác, cành</td><td></td></tr>
+</tbody>
+</table> 
 
-98
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu 
-kỹ thuật, chất 
-lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-Vệ 
-sinh 
-mặt 
-đường  
-như đối với mặt 
-đường 
-bê 
-tông 
-nhựa. 
-cây và các chướng ngại vật 
-khác); không tồn tại đất, đá, cát, 
-rác thải trên mặt đường, lề 
-đường, đáp ứng các yêu cầu sau: 
-  
-  
-a) Khắc phục chướng ngại vật 
-đe dọa tới công tác an toàn giao 
-thông như đất, đá, động vật chết, 
-vật liệu bị đổ đi. 
-01 giờ kể từ khi 
-phát hiện. 
-b) Khắc phục các vật liệu dễ 
-cháy trên mặt đường như nhiên 
-liệu, dầu hoặc chất hóa học. 
-01 giờ kể từ khi 
-phát hiện. 
-c) Khắc phục các mảnh vỡ khác 
-với không đe dọa trực tiếp tới an 
-toàn giao thông. 
-03 ngày kể từ khi 
-phát hiện. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=97">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất<br>lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td rowspan="4"></td><td rowspan="4">Vệ sinh<br>mặt<br>đường</td><td rowspan="4">như đối với mặt<br>đường bê tông<br>nhựa.</td><td>cây và các chướng ngại vật<br>khác); không tồn tại đất, đá, cát,<br>rác thải trên mặt đường, lề<br>đường, đáp ứng các yêu cầu sau:</td><td></td></tr>
+<tr><td>a) Khắc phục chướng ngại vật<br>đe dọa tới công tác an toàn giao<br>thông như đất, đá, động vật chết,<br>vật liệu bị đổ đi.</td><td>01 giờ kể từ khi<br>phát hiện.</td></tr>
+<tr><td>b) Khắc phục các vật liệu dễ<br>cháy trên mặt đường như nhiên<br>liệu, dầu hoặc chất hóa học.</td><td>01 giờ kể từ khi<br>phát hiện.</td></tr>
+<tr><td>c) Khắc phục các mảnh vỡ khác<br>với không đe dọa trực tiếp tới an<br>toàn giao thông.</td><td>03 ngày kể từ khi<br>phát hiện.</td></tr>
+</tbody>
+</table> 
 
-99
- 
- 
 3. Hệ thống an toàn giao thông và hệ thống chiếu sáng 
  
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu kỹ 
-thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-3.1 
-Biển báo Thực hiện theo quy 
-định tại Mục 10.1.1 
-và 10.1.2 của TCCS 
-17:2016/TCĐBVN. 
-a) Bảo quản đầy đủ biển báo từ 
-khi nhận bàn giao; đảm bảo chất 
-lượng, rõ ràng, không bị bẩn, 
-chắc chắn, dễ nhận biết từ xa và 
-phải quan sát được rõ cả ngày và 
-đêm. 
-b) Biển báo điện tử phải hiển thị 
-đúng và đầy đủ thông tin, tỷ lệ 
-đèn LED bị tắt trên 1 mặt biển 
-báo phải đảm bảo bé hơn 1/4 
-tổng số đèn sáng. 
-Đối với hư hỏng, 
-mất 
-phải 
-sửa 
-chữa thay thế 
-trong vòng 01 
-ngày đối với biển 
-báo 
-chỉ 
-dẫn, 
-nguy hiểm, biển 
-hiệu 
-lệnh; 
-03 
-ngày 
-với 
-các 
-biển còn lại sau 
-khi phát hiện. 
-3.2 
-Vạch 
-sơn 
-kẻ 
-đường, 
-gờ giảm 
-tốc 
-Thực hiện theo quy 
-định tại Mục 10.3, 
-10.4 
-của 
-TCCS 
-17:2016/TCĐBVN. 
-Duy trì các vạch sơn khi nhận 
-bàn giao, thường xuyên vệ sinh 
-bảo đảm sáng rõ, không bị cát 
-bụi lấp, dễ nhận biết; sơn dặm 
-khi bị mờ hoặc bong tróc. 
-Đối với những 
-vạch sơn mặt 
-đường hư hỏng 
-cục bộ phải được 
-sơn dặm trong 
-vòng 07 ngày. 
-3.3 
-Cột Km, 
-cọc 
-H, 
-trụ dẻo, 
-cọc mốc 
-giải 
-phóng 
-mặt 
-bằng, 
-cọc mốc 
-lộ giới, 
-mốc đất 
-Thực hiện theo quy 
-định tại Mục 10.6 
-của 
-TCCS 
-17:2016/TCĐBVN. 
-a) Bảo quản đầy đủ các loại cột, 
-cọc từ khi nhận bàn giao. 
-b) Thường xuyên vệ sinh sạch, 
-phát quang đảm bảo tầm nhìn; 
-các loại cột, cọc phải được chắc 
-chắn, không xiêu vẹo; các chữ 
-viết trên cột Km, cọc H, mốc lộ 
-giới, mốc đất của đường bộ 
-không bị mờ, dễ đọc. 
- 
-Sửa chữa, thay 
-thế trong vòng 
-07 ngày. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=98">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu kỹ<br>thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td>3.1</td><td>Biển báo</td><td>Thực hiện theo quy<br>định tại Mục 10.1.1<br>và 10.1.2 của TCCS<br>17:2016/TCĐBVN.</td><td>a) Bảo quản đầy đủ biển báo từ<br>khi nhận bàn giao; đảm bảo chất<br>lượng, rõ ràng, không bị bẩn,<br>chắc chắn, dễ nhận biết từ xa và<br>phải quan sát được rõ cả ngày và<br>đêm.<br>b) Biển báo điện tử phải hiển thị<br>đúng và đầy đủ thông tin, tỷ lệ<br>đèn LED bị tắt trên 1 mặt biển<br>báo phải đảm bảo bé hơn 1/4<br>tổng số đèn sáng.</td><td>Đối với hư hỏng,<br>mất phải sửa<br>chữa thay thế<br>trong vòng 01<br>ngày đối với biển<br>báo chỉ dẫn,<br>nguy hiểm, biển<br>hiệu lệnh; 03<br>ngày với các<br>biển còn lại sau<br>khi phát hiện.</td></tr>
+<tr><td>3.2</td><td>Vạch<br>sơn kẻ<br>đường,<br>gờ giảm<br>tốc</td><td>Thực hiện theo quy<br>định tại Mục 10.3,<br>10.4 của TCCS<br>17:2016/TCĐBVN.</td><td>Duy trì các vạch sơn khi nhận<br>bàn giao, thường xuyên vệ sinh<br>bảo đảm sáng rõ, không bị cát<br>bụi lấp, dễ nhận biết; sơn dặm<br>khi bị mờ hoặc bong tróc.</td><td>Đối với những<br>vạch sơn mặt<br>đường hư hỏng<br>cục bộ phải được<br>sơn dặm trong<br>vòng 07 ngày.</td></tr>
+<tr><td>3.3</td><td>Cột Km,<br>cọc H,<br>trụ dẻo,<br>cọc mốc<br>giải<br>phóng<br>mặt<br>bằng,<br>cọc mốc<br>lộ giới,<br>mốc đất</td><td>Thực hiện theo quy<br>định tại Mục 10.6<br>của TCCS<br>17:2016/TCĐBVN.</td><td>a) Bảo quản đầy đủ các loại cột,<br>cọc từ khi nhận bàn giao.<br>b) Thường xuyên vệ sinh sạch,<br>phát quang đảm bảo tầm nhìn;<br>các loại cột, cọc phải được chắc<br>chắn, không xiêu vẹo; các chữ<br>viết trên cột Km, cọc H, mốc lộ<br>giới, mốc đất của đường bộ<br>không bị mờ, dễ đọc.</td><td>Sửa chữa, thay<br>thế trong vòng<br>07 ngày.</td></tr>
+</tbody>
+</table> 
 
-100
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu kỹ 
-thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-của 
-đường 
-bộ 
-và 
-cọc tiêu 
-c) Nắn chỉnh, sửa chữa kịp thời 
-nếu bị hư hỏng. 
-3.4 
-Tường 
-hộ 
-lan, 
-tôn sóng 
-Thực hiện theo quy 
-định tại Mục 10.7 
-của 
-TCCS 
-17:2016/TCĐBVN. 
-a) Bảo quản đầy đủ tường hộ 
-lan, tôn sóng từ khi nhận bàn 
-giao, phải chắc chắn, không bị 
-bẩn, mờ, đủ bu lông xiết chặt. 
-b) Đảm bảo, dễ nhận biết, không 
-xiêu vẹo, đúng quy định; hư 
-hỏng, mất phải được sửa chữa 
-kịp thời. Trường hợp hỏng do 
-tai nạn giao thông hoặc sự cố hư 
-hỏng lớn phải cảnh báo đảm bảo 
-an toàn giao thông và báo cáo 
-người quản lý, sử dụng đường 
-bộ. 
-Khắc phục hư 
-hỏng hoặc báo 
-cáo trong vòng 
-03 ngày sau khi 
-phát hiện. 
-3.5 
-Dải 
-phân 
-cách 
-giữa, 
-đảo giao 
-thông 
-Thực hiện theo quy 
-định tại Mục 10.8 
-của 
-TCCS 
-17:2016/TCĐBVN. 
-Kết cấu bê tông, bó vỉa đảm bảo 
-chắc chắn, không bị nghiêng đổ; 
-sạch, không nứt vỡ hư hỏng. 
-Trường hợp hỏng do tai nạn 
-giao thông hoặc sự cố hư hỏng 
-lớn phải cảnh báo đảm bảo an 
-toàn giao thông và báo cáo 
-người quản lý, sử dụng đường 
-bộ. 
-Khắc phục hư 
-hỏng hoặc báo 
-cáo trong vòng 
-03 ngày khi phát 
-hiện. 
-3.6 
-Đinh 
-phản 
-quang 
-Thực hiện theo quy 
-định tại Mục 10.5 
-a) Bảo quản đầy đủ từ khi nhận 
-bàn giao. 
-Khắc phục hư 
-hỏng hoặc báo 
-cáo trong vòng 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=99">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu kỹ<br>thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td>của<br>đường<br>bộ và<br>cọc tiêu</td><td></td><td>c) Nắn chỉnh, sửa chữa kịp thời<br>nếu bị hư hỏng.</td><td></td></tr>
+<tr><td>3.4</td><td>Tường<br>hộ lan,<br>tôn sóng</td><td>Thực hiện theo quy<br>định tại Mục 10.7<br>của TCCS<br>17:2016/TCĐBVN.</td><td>a) Bảo quản đầy đủ tường hộ<br>lan, tôn sóng từ khi nhận bàn<br>giao, phải chắc chắn, không bị<br>bẩn, mờ, đủ bu lông xiết chặt.<br>b) Đảm bảo, dễ nhận biết, không<br>xiêu vẹo, đúng quy định; hư<br>hỏng, mất phải được sửa chữa<br>kịp thời. Trường hợp hỏng do<br>tai nạn giao thông hoặc sự cố hư<br>hỏng lớn phải cảnh báo đảm bảo<br>an toàn giao thông và báo cáo<br>người quản lý, sử dụng đường<br>bộ.</td><td>Khắc phục hư<br>hỏng hoặc báo<br>cáo trong vòng<br>03 ngày sau khi<br>phát hiện.</td></tr>
+<tr><td>3.5</td><td>Dải<br>phân<br>cách<br>giữa,<br>đảo giao<br>thông</td><td>Thực hiện theo quy<br>định tại Mục 10.8<br>của TCCS<br>17:2016/TCĐBVN.</td><td>Kết cấu bê tông, bó vỉa đảm bảo<br>chắc chắn, không bị nghiêng đổ;<br>sạch, không nứt vỡ hư hỏng.<br>Trường hợp hỏng do tai nạn<br>giao thông hoặc sự cố hư hỏng<br>lớn phải cảnh báo đảm bảo an<br>toàn giao thông và báo cáo<br>người quản lý, sử dụng đường<br>bộ.</td><td>Khắc phục hư<br>hỏng hoặc báo<br>cáo trong vòng<br>03 ngày khi phát<br>hiện.</td></tr>
+<tr><td>3.6</td><td>Đinh<br>phản<br>quang</td><td>Thực hiện theo quy<br>định tại Mục 10.5</td><td>a) Bảo quản đầy đủ từ khi nhận<br>bàn giao.</td><td>Khắc phục hư<br>hỏng hoặc báo<br>cáo trong vòng</td></tr>
+</tbody>
+</table> 
 
-101
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu kỹ 
-thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-của 
-TCCS 
-17:2016/TCĐBVN. 
-b) Đảm bảo chắc chắn, dễ nhận 
-biết, không xiêu vẹo; hư hỏng, 
-mất phải được sửa chữa kịp 
-thời. 
-c) Trường hợp hỏng do tai nạn 
-giao thông hoặc sự cố hư hỏng 
-lớn phải cảnh báo đảm bảo an 
-toàn giao thông và báo cáo 
-người quản lý, sử dụng đường 
-bộ. 
-03 ngày khi phát 
-hiện. 
-3.7 
-Hệ 
-thống 
-chống 
-chói 
-(dạng 
-tấm, 
-lưới,...) 
-Thực hiện theo quy 
-định tại Mục 11.4 
-của 
-TCCS 
-17:2016/TCĐBVN. 
-a) Bảo quản đầy đủ từ khi nhận 
-bàn giao. 
-b) Kết cấu đảm bảo chắc chắn, 
-không xiêu vẹo, sạch, dễ nhận 
-biết; các hư hỏng, mất phải được 
-sửa chữa kịp thời. 
-c) Trường hợp hỏng do tai nạn 
-giao thông hoặc sự cố hư hỏng 
-lớn phải cảnh báo đảm bảo an 
-toàn giao thông và báo cáo 
-người quản lý, sử dụng đường 
-bộ 
-Khắc phục hư 
-hỏng hoặc báo 
-cáo trong vòng 
-03 ngày khi phát 
-hiện. 
-3.8 
-Hệ 
-thống 
-chiếu 
-sáng, 
-đèn tín 
-hiệu 
-giao 
-Thực hiện theo quy 
-định tại Mục 11.1, 
-10.2 
-của 
-TCCS 
-17:2016/TCĐBVN. 
- 
-a) Bảo quản đầy đủ từ khi nhận 
-bàn giao, vận hành hệ thống 
-đảm bảo thời lượng thắp sáng 
-đúng quy định. 
-b) Đèn tín hiệu giao thông luôn 
-trong tình trạng hoạt động bình 
-thường. Cột đèn, cần đèn, tủ 
-a) 
-Bóng 
-đèn 
-hỏng phải sửa 
-chữa, thay thế 
-trong vòng 01 
-ngày. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=100">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu kỹ<br>thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td>của TCCS<br>17:2016/TCĐBVN.</td><td>b) Đảm bảo chắc chắn, dễ nhận<br>biết, không xiêu vẹo; hư hỏng,<br>mất phải được sửa chữa kịp<br>thời.<br>c) Trường hợp hỏng do tai nạn<br>giao thông hoặc sự cố hư hỏng<br>lớn phải cảnh báo đảm bảo an<br>toàn giao thông và báo cáo<br>người quản lý, sử dụng đường<br>bộ.</td><td>03 ngày khi phát<br>hiện.</td></tr>
+<tr><td>3.7</td><td>Hệ<br>thống<br>chống<br>chói<br>(dạng<br>tấm,<br>lưới,...)</td><td>Thực hiện theo quy<br>định tại Mục 11.4<br>của TCCS<br>17:2016/TCĐBVN.</td><td>a) Bảo quản đầy đủ từ khi nhận<br>bàn giao.<br>b) Kết cấu đảm bảo chắc chắn,<br>không xiêu vẹo, sạch, dễ nhận<br>biết; các hư hỏng, mất phải được<br>sửa chữa kịp thời.<br>c) Trường hợp hỏng do tai nạn<br>giao thông hoặc sự cố hư hỏng<br>lớn phải cảnh báo đảm bảo an<br>toàn giao thông và báo cáo<br>người quản lý, sử dụng đường<br>bộ</td><td>Khắc phục hư<br>hỏng hoặc báo<br>cáo trong vòng<br>03 ngày khi phát<br>hiện.</td></tr>
+<tr><td>3.8</td><td>Hệ<br>thống<br>chiếu<br>sáng,<br>đèn tín<br>hiệu<br>giao</td><td>Thực hiện theo quy<br>định tại Mục 11.1,<br>10.2 của TCCS<br>17:2016/TCĐBVN.</td><td>a) Bảo quản đầy đủ từ khi nhận<br>bàn giao, vận hành hệ thống<br>đảm bảo thời lượng thắp sáng<br>đúng quy định.<br>b) Đèn tín hiệu giao thông luôn<br>trong tình trạng hoạt động bình<br>thường. Cột đèn, cần đèn, tủ</td><td>a) Bóng đèn<br>hỏng phải sửa<br>chữa, thay thế<br>trong vòng 01<br>ngày.</td></tr>
+</tbody>
+</table> 
 
-102
- 
- 
-TT 
-Hạng 
-mục 
-Nội dung yêu cầu kỹ 
-thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-thông 
-(nếu có) 
-điện, chóa đèn phải chắc chắn 
-không nghiêng lệch, sạch, 
-không bị rỉ sét, nứt vỡ. 
-c) Thực hiện cảnh báo, đảm bảo 
-an toàn khu vực khi xảy ra sự cố. 
-Kịp thời xử lý khắc phục sự cố 
-theo quy định. 
-d) Trường hợp hỏng do tai nạn 
-giao thông hoặc sự cố hư hỏng lớn 
-phải cảnh báo đảm bảo an toàn 
-giao thông và báo cáo người quản 
-lý, sử dụng đường bộ. 
-b) Cột đèn, cần 
-đèn bị hư hỏng 
-phải được sửa 
-chữa khắc phục, 
-hoặc 
-báo 
-cáo 
-trong vòng 02 
-ngày. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=101">
+<tbody>
+<tr><td>TT</td><td>Hạng<br>mục</td><td>Nội dung yêu cầu kỹ<br>thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td>thông<br>(nếu có)</td><td></td><td>điện, chóa đèn phải chắc chắn<br>không nghiêng lệch, sạch,<br>không bị rỉ sét, nứt vỡ.<br>c) Thực hiện cảnh báo, đảm bảo<br>an toàn khu vực khi xảy ra sự cố.<br>Kịp thời xử lý khắc phục sự cố<br>theo quy định.<br>d) Trường hợp hỏng do tai nạn<br>giao thông hoặc sự cố hư hỏng lớn<br>phải cảnh báo đảm bảo an toàn<br>giao thông và báo cáo người quản<br>lý, sử dụng đường bộ.</td><td>b) Cột đèn, cần<br>đèn bị hư hỏng<br>phải được sửa<br>chữa khắc phục,<br>hoặc báo cáo<br>trong vòng 02<br>ngày.</td></tr>
+</tbody>
+</table> 
  
 4. Nền đường, thoát nước và chăm sóc cây xanh 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-4.1 
-Taluy đắp 
-và 
-taluy 
-đào 
-Thực hiện theo quy 
-định tại Mục 6.2, 
-6.3, 6.4 của TCCS 
-17:2016/TCĐBVN. 
- 
-Đảm bảo hình dạng ban đầu, 
-không bị xói lở; đảm bảo độ 
-chặt (đối với taluy đất); cụ thể: 
-a) Khi có sạt lở nhỏ phải tổ 
-chức xử lý đảm bảo an toàn 
-giao thông. 
-b) Các hư hỏng lớn vượt quá 
-tiêu chuẩn kỹ thuật và định 
-mức bảo dưỡng thường xuyên 
-do mưa bão, lở đất phải báo 
-cáo kịp thời cho cơ quan được 
-a) Phải hoàn tất sửa 
-chữa trong vòng 01 
-ngày sau khi phát 
-hiện hư hỏng (mùa 
-mưa), 03 ngày (mùa 
-khô). 
-b) Trường hợp sạt 
-lở khối lượng nhỏ 
-làm ách tắc giao 
-thông phải khắc 
-phục ngay để đảm 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=101">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td>4.1</td><td>Taluy đắp<br>và taluy<br>đào</td><td>Thực hiện theo quy<br>định tại Mục 6.2,<br>6.3, 6.4 của TCCS<br>17:2016/TCĐBVN.</td><td>Đảm bảo hình dạng ban đầu,<br>không bị xói lở; đảm bảo độ<br>chặt (đối với taluy đất); cụ thể:<br>a) Khi có sạt lở nhỏ phải tổ<br>chức xử lý đảm bảo an toàn<br>giao thông.<br>b) Các hư hỏng lớn vượt quá<br>tiêu chuẩn kỹ thuật và định<br>mức bảo dưỡng thường xuyên<br>do mưa bão, lở đất phải báo<br>cáo kịp thời cho cơ quan được</td><td>a) Phải hoàn tất sửa<br>chữa trong vòng 01<br>ngày sau khi phát<br>hiện hư hỏng (mùa<br>mưa), 03 ngày (mùa<br>khô).<br>b) Trường hợp sạt<br>lở khối lượng nhỏ<br>làm ách tắc giao<br>thông phải khắc<br>phục ngay để đảm</td></tr>
+</tbody>
+</table> 
 
-103
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-giao quản lý tài sản để được 
-xem xét xử lý. 
- 
-bảo giao thông 
-trong vòng 06 giờ. 
-c) Hư hỏng lớn phải 
-báo cáo ngay trong 
-vòng 01 giờ. 
-4.2 
-Phát cây, 
-cắt cỏ, tỉa 
-cành 
-Thực hiện theo quy 
-định tại Mục 6.2.3, 
-6.2.4, 
-6.2.5 
-của 
-TCCS 
-17:2016/TCĐBVN. 
-a) Không che khuất cọc tiêu, 
-biển báo, cột Km và ảnh 
-hưởng đến thoát nước; không 
-ảnh hưởng tầm nhìn. 
-b) Đối với taluy dương trong 
-phạm vi chiều cao ≤ 4,0 m cây 
-cỏ không được cao quá 0,2 m. 
-c) Đối với taluy âm trong 
-phạm vi 1,0 m từ vai đường trở 
-ra và trong bụng đường cong 
-cây cỏ không được cao quá vai 
-đường 0,2 m. 
-d) Cây cỏ không được cao quá 
-vai đường 0,2 m và chờm ra 
-mặt đường. 
-a) Cây cỏ phải 
-được 
-cắt, 
-phát 
-quang trong vòng 
-03 ngày khi phát 
-hiện. 
-b) Cây đổ ngang 
-đường phải khắc 
-phục đảm bảo an 
-toàn giao thông 
-trong 
-vòng 
-30 
-phút và dọn xong 
-hoàn toàn trong 03 
-giờ sau khi phát 
-hiện. 
-4.3 
-Lề đường Thực hiện theo quy 
-định tại Mục 5.2 của 
-TCVN 14182:2024. 
-a) Chênh lệch cao độ lề đường 
-so với mép mặt đường không 
-được vượt quá 50 mm. 
-b) Lề đường có gia cố lớp mặt 
-không bị biến dạng, xói lở ổ 
-gà, vỡ mép. Phạm vi lề đường, 
-đất của đường bộ phải thông 
-thoáng, không có vật liệu, chất 
-thải chất đống. 
-Các hư hỏng của 
-lề 
-đường 
-phải 
-được khắc phục 
-sau 05 ngày phát 
-hiện. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=102">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>giao quản lý tài sản để được<br>xem xét xử lý.</td><td>bảo giao thông<br>trong vòng 06 giờ.<br>c) Hư hỏng lớn phải<br>báo cáo ngay trong<br>vòng 01 giờ.</td></tr>
+<tr><td>4.2</td><td>Phát cây,<br>cắt cỏ, tỉa<br>cành</td><td>Thực hiện theo quy<br>định tại Mục 6.2.3,<br>6.2.4, 6.2.5 của<br>TCCS<br>17:2016/TCĐBVN.</td><td>a) Không che khuất cọc tiêu,<br>biển báo, cột Km và ảnh<br>hưởng đến thoát nước; không<br>ảnh hưởng tầm nhìn.<br>b) Đối với taluy dương trong<br>phạm vi chiều cao ≤ 4,0 m cây<br>cỏ không được cao quá 0,2 m.<br>c) Đối với taluy âm trong<br>phạm vi 1,0 m từ vai đường trở<br>ra và trong bụng đường cong<br>cây cỏ không được cao quá vai<br>đường 0,2 m.<br>d) Cây cỏ không được cao quá<br>vai đường 0,2 m và chờm ra<br>mặt đường.</td><td>a) Cây cỏ phải<br>được cắt, phát<br>quang trong vòng<br>03 ngày khi phát<br>hiện.<br>b) Cây đổ ngang<br>đường phải khắc<br>phục đảm bảo an<br>toàn giao thông<br>trong vòng 30<br>phút và dọn xong<br>hoàn toàn trong 03<br>giờ sau khi phát<br>hiện.</td></tr>
+<tr><td>4.3</td><td>Lề đường</td><td>Thực hiện theo quy<br>định tại Mục 5.2 của<br>TCVN 14182:2024.</td><td>a) Chênh lệch cao độ lề đường<br>so với mép mặt đường không<br>được vượt quá 50 mm.<br>b) Lề đường có gia cố lớp mặt<br>không bị biến dạng, xói lở ổ<br>gà, vỡ mép. Phạm vi lề đường,<br>đất của đường bộ phải thông<br>thoáng, không có vật liệu, chất<br>thải chất đống.</td><td>Các hư hỏng của<br>lề đường phải<br>được khắc phục<br>sau 05 ngày phát<br>hiện.</td></tr>
+</tbody>
+</table> 
 
-104
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-4.4 
-Rãnh và 
-các công 
-trình thoát 
-nước 
-Thực hiện theo quy 
-định tại Mục 7.2 của 
-TCCS 
-17:2016/TCĐBVN. 
-Phải đảm bảo thông thoáng, 
-không được để đọng nước; 
-các bộ phận được gia cố không 
-bị hư hỏng, mất; không xói lở 
-xung quanh kết cấu rãnh. 
-a) Tắc nghẽn phải 
-được khơi thông 
-trong 
-vòng 
-01 
-ngày sau khi phát 
-hiện đối với mùa 
-mưa, 05 ngày đối 
-với mùa khô. 
-b) Hư hỏng lớn, 
-mất phải được sửa 
-chữa hoặc báo cáo 
-trong 
-vòng 
-05 
-ngày sau khi được 
-phát hiện. 
-4.5 
-Hố thu và 
-cống 
-Thực hiện theo quy 
-định tại Mục 7.1 của 
-TCCS 
-17:2016/TCĐBVN. 
-Phải sạch rác và bùn đất, 
-không có vật gây cản trở dòng 
-chảy, không bị hỏng, mất về 
-kết cấu; xung quanh phải được 
-lèn chặt bằng vật liệu thích 
-hợp. 
-a) Tắc nghẽn phải 
-được khơi thông 
-trong 
-vòng 
-01 
-ngày sau khi phát 
-hiện (đối với mùa 
-mưa), 
-05 
-ngày 
-(đối với mùa khô) 
-b) Hư hỏng phải 
-được 
-sửa 
-chữa 
-hoặc báo cáo trong 
-vòng 05 ngày sau 
-khi 
-được 
-phát 
-hiện. 
-4.6 
-Hệ thống 
-cây xanh 
-Thực hiện theo quy 
-định tại Mục 11.5 
-a) Cây xanh, thảm cỏ luôn 
-được phát quang, xén tỉa đảm 
-bảo tầm nhìn, mỹ quan, không 
-che khuất tầm nhìn, cọc tiêu, 
-a) Cây cỏ phải 
-được cắt tỉa, phát 
-quang, dọn dẹp 
-trong 
-vòng 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=103">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td>4.4</td><td>Rãnh và<br>các công<br>trình thoát<br>nước</td><td>Thực hiện theo quy<br>định tại Mục 7.2 của<br>TCCS<br>17:2016/TCĐBVN.</td><td>Phải đảm bảo thông thoáng,<br>không được để đọng nước;<br>các bộ phận được gia cố không<br>bị hư hỏng, mất; không xói lở<br>xung quanh kết cấu rãnh.</td><td>a) Tắc nghẽn phải<br>được khơi thông<br>trong vòng 01<br>ngày sau khi phát<br>hiện đối với mùa<br>mưa, 05 ngày đối<br>với mùa khô.<br>b) Hư hỏng lớn,<br>mất phải được sửa<br>chữa hoặc báo cáo<br>trong vòng 05<br>ngày sau khi được<br>phát hiện.</td></tr>
+<tr><td>4.5</td><td>Hố thu và<br>cống</td><td>Thực hiện theo quy<br>định tại Mục 7.1 của<br>TCCS<br>17:2016/TCĐBVN.</td><td>Phải sạch rác và bùn đất,<br>không có vật gây cản trở dòng<br>chảy, không bị hỏng, mất về<br>kết cấu; xung quanh phải được<br>lèn chặt bằng vật liệu thích<br>hợp.</td><td>a) Tắc nghẽn phải<br>được khơi thông<br>trong vòng 01<br>ngày sau khi phát<br>hiện (đối với mùa<br>mưa), 05 ngày<br>(đối với mùa khô)<br>b) Hư hỏng phải<br>được sửa chữa<br>hoặc báo cáo trong<br>vòng 05 ngày sau<br>khi được phát<br>hiện.</td></tr>
+<tr><td>4.6</td><td>Hệ thống<br>cây xanh</td><td>Thực hiện theo quy<br>định tại Mục 11.5</td><td>a) Cây xanh, thảm cỏ luôn<br>được phát quang, xén tỉa đảm<br>bảo tầm nhìn, mỹ quan, không<br>che khuất tầm nhìn, cọc tiêu,</td><td>a) Cây cỏ phải<br>được cắt tỉa, phát<br>quang, dọn dẹp<br>trong vòng 01</td></tr>
+</tbody>
+</table> 
 
-105
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-của 
-TCCS 
-17:2016/TCĐBVN. 
-biển báo, cột Km, hộ lan, 
-tường chắn và ảnh hưởng đến 
-việc thoát nước. 
-b) Đối với dải phân cách giữa, 
-đảo giao thông không cho 
-phép cành cây và cỏ mọc 
-chờm ra ngoài hàng vỉa bê 
-tông và chiều cao cây không 
-quá 1,3 – 1,5 m kể từ cao độ 
-mặt vỉa. 
-ngày kể từ khi 
-phát hiện chờm ra 
-mặt đường làm 
-che 
-khuất 
-tầm 
-nhìn và gây cản 
-trở giao thông. 
-b) Cây đổ ngang 
-đường phải khắc 
-phục trong vòng 
-30 phút và dọn 
-xong hoàn toàn 
-trong 03 giờ sau 
-khi phát hiện. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=104">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td>của TCCS<br>17:2016/TCĐBVN.</td><td>biển báo, cột Km, hộ lan,<br>tường chắn và ảnh hưởng đến<br>việc thoát nước.<br>b) Đối với dải phân cách giữa,<br>đảo giao thông không cho<br>phép cành cây và cỏ mọc<br>chờm ra ngoài hàng vỉa bê<br>tông và chiều cao cây không<br>quá 1,3 – 1,5 m kể từ cao độ<br>mặt vỉa.</td><td>ngày kể từ khi<br>phát hiện chờm ra<br>mặt đường làm<br>che khuất tầm<br>nhìn và gây cản<br>trở giao thông.<br>b) Cây đổ ngang<br>đường phải khắc<br>phục trong vòng<br>30 phút và dọn<br>xong hoàn toàn<br>trong 03 giờ sau<br>khi phát hiện.</td></tr>
+</tbody>
+</table> 
 5. Cầu, hầm, cống chui, kè, tường chắn, tường chống ồn, trung tâm quản lý điều 
 hành giao thông đường cao tốc, hệ thống giám sát điều hành giao thông trên đường cao 
 tốc, biển báo giao thông điện tử trên đường cao tốc, hệ thống thông tin liên lạc trên đường 
 cao tốc và các công trình khác 
  
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-5.1 
-Công trình 
-có 
-dầm, 
-dàn 
-thép 
-và thép bê 
-tông 
-liên 
-hợp   
-Thực hiện theo quy 
-định tại Mục 8.2.2 
-của 
-TCCS 
-17:2016/TCĐBVN. 
-a) Kết cấu sạch, không đọng 
-nước. Các bộ phận kim loại của 
-toàn bộ công trình phải được 
-sơn hoặc nếu không phải được 
-bảo vệ và không bị xói mòn, rỉ 
-sét. 
-b) Khi công trình bị hư hỏng đe 
-dọa tới tính toàn vẹn kết cấu 
-của công trình, nhà thầu phải 
-Khắc 
-phục 
-hư 
-hỏng hoặc báo cáo 
-trong 
-vòng 
-05 
-ngày từ khi phát 
-hiện. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=104">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td>5.1</td><td>Công trình<br>có dầm,<br>dàn thép<br>và thép bê<br>tông liên<br>hợp</td><td>Thực hiện theo quy<br>định tại Mục 8.2.2<br>của TCCS<br>17:2016/TCĐBVN.</td><td>a) Kết cấu sạch, không đọng<br>nước. Các bộ phận kim loại của<br>toàn bộ công trình phải được<br>sơn hoặc nếu không phải được<br>bảo vệ và không bị xói mòn, rỉ<br>sét.<br>b) Khi công trình bị hư hỏng đe<br>dọa tới tính toàn vẹn kết cấu<br>của công trình, nhà thầu phải</td><td>Khắc phục hư<br>hỏng hoặc báo cáo<br>trong vòng 05<br>ngày từ khi phát<br>hiện.</td></tr>
+</tbody>
+</table> 
 
-106
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-thông báo ngay cho cấp có 
-thẩm quyền; đồng thời phải có 
-biện pháp cảnh báo cho người 
-và phương tiện lưu thông trên 
-tuyến; cần thiết phải có biện 
-pháp đảm bảo an toàn cho công 
-trình và an toàn giao thông. 
-5.2 
-Công 
-trình 
-có 
-dầm 
-bê 
-tông, 
-đá 
-xây 
-Thực hiện theo quy 
-định tại Mục 8.2.1 
-của 
-TCCS 
-17:2016/TCĐBVN. 
- 
-a) Tình trạng công trình bình 
-thường, vệ sinh sạch sẽ, không 
-đọng nước, các hư hỏng nhỏ phải 
-được sửa chữa hoặc theo dõi. 
-b) Khi công trình bị hư hỏng 
-ảnh hưởng đến an toàn kết cấu 
-của công trình, nhà thầu phải 
-thông báo ngay cho cấp có 
-thẩm quyền; đồng thời phải có 
-biện pháp cảnh báo cho người 
-và phương tiện lưu thông trên 
-tuyến. Cần thiết phải có biện 
-pháp đảm bảo an toàn cho công 
-trình và an toàn giao thông. 
-Khắc 
-phục 
-hư 
-hỏng hoặc báo cáo 
-trong 
-vòng 
-05 
-ngày từ khi phát 
-hiện. 
-5.3 
-Khe 
-co 
-giãn cầu, 
-gối 
-cầu, 
-mố trụ cầu 
-Thực hiện theo quy 
-định tại Mục 8.1.6, 
-8.3 
-của 
-TCCS 
-17:2016/TCĐBVN. 
-a) Sạch đất cát, không bong 
-tróc, mất bu lông và không biến 
-dạng, hư hỏng, đảm bảo trong 
-tình trạng tốt. Gối cầu thép phải 
-được bôi mỡ. 
-b) Đối với các hư hỏng, biến 
-dạng của gối cầu, mố trụ cầu 
-Khắc 
-phục 
-hư 
-hỏng hoặc báo cáo 
-trong vòng: 
-a) 01 ngày từ khi 
-phát hiện đối với 
-khe co giãn. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=105">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>thông báo ngay cho cấp có<br>thẩm quyền; đồng thời phải có<br>biện pháp cảnh báo cho người<br>và phương tiện lưu thông trên<br>tuyến; cần thiết phải có biện<br>pháp đảm bảo an toàn cho công<br>trình và an toàn giao thông.</td><td></td></tr>
+<tr><td>5.2</td><td>Công<br>trình có<br>dầm bê<br>tông, đá<br>xây</td><td>Thực hiện theo quy<br>định tại Mục 8.2.1<br>của TCCS<br>17:2016/TCĐBVN.</td><td>a) Tình trạng công trình bình<br>thường, vệ sinh sạch sẽ, không<br>đọng nước, các hư hỏng nhỏ phải<br>được sửa chữa hoặc theo dõi.<br>b) Khi công trình bị hư hỏng<br>ảnh hưởng đến an toàn kết cấu<br>của công trình, nhà thầu phải<br>thông báo ngay cho cấp có<br>thẩm quyền; đồng thời phải có<br>biện pháp cảnh báo cho người<br>và phương tiện lưu thông trên<br>tuyến. Cần thiết phải có biện<br>pháp đảm bảo an toàn cho công<br>trình và an toàn giao thông.</td><td>Khắc phục hư<br>hỏng hoặc báo cáo<br>trong vòng 05<br>ngày từ khi phát<br>hiện.</td></tr>
+<tr><td>5.3</td><td>Khe co<br>giãn cầu,<br>gối cầu,<br>mố trụ cầu</td><td>Thực hiện theo quy<br>định tại Mục 8.1.6,<br>8.3 của TCCS<br>17:2016/TCĐBVN.</td><td>a) Sạch đất cát, không bong<br>tróc, mất bu lông và không biến<br>dạng, hư hỏng, đảm bảo trong<br>tình trạng tốt. Gối cầu thép phải<br>được bôi mỡ.<br>b) Đối với các hư hỏng, biến<br>dạng của gối cầu, mố trụ cầu</td><td>Khắc phục hư<br>hỏng hoặc báo cáo<br>trong vòng:<br>a) 01 ngày từ khi<br>phát hiện đối với<br>khe co giãn.</td></tr>
+</tbody>
+</table> 
 
-107
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-phải được phát hiện, báo cáo và 
-theo dõi thường xuyên. 
-c) Các nguyên nhân dẫn đến 
-việc không đảm bảo yêu cầu 
-phải được thực hiện trong thời 
-gian 14 ngày sau khi nước rút. 
-b) 05 ngày từ khi 
-phát hiện với gối, 
-mố, trụ cầu. 
-5.4 
-Mặt 
-cầu, 
-đường đầu 
-cầu 
-Thực hiện theo quy 
-định tại Mục 8.1, 
-8.4 
-của 
-TCCS 
-17:2016/TCĐBVN. 
-a) Không có ổ gà, vệ sinh sạch, 
-thoát nước tốt. Đảm bảo êm 
-thuận phần tiếp giáp đầu cầu. 
-b) Xử lý ổ gà, rạn nứt, trồi lún 
-như quy định đối với mặt 
-đường tương ứng tại điểm 2 
-Mục B Phụ lục này. 
-c) Có biện pháp đảm bảo an 
-toàn giao thông theo quy định 
-khi có hư hỏng trong thời gian 
-chờ xử lý. 
-d) Các chỗ lún lõm, ổ gà phải 
-được xử lý đảm bảo giao thông 
-ngay sau không quá 01 ngày 
-phát hiện. 
-01 ngày từ khi 
-phát hiện. 
-5.5 
-Hầm/ 
-Cống chui 
-dân sinh 
-Thực hiện theo quy 
-định tại Mục 9 của 
-TCCS 
-17:2016/TCĐBVN. 
-a) Mặt đường hầm chui sạch, 
-không bị đọng nước. 
-b) Các hư hỏng, khuyết tật phải 
-được xử lý theo tiêu chuẩn kỹ 
-thuật. 
-c) Mặt đường ra vào hầm êm 
-thuận. 
-a) Công tác vệ 
-sinh mặt đường và 
-phát quang thực 
-hiện trong vòng 01 
-ngày sau khi phát 
-hiện bẩn, cây cối 
-che lấp. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=106">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>phải được phát hiện, báo cáo và<br>theo dõi thường xuyên.<br>c) Các nguyên nhân dẫn đến<br>việc không đảm bảo yêu cầu<br>phải được thực hiện trong thời<br>gian 14 ngày sau khi nước rút.</td><td>b) 05 ngày từ khi<br>phát hiện với gối,<br>mố, trụ cầu.</td></tr>
+<tr><td>5.4</td><td>Mặt cầu,<br>đường đầu<br>cầu</td><td>Thực hiện theo quy<br>định tại Mục 8.1,<br>8.4 của TCCS<br>17:2016/TCĐBVN.</td><td>a) Không có ổ gà, vệ sinh sạch,<br>thoát nước tốt. Đảm bảo êm<br>thuận phần tiếp giáp đầu cầu.<br>b) Xử lý ổ gà, rạn nứt, trồi lún<br>như quy định đối với mặt<br>đường tương ứng tại điểm 2<br>Mục B Phụ lục này.<br>c) Có biện pháp đảm bảo an<br>toàn giao thông theo quy định<br>khi có hư hỏng trong thời gian<br>chờ xử lý.<br>d) Các chỗ lún lõm, ổ gà phải<br>được xử lý đảm bảo giao thông<br>ngay sau không quá 01 ngày<br>phát hiện.</td><td>01 ngày từ khi<br>phát hiện.</td></tr>
+<tr><td>5.5</td><td>Hầm/<br>Cống chui<br>dân sinh</td><td>Thực hiện theo quy<br>định tại Mục 9 của<br>TCCS<br>17:2016/TCĐBVN.</td><td>a) Mặt đường hầm chui sạch,<br>không bị đọng nước.<br>b) Các hư hỏng, khuyết tật phải<br>được xử lý theo tiêu chuẩn kỹ<br>thuật.<br>c) Mặt đường ra vào hầm êm<br>thuận.</td><td>a) Công tác vệ<br>sinh mặt đường và<br>phát quang thực<br>hiện trong vòng 01<br>ngày sau khi phát<br>hiện bẩn, cây cối<br>che lấp.</td></tr>
+</tbody>
+</table> 
 
-108
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-d) Hai đầu hầm không bị khuất 
-tầm nhìn do cây che lấp. 
-đ) Hư hỏng lớn ngoài hợp đồng 
-phải báo cáo Bên A để xem xét 
-xử lý. 
-b) Các hư hỏng 
-khác xử lý hoặc 
-báo 
-cáo 
-trong 
-vòng 07 ngày từ 
-khi xuất hiện. 
-5.6 
-Kè hướng 
-dòng, các 
-kết 
-cấu 
-phòng hộ 
-Thực hiện theo quy 
-định tại Mục 8.5 của 
-TCCS 
-17:2016/TCĐBVN. 
-Tình trạng công trình bình 
-thường; không có hư hỏng, 
-không có cây cối ảnh hưởng 
-đến dòng chảy và kết cấu công 
-trình. Hư hỏng lớn ngoài hợp 
-đồng phải báo cáo Bên A để 
-xem xét xử lý. 
-07 ngày từ khi 
-phát hiện. 
-5.7 
-Tường 
-chắn, kè 
-Thực hiện theo quy 
-định tại Mục 5.5.2 
-của 
-TCVN 
-14182:2024. 
-Tình trạng tường chắn bình 
-thường; không có hư hỏng, 
-không có cây cối ảnh hưởng 
-đến dòng chảy và kết cấu công 
-trình, đảm bảo thoát nước bình 
-thường. Hư hỏng lớn ngoài hợp 
-đồng phải báo cáo Bên A để 
-xem xét xử lý. 
-07 ngày từ khi 
-phát hiện. 
-5.8 
-Tường 
-chống ồn 
-Thực hiện theo quy 
-định tại Mục 11.2 
-của 
-TCCS 
-17:2016/TCĐBVN. 
-Tình trạng công trình hoạt động 
-bình thường; không bị bẩn, 
-nghiêng đổ. Hư hỏng lớn ngoài 
-hợp đồng phải báo cáo Bên A 
-để xem xét xử lý. 
-07 ngày từ khi 
-phát hiện. 
-5.9 
-Hầm 
-đường bộ 
-Thực hiện theo quy 
-định tại Mục 5.7 của 
-TCVN 14182:2024. 
-a) Đảm bảo mặt đường sạch, thoát 
-nước và đảm bảo chiếu sáng đảm 
-bảo an toàn giao thông. 
-05 ngày từ khi 
-phát hiện. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=107">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>d) Hai đầu hầm không bị khuất<br>tầm nhìn do cây che lấp.<br>đ) Hư hỏng lớn ngoài hợp đồng<br>phải báo cáo Bên A để xem xét<br>xử lý.</td><td>b) Các hư hỏng<br>khác xử lý hoặc<br>báo cáo trong<br>vòng 07 ngày từ<br>khi xuất hiện.</td></tr>
+<tr><td>5.6</td><td>Kè hướng<br>dòng, các<br>kết cấu<br>phòng hộ</td><td>Thực hiện theo quy<br>định tại Mục 8.5 của<br>TCCS<br>17:2016/TCĐBVN.</td><td>Tình trạng công trình bình<br>thường; không có hư hỏng,<br>không có cây cối ảnh hưởng<br>đến dòng chảy và kết cấu công<br>trình. Hư hỏng lớn ngoài hợp<br>đồng phải báo cáo Bên A để<br>xem xét xử lý.</td><td>07 ngày từ khi<br>phát hiện.</td></tr>
+<tr><td>5.7</td><td>Tường<br>chắn, kè</td><td>Thực hiện theo quy<br>định tại Mục 5.5.2<br>của TCVN<br>14182:2024.</td><td>Tình trạng tường chắn bình<br>thường; không có hư hỏng,<br>không có cây cối ảnh hưởng<br>đến dòng chảy và kết cấu công<br>trình, đảm bảo thoát nước bình<br>thường. Hư hỏng lớn ngoài hợp<br>đồng phải báo cáo Bên A để<br>xem xét xử lý.</td><td>07 ngày từ khi<br>phát hiện.</td></tr>
+<tr><td>5.8</td><td>Tường<br>chống ồn</td><td>Thực hiện theo quy<br>định tại Mục 11.2<br>của TCCS<br>17:2016/TCĐBVN.</td><td>Tình trạng công trình hoạt động<br>bình thường; không bị bẩn,<br>nghiêng đổ. Hư hỏng lớn ngoài<br>hợp đồng phải báo cáo Bên A<br>để xem xét xử lý.</td><td>07 ngày từ khi<br>phát hiện.</td></tr>
+<tr><td>5.9</td><td>Hầm<br>đường bộ</td><td>Thực hiện theo quy<br>định tại Mục 5.7 của<br>TCVN 14182:2024.</td><td>a) Đảm bảo mặt đường sạch, thoát<br>nước và đảm bảo chiếu sáng đảm<br>bảo an toàn giao thông.</td><td>05 ngày từ khi<br>phát hiện.</td></tr>
+</tbody>
+</table> 
 
-109
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-b) Phát hiện kịp thời các hư 
-hỏng, xử lý các hư hỏng nhỏ và 
-theo dõi, báo cáo cấp có thẩm 
-quyền xử lý. 
-5.1
-0 
-Trung tâm 
-quản 
-lý 
-điều hành 
-giao thông 
-trên đường 
-cao 
-tốc 
-(trung tâm 
-ITS) 
-Yêu cầu về kỹ thuật 
-chất lượng trong 
-giai đoạn khai thác 
-đáp ứng quy định tại 
-Tiêu chuẩn quốc gia 
-TCVN 10851:2015 
-“Trung tâm quản lý 
-điều 
-hành 
-giao 
-thông đường cao 
-tốc”. 
-Hoạt động bình thường đảm 
-bảo các nội dung theo quy định 
-về yêu cầu kỹ thuật chất lượng. 
-a) Đối với các 
-hạng mục công 
-trình xây dựng 
-gồm nhà, hệ thống 
-cấp thoát nước, 
-phòng cháy chữa 
-cháy và các công 
-trình xây dựng 
-khác: thời gian 
-thực 
-hiện 
-bảo 
-dưỡng không quá 
-07 ngày từ khi có 
-hư hỏng, xuống 
-cấp thuộc phạm vi 
-công 
-tác 
-bảo 
-dưỡng. 
-b) Đối với thiết bị 
-cấp điện (nguồn, 
-dây dẫn, biến áp, 
-lưu điện và các 
-thiết bị điện lực 
-khác), 
-thiết 
-bị 
-quay phim, ghi 
-hình, các thiết bị 
-quang 
-học, 
-hệ 
-thống máy tính, tin 
-học: hư hỏng dây 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=108">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td>b) Phát hiện kịp thời các hư<br>hỏng, xử lý các hư hỏng nhỏ và<br>theo dõi, báo cáo cấp có thẩm<br>quyền xử lý.</td><td></td></tr>
+<tr><td>5.1<br>0</td><td>Trung tâm<br>quản lý<br>điều hành<br>giao thông<br>trên đường<br>cao tốc<br>(trung tâm<br>ITS)</td><td>Yêu cầu về kỹ thuật<br>chất lượng trong<br>giai đoạn khai thác<br>đáp ứng quy định tại<br>Tiêu chuẩn quốc gia<br>TCVN 10851:2015<br>“Trung tâm quản lý<br>điều hành giao<br>thông đường cao<br>tốc”.</td><td>Hoạt động bình thường đảm<br>bảo các nội dung theo quy định<br>về yêu cầu kỹ thuật chất lượng.</td><td>a) Đối với các<br>hạng mục công<br>trình xây dựng<br>gồm nhà, hệ thống<br>cấp thoát nước,<br>phòng cháy chữa<br>cháy và các công<br>trình xây dựng<br>khác: thời gian<br>thực hiện bảo<br>dưỡng không quá<br>07 ngày từ khi có<br>hư hỏng, xuống<br>cấp thuộc phạm vi<br>công tác bảo<br>dưỡng.<br>b) Đối với thiết bị<br>cấp điện (nguồn,<br>dây dẫn, biến áp,<br>lưu điện và các<br>thiết bị điện lực<br>khác), thiết bị<br>quay phim, ghi<br>hình, các thiết bị<br>quang học, hệ<br>thống máy tính, tin<br>học: hư hỏng dây</td></tr>
+</tbody>
+</table> 
 
-110
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-dẫn 
-khắc 
-phục 
-không 
-quá 
-12 
-tiếng; hư hỏng nhỏ 
-các thiết bị còn lại, 
-thời 
-gian 
-khắc 
-phục không quá 24 
-tiếng. 
-c) Trường hợp xảy 
-ra sự cố, hư hỏng 
-nằm ngoài phạm 
-vi trên, thời gian 
-báo cáo cấp có 
-thẩm quyền quyết 
-định xử lý không 
-quá 02 giờ. 
-5.1
-1 
-Hệ thống 
-giám sát, 
-điều hành 
-giao thông 
-trên đường 
-cao tốc 
-Yêu cầu về kỹ thuật 
-chất lượng đáp ứng 
-quy định trong giai 
-đoạn khai thác tại 
-Tiêu chuẩn quốc gia 
-TCVN 10850:2015 
-Hệ thống giám sát, 
-điều 
-hành 
-giao 
-thông trên đường 
-cao tốc. 
-Hoạt động bình thường đảm 
-bảo các nội dung theo quy định 
-về yêu cầu kỹ thuật chất lượng. 
-a) Đối với các 
-hạng mục công 
-trình xây dựng 
-gồm nhà, phòng 
-cháy chữa cháy và 
-các công trình xây 
-dựng khác: thời 
-gian thực hiện bảo 
-dưỡng không quá 
-07 ngày từ khi có 
-hư hỏng, xuống 
-cấp thuộc phạm vi 
-công 
-tác 
-bảo 
-dưỡng. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=109">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td></td><td>dẫn khắc phục<br>không quá 12<br>tiếng; hư hỏng nhỏ<br>các thiết bị còn lại,<br>thời gian khắc<br>phục không quá 24<br>tiếng.<br>c) Trường hợp xảy<br>ra sự cố, hư hỏng<br>nằm ngoài phạm<br>vi trên, thời gian<br>báo cáo cấp có<br>thẩm quyền quyết<br>định xử lý không<br>quá 02 giờ.</td></tr>
+<tr><td>5.1<br>1</td><td>Hệ thống<br>giám sát,<br>điều hành<br>giao thông<br>trên đường<br>cao tốc</td><td>Yêu cầu về kỹ thuật<br>chất lượng đáp ứng<br>quy định trong giai<br>đoạn khai thác tại<br>Tiêu chuẩn quốc gia<br>TCVN 10850:2015<br>Hệ thống giám sát,<br>điều hành giao<br>thông trên đường<br>cao tốc.</td><td>Hoạt động bình thường đảm<br>bảo các nội dung theo quy định<br>về yêu cầu kỹ thuật chất lượng.</td><td>a) Đối với các<br>hạng mục công<br>trình xây dựng<br>gồm nhà, phòng<br>cháy chữa cháy và<br>các công trình xây<br>dựng khác: thời<br>gian thực hiện bảo<br>dưỡng không quá<br>07 ngày từ khi có<br>hư hỏng, xuống<br>cấp thuộc phạm vi<br>công tác bảo<br>dưỡng.</td></tr>
+</tbody>
+</table> 
 
-111
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-b) Đối với thiết bị 
-cấp điện (nguồn, 
-dây dẫn, biến áp, 
-lưu điện và các 
-thiết bị điện lực 
-khác), 
-thiết 
-bị 
-quay phim, ghi 
-hình, các thiết bị 
-quang 
-học, 
-hệ 
-thống máy tính, tin 
-học: hư hỏng dây 
-dẫn 
-khắc 
-phục 
-không 
-quá 
-12 
-tiếng; hư hỏng nhỏ 
-các thiết bị còn lại, 
-thời 
-gian 
-khắc 
-phục không quá 24 
-tiếng. 
-c) Trường hợp xảy 
-ra sự cố, hư hỏng 
-nằm ngoài phạm 
-vi trên, thời gian 
-báo cáo cấp có 
-thẩm quyền quyết 
-định xử lý không 
-quá 02 giờ. 
-5.1
-2 
-Biển báo 
-giao thông 
-điện 
-tử 
-Yêu cầu về kỹ thuật 
-chất lượng trong 
-giai đoạn khai thác 
-đáp ứng quy định tại 
-a) Hoạt động bình thường, liên 
-tục, sạch, cung cấp các thông 
-tin theo quy định về yêu cầu kỹ 
-thuật chất lượng. 
-a) Biển báo không 
-hoạt động được thì 
-thời gian thực hiện 
-công tác bảo dưỡng 
-khắc phục không 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=110">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td></td><td></td><td>b) Đối với thiết bị<br>cấp điện (nguồn,<br>dây dẫn, biến áp,<br>lưu điện và các<br>thiết bị điện lực<br>khác), thiết bị<br>quay phim, ghi<br>hình, các thiết bị<br>quang học, hệ<br>thống máy tính, tin<br>học: hư hỏng dây<br>dẫn khắc phục<br>không quá 12<br>tiếng; hư hỏng nhỏ<br>các thiết bị còn lại,<br>thời gian khắc<br>phục không quá 24<br>tiếng.<br>c) Trường hợp xảy<br>ra sự cố, hư hỏng<br>nằm ngoài phạm<br>vi trên, thời gian<br>báo cáo cấp có<br>thẩm quyền quyết<br>định xử lý không<br>quá 02 giờ.</td></tr>
+<tr><td>5.1<br>2</td><td>Biển báo<br>giao thông<br>điện tử</td><td>Yêu cầu về kỹ thuật<br>chất lượng trong<br>giai đoạn khai thác<br>đáp ứng quy định tại</td><td>a) Hoạt động bình thường, liên<br>tục, sạch, cung cấp các thông<br>tin theo quy định về yêu cầu kỹ<br>thuật chất lượng.</td><td>a) Biển báo không<br>hoạt động được thì<br>thời gian thực hiện<br>công tác bảo dưỡng<br>khắc phục không</td></tr>
+</tbody>
+</table> 
 
-112
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-trên đường 
-cao tốc 
-Tiêu chuẩn quốc gia 
-TCVN 10852:2015 
-“Biển 
-báo 
-giao 
-thông điện tử trên 
-đường cao tốc - Yêu 
-cầu kỹ thuật và 
-phương pháp thử”. 
-b) Thông tin phải được hiển thị 
-rõ ràng, dễ quan sát, không 
-được nhấp nháy, các chữ hiển 
-thị phải cùng một lúc. 
-c) Đảm bảo độ sáng trong điều 
-kiện ánh sáng ban ngày và ban 
-đêm. 
-d) Cập nhật thông tin trong 
-vòng 03s (giây) khi có yêu cầu 
-thay đổi thông tin hiển thị. 
-quá 12 giờ (trừ khi 
-mưa, bão hoặc sự 
-cố công trình). 
-b) Trường hợp xảy 
-ra sự cố, hư hỏng 
-lớn, thời gian báo 
-cáo cấp có thẩm 
-quyền quyết định 
-xử lý không quá 02 
-giờ. 
-5.1
-3 
-Hệ thống 
-thông tin 
-liên 
-lạc 
-trên đường 
-cao tốc 
-Yêu cầu về kỹ thuật 
-chất lượng đáp ứng 
-quy định trong giai 
-đoạn khai thác tại 
-Tiêu chuẩn quốc gia 
-TCVN 12191:2018 
-“Hệ thống thông tin 
-liên lạc trên đường 
-cao tốc”. 
-a) Hoạt động bình thường, đảm 
-bảo tính kết nối được liên tục, 
-không bị gián đoạn theo quy định 
-về yêu cầu kỹ thuật chất lượng. 
-b) Hệ thống điện thoại khẩn cấp 
-tiếp nhận các thông báo về tai 
-nạn, sự cố phương tiện và công 
-trình trên đường cao tốc từ các 
-cá nhân và tổ chức, hoạt động 
-24/24h. 
-c) Biển chỉ dẫn số điện thoại 
-khẩn cấp dọc tuyến cao tốc phải 
-rõ ràng đầy đủ các số điện thoại 
-khẩn cấp, không bị che khuất. 
-d) Thông tin phải được ghi đầy 
-đủ trong sổ nhật ký. 
-a) Hệ thống không 
-hoạt động được thì 
-thời gian thực hiện 
-công 
-tác 
-bảo 
-dưỡng khắc phục 
-không quá 12 giờ. 
-b) Trường hợp xảy 
-ra sự cố, hư hỏng 
-lớn, thời gian báo 
-cáo cấp có thẩm 
-quyền quyết định 
-xử lý không quá 
-02 giờ. 
-5.1
-4 
-Nhà Hạt 
- Duy trì những đặc 
-trưng kiến trúc, kỹ 
-thuật, thiết bị công  
-a) Vệ sinh sạch sẽ, vận hành, sử 
-dụng Nhà Hạt đúng công năng. 
- 
-Khắc 
-phục 
-hư 
-hỏng hoặc báo cáo 
-trong 
-vòng 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=111">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td>trên đường<br>cao tốc</td><td>Tiêu chuẩn quốc gia<br>TCVN 10852:2015<br>“Biển báo giao<br>thông điện tử trên<br>đường cao tốc - Yêu<br>cầu kỹ thuật và<br>phương pháp thử”.</td><td>b) Thông tin phải được hiển thị<br>rõ ràng, dễ quan sát, không<br>được nhấp nháy, các chữ hiển<br>thị phải cùng một lúc.<br>c) Đảm bảo độ sáng trong điều<br>kiện ánh sáng ban ngày và ban<br>đêm.<br>d) Cập nhật thông tin trong<br>vòng 03s (giây) khi có yêu cầu<br>thay đổi thông tin hiển thị.</td><td>quá 12 giờ (trừ khi<br>mưa, bão hoặc sự<br>cố công trình).<br>b) Trường hợp xảy<br>ra sự cố, hư hỏng<br>lớn, thời gian báo<br>cáo cấp có thẩm<br>quyền quyết định<br>xử lý không quá 02<br>giờ.</td></tr>
+<tr><td>5.1<br>3</td><td>Hệ thống<br>thông tin<br>liên lạc<br>trên đường<br>cao tốc</td><td>Yêu cầu về kỹ thuật<br>chất lượng đáp ứng<br>quy định trong giai<br>đoạn khai thác tại<br>Tiêu chuẩn quốc gia<br>TCVN 12191:2018<br>“Hệ thống thông tin<br>liên lạc trên đường<br>cao tốc”.</td><td>a) Hoạt động bình thường, đảm<br>bảo tính kết nối được liên tục,<br>không bị gián đoạn theo quy định<br>về yêu cầu kỹ thuật chất lượng.<br>b) Hệ thống điện thoại khẩn cấp<br>tiếp nhận các thông báo về tai<br>nạn, sự cố phương tiện và công<br>trình trên đường cao tốc từ các<br>cá nhân và tổ chức, hoạt động<br>24/24h.<br>c) Biển chỉ dẫn số điện thoại<br>khẩn cấp dọc tuyến cao tốc phải<br>rõ ràng đầy đủ các số điện thoại<br>khẩn cấp, không bị che khuất.<br>d) Thông tin phải được ghi đầy<br>đủ trong sổ nhật ký.</td><td>a) Hệ thống không<br>hoạt động được thì<br>thời gian thực hiện<br>công tác bảo<br>dưỡng khắc phục<br>không quá 12 giờ.<br>b) Trường hợp xảy<br>ra sự cố, hư hỏng<br>lớn, thời gian báo<br>cáo cấp có thẩm<br>quyền quyết định<br>xử lý không quá<br>02 giờ.</td></tr>
+<tr><td>5.1<br>4</td><td>Nhà Hạt</td><td>Duy trì những đặc<br>trưng kiến trúc, kỹ<br>thuật, thiết bị công</td><td>a) Vệ sinh sạch sẽ, vận hành, sử<br>dụng Nhà Hạt đúng công năng.</td><td>Khắc phục hư<br>hỏng hoặc báo cáo<br>trong vòng 15</td></tr>
+</tbody>
+</table> 
 
-113
- 
- 
-TT 
-Hạng mục 
-Nội dung yêu cầu 
-kỹ thuật, chất lượng 
-Mức độ đáp ứng 
-Thời gian cho 
-phép khắc phục 
-tồn tại 
-trình 
-theo 
-công 
-năng, đảm bảo chất 
-lượng của Nhà Hạt 
-phù hợp với cấp 
-công trình trong 
-suốt quá trình sử 
-dụng.  
-b) Kiểm tra Nhà Hạt thường 
-xuyên bằng mắt và các phương 
-tiện đơn giản để phát hiện kịp 
-thời dấu hiệu xuống cấp, đồng 
-thời tiến hành bảo dưỡng hoặc 
-sửa chữa nhỏ và theo dõi, báo 
-cáo cấp có thẩm quyền xử lý 
-đối với các hư hỏng đột xuất, 
-hoặc trường hợp hư hỏng có 
-khả năng mất an toàn công 
-trình. 
-ngày từ khi phát 
-hiện. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=112">
+<tbody>
+<tr><td>TT</td><td>Hạng mục</td><td>Nội dung yêu cầu<br>kỹ thuật, chất lượng</td><td>Mức độ đáp ứng</td><td>Thời gian cho<br>phép khắc phục<br>tồn tại</td></tr>
+<tr><td></td><td></td><td>trình theo công<br>năng, đảm bảo chất<br>lượng của Nhà Hạt<br>phù hợp với cấp<br>công trình trong<br>suốt quá trình sử<br>dụng.</td><td>b) Kiểm tra Nhà Hạt thường<br>xuyên bằng mắt và các phương<br>tiện đơn giản để phát hiện kịp<br>thời dấu hiệu xuống cấp, đồng<br>thời tiến hành bảo dưỡng hoặc<br>sửa chữa nhỏ và theo dõi, báo<br>cáo cấp có thẩm quyền xử lý<br>đối với các hư hỏng đột xuất,<br>hoặc trường hợp hư hỏng có<br>khả năng mất an toàn công<br>trình.</td><td>ngày từ khi phát<br>hiện.</td></tr>
+</tbody>
+</table> 
  
 C. Trường hợp tuyến, đoạn tuyến đường bộ không được thiết kế theo tiêu chuẩn, 
 quy chuẩn kỹ thuật do cơ quan nhà nước có thẩm quyền ban hành, tuyến, đoạn tuyến có 
@@ -7218,9 +2413,6 @@ dụng đường bộ báo cáo cấp có thẩm quyền theo quy định của 
 dụng và khai thác tài sản kết cấu hạ tầng giao thông đường bộ để áp dụng bảo trì theo 
 khối lượng thực tế đối với hoạt động bảo dưỡng thường xuyên. 
 
-114
- 
- 
 II. QUY ĐỊNH VỀ GIÁM SÁT, NGHIỆM THU, PHƯƠNG PHÁP ĐÁNH 
 GIÁ, KHẤU TRỪ KINH PHÍ HOẠT ĐỘNG BẢO DƯỠNG THƯỜNG XUYÊN 
 CÔNG TRÌNH THUỘC TÀI SẢN KẾT CẤU HẠ TẦNG ĐƯỜNG BỘ THEO 
@@ -7251,9 +2443,6 @@ diện của cơ quan được giao quản lý tài sản kết cấu hạ tần
 cơ quan được giao nhiệm vụ giám sát (Ban Quản lý dự án bảo trì), người thực hiện 
 nhiệm vụ giám sát cho các nhà thầu có liên quan biết để phối hợp thực hiện.  
 
-115
- 
- 
 b) Kiểm tra đối chiếu nhân lực, thiết bị thi công, hệ thống quản lý chất lượng 
 của nhà thầu bảo trì trên thực tế với các quy định trong hồ sơ mời thầu, dự thầu, 
 hợp đồng bảo trì đã ký. 
@@ -7286,9 +2475,6 @@ B. Quy định về nghiệm thu
 1. Việc nghiệm thu chất lượng thực hiện hoạt đồng bảo dưỡng thường 
 xuyên công trình thuộc tài sản kết cấu hạ tầng đường bộ được thực hiện theo tháng 
 
-116
- 
- 
 hoặc theo quý; việc thanh toán thực hiện theo tháng hoặc quý và được quy định 
 trong hợp đồng. 
 2. Các bên tham gia kiểm tra nghiệm thu gồm: đại diện cơ quan được giao 
@@ -7321,9 +2507,6 @@ hiện trường.
 5. Đối với các tồn tại được xác định khi kiểm tra nghiệm thu, ngoài việc bị 
 khấu trừ kinh phí theo quy định tại mục IV của Phụ lục này, nhà thầu bảo dưỡng 
 
-117
- 
- 
 thường xuyên có trách nhiệm tổ chức khắc phục ngay các tồn tại với thời hạn tối 
 đa không quá 5 ngày kể từ khi có văn bản yêu cầu xử lý của cơ quan trực tiếp 
 quản lý tài sản. Người thực hiện nhiệm vụ giám sát của cơ quan trực tiếp quản lý 
@@ -7345,9 +2528,6 @@ nghiệm thu và thanh toán trong hồ sơ mời thầu, hồ sơ yêu cầu kh
 chọn nhà thầu và quy định trong hợp đồng để làm cơ sở cho các bên triển khai 
 thực hiện. 
 
-118
- 
- 
 III. QUY ĐỊNH VỀ PHƯƠNG PHÁP ĐÁNH GIÁ THEO CHẤT LƯỢNG 
 THỰC HIỆN 
 1. Việc đánh giá kết quả việc thực hiện bảo dưỡng thường xuyên công trình 
@@ -7379,9 +2559,6 @@ Ví dụ 1: xác định điểm các công việc bảo dưỡng thường xuy�
 bảo dưỡng đường bộ cấp VI có giá trị dự toán duyệt là 500 triệu đồng, trong đó có 
 4 công việc sau: công việc vá ổ gà giá trị trong dự toán là 200 triệu đồng; công 
 
-119
- 
- 
 việc bảo dưỡng mặt cầu khe co giãn là 100 triệu đồng; công tác nạo vét cống rãnh 
 thoát nước có giá trị bằng 100 triệu đồng; công tác cắt cỏ giá trị dự toán là 100 
 triệu đồng. Xác định điểm của từng công việc bảo dưỡng thường xuyên trên trong 
@@ -7413,9 +2590,6 @@ này là Dai.
 - Các công việc cần ưu tiên thứ hai gồm nạo vét, khơi thông cống, rãnh 
 thoát nước, bảo dưỡng hệ thống an toàn giao thông, sửa chữa lề đường, nền đường, 
 
-120
- 
- 
 phát hiện xử lý vi phạm hành lang, đấu nối trái phép gọi là Bi có hệ số Kbi từ 1,25 
 đến 1,5. Giá trị dự toán hạng mục này là Dbi. 
 - Tuần đường, cắt cỏ và các công việc còn lại gọi là Ci có hệ số Kci = 1. 
@@ -7445,9 +2619,6 @@ TL = (2 x ∑ DAi + 1,5 x ∑ DBi + ∑ DCi). Thay giá dự toán các công vi
 vào công thức, có: 
 TL = 2 x 200 + 2 x 100 + 1,5 x 100 + 1 x 100 = 850. 
 
-121
- 
- 
 Xác định điểm của từng hạng mục theo phương pháp tại điểm b khoản 2 
 Mục III Phụ lục này: 
 Điểm hạng mục vá ổ gà = 100 điểm x (2 x 200/850) = 47 điểm. 
@@ -7479,61 +2650,24 @@ là: 4 tỷ - 1,5 tỷ = 2,5 tỷ.
 Bước 2: xác định tỷ số giá trị dự toán từng nhóm công việc so với tổng giá trí dự 
 toán tất cả các công việc bảo trì theo chất lượng thực hiện và điểm của từng hạng mục. 
 
-122
- 
- 
 - Tỷ số dự toán hạng mục/tổng dự toán các hạng mục = Di/(TD) = Dự toán 
 hạng mục/2,5 tỷ. 
 - Tuyến đường cấp V nên không có hạng mục công việc cần ưu tiên, do đó 
 điểm các hạng mục được tính như sau: 
 Điểm của hạng mục Ni = 100 x Di/TD = 100 x Di/2,5 tỷ 
  
-TT Nhóm các hạng mục công việc 
-Dự toán 
-nhóm việc 
-(tỷ đồng) 
-Giá trị dự 
-toán/Giá trị 
-dự toán 
-Điểm 
-của các 
-nhóm 
-1 
-Bảo dưỡng cầu 
-0,50 
-0,2 
-20 
-2 
-Bảo dưỡng lề 
-0,25 
-0,1 
-10 
-3 
-Bảo dưỡng rãnh, cống thoát nước 
-0,50 
-0,2 
-20 
-4 
-Bảo dưỡng nền đường 
-0,25 
-0,1 
-10 
-5 
-Bảo dưỡng hệ thống an toàn giao 
-thông 
-0,50 
-0,2 
-20 
-6 
-Các việc quản lý và tuần đường  
-0,25 
-0,1 
-10 
-7 
-Nhóm việc cắt cỏ, phát quang.  
-0,25 
-0,1 
-10 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=121">
+<tbody>
+<tr><td>TT</td><td>Nhóm các hạng mục công việc</td><td>Dự toán<br>nhóm việc<br>(tỷ đồng)</td><td>Giá trị dự<br>toán/Giá trị<br>dự toán</td><td>Điểm<br>của các<br>nhóm</td></tr>
+<tr><td>1</td><td>Bảo dưỡng cầu</td><td>0,50</td><td>0,2</td><td>20</td></tr>
+<tr><td>2</td><td>Bảo dưỡng lề</td><td>0,25</td><td>0,1</td><td>10</td></tr>
+<tr><td>3</td><td>Bảo dưỡng rãnh, cống thoát nước</td><td>0,50</td><td>0,2</td><td>20</td></tr>
+<tr><td>4</td><td>Bảo dưỡng nền đường</td><td>0,25</td><td>0,1</td><td>10</td></tr>
+<tr><td>5</td><td>Bảo dưỡng hệ thống an toàn giao<br>thông</td><td>0,50</td><td>0,2</td><td>20</td></tr>
+<tr><td>6</td><td>Các việc quản lý và tuần đường</td><td>0,25</td><td>0,1</td><td>10</td></tr>
+<tr><td>7</td><td>Nhóm việc cắt cỏ, phát quang.</td><td>0,25</td><td>0,1</td><td>10</td></tr>
+</tbody>
+</table> 
 Trong trường hợp yêu cầu tính từng công việc cụ thể trong một nhóm công 
 tác bảo dưỡng cũng áp dụng cách xác định như trên để xác định. 
 d) Trường hợp một số tiêu chí cần thực hiện thuộc công tác quản lý nhưng 
@@ -7544,9 +2678,6 @@ của tiêu chí được xác định bằng điểm của tiêu chí tương t
 của tiêu chí “Kiểm tra, cập nhật số liệu cầu đường”, tiêu chí B bằng điểm của tiêu 
 chí “Quản lý hành lang an toàn đường bộ và đấu nối” hoặc tiêu chí “Trực bão lụt”). 
 
-123
- 
- 
 Ví dụ 4: điểm của tiêu chí A xác định bằng điểm của tiêu chí “Kiểm tra, 
 cập nhật số liệu cầu đường”; trong trường hợp này, khi xác định điểm của tất cả 
 các tiêu chí thì số điểm của tiêu chí “Kiểm tra, cập nhật số liệu cầu đường” được 
@@ -7579,9 +2710,6 @@ kiểm tra; không phát hiện kịp thời các phát sinh, biến động tà
 hỏng, xuống cấp; không cập nhật diễn biến phát sinh trình trạng công trình; không 
 báo cáo theo quy định; không xử lý tồn tại; 
 
-124
- 
- 
 - Nhà thầu có thực hiện nhưng để xảy ra 02 lỗi trong các lỗi trên thì số điểm 
 chấm không quá 50% số điểm tối đa của tiêu chí; 
 - Nhà thầu có thực hiện nhưng để xảy ra 01 lỗi trong các lỗi trên thì số điểm 
@@ -7612,9 +2740,6 @@ trong hợp đồng.
 - Có thực hiện nhưng để xảy ra 02 lỗi trong các lỗi trên: số điểm chấm là 
 50% số điểm tối đa của tiêu chí; 
 
-125
- 
- 
 - Có thực hiện nhưng để xảy ra 01 lỗi trong các lỗi trên: số điểm chấm là 
 75% số điểm tối đa của tiêu chí; 
 - Đáp ứng yêu cầu: thực hiện đầy đủ các yêu cầu chất lượng, số điểm chấm 
@@ -7643,9 +2768,6 @@ phần hoặc toàn bộ các quy định Mục I của Phụ lục này khi xâ
 sát, nghiệm thu kết quả bảo trì công trình thuộc kết cấu hạ tầng đường bộ theo 
 chất lượng thực hiện. 
 
-126
- 
- 
 IV. QUY ĐỊNH VỀ KHẤU TRỪ KINH PHÍ THEO CHẤT LƯỢNG THỰC 
 HIỆN BẢO DƯỠNG THƯỜNG XUYÊN CÔNG TRÌNH THUỘC TÀI SẢN KẾT 
 CẤU HẠ TẦNG ĐƯỜNG BỘ  
@@ -7665,10 +2787,7 @@ TTL quý = (TTL1 + TTL2 + TTL3)/3.
 khung điểm thì tỷ lệ giá trị thanh toán cho nhà thầu là TTL = % số điểm đạt được. 
 Tỷ lệ giảm trừ bằng (1- TTL) x 100%./.
 
-127
- 
- 
-Mẫu số 02. Ghi chép kết quả bảo dưỡng thường xuyên theo chất lượng thực hiện 
+### Mẫu số 02. Ghi chép kết quả bảo dưỡng thường xuyên theo chất lượng thực hiện 
  
 KẾT QUẢ BẢO DƯỠNG THƯỜNG XUYÊN 
 TUYẾN ĐƯỜNG …. TỪ KM …. ĐẾN KM 
@@ -7680,25 +2799,15 @@ TÊN TỔ CHỨC, CÁ NHÂN GIÁM SÁT (NẾU CÓ) …..
 việc thực hiện liên tục nhiều ngày thì ghi ngày bắt đầu, ngày kết thúc) 
 Các công việc thực hiện trong thời gian trên ghi vào bảng theo ví dụ sau: 
  
-Số 
-thứ 
-tự 
-Công việc 
-thực hiện 
-Ghi lý trình, 
-vị trí công 
-việc được 
-thực hiện 
-Tóm tắt 
-giải pháp 
-thực hiện 
-Kết quả chủ yếu 
-1 
- 
- 
- 
- 
-2 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=126">
+<tbody>
+<tr><td>Số<br>thứ<br>tự</td><td>Công việc<br>thực hiện</td><td>Ghi lý trình,<br>vị trí công<br>việc được<br>thực hiện</td><td>Tóm tắt<br>giải pháp<br>thực hiện</td><td>Kết quả chủ yếu</td></tr>
+<tr><td>1</td><td></td><td></td><td></td><td></td></tr>
+<tr><td>2</td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+</tbody>
+</table> 
  
  
  
@@ -7718,67 +2827,21 @@ Ví dụ:
 X. Thời gian thực hiện: 15/03/2025. 
 Các công việc thực hiện trong thời gian trên ghi vào bảng theo ví dụ sau: 
  
-Số 
-thứ 
-tự 
-Công việc thực 
-hiện 
-Ghi lý trình, 
-vị trí công việc 
-được thực 
-hiện 
-Tóm tắt 
-biện pháp 
-Kết quả chủ yếu 
-1 
-Quét đường 
-Đoạn Km 10 – 
-Km 20 
-Sử dụng 
-máy quét 
-Mặt đường  được vệ 
-sinh sạch (không có 
-rác, cành cây và các 
-chướng ngại vật khác); 
-không tồn tại đất, đá, 
-cát, rác thải trên mặt 
-đường, lề đường, đáp 
-ứng các yêu cầu chất 
-lượng 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=126">
+<tbody>
+<tr><td>Số<br>thứ<br>tự</td><td>Công việc thực<br>hiện</td><td>Ghi lý trình,<br>vị trí công việc<br>được thực<br>hiện</td><td>Tóm tắt<br>biện pháp</td><td>Kết quả chủ yếu</td></tr>
+<tr><td>1</td><td>Quét đường</td><td>Đoạn Km 10 –<br>Km 20</td><td>Sử dụng<br>máy quét</td><td>Mặt đường được vệ<br>sinh sạch (không có<br>rác, cành cây và các<br>chướng ngại vật khác);<br>không tồn tại đất, đá,<br>cát, rác thải trên mặt<br>đường, lề đường, đáp<br>ứng các yêu cầu chất<br>lượng</td></tr>
+</tbody>
+</table> 
 
-128
- 
- 
-2 
-Vá ổ gà 
-Làn trái tuyến, 
-Km 15+ 100 
-Dùng nhân 
-công và 
-đầm cóc 
-Các miếng vá cùng cao 
-độ, hình dạng và vật 
-liệu vá phù hợp mặt 
-đường hiện hữu và tuân 
-thủ tiêu chuẩn kỹ thuật; 
-bảo đảm mặt đường 
-không còn hư hỏng 
-dạng ổ gà  
-3 
-Bôi mỡ gối cầp 
-thép 
-Gối trên đỉnh 
-trụ T1 cầu XX 
-Thủ công 
-kết hợp xe 
-nâng hoặc 
-thang 
-6 gối 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=127">
+<tbody>
+<tr><td>2</td><td>Vá ổ gà</td><td>Làn trái tuyến,<br>Km 15+ 100</td><td>Dùng nhân<br>công và<br>đầm cóc</td><td>Các miếng vá cùng cao<br>độ, hình dạng và vật<br>liệu vá phù hợp mặt<br>đường hiện hữu và tuân<br>thủ tiêu chuẩn kỹ thuật;<br>bảo đảm mặt đường<br>không còn hư hỏng<br>dạng ổ gà</td></tr>
+<tr><td>3</td><td>Bôi mỡ gối cầp<br>thép</td><td>Gối trên đỉnh<br>trụ T1 cầu XX</td><td>Thủ công<br>kết hợp xe<br>nâng hoặc<br>thang</td><td>6 gối</td></tr>
+</tbody>
+</table> 
 
-129
- 
- 
-Phụ lục V 
+## Phụ lục V
 THỜI HẠN SỬA CHỮA ĐỊNH KỲ KẾT CẤU ÁO ĐƯỜNG 
 (Ban hành kèm theo Thông tư số  41/2024/TT-BGTVT ngày 15 tháng 11 năm 
 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai 
@@ -7799,40 +2862,29 @@ trong bảng dưới đây để tính toán so sánh về kinh tế - kỹ thu�
 định thời hạn sửa chữa định kỳ và kinh phí bảo trì trong phương án tài chính của 
 dự án đầu tư xây dựng công trình đường bộ và quản lý khai thác theo hình thức 
 đối tác công tư: 
-Loại tầng mặt áo đường (trên nền, móng 
-đường; trên mặt cầu, đỉnh cống và trong 
-hầm) 
-Thời hạn tính theo năm 
-Sửa chữa 
-toàn bộ kết 
-cấu móng, 
-mặt đường 
-Sửa chữa các 
-lớp áo đường  
-Bê tông nhựa 
-15 
-5 
-Đá dăm trộn nhựa 
-12 
-4 
-Thấm nhập nhựa và láng nhựa 
-10 
-4 
-Đá dăm 
-5 
-3 
-Cấp phối 
-5 
-3 
-Bê tông xi măng 
-25 
-8 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=128">
+  <thead>
+    <tr>
+      <th rowspan="2">Loại tầng mặt áo đường (trên nền, móng đường; trên mặt cầu, đỉnh cống và trong hầm)</th>
+      <th colspan="2">Thời hạn tính theo năm</th>
+    </tr>
+    <tr>
+      <th>Sửa chữa toàn bộ kết cấu móng, mặt đường</th>
+      <th>Sửa chữa các lớp áo đường</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td>Bê tông nhựa</td><td>15</td><td>5</td></tr>
+    <tr><td>Đá dăm trộn nhựa</td><td>12</td><td>4</td></tr>
+    <tr><td>Thấm nhập nhựa và láng nhựa</td><td>10</td><td>4</td></tr>
+    <tr><td>Đá dăm</td><td>5</td><td>3</td></tr>
+    <tr><td>Cấp phối</td><td>5</td><td>3</td></tr>
+    <tr><td>Bê tông xi măng</td><td>25</td><td>8</td></tr>
+  </tbody>
+</table> 
 Không áp dụng quy định về thời hạn sử dụng tại bảng này đối với trường hợp 
 hạng mục mặt đường, lề đường có gia cố đã xuống cấp, hư hỏng nhưng mới chỉ 
 
-130
- 
- 
 sửa chữa cục bộ để đảm bảo an toàn giao thông; trong trường hợp này, chủ sở 
 hữu, người quản lý sử dụng công trình phải xem xét điều kiện an toàn, nếu cần 
 phải điều chỉnh tốc độ, tải trọng phương tiện giao thông, để bảo đảm an toàn cho 
@@ -7855,49 +2907,29 @@ lập, thẩm định, phê duyệt thiết kế, dự toán chi phí sửa ch�
 dưỡng thường xuyên bảo đảm không vượt giá trị quy định trong hợp đồng và phải 
 tổ chức quản lý chi phí đúng quy định của nhà nước.  
 
-131
- 
- 
-Phụ lục VI 
+## Phụ lục VI
 CÔNG TRÌNH ĐƯỜNG BỘ PHẢI QUAN TRẮC TRONG QUÁ TRÌNH 
 KHAI THÁC, SỬ DỤNG 
 (Ban hành kèm theo Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 
 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai 
 thác và bảo trì kết cấu hạ tầng đường bộ) 
  
-TT Loại công trình 
-Cấp công trình(1) 
-1 
-Công trình khi xảy ra sự cố có thể dẫn tới 
-thảm họa 
-  
-2 
-Công trình 
-đường bộ ngoài 
-đô thị 
-Cầu đường bộ 
-Cấp đặc biệt, cấp I 
-Cầu đường bộ có kết 
-cấu nhịp dây văng, dây 
-võng 
-Cấp đặc biệt, cấp I và cấp II 
-Hầm đường bộ 
-Cấp đặc biệt, cấp I 
-Hầm đường bộ vượt 
-biển, sông 
-Cấp đặc biệt, cấp I và cấp II 
-3 
-Công trình có dấu hiệu lún, nghiêng, nứt và các dấu hiệu bất thường khác 
-có khả năng gây sập đổ, mất an toàn trong quá trình khai thác sử dụng 
-4 
-Theo yêu cầu của Chủ đầu tư, chủ sở hữu hoặc người quản lý, sử dụng 
-công trình 
-Hướng dẫn: cấp công trình xác định theo quy định của Bộ Xây dựng. 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=130">
+  <thead>
+    <tr><th>TT</th><th colspan="2">Loại công trình</th><th>Cấp công trình<sup>(1)</sup></th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1</td><td colspan="2">Công trình khi xảy ra sự cố có thể dẫn tới thảm họa</td><td></td></tr>
+    <tr><td rowspan="4">2</td><td rowspan="4">Công trình đường bộ ngoài đô thị</td><td>Cầu đường bộ</td><td>Cấp đặc biệt, cấp I</td></tr>
+    <tr><td>Cầu đường bộ có kết cấu nhịp dây văng, dây võng</td><td>Cấp đặc biệt, cấp I và cấp II</td></tr>
+    <tr><td>Hầm đường bộ</td><td>Cấp đặc biệt, cấp I</td></tr>
+    <tr><td>Hầm đường bộ vượt biển, sông</td><td>Cấp đặc biệt, cấp I và cấp II</td></tr>
+    <tr><td>3</td><td colspan="3">Công trình có dấu hiệu lún, nghiêng, nứt và các dấu hiệu bất thường khác có khả năng gây sập đổ, mất an toàn trong quá trình khai thác sử dụng</td></tr>
+    <tr><td>4</td><td colspan="3">Theo yêu cầu của Chủ đầu tư, chủ sở hữu hoặc người quản lý, sử dụng công trình</td></tr>
+  </tbody>
+</table>Hướng dẫn: cấp công trình xác định theo quy định của Bộ Xây dựng. 
 
-132
- 
- 
-Phụ lục VII 
+## Phụ lục VII
 DANH MỤC CÔNG TRÌNH PHẢI ĐƯỢC CƠ QUAN CÓ THẨM QUYỀN 
 XEM XÉT VÀ THÔNG BÁO Ý KIẾN VỀ KẾT QUẢ ĐÁNH GIÁ AN 
 TOÀN CÔNG TRÌNH 
@@ -7905,34 +2937,27 @@ TOÀN CÔNG TRÌNH
 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai 
 thác và bảo trì kết cấu hạ tầng đường bộ) 
  
-STT Công trình 
-Cấp công trình 
-1. 
-Đường ô tô cao tốc 
-Các cấp 
-2. 
-Đường ô tô 
-Cấp I trở lên 
-3. 
-Cầu đường bộ, cầu phao đường bộ và 
-nút giao thông khác mức 
-Cấp II trở lên 
-4. 
-Hầm đường bộ 
-Cấp II trở lên 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=131">
+  <thead>
+    <tr><th>STT</th><th>Công trình</th><th>Cấp công trình</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>1.</td><td>Đường ô tô cao tốc</td><td>Các cấp</td></tr>
+    <tr><td>2.</td><td>Đường ô tô</td><td>Cấp I trở lên</td></tr>
+    <tr><td>3.</td><td>Cầu đường bộ, cầu phao đường bộ và nút giao thông khác mức</td><td>Cấp II trở lên</td></tr>
+    <tr><td>4.</td><td>Hầm đường bộ</td><td>Cấp II trở lên</td></tr>
+  </tbody>
+</table> 
 Hướng dẫn: cấp công trình tại bảng trong Phụ lục này xác định theo quy định của Bộ 
 trưởng Bộ Xây dựng. 
 
-133
- 
- 
-Phụ lục VIII 
+## Phụ lục VIII
 CÁC BIỂU MẪU PHỤC VỤ CÔNG TÁC TUẦN ĐƯỜNG, TUẨN KIỂM 
 (Ban hành kèm theo Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11  năm 
 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai 
 thác và bảo trì kết cấu hạ tầng đường bộ) 
  
-I. NHẬT KÝ TUẦN ĐƯỜNG 
+### I. NHẬT KÝ TUẦN ĐƯỜNG 
 1. Mẫu bìa nhật ký 
  
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM 
@@ -7962,9 +2987,6 @@ tuần đường là tài liệu quan trọng trong công tác quản lý phải
 đủ và lưu trữ tại đơn vị quản lý bảo dưỡng thường xuyên công trình kết cấu hạ 
 tầng đường bộ. 
 
-134
- 
- 
 2. Người làm nhiệm vụ tuần đường phải ghi chép trong khi làm nhiệm vụ 
 nhằm phản ánh đầy đủ mọi tình trạng, sự cố xảy ra đối với đoạn đường, cây cầu 
 và công trình, hành lang an toàn đường bộ có trên tuyến được giao nhiệm vụ. 
@@ -7995,26 +3017,12 @@ c) Các vụ tai nạn giao thông, nguyên nhân gây tai nạn giao thông, h�
 do tai nạn giao thông gây ra đối với người, phương tiện tham gia giao thông; các 
 hạng mục công trình bị hư hỏng, giá trị hư hỏng do tai nạn giao thông; các điểm 
 hay xảy ra tai nạn giao thông đường bộ; điểm tiềm ẩn tai nạn giao thông đường 
-bộ52 trên tuyến phát sinh nhưng chưa được xử lý; 
+bộ[^vbhn27-52] trên tuyến phát sinh nhưng chưa được xử lý; 
 d) Các vụ vi phạm kết cấu hạ tầng giao thông đường bộ phát sinh trong 
 tháng, các vụ đã xử lý, chưa xử lý. 
  
-52 Cụm từ “điểm đen, điểm tiềm ẩn nguy cơ mất an toàn giao thông” được thay thế bằng cụm từ “điểm hay 
-xảy ra tai nạn giao thông đường bộ; điểm tiềm ẩn tai nạn giao thông đường bộ” theo quy định tại điểm a khoản 1 
-Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung 
-một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
-tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, 
-điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 
-40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
-phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
-cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
-vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
-chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
 
-135
- 
- 
 ## Phần II. Nội dung kiểm tra, ghi chép 
 1. Nội dung ghi trong nhật ký gồm: 
 a) Người thực hiện tuần đường, thời gian tuần đường;  
@@ -8055,9 +3063,6 @@ bị ngập, chiều sâu ngập (trên cột thủy trí), vận tốc dòng n�
 có thiết bị đo), nguyên nhân ngập (do ảnh hưởng của cơn bão, do mưa lớn); tình 
 trạng công trình sau khi nước rút, các hư hỏng cần phải khắc phục (nếu có). 
 
-136
- 
- 
 Đối với cột mốc giải phóng mặt bằng đất xây dựng công trình đường bộ, 
 mốc đất của đường bộ, cột mốc lộ giới phân định phạm vi hàng lang an toàn đường 
 bộ, nhật ký ghi lại các cột bị mất, các cột gãy, đổ và các hư hỏng khác (nếu có). 
@@ -8089,28 +3094,34 @@ hiện nhiệm vụ tuần kiểm để xử lý, rào chắn và hướng dẫn
 Sổ nhật ký tuần đường gồm 100 trang được đánh dấu từ 1 đến 100 và đóng 
 dấu giáp lai. 
 Trang đầu (bên trái): 
-Giờ ngày, 
-tháng kiểm 
-tra 
-Vị trí, Lý 
-trình, xảy ra 
-phát hiện sự 
-cố, vi phạm 
-Tình hình thời tiết (nắng, mưa, mù, lũ, bão...) Diễn biến 
-đột xuất, nội dung của các sự cố cầu đường, hoặc vi 
-phạm mới phát hiện (vẽ minh họa vị trí, kích thước cụ 
-thể). 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=135">
+  <thead>
+    <tr>
+      <th>Giờ ngày, tháng kiểm tra</th>
+      <th>Vị trí, Lý trình, xảy ra phát hiện sự cố, vi phạm</th>
+      <th>Tình hình thời tiết (nắng, mưa, mù, lũ, bão...) Diễn biến đột xuất, nội dung của các sự cố cầu đường, hoặc vi phạm mới phát hiện (vẽ minh họa vị trí, kích thước cụ thể).</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+  </tbody>
+</table> 
 
-137
- 
- 
 Trang liền kề (bên phải): 
-Đã giải quyết, xử lý 
-tại chỗ và kết quả 
-Người nhận báo cáo ghi 
-nhận xét, việc cần lưu ý 
-hàng ngày. Ký tên 
-Ghi  chú 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=136">
+  <thead>
+    <tr>
+      <th>Đã giải quyết, xử lý tại chỗ và kết quả</th>
+      <th>Người nhận báo cáo ghi nhận xét, việc cần lưu ý hàng ngày. Ký tên</th>
+      <th>Ghi chú</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td></td><td></td><td></td></tr>
+    <tr><td></td><td></td><td></td></tr>
+  </tbody>
+</table> 
 ## Phần III. Số lượt và chiều dài tuần đường 
 1. Số lượt tuần đường 
 a) Đối với đường cao tốc: theo quy định tại khoản 1 Điều 19 Thông tư này, 
@@ -8145,9 +3156,6 @@ c) Đoạn đường có lưu lượng phương tiện tham gia giao thông vư�
 lượng thiết kế, tình hình trật tự, an toàn giao thông phức tạp; đoạn đường hay xảy 
 ra tai nạn giao thông;  
 
-138
- 
- 
 d) Thực hiện các công việc phục vụ công tác bảo đảm trật tự, an toàn giao 
 thông, xử lý tai nạn, ùn tắc giao thông; 
  đ) Các trường hợp cần thiết khác do người quản lý, sử dụng đường bộ của 
@@ -8166,12 +3174,9 @@ thông nông thôn, người quản lý, sử dụng đường bộ các đườ
 gian, số lần thực hiện tuần đường trên cơ sở tình hình trật tự, an toàn giao thông, 
 tình trạng kỹ thuật các tuyến đường và lưu lượng phương tiện tham gia giao thông. 
  
-II. NHẬT KÝ TUẦN KIỂM  
+### II. NHẬT KÝ TUẦN KIỂM  
 1. Mẫu bìa nhật ký 
 
-139
- 
- 
 CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM 
 Độc lập - Tự do - Hạnh phúc 
 ________________ 
@@ -8210,9 +3215,6 @@ nhật ký kết quả tuần kiểm.
 3. Người làm nhiệm vụ tuần kiểm đường bộ phải ghi chép kết quả kiểm tra 
 hiện trường, xử lý ý kiến đề xuất của đơn vị quản lý, bảo dưỡng công trình kết 
 
-140
- 
- 
 cấu hạ tầng đường bộ trong công tác quản lý, bảo vệ kết cấu hạ tầng đường bộ 
 được giao nhiệm vụ; kết quả thực hiện của đơn vị quản lý, bảo dưỡng công trình 
 kết cấu hạ tầng đường bộ. 
@@ -8254,9 +3256,6 @@ bộ, người thực hiện nhiệm vụ tuần kiểm ghi nhận quá trình x
 bản, vận động tuyên truyền đối tượng vi phạm chấp hành các quy định của pháp 
 luật hoặc phối hợp chính quyền địa phương hoặc lực lượng công an xử lý theo 
 
-141
- 
- 
 quy định; chỉ đạo đơn vị bảo dưỡng, vận hành, khai thác công trình kết cấu hạ 
 tầng đường bộ thực hiện các biện pháp ngăn chặn, khắc phục hậu quả ban đầu để 
 đảm bảo giao thông theo quy định (nếu cần thiết); 
@@ -8284,26 +3283,21 @@ tuần kiểm đường bộ phải ký tên ở phía dưới nội dung ghi ch
 dấu giáp lai. 
 Trang đầu (bên trái): 
  
-Ngày 
-tháng 
-Hạng mục công việc, 
-ý kiến đề xuất của 
-đơn vị quản lý, bảo 
-dưỡng thường xuyên 
-Lý trình 
-Mô tả chi tiết 
-thực trạng 
-công tác 
-quản lý, bảo 
-dưỡng 
-Ước tính 
-khối 
-lượng 
-Từ 
-Km 
-Đến 
-Km 
-Vị trí 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=140">
+  <thead>
+    <tr>
+      <th rowspan="2">Ngày tháng</th>
+      <th rowspan="2">Hạng mục công việc, ý kiến đề xuất của đơn vị quản lý, bảo dưỡng thường xuyên</th>
+      <th colspan="3">Lý trình</th>
+      <th rowspan="2">Mô tả chi tiết thực trạng công tác quản lý, bảo dưỡng</th>
+      <th rowspan="2">Ước tính khối lượng</th>
+    </tr>
+    <tr><th>Từ Km</th><th>Đến Km</th><th>Vị trí</th></tr>
+  </thead>
+  <tbody>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </tbody>
+</table> 
  
  
  
@@ -8313,41 +3307,27 @@ Vị trí
  
 Trang liền kề (bên phải): 
  
-Ý kiến người thực hiện tuần 
-kiểm  
-Người nhận 
-báo cáo ghi 
-nhận xét, 
-việc cần lưu 
-ý. Ký tên 
-Kết quả thực hiện của đơn vị quản lý, 
-bảo dưỡng thường xuyên 
-Yêu cầu sửa chữa 
-hoặc xử lý vi 
-phạm; hoặc báo 
-cáo cơ quan có 
-thẩm quyền 
-Thời 
-gian 
-hoàn 
-thành 
-Khối 
-lượng 
-Chất 
-lượng 
-Thời 
-gian 
-hoàn 
-thành 
-thực tế 
-Ảnh/Vi 
-deo sau 
-khi sửa 
-chữa 
+<table data-source="data/raw/pdf/27_VBHN_BXD_QLVH_cb469708.pdf#page=140">
+  <thead>
+    <tr>
+      <th colspan="2">Ý kiến người thực hiện tuần kiểm</th>
+      <th rowspan="2">Người nhận báo cáo ghi nhận xét, việc cần lưu ý. Ký tên</th>
+      <th colspan="4">Kết quả thực hiện của đơn vị quản lý, bảo dưỡng thường xuyên</th>
+    </tr>
+    <tr>
+      <th>Yêu cầu sửa chữa hoặc xử lý vi phạm; hoặc báo cáo cơ quan có thẩm quyền</th>
+      <th>Thời gian hoàn thành</th>
+      <th>Khối lượng</th>
+      <th>Chất lượng</th>
+      <th>Thời gian hoàn thành thực tế</th>
+      <th>Ảnh/Video sau khi sửa chữa</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+  </tbody>
+</table> 
 
-142
- 
- 
  
 ## Phần III. Phương tiện, trang thiết bị phục vụ công tác tuần kiểm 
 1.  Phương tiện, trang thiết bị phục vụ tuần kiểm  
@@ -8367,3 +3347,878 @@ toàn khi dừng trên đường cao tốc để kiểm tra;
 chức, cá nhân thực hiện quản lý, bảo dưỡng công trình, người quản lý, sử dụng 
 đường bộ có thể trang bị các phần mềm, phương tiện, thiết bị khác để nâng cao 
 hiệu quả công tác tuần kiểm đường bộ. 
+
+[^vbhn27-2]: Khoản này được sửa đổi, bổ sung bởi khoản 1 Điều 10 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
+
+    năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
+
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
+
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+
+    tháng 12 năm 2025.
+
+[^vbhn27-3]: Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
+
+    1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
+
+    sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
+
+    vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
+
+    nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
+
+    số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
+
+    phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
+
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
+
+    cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
+
+    vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
+
+    chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-4]: Điểm này được sửa đổi, bổ sung bởi khoản 2 Điều 10 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
+
+    năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
+
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
+
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+
+    tháng 12 năm 2025.
+
+[^vbhn27-5]: Điểm này được sửa đổi, bổ sung bởi điểm a khoản 3 Điều 10 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
+
+    vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
+
+    trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
+
+    năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai
+
+    trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+
+    thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
+
+    khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
+
+    từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-6]: Điểm này được bổ sung bởi điểm b khoản 3 Điều 10 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
+
+    năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
+
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
+
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+
+    tháng 12 năm 2025.
+
+[^vbhn27-7]: Khoản này được sửa đổi, bổ sung bởi khoản 4 Điều 10 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
+
+    năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
+
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
+
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+
+    tháng 12 năm 2025.
+
+[^vbhn27-8]: Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
+
+    1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
+
+    sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
+
+    vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
+
+    nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
+
+    số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
+
+    phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
+
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
+
+    cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
+
+    vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
+
+    chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-9]: Khoản này được sửa đổi, bổ sung bởi khoản 1 Điều 11 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
+
+    năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
+
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
+
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+
+    tháng 12 năm 2025.
+
+[^vbhn27-10]: Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
+
+    1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
+
+    sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
+
+    vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
+
+    nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
+
+    số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
+
+    phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
+
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
+
+    cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
+
+    vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
+
+    chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-11]: Điểm này được sửa đổi, bổ sung bởi khoản 2 Điều 11 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
+
+    năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
+
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục
+
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+
+    tháng 12 năm 2025.
+
+[^vbhn27-12]: Điểm này được sửa đổi, bổ sung bởi điểm a khoản 3 Điều 11 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
+
+    vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
+
+    trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
+
+    năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
+
+    trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+
+    thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
+
+    khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
+
+    từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-13]: Điểm này được bổ sung bởi điểm b khoản 3 Điều 11 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
+
+    năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
+
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
+
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+
+    tháng 12 năm 2025.
+
+[^vbhn27-23]: Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
+
+    1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
+
+    sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
+
+    vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
+
+    nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
+
+    số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
+
+    phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
+
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
+
+    cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
+
+    vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
+
+    chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-24]: Điểm này được sửa đổi, bổ sung bởi điểm a khoản 1 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
+
+    vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
+
+    trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
+
+    năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
+
+    trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+
+    thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
+
+    khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
+
+    từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-25]: Điểm này được sửa đổi, bổ sung bởi điểm b khoản 1 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
+
+    vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
+
+    trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
+
+    năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
+
+    trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+
+    thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
+
+    khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
+
+    từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-26]: Điểm này được sửa đổi, bổ sung bởi điểm c khoản 1 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
+
+    vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
+
+    trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
+
+    năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
+
+    trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+
+    thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
+
+    khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
+
+    từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-27]: Điểm này được sửa đổi, bổ sung bởi điểm d khoản 1 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
+
+    vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
+
+    trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
+
+    năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
+
+    trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+
+    thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
+
+    khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
+
+    từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-28]: Điểm này được bãi bỏ theo quy định tại khoản 3 Điều 18 Thông tư số 72/2025/TT-BXD ngày 
+
+    31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
+
+    vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
+
+    trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
+
+    năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
+
+    trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+
+    thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
+
+    khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành từ 
+
+    ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-29]: Điểm này được sửa đổi, bổ sung bởi điểm đ khoản 1 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
+
+    vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
+
+    trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
+
+    năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
+
+    trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+
+    thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
+
+    khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
+
+    từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-30]: Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
+
+    1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
+
+    sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
+
+    vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
+
+    nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
+
+    số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
+
+    phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
+
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
+
+    cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
+
+    vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
+
+    chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-31]: Điểm này được sửa đổi, bổ sung bởi điểm a khoản 2 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
+
+    vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
+
+    trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
+
+    năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
+
+    trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+
+    thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
+
+    khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
+
+    từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-32]: Điểm này được sửa đổi, bổ sung bởi điểm b khoản 2 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
+
+    vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
+
+    trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
+
+    năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
+
+    trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+
+    thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
+
+    khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
+
+    từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-33]: Điểm này được sửa đổi, bổ sung bởi điểm c khoản 2 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
+
+    vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
+
+    trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
+
+    năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
+
+    trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+
+    thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
+
+    khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
+
+    từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-34]: Khoản này được sửa đổi, bổ sung bởi khoản 3 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 tháng 
+
+    12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải
+
+    bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, 
+
+    thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
+
+    của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh 
+
+    vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
+
+    tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT 
+
+    ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ 
+
+    ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-35]: Khoản này được sửa đổi, bổ sung bởi khoản 4 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 tháng 
+
+    12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải 
+
+    bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, 
+
+    thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
+
+    của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh 
+
+    vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
+
+    tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT 
+
+    ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ 
+
+    ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-36]: Khoản này được bổ sung bởi khoản 5 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 
+
+    2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15
+
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe 
+
+    ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
+
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+
+    tháng 12 năm 2025.
+
+[^vbhn27-14]: Điểm này được sửa đổi, bổ sung bởi khoản 1 Điều 12 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
+    năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+    tháng 12 năm 2025.
+
+[^vbhn27-15]: Điểm này được sửa đổi, bổ sung bởi điểm a khoản 2 Điều 12 Thông tư số 72/2025/TT-BXD ngày 31 
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
+    vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
+    trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
+    năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
+    trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+    thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
+    khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
+    từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-16]: Điểm này được bổ sung bởi điểm b khoản 2 Điều 12 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
+    năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+    tháng 12 năm 2025.
+
+[^vbhn27-17]: Khoản này được sửa đổi, bổ sung bởi khoản 3 Điều 12 Thông tư số 72/2025/TT-BXD ngày 31 tháng 
+    12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải 
+    bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, 
+    thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
+    của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh 
+    vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
+    tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT 
+    ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ 
+    ngày 31 tháng 12 năm 2025
+
+[^vbhn27-18]: Điểm này được sửa đổi, bổ sung bởi điểm a khoản 4 Điều 12 Thông tư số 72/2025/TT-BXD ngày 31 
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
+    vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
+    trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 
+    năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai 
+    trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+    thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
+    khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể 
+    từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-19]: Điểm này được bổ sung bởi điểm b khoản 4 Điều 12 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
+    năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+    tháng 12 năm 2025.
+
+[^vbhn27-20]: Khoản này được bổ sung bởi khoản 5 Điều 12 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 
+    2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe 
+    ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+    tháng 12 năm 2025.
+
+[^vbhn27-21]: Khoản này được sửa đổi, bổ sung bởi khoản 1 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 tháng 
+    12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải 
+    bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, 
+    thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
+    của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh 
+    vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
+    tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT 
+    ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ 
+    ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-22]: Khoản này được sửa đổi, bổ sung bởi khoản 3 Điều 13 Thông tư số 72/2025/TT-BXD ngày 31 tháng 
+    12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải 
+    bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, 
+    thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 
+    của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh 
+    vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
+    tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT 
+    ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ 
+    ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-1]: Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung 
+    một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận
+    tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, 
+    điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 
+    40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
+    phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
+    cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
+    vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
+    chở hành khách và xe ô tô có căn cứ ban hành như sau:  
+    “Căn cứ Luật Đường bộ số 35/2024/QH15;  
+    Căn cứ Luật Trật tự, an toàn giao thông đường bộ số 36/2024/QH15;  
+    Căn cứ Luật Xây dựng số 50/2014/QH13;  
+    Căn cứ Luật sửa đổi, bổ sung một số điều của Luật Xây dựng số 62/2020/QH14;  
+    Căn cứ Luật Phòng, chống thiên tai số 33/2013/QH13;  
+    Căn cứ Luật sửa đổi, bổ sung một số điều của Luật Đê điều và Luật Phòng, chống thiên tai số 
+    60/2020/QH14;  
+    Căn cứ Nghị định số 33/2025/NĐ-CP ngày 25 tháng 02 năm 2025 của Chính phủ quy định chức năng, 
+    nhiệm vụ, quyền hạn và cơ cấu tổ chức của Bộ Xây dựng;  
+    Căn cứ Nghị định số 06/2021/NĐ-CP ngày 26 tháng 01 năm 2021 của Chính phủ quy định chi tiết một số 
+    nội dung về quản lý chất lượng, thi công xây dựng và bảo trì công trình xây dựng;  
+    Căn cứ Nghị định số 66/2021/NĐ-CP ngày 06 tháng 7 năm 2021 của Chính phủ quy định chi tiết thi hành 
+    một điều của Luật Phòng, chống thiên tai và Luật sửa đổi, bổ sung một số điều của Luật Đê điều và Luật Phòng, 
+    chống thiên tai; 
+    Căn cứ Nghị định số 44/2024/NĐ-CP ngày 24 tháng 4 năm 2024 của Chính phủ quy định việc quản lý, sử 
+    dụng và khai thác tài sản kết cấu hạ tầng giao thông đường bộ;  
+    Căn cứ Nghị định số 165/2024/NĐ-CP ngày 26 tháng 12 năm 2024 của Chính phủ quy định chi tiết, hướng 
+    dẫn thi hành một số điều của Luật Đường bộ và Điều 77 Luật Trật tự, an toàn giao thông đường bộ;  
+    Theo đề nghị của Cục trưởng Cục Đường bộ Việt Nam; 
+    Bộ trưởng Bộ Xây dựng ban hành Thông tư sửa đổi, bổ sung một số điều của Thông tư số 36/2024/TT-
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động 
+    vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định 
+    trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TTBGTVT ngày 15 tháng 11 năm 
+    2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong 
+    lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
+    vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ; Thông tư số 22/2014/TT-
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, 
+    khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô”.
+
+[^vbhn27-37]: Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
+    1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
+    sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
+    vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
+    nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
+    số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
+    phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
+    cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
+    vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
+    chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-38]: Tên Điều này được sửa đổi bởi khoản 1 Điều 15 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 
+    2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe 
+    ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+    tháng 12 năm 2025.
+
+[^vbhn27-39]: Khoản này được sửa đổi bởi khoản 2 Điều 15 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 
+    2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe 
+    ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+    tháng 12 năm 2025.
+
+[^vbhn27-40]: Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
+    1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
+    sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
+    vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
+    nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
+    số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
+    phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
+    cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
+    vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
+    chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-41]: Cụm từ “Bộ Giao thông vận tải” được thay bằng cụm từ “Bộ Xây dựng” theo quy định tại điểm a khoản 
+    1 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
+    sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
+    vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
+    nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
+    số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
+    phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
+    cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
+    vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
+    chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-42]: Điểm này được sửa đổi bởi Điều 16 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ 
+    trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 
+    2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt 
+    động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, 
+    trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông 
+    tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, 
+    vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 
+    2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách 
+    ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-43]: Điểm này được sửa đổi, bổ sung bởi Điều 17 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 
+    2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe 
+    ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục 
+    đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường 
+    bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+    về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 
+    tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến 
+    phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 
+    tháng 12 năm 2025
+
+[^vbhn27-47]: Mẫu này được thay thế bởi Mẫu số 01 Phụ lục III Thông tư số 72/2025/TT-BXD theo quy định tại điểm 
+    a khoản 2 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
+    sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
+    vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
+    nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
+    số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
+    phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
+    cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
+    vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
+    chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-48]: Mẫu này được thay thể bởi Mẫu số 02 Phụ lục III Thông tư số 72/2025/TT-BXD theo quy định tại điểm 
+    a khoản 2 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
+    sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông 
+    vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng 
+    nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư 
+    số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
+    phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
+    cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
+    vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
+    chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-49]: Mẫu này được thay thể bởi Mẫu số 03 Phụ lục III Thông tư số 72/2025/TT-BXD theo quy định tại điểm 
+    c khoản 2 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa 
+    đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, 
+    trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, 
+    Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về 
+    công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT 
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo 
+    trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao 
+    thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một 
+    lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-50]: Mẫu này được thay thế bởi Mẫu số 04 Phụ lục III Thông tư số 72/2025/TT-BXD theo quy định tại điểm 
+    d khoản 2 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa 
+    đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, 
+    trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, 
+    Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về 
+    công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT 
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo 
+    trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao 
+    thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một 
+    lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-51]: Mẫu này được thay thế bởi Mẫu số 05 Phụ lục III Thông tư số 72/2025/TT-BXD theo quy định tại điểm 
+    c khoản 2 Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa 
+    đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, 
+    trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, 
+    Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về 
+    công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT 
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo 
+    trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao 
+    thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một 
+    lưỡi chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn27-52]: Cụm từ “điểm đen, điểm tiềm ẩn nguy cơ mất an toàn giao thông” được thay thế bằng cụm từ “điểm hay 
+    xảy ra tai nạn giao thông đường bộ; điểm tiềm ẩn tai nạn giao thông đường bộ” theo quy định tại điểm a khoản 1 
+    Điều 18 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung 
+    một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
+    tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, 
+    điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 
+    40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác 
+    phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết 
+    cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông 
+    vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
+    chở hành khách và xe ô tô có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.

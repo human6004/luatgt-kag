@@ -2,6 +2,7 @@
 import copy
 import asyncio
 from dataclasses import replace
+import hashlib
 import json
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -15,11 +16,6 @@ import test_writer_adapter as sample
 ADAPTER = sample.ADAPTER
 ROOT = sample.ROOT
 CONTRACT = sample.CONTRACT
-PINS = {
-    'nodes_jsonl_sha256': '03e929392b2b75d6ba8a381de94a3c0688e8ccc60dd59cb5bd048e9eeacff8e7',
-    'edges_jsonl_sha256': '2e904697369d2e5d90e694cd5692041e83cfcb455ee529afcc1bf7a22d0bdb0f',
-    'plan_sha256': '550d89e7715a7feaf54c23e0a6080bedaa730211eb2bde7ced3e2d67f1b845cd',
-}
 INPUT_SHA = 'f16d05ec6b29248d2c61adb1e9263f78e4f7bace1b955014a2d17872cfe4064d'
 
 
@@ -59,19 +55,21 @@ class ProductionScopeTests(unittest.TestCase):
             (self.root / (name + '.jsonl')).write_bytes(
                 ''.join(canonical(x) + '\n' for x in records).encode())
         (self.root / 'fixture.txt').write_bytes(b'fixture')
-        (self.root / 'plan.sha256').write_bytes((PINS['plan_sha256'] + '\n').encode('ascii'))
-        self.manifest = dict(PINS,
-            schema_sha256='ec05cc76303b99c43f7d2d8ed662459daeafe69fa750b7ebbdbf975fb794c23c',
-            contract_sha256='3a57fae7702e4f063b175d58e58a53d74b991b9c52f822c8cc769770687156c0',
-            input_manifest=[{'name': 'fixture.txt', 'sha256': INPUT_SHA}],
-            node_counts={'LegalUnit': 2}, edge_unique_counts={'hasChild': 1})
-        self.path = self.root / 'manifest.json'
+        from kag.builder.graph_plan import plan_hash
+        self.manifest = dict(
+            schema_sha256=hashlib.sha256((ROOT/'kag/schema/VietRoadTraffic.schema').read_bytes()).hexdigest(),
+            contract_sha256=hashlib.sha256((ROOT/'kag/schema/schema_contract.json').read_bytes()).hexdigest(),
+            input_manifest=[{'name':'fixture.txt','sha256':INPUT_SHA}],
+            node_counts={'LegalUnit':2},edge_unique_counts={'hasChild':1})
+        for name in ('nodes','edges'):
+            self.manifest[name+'_jsonl_sha256']=hashlib.sha256((self.root/(name+'.jsonl')).read_bytes()).hexdigest()
+        self.manifest['plan_sha256']=plan_hash(SimpleNamespace(nodes=self.nodes,edges=self.edges,
+            schema_sha256=self.manifest['schema_sha256'],contract_sha256=self.manifest['contract_sha256'],
+            input_manifest=self.manifest['input_manifest']))
+        (self.root/'plan.sha256').write_bytes((self.manifest['plan_sha256']+'\n').encode('ascii'))
+        self.path=self.root/'manifest.json'
         self.save_manifest()
-        pin = patch.dict(self.code.C3_IDENTITY, PINS)
-        pin.start()
-        self.addCleanup(pin.stop)
-        required = patch.dict(ADAPTER.validate_production_scope.__globals__,
-                              ARTIFACT_HASHES=(('fixture.txt', INPUT_SHA),))
+        required=patch.dict(ADAPTER.validate_production_scope.__globals__,SOURCE_FILES=(('fixture','fixture.txt'),))
         required.start()
         self.addCleanup(required.stop)
         self.settings = self.code.ProductionSettings(
@@ -79,7 +77,7 @@ class ProductionScopeTests(unittest.TestCase):
             host_addr='http://127.0.0.1:28887', neo4j_uri='bolt://127.0.0.1:27687',
             project_name='VietRoadTrafficProduction', namespace='VietRoadTraffic',
             expected_project_id=37, vector_dimensions=3072,
-            confirmation='CONFIRM_PRODUCTION:VietRoadTrafficProduction:VietRoadTraffic:37:' + PINS['plan_sha256'])
+            confirmation='CONFIRM_PRODUCTION:VietRoadTrafficProduction:VietRoadTraffic:37:' + self.manifest['plan_sha256'])
 
     def save_manifest(self):
         self.path.write_text(json.dumps(self.manifest), encoding='utf-8')
@@ -128,7 +126,7 @@ class ProductionScopeTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'contract'): self.discover(contract=contract)
 
     def test_sample_manifest_blocks(self):
-        self.manifest = {'chosen_partition': 5, 'selected_node_identity_sha256': PINS['nodes_jsonl_sha256']}
+        self.manifest = {'chosen_partition': 5, 'selected_node_identity_sha256': '0'*64}
         self.save_manifest()
         with self.assertRaises(ValueError): self.discover()
 
@@ -138,19 +136,21 @@ class ProductionScopeTests(unittest.TestCase):
     def test_ambiguous_project_blocks(self):
         record = Projects().records[0]
         with self.assertRaisesRegex(ValueError, 'exactly one'):
-            self.discover(client=Projects([record, dict(record, id='38')]))
+            self.discover(client=Projects([record, dict(record)]))
+        self.assertEqual(self.discover(client=Projects([record, dict(record, id='38')])).project_id,37)
 
     def test_returned_id_is_verified(self):
         record = dict(Projects().records[0], id='38')
         with self.assertRaisesRegex(ValueError, 'ID'): self.discover(client=Projects(returned=record))
 
-    def test_sample_project_id_cannot_be_relabelled_as_production(self):
+    def test_project_id_two_requires_same_identity_proof_as_every_other_id(self):
         settings = replace(self.settings, expected_project_id=2,
                            confirmation=self.settings.confirmation.replace(':37:', ':2:'))
         record = dict(Projects().records[0], id='2')
-        with self.assertRaisesRegex(ValueError, 'sample'): settings.validate()
-        with self.assertRaisesRegex(ValueError, 'sample'):
-            self.discover(settings=settings, client=Projects([record]))
+        settings.validate()
+        self.assertEqual(self.discover(settings=settings,client=Projects([record])).project_id,2)
+        with self.assertRaises(ValueError):
+            self.discover(settings=settings,client=Projects([dict(record,namespace='Foreign')]))
 
     def test_expected_project_id_mismatch_blocks(self):
         with self.assertRaisesRegex(ValueError, 'ID'):
@@ -185,7 +185,7 @@ class ProductionScopeTests(unittest.TestCase):
         with self.assertRaises(ADAPTER.WriterAdapterError): replace(good, scope='unknown')
 
     def test_missing_confirmation_or_wrong_dimension_blocks(self):
-        for change in ({'confirmation': None}, {'confirmation': 'yes'}, {'vector_dimensions': 1536},
+        for change in ({'confirmation': None}, {'confirmation': 'yes'}, {'vector_dimensions': 0}, {'vector_dimensions':65537},
                        {'vector_dimensions': True}, {'expected_project_id': True}):
             with self.subTest(change=change), self.assertRaises(ValueError):
                 self.discover(settings=replace(self.settings, **change))
@@ -205,6 +205,34 @@ class ProductionScopeTests(unittest.TestCase):
     def test_required_runtime_input_checksum_blocks(self):
         (self.root / 'fixture.txt').write_bytes(b'changed')
         with self.assertRaisesRegex(ValueError, 'checksum'): self.discover()
+
+    def test_confirmation_must_bind_the_verified_manifest(self):
+        wrong = replace(self.settings, confirmation=self.settings.confirmation[:-64]+'0'*64)
+        with self.assertRaisesRegex(ValueError, 'confirmation'):
+            self.discover(settings=wrong)
+
+    def test_required_source_cannot_be_omitted(self):
+        self.manifest['input_manifest'] = []
+        self.save_manifest()
+        with self.assertRaisesRegex(ValueError, 'required runtime input'):
+            self.discover()
+
+    def test_new_valid_manifest_needs_no_code_pins(self):
+        from kag.builder.graph_plan import plan_hash
+        self.nodes[0]['properties']['text'] = 'Updated source content'
+        encoded = ''.join(json.dumps(row, ensure_ascii=False, sort_keys=True, separators=(',', ':'))+'\n'
+                          for row in self.nodes).encode()
+        (self.root/'nodes.jsonl').write_bytes(encoded)
+        self.manifest['nodes_jsonl_sha256'] = hashlib.sha256(encoded).hexdigest()
+        self.manifest['plan_sha256'] = plan_hash(SimpleNamespace(nodes=self.nodes,edges=self.edges,
+            schema_sha256=self.manifest['schema_sha256'],contract_sha256=self.manifest['contract_sha256'],
+            input_manifest=self.manifest['input_manifest']))
+        (self.root/'plan.sha256').write_bytes((self.manifest['plan_sha256']+'\n').encode())
+        self.save_manifest()
+        settings = replace(self.settings, confirmation=self.settings.confirmation[:-64]+self.manifest['plan_sha256'])
+        config = self.discover(settings=settings)
+        config.production_scope.validate_specs(self.nodes,self.edges,complete=True)
+        self.assertEqual(config.production_scope.identity['nodes_jsonl_sha256'],hashlib.sha256(encoded).hexdigest())
 
     def test_actual_nodes_edges_and_plan_files_are_checked(self):
         for name in ('nodes.jsonl', 'edges.jsonl', 'plan.sha256'):

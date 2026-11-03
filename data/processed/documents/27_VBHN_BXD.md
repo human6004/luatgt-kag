@@ -652,7 +652,7 @@ cứu hộ
 giờ 
 4 
 4 
-4 
+4 4 
 
 11
  
@@ -927,7 +927,7 @@ giờ
 4 
 4 
 4 
-4 
+4 4 
 
 13
  
@@ -1094,8 +1094,7 @@ khoản 1 Điều 57 Luật Trật tự, an toàn giao thông đường bộ.
 3. Sân tập lái xe mô tô: thông số kỹ thuật các hình tập lái phù hợp kích thước 
 hình sát hạch theo Quy chuẩn kỹ thuật quốc gia về trung tâm sát hạch lái xe cơ 
 giới đường bộ đối với từng hạng xe tương ứng. 
-##### Điều 9. Tài liệu phục vụ đào tạo và quản lý đào tạo của cơ sở đào tạo 
-lái xe 
+##### Điều 9. Tài liệu phục vụ đào tạo và quản lý đào tạo của cơ sở đào tạo lái xe
 1. Giáo trình đào tạo lái xe phù hợp với chương trình khung đào tạo lái xe 
 quy định tại Phụ lục I ban hành kèm theo Thông tư này; cơ sở đào tạo lái xe thực 
 hiện việc biên soạn, thẩm định, ban hành giáo trình đào tạo theo trình tự quy định 
@@ -1121,7 +1120,7 @@ pháp luật về giao thông đường bộ, sử dụng đối với các bài
 sân tập lái trừ nội dung tập lái trên cabin học lái xe ô tô); 
 g) Sổ theo dõi học viên xét hoàn thành khóa đào tạo theo quy định tại Phụ 
 lục VIII ban hành kèm theo Thông tư này. 
-3.8 Cơ sở đào tạo lái xe mô tô các hạng A1, A, B1 sử dụng các tài liệu quy 
+3. [^vbhn27-8] Cơ sở đào tạo lái xe mô tô các hạng A1, A, B1 sử dụng các tài liệu quy 
 định tại điểm a, điểm e và điểm g khoản 2 Điều này làm tài liệu quản lý đào tạo. 
 4. Cơ sở đào tạo lái xe ô tô sử dụng các tài liệu quy định tại khoản 2 Điều 
 này, dữ liệu quản lý thời gian học lý thuyết môn học pháp luật về giao thông 
@@ -1136,21 +1135,12 @@ trình đào tạo
 3. Ban hành giáo trình đào tạo, chương trình chi tiết. 
 4. Trình tự biên soạn, thẩm định và ban hành giáo trình đào tạo, chương trình 
 chi tiết thực hiện theo quy định tại Phụ lục IX ban hành kèm theo Thông tư này. 
-##### Điều 11. Đào tạo để cấp giấy phép lái xe hạng A1, hạng B chuyển số tự 
-động cho người khuyết tật 
+##### Điều 11. Đào tạo để cấp giấy phép lái xe hạng A1, hạng B chuyển số tự động cho người khuyết tật
 1. Đào tạo lái xe hạng A1 cho người khuyết tật điều khiển xe mô tô ba bánh 
 dùng cho người khuyết tật: 
 a) Người học lái xe lựa chọn hình thức đào tạo lái xe theo quy định tại khoản 
 1 Điều 4 Thông tư này; 
 b) Người học lái xe phải được đào tạo trên xe tập lái cho người khuyết tật 
- 
-8 Khoản này được sửa đổi, bổ sung theo quy định tại Điều 4 Thông tư số 17/2026/TT-BXD ngày 29 tháng 
-4 năm 2026 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số điều của Thông tư số 14/2025/TT-BXD ngày 30 
-tháng 6 năm 2025 của Bộ trưởng Bộ Xây dựng quy định về đào tạo lái xe; bồi dưỡng, kiểm tra, cấp chứng chỉ bồi dưỡng 
-kiến thức pháp luật về giao thông đường bộ có hiệu lực thi hành kể từ ngày 01 tháng 7 năm 2026. 
-
-17
- 
  
 theo quy định của Chính phủ về hoạt động đào tạo và sát hạch lái xe; phải học đủ 
 nội dung và chương trình theo quy định tại Điều 5 Thông tư này. 
@@ -1311,7 +1301,7 @@ Quy chuẩn kỹ thuật quốc gia về báo hiệu đường bộ
 5 
 3 
 Quy định về tốc độ và khoảng cách an toàn của xe cơ giới, 
-xe máy chuyên dùng tham gia giao thông trên đường bộ 
+xe máy chuyên dùng tham gia giao thông trên đường bộ 3 
 
 21
  
@@ -9062,4 +9052,9 @@ bồi dưỡng kiến thức pháp luật về giao thông đường bộ có hi
 + Đi không đúng trình tự bài kiểm tra; 
 + Bánh xe đi ra ngoài vạch giới hạn hình chữ chi; 
 + Gây tai nạn; 
-+ Không hoàn thành bài kiểm tra. 
++ Không hoàn thành bài kiểm tra.
+
+[^vbhn27-8]: Khoản này được sửa đổi, bổ sung theo quy định tại Điều 4 Thông tư số 17/2026/TT-BXD ngày 29 tháng 
+    4 năm 2026 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số điều của Thông tư số 14/2025/TT-BXD ngày 30 
+    tháng 6 năm 2025 của Bộ trưởng Bộ Xây dựng quy định về đào tạo lái xe; bồi dưỡng, kiểm tra, cấp chứng chỉ bồi dưỡng 
+    kiến thức pháp luật về giao thông đường bộ có hiệu lực thi hành kể từ ngày 01 tháng 7 năm 2026.

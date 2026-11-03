@@ -170,8 +170,7 @@ trên Trang thông tin điện tử của Ủy ban nhân dân cấp tỉnh.
 4. Các cơ quan có thẩm quyền quy định tại khoản 1, khoản 2 và khoản 3 Điều 
 này công bố công khai thông tin tải trọng, khổ giới hạn của đường bộ theo mẫu 
 quy định tại Phụ lục IX ban hành kèm theo Thông tư này. 
-##### Điều 7. Điều chỉnh thông tin tải trọng, khổ giới hạn của đường bộ và 
-trạng thái kỹ thuật đường ngang đã công bố 
+##### Điều 7. Điều chỉnh thông tin tải trọng, khổ giới hạn của đường bộ và trạng thái kỹ thuật đường ngang đã công bố 
 1. Cục Đường bộ Việt Nam chịu trách nhiệm cập nhật tải trọng, khổ giới hạn 
 của đường bộ và trạng thái kỹ thuật của đường ngang trong phạm vi cả nước trên 
 

@@ -38,10 +38,7 @@ cấp mới, cấp lại, tạm đình chỉ, thu hồi chứng chỉ đăng ki�
 2. Thông tư này không áp dụng đối với các tổ chức, cá nhân có liên quan đến 
 việc cấp mới, cấp lại, tạm đình chỉ, thu hồi chứng chỉ đăng kiểm viên thuộc phạm 
 vi quản lý của Bộ Quốc phòng, Bộ Công an. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 08.01.2025 10:05:07 +07:00
+
 
   
 ##### Điều 3. Giải thích từ ngữ 

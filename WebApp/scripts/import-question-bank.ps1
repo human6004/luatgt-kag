@@ -13,7 +13,7 @@ try {
     foreach ($taskQuestion in $taskBank) {
         if (!$taskQuestion.data.imageKey) { $taskMissing[$taskQuestion.externalId] = $true }
     }
-    $taskAudit = [IO.File]::ReadAllText((Join-Path $taskRoot 'docs/imports/question-audit.json')) | ConvertFrom-Json
+    $taskAudit = [IO.File]::ReadAllText((Join-Path $taskRoot 'docs/imports/question-images-manifest.json')) | ConvertFrom-Json
     $taskArchives = @($taskAudit.archives | ForEach-Object {
         if ($_ -notmatch '^question-images(-[0-9]+)?\.zip$') { throw 'Tên ZIP trong báo cáo không hợp lệ.' }
         Get-Item -LiteralPath (Join-Path $taskRoot "docs/imports/$_")

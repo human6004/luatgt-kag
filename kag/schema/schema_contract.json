@@ -912,6 +912,54 @@
         "required": false
       },
       {
+        "logical_name": "record_type",
+        "schema_name": "recordType",
+        "contract_type": "OPTIONAL_TEXT",
+        "physical_type": "Text",
+        "source_file": "S",
+        "source_field": "record_type",
+        "source_requirement": "Không; release legacy không có",
+        "notes": "Phân biệt nhóm/biến thể/biển riêng; thiếu ở release cũ không tự suy loại",
+        "intrinsic": false,
+        "required": false
+      },
+      {
+        "logical_name": "description_scope",
+        "schema_name": "descriptionScope",
+        "contract_type": "OPTIONAL_TEXT",
+        "physical_type": "Text",
+        "source_file": "S",
+        "source_field": "description_scope",
+        "source_requirement": "Không; release legacy không có",
+        "notes": "Phạm vi mô tả: specific/family_shared/contextual/unverified; không kế thừa luật theo nhóm",
+        "intrinsic": false,
+        "required": false
+      },
+      {
+        "logical_name": "verification_status",
+        "schema_name": "verificationStatus",
+        "contract_type": "OPTIONAL_TEXT",
+        "physical_type": "Text",
+        "source_file": "S",
+        "source_field": "verification_status",
+        "source_requirement": "Không; release legacy không có",
+        "notes": "verified_pdf/source_conflict/reference_only/review_required; trạng thái ảnh không phải xác minh luật",
+        "intrinsic": false,
+        "required": false
+      },
+      {
+        "logical_name": "parent_sign_id",
+        "schema_name": "parentSignId",
+        "contract_type": "OPTIONAL_TEXT",
+        "physical_type": "Text",
+        "source_file": "S",
+        "source_field": "parent_sign_id",
+        "source_requirement": "Không; release legacy không có",
+        "notes": "ID nhóm hoặc biển gốc cùng QCVN; liên kết danh mục không kế thừa luật, không phải parentId đơn vị pháp luật",
+        "intrinsic": false,
+        "required": false
+      },
+      {
         "logical_name": "source_record",
         "schema_name": "sourceRecord",
         "contract_type": "JSON_TEXT",
@@ -925,9 +973,9 @@
       }
     ]
   },
-  "node_property_count": 75,
-  "logical_property_count": 75,
-  "declared_project_property_count": 69,
+  "node_property_count": 79,
+  "logical_property_count": 79,
+  "declared_project_property_count": 73,
   "built_in_properties_inherited": [
     "id",
     "name"
@@ -941,6 +989,7 @@
     "CITES": "cites",
     "AMENDS": "amends",
     "REPEALS": "repeals",
+    "REPLACES": "replaces",
     "IMPLEMENTS": "implements",
     "CONSOLIDATES": "consolidates"
   },
@@ -1024,7 +1073,11 @@
       "mo_ta": "moTa",
       "ngay_hieu_luc": "ngayHieuLuc",
       "ngay_het_hieu_luc": "ngayHetHieuLuc",
-      "source_record": "sourceRecord"
+      "source_record": "sourceRecord",
+      "record_type": "recordType",
+      "description_scope": "descriptionScope",
+      "verification_status": "verificationStatus",
+      "parent_sign_id": "parentSignId"
     }
   },
   "property_codec_contract": {
@@ -1056,7 +1109,12 @@
     "Khoan",
     "Diem",
     "QCVN",
-    "QCVN_Muc"
+    "QCVN_Muc",
+    "PhuLuc",
+    "Muc",
+    "Bang",
+    "Hinh",
+    "MauBieu"
   ],
   "relations": {
     "hasUnit": {
@@ -1088,6 +1146,10 @@
       "to_type": "LegalDocument"
     },
     "repeals": {
+      "from_type": "LegalDocument",
+      "to_type": "LegalDocument"
+    },
+    "replaces": {
       "from_type": "LegalDocument",
       "to_type": "LegalDocument"
     },
@@ -1243,6 +1305,29 @@
         "required": false
       }
     ],
+    "replaces": [
+      {
+        "logical_name": "evidence",
+        "schema_name": "evidence",
+        "contract_type": "OPTIONAL_TEXT",
+        "physical_type": "Text",
+        "required": false
+      },
+      {
+        "logical_name": "note",
+        "schema_name": "note",
+        "contract_type": "OPTIONAL_TEXT",
+        "physical_type": "Text",
+        "required": false
+      },
+      {
+        "logical_name": "source_record",
+        "schema_name": "sourceRecord",
+        "contract_type": "JSON_TEXT",
+        "physical_type": "Text",
+        "required": false
+      }
+    ],
     "implements": [
       {
         "logical_name": "evidence",
@@ -1295,7 +1380,6 @@
     "document": "evidence and note preserve source missing/empty distinction via sourceRecord; no SAFE_EDGE gate.",
     "unit_xref": {
       "evidenceRecords": "JSON array of every approved complete source record, including scope, is_exclusion, in_corpus, endpoints, evidence, fingerprint and source locator.",
-      "classificationProvenance": "JSON array of approved ledger records with fingerprint, downstream_use, artifact name, artifact SHA256 and classification provenance.",
       "sourceRecord": "JSON array of all contributing relative source paths, file SHA256 and one-based line locators.",
       "merge": "Deduplicate identical records by compact canonical JSON, then sort by that canonical UTF-8 representation; retain every distinct approved record."
     }
@@ -1308,45 +1392,26 @@
     "normalization": "No Unicode normalization, trimming, UUID, or replacement by title/order/text hash."
   },
   "xref_contract": {
-    "xref_sha256": "6ade2790faf6ee843b3a5ade34c5bbc09dd64ebd4cacb9b751a93b2329462188",
-    "required_safe_edge_ledger_sha256": "1dea69f2c2b3ac344478ef24b1844f06514c4150a069e1c6d5cc5f9ffe8fecb4",
-    "ledger_artifact_name": "xref_a3g2_final_ledger.jsonl",
-    "runtime_path_source": "Runtime configuration; no absolute path dependency.",
-    "join_contract": "EXISTING_RECORD_FINGERPRINT_SHA256_CANONICAL_JSON",
-    "fingerprint_input": "Complete 13-field original xref record, including from_so_hieu; preserve missing/null/empty and string bytes.",
-    "fingerprint_canonical_json": "json.dumps(source_record, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')",
-    "fingerprint_algorithm": "SHA256",
-    "classification_total": 17512,
-    "safe_edge_total": 8144,
-    "safe_edge_affirmative": 7709,
-    "safe_edge_exclusion": 435,
     "classification_field": "downstream_use",
     "allowed_classification": "SAFE_EDGE",
     "affirmative_predicate": "citesUnit",
     "exclusion_predicate": "excludesUnit",
     "fail_closed": true,
-    "validation_gate": "Verify both file hashes, complete unambiguous one-to-one fingerprint join, exact counts, source/target production units and matching document IDs, in_corpus=true and nonempty evidence. Missing, conflict or mismatch blocks unit xref edges."
+    "validation_gate": "Require a known downstream_use value; SAFE_EDGE requires exact boolean polarity, in_corpus=true, nonempty evidence and existing unit endpoints with matching document IDs."
   },
   "graph_inclusion_policy": {
     "documents": {
-      "rule": "doc_id exists in documents.jsonl, scope != out_of_scope, and corresponding processed/documents/{doc_id}.md exists",
-      "expected_count": 91,
-      "excluded_doc_ids": [
-        "22_VBHN_BXD"
-      ],
+      "rule": "doc_id exists in documents.jsonl and corresponding processed/documents/{doc_id}.md exists",
       "retain_historical_superseded": true
     },
     "units": {
-      "rule": "Source unit_id and doc_id belong to production whitelist; preserve source parent_id hierarchy",
-      "expected_count": 55597
+      "rule": "Source unit_id and doc_id belong to production whitelist; preserve source parent_id hierarchy"
     },
     "penalties": {
-      "rule": "Merge by unit_id only, LegalUnit 1:0..1 source penalty; duplicate/join/document mismatch fails closed",
-      "expected_count": 1966
+      "rule": "Merge by unit_id only, LegalUnit 1:0..1 source penalty; duplicate/join/document mismatch fails closed"
     },
     "signs": {
-      "rule": "Version-specific sign_id; hasSign follows source unit_id, endpoint exists and doc_id matches; broad extraction anchor is provenance, not exclusive definition",
-      "expected_count": 887
+      "rule": "Version-specific sign_id; hasSign follows source unit_id, endpoint exists and doc_id matches; broad extraction anchor is provenance, not exclusive definition"
     },
     "hierarchy": {
       "hasUnit": "Document to root unit only (parent_id=null)",
@@ -1354,14 +1419,10 @@
       "order": "Source order, exact unit_id as deterministic tie-break only"
     },
     "document_relations": {
-      "rule": "Both corpus flags true and both IDs in production whitelist; original direction; no duplicate edges from document metadata arrays",
-      "expected_count": 238,
-      "external_reference_only_count": 583
+      "rule": "Both corpus flags true and both IDs in production whitelist; original direction; no duplicate edges from document metadata arrays"
     },
-    "unit_xrefs": "Only external ledger SAFE_EDGE plus xref validation gate; retain self-reference, separate affirmative/exclusion predicates; other classifications never create unit edges.",
+    "unit_xrefs": "Only xrefs with downstream_use=SAFE_EDGE and valid endpoints create unit edges; preserve polarity and self-reference.",
     "excluded_sources": [
-      "processed/out_of_scope/**",
-      "processed/penalties/excluded_out_of_scope.jsonl",
       "processed/eval/**",
       "raw/**"
     ],
@@ -1395,7 +1456,7 @@
     "controls_server_uniqueness": false
   },
   "runtime_contract": {
-    "schema_sha256": "ec05cc76303b99c43f7d2d8ed662459daeafe69fa750b7ebbdbf975fb794c23c",
+    "schema_sha256": "4f9afe2e877b0926416b2cb29dd562cbe17805f053a090a5d6d7c618fdc69fde",
     "constraint_enforcement": "DECLARATIVE_ONLY",
     "builder_schema_validation_required": true,
     "builder_unit_type_validation_required": true,
@@ -1404,12 +1465,22 @@
     "integer_storage": "NATIVE_INTEGER",
     "integer_writer_transport": "PROJECT_NATIVE_INTEGER_KGWRITER",
     "vector_index_targets": {
-      "LegalDocument": {"title": "Vector"},
-      "LegalUnit": {"text": "Vector"},
-      "TrafficSign": {"ten": "Vector", "moTa": "Vector"}
+      "LegalDocument": {
+        "title": "Vector"
+      },
+      "LegalUnit": {
+        "text": "Vector"
+      },
+      "TrafficSign": {
+        "ten": "Vector",
+        "moTa": "Vector"
+      }
     },
     "vectorizer_disable_generation": [
-      "LegalDocument.name", "LegalUnit.name", "TrafficSign.name", "Entity.name"
+      "LegalDocument.name",
+      "LegalUnit.name",
+      "TrafficSign.name",
+      "Entity.name"
     ],
     "property_read_decoding": "JSON_DECODE_NON_ID_PROPERTIES",
     "json_text_read_decoding": "ADDITIONAL_SEMANTIC_JSON_DECODE",

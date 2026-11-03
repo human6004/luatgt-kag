@@ -1,36 +1,40 @@
 # Cài đặt LuậtGT trên Windows
 
-Dành cho lần cài đầu. Máy đã có dữ liệu dùng [UPDATE](UPDATE.md), không tạo lại secrets.
+Dùng cho lần cài đầu. Máy đã có dữ liệu làm theo [UPDATE](UPDATE.md); giữ `.env`, secrets và storage đang dùng.
 
-## Bước 1 — Cài công cụ
+Muốn chuyển cả dữ liệu từ máy/thư mục cũ, dùng [chuyển installation và phục hồi](../docker/README.md#chuyển-cả-installation-sang-máy-hoặc-thư-mục-khác), không sinh lại secrets theo bước cài mới.
 
-Cài [Git for Windows](https://git-scm.com/install/windows) và [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/) theo yêu cầu Windows/WSL 2 của Docker. Bật ảo hóa, chọn Linux containers và đợi Docker Engine chạy.
+## 1. Chuẩn bị công cụ
 
-Compose cần **từ 2.20.3** để hỗ trợ [include](https://docs.docker.com/compose/how-tos/multiple-compose-files/include/). Không cần Python, Java hay Node trên host. Dự án chưa công bố cấu hình máy tối thiểu đã đo; cần đủ RAM/disk cho 12 services, build và sao lưu.
+Cài [Git for Windows](https://git-scm.com/install/windows) và [Docker Desktop](https://docs.docker.com/desktop/setup/install/windows-install/). Bật ảo hóa/WSL 2 theo yêu cầu Docker, chọn Linux containers và chờ Docker Engine chạy.
 
-Mở PowerShell, kiểm engine và Compose:
+Mở PowerShell:
 
 ```powershell
 docker version
 docker compose version
 ```
 
-Kết quả: thấy Docker Client/Server và phiên bản Compose phù hợp. Build cần mạng để tải source, images và dependencies.
+Cần thấy cả Docker Client/Server. Compose từ **2.20.3** để hỗ trợ `include`. Runtime KAG đã pin cho **Linux/amd64**; hướng dẫn này dành cho Windows x64 chạy Linux containers. Không cần Python, Java hoặc Node trên host. Build cần mạng để tải source/images/dependencies; dự án chưa công bố cấu hình RAM/disk tối thiểu đã đo.
 
-## Bước 2 — Tải source
+## 2. Lấy source
 
-Chạy tại thư mục muốn chứa dự án:
+Tại thư mục muốn chứa dự án:
 
 ```powershell
 git clone --recurse-submodules https://github.com/human6004/luatgt-kag.git
 Set-Location luatgt-kag
 ```
 
-Kết quả: có source và `vendor/KAG` đúng phiên bản. **Các lệnh còn lại chạy tại thư mục gốc này, trong cùng cửa sổ PowerShell.** Source được cấp riêng cũng phải có `.env.example` và Compose chính tự include file KAG; không dùng hướng dẫn stack cũ để bù file thiếu.
+Dataset và nguồn pháp luật trong `data/raw/` được lưu trực tiếp trong Git. Clone cần có submodule `vendor/KAG`; không dùng ZIP source thiếu upstream. Xem [file và trường dataset](../data/README.md).
 
-## Bước 3 — Tự động tạo mật khẩu và token
+Kiểm có `.env.example`, `docker-compose.yml` và `vendor/KAG`. **Mọi lệnh còn lại chạy tại thư mục gốc `luatgt-kag`, trong cùng cửa sổ PowerShell.** Compose chính tự include KAG; không cần ghép hai file bằng `-f`.
 
-Chạy trong thư mục gốc `luatgt-kag`. Đoạn PowerShell dưới đây tạo `.env` nếu chưa có, với **9 mật khẩu/khóa độc lập**, mỗi giá trị là 64 ký tự hexadecimal ngẫu nhiên, và tạo các token còn thiếu. Nếu đã được cấp `.env` để cài mới trên máy riêng, giữ file đó và chạy cùng đoạn lệnh để tự tạo 7 token. `.env` và token đã tồn tại không bị ghi đè. Máy có database cũ phải giữ bộ secrets tương ứng, dùng [UPDATE](UPDATE.md).
+## 3. Tạo cấu hình và secrets
+
+Đoạn lệnh sau tạo `.env` từ template nếu chưa có, sinh 9 mật khẩu/khóa độc lập và 7 token nội bộ. Mỗi giá trị mới gồm 32 byte ngẫu nhiên, lưu thành 64 ký tự hexadecimal; file đã tồn tại được giữ nguyên.
+
+Nếu được cấp `.env` cho lần cài mới, đặt file đó tại root trước khi chạy. Không dùng đoạn này để thay bộ secrets của máy đã có database.
 
 ```powershell
 $ErrorActionPreference = 'Stop'
@@ -41,14 +45,14 @@ $stateSetting = [regex]::Match($content, '(?m)^KAG_STATE_DIR=([^\r\n]+)')
 if (-not $stateSetting.Success) { throw 'Cần đặt KAG_STATE_DIR trong .env hoặc .env.example.' }
 $statePath = $stateSetting.Groups[1].Value.Trim().Trim([char]34, [char]39)
 if ([string]::IsNullOrWhiteSpace($statePath)) { throw 'KAG_STATE_DIR không được để trống.' }
-$state = [IO.Path]::GetFullPath((Join-Path $PWD.Path $statePath))
+$state = if ([IO.Path]::IsPathRooted($statePath)) { [IO.Path]::GetFullPath($statePath) } else { [IO.Path]::GetFullPath((Join-Path $PWD.Path $statePath)) }
 $tokenNames = @('query', 'inspect', 'builder', 'egress')
 $tokenFiles = @($tokenNames | ForEach-Object { Join-Path $state "$_.token" })
 foreach ($entry in @(@('KAG_CREDENTIALS_WRITE_SECRET_FILE', 'credentials-write'),
                      @('KAG_PROVIDER_TEST_SECRET_FILE', 'provider-test'), @('KAG_CONFIG_APPLY_SECRET_FILE', 'config-apply'))) {
     $setting = [regex]::Match($content, "(?m)^$($entry[0])=([^\r\n]+)")
     $path = if ($setting.Success) { $setting.Groups[1].Value.Trim().Trim([char]34, [char]39) } else { "../luatgt-state/$($entry[1]).token" }
-    $tokenFiles += [IO.Path]::GetFullPath((Join-Path $PWD.Path $path))
+    $tokenFiles += if ([IO.Path]::IsPathRooted($path)) { [IO.Path]::GetFullPath($path) } else { [IO.Path]::GetFullPath((Join-Path $PWD.Path $path)) }
 }
 
 $keys = @('ADMIN_PASSWORD', 'DB_PASSWORD', 'MYSQL_ROOT_PASSWORD', 'REDIS_PASSWORD',
@@ -86,77 +90,64 @@ try {
 Write-Host 'Đã chuẩn bị .env và token; giữ nguyên các file đã có. Xem ADMIN_EMAIL / ADMIN_PASSWORD trong .env để đăng nhập.'
 ```
 
-Sau khi chạy, mở `notepad .env` để xem và **lưu lại** `ADMIN_EMAIL` cùng `ADMIN_PASSWORD`. Có thể đổi email Admin trước khi chạy Docker. Cài mới dùng `COMPOSE_PROJECT_NAME=luatgt` và `KAG_STATE_DIR=./.secrets`. Thư mục `.secrets/` nằm trong repo local nhưng không được đưa lên GitHub hoặc vào Docker build context. Không commit `.env` và token; mỗi máy nên tạo bộ secrets riêng.
+Kết quả mặc định:
 
-## Bước 4 — Kiểm tra token đã tạo
+- `.env`: mật khẩu và biến triển khai; xem `ADMIN_EMAIL`/`ADMIN_PASSWORD` để đăng nhập.
+- `.secrets/`: bảy file `query.token`, `inspect.token`, `builder.token`, `egress.token`, `credentials-write.token`, `provider-test.token`, `config-apply.token`.
 
-Bốn file `query.token`, `inspect.token`, `builder.token`, `egress.token` nằm trong thư mục được chỉ định bởi `KAG_STATE_DIR`. Với cài mới mặc định, kiểm tra:
+Đường dẫn thực tế lấy từ `KAG_STATE_DIR` và ba biến `KAG_*_SECRET_FILE` trong `.env`. Dùng đường dẫn tương đối với root repository hoặc tuyệt đối, dùng dấu `/` trên Windows. Nếu đổi thư mục secrets cho cài mới, sửa cả bốn biến trước khi chạy đoạn lệnh; không dùng cú pháp tham chiếu biến trong các đường dẫn của đoạn PowerShell này. Cài đặt cũ giữ nguyên đường dẫn và fallback `../luatgt-state`, không tự chuyển file. Không commit `.env`, token hoặc backup; giới hạn quyền đọc cho người vận hành và Docker Desktop. Giữ chúng khi cập nhật.
+
+Có thể mở cấu hình tại máy riêng:
 
 ```powershell
-Get-ChildItem .\.secrets -Filter *.token -Name
+notepad .env
 ```
 
-Ba token riêng `credentials-write.token`, `provider-test.token`, `config-apply.token` dùng cho Save, Test và Apply model; mặc định ở `../luatgt-state/` ngoài repository. Đường dẫn tương ứng: `KAG_CREDENTIALS_WRITE_SECRET_FILE`, `KAG_PROVIDER_TEST_SECRET_FILE`, `KAG_CONFIG_APPLY_SECRET_FILE`. Không dùng lại query/inspect token. Compose mount read-only vào backend và KAG API. Khi cập nhật cài đặt cũ, chạy lại Bước 3 để tạo token còn thiếu trước khi recreate hai service.
+Đổi email Admin trước lần khởi động đầu nếu muốn. Mặc định project là `luatgt`, state là `./.secrets`. Không đổi mật khẩu trong `.env` để đặt lại tài khoản/database đã tồn tại.
 
-Save model lưu key trong file riêng quyền `0600` trên volume provider-state, không thay cấu hình Retrieval hoặc runtime. API chỉ trả metadata và trạng thái key. Đây không phải mã hóa; bảo vệ quyền đọc và mọi bản sao volume. Save không cấp quyền Test/Apply hoặc mở provider egress.
+Nếu máy đang có installation khác, đặt `COMPOSE_PROJECT_NAME` mới và các cổng chưa dùng trong `.env` **trước khi khởi động**; tên project riêng không tự tách cổng host. Xem [cổng và mạng](../docker/README.md#cổng-và-mạng). Không đặt các biến storage về volumes của installation kia.
 
-Trong Admin → Cấu hình, lưu từng nhóm rồi chọn Kiểm tra và xác nhận chi phí. Test gửi tối đa một request từ KAG, không tự retry. Gateway hiện đăng ký Chat `http://127.0.0.1:8317/v1` (được chuyển tới host Docker) và Embedding `https://api.vilao.ai/v1`; endpoint khác vẫn lưu được nhưng Test bị chặn. `KAG_PROVIDER_ENABLED=1` cho phép gateway; không mở outbound trực tiếp từ KAG API. Chat Test chỉ được bật bằng `KAG_CHAT_PROXY_TEST_SAFE=1` sau khi người vận hành xác minh route proxy không retry, xoay credential hoặc fallback model. Không bật cờ này cho proxy dùng chung còn các cơ chế đó.
+## 4. Khởi động
 
-Test PASS gắn với revision của từng nhóm. Apply chỉ chạy khi runtime rảnh và model/embedding khớp serving release đã kiểm chứng; thiếu release thì báo BLOCKED. Restart khôi phục bản active, không tự áp dụng bản mới lưu. Builder hiện replay vector; cấu hình provider/OpenIE cho build chưa được hỗ trợ.
-
-Đoạn lệnh ở Bước 3 đọc đường dẫn từ `.env` nếu file đã tồn tại. Cài đặt cũ dùng `../luatgt-state` vẫn giữ nguyên đường dẫn đó. **Không xóa hay tạo lại secrets của lần cài trước.** Khi dùng đường state khác, thay đường dẫn trong lệnh kiểm tra cho khớp.
-
-Trong **Properties → Security**, giới hạn quyền đọc `.env` và state cho người vận hành, giữ quyền Docker Desktop cần để đọc chúng. Chưa cần tạo graph ở bước này.
-
-
-## Bước 5 — Khởi động
-
-Sau khi hoàn tất tạo `.env` và 7 token, chạy tại thư mục gốc `luatgt-kag`:
+Kiểm cú pháp trước, chỉ khởi động khi lệnh đầu không báo lỗi:
 
 ```powershell
+docker compose config -q
 docker compose up -d --build
-```
-
-Docker Compose sẽ tự build các image cần thiết và khởi động 12 services trong project `luatgt`.
-
-Image `luatgt-kag:local` được build từ source code trong repository, không cần tải từ Docker Hub hoặc đăng nhập Docker Hub.
-
-Compose chính tự include `docker-compose.kag.yml`. Không cần chạy KAG riêng hoặc ghép hai file bằng `-f`.
-
-Lần cài đầu có thể mất nhiều thời gian vì Docker cần tải images và dependencies. Hãy đợi lệnh chạy xong.
-
-Sau đó kiểm tra:
-
-```powershell
-Write-Host "Exit code: $LASTEXITCODE"
 docker compose ps -a
 ```
 
-Nếu exit code là `0`, lệnh Compose đã hoàn thành thành công. Tiếp tục kiểm tra trạng thái các services.
+Compose build image từ source và khởi động 12 services. Image ứng dụng `luatgt-kag:local` được build tại máy, không cần tìm nó trên Docker Hub; base images/dependencies vẫn cần được tải khi chưa có cache.
 
-Nếu exit code khác `0`, hoặc có service `Exited` hoặc `Unhealthy`, kiểm tra log của service đó trước khi tiếp tục.
+Đợi lệnh kết thúc và xem trạng thái services. Service có healthcheck cần chuyển sang `healthy`; service còn `Exited`, `Created` hoặc `Unhealthy` cần đọc log theo [Docker](../docker/README.md#vận-hành). Exit code/healthcheck không tự chứng minh chatbot dùng được.
 
-Không xóa Docker volumes, không tạo lại `.env` hoặc token để xử lý lỗi khởi động.
+## 5. Đăng nhập và kiểm cơ bản
 
+1. Mở [WebApp](http://127.0.0.1:8081), đăng nhập bằng `ADMIN_EMAIL`/`ADMIN_PASSWORD` vừa chuẩn bị. Backend tạo ADMIN ở lần đầu; không có mật khẩu quản trị chung trong tài liệu.
+2. Kiểm mở được tổng quan và các trang nội dung. USER có thể tự đăng ký từ màn đăng nhập.
+3. Xem [USER-GUIDE](USER-GUIDE.md) để nhập bản nháp, kiểm duyệt và xuất bản nội dung cho người dùng.
 
-## Bước 6 — Mở WebApp
+Cài mới chưa tự nạp dữ liệu nghiệp vụ hoặc graph. Nguồn luật trong image là đầu vào Builder, không tự được xuất bản vào WebApp MySQL.
 
-```powershell
-docker compose ps -a
-```
+## Cấu hình tiếp theo theo nhu cầu
 
-Kết quả: 12 services được khởi động; các service có healthcheck chuyển sang `healthy`. Mở [WebApp](http://127.0.0.1:8081), dùng ADMIN ở Bước 3 hoặc chọn **Chưa có tài khoản? Đăng ký** để tạo USER. ADMIN vào tổng quan; USER vào chat. Đổi `.env` không đặt lại mật khẩu tài khoản cũ.
+- **Học/thi:** nhập và xuất bản câu hỏi, ảnh, biển báo theo [USER-GUIDE](USER-GUIDE.md#adminpolice--nội-dung).
+- **Dựng graph:** theo [Builder](runner.md) để tạo Knowledge Base, chọn project và chuẩn bị cấu trúc dữ liệu/index trên UI.
+- **Hỏi luật bằng Chat:** xem **Dữ liệu nguồn**, dựng graph bằng Builder, lưu/kiểm model tại **Cài đặt hệ thống → Model & tìm kiếm**, rồi [chọn graph và xác nhận dùng cho Chat](runner.md#chọn-graph-phục-vụ-truy-xuấtchat). Nhánh dataset dùng nguồn đi cùng graph, không phải nhập lại MySQL. Máy mới cần tự cấu hình model/provider và project của mình; chưa cấu hình thì UI hướng dẫn, không dùng graph mẫu. Build xong chưa tự đổi graph phục vụ.
+- **Quản trị OpenSPG/Neo4j:** [URL và tài khoản](../docker/README.md#truy-cập-quản-trị-openspg-và-neo4j). Các tài khoản này độc lập với WebApp.
 
-ADMIN nhập và duyệt nội dung theo [USER-GUIDE](USER-GUIDE.md). Dữ liệu trong repo không tự nạp vào MySQL/graph. Chatbot cần [cấu hình riêng](../docker/README.md#cấu-hình-chatbot); cài mặc định chưa sẵn sàng để hỏi luật hoặc dựng graph production.
-
-**Chưa xác minh trọn quy trình trên máy sạch.** Các bước trên được đối chiếu source local; khởi động container không xác nhận chất lượng chatbot.
+Các thao tác kiểm model, lưu model/Knowledge Base trong OpenSPG và dựng graph có thể gọi dịch vụ model tính phí. Khởi động ứng dụng không yêu cầu tự chạy các thao tác này.
 
 ## Lỗi thường gặp
 
-- Không kết nối Docker: mở Docker Desktop, kiểm Linux containers/WSL 2.
-- Thiếu cấu hình/token: kiểm Bước 3–4; có thể chạy `docker compose config -q` mà không khởi động.
-- Cổng bị dùng: đổi biến cổng tương ứng theo [Docker](../docker/README.md#cổng-và-mạng), rồi dùng địa chỉ mới.
-- WebApp lỗi `502`: xem log backend/frontend theo [vận hành Docker](../docker/README.md#vận-hành). Sai email/mật khẩu trả `401`.
-- Build không tải dependencies: kiểm thông báo mạng/registry; không đổi image pin tùy tiện.
+| Hiện tượng | Kiểm tra |
+| --- | --- |
+| Không thấy Docker Server | Mở Docker Desktop, kiểm Linux containers và WSL 2 |
+| Thiếu biến hoặc token | Kiểm Bước 3 và đường dẫn `.env`; dùng `docker compose config -q` để kiểm cú pháp |
+| Cổng đã được dùng | Đối chiếu [cổng và mạng](../docker/README.md#cổng-và-mạng); nếu đổi cổng quản trị, giữ bind `127.0.0.1` và cập nhật URL tương ứng |
+| WebApp lỗi 502 | Xem log backend/frontend, không tạo lại mật khẩu hoặc xóa dữ liệu |
+| Đăng nhập trả 401 | Kiểm đúng tài khoản của hệ thống đang dùng; đổi `.env` không đặt lại mật khẩu cũ |
+| Build không tải dependency/image | Kiểm mạng và registry; không tự đổi image pin để vượt lỗi |
+| Docker báo `all predefined address pools have been fully subnetted` | Host hết dải mạng Docker; nhờ người vận hành đối chiếu networks. Chỉ gỡ containers/networks thử đã dừng và xác định đúng chủ sở hữu; giữ volumes. Không prune hoặc thay cấu hình mạng toàn Docker để thử vượt lỗi |
 
-Dừng/chạy lại theo [Docker](../docker/README.md#vận-hành). Không dùng `down -v`, xóa volumes hoặc prune để sửa lỗi.
+Dừng/chạy lại theo [Docker](../docker/README.md#vận-hành). Không dùng `down -v`, prune hoặc xóa volumes để sửa lỗi.

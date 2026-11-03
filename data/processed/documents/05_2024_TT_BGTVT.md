@@ -37,36 +37,19 @@ Căn cứ Nghị định số 56/2022/NĐ-CP ngày 24 tháng 8 năm 2022 của
 Chính phủ quy định chức năng, nhiệm vụ, quyền hạn và cơ cấu tổ chức của Bộ 
 Giao thông vận tải; 
 Theo đề nghị của Vụ trưởng Vụ Vận tải và Cục trưởng Cục Đường bộ Việt Nam, 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 26.04.2024 14:05:19 +07:00
+
 
 3 
  
 Bộ trưởng Bộ Giao thông vận tải ban hành Thông tư sửa đổi, bổ sung một số 
 điều của các Thông tư liên quan đến lĩnh vực vận tải đường bộ, dịch vụ hỗ trợ 
 vận tải đường bộ, phương tiện và người lái. 
-##### Điều 1. Sửa đổi, bổ sung một số điều của Thông tư số 06/2011/TT-
-BGTVT ngày 07 tháng 3 năm 2011 của Bộ trưởng Bộ Giao thông vận tải 
-quy định về bồi dưỡng kiến thức pháp luật về giao thông đường bộ cho 
-người điều khiển xe máy chuyên dùng tham gia giao thông đường bộ 
+##### Điều 1. Sửa đổi, bổ sung một số điều của Thông tư số 06/2011/TT-BGTVT ngày 07 tháng 3 năm 2011 của Bộ trưởng Bộ Giao thông vận tải quy định về bồi dưỡng kiến thức pháp luật về giao thông đường bộ cho người điều khiển xe máy chuyên dùng tham gia giao thông đường bộ 
 1. Bãi bỏ điểm b khoản 2 Điều 4; điểm b khoản 2 Điều 10. 
 2. Thay thế Phụ lục 1, Phụ lục 2 và Phụ lục 8 ban hành kèm theo Thông tư số 
 06/2011/TT-BGTVT tương ứng bằng Phụ lục I, Phụ lục II và Phụ lục III ban 
 hành kèm theo Thông tư này. 
-##### Điều 2. Sửa đổi, bổ sung một số điều của Thông tư số 09/2015/TT-
-BGTVT ngày 15 tháng 4 năm 2015 của Bộ trưởng Bộ Giao thông vận tải 
-quy định về cung cấp, quản lý và sử dụng dữ liệu từ thiết bị giám sát hành 
-trình của xe ô tô (sau đây gọi là Thông tư số 09/2015/TT-BGTVT), Thông 
-tư số 36/2020/TT-BGTVT ngày 24 tháng 12 năm 2020 của Bộ trưởng Bộ 
-Giao thông vận tải sửa đổi, bổ sung một số điều của các Thông tư quy định 
-về chế độ báo cáo định kỳ trong lĩnh vực đường bộ (sau đây gọi là Thông tư 
-số 36/2020/TT-BGTVT), Thông tư số 05/2023/TT-BGTVT ngày 27 tháng 4 
-năm 2023 của Bộ trưởng Bộ Giao thông vận tải sửa đổi, bổ sung một số điều 
-của các Thông tư liên quan đến lĩnh vực vận tải đường bộ, dịch vụ hỗ trợ 
-vận tải đường bộ, phương tiện và người lái (sau đây gọi là Thông tư số 
-05/2023/TT-BGTVT) 
+##### Điều 2. Sửa đổi, bổ sung một số điều của Thông tư số 09/2015/TT-BGTVT ngày 15 tháng 4 năm 2015 của Bộ trưởng Bộ Giao thông vận tải quy định về cung cấp, quản lý và sử dụng dữ liệu từ thiết bị giám sát hành trình của xe ô tô (sau đây gọi là Thông tư số 09/2015/TT-BGTVT), Thông tư số 36/2020/TT-BGTVT ngày 24 tháng 12 năm 2020 của Bộ trưởng Bộ Giao thông vận tải sửa đổi, bổ sung một số điều của các Thông tư quy định về chế độ báo cáo định kỳ trong lĩnh vực đường bộ (sau đây gọi là Thông tư số 36/2020/TT-BGTVT), Thông tư số 05/2023/TT-BGTVT ngày 27 tháng 4 năm 2023 của Bộ trưởng Bộ Giao thông vận tải sửa đổi, bổ sung một số điều của các Thông tư liên quan đến lĩnh vực vận tải đường bộ, dịch vụ hỗ trợ vận tải đường bộ, phương tiện và người lái (sau đây gọi là Thông tư số 05/2023/TT-BGTVT) 
 1. Sửa đổi, bổ sung điểm b khoản 3, điểm c khoản 3 Điều 4 Thông tư số 
 09/2015/TT-BGTVT (đã được sửa đổi, bổ sung tại khoản 1 Điều 9 Thông 
 tư số 05/2023/TT-BGTVT) như sau: 
@@ -245,44 +228,11 @@ lục 18, Phụ lục 19, Phụ lục 20, Phụ lục 21 ban hành kèm theo Th�
 09/2015/TT-BGTVT. 
 12. Bãi bỏ Phụ lục 22 của Thông tư số 09/2015/TT-BGTVT (đã được sửa đổi, 
 bổ sung tại Thông tư số 36/2020/TT-BGTVT). 
-##### Điều 3. Sửa đổi, bổ sung một số điều của Thông tư số 29/2015/TT-
-BGTVT ngày 06 tháng 7 năm 2015 của Bộ trưởng Bộ Giao thông vận tải 
-quy định về cấp, sử dụng giấy phép lái xe quốc tế (sau dây gọi là Thông tư 
-số 29/2015/TT-BGTVT), Thông tư số 01/2021/TT-BGTVT ngày 27 tháng 01 
-năm 2021 của Bộ trưởng Bộ Giao thông vận tải sửa đổi, bổ sung một số điều 
-Thông tư số 29/2015/TT-BGTVT ngày 06 tháng 7 năm 2015 của Bộ trưởng 
-Bộ Giao thông vận tải quy định về cấp, sử dụng giấy phép lái xe quốc tế và 
-
+##### Điều 3. Sửa đổi, bổ sung một số điều của Thông tư số 29/2015/TT-BGTVT ngày 06 tháng 7 năm 2015 của Bộ trưởng Bộ Giao thông vận tải quy định về cấp, sử dụng giấy phép lái xe quốc tế (sau dây gọi là Thông tư số 29/2015/TT-BGTVT), Thông tư số 01/2021/TT-BGTVT ngày 27 tháng 01 năm 2021 của Bộ trưởng Bộ Giao thông vận tải sửa đổi, bổ sung một số điều Thông tư số 29/2015/TT-BGTVT ngày 06 tháng 7 năm 2015 của Bộ trưởng Bộ Giao thông vận tải quy định về cấp, sử dụng giấy phép lái xe quốc tế và Thông tư số 12/2017/TT-BGTVT ngày 15 tháng 4 năm 2017 của Bộ trưởng Bộ Giao thông vận tải quy định về đào tạo, sát hạch, cấp giấy phép lái xe cơ giới đường bộ (sau đây gọi là Thông tư số 01/2021/TT-BGTVT)
 9 
  
-Thông tư số 12/2017/TT-BGTVT ngày 15 tháng 4 năm 2017 của Bộ trưởng 
-Bộ Giao thông vận tải quy định về đào tạo, sát hạch, cấp giấy phép lái xe cơ 
-giới đường bộ (sau đây gọi là Thông tư số 01/2021/TT-BGTVT) 
 Thay thế Phụ lục IV tương ứng bằng Phụ lục X ban hành kèm theo Thông tư này. 
-##### Điều 4. Sửa đổi, bổ sung một số điều của Thông tư số 12/2017/TT-
-BGTVT ngày 15 tháng 4 năm 2017 của Bộ trưởng Bộ Giao thông vận tải 
-quy định về đào tạo, sát hạch, cấp giấy phép lái xe cơ giới đường bộ (sau 
-đây gọi là Thông tư số 12/2017/TT-BGTVT), Thông tư số 38/2019/TT-
-BGTVT ngày 08 tháng 10 năm 2019 của Bộ trưởng Bộ Giao thông vận tải 
-sửa đổi, bổ sung một số điều Thông tư số 12/2017/TT-BGTVT ngày 15 
-tháng 4 năm 2017 của Bộ trưởng Bộ Giao thông vận tải quy định về đào 
-tạo, sát hạch, cấp giấy phép lái xe cơ giới đường bộ (sau đây gọi là Thông tư 
-số 38/2019/TT-BGTVT), Thông tư số 01/2021/TT-BGTVT ngày 27 tháng 01 
-năm 2021 của Bộ trưởng Bộ Giao thông vận tải sửa đổi, bổ sung một số điều 
-Thông tư số 29/2015/TT-BGTVT ngày 06 tháng 7 năm 2015 của Bộ trưởng 
-Bộ Giao thông vận tải quy định về cấp, sử dụng giấy phép lái xe quốc tế và 
-Thông tư số 12/2017/TT-BGTVT ngày 15 tháng 4 năm 2017 của Bộ trưởng 
-Bộ Giao thông vận tải quy định về đào tạo, sát hạch, cấp giấy phép lái xe cơ 
-giới đường bộ (sau đây gọi là Thông tư số 01/2021/TT-BGTVT), Thông tư 
-số 04/2022/TT-BGTVT ngày 22 tháng 4 năm 2022 của Bộ trưởng Bộ Giao 
-thông vận tải sửa đổi, bổ sung một số điều Thông tư số 12/2017/TT-
-BGTVT ngày 15 tháng 4 năm 2017 của Bộ trưởng Bộ Giao thông vận tải 
-quy định về đào tạo, sát hạch, cấp giấy phép lái xe cơ giới đường bộ (sau 
-đây gọi là Thông tư số 04/2022/TT-BGTVT), Thông tư số 05/2023/TT-
-BGTVT ngày 27 tháng 4 năm 2023 của Bộ trưởng Bộ Giao thông vận tải 
-sửa đổi, bổ sung một số điều của các Thông tư liên quan đến lĩnh vực vận 
-tải đường bộ, dịch vụ hỗ trợ vận tải đường bộ, phương tiện và người lái 
-(sau đây gọi là Thông tư số 05/2023/TT-BGTVT) 
+##### Điều 4. Sửa đổi, bổ sung một số điều của Thông tư số 12/2017/TT-BGTVT ngày 15 tháng 4 năm 2017 của Bộ trưởng Bộ Giao thông vận tải quy định về đào tạo, sát hạch, cấp giấy phép lái xe cơ giới đường bộ (sau đây gọi là Thông tư số 12/2017/TT-BGTVT), Thông tư số 38/2019/TT-BGTVT ngày 08 tháng 10 năm 2019 của Bộ trưởng Bộ Giao thông vận tải sửa đổi, bổ sung một số điều Thông tư số 12/2017/TT-BGTVT ngày 15 tháng 4 năm 2017 của Bộ trưởng Bộ Giao thông vận tải quy định về đào tạo, sát hạch, cấp giấy phép lái xe cơ giới đường bộ (sau đây gọi là Thông tư số 38/2019/TT-BGTVT), Thông tư số 01/2021/TT-BGTVT ngày 27 tháng 01 năm 2021 của Bộ trưởng Bộ Giao thông vận tải sửa đổi, bổ sung một số điều Thông tư số 29/2015/TT-BGTVT ngày 06 tháng 7 năm 2015 của Bộ trưởng Bộ Giao thông vận tải quy định về cấp, sử dụng giấy phép lái xe quốc tế và Thông tư số 12/2017/TT-BGTVT ngày 15 tháng 4 năm 2017 của Bộ trưởng Bộ Giao thông vận tải quy định về đào tạo, sát hạch, cấp giấy phép lái xe cơ giới đường bộ (sau đây gọi là Thông tư số 01/2021/TT-BGTVT), Thông tư số 04/2022/TT-BGTVT ngày 22 tháng 4 năm 2022 của Bộ trưởng Bộ Giao thông vận tải sửa đổi, bổ sung một số điều Thông tư số 12/2017/TT-BGTVT ngày 15 tháng 4 năm 2017 của Bộ trưởng Bộ Giao thông vận tải quy định về đào tạo, sát hạch, cấp giấy phép lái xe cơ giới đường bộ (sau đây gọi là Thông tư số 04/2022/TT-BGTVT), Thông tư số 05/2023/TT-BGTVT ngày 27 tháng 4 năm 2023 của Bộ trưởng Bộ Giao thông vận tải sửa đổi, bổ sung một số điều của các Thông tư liên quan đến lĩnh vực vận tải đường bộ, dịch vụ hỗ trợ vận tải đường bộ, phương tiện và người lái (sau đây gọi là Thông tư số 05/2023/TT-BGTVT) 
 1. Bổ sung khoản 14 vào Điều 3 như sau: 
 “14. Thời gian học lái xe ban đêm được tính từ 18 giờ ngày hôm trước đến 
 05 giờ sáng ngày hôm sau.”. 
@@ -600,7 +550,7 @@ học lái xe ô tô/01 học viên
 giờ 
 3 
 3 
-3 
+3 3 
 
 17 
  
@@ -789,7 +739,7 @@ giờ
 14 
 14 
 14 
-18 
+18 18 
 
 19 
  
@@ -1761,9 +1711,7 @@ BGTVT);
 (đã được sửa đổi tại khoản 1 Điều 12 Thông tư số 05/2023/TT-BGTVT); 
 e) Bãi bỏ các cụm từ “CĐBVN” và “Cục Đường bộ Việt Nam” tại Phụ lục 18b 
 (đã được sửa đổi tại khoản 1 Điều 12 Thông tư số 05/2023/TT-BGTVT). 
-##### Điều 5. Sửa đổi, bổ sung một số điều của Thông tư số 22/2019/TT-
-BGTVT ngày 12 tháng 6 năm 2019 của Bộ trưởng Bộ Giao thông vận tải 
-quy định về đăng ký xe máy chuyên dùng 
+##### Điều 5. Sửa đổi, bổ sung một số điều của Thông tư số 22/2019/TT-BGTVT ngày 12 tháng 6 năm 2019 của Bộ trưởng Bộ Giao thông vận tải quy định về đăng ký xe máy chuyên dùng 
 1. Bổ sung khoản 3 vào Điều 22 như sau:  
 “3. Chủ sở hữu xe máy chuyên dùng khi thực hiện các thủ tục: Cấp Giấy 
 chứng nhận đăng ký, biển số xe máy chuyên dùng lần đầu; cấp Giấy chứng nhận 
@@ -4106,10 +4054,7 @@ của Bộ trưởng Bộ Giao thông vận tải
  
 Phụ lục 33 
 QUY TRÌNH SÁT HẠCH LÁI XE HẠNG A1 VÀ A2 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 26.04.2024 10:54:07 +07:00
+
 
 3 
  

@@ -1,48 +1,37 @@
 # Dữ liệu pháp luật giao thông đường bộ
 
-Bộ dữ liệu tiếng Việt gồm luật, nghị định, thông tư, QCVN và văn bản hợp nhất. `data/` giữ nguồn và dữ liệu chuẩn hóa; Builder/Retriever/Solver nằm trong `kag/`.
+Corpus tiếng Việt gồm 91 văn bản: luật, nghị định, thông tư, QCVN và văn bản hợp nhất. Nguồn Công báo Chính phủ và CDN chính thức được ghi tại [sources.csv](metadata/sources.csv). Điều kiện sử dụng: [LICENSE.md](LICENSE.md).
 
-## Nguồn và phạm vi
+## Các file dữ liệu
 
-Nguồn pháp luật lấy từ Công báo Chính phủ và CDN đi kèm. [sources.csv](metadata/sources.csv) lưu URL nguồn và file gốc; [document_inventory.csv](metadata/document_inventory.csv) giữ danh mục và phạm vi văn bản. Điều kiện sử dụng, phân biệt luật gốc với phần pipeline tạo ra: [LICENSE.md](LICENSE.md).
+- `raw/`: PDF, HTML và DOC/DOCX nguồn để đối chiếu. Nghị định 119/2024 giữ cả bản đăng lại và bản ký có phụ lục.
+- `processed/documents/*.md`: toàn văn 91 văn bản; tên file là `doc_id`.
+- `processed/meta/documents.jsonl`: `doc_id`, `so_hieu`, `title`, loại/cơ quan, URL và file nguồn, ngày ban hành/hiệu lực, phạm vi và trạng thái văn bản. Các thông tin chưa xác định giữ `null` hoặc ghi chú nguồn.
+- `processed/units/units.jsonl`: 58.402 đơn vị; `unit_id`, `doc_id`, `parent_id`, `unit_type`, `text`, `title`, `order` cùng số Điều/Khoản/Điểm hoặc mục QCVN/phụ lục khi có. `legal_metadata` tùy chọn giữ đúng ba trường chức năng: `source_role`, `operative_clause_numbers`, `source_discrepancies`.
+- `processed/meta/xrefs.jsonl`: 21.618 dẫn chiếu; `from_doc_id`, `from_so_hieu`, `from_unit_id`, các trường đích `to_*`, `evidence`, `scope`, `is_exclusion`, `in_corpus`, `downstream_use`.
+- `processed/meta/relations.jsonl`: quan hệ văn bản với IDs hai đầu, `rel_type`, corpus flags và evidence/ghi chú. Loại quan hệ: `cites`, `amends`, `repeals`, `replaces`, `implements`, `consolidates`.
+- `processed/penalties/penalties.jsonl`: chế tài theo `unit_id`/`penalty_id`; hành vi/đối tượng, tiền phạt, điểm GPLX, tước GPLX, tịch thu và các trường `fine_rule`, `sanction_rules` giữ căn cứ, điều kiện áp dụng.
+- `processed/signs/signs_app.json`: danh mục biển theo phiên bản QCVN, nhóm/biến thể, mô tả, đơn vị nguồn, locator, trạng thái nguồn và ảnh. `signs.jsonl` là dữ liệu cho Builder. `dataset_signs/` giữ SVG theo bảy nhóm.
+- `processed/eval/eval_questions.jsonl`: 71 câu đánh giá nguồn, tách khỏi dữ liệu truy xuất.
+- `metadata/sources.csv`: văn bản, URL và file gốc; `metadata/corpus.json`: ngày và số bản ghi hiện tại.
 
-Corpus có 92 bản ghi metadata, 91 văn bản Markdown thuộc production corpus. `22_VBHN_BXD` nằm riêng trong `processed/out_of_scope/`; không trộn vào corpus truy xuất hoặc graph.
+`doc_id` nối các lớp dữ liệu. Ví dụ `100_2019_ND_CP::D5::K1::Pa` chỉ Điều 5, Khoản 1, Điểm a. `parent_id` quyết định cây; không suy cấu trúc hoặc đổi ID theo tên hiển thị.
 
-## Cấu trúc
+## Dẫn chiếu và downstream_use
 
-- `raw/`: 215 file nguồn — 171 PDF, 38 HTML, 6 DOC/DOCX; dùng đối chiếu.
-- `processed/documents/`: toàn văn Markdown theo `doc_id`.
-- `processed/units/units.jsonl`: Điều/Khoản/Điểm và QCVN; giữ `unit_id`, `parent_id`, `unit_type`, `text`.
-- `processed/meta/`: `documents.jsonl`, `xrefs.jsonl`, `relations.jsonl`.
-- `processed/penalties/`: mức phạt trích xuất; dữ liệu ngoài phạm vi ở `excluded_out_of_scope.jsonl`.
-- `processed/signs/signs.jsonl`: biển báo và metadata nguồn QCVN/unit.
-- `processed/eval/eval_questions.jsonl`: 71 câu đánh giá nguồn, không thuộc retrieval corpus.
-- `processed/out_of_scope/`: văn bản và records ngoài corpus.
-- `metadata/`: thống kê, nguồn, danh mục và SHA-256.
+- `SAFE_EDGE` (13.106): có thể tạo cạnh sau khi kiểm endpoint, văn bản, evidence và kiểu boolean. `is_exclusion=false` tạo `citesUnit`; `true` tạo `excludesUnit`.
+- `EXCLUDE_FROM_GRAPH_EDGE` (1.034): giữ bản ghi nhưng không tạo cạnh.
+- `KEEP_UNRESOLVED_NO_EDGE` (5.925): chưa giải quyết được dẫn chiếu; giữ nguyên, không tạo cạnh.
+- `EXTERNAL_REFERENCE_ONLY` (1.553): tham chiếu ngoài phạm vi graph; không tạo node đích giả.
 
-`doc_id` nối các lớp dữ liệu. Ví dụ `100_2019_ND_CP::D5::K1::Pa` chỉ văn bản, Điều 5, Khoản 1, Điểm a. Giữ nguyên ID nguồn.
+`load_inputs` đọc trực tiếp corpus và kiểm ID trùng, parent/cycle, liên kết chế tài/biển và endpoint của `SAFE_EDGE`. `in_corpus=true` riêng lẻ chưa đủ tạo cạnh. Các dẫn chiếu cùng tuple được gộp, giữ evidence và locator khác nhau; số bản ghi nguồn có thể khác số cạnh graph.
 
-`xrefs` là dẫn chiếu trong nội dung, thường tới Điều/Khoản/Điểm. `relations` là quan hệ giữa văn bản: `cites`, `amends`, `repeals`, `implements`, `consolidates`.
+## Giới hạn
 
-## Thống kê corpus
+Văn bản lịch sử hoặc hết hiệu lực vẫn giữ bản nguồn riêng. Ngày dataset không xác nhận hiệu lực hiện hành. Chế tài có điều kiện, nhiều đối tượng hoặc lỗi in nguồn không được rút thành một mức tiền chung; `null` không có nghĩa là 0 hay không bị phạt. `fine_rule.source_discrepancy` giữ khác biệt nguồn chưa giải quyết.
 
-[corpus.json](metadata/corpus.json) ghi snapshot `2026-10-02`; [checksums.json](metadata/checksums.json) giữ hash dữ liệu. Số lượng records:
+Trong `legal_metadata`, `source_role` phân biệt vai trò đoạn nguồn, `operative_clause_numbers` giữ số khoản tác nghiệp của đoạn sửa đổi, `source_discrepancies` giữ xung đột nguồn chưa giải quyết. Loader chuyển ba trường này vào `sourceRecord.origin` để Solver nhận diện chú thích và chặn kết luận khi căn cứ còn xung đột; không thay nguyên văn luật.
 
-- Documents metadata: 92; production Markdown: 91.
-- Units: 55.597.
-- Xrefs: 17.512.
-- Relations: 821.
-- Penalties: 1.966.
-- Signs: 887.
+Ảnh biển minh họa không tự chứng minh quy định hoặc hiệu lực. Thiếu hình đúng phiên bản giữ trạng thái thiếu; không mượn hình/mô tả từ phiên bản khác. Chi tiết trường và giới hạn: [DATASHEET.md](DATASHEET.md).
 
-Tên “production corpus” phân biệt phạm vi dữ liệu, không xác nhận triển khai production hoặc tính cập nhật của pháp luật.
-
-## Lưu ý sử dụng
-
-Chỉ xref được phân loại `SAFE_EDGE` mới có thể thành cạnh graph. `in_corpus=true` không chứng minh endpoint hay ngữ nghĩa hợp lệ. Ledger/policy canonical nằm tại [artifacts/inputs/xref-a3g2](../artifacts/inputs/xref-a3g2/); `load_inputs` kiểm hash, fingerprint join và endpoint trước mapping. Không suy cạnh từ ID gần nhất hoặc bỏ polarity `is_exclusion`.
-
-71 câu nguồn chưa phải dataset benchmark chính thức của Evaluation Framework. Không sửa gold hoặc đưa câu đánh giá vào nguồn luật; chuyển đổi/review theo [benchmark](../benchmark/README.md).
-
-Nội dung trích tự động có thể sai OCR, bảng/phụ lục, mức phạt và ngày hiệu lực. Đối chiếu bản gốc qua `source_url`, quan hệ sửa đổi/thay thế và hiệu lực từng phần trước khi trích dẫn. Dataset không thay thế văn bản chính thức hay tư vấn pháp lý.
-
-Chi tiết phạm vi và giới hạn: [DATASHEET.md](DATASHEET.md).
+Đối chiếu văn bản chính thức trước khi trích dẫn. Dataset không thay thế văn bản pháp luật hay tư vấn pháp lý.

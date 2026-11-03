@@ -50,14 +50,14 @@ export default function KagSchemaPage() {
 
   return (
     <Page
-      title="Cấu hình KAG"
-      subtitle="Schema và contract hiện tại từ backend. Cấu hình runtime chỉ đọc; chưa có API cập nhật."
+      title="Schema & quan hệ"
+      subtitle="Cấu trúc LuậtGT đi kèm bộ dữ liệu. Trang chỉ đọc."
       actions={<Button onClick={data.reload}>Cập nhật</Button>}
     >
       <Notice {...data} retry={data.reload} />
       {schema && (
         <>
-          <dl className="grid sm:grid-cols-3 gap-5 pb-6 border-b border-line">
+          <details><summary className="underline cursor-pointer text-sm">Chi tiết kỹ thuật</summary><dl className="grid sm:grid-cols-3 gap-5 py-6 border-b border-line">
             {[
               ["Namespace", schema.identity.namespace],
               ["SHA-256 schema", schema.identity.schema_sha256],
@@ -70,20 +70,20 @@ export default function KagSchemaPage() {
                 </dd>
               </div>
             ))}
-          </dl>
+          </dl></details>
           <div className="flex flex-wrap gap-4 items-center my-6">
             <Link
-              to="/admin/units"
+              to="/admin/sources"
               className="text-sm underline underline-offset-4"
             >
-              Quản lý đơn vị pháp lý
+              Về dữ liệu nguồn
             </Link>
             <Button onClick={download}>Tải contract</Button>
           </div>
           <p className="text-sm">
             Dùng doc_id, unit_id và sign_id nguyên trạng làm ID nguồn. UUID
-            trong WebApp chỉ dùng cho quản trị bản ghi. Trích dẫn phải thuộc
-            unit đã duyệt và văn bản được phép tra cứu.
+            trong WebApp chỉ dùng cho quản trị bản ghi. Chat từ dataset đối chiếu
+            trích dẫn với bản nguồn của đồ thị đang áp dụng.
           </p>
           <label className="block text-sm mt-6">
             Loại node

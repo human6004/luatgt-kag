@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="Vietnam_road_sign_S503c.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   id="svg5907"
+   version="1.1"
+   viewBox="0 0 877.5896 354.11999"
+   height="354.12mm"
+   width="877.5896mm">
+  <defs
+     id="defs5901" />
+  <sodipodi:namedview
+     inkscape:window-maximized="1"
+     inkscape:window-y="-9"
+     inkscape:window-x="-9"
+     inkscape:window-height="1001"
+     inkscape:window-width="1920"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="474.48211"
+     inkscape:cx="2189.0958"
+     inkscape:zoom="0.1964431"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base" />
+  <metadata
+     id="metadata5904">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(-1088.4581,-258.92476)"
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1">
+    <path
+       sodipodi:nodetypes="ccccc"
+       d="m 1963.2952,261.67726 h -872.0846 v 348.61499 h 872.0846 z"
+       style="opacity:1;fill:#000000;fill-rule:evenodd;stroke:none;stroke-width:5.505;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       id="path6536" />
+    <path
+       sodipodi:nodetypes="ccccc"
+       d="m 1945.1329,279.8595 h -835.7267 v 312.20408 h 835.7267 z"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.305001;stroke-linejoin:round;paint-order:stroke fill markers"
+       id="path6538" />
+    <path
+       id="path6540"
+       style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.305001;stroke-linejoin:round;paint-order:stroke fill markers"
+       d="m 1221.6494,438.83996 131.6711,-78.68526 v 52.18982 h 479.2362 v 53.02104 h -479.2362 v 52.20491 z"
+       sodipodi:nodetypes="cccccccc" />
+  </g>
+</svg>

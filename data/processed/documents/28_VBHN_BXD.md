@@ -445,7 +445,7 @@ dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi
 86 
  
  
-a) Bộ trưởng Bộ Xây dựng7 vận tải quyết định công bố và kết thúc tình huống 
+a) Bộ trưởng Bộ Xây dựng[^vbhn28-7] vận tải quyết định công bố và kết thúc tình huống 
 khẩn cấp về thiên tai đối với quốc lộ quy định tại khoản 3 Điều 8 Luật Đường bộ. 
 Ban chỉ huy phòng thủ dân sự hoặc cơ quan chuyên môn trực thuộc Bộ Giao thông 
 vận tải tham mưu cho Bộ trưởng Bộ Giao thông vận tải quyết định công bố tình huống 
@@ -471,29 +471,14 @@ hành quyết định công bố kết thúc tình huống khẩn cấp về thi
 ##### Điều 11. Hoạt động phối hợp trong ứng phó sự cố, thiên tai và tìm kiếm cứu 
 nạn 
 1. Hoạt động phối hợp cứu nạn người gặp nguy hiểm tại khu vực có thiên tai: 
- 
-7 Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 Thông 
-tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của 
-Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
-chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
-đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
-thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
 
-87 
- 
- 
 a) Sơ tán người ra khỏi nơi nguy hiểm; 
 b) Cấp cứu kịp thời người gặp nguy hiểm; tìm kiếm người, phương tiện mất 
 tích; 
 c) Huy động người, vật tư, trang thiết bị để tham gia cứu chữa người bị nạn và 
 cứu hộ khi cần thiết. 
 2. Trách nhiệm phối hợp cứu nạn: 
-a) Các Khu Quản lý đường bộ, Sở Xây dựng8, Ban Quản lý dự án, doanh nghiệp 
+a) Các Khu Quản lý đường bộ, Sở Xây dựng[^vbhn28-8], Ban Quản lý dự án, doanh nghiệp 
 đầu tư xây dựng và quản lý khai thác công trình đường bộ, nhà thầu bảo trì công trình 
 đường bộ có trách nhiệm tham gia tìm kiếm, cứu nạn theo sự huy động của cơ quan 
 có thẩm quyền; 
@@ -502,40 +487,14 @@ năng lực cứu người bị nạn (nếu có) nhanh chóng thoát khỏi khu
 hiểm; trong trường hợp vượt quá khả năng phải thông báo ngay cho các lực lượng 
 chuyên nghiệp tìm kiếm, cứu nạn hoặc cấp cứu y tế gần nhất; đồng thời, sẵn sàng 
 phối hợp khi có yêu cầu; 
-c) Các Khu Quản lý đường bộ, Sở Xây dựng9, Ban Quản lý dự án, chủ đầu tư, 
+c) Các Khu Quản lý đường bộ, Sở Xây dựng[^vbhn28-9], Ban Quản lý dự án, chủ đầu tư, 
 doanh nghiệp đầu tư xây dựng và quản lý khai thác công trình đường bộ, nhà thầu 
 bảo trì công trình đường bộ có trách nhiệm chủ động triển khai hoạt động cứu nạn 
 thuộc phạm vi quản lý; trường hợp vượt quá khả năng phải báo cáo Ủy ban nhân dân 
- 
-8 Cụm từ “Sở Giao thông vận tải” được thay thế bởi cụm từ “Sở Xây dựng” quy định tại khoản 2 Điều 9 Thông 
-tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của 
-Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
-chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
-đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
-thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
-9 Cụm từ “Sở Giao thông vận tải” được thay thế bởi cụm từ “Sở Xây dựng” quy định tại khoản 2 Điều 9 Thông 
-tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của 
-Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
-chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
-đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
-thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
 
-88 
- 
- 
-cấp tỉnh, Bộ Xây dựng10 và Cục Đường bộ Việt Nam đối với quốc lộ quy định tại 
+cấp tỉnh, Bộ Xây dựng[^vbhn28-10] và Cục Đường bộ Việt Nam đối với quốc lộ quy định tại 
 khoản 3 Điều 8 Luật Đường bộ. 
-311. Khi thiên tai gây hư hỏng công trình đường bộ, ùn tắc giao thông trên 
+3.[^vbhn28-11] Khi thiên tai gây hư hỏng công trình đường bộ, ùn tắc giao thông trên 
 đường bộ, cơ quan quản lý đường bộ, doanh nghiệp đầu tư xây dựng và quản lý khai 
 thác công trình đường bộ, người quản lý, sử dụng đường bộ, nhà thầu bảo trì công 
 trình đường bộ, nhà thầu thi công xây dựng công trình, cơ quan, tổ chức khác có trách 
@@ -555,32 +514,7 @@ thời báo cáo cơ quan quản lý cấp trên trực tiếp, thông báo cho 
 xã, Ban Chỉ huy phòng thủ dân sự cấp xã;  
 b) Đối với đường bộ do Doanh nghiệp đầu tư xây dựng và quản lý khai thác 
 công trình đường bộ quản lý, Doanh nghiệp có trách nhiệm: chủ trì, phối hợp cơ quan 
- 
-10 Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
-Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
-của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
-chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
-đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
-thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
-11 Khoản này được sửa đổi, bổ sung theo quy định tại Điều 4 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 
-của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 
-2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động 
-của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng 
-nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải 
-quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và 
-bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao 
-thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
-chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
 
-89 
- 
- 
 quản lý đường bộ, các nhà thầu bảo trì công trình đường bộ để thực hiện các quy định 
 tại điểm a khoản này; đồng thời báo cáo cơ quan ký hợp đồng đối tác công tư, thông 
 báo cho Ủy ban nhân dân cấp xã, Ban Chỉ huy phòng thủ dân sự cấp xã, cơ quan quản 
@@ -604,25 +538,11 @@ ban nhân dân cấp xã, Doanh nghiệp đầu tư xây dựng và quản lý k
 để công bố tình huống khẩn cấp do thiên tai, lệnh xây dựng công trình khẩn cấp theo 
 quy định của Luật Phòng, chống thiên tai, Nghị định số 66/2021/NĐ-CP ngày 06 
 tháng 7 năm 2021 của Chính phủ, quy định tại Điều 10 và Điều 13 Thông tư này 
-412. (Được bãi bỏ) 
+4.[^vbhn28-12] (Được bãi bỏ) 
 ### Chương IV 
 KHẮC PHỤC HẬU QUẢ THIÊN TAI 
 ##### Điều 12. Hoạt động khắc phục hậu quả thiên tai, bảo đảm giao thông 
- 
-12 Khoản này được bãi bỏ theo quy định tại điểm a khoản 5 Điều 9 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
-bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
-số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
-hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
-Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
-dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
 
-90 
- 
- 
 1. Tham gia công tác tìm kiếm cứu người bị nạn; tìm kiếm cứu hộ phương tiện, 
 tài sản của nhà nước, của nhân dân bị chìm đắm, vùi lấp do tác động của thiên tai. 
 2. Tham gia việc cứu trợ, ổn định đời sống của người dân vùng bị thiên tai 
@@ -644,30 +564,15 @@ Phòng, chống thiên tai và Luật sửa đổi, bổ sung một số điều
 thiên tai và Luật Đê điều; ban hành quyết định công bố tình huống khẩn cấp về thiên 
 tai, Lệnh xây dựng công trình khẩn cấp. 
 2. Thẩm quyền quyết định Lệnh xây dựng công trình khẩn cấp: 
-a) Cục trưởng Cục Đường bộ Việt Nam quyết định đối với quốc lộ thuộc trách 
-nhiệm quản lý, vận hành, khai thác, bảo trì của Bộ Xây dựng13 (trừ trường hợp quy 
+a)[^vbhn28-13] Cục trưởng Cục Đường bộ Việt Nam quyết định đối với quốc lộ thuộc trách 
+nhiệm quản lý, vận hành, khai thác, bảo trì của Bộ Xây dựng (trừ trường hợp quy 
 định tại điểm c, điểm d khoản này); cơ quan chuyên môn trực thuộc Cục Đường bộ 
 Việt Nam tham mưu cho Cục trưởng Cục Đường bộ Việt Nam quyết định Lệnh xây 
 dựng công trình khẩn cấp; 
- 
-13 Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
-Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
-của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
-chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
-đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
-thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
 
-91 
- 
- 
 b) Chủ tịch Ủy ban nhân dân các cấp quyết định đối với đường bộ thuộc phạm 
 vi quản lý; 
-c) Người đứng đầu Cơ quan chuyên môn về xây dựng của Bộ Xây dựng14 quyết 
+c)[^vbhn28-14] Người đứng đầu Cơ quan chuyên môn về xây dựng của Bộ Xây dựng quyết 
 định đối với công trình đường bộ xây dựng mới, cải tạo, nâng cấp do Bộ Giao thông 
 vận tải là người quyết định đầu tư, là chủ đầu tư; 
 d) Người đứng đầu Cơ quan đại diện chủ sở hữu quyết định đối với công trình 
@@ -690,22 +595,7 @@ a) Giao tổ chức, cá nhân thực hiện các công việc khảo sát, thi�
 công xây dựng và các công việc cần thiết khác phục vụ xây dựng công trình khẩn 
 cấp; 
 b) Quyết định về trình tự thực hiện khảo sát, thiết kế và thi công xây dựng; 
- 
-14 Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
-Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
-của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
-chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
-đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
-thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
 
-92 
- 
- 
 c) Quyết định về việc giám sát thi công xây dựng và nghiệm thu công trình xây 
 dựng đáp ứng yêu cầu của lệnh xây dựng công trình khẩn cấp; 
 d) Sau khi kết thúc thi công xây dựng công trình khẩn cấp, lập và trình phê 
@@ -721,7 +611,7 @@ công đối với dự án đầu tư, xây dựng đường bộ mới hoặc 
 a) Trên tuyến hoặc đoạn tuyến đường bộ được giao để thực hiện dự án, chủ đầu 
 tư, nhà đầu tư chịu trách nhiệm sửa chữa hư hỏng, khắc phục hậu quả thiên tai gây ra 
 đối với toàn bộ công trình đường bộ và hành lang an toàn đường bộ; 
-b)15 Khi có thiệt hại do thiên tai gây ra, chủ đầu tư, nhà thầu thi công xây dựng, 
+b)[^vbhn28-15] Khi có thiệt hại do thiên tai gây ra, chủ đầu tư, nhà thầu thi công xây dựng, 
 nhà thầu giám sát thi công xây dựng, tổ chức, đơn vị cung cấp dịch vụ bảo hiểm (nếu 
 có), kiểm tra hiện trường, xác định thiệt hại để tổ chức xử lý, khắc phục hậu quả theo 
 quy định của pháp luật về xây dựng, pháp luật về phòng, chống thiên tai và quy định 
@@ -730,24 +620,10 @@ c) Trường hợp thiệt hại lớn hoặc hư hỏng hạng mục không ph�
 dự án, chủ đầu tư hoặc nhà đầu tư báo cáo mức độ, ước tính kinh phí thiệt hại do thiên 
 tai gây ra để người quyết định đầu tư hoặc cơ quan có thẩm quyền xem xét, quyết 
 định. 
- 
-15 Điểm này được sửa đổi, bổ sung theo quy định tại khoản 1 Điều 5 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
-bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
-số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
-hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
-Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
-dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
 
-93 
- 
- 
 3. Khắc phục hậu quả thiên tai, bảo đảm giao thông trong giai đoạn đang thi 
 công đối với dự án bảo trì đường bộ: 
-a)16 Theo phạm vi thi công được giao, nhà thầu thi công thông báo cho chủ đầu 
+a)[^vbhn28-16] Theo phạm vi thi công được giao, nhà thầu thi công thông báo cho chủ đầu 
 tư, nhà thầu giám sát thi công xây dựng, người quản lý, sử dụng đường bộ, nhà thầu 
 quản lý, bảo dưỡng thường xuyên tuyến đường, đơn vị cung cấp dịch vụ bảo hiểm 
 (nếu có), kiểm tra hiện trường, xác định thiệt hại do thiên tai gây ra và tổ chức thực 
@@ -773,21 +649,7 @@ Trường hợp nguyên nhân hư hỏng do thiên tai gây ra, cơ quan quản 
 bộ, Khu Quản lý đường bộ và nhà thầu quản lý, bảo dưỡng đường bộ chịu trách nhiệm 
 thực hiện theo quy định tại Điều 15, Điều 16 Thông tư này; trường hợp xác định 
 nguyên nhân hư hỏng do chất lượng công trình thuộc trách nhiệm bảo hành, chủ đầu 
- 
-16 Điểm này được sửa đổi, bổ sung theo quy định tại khoản 1 Điều 5 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
-bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
-số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
-hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
-Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
-dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
 
-94 
- 
- 
 tư có trách nhiệm tổ chức việc sửa chữa hư hỏng, khắc phục hậu quả và chịu trách 
 nhiệm trước pháp luật về việc không sửa chữa hoặc sửa chữa hư hỏng không bảo đảm 
 chất lượng gây mất an toàn giao thông. 
@@ -823,9 +685,6 @@ an toàn. Những đoạn đường hoặc công trình bị hư hại nặng ph
 người gác chỉ huy, điều khiển giao thông, tổ chức phân luồng giao thông và thông 
 báo trên các phương tiện thông tin đại chúng. Trường hợp chiều sâu ngập nước lớn, 
 
-95 
- 
- 
 lưu tốc dòng chảy mạnh phải cắm cọc tiêu, cắm phao tiêu, cột thủy chí, phối hợp với 
 chính quyền địa phương làm rào chắn, phân luồng hoặc cấm phương tiện qua lại hoặc 
 điều tiết giao thông và cảnh báo khác nếu cần; 
@@ -838,7 +697,7 @@ c) Sạt lở đất, đá ta luy dương xuống nền, mặt đường: đào,
 kém ổn định, hót dọn sụt lở ta luy dương; khi cần gia cố ổn định chân ta luy dương 
 thì sử dụng kè rọ thép đã hộc hoặc giải pháp kỹ thuật khác phù hợp với điều kiện thực 
 tế trên địa bàn để thông xe an toàn; 
-d)17 Khi sạt lở ta luy âm, lún sụt lấn vào nền, mặt đường: tùy theo tình hình 
+d)[^vbhn28-17] Khi sạt lở ta luy âm, lún sụt lấn vào nền, mặt đường: tùy theo tình hình 
 thực tế của địa hình, địa chất, thuỷ văn và công trình, thực hiện gia cố bảo vệ ta luy 
 âm nền đường bằng một hoặc kết hợp các giải pháp: xếp kè rọ thép đá hộc; đóng hàng 
 cọc thép hình hoặc cọc cừ làm tường chắn chống sụt, sau đó đắp đất, đá theo tiêu 
@@ -856,21 +715,7 @@ thông cho các phương tiện đi qua đoạn tuyến;
 đ) Cầu nhỏ, cống, ngầm, tràn, đường cứu nạn, hệ thống thoát nước bị xói, sạt 
 lở, bong bật, ngập úng cục bộ, các trường hợp hư hỏng khác gây ảnh hưởng đến hoạt 
 động giao thông trên đường bộ, an toàn công trình: thực hiện khơi thông, vét bùn, đất, 
- 
-17 Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 1 Điều 6 Thông tư số 72/2025/TT-BXD 
-ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận 
-tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ 
-tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; 
-Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản 
-lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 
-2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang 
-sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
 
-96 
- 
- 
 đá bảo đảm thoát nước; gia cố các hư hỏng bằng một hoặc một số vật liệu, như: bê 
 tông xi măng, bê tông cốt thép, rọ thép đá hộc, hoặc hoàn trả lại kết cấu cũ, hoặc kết 
 cấu tương đương để thông xe an toàn; 
@@ -895,26 +740,12 @@ l) Cơ quan quản lý đường bộ, Khu Quản lý đường bộ theo phạm
 tổ chức, cá nhân có năng lực, kinh nghiệm thực hiện ngay các công việc khảo sát, thiết 
 kế, giám sát đối với các trường hợp quy định tại điểm b, điểm c, điểm d, điểm đ, điểm 
 e, điểm g, điểm h, điểm i khoản này; 
-m)18 Trường hợp khắc phục hậu quả thiên tai, xử lý ùn tắc và bảo đảm giao 
+m)[^vbhn28-18] Trường hợp khắc phục hậu quả thiên tai, xử lý ùn tắc và bảo đảm giao 
 thông quy định tại điểm d và điểm g khoản này trên các tuyến đường bộ sử dụng vốn 
 ngân sách trung ương thuộc phạm vi quản lý của Cục Đường bộ Việt Nam thì được 
 thực hiện như sau: đối với trường hợp phải thực hiện ngay để phục vụ công tác cứu 
 nạn, cứu hộ, Khu Quản lý đường bộ có trách nhiệm khẩn trương tổ chức thực hiện; 
- 
-18 Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 1 Điều 6 Thông tư số 72/2025/TT-BXD ngày 
-31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
-bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
-số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
-hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
-Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
-dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
 
-97 
- 
- 
 đối với trường hợp còn lại, Khu Quản lý đường bộ báo cáo để Cục Đường bộ Việt 
 Nam chấp thuận quy mô, giải pháp chủ yếu trước khi thực hiện. 
 2. Sửa chữa, khôi phục công trình đường bộ 
@@ -942,22 +773,8 @@ thiện cho thông xe bình thường;
 định tại điểm a, điểm b, điểm c, điểm d khoản này, cấp có thẩm quyền được bổ sung 
 các giải pháp sửa chữa trong Lệnh xây dựng công trình khẩn cấp nhằm xử lý kịp thời 
 hậu quả do thiên tai gây ra. 
-319. (Được bãi bỏ)  
- 
-19 Khoản này được bãi bỏ theo quy định tại điểm đ khoản 5 Điều 9 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
-bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
-số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
-hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
-Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
-dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+3.[^vbhn28-19] (Được bãi bỏ)  
 
-98 
- 
- 
 ##### Điều 16. Hồ sơ hoàn thành khắc phục hậu quả thiên tai, xử lý ùn tắc, bảo 
 đảm giao thông; hồ sơ hoàn thành dự án khẩn cấp phòng, chống, khắc phục hậu 
 quả thiên tai 
@@ -979,32 +796,22 @@ b) Cơ quan, tổ chức được Ủy ban nhân dân cấp tỉnh giao đối v
 quy định tại khoản 4 Điều 8 Luật Đường bộ; 
 c) Cơ quan đại diện chủ sở hữu đối với công trình đường bộ do doanh nghiệp 
 được nhà nước giao đầu tư xây dựng, quản lý, khai thác công trình đường bộ quản lý; 
-d)20 Thời gian thẩm định hồ sơ và phê duyệt hoặc thông báo kết quả là 20 ngày, 
+d)[^vbhn28-20] Thời gian thẩm định hồ sơ và phê duyệt hoặc thông báo kết quả là 20 ngày, 
 kể từ khi nhận đủ hồ sơ hợp lệ. 
 3. Thành phần hồ sơ hoàn thành khắc phục thiên tai, xử lý ùn tắc, bảo đảm 
 giao thông, gồm: 
 a) Tờ trình của cơ quan lập hồ sơ; 
  
-20 Điểm này được sửa đổi, bổ sung theo quy định tại khoản 1 Điều 7 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
-bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
-số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
-hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
-Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
-dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
 
-99 
  
  
 b) Thuyết minh phương án khắc phục hậu quả thiên tai; 
-c) 21 (Được bãi bỏ). 
+c) [^vbhn28-21] (Được bãi bỏ). 
 d) Báo cáo ban đầu kèm theo một số ảnh chụp về thiệt hại do thiên tai gây ra 
 của cơ quan lập hồ sơ hoặc nhà thầu quản lý, bảo dưỡng thường xuyên, vận hành khai 
 thác công trình đường bộ; 
-đ)22 Biên bản xác nhận khối lượng đã thực hiện công tác khắc phục hậu quả 
+đ)[^vbhn28-22] Biên bản xác nhận khối lượng đã thực hiện công tác khắc phục hậu quả 
 thiên tai, xử lý ùn tắc, bảo đảm giao thông, kèm theo bản kê khối lượng chi tiết đã 
 thực hiện. Thành phần ký biên bản gồm: Đối với trường hợp khắc phục hậu quả thiên 
 tai, xử lý ùn tắc, bảo đảm giao thông trên đường bộ đang khai thác, thành phần ký 
@@ -1016,38 +823,10 @@ khai thác, thành phần ký biên bản theo quy định tại điểm h kho�
 e) Bản vẽ hoàn công; 
 g) Dự toán kinh phí cho các nhiệm vụ khắc phục thiên tai, xử lý ùn tắc, bảo đảm 
 giao thông đã thực hiện, kèm các bản thuyết minh tính toán chi tiết; 
-h) 23Biên bản xác minh thiệt hại lập tại hiện trường (gồm các thông tin: vị trí, 
+h) [^vbhn28-23]Biên bản xác minh thiệt hại lập tại hiện trường (gồm các thông tin: vị trí, 
  
-21 Khoản này được bãi bỏ theo quy định tại điểm e khoản 5 Điều 9 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
-bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
-số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
-hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
-Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
-dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
-22 Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 2 Điều 7 Thông tư số 72/2025/TT-BXD 
-ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận 
-tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ 
-tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; 
-Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản 
-lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 
-2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang 
-sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
-23 Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 2 Điều 7 Thông tư số 72/2025/TT-BXD 
-ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận 
-tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ 
-tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; 
-Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản 
-lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 
-
-100 
+ 
+ 
  
  
 lý trình; mô tả, đánh giá mức độ thiệt hại, hư hỏng công trình đường bộ; sơ bộ khối 
@@ -1065,38 +844,18 @@ i) Các bản vẽ kỹ thuật thi công thể hiện khối lượng, kết c�
 k) Nhật ký thi công xây dựng công trình và một số hình ảnh ghi nhận quá trình 
 thi công xây dựng công trình, bảng chấm công trực điều tiết, phân luồng bảo đảm giao 
 thông; 
-l)24 Tờ trình quy định tại điểm a khoản này là bản chính, hoặc biểu mẫu điện 
+l)[^vbhn28-24] Tờ trình quy định tại điểm a khoản này là bản chính, hoặc biểu mẫu điện 
 tử; thành phần hồ sơ còn lại quy định tại khoản này là bản sao. 
-4.25 Thành phần Hồ sơ hoàn thành dự án khẩn cấp phòng, chống, khắc phục 
+4.[^vbhn28-25] Thành phần Hồ sơ hoàn thành dự án khẩn cấp phòng, chống, khắc phục 
 hậu quả thiên tai, gồm: Tờ trình đề nghị phê duyệt Hồ sơ hoàn thành dự án khẩn cấp 
 phòng, chống, khắc phục hậu quả thiên tai của cơ quan lập hồ sơ và các hồ sơ theo 
 quy định tại khoản 4 Điều 58 Nghị định số 15/2021/NĐ-CP ngày 03 tháng 3 năm 
 2021 của Chính phủ Quy định chi tiết một số nội dung về quản lý dự án đầu tư xây 
  
-2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang 
-sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
-24 Điểm này được bổ sung theo quy định tại điểm c khoản 2 Điều 7 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
-bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
-số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
-hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
-Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
-dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
-25 Điểm này được bổ sung theo quy định tại khoản 3 Điều 7 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
-năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 
-tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô 
-và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, 
-trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
-thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 
-41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, 
-khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ 
-trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
-dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
+ 
+ 
 
-101 
  
  
 dựng và Nghị định số 35/2023/NĐ-CP ngày 20 tháng 6 năm 2023 của Chính phủ về 
@@ -1124,21 +883,12 @@ PHÒNG VÀ KINH PHÍ PHÒNG, CHỐNG THIÊN TAI TRONG LĨNH VỰC
 ##### Điều 17. Quản lý và sử dụng phương tiện, trang thiết bị, vật tư dự phòng 
 1. Vật tư, trang thiết bị dự phòng cho công tác phòng, chống, khắc phục hậu quả 
 thiên tai: 
-a)26 Vật tư, trang thiết bị chủ yếu bao gồm: rọ thép, dây thép buộc; đá hộc, đá 
+a)[^vbhn28-26] Vật tư, trang thiết bị chủ yếu bao gồm: rọ thép, dây thép buộc; đá hộc, đá 
 dăm, bê tông nhựa nguội, đá dăm đen và các loại vật liệu để sửa chữa mặt đường, 
 dầm cầu các loại, cọc thép, cọc bê tông cốt thép, bao tải, vải địa kỹ thuật và các vật 
  
-26 Điểm này được sửa đổi, bổ sung theo quy định tại khoản 1 Điều 8 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
-bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
-số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
-hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
-Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
 
-102 
  
  
 liệu cần thiết khác phục vụ sửa chữa, khắc phục hậu quả thiên tai trên các công trình 
@@ -1147,56 +897,27 @@ chóp, nón, đèn cảnh báo, đèn chiếu sáng để bảo đảm giao thô
 trang bị quần, áo, mũ, găng tay và các dụng cụ phòng hộ cho người lao động, người 
 tham gia công tác phòng, chống thiên tai; dây buộc, bình chữa cháy; 
 b) Trang thiết bị, vật tư dự phòng được bố trí, lưu giữ, bảo quản tại các kho chứa 
-trang thiết bị, vật tư dự phòng trong lĩnh vực đường bộ. Bộ Xây dựng27 quyết định vị 
+trang thiết bị, vật tư dự phòng trong lĩnh vực đường bộ. Bộ Xây dựng[^vbhn28-27] quyết định vị 
 trí đặt kho chứa trang thiết bị, vật tư dự phòng thuộc phạm vi quản lý trên cơ sở đề 
 xuất của Cục Đường bộ Việt Nam. 
 2. Phương tiện thực hiện công tác phòng, chống, khắc phục hậu quả thiên tai: 
-a)28 Phương tiện chủ yếu bao gồm: phà, cần cẩu cứu hộ, cần cẩu thi công bốc 
+a)[^vbhn28-28] Phương tiện chủ yếu bao gồm: phà, cần cẩu cứu hộ, cần cẩu thi công bốc 
 xếp, xe ô tô chuyên dùng cứu nạn, xe ô tô chuyên dùng cứu hộ, xe tải, xe chở nước 
 chuyên dụng, ca nô, búa đóng cọc, máy xúc, máy ủi, máy lu, máy phát điện, máy 
 bơm nước, máy hàn, kích, thiết bị thông tin liên lạc hữu tuyến và vô tuyến, máy cưa, 
 cắt cây, các thiết bị khác phục vụ thi công công trình đường bộ; 
-b) Cục Đường bộ Việt Nam, Khu Quản lý đường bộ, Sở Xây dựng29 các địa 
+b) Cục Đường bộ Việt Nam, Khu Quản lý đường bộ, Sở Xây dựng[^vbhn28-29] các địa 
  
-27 Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
-Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
-của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
-chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
-đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
-thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
-28 Điểm này được sửa đổi, bổ sung theo quy định tại khoản 2 Điều 8 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
-bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
-số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
-hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
-Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
-29 Cụm từ “Sở Giao thông vận tải” được thay thế bởi cụm từ “Sở Xây dựng” quy định tại khoản 2 Điều 9 Thông 
-tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của 
-Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
-chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
-đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
-thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
+ 
+ 
+ 
 
-103 
  
  
 phương xây dựng phương án điều động phương tiện tham gia phòng, chống, khắc 
 phục hậu quả thiên tai và tìm kiếm cứu nạn. 
 3. Thẩm quyền điều động phương tiện, vật tư dự phòng: 
-a) Trưởng Ban chỉ huy phòng thủ dân sự Bộ Xây dựng30, Cục trưởng Cục Đường 
+a) Trưởng Ban chỉ huy phòng thủ dân sự Bộ Xây dựng[^vbhn28-30], Cục trưởng Cục Đường 
 bộ Việt Nam có thẩm quyền điều động vật tư, phương tiện, trang thiết bị dự phòng 
 thuộc phạm vi quản lý để phục vụ phòng, chống thiên tai và tìm kiếm cứu nạn trên hệ 
 thống quốc lộ quy định tại khoản 3 Điều 8 Luật Đường bộ; hoặc hỗ trợ, chi viện cho 
@@ -1204,7 +925,7 @@ các địa phương theo chỉ đạo của Ban chỉ đạo phòng thủ dân 
 b) Giám đốc Khu Quản lý đường bộ có thẩm quyền điều động vật tư, phương 
 tiện, trang thiết bị dự phòng thuộc phạm vi quản lý để phục vụ ứng phó thiên tai và 
 tìm kiếm cứu nạn trên quốc lộ được giao quản lý;  
-c)31 Giám đốc Sở Xây dựng, Chủ tịch Ủy ban nhân dân cấp xã điều động vật 
+c)[^vbhn28-31] Giám đốc Sở Xây dựng, Chủ tịch Ủy ban nhân dân cấp xã điều động vật 
 tư, phương tiện, trang thiết bị dự phòng thuộc thẩm quyền quản lý để kịp thời ứng 
 phó thiên tai và tìm kiếm cứu nạn trên đường bộ thuộc phạm vi quản lý; 
 d) Cơ quan tham mưu giúp việc cho người có thẩm quyền quy định tại các điểm 
@@ -1216,32 +937,13 @@ dưỡng trang thiết bị, vật tư dự phòng được giao; lập dự to�
 Cục Đường bộ Việt Nam. Cục Đường bộ Việt Nam rà soát, lập nhu cầu sản xuất, mua 
 sắm, sửa chữa, dự trữ trang thiết bị, vật tư dự phòng và dự toán cho công tác bảo trì, 
  
-30 Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
-Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
-của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
-chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
-đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
-thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
-31 Điểm này được sửa đổi, bổ sung theo quy định tại khoản 3 Điều 8 Thông tư số 72/2025/TT-BXD ngày 31 
-tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
-bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
-số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
-hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
-Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+ 
+ 
 
-104 
  
  
 bảo vệ các kho chứa trang thiết bị, vật tư dự phòng thuộc phạm vi quản lý, trình Bộ 
-Xây dựng32 trước ngày 30 tháng 5 hàng năm; 
+Xây dựng[^vbhn28-32] trước ngày 30 tháng 5 hàng năm; 
 b) Việc quản lý, bảo trì trang thiết bị, vật tư dự phòng của địa phương do 
 Ủy ban nhân dân cấp tỉnh quyết định; 
 c) Khu Quản lý đường bộ có trách nhiệm mở sổ sách để hạch toán, theo dõi và 
@@ -1267,19 +969,8 @@ quy định về thời giờ làm việc, thời giờ nghỉ ngơi đối vớ
 việc có tính chất đặc biệt trong công tác phòng, chống thiên tai; 
 b) Tùy theo tình hình thiên tai và thời gian nghỉ lễ, tết, Trưởng Ban chỉ huy 
  
-32 Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
-Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
-của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
-chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
-đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
-thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
+ 
 
-105 
  
  
 phòng thủ dân sự hoặc thủ trưởng cơ quan, đơn vị quyết định số lượng người trực, điều 
@@ -1318,7 +1009,6 @@ trang thiết bị của tổ chức, cá nhân thuộc phạm vi quản lý có
 kinh phí cho các tổ chức, cá nhân tham gia hoạt động ứng phó sự cố thiên tai và tìm 
 kiếm cứu nạn hoặc hoàn trả, bồi thường thiệt hại cho tổ chức, cá nhân được huy động 
 
-106 
  
  
 theo quy định của pháp luật về phòng, chống thiên tai và quy định khác của pháp luật 
@@ -1328,12 +1018,12 @@ quả thiên tai
 Thực hiện theo quy định của pháp luật về phòng, chống thiên tai và các quy 
 định sau: 
 1. Khi xảy ra thiên tai thì tùy theo mức độ xảy ra, Khu Quản lý đường bộ (đối 
-với quốc lộ), Sở Xây dựng33 (đối với đường bộ thuộc phạm vi quản lý), Ban Quản lý 
+với quốc lộ), Sở Xây dựng[^vbhn28-33] (đối với đường bộ thuộc phạm vi quản lý), Ban Quản lý 
 dự án (đối với dự án đang thi công, công trình đường bộ đang trong thời gian bảo 
 hành), doanh nghiệp đầu tư xây dựng và quản lý khai thác công trình đường bộ (đối 
 với các công trình đường bộ đầu tư xây dựng và khai thác theo hình thức BOT và các 
 hình thức hợp đồng dự án khác) phải báo cáo về Ban chỉ huy phòng thủ dân sự Bộ 
-Xây dựng34, Cục Đường bộ Việt Nam như sau: 
+Xây dựng[^vbhn28-34], Cục Đường bộ Việt Nam như sau: 
 a) Báo cáo trực tiếp: là báo cáo tình hình diễn biến thiên tai qua điện thoại 
 thường trực, điện thoại di động hoặc truyền dữ liệu, hình ảnh qua công nghệ viễn 
 thông những sự cố, thiệt hại đặc biệt nghiêm trọng xảy ra đối với công trình đường bộ, 
@@ -1343,30 +1033,9 @@ b) Báo cáo ngày qua thư điện tử: là báo cáo bằng văn bản gửi 
 fax trước 8 giờ sáng và trước 16 giờ chiều hàng ngày trong suốt thời gian có thiên tai 
 để nắm bắt chính xác diễn biến tình hình và kịp thời chỉ đạo các biện pháp giải quyết 
  
-33 Cụm từ “Sở Giao thông vận tải” được thay thế bởi cụm từ “Sở Xây dựng” quy định tại khoản 2 Điều 9 Thông 
-tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của 
-Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
-chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
-đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
-thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
-34 Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
-Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
-của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
-chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
-đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
-thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
+ 
+ 
 
-107 
  
  
 theo thẩm quyền hoặc đề xuất với cấp trên. 
@@ -1383,7 +1052,7 @@ b) Nội dung yêu cầu báo cáo: báo cáo năm về công tác phòng, chố
 kèm theo Kế hoạch phòng, chống thiên tai của năm sau và những kiến nghị, đề xuất 
 (nếu có); 
 c) Đối tượng thực hiện báo cáo: Cục Đường bộ Việt Nam; 
-d) Cơ quan nhận báo cáo: Ban chỉ huy phòng thủ dân sự Bộ Xây dựng35; 
+d) Cơ quan nhận báo cáo: Ban chỉ huy phòng thủ dân sự Bộ Xây dựng[^vbhn28-35]; 
 đ) Phương thức gửi, nhận báo cáo: báo cáo được thể hiện dưới hình thức văn 
 bản giấy hoặc văn bản điện tử. Báo cáo được gửi đến cơ quan nhận báo cáo bằng một 
 trong các phương thức sau: gửi trực tiếp, qua dịch vụ bưu chính, fax, qua hệ thống 
@@ -1396,24 +1065,13 @@ báo cáo đến ngày 14 tháng 12 của kỳ báo cáo;
 i) Mẫu biểu số liệu báo cáo: theo mẫu quy định tại Phụ lục ban hành kèm theo 
 Thông tư này. 
  
-35 Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
-Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
-của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
-chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
-đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
-thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
+ 
 
-108 
  
  
 ##### Điều 23. Công tác kiểm tra hoạt động phòng, chống, khắc phục hậu quả 
 thiên tai 
-1. Hàng năm, Bộ Xây dựng36, Cục Đường bộ Việt Nam lập kế hoạch kiểm tra 
+1. Hàng năm, Bộ Xây dựng[^vbhn28-36], Cục Đường bộ Việt Nam lập kế hoạch kiểm tra 
 và triển khai thực hiện kiểm tra việc chấp hành các quy định của pháp luật trong công 
 tác phòng, chống, khắc phục hậu quả thiên tai và quản lý, bảo quản, sử dụng vật tư, 
 trang thiết bị dự phòng đối với các cơ quan, đơn vị liên quan. Để đối phó với các diễn 
@@ -1422,7 +1080,7 @@ biến bất ngờ của thiên tai, Ban chỉ huy phòng thủ dân sự Bộ G
 đột xuất nhằm đôn đốc và chấn chỉnh kịp thời các thiếu sót, vi phạm để tăng cường 
 hiệu quả của công tác quản lý nhà nước về phòng, chống, khắc phục hậu quả thiên 
 tai. 
-2. Các Khu Quản lý đường bộ, Sở Xây dựng37, Ban Quản lý dự án, doanh 
+2. Các Khu Quản lý đường bộ, Sở Xây dựng[^vbhn28-37], Ban Quản lý dự án, doanh 
 nghiệp đầu tư xây dựng và quản lý khai thác công trình đường bộ căn cứ vào điều 
 kiện đặc thù của địa bàn quản lý, chủ động tổ chức thực hiện kiểm tra định kỳ, kiểm 
 tra đột xuất việc thực hiện các quy định của pháp luật về công tác phòng, chống, khắc 
@@ -1433,35 +1091,14 @@ bộ trên địa bàn thuộc phạm vi quản lý.
 tra và tự kiểm tra công tác phòng, chống, khắc phục hậu quả thiên tai phù hợp với 
 nhiệm vụ được giao. 
  
-36 Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
-Thông tư số 72/2025/TT-BGTVT ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số 
-Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
-về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe 
-trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu 
-quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
-37 Cụm từ “Sở Giao thông vận tải” được thay thế bởi cụm từ “Sở Xây dựng” quy định tại khoản 2 Điều 9 Thông 
-tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của 
-Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
-chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
-đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
-15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
-thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
-thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
-31 tháng 12 năm 2025. 
+ 
+ 
 
-109 
  
  
 ### Chương VII 
-ĐIỀU KHOẢN THI HÀNH38 
-##### Điều 24. Hiệu lực thi hành 
+ĐIỀU KHOẢN THI HÀNH[^vbhn28-38] 
+##### Điều 24. Hiệu lực thi hành[^vbhn28-39] 
 1. Thông tư này có hiệu lực kể ngày 01 tháng 01 năm 2025. 
 2. Bãi bỏ các Thông tư sau: 
 a) Thông tư số 03/2019/TT-BGTVT ngày 11 tháng 01 năm 2019 của Bộ 
@@ -1472,43 +1109,9 @@ năm 2020 của Bộ trưởng Bộ Giao thông vận tải sửa đổi, bổ s
 Thông tư quy định về chế độ báo cáo định kỳ trong lĩnh vực đường bộ; 
 c) Thông tư số 43/2021/TT-BGTVT ngày 31 tháng 12 năm 2021 của Bộ 
  
-38 Điều 24 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
-sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
-tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm 
-dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc 
-phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư 
-số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình 
-vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi 
-hành kể từ ngày 31 tháng 12 năm 2025 quy định như sau: 
-“Điều 24. Trách nhiệm của các cơ quan 
-1. Cục Đường bộ Việt Nam 
-a) Tổ chức thực hiện nhiệm vụ, quyền hạn được giao theo quy định tại Thông tư này;  
-b) Thực hiện việc kiểm tra, giám sát đối với các nhiệm vụ đã được phân cấp cho chính quyền địa phương theo 
-quy định của pháp luật.  
-2. Sở Xây dựng có trách nhiệm tham mưu Ủy ban nhân dân cấp tỉnh bố trí nguồn lực, các điều kiện để tổ chức 
-thực hiện các nhiệm vụ theo quy định của Thông tư này. Trường hợp phát sinh vướng mắc, bất cập trong quá trình triển 
-khai thi hành báo cáo Ủy ban nhân dân cấp tỉnh, Bộ Xây dựng để kịp thời xử lý, tháo gỡ theo thẩm quyền; 
-3. Ủy ban nhân dân cấp xã có trách nhiệm tổ chức thực hiện nhiệm vụ, quyền hạn được giao theo quy định tại 
-Thông tư này.”. 
-39 Điều 9 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
-sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
-tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm 
-dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-
-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc 
-phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
-trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư 
-số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình 
-vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi 
-hành kể từ ngày 31 tháng 12 năm 2025 quy định như sau: 
-“Điều 23. Hiệu lực thi hành  
-1. Thông tư này có hiệu lực thi hành kể từ ngày ký ban hành.  
-2. Bãi bỏ Điều 27 và Điều 28 Thông tư số 09/2025/TT-BXD ngày 13 tháng 6 năm 2025 của Bộ trưởng Bộ Xây 
-dựng về sửa đổi, bổ sung một số điều của các Thông tư thuộc lĩnh vực quản lý nhà nước của Bộ Xây dựng liên quan 
-đến sắp xếp tổ chức bộ máy, thực hiện chính quyền địa phương hai cấp và phân cấp cho chính quyền địa phương.”. 
+ 
+ 
 
-110 
  
  
 trưởng Bộ Giao thông vận tải sửa đổi, bổ sung một số điều của Thông tư số 
@@ -1542,10 +1145,9 @@ KT. BỘ TRƯỞNG
 THỨ TRƯỞNG  
 Lê Anh Tuấn  
 
-111
  
  
-Phụ lục4040 
+## Phụ lục[^vbhn28-40] 
 CÁC MẪU BIỂU BÁO CÁO VỀ CÔNG TÁC PHÒNG, CHỐNG THIÊN TAI 
 (Ban hành kèm theo Thông tư số 72/2025/TT -BXD ngày 31 tháng 12 năm 2025 của Bộ 
 trưởng Bộ Xây dựng) 
@@ -1565,1178 +1167,1498 @@ thông theo quy định tại khoản 1 Điều 15 Thông tư số 40/2024/TT-
 BGTVT. 
 Mẫu số 5 
 Danh mục các công trình xây dựng theo Lệnh xây dựng khẩn cấp để 
-khắc phục hậu quả thiên tai. 
- 
- 
- 
- 
-40 Phụ lục ban hành kèm theo Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng 
-Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ có 
-hiệu thi hành từ ngày 01 tháng 01 năm 2025, được thay thế bởi Phụ lục II  kèm theo Thông tư số 72/2025/TT-BXD 
-ngày 31/12/2025 của Bộ trưởng Bộ Xây dựng Sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
-ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
-xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
-bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
-Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
-số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
-hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
-Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông 
-sử dụng phà một lưỡi chở hành khách và xe ô tô, theo quy định tại khoản 4 Điều 9 Thông tư số 72/2025/TT-BXD, có 
-hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025. 
+khắc phục hậu quả thiên tai.
 
-112
- 
- 
-Mẫu số 1: Báo cáo nhanh các vị trí tắc đường do thiên tai trên đường bộ  
- 
-I.  BÁO CÁO NHANH CÁC VỊ TRÍ TẮC TRÊN CÁC TUYẾN ĐƯỜNG 
-QUỐC LỘ VÀ CAO TỐC  
-Cơ quan báo cáo: ……………… 
-Thời điểm báo cáo: …………….. 
-1. Thông tin chung về tình hình tắc đường quốc lộ, đường cao tốc: 
-1.1 – Tổng số: 
-a) Tổng số vị trí hiện đang bị tắc ….. vị trí. 
-b) Số vị trí tắc đường tăng (+) hoặc giảm (-) so với báo cáo gần nhất …. vị trí. 
-1.2- Tình hình tắc đường quốc lộ, cao tốc do Trung ương quản lý (kể cả đường giao 
-doanh nghiệp đầu tư xây dựng, quản lý, vận hành khai thác) 
- 
-TT 
- 
- 
-Quốc lộ, 
-đường cao 
-tốc 
-Tình hình tắc đường 
-Số vị trí đã 
-thông 
-tuyến so 
-với báo cáo 
-gần nhất 
-Tổng 
-số vị 
-trí 
-còn 
-tắc 
-Tắc 
-do lũ, 
-ngập 
-lụt, 
-nước 
-dâng 
-Tắc 
-do sạt 
-lở ta 
-luy 
-dương 
-Tắc 
-do sạt 
-lở nền 
-đường 
-xuống 
-ta luy 
-âm, 
-đứt 
-đường 
-Tắc do 
-hư 
-hỏng, 
-sập đổ, 
-trôi cầu, 
-cống 
-Tắc do 
-dừng 
-khai 
-thác 
-phà và 
-các 
-nguyên 
-nhân 
-khác 
- 
-I. Địa bàn 
-Khu 
-QLĐB I 
- 
- 
- 
- 
- 
- 
- 
- 
-I.1- Đường 
-sử dụng 
-ngân sách  
- 
- 
- 
- 
- 
- 
- 
-1 
-QL .. 
- 
- 
- 
- 
- 
- 
- 
-2 
-QL ... 
- 
- 
- 
- 
- 
- 
- 
- 
-… 
- 
- 
- 
- 
- 
- 
- 
- 
-Cộng (A) 
- 
- 
- 
- 
- 
- 
- 
- 
-I.2- Đường 
-do 
-doanh 
-nghiệp 
-được Nhà 
+Mẫu số 1: Báo cáo nhanh các vị trí tắc đường do thiên tai trên đường bộ
+I. BÁO CÁO NHANH CÁC VỊ TRÍ TẮC TRÊN CÁC TUYẾN ĐƯỜNG
+QUỐC LỘ VÀ CAO TỐC
+Cơ quan báo cáo: ………………
+Thời điểm báo cáo: ……………..
+1. Thông tin chung về tình hình tắc đường quốc lộ, đường cao tốc:
+1.1 – Tổng số:
+a) Tổng số vị trí hiện đang bị tắc ….. vị trí.
+b) Số vị trí tắc đường tăng (+) hoặc giảm (-) so với báo cáo gần nhất …. vị trí.
+1.2- Tình hình tắc đường quốc lộ, cao tốc do Trung ương quản lý (kể cả đường giao
+doanh nghiệp đầu tư xây dựng, quản lý, vận hành khai thác)
 
-113
- 
- 
-nước giao 
-đầu tư xây 
-dựng, quản 
-lý khai thác 
-1 
-Đường cao 
-tốc .. 
- 
- 
- 
- 
- 
- 
- 
-2 
-QL … 
- 
- 
- 
- 
- 
- 
- 
- 
-… 
- 
- 
- 
- 
- 
- 
- 
- 
-Cộng (B) 
- 
- 
- 
- 
- 
- 
- 
- 
-Tổng cộng 
-A và B 
- 
- 
- 
- 
- 
- 
- 
- 
-Địa bàn 
-các Khu 
-QLĐB II, 
-III và IV 
- 
- 
- 
- 
- 
- 
- 
- 
-Thực hiện tương tự địa bàn Khu QLĐB I 
- 
-Tổng số 
+<table data-source="data/raw/pdf/28_VBHN_BXD_cb469690.pdf#page=38">
+<tr>
+<td rowspan="2">TT</td>
+<td rowspan="2">Quốc lộ,<br>đường cao<br>tốc</td>
+<td colspan="6">Tình hình tắc đường</td>
+<td rowspan="2">Số vị trí đã<br>thông<br>tuyến so<br>với báo cáo<br>gần nhất</td>
+</tr>
+<tr>
+<td>Tổng<br>số vị<br>trí<br>còn<br>tắc</td>
+<td>Tắc<br>do lũ,<br>ngập<br>lụt,<br>nước<br>dâng</td>
+<td>Tắc<br>do sạt<br>lở ta<br>luy<br>dương</td>
+<td>Tắc<br>do sạt<br>lở nền<br>đường<br>xuống<br>ta luy<br>âm,<br>đứt<br>đường</td>
+<td>Tắc do<br>hư<br>hỏng,<br>sập đổ,<br>trôi cầu,<br>cống</td>
+<td>Tắc do<br>dừng<br>khai<br>thác<br>phà và<br>các<br>nguyên<br>nhân<br>khác</td>
+</tr>
+<tr>
+<td></td>
+<td>I. Địa bàn<br>Khu<br>QLĐB I</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>I.1- Đường<br>sử dụng<br>ngân sách</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td>QL ..</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>QL ...</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Cộng (A)</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>I.2- Đường<br>do doanh<br>nghiệp<br>được Nhà</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
 
-114
- 
- 
-1.3- Các tuyến đường cao tốc, quốc lộ do Ủy ban nhân dân cấp tỉnh quản lý, gồm 
-cả các tuyến đường bộ đầu tư theo hình thức PPP và đường cao tốc: 
- 
-TT 
- 
- 
-Quốc lộ, 
-đường cao 
-tốc 
-Tình hình tắc đường 
-Số vị trí đã 
-thông 
-tuyến so 
-với báo cáo 
-gần nhất 
-Tổng 
-số vị 
-trí 
-còn 
-tắc 
-Tắc 
-do lũ, 
-ngập 
-lụt, 
-nước 
-dâng 
-Tắc 
-do sạt 
-lở ta 
-luy 
-dương 
-Tắc 
-do sạt 
-lở nền 
-đường 
-xuống 
-ta luy 
-âm, 
-đứt 
-đường 
-Tắc do 
-hư 
-hỏng, 
-sập đổ, 
-trôi cầu, 
-cống 
-Tắc do 
-dừng 
-khai 
-thác 
-phà và 
-các 
-nguyên 
-nhân 
-khác 
-1 
-Tỉnh A 
- 
- 
- 
- 
- 
- 
- 
-1.1 Đường 
-sử 
-dụng ngân 
-sách 
-Nhà 
-nước quản 
-lý 
- 
- 
- 
- 
- 
- 
- 
- 
-- Đường 
- 
- 
- 
- 
- 
- 
- 
- 
-- Đường 
- 
- 
- 
- 
- 
- 
- 
- 
-… 
-….. 
- 
- 
- 
- 
- 
- 
- 
-Cộng (1.1) 
- 
- 
- 
- 
- 
- 
- 
-1.2 Đường 
-do 
-doanh 
-nghiệp được 
-Nhà 
-nước 
-giao đầu tư 
-xây 
-dựng, 
-quản lý khai 
-thác 
- 
- 
- 
- 
- 
- 
- 
- 
-- Đường cao 
-tốc .. 
- 
- 
- 
- 
- 
- 
- 
- 
-- QL … 
- 
- 
- 
- 
- 
- 
- 
- 
-… 
- 
- 
- 
- 
- 
- 
- 
- 
-Cộng (1.2) 
-…… 
+<table data-source="data/raw/pdf/28_VBHN_BXD_cb469690.pdf#page=39">
+<tr>
+<td></td>
+<td>nước giao<br>đầu tư xây<br>dựng, quản<br>lý khai thác</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td>Đường cao<br>tốc ..</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>QL …</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Cộng (B)</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Tổng cộng<br>A và B</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Địa bàn<br>các Khu<br>QLĐB II,<br>III và IV</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td colspan="8">Thực hiện tương tự địa bàn Khu QLĐB I</td>
+</tr>
+<tr>
+<td></td>
+<td>Tổng số</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
 
-115
- 
- 
- 
-Tổng cộng 
-số vị trí tắc 
-đường 
-tại 
-tỉnh, thành 
-phố…  
- 
- 
- 
- 
- 
- 
- 
-n 
-Tỉnh Y 
- 
- 
- 
- 
- 
- 
- 
- 
-Báo cáo như đã thực hiện đối với Tỉnh A 
- 
- 
-Tổng số 
- 
-…. 
+1.3- Các tuyến đường cao tốc, quốc lộ do Ủy ban nhân dân cấp tỉnh quản lý, gồm
+cả các tuyến đường bộ đầu tư theo hình thức PPP và đường cao tốc:
 
-116
- 
- 
-2. Bảng kê vị trí, tuyến đường bị tắc theo địa bàn 
- 
-TT Tỉnh, 
-TP 
-Tuyến 
-đường 
-Vị trí 
-đang 
-tắc 
-Nguyên 
-nhân 
-(*) 
-Tóm tắt công tác bảo đảm giao thông, phân 
-luồng giao thông, công tác khắc phục (**) 
-1 
-Tỉnh A 
- 
- 
- 
- 
-2 
-Tỉnh B 
- 
- 
- 
- 
-3 
-Tỉnh C 
-QL.N 
-01 vị 
-trí Km 
-10 
-Ngập 
-sâu 
-- Hiện nay nước ngập 0,5m và chảy xiết. Đơn 
-vị đã tổ chức cắm biển tạm dừng khai thác, cử 
-người chốt trực hướng dẫn người tham gia giao 
-thông đi theo tuyến X, tuyến Y. 
-- Tạm thời phân luồng sang tuyến đường X, 
-đường Y… 
-- Dự kiến đến … thì thông xe. 
- 
- 
- 
-3 vị trí 
-Km 
-15; 
-Km 20 
-và Km 
-25 
-Sạt lở ta 
-luy 
-dương 
-- Hiện nay đất đá sạt lên trên mặt đường, gây 
-tắc giao thông. Đơn vị đang đào xúc, họt sụt và 
-đã tổ chức cắm biển tạm dừng khai thác, cử 
-người chốt trực hướng dẫn người tham gia giao 
-thông đi theo tuyến X, tuyến Y. 
-- Dự kiến đến … thì thông xe. 
-- Tạm thời phân luồng sang tuyến đường X, 
-đường Y… 
- 
- 
- 
-02 vị 
-trí Km 
-30 và 
-Km 35 
-Sạt lở ta 
-luy âm 
-- Hiện nay nền, mặt đường lún sụt xuống ta luy 
-âm, gây tắc giao thông. Đơn vị đang lắp dựng 
-kè rọ thép, làm lại nền, mặt đường; đồng thời 
-đã tổ chức cắm biển tạm dừng khai thác, cử 
-người chốt trực hướng dẫn người tham gia giao 
-thông đi theo tuyến X, tuyến Y. 
-- Dự kiến đến … thì thông xe. 
-- Tạm thời phân luồng sang tuyến đường X, 
-đường Y… 
- 
- 
- 
-01 vị 
-trí tại 
-Km 40 
-Cầu 
-phao 
-không 
-bảo đảm 
-an toàn 
-khai 
-thác 
-- Hiện nay V nước quá quy định. Đơn vị đã tổ 
-chức cắm biển tạm dừng khai thác, cử người 
-chốt trực hướng dẫn người tham gia giao thông 
-đi theo tuyến X, tuyến Y. 
-- Tạm thời phân luồng sang tuyến đường X, 
-đường Y… 
-- Dự kiến đến … thì thông xe. 
-4 
-Tỉnh … 
+<table data-source="data/raw/pdf/28_VBHN_BXD_cb469690.pdf#page=40">
+<tr>
+<td rowspan="2">TT</td>
+<td rowspan="2">Quốc lộ,<br>đường cao<br>tốc</td>
+<td colspan="6">Tình hình tắc đường</td>
+<td rowspan="2">Số vị trí đã<br>thông<br>tuyến so<br>với báo cáo<br>gần nhất</td>
+</tr>
+<tr>
+<td>Tổng<br>số vị<br>trí<br>còn<br>tắc</td>
+<td>Tắc<br>do lũ,<br>ngập<br>lụt,<br>nước<br>dâng</td>
+<td>Tắc<br>do sạt<br>lở ta<br>luy<br>dương</td>
+<td>Tắc<br>do sạt<br>lở nền<br>đường<br>xuống<br>ta luy<br>âm,<br>đứt<br>đường</td>
+<td>Tắc do<br>hư<br>hỏng,<br>sập đổ,<br>trôi cầu,<br>cống</td>
+<td>Tắc do<br>dừng<br>khai<br>thác<br>phà và<br>các<br>nguyên<br>nhân<br>khác</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Tỉnh A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>1.1</td>
+<td>Đường sử<br>dụng ngân<br>sách Nhà<br>nước quản<br>lý</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>- Đường</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>- Đường</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>…</td>
+<td>…..</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Cộng (1.1)</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>1.2</td>
+<td>Đường do<br>doanh<br>nghiệp được<br>Nhà nước<br>giao đầu tư<br>xây dựng,<br>quản lý khai<br>thác</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>- Đường cao<br>tốc ..</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>- QL …</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>Cộng (1.2)</td>
+<td>……</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
 
-117
- 
- 
- 
-Tổng 
-cộng:  
-vị trí (*) 
- 
- 
- 
- 
- 
-(*) Chỉ ghi các nguyên nhân chính: ngập nước (do lũ, lụt, nước dâng, ngập đường tràn); 
-sạt lở đất đá trên ta luy dương; lún, sụt nền mặt đường xuống ta luy âm, đứt đường; hư 
-hỏng, trôi cầu, cống; các nguyên nhân khác. Trường hợp 1 tỉnh có tắc đường cả 4 nhóm 
-nguyên nhân này thì ghi số điểm tắc theo từng nhóm nguyên nhân, mỗi nhóm 1 hàng. 
- (**) Ghi tóm tắt công tác đang triển khai khắc phục và công tác phân luồng giao thông 
-Ví dụ Tỉnh C trên quốc lộ N tắc 01 vị trí do ngập sâu, 03 vị trí sạt ta luy dương, 1 điểm sụt 
-cống, 2 điểm sạt lở ta luy âm, 01 vị trí cầu phao hỏng. Đồng thời đang khác phục và bảo 
-đảm giao thông thì ghi như sau: 
+<table data-source="data/raw/pdf/28_VBHN_BXD_cb469690.pdf#page=41">
+<tr>
+<td></td>
+<td>Tổng cộng<br>số vị trí tắc<br>đường tại<br>tỉnh, thành<br>phố…</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>n</td>
+<td>Tỉnh Y</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td colspan="8">Báo cáo như đã thực hiện đối với Tỉnh A</td>
+</tr>
+<tr>
+<td></td>
+<td>Tổng số</td>
+<td>….</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
 
-118
- 
- 
-3. Bảng thống kê danh sách các vị trí đã thông tuyến (thời điểm từ  giờ … đến … giờ 
-ngày … tháng … năm …) 
- 
-TT 
-Tỉnh, TP 
-Tuyến 
-đường 
-Vị trí đã 
-thông truyến 
- 
-Trước đây 
-tắc là do 
-Thuyết minh tóm tắt 
-giải pháp, nguyên nhân 
-đã thông tuyến 
-1 
-Tỉnh A  
- 
- 
- 
- 
-2 
-Tỉnh B 
- 
- 
- 
- 
-3 
-Tỉnh C 
-QL.N 
-01 vị trí Km 
-10 
-Ngập sâu 
-- Hiện nay nước đã rút 
-cạn ngập 0,5m; 
-- Giao thông trở lại bình 
-thườn 
- 
- 
- 
- 
-Vị trí Km 15 
-Sạt lở ta 
-luy dương 
-- Hiện nay đã họt dọn 
-thông xe 1 làn; 
-- Tạm thời thông xe 01 
-làn. 
-- Dự kiến  … ngày X sẽ 
-thông xe toàn bộ mặt 
-đường 
- 
- 
- 
-01 vị trí tại 
-Km 40 
-Cầu phao 
-không bảo 
-đảm an 
-toàn khai 
-thác 
-- Hiện nay nước sông đã 
-bảo đảm an toàn khai 
-thác, cầu phao đã hoạt 
-động phục vụ giao thông 
-bình thường. 
- 
-II.  BÁO CÁO NHANH CÁC VỊ TRÍ TẮC TRÊN CÁC TUYẾN ĐƯỜNG 
-TỈNH, ĐƯỜNG ĐỊA PHƯƠNG VÀ ĐƯỜNG KHÁC  
-Đối với đường tỉnh, đường xã và đường khác việc báo cáo về tình hình tắc 
-đường do hậu quả thiên tai tương tự Mục I báo cáo nhanh các vị trí tắc trên các tuyến 
-đường quốc lộ, đường cao tốc. Nhưng thay tên quốc lộ, cao tốc trong Mục I bằng 
-đường tỉnh, đường xã, đường khác cho phù hợp; thay cụm từ ngữ “tỉnh, thành phố” 
-bằng cụm từ “cấp xã”. 
+2. Bảng kê vị trí, tuyến đường bị tắc theo địa bàn
 
-119
- 
- 
-Mẫu số 2: Mẫu  báo cáo tổng hợp các chỉ tiêu chính thiệt hại đối với đường bộ 
-do thiên tai 
-TỔNG HỢP CÁC CHỈ TIÊU CHÍNH THIỆT HẠI DO THIÊN TAI GÂY RA 
-TỪ  …  ĐẾN …. 
-Cơ quan báo cáo: ……………………………… 
- 
-TT 
-MÃ 
-CHỈ TIÊU THIỆT HẠI 
-ĐƠN VỊ 
-Tổng 
-Số 
-lượng 
-Ước thiệt 
-hại (triệu 
-đồng) 
- 
- 
-THIỆT HẠI VỀ KẾT CẤU HẠ 
-TẦNG ĐƯỜNG BỘ 
-triệu 
-đồng 
-x 
- 
-A 
- 
-Đường quốc lộ, đường cao tốc do 
-Trung ương quản lý 
-Triệu 
-X 
- 
-1 
- 
-Chiều dài sạt lở, hư hỏng 
-m 
- 
-x 
-2 
- 
-Khối lượng đất, đá, bê tông, nhựa 
-đường các loại 
-m3 
- 
- 
-3 
- 
-Cầu, cống bị hư hỏng 
-cái 
- 
- 
-4 
- 
-Các thiệt hại khác 
-Triệu 
-x 
- 
-B 
- 
-Đường quốc lộ do địa phương 
-quản lý 
-Triệu 
-X 
- 
-1 
- 
-Chiều dài sạt lở, hư hỏng 
-m 
- 
-x 
-2 
- 
-Khối lượng đất, đá, bê tông, nhựa 
-đường các loại 
-m3 
- 
- 
-3 
- 
-Cầu, cống bị hư hỏng 
-cái 
- 
- 
-4 
- 
-Các thiệt hại khác 
-Triệu 
-x 
- 
-C 
- 
-Đường tỉnh, đường xã, đường 
-khác do địa phương quản lý 
-Triệu 
-X 
- 
-1 
- 
-Chiều dài sạt lở, hư hỏng 
-m 
- 
-x 
-2 
- 
-Khối lượng đất, đá, bê tông, nhựa 
-đường các loại 
-m3 
- 
- 
-3 
- 
-Cầu, cống bị hư hỏng 
-cái 
- 
- 
-4 
- 
-Các thiệt hại khác 
-Triệu 
-x 
+<table data-source="data/raw/pdf/28_VBHN_BXD_cb469690.pdf#page=42">
+<tr>
+<td>TT</td>
+<td>Tỉnh,<br>TP</td>
+<td>Tuyến<br>đường</td>
+<td>Vị trí<br>đang<br>tắc</td>
+<td>Nguyên<br>nhân<br>(*)</td>
+<td>Tóm tắt công tác bảo đảm giao thông, phân<br>luồng giao thông, công tác khắc phục (**)</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Tỉnh A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Tỉnh B</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Tỉnh C</td>
+<td>QL.N</td>
+<td>01 vị<br>trí Km<br>10</td>
+<td>Ngập<br>sâu</td>
+<td>- Hiện nay nước ngập 0,5m và chảy xiết. Đơn<br>vị đã tổ chức cắm biển tạm dừng khai thác, cử<br>người chốt trực hướng dẫn người tham gia giao<br>thông đi theo tuyến X, tuyến Y.<br>- Tạm thời phân luồng sang tuyến đường X,<br>đường Y…<br>- Dự kiến đến … thì thông xe.</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>3 vị trí<br>Km<br>15;<br>Km 20<br>và Km<br>25</td>
+<td>Sạt lở ta<br>luy<br>dương</td>
+<td>- Hiện nay đất đá sạt lên trên mặt đường, gây<br>tắc giao thông. Đơn vị đang đào xúc, họt sụt và<br>đã tổ chức cắm biển tạm dừng khai thác, cử<br>người chốt trực hướng dẫn người tham gia giao<br>thông đi theo tuyến X, tuyến Y.<br>- Dự kiến đến … thì thông xe.<br>- Tạm thời phân luồng sang tuyến đường X,<br>đường Y…</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>02 vị<br>trí Km<br>30 và<br>Km 35</td>
+<td>Sạt lở ta<br>luy âm</td>
+<td>- Hiện nay nền, mặt đường lún sụt xuống ta luy<br>âm, gây tắc giao thông. Đơn vị đang lắp dựng<br>kè rọ thép, làm lại nền, mặt đường; đồng thời<br>đã tổ chức cắm biển tạm dừng khai thác, cử<br>người chốt trực hướng dẫn người tham gia giao<br>thông đi theo tuyến X, tuyến Y.<br>- Dự kiến đến … thì thông xe.<br>- Tạm thời phân luồng sang tuyến đường X,<br>đường Y…</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>01 vị<br>trí tại<br>Km 40</td>
+<td>Cầu<br>phao<br>không<br>bảo đảm<br>an toàn<br>khai<br>thác</td>
+<td>- Hiện nay V nước quá quy định. Đơn vị đã tổ<br>chức cắm biển tạm dừng khai thác, cử người<br>chốt trực hướng dẫn người tham gia giao thông<br>đi theo tuyến X, tuyến Y.<br>- Tạm thời phân luồng sang tuyến đường X,<br>đường Y…<br>- Dự kiến đến … thì thông xe.</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Tỉnh …</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
 
-120
- 
- 
-D 
- 
-Đường đầu tư theo hình thức 
-PPP, đường giao Doanh nghiệp 
-nhà nước đầu tư xây dựng, quản 
-lý, khai thác 
-Triệu 
-X 
- 
-1 
- 
-Chiều dài sạt lở, hư hỏng 
-m 
- 
-x 
-2 
- 
-Khối lượng đất, đá, bê tông, nhựa 
-đường các loại 
-m3 
- 
- 
-3 
- 
-Cầu, cống bị hư hỏng 
-cái 
- 
- 
-4 
- 
-Các thiệt hại khác 
-Triệu 
-x 
- 
- 
-TỔNG (A+B+C+D) 
-triệu 
-đồng 
-x 
- 
-Ghi chú: 
- (x) Các ô đánh dấu (X) thì bỏ qua không ước giá trị thiệt hại bằng tiền, hoặc số lượng. 
+<table data-source="data/raw/pdf/28_VBHN_BXD_cb469690.pdf#page=43">
+<tr>
+<td></td>
+<td>Tổng<br>cộng:<br>vị trí (*)</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
 
-121
- 
- 
-Mẫu số 3: Tổng hợp kinh phí thực hiện để khắc phục hậu quả thiệt hại do thiên tai 
-gây ra trong 01 đợt thiên tai, trong tháng, quý, năm 
- 
-TT 
-Kinh phí thực hiện từng 
-loại công việc phòng, 
-chống thiên tai 
-Kinh phí khắc 
-phục hậu quả 
-thiên tai đối 
-với KCHTĐB 
-đang khai thác 
-(triệu đồng) 
-Kinh 
-phí 
-khắc 
-phục 
-hậu quả thiên 
-tai trong dự 
-án sửa chữa 
-bảo trì (triệu 
-đồng) 
-Kinh phí khắc 
-phục hậu quả 
-thiên tai trong 
-các dự án đầu 
-tư xây dựng 
-công 
-trình 
-(triệu đồng) 
-Năm N Năm 
-N+1 
-Năm 
-N 
-Năm 
-N+1 
-Năm N Năm 
-N+1 
- 
-Tổng cộng (triệu đồng) 
- 
- 
- 
- 
- 
- 
-1 
-Kính phí để khắc phục hậu 
-quả thiên tai để bảo đảm 
-giao thông theo quy định tại 
-khoản 1 Điều 14 và khoản 1 
-Điều 15 Thông tư số 
-40/2024/TT-BGTVT 
- 
- 
-X 
-X 
-X 
-X 
-2 
-Kinh phí để xây dựng công 
-trình theo Lệnh xây dựng 
-khẩn cấp để khắc phục hậu 
-quả thiên tai. 
- 
- 
-X 
-X 
-X 
-X 
-3 
-Kinh phí để thực hiện liên 
-quan đến cứu nạn, cứu trợ 
-theo quy định của pháp luật 
-về phòng, chống thiên tai 
- 
- 
- 
- 
- 
- 
-4 
-Kinh phí khắc phục hậu quả 
-thiên tai trong các dự án sửa 
-chữa KCHT đường bộ, máy 
-móc, thiết bị phục vụ vận 
-hành khai thác KCHTĐB bị 
-hư hỏng, thiệt hại do thiên 
-tai. 
-X 
-X 
- 
- 
-X 
-X 
-5 
-Kinh phí khắc phục hậu quả 
-thiên tai phát sinh trong dự 
-án đầu tư xây dựng công 
-trình đường bộ  
-X 
-X 
-X 
-X 
- 
- 
-6 
-Kinh phí để bổ sung vật tư 
-dự phòng, máy móc thiết bị 
- 
- 
-X 
-X 
-X 
-X 
+(*) Chỉ ghi các nguyên nhân chính: ngập nước (do lũ, lụt, nước dâng, ngập đường tràn);
+sạt lở đất đá trên ta luy dương; lún, sụt nền mặt đường xuống ta luy âm, đứt đường; hư
+hỏng, trôi cầu, cống; các nguyên nhân khác. Trường hợp 1 tỉnh có tắc đường cả 4 nhóm
+nguyên nhân này thì ghi số điểm tắc theo từng nhóm nguyên nhân, mỗi nhóm 1 hàng.
+(**) Ghi tóm tắt công tác đang triển khai khắc phục và công tác phân luồng giao thông
+Ví dụ Tỉnh C trên quốc lộ N tắc 01 vị trí do ngập sâu, 03 vị trí sạt ta luy dương, 1 điểm sụt
+cống, 2 điểm sạt lở ta luy âm, 01 vị trí cầu phao hỏng. Đồng thời đang khác phục và bảo
+đảm giao thông thì ghi như sau:
 
-122
- 
- 
-dự phòng (nếu cần) cho công 
-tác phòng, chống, khắc phục 
-hậu quả thiên tai  và các 
-công việc cần thiết khác để 
-bảo đảm giao thông, khôi 
-phục các hạ tầng thiết yếu. 
-7 
-Kinh phí khắc phục hậu quả 
-thiên tai gây ra đối với trụ sở 
-cơ quan, đơn vị và nhà làm 
-việc và các công trình dân 
-dụng khác. 
- 
- 
- 
- 
- 
- 
- 
- 
-Ghi chú: Ô có đánh dấu “X” thì không ghi số tiền. 
+3. Bảng thống kê danh sách các vị trí đã thông tuyến (thời điểm từ giờ … đến … giờ
+ngày … tháng … năm …)
 
-123
- 
- 
-Mẫu số 4: Danh mục công trình khắc phục hậu quả thiên tai để bảo đảm giao thông 
-theo quy định tại khoản 1 Điều 15 Thông tư số 40/2024/TT-BGTVT. 
- 
-TT Tên công 
-trình 
-Quyết 
-định số, 
-ngày, 
-tháng, 
-năm phê 
-duyệt 
-duyệt hồ 
-sơ hoàn 
-thành 
-công trình 
-Thiên tai  
-Thiệt hại 
-chính cần 
-phải khắc 
-phục để 
-bảo đảm 
-giao thông 
-Thời 
-gian 
-hoàn 
-thành 
-(hoặc dự 
-kiến 
-hoàn 
-thành) 
-Kinh phí 
-đề xuất hỗ 
-trợ (triệu 
-đồng) 
-Loại 
-thiên tai 
-Thời 
-gian 
-xảy 
-ra 
-Năm 
-N 
-Năm 
-N +1 
-1 
- 
- 
- 
- 
- 
- 
- 
- 
-2 
+<table data-source="data/raw/pdf/28_VBHN_BXD_cb469690.pdf#page=44">
+<tr>
+<td>TT</td>
+<td>Tỉnh, TP</td>
+<td>Tuyến<br>đường</td>
+<td>Vị trí đã<br>thông truyến</td>
+<td>Trước đây<br>tắc là do</td>
+<td>Thuyết minh tóm tắt<br>giải pháp, nguyên nhân<br>đã thông tuyến</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Tỉnh A</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Tỉnh B</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>Tỉnh C</td>
+<td>QL.N</td>
+<td>01 vị trí Km<br>10</td>
+<td>Ngập sâu</td>
+<td>- Hiện nay nước đã rút<br>cạn ngập 0,5m;<br>- Giao thông trở lại bình<br>thườn</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>Vị trí Km 15</td>
+<td>Sạt lở ta<br>luy dương</td>
+<td>- Hiện nay đã họt dọn<br>thông xe 1 làn;<br>- Tạm thời thông xe 01<br>làn.<br>- Dự kiến … ngày X sẽ<br>thông xe toàn bộ mặt<br>đường</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td>01 vị trí tại<br>Km 40</td>
+<td>Cầu phao<br>không bảo<br>đảm an<br>toàn khai<br>thác</td>
+<td>- Hiện nay nước sông đã<br>bảo đảm an toàn khai<br>thác, cầu phao đã hoạt<br>động phục vụ giao thông<br>bình thường.</td>
+</tr>
+</table>
 
-124
- 
- 
-Mẫu số 5: Danh mục các công trình xây dựng theo Lệnh xây dựng khẩn cấp để khắc 
-phục hậu quả thiên tai. 
- 
-TT 
-Tên 
-công 
-trình  
-Quyết định 
-số, ngày, 
-tháng, năm 
-công bố tình 
-huống khẩn 
-cấp do thiên 
-tai; Quyết 
-định số, 
-ngày, tháng, 
-năm ban 
-hành Lệnh 
-XDCT khẩn 
-cấp khắc 
-phục hậu 
-quả thiên 
-tai 
-Thiên tai  
-Thiệt hại 
-chính cần 
-phải khắc 
-phục, giải 
-pháp thiết 
-kế chính 
-XDCT 
-theo Lệnh 
-XDCT 
-khẩn cấp. 
-Thời gian 
-hoàn 
-thành 
-(hoặc dự 
-kiến hoàn 
-thành) 
-Kinh phí 
-đề xuất hỗ 
-trợ (triệu 
-đồng) 
-Loại 
-thiên 
-tai 
-Thời gian 
-xảy ra 
-Năm 
-N 
-Năm 
-N +1 
-1 
-Ví dụ: 
-Dự án 
-XDCT 
-khẩn 
-cấp 
-tường 
-chắn 
-BTCT 
-theo 
-Lệnh 
-XDCT 
-khẩn 
-cấp 
-1. Quyết 
-định công bố 
-tình huống 
-khẩn cấp do 
-thiên tai số  
-/QĐ-BXD 
-ngày ….; 
-2. Quyết 
-định số, 
-ngày, tháng, 
-năm của … 
-về việc ban 
-hành Lệnh 
-XDCT   
-khẩn cấp 
-khắc phục 
-hậu quả 
-thiên tai … 
-Mưa 
-lũ lớn, 
-đặc 
-biệt 
-lớn, 
-gây 
-sạt lở 
-ta luy 
-âm 
-nền 
-đường 
-từ Km  
-… 
-Km, 
-QL… 
-15/11 đến 
-25/11/2025 
-Sụt lún nền 
-mặt đường 
-xuống 
-ta 
-luy âm, xói 
-lở 
-thành 
-hàm 
-ếch 
-dưới 
-mặt 
-đường, thắt 
-hẹp 
-mặt 
-đường dẫn 
-đến không 
-bảo 
-đảm 
-AT 
-cho 
-khai thác, 
-sử 
-dụng, 
-không bảo 
-đảm 
-TTATGT. 
-Thiết 
-kế 
-tường chắn 
-bằng 
-rọ 
-thép, 
-xếp 
-đá hộc, đắp 
-Dự 
-kiến 
-31/01/2026 
-0,1 
-2,5 
+II. BÁO CÁO NHANH CÁC VỊ TRÍ TẮC TRÊN CÁC TUYẾN ĐƯỜNG
+TỈNH, ĐƯỜNG ĐỊA PHƯƠNG VÀ ĐƯỜNG KHÁC
+Đối với đường tỉnh, đường xã và đường khác việc báo cáo về tình hình tắc
+đường do hậu quả thiên tai tương tự Mục I báo cáo nhanh các vị trí tắc trên các tuyến
+đường quốc lộ, đường cao tốc. Nhưng thay tên quốc lộ, cao tốc trong Mục I bằng
+đường tỉnh, đường xã, đường khác cho phù hợp; thay cụm từ ngữ “tỉnh, thành phố”
+bằng cụm từ “cấp xã”.
 
-125
- 
- 
-bù 
-nền 
-đường, làm 
-lại 
-mặt 
-đường, báo 
-hiệu đường 
-bộ và hộ 
-lan ATGT 
-2 
- 
- 
- 
- 
- 
- 
- 
- 
-3 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+Mẫu số 2: Mẫu báo cáo tổng hợp các chỉ tiêu chính thiệt hại đối với đường bộ
+do thiên tai
+TỔNG HỢP CÁC CHỈ TIÊU CHÍNH THIỆT HẠI DO THIÊN TAI GÂY RA
+TỪ … ĐẾN ….
+Cơ quan báo cáo: ………………………………
+
+<table data-source="data/raw/pdf/28_VBHN_BXD_cb469690.pdf#page=45">
+<tr>
+<td rowspan="2">TT</td>
+<td rowspan="2">MÃ</td>
+<td rowspan="2">CHỈ TIÊU THIỆT HẠI</td>
+<td rowspan="2">ĐƠN VỊ</td>
+<td colspan="2">Tổng</td>
+</tr>
+<tr>
+<td>Số lượng</td>
+<td>Ước thiệt hại (triệu đồng)</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>THIỆT HẠI VỀ KẾT CẤU HẠ<br>TẦNG ĐƯỜNG BỘ</td>
+<td>triệu<br>đồng</td>
+<td>x</td>
+<td></td>
+</tr>
+<tr>
+<td>A</td>
+<td></td>
+<td>Đường quốc lộ, đường cao tốc do<br>Trung ương quản lý</td>
+<td>Triệu</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td></td>
+<td>Chiều dài sạt lở, hư hỏng</td>
+<td>m</td>
+<td></td>
+<td>x</td>
+</tr>
+<tr>
+<td>2</td>
+<td></td>
+<td>Khối lượng đất, đá, bê tông, nhựa<br>đường các loại</td>
+<td>m<sup>3</sup></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td>Cầu, cống bị hư hỏng</td>
+<td>cái</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td></td>
+<td>Các thiệt hại khác</td>
+<td>Triệu</td>
+<td>x</td>
+<td></td>
+</tr>
+<tr>
+<td>B</td>
+<td></td>
+<td>Đường quốc lộ do địa phương<br>quản lý</td>
+<td>Triệu</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td></td>
+<td>Chiều dài sạt lở, hư hỏng</td>
+<td>m</td>
+<td></td>
+<td>x</td>
+</tr>
+<tr>
+<td>2</td>
+<td></td>
+<td>Khối lượng đất, đá, bê tông, nhựa<br>đường các loại</td>
+<td>m<sup>3</sup></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td>Cầu, cống bị hư hỏng</td>
+<td>cái</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td></td>
+<td>Các thiệt hại khác</td>
+<td>Triệu</td>
+<td>x</td>
+<td></td>
+</tr>
+<tr>
+<td>C</td>
+<td></td>
+<td>Đường tỉnh, đường xã, đường<br>khác do địa phương quản lý</td>
+<td>Triệu</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td></td>
+<td>Chiều dài sạt lở, hư hỏng</td>
+<td>m</td>
+<td></td>
+<td>x</td>
+</tr>
+<tr>
+<td>2</td>
+<td></td>
+<td>Khối lượng đất, đá, bê tông, nhựa<br>đường các loại</td>
+<td>m<sup>3</sup></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td>Cầu, cống bị hư hỏng</td>
+<td>cái</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td></td>
+<td>Các thiệt hại khác</td>
+<td>Triệu</td>
+<td>x</td>
+<td></td>
+</tr>
+</table>
+
+<table data-source="data/raw/pdf/28_VBHN_BXD_cb469690.pdf#page=46">
+<tr>
+<td>D</td>
+<td></td>
+<td>Đường đầu tư theo hình thức<br>PPP, đường giao Doanh nghiệp<br>nhà nước đầu tư xây dựng, quản<br>lý, khai thác</td>
+<td>Triệu</td>
+<td>X</td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td></td>
+<td>Chiều dài sạt lở, hư hỏng</td>
+<td>m</td>
+<td></td>
+<td>x</td>
+</tr>
+<tr>
+<td>2</td>
+<td></td>
+<td>Khối lượng đất, đá, bê tông, nhựa<br>đường các loại</td>
+<td>m<sup>3</sup></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td>Cầu, cống bị hư hỏng</td>
+<td>cái</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td></td>
+<td>Các thiệt hại khác</td>
+<td>Triệu</td>
+<td>x</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td colspan="2">TỔNG (A+B+C+D)</td>
+<td>triệu<br>đồng</td>
+<td>x</td>
+<td></td>
+</tr>
+</table>
+
+Ghi chú:
+(x) Các ô đánh dấu (X) thì bỏ qua không ước giá trị thiệt hại bằng tiền, hoặc số lượng.
+
+Mẫu số 3: Tổng hợp kinh phí thực hiện để khắc phục hậu quả thiệt hại do thiên tai
+gây ra trong 01 đợt thiên tai, trong tháng, quý, năm
+
+<table data-source="data/raw/pdf/28_VBHN_BXD_cb469690.pdf#page=47">
+<tr>
+<td rowspan="2">TT</td>
+<td rowspan="2">Kinh phí thực hiện từng<br>loại công việc phòng,<br>chống thiên tai</td>
+<td colspan="2">Kinh phí khắc<br>phục hậu quả<br>thiên tai đối<br>với KCHTĐB<br>đang khai thác<br>(triệu đồng)</td>
+<td colspan="2">Kinh phí<br>khắc phục<br>hậu quả thiên<br>tai trong dự<br>án sửa chữa<br>bảo trì (triệu<br>đồng)</td>
+<td colspan="2">Kinh phí khắc<br>phục hậu quả<br>thiên tai trong<br>các dự án đầu<br>tư xây dựng<br>công trình<br>(triệu đồng)</td>
+</tr>
+<tr>
+<td>Năm N</td>
+<td>Năm<br>N+1</td>
+<td>Năm<br>N</td>
+<td>Năm<br>N+1</td>
+<td>Năm N</td>
+<td>Năm<br>N+1</td>
+</tr>
+<tr>
+<td></td>
+<td>Tổng cộng (triệu đồng)</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>1</td>
+<td>Kính phí để khắc phục hậu<br>quả thiên tai để bảo đảm<br>giao thông theo quy định tại<br>khoản 1 Điều 14 và khoản 1<br>Điều 15 Thông tư số<br>40/2024/TT-BGTVT</td>
+<td></td>
+<td></td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Kinh phí để xây dựng công<br>trình theo Lệnh xây dựng<br>khẩn cấp để khắc phục hậu<br>quả thiên tai.</td>
+<td></td>
+<td></td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Kinh phí để thực hiện liên<br>quan đến cứu nạn, cứu trợ<br>theo quy định của pháp luật<br>về phòng, chống thiên tai</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Kinh phí khắc phục hậu quả<br>thiên tai trong các dự án sửa<br>chữa KCHT đường bộ, máy<br>móc, thiết bị phục vụ vận<br>hành khai thác KCHTĐB bị<br>hư hỏng, thiệt hại do thiên<br>tai.</td>
+<td>X</td>
+<td>X</td>
+<td></td>
+<td></td>
+<td>X</td>
+<td>X</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Kinh phí khắc phục hậu quả<br>thiên tai phát sinh trong dự<br>án đầu tư xây dựng công<br>trình đường bộ</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>Kinh phí để bổ sung vật tư<br>dự phòng, máy móc thiết bị</td>
+<td></td>
+<td></td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+<td>X</td>
+</tr>
+</table>
+
+<table data-source="data/raw/pdf/28_VBHN_BXD_cb469690.pdf#page=48">
+<tr>
+<td></td>
+<td>dự phòng (nếu cần) cho công<br>tác phòng, chống, khắc phục<br>hậu quả thiên tai và các<br>công việc cần thiết khác để<br>bảo đảm giao thông, khôi<br>phục các hạ tầng thiết yếu.</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>7</td>
+<td>Kinh phí khắc phục hậu quả<br>thiên tai gây ra đối với trụ sở<br>cơ quan, đơn vị và nhà làm<br>việc và các công trình dân<br>dụng khác.</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+
+Ghi chú: Ô có đánh dấu “X” thì không ghi số tiền.
+
+Mẫu số 4: Danh mục công trình khắc phục hậu quả thiên tai để bảo đảm giao thông
+theo quy định tại khoản 1 Điều 15 Thông tư số 40/2024/TT-BGTVT.
+
+<table data-source="data/raw/pdf/28_VBHN_BXD_cb469690.pdf#page=49">
+<tr>
+<td rowspan="2">TT</td>
+<td rowspan="2">Tên công<br>trình</td>
+<td rowspan="2">Quyết<br>định số,<br>ngày,<br>tháng,<br>năm phê<br>duyệt<br>duyệt hồ<br>sơ hoàn<br>thành<br>công trình</td>
+<td colspan="2">Thiên tai</td>
+<td rowspan="2">Thiệt hại<br>chính cần<br>phải khắc<br>phục để<br>bảo đảm<br>giao thông</td>
+<td rowspan="2">Thời<br>gian<br>hoàn<br>thành<br>(hoặc dự<br>kiến<br>hoàn<br>thành)</td>
+<td colspan="2">Kinh phí<br>đề xuất hỗ<br>trợ (triệu<br>đồng)</td>
+</tr>
+<tr>
+<td>Loại<br>thiên tai</td>
+<td>Thời<br>gian<br>xảy<br>ra</td>
+<td>Năm<br>N</td>
+<td>Năm<br>N +1</td>
+</tr>
+<tr>
+<td>1</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+
+Mẫu số 5: Danh mục các công trình xây dựng theo Lệnh xây dựng khẩn cấp để khắc
+phục hậu quả thiên tai.
+
+<table data-source="data/raw/pdf/28_VBHN_BXD_cb469690.pdf#page=50">
+<tr>
+<td rowspan="2">TT</td>
+<td rowspan="2">Tên<br>công<br>trình</td>
+<td rowspan="2">Quyết định<br>số, ngày,<br>tháng, năm<br>công bố tình<br>huống khẩn<br>cấp do thiên<br>tai; Quyết<br>định số,<br>ngày, tháng,<br>năm ban<br>hành Lệnh<br>XDCT khẩn<br>cấp khắc<br>phục hậu<br>quả thiên<br>tai</td>
+<td colspan="2">Thiên tai</td>
+<td rowspan="2">Thiệt hại<br>chính cần<br>phải khắc<br>phục, giải<br>pháp thiết<br>kế chính<br>XDCT<br>theo Lệnh<br>XDCT<br>khẩn cấp.</td>
+<td rowspan="2">Thời gian<br>hoàn<br>thành<br>(hoặc dự<br>kiến hoàn<br>thành)</td>
+<td colspan="2">Kinh phí<br>đề xuất hỗ<br>trợ (triệu<br>đồng)</td>
+</tr>
+<tr>
+<td>Loại<br>thiên<br>tai</td>
+<td>Thời gian<br>xảy ra</td>
+<td>Năm<br>N</td>
+<td>Năm<br>N +1</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Ví dụ:<br>Dự án<br>XDCT<br>khẩn<br>cấp<br>tường<br>chắn<br>BTCT<br>theo<br>Lệnh<br>XDCT<br>khẩn<br>cấp</td>
+<td>1. Quyết<br>định công bố<br>tình huống<br>khẩn cấp do<br>thiên tai số<br>/QĐ-BXD<br>ngày ….;<br>2. Quyết<br>định số,<br>ngày, tháng,<br>năm của …<br>về việc ban<br>hành Lệnh<br>XDCT<br>khẩn cấp<br>khắc phục<br>hậu quả<br>thiên tai …</td>
+<td>Mưa<br>lũ lớn,<br>đặc<br>biệt<br>lớn,<br>gây<br>sạt lở<br>ta luy<br>âm<br>nền<br>đường<br>từ Km<br>…<br>Km,<br>QL…</td>
+<td>15/11 đến<br>25/11/2025</td>
+<td>Sụt lún nền<br>mặt đường<br>xuống ta<br>luy âm, xói<br>lở thành<br>hàm ếch<br>dưới mặt<br>đường, thắt<br>hẹp mặt<br>đường dẫn<br>đến không<br>bảo đảm<br>AT cho<br>khai thác,<br>sử dụng,<br>không bảo<br>đảm<br>TTATGT.<br>Thiết kế<br>tường chắn<br>bằng rọ<br>thép, xếp<br>đá hộc, đắp</td>
+<td>Dự kiến<br>31/01/2026</td>
+<td>0,1</td>
+<td>2,5</td>
+</tr>
+</table>
+
+<table data-source="data/raw/pdf/28_VBHN_BXD_cb469690.pdf#page=51">
+<tr>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>bù nền<br>đường, làm<br>lại mặt<br>đường, báo<br>hiệu đường<br>bộ và hộ<br>lan ATGT</td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+</table>
+
+[^vbhn28-20]: Điểm này được sửa đổi, bổ sung theo quy định tại khoản 1 Điều 7 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
+
+    bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+
+    Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
+
+    số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
+
+    hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
+
+    Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
+
+    dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-21]: Khoản này được bãi bỏ theo quy định tại điểm e khoản 5 Điều 9 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
+
+    bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+
+    Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
+
+    số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
+
+    hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
+
+    Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
+
+    dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-22]: Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 2 Điều 7 Thông tư số 72/2025/TT-BXD 
+
+    ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận 
+
+    tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ 
+
+    tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; 
+
+    Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản 
+
+    lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 
+
+    2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang 
+
+    sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-23]: Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 2 Điều 7 Thông tư số 72/2025/TT-BXD 
+
+    ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận 
+
+    tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ 
+
+    tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; 
+
+    Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản 
+
+    lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm
+
+    2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang 
+
+    sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-24]: Điểm này được bổ sung theo quy định tại điểm c khoản 2 Điều 7 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
+
+    bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+
+    Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
+
+    số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
+
+    hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
+
+    Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
+
+    dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-25]: Điểm này được bổ sung theo quy định tại khoản 3 Điều 7 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 
+
+    năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 
+
+    tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô 
+
+    và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, 
+
+    trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao 
+
+    thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 
+
+    41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, 
+
+    khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ 
+
+    trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
+
+    dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-26]: Điểm này được sửa đổi, bổ sung theo quy định tại khoản 1 Điều 8 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
+
+    bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+
+    Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
+
+    số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
+
+    hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
+
+    Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-27]: Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
+
+    Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
+
+    của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
+
+    chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
+
+    đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
+
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
+
+    thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+
+    31 tháng 12 năm 2025.
+
+[^vbhn28-28]: Điểm này được sửa đổi, bổ sung theo quy định tại khoản 2 Điều 8 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
+
+    bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+
+    Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
+
+    số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
+
+    hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
+
+    Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-29]: Cụm từ “Sở Giao thông vận tải” được thay thế bởi cụm từ “Sở Xây dựng” quy định tại khoản 2 Điều 9 Thông 
+
+    tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của 
+
+    Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
+
+    chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
+
+    đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
+
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
+
+    thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+
+    31 tháng 12 năm 2025.
+
+[^vbhn28-30]: Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
+
+    Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
+
+    của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
+
+    chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
+
+    đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
+
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
+
+    thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+
+    31 tháng 12 năm 2025.
+
+[^vbhn28-31]: Điểm này được sửa đổi, bổ sung theo quy định tại khoản 3 Điều 8 Thông tư số 72/2025/TT-BXD ngày 31 
+
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
+
+    bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+
+    Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
+
+    số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
+
+    hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
+
+    Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-32]: Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
+
+    Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
+
+    của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
+
+    chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
+
+    đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
+
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
+
+    thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+
+    31 tháng 12 năm 2025.
+
+[^vbhn28-7]: Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 Thông 
+    tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của 
+    Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
+    chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
+    đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
+    thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+    31 tháng 12 năm 2025.
+
+[^vbhn28-8]: Cụm từ “Sở Giao thông vận tải” được thay thế bởi cụm từ “Sở Xây dựng” quy định tại khoản 2 Điều 9 Thông 
+    tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của 
+    Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
+    chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
+    đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
+    thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+    31 tháng 12 năm 2025.
+
+[^vbhn28-9]: Cụm từ “Sở Giao thông vận tải” được thay thế bởi cụm từ “Sở Xây dựng” quy định tại khoản 2 Điều 9 Thông 
+    tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của 
+    Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
+    chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
+    đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
+    thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+    31 tháng 12 năm 2025.
+
+[^vbhn28-10]: Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
+    Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
+    của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
+    chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
+    đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
+    thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+    31 tháng 12 năm 2025.
+
+[^vbhn28-11]: Khoản này được sửa đổi, bổ sung theo quy định tại Điều 4 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 
+    của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 
+    2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động 
+    của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng 
+    nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải 
+    quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và 
+    bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao 
+    thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi 
+    chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-12]: Khoản này được bãi bỏ theo quy định tại điểm a khoản 5 Điều 9 Thông tư số 72/2025/TT-BXD ngày 31 
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
+    bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
+    số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
+    hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
+    Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
+    dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-17]: Điểm này được sửa đổi, bổ sung theo quy định tại điểm a khoản 1 Điều 6 Thông tư số 72/2025/TT-BXD 
+    ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận 
+    tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ 
+    tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+    trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; 
+    Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản 
+    lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 
+    2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang 
+    sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-18]: Điểm này được sửa đổi, bổ sung theo quy định tại điểm b khoản 1 Điều 6 Thông tư số 72/2025/TT-BXD ngày 
+    31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
+    bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
+    số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
+    hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
+    Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
+    dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-19]: Khoản này được bãi bỏ theo quy định tại điểm đ khoản 5 Điều 9 Thông tư số 72/2025/TT-BXD ngày 31 
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
+    bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
+    số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
+    hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
+    Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
+    dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-13]: Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
+    Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
+    của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
+    chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
+    đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
+    thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+    31 tháng 12 năm 2025.
+
+[^vbhn28-14]: Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
+    Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
+    của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
+    chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
+    đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
+    thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+    31 tháng 12 năm 2025.
+
+[^vbhn28-15]: Điểm này được sửa đổi, bổ sung theo quy định tại khoản 1 Điều 5 Thông tư số 72/2025/TT-BXD ngày 31 
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
+    bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
+    số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
+    hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
+    Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
+    dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-16]: Điểm này được sửa đổi, bổ sung theo quy định tại khoản 1 Điều 5 Thông tư số 72/2025/TT-BXD ngày 31 
+    tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
+    bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
+    số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
+    hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
+    Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông sử 
+    dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.
+
+[^vbhn28-33]: Cụm từ “Sở Giao thông vận tải” được thay thế bởi cụm từ “Sở Xây dựng” quy định tại khoản 2 Điều 9 Thông 
+    tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của 
+    Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
+    chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
+    đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
+    thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+    31 tháng 12 năm 2025.
+
+[^vbhn28-34]: Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
+    Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
+    của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
+    chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
+    đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
+    thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+    31 tháng 12 năm 2025.
+
+[^vbhn28-35]: Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
+    Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều 
+    của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
+    chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
+    đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
+    thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+    31 tháng 12 năm 2025.
+
+[^vbhn28-36]: Cụm từ “Bộ Giao thông vận tải” được thay thế bởi cụm từ “Bộ Xây dựng” quy định tại khoản 1 Điều 9 
+    Thông tư số 72/2025/TT-BGTVT ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số 
+    Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định 
+    về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe 
+    trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT 
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu 
+    quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+    31 tháng 12 năm 2025.
+
+[^vbhn28-37]: Cụm từ “Sở Giao thông vận tải” được thay thế bởi cụm từ “Sở Xây dựng” quy định tại khoản 2 Điều 9 Thông 
+    tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ sung một số Điều của 
+    Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ 
+    chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên 
+    đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 
+    15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả 
+    thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-
+    BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai 
+    thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi hành kể từ ngày 
+    31 tháng 12 năm 2025.
+
+[^vbhn28-38]: Điều 24 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
+    sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
+    tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm 
+    dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc 
+    phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+    trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư 
+    số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình 
+    vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi 
+    hành kể từ ngày 31 tháng 12 năm 2025 quy định như sau: 
+    “Điều 24. Trách nhiệm của các cơ quan 
+    1. Cục Đường bộ Việt Nam 
+    a) Tổ chức thực hiện nhiệm vụ, quyền hạn được giao theo quy định tại Thông tư này;  
+    b) Thực hiện việc kiểm tra, giám sát đối với các nhiệm vụ đã được phân cấp cho chính quyền địa phương theo 
+    quy định của pháp luật.  
+    2. Sở Xây dựng có trách nhiệm tham mưu Ủy ban nhân dân cấp tỉnh bố trí nguồn lực, các điều kiện để tổ chức 
+    thực hiện các nhiệm vụ theo quy định của Thông tư này. Trường hợp phát sinh vướng mắc, bất cập trong quá trình triển 
+    khai thi hành báo cáo Ủy ban nhân dân cấp tỉnh, Bộ Xây dựng để kịp thời xử lý, tháo gỡ theo thẩm quyền; 
+    3. Ủy ban nhân dân cấp xã có trách nhiệm tổ chức thực hiện nhiệm vụ, quyền hạn được giao theo quy định tại 
+    Thông tư này.”.
+
+[^vbhn28-39]: Điều 9 Thông tư số 72/2025/TT-BXD ngày 31 tháng 12 năm 2025 của Bộ trưởng Bộ Xây dựng sửa đổi, bổ 
+    sung một số Điều của Thông tư số 36/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận 
+    tải quy định về tổ chức, quản lý hoạt động vận tải bằng xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm 
+    dừng xe trên đường bộ; quy định trình tự, thủ tục đưa bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-
+    BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc 
+    phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ 
+    trưởng Bộ Giao thông vận tải quy định về quản lý, vận hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư 
+    số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình 
+    vận hành, khai thác bến phà, bến khách ngang sông sử dụng phà một lưỡi chở hành khách và xe ô tô, có hiệu lực thi 
+    hành kể từ ngày 31 tháng 12 năm 2025 quy định như sau: 
+    “Điều 23. Hiệu lực thi hành  
+    1. Thông tư này có hiệu lực thi hành kể từ ngày ký ban hành.  
+    2. Bãi bỏ Điều 27 và Điều 28 Thông tư số 09/2025/TT-BXD ngày 13 tháng 6 năm 2025 của Bộ trưởng Bộ Xây 
+    dựng về sửa đổi, bổ sung một số điều của các Thông tư thuộc lĩnh vực quản lý nhà nước của Bộ Xây dựng liên quan 
+    đến sắp xếp tổ chức bộ máy, thực hiện chính quyền địa phương hai cấp và phân cấp cho chính quyền địa phương.”.
+
+[^vbhn28-40]: Phụ lục ban hành kèm theo Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng 
+    Bộ Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ có 
+    hiệu thi hành từ ngày 01 tháng 01 năm 2025, được thay thế bởi Phụ lục II  kèm theo Thông tư số 72/2025/TT-BXD 
+    ngày 31/12/2025 của Bộ trưởng Bộ Xây dựng Sửa đổi, bổ sung một số Điều của Thông tư số 36/2024/TT-BGTVT 
+    ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về tổ chức, quản lý hoạt động vận tải bằng 
+    xe ô tô và hoạt động của bến xe, bãi đỗ xe, trạm dừng nghỉ, điểm dừng xe trên đường bộ; quy định trình tự, thủ tục đưa 
+    bến xe, trạm dừng nghỉ vào khai thác, Thông tư số 40/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ 
+    Giao thông vận tải quy định về công tác phòng, chống, khắc phục hậu quả thiên tai trong lĩnh vực đường bộ; Thông tư 
+    số 41/2024/TT-BGTVT ngày 15 tháng 11 năm 2024 của Bộ trưởng Bộ Giao thông vận tải quy định về quản lý, vận 
+    hành, khai thác và bảo trì kết cấu hạ tầng đường bộ, Thông tư số 22/2014/TT-BGTVT ngày 06 tháng 6 năm 2014 của 
+    Bộ trưởng Bộ Giao thông vận tải hướng dẫn xây dựng quy trình vận hành, khai thác bến phà, bến khách ngang sông 
+    sử dụng phà một lưỡi chở hành khách và xe ô tô, theo quy định tại khoản 4 Điều 9 Thông tư số 72/2025/TT-BXD, có 
+    hiệu lực thi hành kể từ ngày 31 tháng 12 năm 2025.

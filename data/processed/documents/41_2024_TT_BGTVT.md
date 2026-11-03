@@ -35,10 +35,7 @@ công nút giao đấu nối vào đường quốc lộ đang khai thác;
 trên đường bộ đang khai thác; trách nhiệm cung cấp thông tin và cơ chế phối hợp 
 giữa các cơ quan, tổ chức, cá nhân có liên quan để bảo đảm trật tự, an toàn giao 
 thông, an toàn khi thi công;  
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 20.12.2024 14:32:25 +07:00
+
 
   
 3. Quản lý, vận hành, khai thác, bảo trì kết cấu hạ tầng đường bộ; 
@@ -72,8 +69,6 @@ quy định tại Nghị định quy định chi tiết và hướng dẫn thi h
 Đường bộ, Điều 77 Luật Trật tự an toàn giao thông đường bộ; 
 c) Văn bản giao làm chủ đầu tư dự án xây dựng nút giao đấu nối vào đường 
 quốc lộ đang khai thác. 
-
-31 
  
 2. Cơ quan có thẩm quyền chấp thuận thiết kế nút giao đấu nối vào đường 
 quốc lộ đang khai thác: 
@@ -201,8 +196,7 @@ trường hợp không cấp phép thì phải có văn bản trả lời và n�
 5. Giấy phép thi công có thời hạn 24 tháng, hết thời hạn nêu trên mà chưa hoàn 
 thành thi công công trình trên đường bộ đang khai thác thì phải thực hiện lại từ đầu 
 thủ tục cấp phép thi công công trình trên đường bộ đang khai thác. 
-##### Điều 6. Cung cấp thông tin và cơ chế phối hợp giữa các cơ quan, tổ chức, 
-cá nhân khi thi công trên đường bộ đang khai thác 
+##### Điều 6. Cung cấp thông tin và cơ chế phối hợp giữa các cơ quan, tổ chức, cá nhân khi thi công trên đường bộ đang khai thác 
 1. Trách nhiệm của tổ chức, cá nhân được cấp giấy phép thi công công trình 
 trên đường bộ đang khai thác: 
 a) Trước khi thi công ít nhất 05 ngày, phải lắp đặt bảng thông tin công khai tại 
@@ -426,8 +420,7 @@ vận tải;
 
 41 
  
-##### Điều 10. Báo cáo kết quả thực hiện kế hoạch quản lý, vận hành, khai thác, 
-bảo trì kết cấu hạ tầng đường bộ 
+##### Điều 10. Báo cáo kết quả thực hiện kế hoạch quản lý, vận hành, khai thác, bảo trì kết cấu hạ tầng đường bộ 
 1. Quy định về báo cáo: 
 a) Báo cáo kết quả thực hiện kế hoạch quản lý, vận hành, khai thác, bảo trì kết 
 cấu hạ tầng đường bộ được thực hiện từng quý, 06 tháng đầu năm và báo cáo năm 
@@ -562,8 +555,7 @@ khu vực, ảnh chụp khu vực hay xảy ra tai nạn giao thông.
 
 45 
  
-##### Điều 15. Trình tự xử lý điểm hay xảy ra tai nạn giao thông đường bộ, 
-điểm tiềm ẩn tai nạn giao thông đường bộ  
+##### Điều 15. Trình tự xử lý điểm hay xảy ra tai nạn giao thông đường bộ, điểm tiềm ẩn tai nạn giao thông đường bộ  
 1. Cơ quan quản lý đường bộ, người quản lý, sử dụng đường bộ có trách nhiệm 
 tổng hợp theo các tiêu chí: số vụ tai nạn giao thông, số người tử vong và số người 
 bị thương do tai nạn giao thông; thiệt hại đối với kết cấu hạ tầng, phương tiện tham 
@@ -4253,10 +4245,7 @@ báo về tồn tại
 trong công tác 
 này của cơ quan 
 ký hợp đồng. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 20.12.2024 14:33:04 +07:00
+
 
   
  

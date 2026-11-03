@@ -141,7 +141,7 @@ class FreshSampleTests(unittest.TestCase):
         config=copy.deepcopy(self.config); config['vector_policy']='provider'
         with self.assertRaises(RunBlocked): self.api()._config(config)
 
-    def test_production_write_stays_denied(self):
+    def test_fresh_config_cannot_authorize_production_write(self):
         config=copy.deepcopy(self.config); config.update(scope='PRODUCTION',write_mode='WRITE')
         with self.assertRaises(RunBlocked): self.preflight(config,self.reader())
 

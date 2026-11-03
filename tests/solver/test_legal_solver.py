@@ -298,6 +298,8 @@ class AdapterTests(unittest.TestCase):
                 for key, value in list(record['properties'].items()):
                     if key not in ('id', 'name', 'docId', 'text') and isinstance(value, str) and value != '{}':
                         record['properties'][key] = ''
+            # This boundary fixture isolates text; source provenance is budgeted separately.
+            reader.nodes['VietRoadTraffic.LegalUnit', 'đơn-vị']['properties']['sourceRecord'] = 'null'
             result, _, _ = self.invoke(reader, retriever)
             self.assertEqual(result.payload()['source_characters'], size)
             self.assertEqual(result.payload()['budget_exceeded'], exceeded)
@@ -405,6 +407,17 @@ class SafetyTests(unittest.TestCase):
         result, _, _ = self.render(module,ctx,question,candidate([self.selected(ctx)]))
         self.assertTrue(result.abstained)
 
+    def test_reviewed_sign_authority_rejects_another_primary_code(self):
+        module = self.module()
+        metadata = dict(ma_bien='P.101', qcvn='QCVN 41:2024/BGTVT',
+                        record_type='standalone', description_scope='specific',
+                        verification_status='verified_pdf')
+        self.assertTrue(module._sign_applicable('Biển P.101 có ý nghĩa gì?', metadata))
+        for question in ('Biển P.102 có ý nghĩa gì?', 'Biển P.101-80 có ý nghĩa gì?',
+                         'Biển P.101 theo QCVN 41:2019 có ý nghĩa gì?'):
+            with self.subTest(question=question):
+                self.assertFalse(module._sign_applicable(question, metadata))
+
     def module(self):
         module = importlib.import_module('kag.legal_solver')
         self.assertTrue(hasattr(module, 'LegalDeduceExecutor'), 'evidence-only LegalDeduce missing')
@@ -462,20 +475,22 @@ class SafetyTests(unittest.TestCase):
 
     def test_forged_identity_and_offsets_abstain(self):
         module, _, _, ctx, question = self.prepare()
-        for override in ({'evidence_id': 'invented'}, {'field': 'missing'}, {'start': True},
+        for override in ({'evidence_id': 'invented'}, {'field': 'missing'},
                          {'start': -1}, {'end': 99999}, {'start': 20, 'end': 1}, {'end': 0}):
             with self.subTest(override=override):
                 result, _, _ = self.render(module, ctx, question, candidate([self.selected(ctx, **override)]))
                 self.assertTrue(result.abstained)
                 self.assertEqual(result.to_dict()['citations'], [])
+        with self.assertRaises(RuntimeError):
+            self.render(module, ctx, question, candidate([self.selected(ctx, start=True)]))
         for extra in ({'quote': '3.000.000 đồng'}, {'doc_id': 'invented'}, {'answer': 'được phép'}):
-            result, _, _ = self.render(module, ctx, question, candidate([self.selected(ctx)], **extra))
-            self.assertTrue(result.abstained)
+            with self.assertRaises(RuntimeError):
+                self.render(module, ctx, question, candidate([self.selected(ctx)], **extra))
 
     def test_server_spans_preserve_numbers_negation_and_context(self):
         for left, right in PAIRS:
             source = 'Xe mô tô không đội mũ bảo hiểm: '+left+'.'
-            module, _, _, ctx, question = self.prepare(text=source)
+            module, _, _, ctx, question = self.prepare(text=source, question='Xe mô tô không đội mũ bảo hiểm?')
             result, _, _ = self.render(module, ctx, question, candidate([self.selected(ctx)]))
             self.assertFalse(result.abstained, left)
             self.assertEqual(result.to_dict()['citations'][0]['quote'].encode(), source.encode())
@@ -485,7 +500,7 @@ class SafetyTests(unittest.TestCase):
             result, _, _ = self.render(module, ctx, question, candidate([self.selected(ctx, start=len('Xe mô tô không đội mũ bảo hiểm: '))]))
             self.assertTrue(result.abstained)
         source = 'Xe mô tô không đội mũ bảo hiểm; khoản 2 Điều 13 điểm b, 01/07/2026. é e\u0301 $text'
-        module, _, _, ctx, question = self.prepare(text=source)
+        module, _, _, ctx, question = self.prepare(text=source, question='Xe mô tô không đội mũ bảo hiểm?')
         result, _, _ = self.render(module, ctx, question, candidate([self.selected(ctx)]))
         self.assertEqual(result.to_dict()['citations'][0]['quote'], source)
 
@@ -741,7 +756,7 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(result.to_dict()['citations'][0]['quote'], 'Xe mô tô không đội mũ bảo hiểm: phạt 30.000.000 đồng.')
         self.assertEqual(result.to_dict()['citations'][0]['unit_id'], 'đơn-vị')
         self.assertEqual(llm.prompts[1]['context'][0]['action']['argument']['query'], self.narrow)
-        self.assertEqual([step['action']['name'] for step in llm.prompts[-1]['context']], ['Retriever', 'Deduce'])
+        self.assertEqual(len(llm.prompts), 3)
         self.assertEqual(llm.prompts[2]['evidence']['subquery'], self.narrow)
         self.assertEqual(pipeline.max_iteration, 5)
         _, another, _ = self.pipeline()
@@ -774,11 +789,16 @@ class PipelineTests(unittest.TestCase):
         self.assertEqual(llm.prompts, [])
 
     def test_finish_iteration_retries_and_errors(self):
-        module, pipeline, llm = self.pipeline([action(self.narrow)]*5)
+        second = 'Xe mô tô không đội mũ bảo hiểm mức phạt thế nào?'
+        third = 'Phạt xe mô tô không đội mũ bảo hiểm bao nhiêu?'
+        insufficient = candidate(abstained=True, applicability='insufficient', effectivity='uncertain')
+        module, pipeline, llm = self.pipeline([
+            action(self.narrow), action(self.narrow, 'Deduce'), insufficient,
+            action(second), action(second, 'Deduce'), insufficient, action(third)])
         from kag.solver.pipeline.kag_iterative_pipeline import MaxIterationsReachedError
         with self.assertRaises(MaxIterationsReachedError):
             module.answer(self.question, pipeline=pipeline, as_of=date(2026, 10, 6))
-        self.assertEqual(len(llm.prompts), 5)
+        self.assertEqual(len(llm.prompts), 7)
         module, pipeline, llm = self.pipeline([action('ô tô', 'Unknown')]*3)
         with self.assertRaises(RuntimeError):
             module.answer(self.question, pipeline=pipeline, as_of=date(2026, 10, 6))
@@ -811,7 +831,7 @@ class PipelineTests(unittest.TestCase):
         self.assertFalse(result.abstained)
         self.assertEqual(seen, [good])
         self.assertNotEqual(good, original)
-        self.assertEqual(len(llm.prompts), 5)
+        self.assertEqual(len(llm.prompts), 4)
 
     def test_request_clock_not_import_time(self):
         module = self.module()
@@ -833,7 +853,7 @@ class PipelineTests(unittest.TestCase):
                 return self(prompt, **kwargs)
         module = self.module()
         _, retriever = fixture(text='Xe mô tô không đội mũ bảo hiểm: phạt 30.000.000 đồng.')
-        script = [action(self.narrow), action(self.narrow, 'Deduce'), select_first, action(executor='Finish')]
+        script = [action(self.narrow), action(self.narrow, 'Deduce'), select_first]
         llm = LoopBoundLLM(script+script)
         pipeline = module.build_pipeline(retriever, llm)
         async def no_sleep(seconds):
@@ -869,7 +889,7 @@ class PipelineTests(unittest.TestCase):
                 module.aanswer(self.narrow, pipeline=pipeline, as_of=date(2026, 10, 6)))
         results = asyncio.run(run())
         self.assertTrue(all(not result.abstained for result in results))
-        self.assertEqual(len(llm.prompts), 8)
+        self.assertEqual(len(llm.prompts), 6)
         for prompt in llm.prompts:
             if 'question' in prompt:
                 self.assertEqual(prompt['question'], prompt['evidence']['original_question'])

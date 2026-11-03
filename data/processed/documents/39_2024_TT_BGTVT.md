@@ -1,4 +1,3 @@
-4                 
 
                         BỘ GIAO THÔNG VẬN TẢI
 BỘ GIAO THÔNG VẬN TẢI               CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
@@ -67,8 +66,6 @@ là hàng dạng kiện còn nguyên kẹp chì, niêm phong của cơ quan hả
 quốc phòng hoặc là tổ hợp cấu kiện, thiết bị, máy móc nếu tháo rời, chia nhỏ sẽ bị
 hư hỏng hoặc thay đổi công năng.
 
-6                
-
    7. Đường ngang là đoạn đường bộ giao nhau cùng mức với đường sắt, được cơ
 quan có thẩm quyền cho phép xây dựng và khai thác.
     8. Doanh nghiệp đầu tư xây dựng và quản lý khai thác công trình đường bộ là
@@ -131,8 +128,6 @@ trên Trang thông tin điện tử của Ủy ban nhân dân cấp tỉnh.
     5. Các cơ quan có thẩm quyền quy định tại khoản 1, khoản 2, khoản 3 và
 khoản 4 Điều này công bố công khai thông tin tải trọng, khổ giới hạn của đường bộ
 theo mẫu quy định tại Phụ lục IX ban hành kèm theo Thông tư này.
-
-8                
 
 #####     Điều 7. Điều chỉnh công bố tải trọng, khổ giới hạn của đường bộ và trạng
 thái kỹ thuật đường ngang
@@ -202,8 +197,6 @@ người điều khiển phương tiện khi lưu hành xe quá khổ giới h�
 02 (hai) đơn nguyên hàng trở lên phải thực hiện các quy định tại khoản 1, khoản 2
 Điều này và phải đáp ứng các quy định sau:
 
-10                
-
    a) Khối lượng toàn bộ và tải trọng trục của xe không vượt quá tải trọng của
 đường bộ;
     b) Khi xếp từ 02 (hai) đơn nguyên hàng trở lên theo chiều cao thùng xe thì
@@ -268,8 +261,6 @@ phải thực hiện theo quy định tại Điều 8 của Thông tư này.
    2. Tổ chức, cá nhân là chủ phương tiện, đơn vị vận tải, người thuê vận tải hoặc
 người điều khiển phương tiện khi vận chuyển hàng siêu trường, siêu trọng trên
 
-12                
-
 đường bộ ngoài việc thực hiện quy định tại khoản 1 Điều này, còn phải thực hiện
 các quy định sau:
     a) Căn cứ vào loại hàng hóa, địa điểm vận chuyển (nơi đi, nơi đến) để lựa chọn
@@ -333,8 +324,6 @@ gói thành bao, kiện, thùng, cuộn, khối thực hiện theo hướng dẫ
 cuối cùng nhỏ hơn hoặc bằng 7 mét, khối lượng toàn bộ của xe ≤ 32 tấn;
     đ) Bằng năm hoặc lớn hơn và khoảng cách tính từ tâm trục đầu tiên đến tâm
 trục cuối cùng lớn hơn 7 mét, khối lượng toàn bộ của xe ≤ 34 tấn.
-
-14                
 
      2. Đối với tổ hợp xe ô tô đầu kéo kéo sơ mi rơ moóc có tổng số trục:
      a) Bằng ba, khối lượng toàn bộ của tổ hợp xe ≤ 26 tấn;
@@ -406,8 +395,6 @@ khoản 5 Điều 33 Luật Trật tự, an toàn giao thông đường bộ.
     1. Chiều rộng xếp hàng hóa cho phép trên phương tiện giao thông cơ giới
 đường bộ là chiều rộng của thùng xe theo thiết kế được ghi trong giấy chứng nhận
 kiểm định an toàn kỹ thuật và bảo vệ môi trường của xe.
-
-16                
 
     2. Chiều dài xếp hàng hóa cho phép trên phương tiện giao thông cơ giới đường
 bộ không được lớn hơn 1,1 lần chiều dài toàn bộ của xe theo thiết kế được ghi
@@ -481,8 +468,6 @@ bảo không bị xê dịch trong quá trình vận chuyển.
 quá khổ giới hạn, xe bánh xích, xe vận chuyển hàng siêu trường, siêu trọng
 trên đường bộ
 
-18                
-
     1. Xe quá khổ giới hạn, xe quá tải trọng, xe bánh xích, xe vận chuyển hàng
 siêu trường, siêu trọng được cấp giấy phép lưu hành xe trên đường bộ trong các
 trường hợp sau đây:
@@ -554,8 +539,6 @@ chuyên chở có xác nhận của người thuê vận tải, gồm các thôn
 chiều dài, chiều rộng và chiều cao (D x R x C) mét, khối lượng; trích hợp đồng
 vận chuyển hoặc văn bản chỉ định đơn vị vận tải của người thuê vận tải; báo cáo
 
-20                
-
 kết quả khảo sát; đề nghị của cơ quan, tổ chức có thẩm quyền (đối với trường hợp
 quy định tại điểm b, điểm c và điểm d khoản 1 Điều 22 Thông tư này);
    đ) Báo cáo kết quả hoàn thành gia cường công trình đường bộ (đối với trường
@@ -626,8 +609,6 @@ nằm trên cùng địa bàn quản lý của một Khu Quản lý đường b�
 phép lưu hành xe bảo đảm đúng đối tượng, phù hợp với tình trạng của đường bộ,
 phương tiện vận tải và bảo đảm an toàn giao thông.
 
-22                
-
     2. Lựa chọn các tuyến, đoạn tuyến đường bộ trên cơ sở bảo đảm an toàn giao
 thông và an toàn cho công trình đường bộ.
     3. Khi cho phép lưu hành trên đường cao tốc, căn cứ vào kích thước bao của
@@ -696,8 +677,6 @@ Cục Đường bộ Việt Nam theo mẫu quy định tại Phụ lục V, Ph�
 Phụ lục VIII ban hành kèm theo Thông tư này. Thời gian báo cáo định kỳ hàng
 quý trước ngày 20 tháng cuối quý; báo cáo định kỳ hàng năm trước ngày 15
 tháng 12.
-
-24                
 
 #####      Điều 29. Trách nhiệm của đơn vị vận tải, lái xe và người áp tải
      1. Trách nhiệm của đơn vị vận tải:
@@ -769,8 +748,6 @@ quá khổ giới hạn, xe bánh xích trên đường bộ; vận chuyển hà
 trọng và giới hạn xếp hàng hóa trên phương tiện giao thông đường bộ khi tham gia
 giao thông trên đường bộ;
 
-26               
-
     đ) Thông tư số 41/2023/TT-BGTVT ngày 29 tháng 12 năm 2023 của Bộ
 trưởng Bộ Giao thông vận tải quy định xếp hàng hóa trên phương tiện giao thông
 đường bộ.
@@ -791,7 +768,9 @@ ghi trong giấy phép lưu hành xe./.
 
                                                 Nguyễn Duy Lâm
 
-                                   Phụ lục I
+## Phụ lục I
+Bảng/hình gốc của Phụ lục I: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=24 (PDF 24–26; trang in 27–29). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
+
  (Ban hành kèm theo Thông tư số 39/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                      của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -810,49 +789,41 @@ ghi trong giấy phép lưu hành xe./.
 hạn, xe vận chuyển hàng siêu trường, siêu trọng)… trên đường bộ với các thông số
 sau:
 
- 1. Thông tin tổ hợp xe:
-                                                                Xe ô tô hoặc xe Rơ moóc (RM)/Sơ mi
-                  Thông số kỹ thuật
-                                                                 ô tô đầu kéo    rơ moóc (SMRM)
-Nhãn hiệu
-Biển số
-Số trục
-Thời hạn kiểm định
-Khối lượng bản thân (kg)
-Khối lượng kéo theo thiết kế (kg)
-Khối lượng kéo theo cho phép tham gia giao
-thông (kg)
-Khối lượng hàng chuyên chở theo thiết kế (kg)
-Khối lượng hàng chuyên chở cho phép
-tham gia giao thông (kg)
-Khối lượng toàn bộ theo thiết kế (kg)
-Kích thước bao của tổ hợp (dài x rộng x
-cao) (m)
+ <table data-source="39-P24-T1">
+<tr data-unit="39_2024_TT_BGTVT::D33::K1#2"><td colspan="3">1. Thông tin tổ hợp xe:</td></tr>
+<tr><td>Thông số kỹ thuật</td><td>Xe ô tô hoặc xe<br>ô tô đầu kéo</td><td>Rơ moóc (RM)/Sơ mi<br>rơ moóc (SMRM)</td></tr>
+<tr><td>Nhãn hiệu</td><td></td><td></td></tr>
+<tr><td>Biển số</td><td></td><td></td></tr>
+<tr><td>Số trục</td><td></td><td></td></tr>
+<tr><td>Thời hạn kiểm định</td><td></td><td></td></tr>
+<tr><td>Khối lượng bản thân (kg)</td><td></td><td></td></tr>
+<tr><td>Khối lượng kéo theo thiết kế (kg)</td><td></td><td></td></tr>
+<tr><td>Khối lượng kéo theo cho phép tham gia giao<br>thông (kg)</td><td></td><td></td></tr>
+<tr><td>Khối lượng hàng chuyên chở theo thiết kế (kg)</td><td></td><td></td></tr>
+<tr><td>Khối lượng hàng chuyên chở cho phép<br>tham gia giao thông (kg)</td><td></td><td></td></tr>
+<tr><td>Khối lượng toàn bộ theo thiết kế (kg)</td><td></td><td></td></tr>
+<tr><td>Kích thước bao của tổ hợp (dài x rộng x<br>cao) (m)</td><td colspan="2"></td></tr>
+</table>
 
-28                 
-
-2. Thông tin thiết bị chuyên dùng để hỗ trợ phục vụ vận chuyển lắp, đặt trên
-xe (nếu có):
-Tên (nhãn hiệu) thiết bị: ........……………..
-Khối lượng bản thân của thiết bị (kg): ...... ………………..
-Kích thước bao của thiết bị (dài x rộng x cao) (m): ...... ………………
-Tính năng của thiết bị (ghi theo thiết kế của nhà sản xuất):…………
-3. Thông tin hàng hóa đề nghị chuyên chở:
-Loại hàng:…………………
-Kích thước (D x R x C) m:.... Tổng khối lượng (tấn):....
-4. Thông tin kích thước, khối lượng toàn bộ của tổ hợp xe sau khi xếp hàng
-hóa lên xe:
-Kích thước (D x R x C) m: ....………………….
-Hàng vượt bên phải thùng xe: .... m      Hàng vượt phía trước thùng xe:… m
-Hàng vượt bên trái thùng xe:..... m      Hàng vượt phía sau thùng xe:... m
-Khối lượng toàn bộ (gồm: khối lượng bản thân ô tô đầu kéo + khối lượng bản
-thân RM/SMRM + khối lượng thiết bị chuyên dùng để hỗ trợ phục vụ vận chuyển
-lắp, đặt trên xe (nếu có) + khối lượng số người ngồi trên xe + khối lượng hàng
-xếp trên xe):…………………….tấn
-5. Tải trọng lớn nhất được phân bổ lên trục xe sau khi xếp hàng hóa lên xe:
-Trục đơn:… tấn
-Cụm trục kép: .....tấn, khoảng cách giữa 02 tâm trục liền kề: d = …. m
-Cụm trục ba: .....tấn, khoảng cách giữa 02 tâm trục liền kề: d = …. m
+<table data-source="39-P25-T1">
+<tr data-unit="39_2024_TT_BGTVT::D33::K2#2"><td colspan="2">2. Thông tin thiết bị chuyên dùng để hỗ trợ phục vụ vận chuyển lắp, đặt trên<br>xe (nếu có):</td></tr>
+<tr><td colspan="2">Tên (nhãn hiệu) thiết bị:........……………..</td></tr>
+<tr><td colspan="2">Khối lượng bản thân của thiết bị (kg):......………………..</td></tr>
+<tr><td colspan="2">Kích thước bao của thiết bị (dài x rộng x cao) (m):...... ………………</td></tr>
+<tr><td colspan="2">Tính năng của thiết bị (ghi theo thiết kế của nhà sản xuất):…………</td></tr>
+<tr data-unit="39_2024_TT_BGTVT::D33::K3"><td colspan="2">3. Thông tin hàng hóa đề nghị chuyên chở:</td></tr>
+<tr><td colspan="2">Loại hàng:…………………</td></tr>
+<tr><td colspan="2">Kích thước (D x R x C) m:.... Tổng khối lượng (tấn):....</td></tr>
+<tr data-unit="39_2024_TT_BGTVT::D33::K4"><td colspan="2">4. Thông tin kích thước, khối lượng toàn bộ của tổ hợp xe sau khi xếp hàng<br>hóa lên xe:</td></tr>
+<tr><td colspan="2">Kích thước (D x R x C) m: ....………………….</td></tr>
+<tr><td>Hàng vượt bên phải thùng xe:.... m</td><td>Hàng vượt phía trước thùng xe:… m</td></tr>
+<tr><td>Hàng vượt bên trái thùng xe:.....m</td><td>Hàng vượt phía sau thùng xe:... m</td></tr>
+<tr><td colspan="2">Khối lượng toàn bộ (gồm: khối lượng bản thân ô tô đầu kéo + khối lượng bản<br>thân RM/SMRM + khối lượng thiết bị chuyên dùng để hỗ trợ phục vụ vận chuyển<br>lắp, đặt trên xe (nếu có) + khối lượng số người ngồi trên xe + khối lượng hàng<br>xếp trên xe):…………………….tấn</td></tr>
+<tr data-unit="39_2024_TT_BGTVT::D33::K5"><td colspan="2">5. Tải trọng lớn nhất được phân bổ lên trục xe sau khi xếp hàng hóa lên xe:</td></tr>
+<tr><td colspan="2">Trục đơn:… tấn</td></tr>
+<tr><td colspan="2">Cụm trục kép:.....tấn, khoảng cách giữa 02 tâm trục liền kề: d = …. m</td></tr>
+<tr><td colspan="2">Cụm trục ba:.....tấn, khoảng cách giữa 02 tâm trục liền kề: d = …. m</td></tr>
+</table>
      6. Tuyến đường và thời gian vận chuyển:
    - Tuyến đường vận chuyển (ghi đầy đủ, cụ thể nơi đi, nơi đến, tên từng đoạn
 tuyến đường bộ, các vị trí chuyển hướng, đi qua đường ngang tại Km...):………
@@ -881,9 +852,9 @@ trọng có kích thước, khối lượng lớn, tuyến đường vận chuy�
 tạp hoặc phải dùng thiết bị chuyên dùng để hỗ trợ, đơn đề nghị có nhiều thông tin
 thì bổ sung phụ lục kèm theo.
 
-30                      
+## Phụ lục II
+Bảng/hình gốc của Phụ lục II: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=27 (PDF 27–27; trang in 30–30). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
 
-                                 Phụ lục II
 (Ban hành kèm theo Thông tư số 39/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -924,7 +895,9 @@ hành xe phải kèm theo sơ đồ xe thể hiện                       Đại
 rõ các kích thước: chiều dài, chiều                            (Ký, ghi rõ họ tên và đóng dấu)
 rộng, chiều cao của xe)
 
-                                    Phụ lục III
+## Phụ lục III
+Bảng/hình gốc của Phụ lục III: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=28 (PDF 28–30; trang in 31–33). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 39/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -952,54 +925,45 @@ năm.... của…….. (tên tổ chức, cá nhân đứng đơn, địa chỉ)
 hàng siêu trường, siêu trọng)... trên đường bộ của.... (tên tổ chức, cá nhân chủ
 xe) ... với các thông tin như sau:
 
-1. Thông tin tổ hợp xe:
-                                                      Xe ô tô    Rơ moóc (RM)/
-                Thông số kỹ thuật                   hoặc xe ô tô Sơ mi rơ moóc
-                                                      đầu kéo       (SMRM)
-Nhãn hiệu
-Biển số
-Số trục
-Thời hạn kiểm định
+<table data-source="39-P28-T1">
+<tr data-unit="39_2024_TT_BGTVT::D33::K1#3"><td colspan="3">1. Thông tin tổ hợp xe:</td></tr>
+<tr><td>Thông số kỹ thuật</td><td>Xe ô tô<br>hoặc xe ô tô<br>đầu kéo</td><td>Rơ moóc (RM)/<br>Sơ mi rơ moóc<br>(SMRM)</td></tr>
+<tr><td>Nhãn hiệu</td><td></td><td></td></tr>
+<tr><td>Biển số</td><td></td><td></td></tr>
+<tr><td>Số trục</td><td></td><td></td></tr>
+<tr><td>Thời hạn kiểm định</td><td></td><td></td></tr>
+</table>
 
-32                
+<table data-source="39-P29-T1">
+<tr><td colspan="2">Khối lượng bản thân (kg)</td><td></td><td></td></tr>
+<tr><td colspan="2">Khối lượng kéo theo thiết kế (kg)</td><td></td><td></td></tr>
+<tr><td colspan="2">Khối lượng kéo theo cho phép tham gia giao thông (kg)</td><td></td><td></td></tr>
+<tr><td colspan="2">Khối lượng hàng chuyên chở theo thiết kế (kg)</td><td></td><td></td></tr>
+<tr><td colspan="2">Khối lượng hàng chuyên chở cho phép tham gia<br>giao thông (kg)</td><td></td><td></td></tr>
+<tr><td colspan="2">Khối lượng toàn bộ theo thiết kế (kg)</td><td></td><td></td></tr>
+<tr><td colspan="2">Kích thước bao của tổ hợp (dài x rộng x cao) (m)</td><td colspan="2"></td></tr>
+<tr data-unit="39_2024_TT_BGTVT::D33::K2#3"><td colspan="4">2. Thông tin thiết bị chuyên dùng để hỗ trợ phục vụ vận chuyển lắp, đặt trên<br>xe (nếu có): ……</td></tr>
+<tr><td colspan="4">Tên (nhãn hiệu) thiết bị:………</td></tr>
+<tr><td colspan="4">Khối lượng bản thân của thiết bị (kg):......……..</td></tr>
+<tr><td colspan="4">Kích thước bao của thiết bị (dài x rộng x cao) (m):………</td></tr>
+<tr><td colspan="4">Tính năng của thiết bị (ghi theo thiết kế của nhà sản xuất):…….</td></tr>
+<tr data-unit="39_2024_TT_BGTVT::D33::K3#2"><td colspan="4">3. Thông tin hàng hóa đề nghị chuyên chở:</td></tr>
+<tr><td colspan="4">Loại hàng:………</td></tr>
+<tr><td colspan="4">Kích thước (D x R x C) m:......... Tổng khối lượng:...... tấn</td></tr>
+<tr data-unit="39_2024_TT_BGTVT::D33::K4#2"><td colspan="4">4. Thông tin kích thước, khối lượng toàn bộ của tổ hợp xe sau khi xếp hàng<br>hóa lên xe:</td></tr>
+<tr><td>Kích thước (D x R x C) m:…</td><td colspan="3">Hàng vượt phía trước thùng xe:... m</td></tr>
+<tr><td>Hàng vượt hai bên thùng xe:.... m</td><td colspan="3">Hàng vượt phía sau thùng xe:.... m</td></tr>
+<tr><td colspan="4">Khối lượng toàn bộ (gồm khối lượng bản thân ô tô đầu kéo + khối lượng bản thân<br>RM/SMRM + khối lượng thiết bị chuyên dùng để hỗ trợ phục vụ vận chuyển lắp,<br>đặt trên xe (nếu có) + khối lượng số người ngồi trên xe + khối lượng hàng hóa):... tấn</td></tr>
+<tr data-unit="39_2024_TT_BGTVT::D33::K5#2"><td colspan="4">5. Tải trọng lớn nhất được phân bổ lên trục xe sau khi xếp hàng hóa lên xe:</td></tr>
+<tr><td colspan="4">Trục đơn: ..... tấn</td></tr>
+<tr><td colspan="4">Cụm trục kép: ..... tấn, khoảng cách giữa 02 tâm trục: d = …. m</td></tr>
+<tr><td colspan="4">Cụm trục ba:..... tấn, khoảng cách giữa 02 tâm trục liền kề: d = … m</td></tr>
+<tr data-unit="39_2024_TT_BGTVT::D33::K6#2"><td colspan="4">6. Tuyến đường vận chuyển<br>- Nơi đi.............(ghi cụ thể Km......../QL (ĐT)......., địa danh) hoặc ghi cụ thể<br>tuyến đường, địa danh đối với tuyến đường bộ không bố trí cột km<br>- Nơi đến..........(ghi cụ thể Km......../QL (ĐT ...., địa danh) hoặc ghi cụ thể tuyến<br>đường, địa danh đối với tuyến đường bộ không bố trí cột km</td></tr>
+</table>
 
-Khối lượng bản thân (kg)
-Khối lượng kéo theo thiết kế (kg)
-Khối lượng kéo theo cho phép tham gia giao thông (kg)
-Khối lượng hàng chuyên chở theo thiết kế (kg)
-Khối lượng hàng chuyên chở cho phép tham gia
-giao thông (kg)
-Khối lượng toàn bộ theo thiết kế (kg)
-Kích thước bao của tổ hợp (dài x rộng x cao) (m)
-2. Thông tin thiết bị chuyên dùng để hỗ trợ phục vụ vận chuyển lắp, đặt trên
-xe (nếu có): ……
-Tên (nhãn hiệu) thiết bị:………
-Khối lượng bản thân của thiết bị (kg): ...... ……..
-Kích thước bao của thiết bị (dài x rộng x cao) (m):………
-Tính năng của thiết bị (ghi theo thiết kế của nhà sản xuất):…….
-3. Thông tin hàng hóa đề nghị chuyên chở:
-Loại hàng:………
-Kích thước (D x R x C) m: ......... Tổng khối lượng:...... tấn
-4. Thông tin kích thước, khối lượng toàn bộ của tổ hợp xe sau khi xếp hàng
-hóa lên xe:
-Kích thước (D x R x C) m:…             Hàng vượt phía trước thùng xe:... m
-Hàng vượt hai bên thùng xe:.... m      Hàng vượt phía sau thùng xe:.... m
-Khối lượng toàn bộ (gồm khối lượng bản thân ô tô đầu kéo + khối lượng bản thân
-RM/SMRM + khối lượng thiết bị chuyên dùng để hỗ trợ phục vụ vận chuyển lắp,
-đặt trên xe (nếu có) + khối lượng số người ngồi trên xe + khối lượng hàng hóa):... tấn
-5. Tải trọng lớn nhất được phân bổ lên trục xe sau khi xếp hàng hóa lên xe:
-Trục đơn: ..... tấn
-Cụm trục kép: ..... tấn, khoảng cách giữa 02 tâm trục: d = …. m
-Cụm trục ba: ..... tấn, khoảng cách giữa 02 tâm trục liền kề: d = … m
-6. Tuyến đường vận chuyển
-- Nơi đi............. (ghi cụ thể Km........ /QL (ĐT) ....... , địa danh) hoặc ghi cụ thể
-tuyến đường, địa danh đối với tuyến đường bộ không bố trí cột km
-- Nơi đến .......... (ghi cụ thể Km........ /QL (ĐT ...., địa danh) hoặc ghi cụ thể tuyến
-đường, địa danh đối với tuyến đường bộ không bố trí cột km
-
-- Các tuyến đường được đi: .......... (ghi đầy đủ, cụ thể tên đoạn tuyến đường bộ
-được đi, các vị trí chuyển hướng (nút giao), đi qua đường ngang (nếu có), các
-điểm khống chế từ nơi đi đến nơi đến)
+<table data-source="39-P30-T1">
+<tr><td>- Các tuyến đường được đi:.......... (ghi đầy đủ, cụ thể tên đoạn tuyến đường bộ<br>được đi, các vị trí chuyển hướng (nút giao), đi qua đường ngang (nếu có), các<br>điểm khống chế từ nơi đi đến nơi đến)</td></tr>
+</table>
    7. Các điều kiện quy định khi lưu hành xe trên đường bộ
    - Chủ phương tiện, người điều khiển phương tiện phải tuân thủ các quy định
 của Luật Đường bộ, Luật Trật tự, an toàn giao thông đường bộ.
@@ -1025,9 +989,9 @@ trọng có kích thước, khối lượng lớn, tuyến đường vận chuy�
 tạp hoặc phải dùng thiết bị chuyên dùng để hỗ trợ, giấy phép lưu hành có nhiều
 thông tin thì bổ sung phụ lục kèm theo.
 
-34                     
+## Phụ lục IV
+Bảng/hình gốc của Phụ lục IV: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=31 (PDF 31–32; trang in 34–35). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
 
-                                 Phụ lục IV
 (Ban hành kèm theo Thông tư số 39/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -1084,9 +1048,9 @@ Nơi nhận:                                      Lãnh đạo cơ quan cấp gi
 - ... (Các cơ quan, đơn vị liên quan)...;                 lưu hành xe
 - Lưu: VT……..                                   (Ký, ghi rõ họ tên và đóng dấu)
 
-36               
+## Phụ lục V
+Bảng/hình gốc của Phụ lục V: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=33 (PDF 33–33; trang in 36–36). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
 
-                                 Phụ lục V
 (Ban hành kèm theo Thông tư số 39/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -1100,25 +1064,13 @@ Nơi nhận:                                      Lãnh đạo cơ quan cấp gi
                            (Tháng ... năm..... )
                  Kính gửi:………………………………..
 
-                             Tổ hợp Tổ hợp Tổ hợp Tổ hợp
- Dạng                                                                 Vận
-         Xe                  xe - rơ xe - rơ xe - rơ xe - rơ
-phương        Xe Xe Xe                                              chuyển
-         02                 moóc/sơ moóc/sơ moóc/sơ moóc/sơ Tổng              Ghi
-  tiện/       03 04 bánh                                             hàng
-        trục                  mi rơ mi rơ mi rơ mi rơ cộng                    chú
-Tuyến        trục trục xích                                           siêu
-        đơn                   moóc moóc moóc moóc
-đường                                                                trọng
-                            (03 trục) (04 trục) (05 trục) (06 trục)
-
-Quốc lộ
-
-Đường
-tỉnh...
-
- Tổng
- cộng
+<table data-source="39-P33-T1">
+<tr><th>Dạng<br>phương<br>tiện/<br>Tuyến<br>đường</th><th>Xe<br>02<br>trục<br>đơn</th><th>Xe<br>03<br>trục</th><th>Xe<br>04<br>trục</th><th>Xe<br>bánh<br>xích</th><th>Tổ hợp<br>xe - rơ<br>moóc/sơ<br>mi rơ<br>moóc<br>(03 trục)</th><th>Tổ hợp<br>xe - rơ<br>moóc/sơ<br>mi rơ<br>moóc<br>(04 trục)</th><th>Tổ hợp<br>xe - rơ<br>moóc/sơ<br>mi rơ<br>moóc<br>(05 trục)</th><th>Tổ hợp<br>xe - rơ<br>moóc/sơ<br>mi rơ<br>moóc<br>(06 trục)</th><th>Tổng<br>cộng</th><th>Vận<br>chuyển<br>hàng<br>siêu<br>trọng</th><th>Ghi<br>chú</th></tr>
+<tr><td>Quốc lộ</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Đường<br>tỉnh...</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Tổng<br>cộng</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
 
    Lưu ý:                                  Thủ trưởng cơ quan cấp giấy phép
    - Cột Ghi chú ghi cụ thể loại                       lưu hành xe
@@ -1128,7 +1080,9 @@ chuyên dùng lắp, đặt trên xe (nếu có).
    - CQCP: Sở Giao thông vận tải,
 Khu Quản lý đường bộ.
 
-                                     Phụ lục VI
+## Phụ lục VI
+Bảng/hình gốc của Phụ lục VI: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=34 (PDF 34–34; trang in 37–37). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 39/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -1142,25 +1096,13 @@ BÁO CÁO CẤP GIẤY PHÉP LƯU HÀNH CHO XE QUÁ KHỔ GIỚI HẠN
                    (Tháng......................năm ........ )
               Kính gửi:………………………………….
 
-                                      Tổ hợp
-                             Tổ hợp            Tổ hợp Tổ hợp
- Dạng                                 xe - rơ                          Vận
-         Xe                  xe - rơ           xe - rơ xe - rơ
-phương        Xe Xe Xe                moóc/sơ                        chuyển
-         02                 moóc/sơ           moóc/sơ moóc/sơ Tổng              Ghi
-  tiện/       03 04 bánh               mi rơ                          hàng
-        trục                  mi rơ             mi rơ     mi rơ cộng            chú
- Tuyến       trục trục xích            moóc                            siêu
-        đơn                   moóc              moóc      moóc
-đường                                   (04                          trường
-                            (03 trục)         (05 trục) (06 trục)
-                                       trục)
-Quốc lộ
-Đường
-tỉnh ...
-
- Tổng
- cộng
+<table data-source="39-P34-T1">
+<tr><th>Dạng<br>phương<br>tiện/<br>Tuyến<br>đường</th><th>Xe<br>02<br>trục<br>đơn</th><th>Xe<br>03<br>trục</th><th>Xe<br>04<br>trục</th><th>Xe<br>bánh<br>xích</th><th>Tổ hợp<br>xe - rơ<br>moóc/sơ<br>mi rơ<br>moóc<br>(03 trục)</th><th>Tổ hợp<br>xe - rơ<br>moóc/sơ<br>mi rơ<br>moóc<br>(04<br>trục)</th><th>Tổ hợp<br>xe - rơ<br>moóc/sơ<br>mi rơ<br>moóc<br>(05 trục)</th><th>Tổ hợp<br>xe - rơ<br>moóc/sơ<br>mi rơ<br>moóc<br>(06 trục)</th><th>Tổng<br>cộng</th><th>Vận<br>chuyển<br>hàng<br>siêu<br>trường</th><th>Ghi<br>chú</th></tr>
+<tr><td>Quốc lộ</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Đường<br>tỉnh ...</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Tổng<br>cộng</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
 
     Lưu ý:                                         Thủ trưởng cơ quan cấp giấy
     - Cột Ghi chú ghi cụ thể loại phương tiện            phép lưu hành xe
@@ -1172,9 +1114,9 @@ thiết bị chuyên dùng lắp, đặt trên xe (nếu có).
     - CQCP: Sở Giao thông vận tải, Khu
 Quản lý đường bộ.
 
-38               
+## Phụ lục VII
+Bảng/hình gốc của Phụ lục VII: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=35 (PDF 35–35; trang in 38–38). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
 
-                                  Phụ lục VII
 (Ban hành kèm theo Thông tư số 39/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -1190,21 +1132,13 @@ BÁO CÁO CẤP GIẤY PHÉP LƯU HÀINH CHO XE QUÁ TẢI TRỌNG VÀ
 
                    Kính gửi:………………………………….
 
- Dạng                     Tổ hợp Tổ hợp Tổ hợp Tổ hợp                 Vận
-phương Xe                 xe - rơ xe - rơ xe - rơ xe - rơ           chuyển
-  tiện/ 02  Xe  Xe   Xe
-                         moóc/sơ moóc/sơ moóc/sơ moóc/sơ Tổng hàng siêu Ghi
- Tuyến trục 03  04  bánh
-                           mi rơ     mi rơ     mi rơ     mi rơ cộng trường chú
-đường đơn trục trục xích moóc        moóc      moóc moóc            và siêu
- Tuyến                   (03 trục) (04 trục) (05 trục) (06 trục)     trọng
-đ
-Quốc   lộ
-Đường
-tỉnh ...
-
- Tổng
- cộng
+<table data-source="39-P35-T1">
+<tr><th>Dạng<br>phương<br>tiện/<br>Tuyến<br>đường<br>Tuyến</th><th>Xe<br>02<br>trục<br>đơn</th><th>Xe<br>03<br>trục</th><th>Xe<br>04<br>trục</th><th>Xe<br>bánh<br>xích</th><th>Tổ hợp<br>xe - rơ<br>moóc/sơ<br>mi rơ<br>moóc<br>(03 trục)</th><th>Tổ hợp<br>xe - rơ<br>moóc/sơ<br>mi rơ<br>moóc<br>(04 trục)</th><th>Tổ hợp<br>xe - rơ<br>moóc/sơ<br>mi rơ<br>moóc<br>(05 trục)</th><th>Tổ hợp<br>xe - rơ<br>moóc/sơ<br>mi rơ<br>moóc<br>(06 trục)</th><th>Tổng<br>cộng</th><th>Vận<br>chuyển<br>hàng siêu<br>trường<br>và siêu<br>trọng</th><th>Ghi<br>chú</th></tr>
+<tr><td>Quốc lộ</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Đường<br>tỉnh ...</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td>Tổng<br>cộng</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
 
     Lưu ý:                                   Thủ trưởng cơ quan cấp giấy phép
     - Cột Ghi chú ghi cụ thể loại phương                 lưu hành xe
@@ -1217,7 +1151,9 @@ có).
     - CQCP: Sở Giao thông vận tải, Khu
 Quản lý đường bộ.
 
-                                Phụ lục VIII
+## Phụ lục VIII
+Bảng/hình gốc của Phụ lục VIII: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=36 (PDF 36–36; trang in 39–39). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 39/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -1232,19 +1168,15 @@ Quản lý đường bộ.
                               (Tháng......... năm ............... )
                         Kính gửi:…………………………………..
 
-                                           Quá tải    Xe vận
-                            Quá               và chuyển hàng
-TT    Dạng phương tiện             Quá tải                      Tổng cộng Ghi chú
-                            khổ            quá khổ siêu trường,
-                                           giới hạn siêu trọng
- 1     Xe 02 trục đơn
-          Xe ... trục
-        Xe bánh xích
-         Tổ hợp xe
-          03 trục
-         Tổ hợp xe
-            trục
-         Tổng cộng
+<table data-source="39-P36-T1">
+<tr><th>TT</th><th>Dạng phương tiện</th><th>Quá<br>khổ</th><th>Quá tải</th><th>Quá tải<br>và<br>quá khổ<br>giới hạn</th><th>Xe vận<br>chuyển hàng<br>siêu trường,<br>siêu trọng</th><th>Tổng cộng</th><th>Ghi chú</th></tr>
+<tr><td>1</td><td>Xe 02 trục đơn</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Xe ... trục</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Xe bánh xích</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Tổ hợp xe<br>03 trục</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Tổ hợp xe<br>trục</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td>Tổng cộng</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
 
     Lưu ý:                                           Thủ trưởng cơ quan cấp giấy
     - Cột ghi chú ghi cụ thể loại phương tiện đã           phép lưu hành xe
@@ -1256,9 +1188,9 @@ bị chuyên dùng lắp, đặt trên xe (nếu có).
     - CQCP: Sở Giao thông vận tải, Khu Quản
 lý đường bộ.
 
-40               
+## Phụ lục IX
+Bảng/hình gốc của Phụ lục IX: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=37 (PDF 37–38; trang in 40–41). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
 
-                                    Phụ lục IX
 (Ban hành kèm theo Thông tư số 39/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
   NỘI DUNG CÔNG BỐ TẢI TRỌNG, KHỔ GIỚI HẠN CỦA ĐƯỜNG BỘ
@@ -1266,40 +1198,32 @@ lý đường bộ.
        I. CÁC TUYẾN, ĐOẠN TUYẾN ĐƯỜNG BỘ ĐÃ VÀO CẤP
      (Có tải trọng thiết kế mặt đường cho xe có tải trọng trục nhỏ hơn hoặc bằng
 10 tấn/trục đơn của xe, tải trọng thiết kế cầu là HL - 93 hoặc tương đương)
-                  Tên đường                      Thông tin cơ
-                                   Chiều dài
-        TT       (quốc lộ, cao                   bản về tuyến,            Ghi chú
-                                    (Km)
-                    tốc,....)                     đoạn tuyến
-        (1)           (2)             (3)             (4)                   (5)
+<table data-source="39-P37-T1">
+<tr><th>TT</th><th>Tên đường<br>(quốc lộ, cao<br>tốc,....)</th><th>Chiều dài<br>(Km)</th><th>Thông tin cơ<br>bản về tuyến,<br>đoạn tuyến</th><th>Ghi chú</th></tr>
+<tr><td>(1)</td><td>(2)</td><td>(3)</td><td>(4)</td><td>(5)</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
 
   II. CÁC VỊ TRÍ HẠN CHẾ TẢI TRỌNG, KHỔ GIỚI HẠN TRÊN
 ĐƯỜNG BỘ
-                                  Thông tin hạn chế tải trọng, khổ giới hạn
-     Tên                                         của đường
-    đường                        Tình trạng
-              Lý      Tỉnh/thành              Chiều rộng        Chiều cao
-TT (quốc lộ,                      tải trọng                                 Ghi chú
-             trình       phố                 hạn chế (biển       hạn chế
-      cao                        (biển hạn
-                                             hạn chế chiều (biển hạn chế
-    tốc,...)                       chế tải
-                                               ngang xe)        chiều cao)
-                                   trọng)
-(1)      (2)    (3)      (4)          (5)           (6)             (7)             (8)
+<table data-source="39-P37-T2">
+<tr><th rowspan="2">TT</th><th rowspan="2">Tên<br>đường<br>(quốc lộ,<br>cao<br>tốc,...)</th><th rowspan="2">Lý<br>trình</th><th rowspan="2">Tỉnh/thành<br>phố</th><th colspan="3">Thông tin hạn chế tải trọng, khổ giới hạn<br>của đường</th><th rowspan="2">Ghi chú</th></tr>
+<tr><td>Tình trạng<br>tải trọng<br>(biển hạn<br>chế tải<br>trọng)</td><td>Chiều rộng<br>hạn chế (biển<br>hạn chế chiều<br>ngang xe)</td><td>Chiều cao<br>hạn chế<br>(biển hạn chế<br>chiều cao)</td></tr>
+<tr><td>(1)</td><td>(2)</td><td>(3)</td><td>(4)</td><td>(5)</td><td>(6)</td><td>(7)</td><td>(8)</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
 
        III. CÁC CẦU HẠN CHẾ TẢI TRỌNG, KHỔ GIỚI HẠN
 
-      Tên                               Cầu hạn chế tải trọng, khổ giới hạn
-     đường                                         Tình trạng tải Tình trạng
-               Lý     Tỉnh/thành            Tải                                     Ghi
- TT (quốc lộ,                       Tên             trọng (biển khổ giới hạn
-              trình      phố               trọng                                    chú
-       cao                          cầu             hạn chế tải (biển hạn chế
-     tốc,...)                             thiết kế
-                                                       trọng)     khổ giới hạn)
- (1)      (2)   (3)       (4)       (5)      (6)         (7)           (8)          (9)
-                                                   XX-YY-ZZ
+<table data-source="39-P37-T3">
+<tr><th rowspan="2">TT</th><th rowspan="2">Tên<br>đường<br>(quốc lộ,<br>cao<br>tốc,...)</th><th rowspan="2">Lý<br>trình</th><th rowspan="2">Tỉnh/thành<br>phố</th><th colspan="4">Cầu hạn chế tải trọng, khổ giới hạn</th><th rowspan="2">Ghi<br>chú</th></tr>
+<tr><td>Tên<br>cầu</td><td>Tải<br>trọng<br>thiết kế</td><td>Tình trạng tải<br>trọng (biển<br>hạn chế tải<br>trọng)</td><td>Tình trạng<br>khổ giới hạn<br>(biển hạn chế<br>khổ giới hạn)</td></tr>
+<tr><td>(1)</td><td>(2)</td><td>(3)</td><td>(4)</td><td>(5)</td><td>(6)</td><td>(7)</td><td>(8)</td><td>(9)</td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td>XX-YY-ZZ</td><td></td><td></td></tr>
+<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+</table>
 
    Ghi chú:
    Số liệu nhập tại cột (7) có dạng XX-YY-ZZ trong đó:
@@ -1313,9 +1237,9 @@ kéo sơ-mi-rơ-moóc được lưu thông với khối lượng toàn bộ (c�
 hoặc bằng 29 tấn và xe ô tô kéo rơ-moóc được lưu thông với khối lượng toàn bộ
 (cả xe và hàng) nhỏ hơn hoặc bằng 32 tấn.
 
-42               
+## Phụ lục X
+Bảng/hình gốc của Phụ lục X: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=39 (PDF 39–43; trang in 42–46). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
 
-                                   Phụ lục X
 (Ban hành kèm theo Thông tư số 39/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -1333,7 +1257,7 @@ ngăn khối hàng tròn hoặc hình trụ lăn trên sàn xe.
     a) Chêm nhọn (chêm góc): thông thường các góc chêm là 15o không có khả
 năng cố định và chức năng chính là để giữ hàng hóa ở đúng vị trí trong quá trình
 bốc dỡ. Chêm nhọn được minh họa tại hình 1.1.
-    b) Khối chêm (góc chêm xấp xỉ 450): là khối để ngăn dãy hàng có tiết diện tròn
+    b) Khối chêm (góc chêm xấp xỉ 45⁰): là khối để ngăn dãy hàng có tiết diện tròn
 (cuộn hàng) khỏi sự xê dịch. Các cuộn hàng phải được chằng buộc lại chắc chắn
 trên sàn chất tải với các nẹp cạnh và cần thiết phải chằng buộc qua nóc đối với 2
 cuộn phía sau. Khối chêm có chiều cao nhỏ nhất bằng R/3 (một phần ba bán kính
@@ -1343,6 +1267,8 @@ cm. Khi dùng đinh cố định chêm gỗ xuống sàn, chú ý đảm bảo k
 của nó không giảm đi. Khối chêm được minh họa tại hình 1.1.
 
               Hình 1.1. Minh họa mô tả chêm nhọn và khối chêm
+Nguồn Hình 1.1: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=39 (trang in 42); hình học và nhãn trong hình đọc tại nguồn.
+
 
      c) Đế chêm: hai chêm dài được gắn với nhau ở một khoảng cách nhất định bởi
 các thanh giằng bắt chặt bằng bu lông đai ốc hoặc bởi các dây xích. Các thanh
@@ -1350,8 +1276,10 @@ giằng này được sắp xếp tạo ra 1 khoảng cách nhỏ nhất so vớ
 đảm bảo không xảy ra sự xê dịch ngang của các khối hàng dạng cuộn hoặc hình
 trụ. Đế chêm được minh họa tại hình 1.2.
 
-     (góc khoảng 370 trong tam giác vuông, với các cạnh theo tỷ lệ 3, 4 và 5)
+     (góc khoảng 37⁰ trong tam giác vuông, với các cạnh theo tỷ lệ 3, 4 và 5)
                       Hình 1.2. Minh họa mô tả đế chêm
+Nguồn Hình 1.2: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=40 (trang in 43); hình học và nhãn trong hình đọc tại nguồn.
+
 
     2.2. Chêm được sử dụng cho cuộn dây quấn ngang như minh họa tại hình 1.3,
 cụ thể như sau:
@@ -1361,8 +1289,8 @@ phương pháp dùng máng.
     - Sử dụng các tấm trống trượt giữa đế gia cố và sàn chất tải.
 
                 Hình 1.3. Minh họa mô tả kích thước đế chêm
+Nguồn Hình 1.3: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=40 (trang in 43); hình học và nhãn trong hình đọc tại nguồn.
 
-44                
 
     3. Thiết bị chằng buộc
     3.1. Việc lựa chọn thiết bị phù hợp nhất cho việc chằng buộc cố định hàng hóa
@@ -1394,6 +1322,8 @@ phương pháp này phụ thuộc vào khả năng chịu lực của các đi�
 những thứ khác.
 
      Hình 1.4. Minh họa mô tả bố trí 2 cặp dây chằng buộc vòng quanh hàng hóa
+Nguồn Hình 1.4: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=41 (trang in 44); hình học và nhãn trong hình đọc tại nguồn.
+
 
     Lưu ý: để đảm bảo hàng hóa không xê dịch theo hướng về phía trước, cần phải
 sử dụng các biện pháp cố định hàng hóa cơ bản khác kết hợp với phương pháp
@@ -1401,6 +1331,8 @@ chằng buộc thành vòng với hàng hóa. Các vòng dây chằng chỉ cung
 ngang, tức là sang hai bên thành phương tiện như minh họa tại hình 1.5.
 
        Hình 1.5. Minh họa mô tả chằng buộc vòng kết hợp với đế chêm
+Nguồn Hình 1.5: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=42 (trang in 45); hình học và nhãn trong hình đọc tại nguồn.
+
 
    4. Máng
     Máng thường được sử dụng đối với các cuộn nặng từ 4 tấn trở lên để đảm bảo
@@ -1418,15 +1350,17 @@ dây”;
    Lưu ý: nếu máng làm bằng thép thì bắt buộc phải sử dụng thảm cao su hoặc vật
 chèn lót.
 
-46              
-
               Hình 1.6. Minh họa mô tả xếp cuộn dây với máng
+Nguồn Hình 1.6: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=43 (trang in 46); hình học và nhãn trong hình đọc tại nguồn.
+
 
      5. Khung chữ H
    Khung chữ H là một công cụ tốt để cố định cuộn dây. Nó được sử dụng cho cả
 cuộn dây đặt ngang trên máng hoặc cuộn dây được đặt dọc trên mâm hàng.
 
-                                    Phụ lục XI
+## Phụ lục XI
+Bảng/hình gốc của Phụ lục XI: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=44 (PDF 44–50; trang in 47–53). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 39/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -1462,8 +1396,6 @@ buộc vào sàn của phương tiện vận chuyển;
 sau và 2 bên bằng dây đai hoặc dây xích được buộc chặt vào những điểm neo giữ
 trên xe. Tất cả các dây chằng buộc phải được xiết chặt;
 
-48               
-
     e) Khi vận chuyển hàng hóa quá cao, lái xe cần biết chính xác chiều cao của
 hàng hóa và chiều rộng của hàng hóa ở độ cao đó để tránh việc gây hư hỏng cầu
 đường bộ. Những hàng hóa có trọng tâm cao có thể ảnh hưởng nghiêm trọng đến
@@ -1480,17 +1412,25 @@ xếp máy móc, thiết bị kỹ thuật
 
 Hình 2.1. Mô tả xe bánh hơi được chằng chéo lên sàn xe mặt bằng từ các điểm
                              được đánh dấu (X)
+Nguồn Hình 2.1: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=45 (trang in 48); hình học và nhãn trong hình đọc tại nguồn.
+
 
      Hình 2.2. Mô tả phương pháp cố định máy kéo nông nghiệp trên sơ mi
                                   rơ moóc
+Nguồn Hình 2.2: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=45 (trang in 48); hình học và nhãn trong hình đọc tại nguồn.
+
 
    Hình 2.3. Mô tả phương pháp cố định xe nâng hàng trên sơ mi rơ moóc
+Nguồn Hình 2.3: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=46 (trang in 49); hình học và nhãn trong hình đọc tại nguồn.
+
 
    Hình 2.4. Mô tả phương pháp cố định xe lu đường trên sơ mi rơ moóc
+Nguồn Hình 2.4: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=46 (trang in 49); hình học và nhãn trong hình đọc tại nguồn.
+
 
 Hình 2.5. Mô tả phương pháp cố định máy xúc bánh lốp, bánh xích trên sơ mi rơ moóc
+Nguồn Hình 2.5: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=46 (trang in 49); hình học và nhãn trong hình đọc tại nguồn.
 
-50                
 
      2. Xếp hàng hóa là xe ô tô trong khi vận chuyển
     Xe ô tô và các thùng xe kéo phải được vận chuyển bằng các phương tiện thích
@@ -1507,7 +1447,7 @@ bản giống với máy móc kỹ thuật và đảm bảo một số nguyên t
 chằng buộc và phương pháp chèn chặn cố định hàng hóa.
      - Trường hợp 1
     Nếu phương tiện được chuyên chở nằm trên sàn chất tải ngang hoặc dốc về
-phía trước tối đa 100 (tức là 1/6) thì phải sử dụng phương pháp chèn chặn. Hai khối
+phía trước tối đa 10⁰ (tức là 1/6) thì phải sử dụng phương pháp chèn chặn. Hai khối
 chặn được bố trí ở vị trí phía trước của bánh trước và hai khối chặn được bố trí ở
 phía sau của bất kỳ cặp bánh xe nào. Việc chằng buộc được áp dụng cho cặp bánh
 xe xa nhất (xem hình A và B).
@@ -1519,7 +1459,7 @@ bố trí các khối chặn này ở phía trước của cả 2 bánh sau và 
 cả dây chằng cố định.
 
    - Trường hợp 3
-    Nếu phương tiện được đặt nằm trên sàn chất tải có góc nghiêng quá 100 hướng
+    Nếu phương tiện được đặt nằm trên sàn chất tải có góc nghiêng quá 10⁰ hướng
 về phía đầu của phương tiện chuyên chở, hai khối chặn được đặt ở phía trước của
 cặp bánh xa nhất và hai khối chặn được đặt ở phía sau của cặp bánh sau. sử dụng
 dây chằng buộc cho cả bánh trước và sau.
@@ -1531,11 +1471,9 @@ việc chặn ở phía trước của cặp bánh sau.
 
    - Trường hợp 5
     Nếu như phương tiện được vận chuyển được đặt nằm trên sàn chất tải nghiêng
-một góc 100 về phía sau thì phải sử dụng phương pháp chèn chặn để đảm bảo
+một góc 10⁰ về phía sau thì phải sử dụng phương pháp chèn chặn để đảm bảo
 không xê dịch. Các khối chặn được đặt cả ở phía trước và phía sau của cặp bánh xe
 xa nhất. Các bánh xe được chặn này phải được chằng buộc thêm.
-
-52                 
 
      - Trường hợp 6
      Cố định phương tiện đặt theo hướng xe tải di chuyển:
@@ -1561,9 +1499,9 @@ một bánh xe nữa phải được cố định bằng đai chằng buộc.
 
    b. Cố định 3 bánh xe
 
-54                
+## Phụ lục XII
+Bảng/hình gốc của Phụ lục XII: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=51 (PDF 51–51; trang in 54–54). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
 
-                                    Phụ lục XII
 (Ban hành kèm theo Thông tư số 39/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -1577,6 +1515,8 @@ xây dựng,... phải được che phủ bằng lưới, kích thước mắt l
 thước những hạt nhỏ nhất để hạn chế hàng hóa bị lọt, rơi vãi khi vận chuyển.
 
                        Hình 3.1. Minh họa về xếp hàng rời
+Nguồn Hình 3.1: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=51 (trang in 54); hình học và nhãn trong hình đọc tại nguồn.
+
    2. Khi vận chuyển cần chú ý kiểm tra trục xe có thể bị quá tải khi xe lên và
 xuống dốc cao bởi vì các hạt rời có thể di chuyển trong thùng xe. Cụ thể hàng sẽ di
 chuyển dễ dàng từ đầu này đến đầu kia của thùng xe vì vậy cần kiểm tra thường
@@ -1584,8 +1524,12 @@ xuyên trong điều kiện này và có thể xếp lại tải (san đều t�
 hoặc công-ten-nơ) khi xe dừng đỗ ở nơi an toàn.
 
             Hình 3.2. Minh họa mô tả tải dịch chuyển khi xe lên dốc
+Nguồn Hình 3.2: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=51 (trang in 54); hình học và nhãn trong hình đọc tại nguồn.
 
-                                  Phụ lục XIII
+
+## Phụ lục XIII
+Bảng/hình gốc của Phụ lục XIII: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=52 (PDF 52–60; trang in 55–63). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 39/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -1604,8 +1548,8 @@ Với hàng hóa có khối lượng nặng, cần thiết sử dụng các dầ
 đều trên mâm hàng, sàn xe hoặc sàn công-ten-nơ.
 
  Hình 4.1. Minh họa mô tả một số ví dụ về cách xếp và cố định hàng trụ ống
+Nguồn Hình 4.1: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=52 (trang in 55); hình học và nhãn trong hình đọc tại nguồn.
 
-56                
 
      2. Hướng dẫn xếp và cố định một số loại hàng dạng trụ cụ thể
      2.1. Cuộn giấy
@@ -1614,6 +1558,8 @@ không xếp hết, được xếp trên sàn chất tải bằng phẳng và đ
 bên của thùng xe.
 
 Hình 4.2. Minh họa mô tả cách xếp các cuộn giấy không đồng đều về chiều cao
+Nguồn Hình 4.2: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=53 (trang in 56); hình học và nhãn trong hình đọc tại nguồn.
+
 
     Lớp trên cùng sẽ được ổn định ngang nhờ ma sát và các tấm chặn trước hoặc
 sau. Ngoài ra, phương án sử dụng khung giới hạn cũng có thể được áp dụng:
@@ -1636,6 +1582,8 @@ thành bên. Đối với mặt hàng tập trung lớn như thế này, cần �
 phân bố tải trọng.
 
           Hình 4.3. Minh họa mô tả cách xếp cuộn kim loại lõi ngang
+Nguồn Hình 4.3: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=54 (trang in 57); hình học và nhãn trong hình đọc tại nguồn.
+
 
     - Tấm kim loại dạng cuộn trên đế chêm (2) được chằng buộc các hướng bằng
 dây chằng buộc vòng quanh (1).
@@ -1644,8 +1592,6 @@ dây chằng buộc vòng quanh (1).
 đai thép tiêu chuẩn. Các dây chằng phải tiếp xúc với bề mặt của cuộn dây và các
 đế chêm.
 
-58                
-
    Nếu đế chêm không được sử dụng, thì các cuộn dây hoặc các giá đỡ phải được
 chằng buộc bằng dây xích hoặc đai vải kết hợp các thiết bị kéo căng.
      b) Cuộn lõi dọc
@@ -1653,6 +1599,8 @@ chằng buộc bằng dây xích hoặc đai vải kết hợp các thiết bị
 trong những hàng hóa khó khăn nhất để cố định như Hình 4.4.
 
                 Hình 4.4. Minh họa mô tả cách xếp cuộn lõi dọc
+Nguồn Hình 4.4: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=55 (trang in 58); hình học và nhãn trong hình đọc tại nguồn.
+
     Hình 4.5 mô tả cách chằng buộc phù hợp sử dụng một tấm hình chữ thập cùng
 với dây xích hoặc dây co giãn để giữ an toàn cho cuộn dây đặt lõi dọc có đường
 kính lớn. Nên đặt cuộn trên đường tâm của các phương tiện và tấm hình chữ thập
@@ -1667,6 +1615,8 @@ hoàn toàn tránh được bất kỳ sự xê dịch nào của cuộn.
 trọng là đặc biệt quan trọng.
 
              Hình 4.5. Minh họa mô tả chằng buộc hàng dạng cuộn
+Nguồn Hình 4.5: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=55 (trang in 58); hình học và nhãn trong hình đọc tại nguồn.
+
 
    2.3. Thùng tròn
     Hình 4.6. minh họa việc vận chuyển các thùng hàng dạng ống kích thước đầy
@@ -1675,6 +1625,8 @@ hàng được xếp trong công te nơ hoặc trong thùng xe.
 
     Hình 4.6. Minh họa mô tả về vận chuyển các thùng hàng dạng ống kích
                                thước đầy đủ
+Nguồn Hình 4.6: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=56 (trang in 59); hình học và nhãn trong hình đọc tại nguồn.
+
 
    - Hàng hóa xếp hết toàn bộ bề ngang công te nơ hoặc thùng xe.
    - Các vật liệu chặn hay thanh chèn lót (1) được bố trí chèn chặn ở phía sau.
@@ -1691,9 +1643,9 @@ chặn sau bằng khối chèn hoặc thanh chống là cần thiết.
    Các dây chằng buộc được bố trí cuốn xung quanh hàng hóa (1).
    Các khối hình trụ sẽ được đặt trên đế chêm (2).
 
-60                
-
  Hình 4.7. Minh họa mô tả về vận chuyển dầm tròn cho công trình xây dựng
+Nguồn Hình 4.7: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=57 (trang in 60); hình học và nhãn trong hình đọc tại nguồn.
+
 
      2.5. Cuộn dây
     a) Các cuộn dây tốt nhất được bó lại với nhau để tạo thành một cuộn đồng đều
@@ -1711,6 +1663,8 @@ ngang (1).
      - Đai thép được đề nghị không sử dụng cho các mục đích khác.
 
             Hình 4.8. Minh họa mô tả về vận chuyển các cuộn dây
+Nguồn Hình 4.8: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=58 (trang in 61); hình học và nhãn trong hình đọc tại nguồn.
+
 
    2.6. Thanh gỗ tròn
      a) Việc xếp hàng là thanh gỗ tròn lên xe phải đảm bảo nguyên tắc về phân bố
@@ -1726,8 +1680,6 @@ gỗ) theo các số lần sau đây:
     - Ít nhất hai lần nếu khối hàng hóa là những thanh gỗ vẫn còn nguyên vỏ cây
 có chiều dài tối đa là 3,3 m;
 
-62                
-
     - Ít nhất ba lần nếu khối hàng dài hơn 3,3 m hoặc không phụ thuộc vào độ dài
 nếu vỏ đã được lột.
     Dây chằng buộc qua nóc được đặt nằm ngang giữa mỗi cặp trụ chống sàn xe
@@ -1735,6 +1687,8 @@ trước và sau mỗi khối hàng.
 
   Hình 4.9. Minh họa mô tả xếp các thanh gỗ tròn được xếp đúng và xếp sai
                                trên thùng xe
+Nguồn Hình 4.9: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=59 (trang in 62); hình học và nhãn trong hình đọc tại nguồn.
+
     c) Phương pháp xếp chồng lên nhau theo chiều ngang như minh họa tại hình 4.10,
 cụ thể như sau:
    - Các thanh gỗ xếp chồng lên nhau theo chiều ngang của sàn xe mặt bằng
@@ -1744,6 +1698,8 @@ hàng không chất cao hơn nóc thùng xe.
 
   Hình 4.10. Minh họa mô tả xếp thanh gỗ được xếp chồng ngang trên xe tải
                             thùng có cửa ngang
+Nguồn Hình 4.10: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=59 (trang in 62); hình học và nhãn trong hình đọc tại nguồn.
+
      2.7. Hàng dạng ống có kích thước dài
    a) Việc vận chuyển hàng dạng ống có kích thước dài phải sử dụng xe thùng hở
 hoặc các xe mà hàng được chằng buộc trên một thùng xe kéo ở một đầu. Các
@@ -1759,10 +1715,12 @@ trong suốt hành trình và tất cả dây chằng buộc cần thắt chặt
 
 Hình 4.11. Minh họa mô tả cách xếp, chằng buộc, chêm, chèn hàng dạng ống
                             có kích thước dài
+Nguồn Hình 4.11: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=60 (trang in 63); hình học và nhãn trong hình đọc tại nguồn.
 
-64                
 
-                                     Phụ lục XIV
+## Phụ lục XIV
+Bảng/hình gốc của Phụ lục XIV: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=61 (PDF 61–62; trang in 64–65). Vị trí ký và hình học biểu mẫu đọc tại nguồn.
+
 (Ban hành kèm theo Thông tư số 39/2024/TT-BGTVT ngày 15 tháng 11 năm 2024
                     của Bộ trưởng Bộ Giao thông vận tải)
 
@@ -1806,6 +1764,8 @@ luôn luôn kiểm tra để đảm bảo các cửa đã được khóa và cá
 
 Hình 5.1. Minh họa về những thùng hàng rời được xếp 2 chồng trong
                     công te nơ, 2 lớp và 4 hàng
+Nguồn Hình 5.1: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=62 (trang in 65); hình học và nhãn trong hình đọc tại nguồn.
+
 
                                         Nhìn từ trên xuống
                                         Sự kết hợp các thùng hàng trong
@@ -1821,3 +1781,5 @@ Hình 5.1. Minh họa về những thùng hàng rời được xếp 2 chồng t
 
   Hình 5.2. Minh họa về các thùng hàng tải trọng trung bình được chồng
                        đôi trong công te nơ
+Nguồn Hình 5.2: data/raw/pdf/39_2024_TT_BGTVT_cb53112.pdf#page=62 (trang in 65); hình học và nhãn trong hình đọc tại nguồn.
+

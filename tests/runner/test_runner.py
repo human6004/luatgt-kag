@@ -63,6 +63,8 @@ class RunnerPreflightTests(unittest.TestCase):
         cls.adapter = importlib.import_module('kag.builder.writer_adapter')
 
     def setUp(self):
+        schema = patch('kag.runner._check_target_layout')
+        schema.start(); self.addCleanup(schema.stop)
         self.temp = tempfile.TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.root = Path(self.temp.name)
@@ -88,7 +90,8 @@ class RunnerPreflightTests(unittest.TestCase):
             (schema_dir / filename).write_bytes((ROOT / 'kag/schema' / filename).read_bytes())
         (self.root / 'fixture.txt').write_bytes(b'fixture')
         inputs = [{'name': 'fixture.txt', 'sha256': checksum(self.root / 'fixture.txt')}]
-        pins = dict(scope.C3_IDENTITY)
+        pins = dict(schema_sha256=checksum(ROOT/'kag/schema/VietRoadTraffic.schema'),
+                    contract_sha256=checksum(ROOT/'kag/schema/schema_contract.json'))
         pins.update(nodes_jsonl_sha256=checksum(self.root / 'nodes.jsonl'),
                     edges_jsonl_sha256=checksum(self.root / 'edges.jsonl'))
         pins['plan_sha256'] = plan_hash(SimpleNamespace(nodes=self.originals, edges=self.edges,
@@ -141,8 +144,8 @@ class RunnerPreflightTests(unittest.TestCase):
         binding = patch.object(DockerBackendTransport, 'read',
             side_effect=lambda transport_store, verifier: (dict(metadata), ('fixture-runtime',)))
         binding.start(); self.addCleanup(binding.stop)
-        for target in (patch.object(scope, 'C3_IDENTITY', pins), patch.object(scope, 'ROOT', self.root),
-                       patch.object(scope, 'ARTIFACT_HASHES', (('fixture.txt', inputs[0]['sha256']),)),
+        for target in (patch.object(scope, 'ROOT', self.root),
+                       patch.object(scope, 'SOURCE_FILES', (('fixture', 'fixture.txt'),)),
                        patch.object(self.adapter, '_C43A_POLICY', policy)):
             target.start(); self.addCleanup(target.stop)
 
@@ -328,6 +331,14 @@ class RunnerPreflightTests(unittest.TestCase):
         self.assertEqual(verified['writer_config'].scope, 'PRODUCTION')
         self.assertGreaterEqual(self.projects.reads, 2)
 
+    def test_confirmed_production_write_uses_existing_scope_authority(self):
+        try:
+            verified = self.preflight(self.production())
+        except RunBlocked as error:
+            self.fail('Confirmed production scope refused: ' + error.code)
+        self.assertEqual(verified['identity']['write_mode'], 'WRITE')
+        self.assertEqual(verified['writer_config'].scope, 'PRODUCTION')
+
     def test_production_ambiguous_missing_reserved_id_and_confirmation_block(self):
         for kind in ('missing', 'duplicate', 'reserved', 'confirmation'):
             with self.subTest(kind=kind):
@@ -395,6 +406,17 @@ class RunnerExecutionTests(unittest.TestCase):
         self.reader.database_identity = lambda: 'physical-fixture-db'
         self.reader.database_metadata = Database().database_metadata
         self.calls = []
+        # The fixture starts with graph data; retain its same-model readback history.
+        from kag.verify import index_expected
+        prior = Path(self.config['paths']['run_root']) / 'model-origin'
+        prior.mkdir(parents=True)
+        with sqlite3.connect(prior / 'ledger.sqlite3') as db:
+            db.execute('CREATE TABLE run_meta(key TEXT PRIMARY KEY,value TEXT)')
+            db.execute('INSERT INTO run_meta VALUES (?,?)', ('identity', canonical_json(dict(
+                database_id='physical-fixture-db', namespace=self.config['namespace'],
+                model_identity=MODEL, dimension=3072))))
+        index_expected(prior / 'expected.sqlite3', self.nodes, self.edges,
+                       contract=CONTRACT, provenance=self.jobs)
 
     def execute(self, run_id='fixture-run', **kwargs):
         api = self.api()
@@ -407,18 +429,6 @@ class RunnerExecutionTests(unittest.TestCase):
 
     def record(self, filename='receipt.json', run_id='fixture-run'):
         return json.loads((self.root / 'runs' / run_id / filename).read_bytes())
-
-    def synthetic_dispatch_scope(self):
-        # Exercise internal writer orchestration; public unproven WRITE remains BLOCKED.
-        api = self.api()
-        readonly = copy.deepcopy(self.config); readonly['write_mode'] = 'NO_OP'
-        original = api.preflight
-        def fresh_proof(*args, **kwargs):
-            verified = original(readonly, project_client=self.projects, reader=self.reader)
-            verified['identity'].update(write_mode='WRITE', config_hash=scope._spec_hash(self.config))
-            return verified
-        boundary = patch.object(api, 'preflight', side_effect=fresh_proof)
-        boundary.start(); self.addCleanup(boundary.stop)
 
     def test_nine_stages_stream_existing_vectors_without_side_effect_factories(self):
         self.assertEqual(self.execute(), 0)
@@ -487,7 +497,10 @@ class RunnerExecutionTests(unittest.TestCase):
         from kag import verify
         original = verify.verify_graph
         def barrier(reader, **kwargs):
-            if kwargs.get('nodes_only'): raise RunBlocked('NODES')
+            if kwargs.get('nodes_only'):
+                status=self.record('status.json')
+                self.assertEqual((status['stage'],status['state'],status['done']),('verify-nodes','RUNNING',0))
+                raise RunBlocked('NODES')
             return original(reader, **kwargs)
         with patch.object(verify, 'verify_graph', barrier):
             self.assertEqual(self.execute(), 2)
@@ -509,7 +522,6 @@ class RunnerExecutionTests(unittest.TestCase):
 
     def test_production_real_writer_barrier_and_ambiguous_ack_resume(self):
         self.config = self.production()
-        self.synthetic_dispatch_scope()
         api = self.api()
         self.assertTrue(callable(getattr(api, 'run', None)), 'shared stage runner missing')
         writes, writers = [], []
@@ -544,7 +556,6 @@ class RunnerExecutionTests(unittest.TestCase):
 
     def test_graph_ack_before_confirmation_recovers_without_resend(self):
         self.config = self.production()
-        self.synthetic_dispatch_scope()
         api = self.api()
         self.assertTrue(callable(getattr(api, 'run', None)), 'shared stage runner missing')
         from kag.run_state import RunState
@@ -584,7 +595,8 @@ class RunnerExecutionTests(unittest.TestCase):
                     config.update(vector_policy='provider', embedding_model={'type': 'openai',
                         'base_url': 'https://embedding.invalid/v1', 'model': 'example-model', 'timeout': 60})
                 calls = []
-                with patch('kag.runner.GraphLock.acquire', side_effect=lambda *args: calls.append('lock')):
+                with patch.object(self.reader, 'database_metadata', return_value={}), \
+                        patch('kag.runner.GraphLock.acquire', side_effect=lambda *args: calls.append('lock')):
                     code = self.api().run(config, run_id='unproven-backend-' + str(provider),
                         project_client=self.projects, reader=self.reader,
                         vectorizer_factory=lambda *args: calls.append('provider'),

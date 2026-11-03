@@ -26,12 +26,14 @@ import vn.luatgt.dto.ModelConfigActionRequest;
 
 @Component
 public class KagClient {
+    private static final org.slf4j.Logger LOG=org.slf4j.LoggerFactory.getLogger(KagClient.class);
     private final RestClient client,inspectionClient; private final ObjectMapper json;
     private final JdkClientHttpRequestFactory queryFactory,inspectionFactory;
+    private final RestClient servingClient;
     private final KagSchema schema;
     private final String tokenFile,inspectTokenFile,release,snapshot;
     private final Clock clock;
-    private RestClient builderClient;
+    private RestClient builderClient,builderConfigurationClient;
     @Value("${app.kag-builder-token-file:}") private String builderTokenFile="";
     @Value("${app.kag-credentials-write-token-file:}") private String credentialsWriteTokenFile="";
     @Value("${app.kag-provider-test-token-file:}") private String providerTestTokenFile="";
@@ -39,13 +41,13 @@ public class KagClient {
     private static final ZoneId LEGAL_ZONE=ZoneId.of("Asia/Saigon");
     private static final Set<String> REQUEST_FIELDS=Set.of("user_id","message","context_id","schema_contract");
     private static final Set<String> CITATION_FIELDS=Set.of("doc_id","unit_id","sign_id","evidence_id","field","start","end","quote");
-    private final CircuitBreaker breaker=CircuitBreaker.of("kag",CircuitBreakerConfig.custom().minimumNumberOfCalls(3).slidingWindowSize(6).waitDurationInOpenState(Duration.ofSeconds(30)).build());
+    private final CircuitBreaker breaker=CircuitBreaker.of("kag",CircuitBreakerConfig.custom().minimumNumberOfCalls(3).slidingWindowSize(6).waitDurationInOpenState(Duration.ofSeconds(30)).ignoreException(error->Thread.currentThread().isInterrupted()).build());
     public KagClient(@Value("${app.kag-url}") String url,ObjectMapper json,KagSchema schema,
         @Value("${app.kag-token-file:}") String tokenFile,@Value("${app.kag-release-id:}") String release,
         @Value("${app.kag-webapp-snapshot-id:}") String snapshot,ObjectProvider<Clock> clocks,
         @Value("${app.kag-inspect-token-file:}") String inspectTokenFile) {
         var factory=new JdkClientHttpRequestFactory(HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build());
-        factory.setReadTimeout(Duration.ofSeconds(30));
+        factory.setReadTimeout(Duration.ofSeconds(180));
         this.queryFactory=factory;
         this.client=RestClient.builder().baseUrl(url).requestFactory(factory).build(); this.json=json;
         this.schema=schema; this.tokenFile=tokenFile; this.release=release; this.snapshot=snapshot;
@@ -55,8 +57,11 @@ public class KagClient {
         inspectionFactory.setReadTimeout(Duration.ofSeconds(2));
         this.inspectionFactory=inspectionFactory;
         this.inspectionClient=RestClient.builder().baseUrl(url).requestFactory(inspectionFactory).build();
+        var servingFactory=new JdkClientHttpRequestFactory(HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build());
+        servingFactory.setReadTimeout(Duration.ofSeconds(150));
+        this.servingClient=RestClient.builder().baseUrl(url).requestFactory(servingFactory).build();
     }
-    @Value("${app.kag-query-timeout-seconds:30}")
+    @Value("${app.kag-query-timeout-seconds:180}")
     public void queryTimeout(int seconds) {
         if(seconds<30||seconds>180) throw new IllegalArgumentException("Bounded KAG query timeout required");
         queryFactory.setReadTimeout(Duration.ofSeconds(seconds));
@@ -68,22 +73,129 @@ public class KagClient {
     }
     @Value("${app.kag-builder-url:}")
     public void builderEndpoint(String url) {
-        if(url.isBlank()) {builderClient=null;return;}
+        if(url.isBlank()) {builderClient=builderConfigurationClient=null;return;}
         var uri=java.net.URI.create(url);
         if(!Set.of("http","https").contains(uri.getScheme())||uri.getHost()==null||uri.getUserInfo()!=null||uri.getQuery()!=null||uri.getFragment()!=null||!Set.of("","/").contains(uri.getPath()))
             throw new IllegalArgumentException("Private Builder endpoint required");
-        var factory=new JdkClientHttpRequestFactory(HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build());
+        var http=HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build();
+        var factory=new JdkClientHttpRequestFactory(http);
         factory.setReadTimeout(Duration.ofSeconds(3));
         builderClient=RestClient.builder().baseUrl(url).requestFactory(factory).build();
+        var saveFactory=new JdkClientHttpRequestFactory(http);
+        saveFactory.setReadTimeout(Duration.ofSeconds(60));
+        builderConfigurationClient=builderClient.mutate().requestFactory(saveFactory).build();
     }
     public JsonNode builderStatus() {return builderRequest(null,null);}
     public JsonNode builderInputs() {return builderRequest("inputs",null);}
-    public JsonNode builderAction(String action,String runId) {
-        if(!Set.of("build","stop","resume").contains(action)||runId==null||!runId.matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}"))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Thao tác Builder không hợp lệ");
-        return builderRequest(action,runId);
+    public JsonNode builderDataset(String group,int offset,int limit) {
+        if(!Set.of("documents","units","signs","penalties","relations","xrefs").contains(group)||offset<0||limit<1||limit>50)
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Loại nguồn hoặc trang không hợp lệ");
+        return builderRequest("dataset/"+group+"/"+offset+"/"+limit,null);
     }
-    private JsonNode builderRequest(String action,String runId) {
+    public JsonNode checkBuilderInputs() {return builderRequest("check-inputs",null);}
+    public JsonNode builderConfiguration() {return builderRequest("configuration",null);}
+    public JsonNode builderProjects() {return builderRequest("projects",null);}
+    public JsonNode graphProject(int projectId) {
+        if(projectId<1)throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"ID project không hợp lệ");
+        return builderRequest("graph/"+projectId,null);
+    }
+    public JsonNode builderSources(int projectId,String runId) {
+        if(projectId<1||runId==null||!runId.matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}"))throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Chọn project và phiên đã xác minh");
+        return builderRequest("sources/"+projectId+"/"+runId,null);
+    }
+    public JsonNode serving(String action,JsonNode change,JsonNode publication) {
+        try {
+            boolean read=action==null;
+            if(!read&&(!Set.of("preview","activate").contains(action)||
+                !fields(change).equals(action.equals("activate")?Set.of("project_id","run_id","preview_id"):Set.of("project_id","run_id"))||
+                !bounded(change.path("project_id"),1,Integer.MAX_VALUE)||!change.path("run_id").asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}")||
+                action.equals("activate")&&!change.path("preview_id").asText().matches("[0-9a-f]{64}")))
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Chọn project, phiên đã xác minh và xem trước lại trước khi kích hoạt");
+            String token=read?inspectionToken():readToken(configApplyTokenFile);
+            RestClient.RequestHeadersSpec<?> request;
+            if(read)request=servingClient.get().uri("/v1/serving");
+            else {
+                request=servingClient.post().uri("/v1/serving/"+action).contentType(MediaType.APPLICATION_JSON).body(change);
+            }
+            String session=openSpgSession();if(session!=null)request.header("X-OpenSPG-Session",session);
+            return request.header(HttpHeaders.AUTHORIZATION,"Bearer "+token).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
+                var body=inspectionBody(res,token);
+                if(res.getStatusCode().value()!=200) {
+                    String code=errorCode(body);
+                    String reason=switch(code) {
+                        case "CONFIG_CONFLICT" -> "Bản xem trước đã cũ. Tải lại và xem trước lần nữa";
+                        case "CONFIG_BUSY" -> "Dịch vụ đang xử lý yêu cầu khác. Chờ rồi tải lại trạng thái";
+                        case "SCOPE_DENIED" -> "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project";
+                        case "RELEASE_MISMATCH" -> "Model Embedding hoặc số chiều không khớp phiên dựng. Chọn lại và kiểm tra model";
+                        case "SOURCE_VALIDATION_FAILED" -> "Nguồn graph chưa đầy đủ hoặc khác bản đã xác minh. Kiểm văn bản nguồn và phạm vi dựng trước khi xuất bản";
+                        default -> "Chưa thể dùng đồ thị. Kiểm phiên đã xác minh, cấu trúc/chỉ mục và model đã kiểm tra ("+code+")";
+                    };
+                    throw new ResponseStatusException(HttpStatus.CONFLICT,reason);
+                }
+                if(read) {
+                    if(!body.path("contract_version").asText().equals("builder-serving-v1")||!body.path("runs").isArray()||
+                        !body.path("busy").isBoolean()||!body.path("runtime_ready").isBoolean()||!body.path("chat_blockers").isArray())throw new IOException();
+                } else if(!body.path("preview_id").asText().matches("[0-9a-f]{64}")||!body.path("chat_blockers").isArray()||
+                    !body.path("project_id").equals(change.path("project_id"))||action.equals("activate")&&!body.path("status").asText().equals("ACTIVE"))throw new IOException();
+                return body;
+            });
+        } catch(ResponseStatusException e) {throw e;}
+        catch(Exception e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Chưa xác nhận được trạng thái đồ thị phục vụ; tải lại trước khi thao tác tiếp");}
+    }
+    public JsonNode checkBuilderReadiness() {return builderRequest("preflight",null);}
+    public JsonNode builderStructure(String action,JsonNode change) {
+        if(action==null)return builderRequest("structure",null);
+        if(!Set.of("preview","apply").contains(action)||
+            !fields(change).equals(action.equals("apply")?Set.of("project_id","revision","preview_id"):Set.of("project_id","revision"))||
+            !bounded(change.path("project_id"),1,Integer.MAX_VALUE)||!bounded(change.path("revision"),0,Integer.MAX_VALUE)||
+            action.equals("apply")&&!change.path("preview_id").asText().matches("[0-9a-f]{64}"))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Yêu cầu chuẩn bị cấu trúc không hợp lệ");
+        return builderRequest("structure-"+action,change);
+    }
+    public JsonNode saveBuilderConfiguration(JsonNode change) {
+        var allowed=Set.of("revision","embedding_revision","batch_size","request_limit","node_limit","project_id","selection_preview_id");
+        if(!fields(change).containsAll(Set.of("revision","embedding_revision","batch_size","request_limit"))||!allowed.containsAll(fields(change))||
+            !bounded(change.path("revision"),0,Integer.MAX_VALUE-1)||!bounded(change.path("embedding_revision"),1,Integer.MAX_VALUE)||
+            !bounded(change.path("batch_size"),1,4096)||!change.path("request_limit").isNull()&&!bounded(change.path("request_limit"),1,1000000)||
+            change.has("node_limit")&&!change.path("node_limit").isNull()&&!bounded(change.path("node_limit"),3,128)||
+            change.has("selection_preview_id")&&!change.path("selection_preview_id").asText().matches("[0-9a-f]{64}")||
+            change.has("project_id")&&!bounded(change.path("project_id"),1,Integer.MAX_VALUE))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Cấu hình Builder không hợp lệ");
+        return builderRequest("save-configuration",change);
+    }
+    public JsonNode previewBuilderSelection(JsonNode change) {
+        if(!fields(change).equals(Set.of("revision","mode","value"))||!bounded(change.path("revision"),0,Integer.MAX_VALUE))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Phạm vi không hợp lệ");
+        validateSelectionRequest(change);
+        return builderRequest("selection",change);
+    }
+    private void validateSelectionRequest(JsonNode request) {
+        String mode=request.path("mode").asText();var value=request.path("value");
+        if(!Set.of("ALL","COUNT","PERCENT").contains(mode)||
+            (mode.equals("ALL")?!value.isNull():!bounded(value,mode.equals("COUNT")?3:1,mode.equals("COUNT")?Integer.MAX_VALUE:100)))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Chọn toàn bộ, số lượng nguyên hoặc tỷ lệ 1–100%");
+    }
+    public JsonNode builderClear(String action,JsonNode change) {
+        if(action==null)return builderRequest("clear",null);
+        if(!Set.of("preview","apply").contains(action)||!fields(change).equals(action.equals("preview")?Set.of("revision"):Set.of("revision","preview_id","database"))||
+            !bounded(change.path("revision"),1,Integer.MAX_VALUE)||action.equals("apply")&&
+                (!change.path("preview_id").asText().matches("[0-9a-f]{64}")||!change.path("database").asText().matches("[a-z][a-z0-9.-]{0,62}")))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Yêu cầu xóa dữ liệu không hợp lệ");
+        return builderRequest("clear-"+action,change);
+    }
+    public JsonNode builderAction(String action,String runId) {
+        return builderAction(action,runId,null);
+    }
+    public JsonNode builderAction(String action,String runId,String revision) {
+        if(!Set.of("build","stop","resume","abandon").contains(action)||runId==null||!runId.matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}"))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Thao tác Builder không hợp lệ");
+        if(revision!=null&&!revision.matches("\"[1-9][0-9]{0,9}\""))throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Revision Builder không hợp lệ");
+        return builderRequest(action,Map.of("run_id",runId),revision);
+    }
+    private JsonNode builderRequest(String action,Object payload) {
+        return builderRequest(action,payload,null);
+    }
+    private JsonNode builderRequest(String action,Object payload,String revision) {
         try {
             if(builderClient==null||builderTokenFile.isBlank()||!Path.of(builderTokenFile).isAbsolute())throw new IOException();
             String token=readToken(builderTokenFile);
@@ -91,62 +203,403 @@ public class KagClient {
                 String other=null;try{other=readToken(file);}catch(IOException ignored){}
                 if(token.equals(other))throw new IOException();
             }
-            boolean read=action==null||action.equals("inputs");
-            RestClient.RequestHeadersSpec<?> request=read?builderClient.get().uri("/v1/builder/"+(action==null?"status":"inputs")):
-                builderClient.post().uri("/v1/builder/"+action).contentType(MediaType.APPLICATION_JSON).body(Map.of("run_id",runId));
+            boolean graph=action!=null&&action.matches("graph/[1-9][0-9]{0,9}");
+            boolean sources=action!=null&&action.startsWith("sources/");
+            boolean dataset=action!=null&&action.startsWith("dataset/");
+            boolean read=graph||sources||dataset||action==null||Set.of("inputs","configuration","projects","structure","clear").contains(action);
+            boolean structure=action!=null&&action.startsWith("structure");
+            boolean clear=action!=null&&action.startsWith("clear");
+            boolean inputs="inputs".equals(action)||"check-inputs".equals(action);
+            boolean configuration=Set.of("configuration","save-configuration","preflight").contains(action==null?"":action);
+            String path=action==null?"status":inputs?"inputs":action.equals("save-configuration")?"configuration":structure||clear?action.replace('-', '/'):action;
+            var transport=graph||sources||structure||clear||Set.of("save-configuration","projects","selection","abandon").contains(action==null?"":action)?builderConfigurationClient:builderClient;
+            RestClient.RequestHeadersSpec<?> request=read?transport.get().uri("/v1/builder/"+path):
+                transport.post().uri("/v1/builder/"+path).contentType(MediaType.APPLICATION_JSON).body(payload==null?Map.of():payload);
+            if(revision!=null)request.header(HttpHeaders.IF_MATCH,revision);
+            if(graph||sources||structure||clear||Set.of("projects","save-configuration","preflight","build","resume","abandon").contains(action==null?"":action)) {
+                String session=openSpgSession();
+                if(session!=null)request.header("X-OpenSPG-Session",session);
+            }
             return request.header(HttpHeaders.AUTHORIZATION,"Bearer "+token).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
                 int code=res.getStatusCode().value();
-                if(code==409)throw new ResponseStatusException(HttpStatus.CONFLICT,"Builder đang bận hoặc thao tác chưa an toàn; hãy tải lại trạng thái");
+                if((graph||sources)&&(code==403||code==404))throw new ResponseStatusException(code==403?HttpStatus.FORBIDDEN:HttpStatus.NOT_FOUND,
+                    code==403?"Đăng nhập lại OpenSPG và kiểm quyền sở hữu project":"Project không còn thuộc danh sách được phép xem; hãy tải lại");
+                if(code==409) {
+                    if("selection".equals(action)&&inspectionBody(res,token).path("detail").asText().equals("BUILDER_SELECTION_INVALID"))
+                        throw new ResponseStatusException(HttpStatus.CONFLICT,"Phạm vi quá nhỏ để giữ đủ loại, quan hệ và nguồn liên quan. Tăng giới hạn rồi xem trước lại");
+                    throw new ResponseStatusException(HttpStatus.CONFLICT,"Builder đang bận hoặc thao tác chưa an toàn; hãy tải lại trạng thái");
+                }
                 if(code==422)throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Yêu cầu Builder không hợp lệ");
                 if(code!=(read?200:202))throw new IOException();
-                var body=inspectionBody(res,token);
-                if("inputs".equals(action))validateBuilderInputs(body);else validateBuilder(body);
-                if(!read&&!body.path("run_id").asText().equals(runId))throw new IOException();
+                JsonNode body;
+                try { body=inspectionBody(res,token,sources?32*1024*1024:245760); }
+                catch(IOException e) { if(sources&&"Response too large".equals(e.getMessage()))throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"Danh sách nguồn vượt giới hạn 32 MiB; chưa thể xem hoặc nhập qua màn này");throw e; }
+                if(dataset)validateDataset(body,action);else if(sources)validateBuilderSources(body,action);else if(graph)validateGraphProject(body,Integer.parseInt(action.substring(6)));else if(structure)validateBuilderStructure(body);else if(clear)validateBuilderClear(body);else if("selection".equals(action))validateBuilderSelection(body);else if("projects".equals(action))validateBuilderProjects(body);else if(inputs)validateBuilderInputs(body);else if(configuration)validateBuilderConfiguration(body);else validateBuilder(body);
+                if(!read&&!inputs&&!configuration&&!structure&&!clear&&!"selection".equals(action)&&!body.path("run_id").asText().equals(((Map<?,?>)payload).get("run_id")))throw new IOException();
                 return body;
             });
         } catch(ResponseStatusException e) {throw e;}
         catch(Exception e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Builder chưa khả dụng; kiểm tra cấu hình Worker và quyền điều khiển");}
     }
+    private void validateBuilderSources(JsonNode body,String action) throws IOException {
+        var target=body.path("target");var parts=action.split("/");
+        if(!fields(body).equals(Set.of("contract_version","target","run_id","partial","documents","units","release"))||
+            !body.path("contract_version").asText().equals("builder-sources-v1")||!body.path("run_id").asText().equals(parts[2])||
+            !body.path("partial").isBoolean()||!fields(target).equals(Set.of("project_id","project_name","database","namespace"))||
+            !bounded(target.path("project_id"),Integer.parseInt(parts[1]),Integer.parseInt(parts[1]))||!text(target.path("project_name"),255,true)||
+            !target.path("database").asText().matches("[a-z][a-z0-9.-]{0,62}")||!target.path("namespace").asText().matches("[A-Za-z][A-Za-z0-9_]{0,63}"))throw new IOException();
+        for(String group:List.of("documents","units")) {
+            var rows=body.path(group);if(!rows.isArray()||rows.size()>1_000_000)throw new IOException();
+            var seen=new HashSet<String>();
+            for(var row:rows)if(!row.isObject()||!text(row.path(group.equals("documents")?"doc_id":"unit_id"),group.equals("documents")?250:500,true)||
+                !seen.add(row.path(group.equals("documents")?"doc_id":"unit_id").asText())||!group.equals("documents")&&(!text(row.path("doc_id"),250,true)||!row.path("text").isTextual()))throw new IOException();
+        }
+        var release=body.path("release");
+        if(!release.isNull()&&(!fields(release).equals(Set.of("release_id","documents","units"))||!text(release.path("release_id"),128,true)||
+            !release.path("documents").isArray()||!release.path("units").isArray()))throw new IOException();
+    }
+    private void validateDataset(JsonNode body,String action) throws IOException {
+        var parts=action.split("/");int offset=Integer.parseInt(parts[2]),limit=Integer.parseInt(parts[3]);
+        if(!fields(body).equals(Set.of("contract_version","dataset","group","source","offset","limit","total","items"))||
+            !body.path("contract_version").asText().equals("builder-dataset-v1")||!text(body.path("dataset"),512,true)||
+            !body.path("group").asText().equals(parts[1])||!text(body.path("source"),512,true)||
+            body.path("offset").asInt(-1)!=offset||body.path("limit").asInt(-1)!=limit||!bounded(body.path("total"),0,Integer.MAX_VALUE)||
+            !body.path("items").isArray()||body.path("items").size()!=Math.min(limit,Math.max(0,body.path("total").asInt()-offset)))throw new IOException("Invalid dataset page");
+        for(var item:body.path("items"))if(!item.isObject())throw new IOException("Invalid source record");
+    }
+    private void validateGraphProject(JsonNode body,int projectId) throws IOException {
+        if(!fields(body).equals(Set.of("contract_version","target","database_id","measured_from","measured_at","counts","labels","relations","indexes","vector_count_kind"))||
+            !body.path("contract_version").asText().equals("graph-project-v1")||!body.path("vector_count_kind").asText().equals("NONEMPTY")||
+            !text(body.path("database_id"),255,true))throw new IOException();
+        var target=body.path("target");
+        if(!fields(target).equals(Set.of("project_id","project_name","namespace","database"))||!bounded(target.path("project_id"),projectId,projectId)||
+            !text(target.path("project_name"),255,true)||!target.path("namespace").asText().matches("[A-Za-z][A-Za-z0-9_]{0,63}")||
+            !target.path("database").asText().matches("[a-z][a-z0-9.-]{0,62}"))throw new IOException();
+        for(String field:List.of("measured_from","measured_at")) {
+            if(!text(body.path(field),64,true))throw new IOException();
+            java.time.OffsetDateTime.parse(body.path(field).asText());
+        }
+        if(!fields(body.path("counts")).equals(Set.of("nodes","edges","vectors")))throw new IOException();
+        for(String field:List.of("nodes","edges","vectors"))if(!bounded(body.path("counts").path(field),0,Integer.MAX_VALUE))throw new IOException();
+        for(String group:List.of("labels","relations")) {
+            if(!body.path(group).isArray()||body.path(group).size()>2048)throw new IOException();
+            var names=new HashSet<String>();
+            for(var row:body.path(group))if(!fields(row).equals(Set.of("name","count"))||!text(row.path("name"),512,true)||
+                !names.add(row.path("name").asText())||!bounded(row.path("count"),0,Integer.MAX_VALUE))throw new IOException();
+        }
+        if(!body.path("indexes").isArray()||body.path("indexes").size()>2048)throw new IOException();
+        for(var row:body.path("indexes")) {
+            if(!fields(row).equals(Set.of("name","state","type","labels","properties","dimension"))||!text(row.path("name"),512,true)||
+                !text(row.path("state"),32,true)||!text(row.path("type"),32,true)||!row.path("dimension").isNull()&&!bounded(row.path("dimension"),1,65536))throw new IOException();
+            for(String field:List.of("labels","properties")) {
+                if(!row.path(field).isArray()||row.path(field).size()>512)throw new IOException();
+                for(var item:row.path(field))if(!text(item,512,true))throw new IOException();
+            }
+        }
+    }
+    private void validateBuilderStructure(JsonNode body) throws IOException {
+        if(!fields(body).equals(Set.of("contract_version","state","revision","preview_id","checked_at","can_apply","report","code"))||
+            !body.path("contract_version").asText().equals("builder-structure-v1")||
+            !Set.of("NOT_RUN","PREVIEW","APPLYING","COMPLETE","PARTIAL","INTERRUPTED","BLOCKED").contains(body.path("state").asText())||
+            !bounded(body.path("revision"),0,Integer.MAX_VALUE)||!body.path("can_apply").isBoolean()||
+            !body.path("preview_id").isNull()&&!body.path("preview_id").asText().matches("[0-9a-f]{64}")||
+            !body.path("checked_at").isNull()&&!body.path("checked_at").isTextual()||
+            !body.path("code").isNull()&&!body.path("code").asText().matches("[A-Z_]{1,32}"))throw new IOException();
+        var report=body.path("report");
+        if(!report.isNull()) {
+            var reportFields=new HashSet<>(Set.of("target","database_id","dimension","counts","changes","indexes","conflicts","code","native_rebuild"));
+            boolean extended=report.has("build_ready");
+            if(extended)reportFields.addAll(Set.of("build_ready","default_types","index_changes"));
+            if(!fields(report).equals(reportFields)||
+                !report.path("database_id").isTextual()||report.path("database_id").asText().isBlank()||report.path("database_id").asText().length()>255||
+                !bounded(report.path("dimension"),1,65536)||!fields(report.path("counts")).equals(Set.of("nodes","edges"))||
+                !bounded(report.path("counts").path("nodes"),0,Integer.MAX_VALUE)||!bounded(report.path("counts").path("edges"),0,Integer.MAX_VALUE))throw new IOException();
+            var target=report.path("target");
+            if(!fields(target).equals(Set.of("project_id","project_name","namespace","database"))||!bounded(target.path("project_id"),1,Integer.MAX_VALUE)||
+                !target.path("project_name").isTextual()||target.path("project_name").asText().length()>255||
+                !target.path("namespace").asText().matches("[A-Za-z][A-Za-z0-9_]{0,63}")||!target.path("database").asText().matches("[a-z][a-z0-9.-]{0,62}"))throw new IOException();
+            if(!report.path("changes").isArray()||report.path("changes").size()>512||!report.path("indexes").isArray()||report.path("indexes").size()!=4||
+                !report.path("code").isNull()&&!report.path("code").asText().matches("[A-Z_]{1,32}"))throw new IOException();
+            for(var row:report.path("changes"))if(!fields(row).equals(Set.of("kind","action","name"))||
+                !Set.of("type","property","relation").contains(row.path("kind").asText())||!Set.of("ADD","UPDATE","REMOVE","KEEP").contains(row.path("action").asText())||
+                !row.path("name").asText().matches("[A-Za-z][A-Za-z0-9_.]{0,255}"))throw new IOException();
+            for(var row:report.path("indexes"))if(!fields(row).equals(Set.of("label","property","action"))||
+                !row.path("label").asText().matches("[A-Za-z][A-Za-z0-9_]{0,63}\\.(LegalDocument|LegalUnit|TrafficSign)")||
+                !Set.of("_title_vector","_text_vector","_ten_vector","_mo_ta_vector").contains(row.path("property").asText())||
+                !Set.of("ADD","KEEP","REBUILD","BLOCKED").contains(row.path("action").asText()))throw new IOException();
+            for(String name:List.of("conflicts","native_rebuild")) {
+                if(!report.path(name).isArray()||report.path(name).size()>2048)throw new IOException();
+                for(var row:report.path(name))if(!row.isTextual()||row.asText().length()>512)throw new IOException();
+            }
+            if(extended) {
+                if(!report.path("build_ready").isBoolean()||!report.path("default_types").isArray()||report.path("default_types").size()>18||
+                    !report.path("index_changes").isArray()||report.path("index_changes").size()>2048)throw new IOException();
+                for(var row:report.path("default_types"))if(!row.isTextual()||!row.asText().matches("[A-Za-z][A-Za-z0-9_.]{0,255}"))throw new IOException();
+                for(var row:report.path("index_changes")) {
+                    if(!fields(row).equals(Set.of("name","type","labels","properties","action"))||!row.path("name").isTextual()||row.path("name").asText().isBlank()||row.path("name").asText().length()>512||
+                        !row.path("type").asText().matches("[A-Z_]{1,32}")||!Set.of("ADD","KEEP","REMOVE","REBUILD","BLOCKED").contains(row.path("action").asText()))throw new IOException();
+                    for(String key:List.of("labels","properties")) {
+                        if(!row.path(key).isArray()||row.path(key).size()>512)throw new IOException();
+                        for(var item:row.path(key))if(!item.isTextual()||item.asText().length()>512)throw new IOException();
+                    }
+                }
+            }
+        }
+        if(body.path("can_apply").asBoolean()&&(!body.path("state").asText().equals("PREVIEW")||report.isNull()||!report.path("code").isNull()))throw new IOException();
+        if(body.path("state").asText().equals("COMPLETE")&&(report.isNull()||!report.path("code").isNull()||
+            java.util.stream.StreamSupport.stream(report.path("changes").spliterator(),false).anyMatch(row->!row.path("action").asText().equals("KEEP"))||
+            !report.path("default_types").isMissingNode()&&!report.path("default_types").isEmpty()||
+            java.util.stream.StreamSupport.stream(report.path("index_changes").spliterator(),false).anyMatch(row->!row.path("action").asText().equals("KEEP"))||
+            java.util.stream.StreamSupport.stream(report.path("indexes").spliterator(),false).anyMatch(row->!row.path("action").asText().equals("KEEP"))))throw new IOException();
+    }
+    private void validateBuilderClear(JsonNode body) throws IOException {
+        if(!fields(body).equals(Set.of("contract_version","state","revision","preview_id","report","deleted","checked_at","code"))||
+            !body.path("contract_version").asText().equals("builder-clear-v1")||!bounded(body.path("revision"),0,Integer.MAX_VALUE)||
+            !Set.of("NOT_RUN","PREVIEW","APPLYING","COMPLETE","PARTIAL","INTERRUPTED","BLOCKED").contains(body.path("state").asText())||
+            !body.path("preview_id").isNull()&&!body.path("preview_id").asText().matches("[0-9a-f]{64}")||
+            !body.path("code").isNull()&&!body.path("code").asText().matches("[A-Z_]{1,32}")||
+            !body.path("checked_at").isNull()&&!body.path("checked_at").isTextual())throw new IOException();
+        var deleted=body.path("deleted");
+        if(!fields(deleted).equals(Set.of("nodes","edges"))||!bounded(deleted.path("nodes"),0,Integer.MAX_VALUE)||!bounded(deleted.path("edges"),0,Integer.MAX_VALUE))throw new IOException();
+        var report=body.path("report");
+        if(report.isNull()) {
+            if(Set.of("PREVIEW","APPLYING","COMPLETE","PARTIAL").contains(body.path("state").asText()))throw new IOException();
+            return;
+        }
+        var target=report.path("target");var counts=report.path("counts");
+        if(!fields(report).equals(Set.of("target","database_id","counts","batch_size"))||!bounded(report.path("batch_size"),500,500)||
+            !report.path("database_id").asText().matches("[A-Za-z0-9._:-]{1,128}")||!fields(target).equals(Set.of("project_id","project_name","namespace","database"))||
+            !bounded(target.path("project_id"),1,Integer.MAX_VALUE)||!target.path("project_name").isTextual()||target.path("project_name").asText().isBlank()||target.path("project_name").asText().length()>255||
+            !target.path("namespace").asText().matches("[A-Za-z][A-Za-z0-9_]{0,63}")||!target.path("database").asText().matches("[a-z][a-z0-9.-]{0,62}")||
+            !fields(counts).equals(Set.of("nodes","edges"))||!bounded(counts.path("nodes"),0,Integer.MAX_VALUE)||!bounded(counts.path("edges"),0,Integer.MAX_VALUE)||
+            body.path("preview_id").isNull())throw new IOException();
+    }
+    private String openSpgSession() throws IOException {
+        var context=org.springframework.web.context.request.RequestContextHolder.getRequestAttributes();
+        if(!(context instanceof org.springframework.web.context.request.ServletRequestAttributes servlet))return null;
+        var cookies=servlet.getRequest().getCookies();String session=null;
+        if(cookies!=null)for(var cookie:cookies)if(cookie.getName().equals("OPEN_SPG_TOKEN")) {
+            if(session!=null||!cookie.getValue().matches("[A-Za-z0-9._~+/=%:-]{1,8192}"))throw new IOException();
+            session=cookie.getValue();
+        }
+        return session;
+    }
+    private void validateBuilderProjects(JsonNode body) throws IOException {
+        if(!fields(body).equals(Set.of("contract_version","state","projects"))||!body.path("contract_version").asText().equals("builder-projects-v1")||
+            !Set.of("AVAILABLE","EMPTY","FORBIDDEN","NOT_CONFIGURED","UNAVAILABLE").contains(body.path("state").asText())||
+            !body.path("projects").isArray()||body.path("projects").size()>10000)throw new IOException();
+        var ids=new HashSet<Integer>();
+        for(var row:body.path("projects")) {
+            if(!fields(row).equals(Set.of("project_id","project_name","namespace","database","state"))||!bounded(row.path("project_id"),1,Integer.MAX_VALUE)||
+                !ids.add(row.path("project_id").asInt())||!row.path("project_name").isTextual()||row.path("project_name").asText().isBlank()||row.path("project_name").asText().length()>255||
+                !row.path("namespace").asText().matches("[A-Za-z][A-Za-z0-9_]{0,63}")||
+                !row.path("database").isNull()&&!row.path("database").asText().matches("[a-z][a-z0-9.-]{0,62}")||
+                !Set.of("AVAILABLE","CONNECTION_NOT_CONFIGURED","SERVING_PROTECTED").contains(row.path("state").asText())||
+                row.path("state").asText().equals("AVAILABLE")&&row.path("database").isNull())throw new IOException();
+        }
+        if(body.path("state").asText().equals("AVAILABLE")==body.path("projects").isEmpty())throw new IOException();
+        if(!body.path("state").asText().equals("AVAILABLE")&&!body.path("projects").isEmpty())throw new IOException();
+    }
+    private void validateBuilderConfiguration(JsonNode body) throws IOException {
+        boolean extended=body.path("contract_version").asText().equals("builder-configuration-v4");
+        boolean projects=extended||body.path("contract_version").asText().equals("builder-configuration-v3");
+        boolean selected=projects||body.path("contract_version").asText().equals("builder-configuration-v2");
+        var expected=new HashSet<>(Set.of("contract_version","revision","saved","error_code","target","embedding","batch_size","request_limit","readiness"));
+        if(selected)expected.add("selection");
+        if(projects)expected.add("links");
+        if(!fields(body).equals(expected)||
+            !Set.of("builder-configuration-v1","builder-configuration-v2","builder-configuration-v3","builder-configuration-v4").contains(body.path("contract_version").asText())||!bounded(body.path("revision"),0,Integer.MAX_VALUE)||
+            !body.path("saved").isBoolean()||body.path("saved").asBoolean()!=(body.path("revision").asInt()>0)||
+            !bounded(body.path("batch_size"),1,4096)||!body.path("request_limit").isNull()&&!bounded(body.path("request_limit"),1,1000000)||
+            !body.path("error_code").isNull()&&!body.path("error_code").asText().equals("CONFIG"))throw new IOException();
+        if(selected) {
+            var selection=body.path("selection");
+            if(!fields(selection).equals(extended?Set.of("node_limit","nodes","edges","request","summary"):Set.of("node_limit","nodes","edges"))||
+                !selection.path("node_limit").isNull()&&!bounded(selection.path("node_limit"),3,extended?Integer.MAX_VALUE:128)||
+                !selection.path("nodes").isNull()&&!bounded(selection.path("nodes"),0,Integer.MAX_VALUE)||
+                !selection.path("edges").isNull()&&!bounded(selection.path("edges"),0,Integer.MAX_VALUE)||
+                !selection.path("node_limit").isNull()&&(!bounded(selection.path("nodes"),1,selection.path("node_limit").asInt())||!bounded(selection.path("edges"),1,extended?Integer.MAX_VALUE:256)))throw new IOException();
+            if(extended) {
+                if(!fields(selection.path("request")).equals(Set.of("mode","value")))throw new IOException();
+                validateSelectionRequest(selection.path("request"));
+                if(!selection.path("summary").isNull()) {
+                    validateSelectionSummary(selection.path("summary"));
+                    for(String key:List.of("nodes","edges"))if(!selection.path(key).equals(selection.path("summary").path(key)))throw new IOException();
+                }
+            }
+        }
+        var target=body.path("target");
+        if(!target.isNull()&&(!fields(target).equals(Set.of("project_id","project_name","database","namespace"))||
+            !bounded(target.path("project_id"),1,Integer.MAX_VALUE)||!target.path("project_name").isTextual()||target.path("project_name").asText().isBlank()||target.path("project_name").asText().length()>255||
+            !target.path("database").asText().matches("[a-z][a-z0-9.-]{0,62}")||!target.path("namespace").asText().matches("[A-Za-z][A-Za-z0-9_]{0,63}")))throw new IOException();
+        if(projects&&!body.path("links").isNull()) {
+            var links=body.path("links");
+            if(!fields(links).equals(Set.of("openspg","neo4j","bolt")))throw new IOException();
+            for(String name:List.of("openspg","neo4j","bolt")) {
+                var uri=java.net.URI.create(links.path(name).asText());
+                if(!(name.equals("bolt")?Set.of("bolt","neo4j","bolt+s","neo4j+s"):Set.of("http","https")).contains(uri.getScheme())||
+                    uri.getHost()==null||uri.getUserInfo()!=null||uri.getQuery()!=null||uri.getFragment()!=null)throw new IOException();
+            }
+        }
+        var embedding=body.path("embedding");
+        if(!embedding.isNull()) {
+            if(!fields(embedding).equals(Set.of("provider","base_url","model","revision","key_configured","tested","dimension"))||
+                !embedding.path("provider").asText().equals("openai-compatible")||!bounded(embedding.path("revision"),1,Integer.MAX_VALUE)||
+                !embedding.path("key_configured").isBoolean()||!embedding.path("tested").isBoolean()||
+                !embedding.path("model").asText().matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}")||
+                !embedding.path("dimension").isNull()&&!bounded(embedding.path("dimension"),1,65536))throw new IOException();
+            var uri=java.net.URI.create(embedding.path("base_url").asText());
+            if(!Set.of("http","https").contains(uri.getScheme())||uri.getHost()==null||uri.getUserInfo()!=null||uri.getQuery()!=null||uri.getFragment()!=null)throw new IOException();
+        }
+        var ready=body.path("readiness");String state=ready.path("state").asText();
+        if(!fields(ready).equals(Set.of("state","checks","checked_at"))||!Set.of("NOT_RUN","CHECKING","READY","BLOCKED").contains(state)||
+            !ready.path("checks").isArray()||ready.path("checks").size()>4||!ready.path("checked_at").isNull()&&!ready.path("checked_at").isTextual())throw new IOException();
+        var names=new HashSet<String>();
+        for(var row:ready.path("checks")) {
+            if(!fields(row).equals(row.has("owner")?Set.of("name","state","code","owner"):Set.of("name","state","code"))||!Set.of("source","embedding","target","lock").contains(row.path("name").asText())||!names.add(row.path("name").asText())||
+                !Set.of("READY","BLOCKED","NOT_CHECKED").contains(row.path("state").asText())||
+                row.path("state").asText().equals("NOT_CHECKED")&&!Set.of("WAIT_SOURCE","WAIT_EMBEDDING","WAIT_TARGET").contains(row.path("code").asText())||
+                (row.path("state").asText().equals("READY")?!row.path("code").isNull():!row.path("code").asText().matches("[A-Z_]{1,32}")))throw new IOException();
+            if(row.has("owner")) {
+                var owner=row.path("owner");
+                if(!row.path("name").asText().equals("lock")||!row.path("state").asText().equals("BLOCKED")||!row.path("code").asText().equals("LOCK")||
+                    !fields(owner).equals(Set.of("run_id","project_id"))||!owner.path("run_id").isTextual()||!owner.path("run_id").asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}")||
+                    !bounded(owner.path("project_id"),1,Integer.MAX_VALUE))throw new IOException();
+            }
+        }
+        if(state.equals("READY")&&(names.size()!=4||!body.path("saved").asBoolean()||target.isNull()||embedding.isNull()||
+            !embedding.path("tested").asBoolean()||!bounded(embedding.path("dimension"),1,65536)||
+            java.util.stream.StreamSupport.stream(ready.path("checks").spliterator(),false).anyMatch(row->!row.path("state").asText().equals("READY"))))throw new IOException();
+    }
     private void validateBuilderInputs(JsonNode body) throws IOException {
         String configuration=body.path("configuration").asText();
-        if(!fields(body).equals(Set.of("contract_version","configuration","error_code","scope","target","inputs","preflight"))||
-            !body.path("contract_version").asText().equals("builder-inputs-v1")||!Set.of("NOT_CONFIGURED","INVALID","CONFIGURED").contains(configuration)||
+        if(!fields(body).equals(Set.of("contract_version","configuration","error_code","scope","target","inputs","preflight","source_validation"))||
+            !Set.of("builder-inputs-v1","builder-inputs-v2","builder-inputs-v3").contains(body.path("contract_version").asText())||!Set.of("NOT_CONFIGURED","INVALID","CONFIGURED").contains(configuration)||
             !body.path("preflight").asText().equals("NOT_RUN"))throw new IOException();
         boolean configured=configuration.equals("CONFIGURED");
         if(configuration.equals("INVALID")?!body.path("error_code").asText().equals("CONFIG"):!body.path("error_code").isNull())throw new IOException();
         var target=body.path("target");
         if(configured) {
-            if(!body.path("scope").asText().equals("FRESH_SAMPLE")||!fields(target).equals(Set.of("project_id","database","namespace"))||
-                !bounded(target.path("project_id"),1,Integer.MAX_VALUE)||!target.path("database").asText().matches("(?:neo4j|vietroadtraffic|freshsample[a-z0-9]{8,40})")||
-                !target.path("namespace").asText().equals("VietRoadTraffic"))throw new IOException();
+            if(!Set.of("FRESH_SAMPLE","PRODUCTION").contains(body.path("scope").asText())||!fields(target).equals(Set.of("project_id","database","namespace"))||
+                !bounded(target.path("project_id"),1,Integer.MAX_VALUE)||!target.path("database").asText().matches(body.path("scope").asText().equals("PRODUCTION")?"[a-z][a-z0-9.-]{0,62}":"(?:neo4j|vietroadtraffic|freshsample[a-z0-9]{8,40})")||
+                !target.path("namespace").asText().matches("[A-Za-z][A-Za-z0-9_]{0,63}"))throw new IOException();
         } else if(!target.isNull()||!body.path("scope").isNull())throw new IOException();
         var inputs=body.path("inputs");var names=new HashSet<String>();
-        var expected=Set.of("c3_manifest","sample_manifest","vector_artifact","provenance","chunk_manifest","source_checkpoint");
-        if(!inputs.isArray()||inputs.size()!=(configured?expected.size():0))throw new IOException();
+        var expected=Set.of("c3_manifest","sample_manifest","vector_artifact","provenance","chunk_manifest","source_checkpoint","selection");
+        if(!inputs.isArray()||(configured?inputs.isEmpty()||inputs.size()>expected.size()||body.path("scope").asText().equals("FRESH_SAMPLE")&&inputs.size()!=6:!inputs.isEmpty()))throw new IOException();
         for(var input:inputs) {
             String name=input.path("name").asText();
             if(!fields(input).equals(Set.of("name","sha256","state"))||!expected.contains(name)||!names.add(name)||
-                !input.path("sha256").asText().matches("[0-9a-f]{64}")||!Set.of("MATCHED","MISSING","INVALID","UNAVAILABLE").contains(input.path("state").asText()))throw new IOException();
+                !input.path("sha256").asText().matches("[0-9a-f]{64}")||!Set.of("NOT_CHECKED","MATCHED","MISSING","INVALID","UNAVAILABLE").contains(input.path("state").asText()))throw new IOException();
         }
+        if(configured&&!names.contains("c3_manifest"))throw new IOException();
+        var source=body.path("source_validation");String state=source.path("state").asText();
+        boolean extended=body.path("contract_version").asText().equals("builder-inputs-v3");
+        if(!fields(source).equals(extended?Set.of("state","error_code","plan_sha256","nodes","edges","summary"):Set.of("state","error_code","plan_sha256","nodes","edges"))||
+            !Set.of("NOT_RUN","CHECKING","VALID","INVALID","UNAVAILABLE").contains(state))throw new IOException();
+        String error=switch(state){case "INVALID"->"INTEGRITY";case "UNAVAILABLE"->"RUNTIME";default->null;};
+        if(error==null?!source.path("error_code").isNull():!source.path("error_code").asText().equals(error))throw new IOException();
+        if(state.equals("VALID")?body.path("contract_version").asText().equals("builder-inputs-v1")&&!configured||!source.path("plan_sha256").isTextual()||!source.path("plan_sha256").asText().matches("[0-9a-f]{64}")||
+            !bounded(source.path("nodes"),0,Integer.MAX_VALUE)||!bounded(source.path("edges"),0,Integer.MAX_VALUE):
+            !source.path("plan_sha256").isNull()||!source.path("nodes").isNull()||!source.path("edges").isNull())throw new IOException();
+        if(extended) {
+            if(state.equals("VALID")) {
+                validateSelectionSummary(source.path("summary"));
+                for(String key:List.of("nodes","edges"))if(!source.path(key).equals(source.path("summary").path(key)))throw new IOException();
+            } else if(!source.path("summary").isNull())throw new IOException();
+        }
+    }
+    private void validateSelectionSummary(JsonNode summary) throws IOException {
+        if(!fields(summary).equals(Set.of("nodes","edges","node_counts","edge_counts","excluded_edges"))||
+            !bounded(summary.path("nodes"),0,Integer.MAX_VALUE)||!bounded(summary.path("edges"),0,Integer.MAX_VALUE)||
+            !bounded(summary.path("excluded_edges"),0,Integer.MAX_VALUE))throw new IOException();
+        for(String name:List.of("node_counts","edge_counts")) {
+            var counts=summary.path(name);long total=0;
+            if(!counts.isObject()||counts.size()>512)throw new IOException();
+            var rows=counts.fields();
+            while(rows.hasNext()) {
+                var row=rows.next();
+                if(!row.getKey().matches("[A-Za-z][A-Za-z0-9_.]{0,255}")||!bounded(row.getValue(),0,Integer.MAX_VALUE))throw new IOException();
+                total+=row.getValue().asInt();
+            }
+            if(total!=summary.path(name.equals("node_counts")?"nodes":"edges").asLong())throw new IOException();
+        }
+    }
+    private void validateBuilderSelection(JsonNode body) throws IOException {
+        if(!fields(body).equals(Set.of("contract_version","revision","preview_id","node_limit","request","summary"))||
+            !body.path("contract_version").asText().equals("builder-selection-v1")||!bounded(body.path("revision"),0,Integer.MAX_VALUE)||
+            !body.path("preview_id").asText().matches("[0-9a-f]{64}")||
+            !fields(body.path("request")).equals(Set.of("mode","value")))throw new IOException();
+        validateSelectionRequest(body.path("request"));validateSelectionSummary(body.path("summary"));
+        if(body.path("request").path("mode").asText().equals("ALL")?!body.path("node_limit").isNull():
+            !bounded(body.path("node_limit"),3,Integer.MAX_VALUE)||!body.path("node_limit").equals(body.path("summary").path("nodes")))throw new IOException();
     }
     private void validateBuilder(JsonNode body) throws IOException {
         String state=body.path("state").asText();var actions=body.path("actions");
-        if(!fields(body).equals(Set.of("contract_version","state","run_id","target","progress","error_code","actions","delete_reason","production_write"))||
-            !body.path("contract_version").asText().equals("builder-control-v1")||!Set.of("IDLE","RUNNING","STOPPING","STOPPED","COMPLETE","BLOCKED").contains(state)||
-            !fields(actions).equals(Set.of("build","stop","resume","delete"))||!body.path("delete_reason").asText().equals("DELETE_NOT_AUTHORIZED")||!body.path("production_write").asText().equals("BLOCKED"))throw new IOException();
-        for(String name:List.of("build","stop","resume","delete")) {
-            boolean allowed=switch(name){case "build"->Set.of("IDLE","COMPLETE").contains(state);case "stop"->state.equals("RUNNING");case "resume"->state.equals("STOPPED");default->false;};
-            if(!actions.path(name).isBoolean()||actions.path(name).asBoolean()!=allowed)throw new IOException();
+        boolean extended=body.path("contract_version").asText().equals("builder-control-v3");
+        boolean detail=extended||body.path("contract_version").asText().equals("builder-control-v2");
+        var expected=new HashSet<>(Set.of("contract_version","state","run_id","target","progress","error_code","actions","delete_reason","production_write"));
+        if(detail)expected.addAll(Set.of("stages","timing","binding","result"));
+        if(!fields(body).equals(expected)||!Set.of("builder-control-v1","builder-control-v2","builder-control-v3").contains(body.path("contract_version").asText())||!Set.of("IDLE","RUNNING","STOPPING","STOPPED","COMPLETE","BLOCKED","ABANDONED","CLEARED").contains(state)||!extended&&Set.of("ABANDONED","CLEARED").contains(state)||
+            !fields(actions).equals(extended?Set.of("build","stop","resume","delete","abandon"):Set.of("build","stop","resume","delete"))||!body.path("delete_reason").asText().equals("DELETE_NOT_AUTHORIZED")||!Set.of("BLOCKED","CONFIGURED").contains(body.path("production_write").asText()))throw new IOException();
+        for(String name:fields(actions)) {
+            boolean allowed=switch(name){case "build"->Set.of("IDLE","COMPLETE","ABANDONED","CLEARED").contains(state);case "stop"->state.equals("RUNNING");case "resume","abandon"->state.equals("STOPPED");default->false;};
+            if(!actions.path(name).isBoolean()||(detail&&Set.of("build","resume").contains(name)?actions.path(name).asBoolean()&&!allowed:actions.path(name).asBoolean()!=allowed))throw new IOException();
         }
         var runId=body.path("run_id");
         if(runId.isNull()? !Set.of("IDLE","BLOCKED").contains(state): !runId.isTextual()||!runId.asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}"))throw new IOException();
         var target=body.path("target");
         if(target.isNull()? !state.equals("BLOCKED"): !fields(target).equals(Set.of("project_id","database","namespace"))||!bounded(target.path("project_id"),1,Integer.MAX_VALUE)||
-            !target.path("database").asText().matches("(?:vietroadtraffic|freshsample[a-z0-9]{8,40})")||!target.path("namespace").asText().equals("VietRoadTraffic"))throw new IOException();
+            !target.path("database").asText().matches(body.path("production_write").asText().equals("CONFIGURED")?"[a-z][a-z0-9.-]{0,62}":"(?:neo4j|vietroadtraffic|freshsample[a-z0-9]{8,40})")||!target.path("namespace").asText().matches("[A-Za-z][A-Za-z0-9_]{0,63}"))throw new IOException();
         var progress=body.path("progress");
         if(!progress.isNull()&&(!fields(progress).equals(Set.of("stage","done","total"))||!Set.of("preflight","plan","vectorize","export-artifact","write-nodes","verify-nodes","write-edges","verify","release").contains(progress.path("stage").asText())||
             !bounded(progress.path("total"),0,Integer.MAX_VALUE)||!bounded(progress.path("done"),0,progress.path("total").asInt())))throw new IOException();
         var error=body.path("error_code");if(!error.isNull()&&(!error.isTextual()||!error.asText().matches("[A-Z_]{1,32}")))throw new IOException();
+        if(detail)validateBuilderDetail(body);
+    }
+    private void validateBuilderDetail(JsonNode body) throws IOException {
+        var stages=body.path("stages");var binding=body.path("binding");var result=body.path("result");var timing=body.path("timing");
+        var expected=List.of("preflight","plan","vectorize","export-artifact","write-nodes","verify-nodes","write-edges","verify","release");
+        if(!stages.isArray()||stages.size()>expected.size())throw new IOException();
+        int position=0;
+        for(var row:stages) {
+            if(!fields(row).equals(Set.of("name","state","done","total","error_code"))||!row.path("name").asText().equals(expected.get(position++))||
+                !Set.of("PENDING","RUNNING","COMPLETE","STOPPED","BLOCKED").contains(row.path("state").asText())||
+                (row.path("state").asText().equals("PENDING")?!row.path("done").isNull()||!row.path("total").isNull():
+                    !bounded(row.path("total"),0,Integer.MAX_VALUE)||!bounded(row.path("done"),0,row.path("total").asInt()))||
+                row.path("state").asText().equals("COMPLETE")&&!row.path("done").equals(row.path("total"))||
+                !row.path("error_code").isNull()&&!row.path("error_code").asText().matches("[A-Z_]{1,32}"))throw new IOException();
+        }
+        if(binding.isNull()) {
+            if(!stages.isEmpty()||!timing.isNull()||!result.isNull()||body.path("state").asText().equals("COMPLETE"))throw new IOException();
+            return;
+        }
+        var bindingFields=new HashSet<>(Set.of("run_id","scope","plan_sha256","config_sha256","model_identity","database_id","project_id","database","namespace"));
+        if(binding.has("node_limit")) {
+            bindingFields.add("node_limit");
+            if(!binding.path("node_limit").isNull()&&!bounded(binding.path("node_limit"),3,Integer.MAX_VALUE)||!binding.path("scope").asText().equals("PRODUCTION"))throw new IOException();
+        }
+        if(stages.size()!=expected.size()||!fields(binding).equals(bindingFields)||
+            !binding.path("run_id").equals(body.path("run_id"))||!Set.of("FRESH_SAMPLE","PRODUCTION").contains(binding.path("scope").asText())||
+            binding.path("scope").asText().equals("PRODUCTION")!=body.path("production_write").asText().equals("CONFIGURED")||
+            !binding.path("plan_sha256").asText().matches("[0-9a-f]{64}")||!binding.path("config_sha256").asText().matches("[0-9a-f]{64}")||
+            !binding.path("database_id").asText().matches("[A-Za-z0-9._:-]{1,128}"))throw new IOException();
+        for(String key:List.of("project_id","database","namespace"))if(!binding.path(key).equals(body.path("target").path(key)))throw new IOException();
+        String identity=binding.path("model_identity").asText();int split=identity.lastIndexOf('|');
+        if(split<1||!identity.substring(split+1).matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}"))throw new IOException();
+        var uri=java.net.URI.create(identity.substring(0,split));
+        if(!Set.of("http","https").contains(uri.getScheme())||uri.getHost()==null||uri.getUserInfo()!=null||uri.getQuery()!=null||uri.getFragment()!=null)throw new IOException();
+        if(!fields(timing).equals(Set.of("started_at","updated_at")))throw new IOException();
+        java.time.OffsetDateTime.parse(timing.path("started_at").asText());java.time.OffsetDateTime.parse(timing.path("updated_at").asText());
+        if(result.isNull()) {
+            if(body.path("state").asText().equals("COMPLETE"))throw new IOException();
+            return;
+        }
+        if(!body.path("state").asText().equals("COMPLETE")||!fields(result).equals(Set.of("nodes","edges","vectors","dimension","indexes","fingerprint","verified_at","chat_activation"))||
+            !bounded(result.path("nodes"),0,Integer.MAX_VALUE)||!bounded(result.path("edges"),0,Integer.MAX_VALUE)||!bounded(result.path("vectors"),0,Integer.MAX_VALUE)||
+            !bounded(result.path("dimension"),1,65536)||!bounded(result.path("indexes"),4,4)||!result.path("fingerprint").asText().matches("[0-9a-f]{64}")||
+            !result.path("chat_activation").asText().equals("SEPARATE")||java.util.stream.StreamSupport.stream(stages.spliterator(),false).anyMatch(row->!row.path("state").asText().equals("COMPLETE")))throw new IOException();
+        java.time.OffsetDateTime.parse(result.path("verified_at").asText());
     }
     public Map<String,Object> status() {
         return Map.of("liveness",probe("/v1/health","either"),
@@ -202,7 +655,7 @@ public class KagClient {
         } else if(!input)return false;
         if(input?!(keys.equals(Set.of("base_url","model"))||keys.equals(Set.of("base_url","model","api_key"))):
             !keys.equals(Set.of("base_url","model","key_configured")))return false;
-        if(!value.path("model").isTextual()||!value.path("model").asText().matches("[A-Za-z0-9][A-Za-z0-9._/-]{0,199}")||
+        if(!value.path("model").isTextual()||!value.path("model").asText().matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}")||
             !value.path("base_url").isTextual()||value.path("base_url").asText().length()>2048||
             value.path("base_url").asText().matches("(?s).*[\\s\\x00-\\x1f\\x7f].*"))return false;
         try {
@@ -248,7 +701,8 @@ public class KagClient {
             body.path("revision").asInt()!=0||!body.path("chat").isNull()||!body.path("embedding").isNull())throw new IOException("Invalid saved metadata");
         if((!body.path("error_code").isNull()||body.path("revision").asInt()==Integer.MAX_VALUE)&&body.path("save_allowed").asBoolean())throw new IOException("Invalid save authority");
         if(!fields(body.path("roles")).equals(Set.of("chat","embedding"))||
-            !body.path("build_config").equals(json.valueToTree(Map.of("state","NOT_SUPPORTED","reason","BUILDER_REPLAY_ONLY"))))
+            !(body.path("build_config").equals(json.valueToTree(Map.of("state","SEPARATE","reason","BUILDER_CONFIGURATION_API")))||
+              body.path("build_config").equals(json.valueToTree(Map.of("state","NOT_SUPPORTED","reason","BUILDER_REPLAY_ONLY")))))
             throw new IOException("Invalid consumer metadata");
         boolean applied=false,tested=false;
         for(String role:List.of("chat","embedding")) {
@@ -270,10 +724,11 @@ public class KagClient {
                     !test.path("code").equals(row.path("blocker"))&&!row.path("blocker").asText().matches("TEST_REQUIRED|TEST_IN_PROGRESS|RELEASE_UNAVAILABLE|RELEASE_MISMATCH|VECTOR_IDENTITY_MISMATCH|ACTIVE_CONFIG_INVALID|PROXY_POLICY_UNVERIFIED|BLOCKED")||
                     !bounded(test.path("client_attempts"),0,1)||!bounded(test.path("output_chars"),0,262144)||
                     !test.path("dimension").isNull()&&!bounded(test.path("dimension"),0,262144)||
-                    !test.path("observed_model").isNull()&&!test.path("observed_model").equals(body.path(role).path("model"))||
+                    !test.path("observed_model").isNull()&&(!test.path("observed_model").isTextual()||
+                        !test.path("observed_model").asText().matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}"))||
                     !test.path("tested_at").isTextual()||!test.path("tested_at").asText().matches("[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\+00:00")||
                     test.path("status").asText().equals("PASS")&&(!test.path("code").isNull()||test.path("client_attempts").asInt()!=1||
-                        (role.equals("embedding")?test.path("dimension").asInt()!=3072:test.path("output_chars").asInt()<1)))throw new IOException("Invalid provider result");
+                        (role.equals("embedding")?!bounded(test.path("dimension"),1,65536):test.path("output_chars").asInt()<1)))throw new IOException("Invalid provider result");
                 tested|=test.path("status").asText().equals("PASS");
             }
             if(row.path("status").asText().equals("APPLIED")) {
@@ -338,7 +793,7 @@ public class KagClient {
         for(String role:List.of("chat","embedding")) {
             var model=models.path(role);String state=model.path("state").asText();
             if(!fields(model).equals(Set.of("state","model","endpoint"))||!Set.of("CONFIGURED","NOT_CONFIGURED","INCOMPLETE","INVALID").contains(state)||
-                (!model.path("model").isNull()&&(!model.path("model").isTextual()||!model.path("model").asText().matches("[A-Za-z0-9][A-Za-z0-9._/-]{0,199}")))||
+                (!model.path("model").isNull()&&(!model.path("model").isTextual()||!model.path("model").asText().matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}")))||
                 (!model.path("endpoint").isNull()&&(!text(model.path("endpoint"),270,true)||!configEndpoint(model.path("endpoint").asText()))))throw new IOException("Invalid model metadata");
             if(state.equals("CONFIGURED")&&(model.path("model").isNull()||model.path("endpoint").isNull())||
                 state.equals("NOT_CONFIGURED")&&(!model.path("model").isNull()||!model.path("endpoint").isNull()))throw new IOException("Inconsistent model metadata");
@@ -425,8 +880,8 @@ public class KagClient {
         if(body.path("state").asText().equals("NOT_CONFIGURED")) {
             if(!body.path("attempts").isNull()||!body.path("receipt_window").isNull())throw new IOException("Unobserved provider counts");return;
         }
-        if(!body.path("configured_chat_model").asText().equals("gemini-3.8-flash-high")||!body.path("configured_embedding_model").asText().equals("dg/text-embedding-3-large")||
-            (!body.path("policy_response_version").isNull()&&!body.path("policy_response_version").asText().equals("gemini-3.8-flash-n")))throw new IOException("Invalid model route");
+        for(String name:List.of("configured_chat_model","configured_embedding_model","policy_response_version"))
+            if(!(name.equals("policy_response_version")&&body.path(name).isNull())&&(!body.path(name).isTextual()||!body.path(name).asText().matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}")))throw new IOException("Invalid model route");
         var counts=body.path("attempts");if(!fields(counts).equals(Set.of("embedding","chat")))throw new IOException("Invalid request counts");
         for(var count:counts)if(!count.isIntegralNumber()||!count.canConvertToLong()||count.asLong()<0)throw new IOException("Invalid request count");
         var window=body.path("receipt_window");
@@ -586,7 +1041,10 @@ public class KagClient {
         final String sentToken=token;
         int[] observed={0};
         try {
-            return inspectionClient.get().uri(path).header(HttpHeaders.AUTHORIZATION,"Bearer "+sentToken).header("X-KAG-Release-ID",release).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
+            String observedRelease=release;
+            if(path.contains("mode=ready")&&!path.endsWith("retrieve-vector"))try {observedRelease=activePins().release();}catch(Exception ignored) {}
+            final String expectedRelease=observedRelease;
+            return servingClient.get().uri(path).header(HttpHeaders.AUTHORIZATION,"Bearer "+sentToken).header("X-KAG-Release-ID",expectedRelease).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
                 int code=res.getStatusCode().value(); observed[0]=code; var body=inspectionBody(res,sentToken);
                 if(code!=200) {
                     String error=errorCode(body);
@@ -619,7 +1077,7 @@ public class KagClient {
                 }
                 if(!fields(body).equals(Set.of("status","capability","release_kind","release_id","checks","provider_transport","production_write"))||
                     !body.path("status").asText().equals("ready")||!body.path("capability").asText().equals(capability)||
-                    !body.path("release_kind").asText().equals("SAMPLE")||!body.path("release_id").asText().equals(release)||release.isBlank()||
+                    !Set.of("SAMPLE","PRODUCTION").contains(body.path("release_kind").asText())||!body.path("release_id").asText().equals(expectedRelease)||expectedRelease.isBlank()||
                     !body.path("provider_transport").asText().equals("metadata_verified")||!body.path("production_write").asText().equals("blocked")||
                     !fields(body.path("checks")).equals(Set.of("auth","runtime","sources","admission"))) throw new IOException("Invalid sample readiness");
                 for(var check:body.path("checks")) if(!check.isTextual()||!check.asText().equals("pass")) throw new IOException("Invalid readiness check");
@@ -630,26 +1088,29 @@ public class KagClient {
     public JsonNode retrieve(String message,int topK,boolean expand) {
         try {
             if(!text(json.valueToTree(message),4000,true)||topK<1||topK>10) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Yêu cầu truy xuất không hợp lệ");
-            headerIdentity(release); String token=inspectionToken();
-            byte[] request=json.writeValueAsBytes(Map.of("message",message,"top_k",topK,"expand",expand,"schema_contract",schema.identity()));
+            var pins=activePins();String token=inspectionToken();
+            byte[] request=json.writeValueAsBytes(Map.of("message",message,"top_k",topK,"expand",expand,"schema_contract",pins.schema()));
             if(request.length>64*1024) throw new ResponseStatusException(HttpStatus.UNPROCESSABLE_ENTITY,"Yêu cầu truy xuất vượt giới hạn");
-            return inspectionClient.post().uri("/v1/retrieve").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.AUTHORIZATION,"Bearer "+token).header("X-KAG-Release-ID",release).body(request).exchange((req,res)->{
+            return (pins.production()?client:inspectionClient).post().uri("/v1/retrieve").contentType(MediaType.APPLICATION_JSON).accept(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION,"Bearer "+token).header("X-KAG-Release-ID",pins.release()).body(request).exchange((req,res)->{
                     var result=inspectionBody(res,token);
                     if(res.getStatusCode().value()!=200) {
                         String error=errorCode(result);
                         throw new ResponseStatusException(res.getStatusCode().value()==422?HttpStatus.UNPROCESSABLE_ENTITY:HttpStatus.SERVICE_UNAVAILABLE,
                             "Truy xuất KAG chưa khả dụng ("+error+")");
                     }
-                    echo(res.getHeaders(),"X-KAG-Release-ID",release); validateRetrieval(result); return result;
+                    echo(res.getHeaders(),"X-KAG-Release-ID",pins.release()); validateRetrieval(result,pins); return result;
                 });
         } catch(ResponseStatusException e) { throw e; }
         catch(Exception e) { throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Truy xuất KAG chưa khả dụng hoặc chưa được cấu hình"); }
     }
     private JsonNode inspectionBody(org.springframework.http.client.ClientHttpResponse response,String token) throws IOException {
+        return inspectionBody(response,token,245760);
+    }
+    private JsonNode inspectionBody(org.springframework.http.client.ClientHttpResponse response,String token,int limit) throws IOException {
         var type=response.getHeaders().getContentType();
         if(type==null||!type.getType().equalsIgnoreCase("application")||!type.getSubtype().equalsIgnoreCase("json")||(type.getCharset()!=null&&!type.getCharset().equals(StandardCharsets.UTF_8))||response.getHeaders().containsKey(HttpHeaders.CONTENT_ENCODING)) throw new IOException("Invalid response media");
-        byte[] bytes=response.getBody().readNBytes(245761); if(bytes.length>245760) throw new IOException("Response too large");
+        byte[] bytes=response.getBody().readNBytes(limit+1); if(bytes.length>limit) throw new IOException("Response too large");
         var body=parse(StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(bytes)).toString(),token);
         if(body==null||!body.isObject()) throw new IOException("Invalid response");
         for(String file:List.of(tokenFile,inspectTokenFile,credentialsWriteTokenFile,providerTestTokenFile,configApplyTokenFile)) {
@@ -660,10 +1121,24 @@ public class KagClient {
     }
     private static String errorCode(JsonNode body) throws IOException {
         String code=body.path("error").path("code").asText();
-        if(!Set.of("AUTH_REQUIRED","AUTH_INVALID","SCOPE_DENIED","INVALID_REQUEST","NOT_READY","RELEASE_UNAVAILABLE","QUERY_TIMEOUT","BACKEND_UNAVAILABLE","SCHEMA_CONTRACT_MISMATCH","RELEASE_MISMATCH","SOURCE_SNAPSHOT_MISMATCH","CONCURRENCY_LIMIT","RESULT_LIMIT_EXCEEDED","INTERNAL_ERROR","SOURCE_VALIDATION_FAILED","INVALID_NATIVE_RESULT").contains(code)) throw new IOException("Unknown error");
+        if(!Set.of("AUTH_REQUIRED","AUTH_INVALID","SCOPE_DENIED","INVALID_REQUEST","NOT_READY","RELEASE_UNAVAILABLE","QUERY_TIMEOUT","BACKEND_UNAVAILABLE","SCHEMA_CONTRACT_MISMATCH","RELEASE_MISMATCH","SOURCE_SNAPSHOT_MISMATCH","CONCURRENCY_LIMIT","RESULT_LIMIT_EXCEEDED","INTERNAL_ERROR","SOURCE_VALIDATION_FAILED","INVALID_NATIVE_RESULT","CONFIG_BUSY","CONFIG_CONFLICT").contains(code)) throw new IOException("Unknown error");
         return code;
     }
     private void validateRelease(JsonNode body) throws IOException {
+        boolean production=body.path("release_kind").asText().equals("PRODUCTION");
+        if(production) {
+            var legacy=(com.fasterxml.jackson.databind.node.ObjectNode)body.deepCopy();legacy.remove("webapp_snapshot_id");
+            boolean dataset=body.path("contract_version").asText().equals("h1-read-v1.2");
+            if(dataset) {
+                if(!body.path("source_mode").asText().equals("dataset-snapshot-v1")||!body.path("webapp_snapshot_id").isNull())throw new IOException("Invalid dataset source");
+                legacy.remove("source_mode");
+            }
+            if(!dataset&&!body.path("contract_version").asText().equals("h1-read-v1.1")||!body.has("webapp_snapshot_id")||
+                !body.path("webapp_snapshot_id").isNull()&&!text(body.path("webapp_snapshot_id"),512,true))throw new IOException("Invalid publication");
+            validateMappedSchema(body.path("schema_contract"));
+            legacy.put("contract_version","h1-read-v1.0");legacy.set("schema_contract",json.valueToTree(schema.identity()));
+            validateRelease(legacy.put("release_kind","SAMPLE"));return;
+        }
         if(!fields(body).equals(Set.of("contract_version","release_id","release_kind","schema_contract","source_snapshot_id","source_catalog_sha256","release_descriptor_sha256","graph_fingerprint","backend_identity_verified","source_identity_verified","verified_at","query_ready","production_write"))||
             !body.path("contract_version").asText().equals("h1-read-v1.0")||!body.path("schema_contract").equals(json.valueToTree(schema.identity()))||
             !text(body.path("release_id"),512,true)||!text(body.path("source_snapshot_id"),512,true)||!text(body.path("release_kind"),128,true)||
@@ -671,15 +1146,18 @@ public class KagClient {
         for(String field:List.of("source_catalog_sha256","release_descriptor_sha256","graph_fingerprint")) if(!body.path(field).asText().matches("[0-9a-f]{64}")) throw new IOException("Invalid release hash");
         for(String field:List.of("backend_identity_verified","source_identity_verified","query_ready")) if(!body.path(field).isBoolean()||body.path(field).asBoolean()) throw new IOException("Unsupported release proof");
     }
-    private void validateRetrieval(JsonNode body) throws IOException {
+    private void validateRetrieval(JsonNode body,Pins pins) throws IOException {
         if(!fields(body).equals(Set.of("contract_version","request_id","release_id","source_snapshot_id","schema_contract","items"))||!body.path("contract_version").asText().equals("h1-read-v1.1")||
-            !body.path("release_id").asText().equals(release)||!text(body.path("source_snapshot_id"),512,true)||!body.path("schema_contract").equals(json.valueToTree(schema.identity()))||
+            !body.path("release_id").asText().equals(pins.release())||!text(body.path("source_snapshot_id"),512,true)||!body.path("schema_contract").equals(pins.schema())||
             !body.path("items").isArray()||body.path("items").size()>110) throw new IOException("Invalid retrieval");
         if(!UUID.fromString(body.path("request_id").asText()).toString().equals(body.path("request_id").asText())) throw new IOException("Invalid request identity");
+        validateRetrievalItems(body,pins.schema());
+    }
+    private void validateRetrievalItems(JsonNode body,JsonNode graphSchema) throws IOException {
         var seen=new HashSet<String>();
         for(var item:body.path("items")) {
             if(!fields(item).equals(Set.of("entity_type","entity_id","doc_id","unit_id","sign_id","source_texts","score","vector_sources","graph_context"))||
-                !Set.of("VietRoadTraffic.LegalUnit","VietRoadTraffic.LegalDocument","VietRoadTraffic.TrafficSign").contains(item.path("entity_type").asText())||!text(item.path("entity_id"),245760,true)||
+                !Set.of(graphSchema.path("namespace").asText()+".LegalUnit",graphSchema.path("namespace").asText()+".LegalDocument",graphSchema.path("namespace").asText()+".TrafficSign").contains(item.path("entity_type").asText())||!text(item.path("entity_id"),245760,true)||
                 !seen.add(item.path("entity_type").asText()+"\u0000"+item.path("entity_id").asText())||!item.path("source_texts").isObject()||item.path("source_texts").isEmpty()||
                 !item.path("vector_sources").isArray()||!item.path("graph_context").isArray()) throw new IOException("Invalid evidence");
             for(String id:List.of("doc_id","unit_id","sign_id")) if(!item.path(id).isNull()&&!text(item.path(id),245760,true)) throw new IOException("Invalid source identity");
@@ -705,25 +1183,72 @@ public class KagClient {
         }
     }
     private static boolean score(JsonNode value) {return value.isNumber()&&Double.isFinite(value.asDouble())&&value.asDouble()>=0&&value.asDouble()<=1;}
-    public JsonNode query(Object request) {
+    public JsonNode trialGraph(int projectId,String runId,vn.luatgt.dto.KagRetrieveRequest input) {
+        if(projectId<1||runId==null||!runId.matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}"))throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Chọn project và phiên dựng");
         try {
-            var admitted=admit(request);
+            String token=inspectionToken();
+            var request=servingClient.post().uri("/v1/serving/trial/"+projectId+"/"+runId).contentType(MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.AUTHORIZATION,"Bearer "+token);
+            String session=openSpgSession();if(session!=null)request.header("X-OpenSPG-Session",session);
+            return request.body(input).exchange((req,res)->{
+                var body=inspectionBody(res,token);
+                if(res.getStatusCode().value()!=200) {
+                    String code=errorCode(body);
+                    String message=switch(code) {
+                        case "QUERY_TIMEOUT" -> "Chưa đọc xong kết quả trong thời gian cho phép. Đợi lượt xử lý kết thúc rồi thử lại";
+                        case "CONFIG_BUSY","CONCURRENCY_LIMIT" -> "Đồ thị đang được xử lý. Chờ rồi thử lại";
+                        case "SCOPE_DENIED" -> "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project";
+                        case "RELEASE_MISMATCH" -> "Embedding đã lưu không khớp phiên dựng. Chỉnh model phù hợp rồi thử lại";
+                        default -> "Chưa thể thử đồ thị. Kiểm kết nối, phiên dựng và model đã lưu";
+                    };
+                    throw new ResponseStatusException(HttpStatus.CONFLICT,message+" ("+code+")");
+                }
+                if(!fields(body).equals(Set.of("contract_version","project_id","run_id","schema_contract","model_identity","dimension","graph_fingerprint","items"))||
+                    !body.path("contract_version").asText().equals("builder-retrieval-v1")||body.path("project_id").asInt()!=projectId||!body.path("run_id").asText().equals(runId)||
+                    !text(body.path("model_identity"),4096,true)||!bounded(body.path("dimension"),1,65536)||!body.path("graph_fingerprint").asText().matches("[0-9a-f]{64}")||
+                    !body.path("items").isArray()||body.path("items").size()>110)throw new IOException("Invalid selected graph result");
+                validateMappedSchema(body.path("schema_contract"));validateRetrievalItems(body,body.path("schema_contract"));return body;
+            });
+        }catch(ResponseStatusException e){throw e;}
+        catch(Exception e){throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Chưa đọc được kết quả thử đồ thị; lựa chọn Chat được giữ nguyên");}
+    }
+    public JsonNode query(Object request) {
+        return query(request,UUID.randomUUID());
+    }
+    public JsonNode query(Object request,UUID requestId) {
+        long started=System.nanoTime();
+        String localId=Objects.requireNonNull(requestId).toString();
+        var diagnostic=new HashMap<String,Object>();
+        diagnostic.put("stage","admission"); diagnostic.put("status",0); diagnostic.put("remote_id","none");
+        try {
+            var admitted=admit(request,diagnostic);
+            diagnostic.put("stage","transport");
+            diagnostic.put("status",0); diagnostic.put("remote_id","none");
             return breaker.executeSupplier(() -> post("/v1/query",admitted).exchange((req,res) -> {
+                diagnostic.put("status",res.getStatusCode().value());
+                String remoteId=res.getHeaders().getFirst("X-Request-ID");
+                if(remoteId!=null&&remoteId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))diagnostic.put("remote_id",remoteId);
+                diagnostic.put("stage",res.getStatusCode().is2xxSuccessful()?"validation":"upstream");
                 if(!res.getStatusCode().is2xxSuccessful()) return abstained(res,admitted);
-                verifyHeaders(res.getHeaders(),admitted.date(),MediaType.APPLICATION_JSON);
+                verifyHeaders(res.getHeaders(),admitted,MediaType.APPLICATION_JSON);
                 byte[] bytes=res.getBody().readNBytes(256*1024+1);
                 if(bytes.length>256*1024) throw new IOException("KAG response too large");
                 var result=parse(StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(bytes)).toString(),admitted.token());
-                validateResult(result); currentDate(admitted.date()); return result;
+                validateResult(result,admitted); currentDate(admitted.date()); return result;
             }));
-        } catch(Exception e) { throw unavailable(); }
+        } catch(Exception e) {
+            if(!Thread.currentThread().isInterrupted()) LOG.warn(
+                "KAG_QUERY_FAILURE request_id={} remote_id={} stage={} status={} error_type={} elapsed_ms={}",
+                localId,diagnostic.get("remote_id"),diagnostic.get("stage"),diagnostic.get("status"),e.getClass().getSimpleName(),Long.toString((System.nanoTime()-started)/1_000_000));
+            throw unavailable();
+        }
     }
     public void stream(Object request,BiConsumer<String,JsonNode> consumer) {
         try {
             var admitted=admit(request);
             breaker.executeRunnable(() -> post("/v1/query/stream",admitted).accept(MediaType.TEXT_EVENT_STREAM).exchange((req,res) -> {
                 if(!res.getStatusCode().is2xxSuccessful()) { consumer.accept("done",abstained(res,admitted)); return null; }
-                verifyHeaders(res.getHeaders(),admitted.date(),MediaType.TEXT_EVENT_STREAM);
+                verifyHeaders(res.getHeaders(),admitted,MediaType.TEXT_EVENT_STREAM);
                 try(var reader=new BufferedReader(new InputStreamReader(new LimitedInput(res.getBody()),StandardCharsets.UTF_8.newDecoder()))) {
                     String event="message",line; var payload=new StringBuilder(); boolean done=false;
                     while((line=reader.readLine())!=null) {
@@ -731,7 +1256,7 @@ public class KagClient {
                             if(payload.isEmpty()) continue;
                             if(!event.equals("delta")&&!event.equals("done")) throw new IOException("Unknown KAG event");
                             var result=parse(payload.toString(),admitted.token());
-                            if(event.equals("done")) validateResult(result);
+                            if(event.equals("done")) validateResult(result,admitted);
                             else if(!fields(result).equals(Set.of("text"))||!text(result.path("text"),4000,false)) throw new IOException("Invalid delta");
                             currentDate(admitted.date()); consumer.accept(event,result); payload.setLength(0);
                             if(event.equals("done")) { done=true; break; }
@@ -745,7 +1270,44 @@ public class KagClient {
             }));
         } catch(Exception e) { throw unavailable(); }
     }
-    private record Admitted(byte[] body,String token,LocalDate date) {}
+    private record Pins(String release,String snapshot,JsonNode schema,boolean production,boolean dataset,String descriptor) {
+        String sourceHeader() { return dataset?"X-KAG-Source-Snapshot-ID":"X-WebApp-Snapshot-ID"; }
+    }
+    private void validateMappedSchema(JsonNode value) throws IOException {
+        if(!fields(value).equals(Set.of("namespace","schema_sha256","contract_sha256"))||
+            !value.path("namespace").asText().matches("[A-Za-z][A-Za-z0-9_]{0,63}")||
+            !value.path("schema_sha256").asText().equals(schema.identity().get("schema_sha256"))||
+            !value.path("contract_sha256").asText().matches("[0-9a-f]{64}"))throw new IOException("Invalid graph schema");
+    }
+    private Pins activePins() throws IOException {
+        return activePins(null);
+    }
+    private Pins activePins(Map<String,Object> diagnostic) throws IOException {
+        String token;
+        try {token=inspectionToken();}catch(IOException e) {token=readToken(tokenFile);}
+        String sent=token;
+        if(diagnostic!=null) diagnostic.put("stage","release");
+        return inspectionClient.get().uri("/v1/graph/release").header(HttpHeaders.AUTHORIZATION,"Bearer "+sent).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
+            int status=res.getStatusCode().value();
+            if(diagnostic!=null) {
+                diagnostic.put("status",status);
+                String remoteId=res.getHeaders().getFirst("X-Request-ID");
+                if(remoteId!=null&&remoteId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}")) diagnostic.put("remote_id",remoteId);
+            }
+            if(!release.isBlank()&&(status==404||status==503&&errorCode(inspectionBody(res,sent)).equals("RELEASE_UNAVAILABLE"))) {
+                headerIdentity(release);return new Pins(release,snapshot,json.valueToTree(schema.identity()),false,false,"");
+            }
+            if(status!=200)throw new IOException("Release unavailable");
+            var body=inspectionBody(res,sent);validateRelease(body);String id=body.path("release_id").asText();headerIdentity(id);
+            if(body.path("release_kind").asText().equals("PRODUCTION")) {
+                boolean dataset=body.path("source_mode").asText().equals("dataset-snapshot-v1");
+                return new Pins(id,body.path(dataset?"source_snapshot_id":"webapp_snapshot_id").asText(""),body.path("schema_contract").deepCopy(),true,dataset,body.path("release_descriptor_sha256").asText());
+            }
+            if(!id.equals(release))throw new IOException("Release changed");
+            return new Pins(release,snapshot,json.valueToTree(schema.identity()),false,false,"");
+        });
+    }
+    private record Admitted(byte[] body,String token,LocalDate date,Pins pins) {}
     private JsonNode abstained(ClientHttpResponse response,Admitted admitted) throws IOException {
         var headers=response.getHeaders(); var media=headers.getContentType();
         if(response.getStatusCode().value()!=503||media==null||!media.getType().equalsIgnoreCase("application")||!media.getSubtype().equalsIgnoreCase("json")||
@@ -762,21 +1324,28 @@ public class KagClient {
         if(!UUID.fromString(id).toString().equals(id)) throw new IOException("Invalid request identity");
         echo(headers,"X-Request-ID",id);
         // Native errors have no success identity echoes; reject mismatches when echoes are present.
-        for(var pin:Map.of("X-KAG-Release-ID",release,"X-WebApp-Snapshot-ID",snapshot,"X-KAG-As-Of",admitted.date().toString()).entrySet())
+        for(var pin:Map.of("X-KAG-Release-ID",admitted.pins().release(),admitted.pins().sourceHeader(),admitted.pins().snapshot(),"X-KAG-As-Of",admitted.date().toString()).entrySet())
             if(headers.containsKey(pin.getKey())) echo(headers,pin.getKey(),pin.getValue());
         currentDate(admitted.date()); return json.createObjectNode().put("state","KAG_ABSTAINED");
     }
     private Admitted admit(Object request) throws IOException {
-        headerIdentity(release); headerIdentity(snapshot);
+        return admit(request,null);
+    }
+    private Admitted admit(Object request,Map<String,Object> diagnostic) throws IOException {
         currentDate(LocalDate.now(clock));
         if(!(request instanceof Map<?,?> input)||!input.keySet().equals(REQUEST_FIELDS)||!(input.get("user_id") instanceof UUID owner)) throw new IOException("Invalid request");
         var body=json.valueToTree(request);
         if(!fields(body).equals(REQUEST_FIELDS)||!body.path("user_id").isTextual()||!owner.toString().equals(body.path("user_id").asText())||
             !text(body.path("message"),4000,true)||!body.path("context_id").isTextual()||!body.path("context_id").asText().isEmpty()||
             !body.path("schema_contract").equals(json.valueToTree(schema.identity()))) throw new IOException("Invalid request");
+        var pins=activePins(diagnostic);headerIdentity(pins.snapshot());
+        if(diagnostic!=null) {
+            diagnostic.put("stage","admission");diagnostic.put("status",0);diagnostic.put("remote_id","none");
+        }
+        ((com.fasterxml.jackson.databind.node.ObjectNode)body).set("schema_contract",pins.schema());
         byte[] bytes=json.writeValueAsBytes(body);
         if(bytes.length>64*1024) throw new IOException("Request too large");
-        return new Admitted(bytes,readToken(tokenFile),LocalDate.now(clock));
+        return new Admitted(bytes,readToken(tokenFile),LocalDate.now(clock),pins);
     }
     private static String readToken(String credentialFile) throws IOException {
         if(credentialFile.isBlank()) throw new IOException("Credentials unavailable");
@@ -796,10 +1365,11 @@ public class KagClient {
     private RestClient.RequestBodySpec post(String path,Admitted admitted) {
         currentDate(admitted.date());
         return client.post().uri(path).contentType(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION,"Bearer "+admitted.token())
-            .header("X-KAG-Release-ID",release).header("X-WebApp-Snapshot-ID",snapshot).header("X-KAG-As-Of",admitted.date().toString()).body(admitted.body());
+            .header("X-KAG-Release-ID",admitted.pins().release()).header(admitted.pins().sourceHeader(),admitted.pins().snapshot()).header("X-KAG-As-Of",admitted.date().toString()).body(admitted.body());
     }
-    private void verifyHeaders(HttpHeaders headers,LocalDate date,MediaType expected) throws IOException {
-        echo(headers,"X-KAG-Release-ID",release); echo(headers,"X-WebApp-Snapshot-ID",snapshot); echo(headers,"X-KAG-As-Of",date.toString());
+    private void verifyHeaders(HttpHeaders headers,Admitted admitted,MediaType expected) throws IOException {
+        LocalDate date=admitted.date();
+        echo(headers,"X-KAG-Release-ID",admitted.pins().release()); echo(headers,admitted.pins().sourceHeader(),admitted.pins().snapshot()); echo(headers,"X-KAG-As-Of",date.toString());
         var type=headers.getContentType();
         if(type==null||!expected.getType().equalsIgnoreCase(type.getType())||!expected.getSubtype().equalsIgnoreCase(type.getSubtype())||
             (type.getCharset()!=null&&!type.getCharset().equals(StandardCharsets.UTF_8))||headers.containsKey(HttpHeaders.CONTENT_ENCODING)) throw new IOException("Invalid response media");
@@ -833,6 +1403,41 @@ public class KagClient {
             else if(Character.isLowSurrogate(c)) return false;
         }
         return true;
+    }
+    private void validateResult(JsonNode result,Admitted admitted) throws IOException {
+        if(!admitted.pins().dataset()) {validateResult(result);return;}
+        if(!fields(result).equals(Set.of("contract_version","answer","citations"))||!result.path("contract_version").asText().equals("graph-chat-v1")||
+            !text(result.path("answer"),20000,true)||!result.path("citations").isArray()||result.path("citations").isEmpty()||result.path("citations").size()>20)throw new IOException("Invalid graph answer");
+        var expectedFields=new HashSet<>(CITATION_FIELDS);expectedFields.add("source");
+        for(var citation:result.path("citations")) {
+            var source=citation.path("source");var pins=admitted.pins();var metadata=source.path("metadata");
+            if(!fields(citation).equals(expectedFields)||!fields(source).equals(Set.of("contract_version","release_id","source_snapshot_id","release_descriptor_sha256","schema_contract","entity_type","entity_id","source_sha256","text","metadata","document_metadata","as_of"))||
+                !source.path("contract_version").asText().equals("graph-source-v1")||!source.path("release_id").asText().equals(pins.release())||
+                !source.path("source_snapshot_id").asText().equals(pins.snapshot())||!source.path("release_descriptor_sha256").asText().equals(pins.descriptor())||
+                !source.path("schema_contract").equals(pins.schema())||!source.path("as_of").asText().equals(admitted.date().toString())||
+                !text(citation.path("doc_id"),256*1024,true)||!text(citation.path("quote"),20000,true)||!source.path("text").equals(citation.path("quote"))||
+                !metadata.isObject()||!source.path("document_metadata").isObject()||!source.path("document_metadata").path("id").equals(citation.path("doc_id"))||
+                !bounded(citation.path("start"),0,0)||!bounded(citation.path("end"),1,20000)||
+                citation.path("end").asInt()!=citation.path("quote").asText().codePointCount(0,citation.path("quote").asText().length()))throw new IOException("Invalid graph source binding");
+            String type=source.path("entity_type").asText(),prefix=pins.schema().path("namespace").asText()+".";
+            String kind=type.startsWith(prefix)?type.substring(prefix.length()):"";
+            String identity=switch(kind) {case "LegalDocument"->"doc_id";case "LegalUnit"->"unit_id";case "TrafficSign"->"sign_id";default->throw new IOException("Invalid source type");};
+            for(String field:List.of("unit_id","sign_id"))if(!citation.path(field).isNull()&&!text(citation.path(field),256*1024,true))throw new IOException("Invalid source identity");
+            if(!text(source.path("entity_id"),256*1024,true)||!source.path("entity_id").equals(citation.path(identity))||!metadata.path("id").equals(source.path("entity_id"))||
+                !kind.equals("LegalDocument")&&!metadata.path("doc_id").equals(citation.path("doc_id"))||
+                kind.equals("LegalDocument")&&(!citation.path("unit_id").isNull()||!citation.path("sign_id").isNull())||
+                kind.equals("LegalUnit")&&!citation.path("sign_id").isNull()||
+                kind.equals("TrafficSign")&&!metadata.path("unit_id").asText("").equals(citation.path("unit_id").asText("")))throw new IOException("Source identity mismatch");
+            String field=citation.path("field").asText();boolean matches=false;
+            for(var property:schema.contract().path("node_properties").path(kind))
+                if((property.path("logical_name").asText().equals(field)||property.path("schema_name").asText().equals(field))&&metadata.path(property.path("logical_name").asText()).equals(source.path("text")))matches=true;
+            if(!matches||!source.path("source_sha256").asText().equals(sha256(source.path("text").asText().getBytes(StandardCharsets.UTF_8)))||
+                !citation.path("evidence_id").asText().equals(sha256(json.writeValueAsBytes(List.of(type,source.path("entity_id").asText(),field)))))throw new IOException("Source quote mismatch");
+        }
+    }
+    private static String sha256(byte[] value) throws IOException {
+        try {return HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(value));}
+        catch(java.security.NoSuchAlgorithmException e){throw new IOException(e);}
     }
     private static void validateResult(JsonNode result) throws IOException {
         if(!fields(result).equals(Set.of("answer","citations"))||!text(result.path("answer"),20000,true)||!result.path("citations").isArray()||

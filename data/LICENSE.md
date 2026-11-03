@@ -45,3 +45,12 @@ Phần này do bạn (chủ repo) sở hữu và tự quyết định giấy ph�
 
 Nếu dùng để xây dựng hệ thống tư vấn cho người dùng cuối, cần hiển thị cảnh báo tương tự
 và luôn dẫn nguồn tới điều khoản cụ thể.
+## 4. SVG biển báo
+
+SVG trong `processed/signs/dataset_signs/` tái sử dụng từ tester và các file Wikimedia Commons. Hình QCVN chính thức dùng để đối chiếu mã, caption và phiên bản; Commons là nguồn file minh họa, không thay nguồn pháp lý.
+
+Mỗi ảnh chính có `image_provenance.attribution` trong `signs_app.json`: tác giả/credit, trang Commons, URL file, giấy phép, URL giấy phép và thay đổi đã thực hiện. Metadata được giữ từ manifest nguồn tester; các mục bổ sung được đối chiếu với bytes file qua Commons imageinfo. Không suy giấy phép chỉ từ tên mã hoặc năm QCVN.
+
+Các file được nguồn ghi Public domain hoặc CC BY-SA 4.0 theo từng mục; khi phân phối lại cần giữ attribution tương ứng. [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/) áp dụng cho các SVG được ghi giấy phép đó, không tự áp dụng cho toàn corpus. I.437 có thay đổi kỹ thuật: bỏ sáu định nghĩa raster không dùng trong `defs`; vector và hình render giữ nguyên. Các SVG còn lại không sửa nét; đổi tên/đường dẫn và liên kết không đổi tác giả hoặc giấy phép.
+
+387 SVG nguồn cũ đã được dọn khỏi repo sau backup. Attribution và Git ref/path gốc của ảnh hiện hành vẫn được giữ trong master; việc dọn bản nguồn cũ không đổi tác giả hoặc giấy phép.

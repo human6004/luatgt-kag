@@ -43,9 +43,7 @@ số 36/2024/QH15, Luật Đường bộ số 35/2024/QH15 đã được sửa �
 112/2025/QH15, Luật Quản lý, sử dụng vũ khí, vật liệu nổ và công cụ hỗ trợ số 42/2024/QH15, 
 Luật Phòng cháy, chữa cháy và cứu nạn, cứu hộ số 55/2024/QH15 đã được sửa đổi, bổ sung 
 theo Luật số 135/2025/QH15.”. 
-Ký bởi: CÔNG BÁO NƯỚC CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Ngày ký: 2026-04-01 08:15:39 +07:00
+
 
 36
  
@@ -68,7 +66,7 @@ xe; trạm dừng nghỉ; điểm dừng xe, đỗ xe; đất của đường b�
 từ mép ngoài phần đất để bảo vệ, bảo trì đường bộ ra hai bên để bảo đảm an toàn 
 giao thông đường bộ, bảo đảm tầm nhìn xe chạy và hạn chế ảnh hưởng đến môi 
 trường xung quanh.  
-6.2 Cơ quan quản lý đường bộ là cơ quan thuộc Bộ Xây dựng giúp Bộ trưởng 
+6.² Cơ quan quản lý đường bộ là cơ quan thuộc Bộ Xây dựng giúp Bộ trưởng 
 Bộ Xây dựng thực hiện chức năng quản lý nhà nước về hoạt động đường bộ; cơ 
 quan chuyên môn thuộc Ủy ban nhân dân cấp tỉnh; Ủy ban nhân dân cấp xã. 
 7. Người quản lý, sử dụng đường bộ là chủ sở hữu trực tiếp quản lý, sử dụng, 
@@ -298,9 +296,6 @@ b) Đường cấp I, II, III, IV, V, VI;
 c) Đường đô thị; 
 d) Đường cấp A, B, C, D, đường khác.  
 
-42
- 
- 
 3. Cấp kỹ thuật của đường bộ quy định tại 6khoản 2 Điều này thực hiện theo 
 quy chuẩn kỹ thuật quốc gia do Bộ trưởng Bộ Xây dựng7 ban hành và tiêu chuẩn 
 kỹ thuật do cấp có thẩm quyền công bố. 
@@ -1123,18 +1118,11 @@ công tư và Điều 48 của Luật này.
 hạn khai thác, không đáp ứng lưu lượng vận tải phải từng bước đầu tư, xây dựng, 
 nâng cấp, cải tạo để bảo đảm yêu cầu kỹ thuật theo tiêu chuẩn đường bộ. 
 ##### Điều 29. Thẩm tra, thẩm định an toàn giao thông đường bộ 
-1. Đường bộ được thẩm tra, thẩm định về an toàn giao thông trong giai 
+1. [^vbhn49-15] Đường bộ được thẩm tra, thẩm định về an toàn giao thông trong giai 
 đoạn lập dự án đầu tư xây dựng công trình; thiết kế triển khai sau thiết kế cơ sở; 
 trước khi đưa công trình đường bộ vào khai thác và trong quá trình khai thác công 
 trình đường bộ, trừ đường bộ có cấp kỹ thuật theo quy định tại điểm d khoản 2 
 Điều 10 của Luật này, đường phố gom, đường nội bộ đô thị. 
- 
-15 Khoản này được sửa đổi, bổ sung theo quy định tại khoản 5 Điều 8 của Luật số 
-118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
-hiệu lực kể từ ngày 01 tháng 7 năm 2026. 
-
-62
- 
  
 Trong giai đoạn lập dự án đầu tư, thiết kế triển khai sau thiết kế cơ sở, việc 
 thẩm tra, thẩm định an toàn giao thông được thực hiện cùng với công tác thẩm tra, 
@@ -1658,8 +1646,7 @@ có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 
 thường xuyên của ngân sách nhà nước. 
 6. Người quản lý, sử dụng đường bộ đối với đường chuyên dùng phải bảo 
 đảm kinh phí quản lý, vận hành, khai thác, bảo trì và bảo vệ đường chuyên dùng. 
-##### Điều 42. Nguồn tài chính để đầu tư, xây dựng, quản lý, vận hành, khai thác, 
-bảo trì kết cấu hạ tầng đường bộ và nguồn thu từ kết cấu hạ tầng đường bộ 
+##### Điều 42. Nguồn tài chính để đầu tư, xây dựng, quản lý, vận hành, khai thác, bảo trì kết cấu hạ tầng đường bộ và nguồn thu từ kết cấu hạ tầng đường bộ 
 1. Nguồn tài chính để đầu tư, xây dựng, quản lý, vận hành, khai thác và bảo 
 trì kết cấu hạ tầng đường bộ được thực hiện theo quy định của pháp luật về ngân 
 sách nhà nước, pháp luật về đầu tư, pháp luật về đầu tư công, pháp luật về đầu tư 
@@ -2631,11 +2618,11 @@ có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 
 40 Điều này được bãi bỏ theo quy định tại khoản 10 Điều 8 của Luật số 118/2025/QH15 
 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 
 01 tháng 7 năm 2026. 
-41 Khoản 1 Điều 11 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật 
-có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026 quy định như sau: 
-“Điều 11. Điều khoản thi hành 
-1. Luật này có hiệu lực thi hành từ ngày 01 tháng 7 năm 2026, trừ quy định tại 
-khoản 2 Điều này.”. 
+> 41 Khoản 1 Điều 11 của Luật số 118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật
+> có liên quan đến an ninh, trật tự, có hiệu lực kể từ ngày 01 tháng 7 năm 2026 quy định như sau:
+> “Điều 11. Điều khoản thi hành
+> 1. Luật này có hiệu lực thi hành từ ngày 01 tháng 7 năm 2026, trừ quy định tại
+> khoản 2 Điều này.”.
 
 98
  
@@ -2753,5 +2740,8 @@ XÁC THỰC VĂN BẢN HỢP NHẤT
 Hà Nội, ngày 17 tháng 3 năm 2026 
 CHỦ NHIỆM 
  
-Lê Quang Mạnh 
- 
+Lê Quang Mạnh
+
+[^vbhn49-15]: Khoản này được sửa đổi, bổ sung theo quy định tại khoản 5 Điều 8 của Luật số 
+    118/2025/QH15 sửa đổi, bổ sung một số điều của 10 luật có liên quan đến an ninh, trật tự, có 
+    hiệu lực kể từ ngày 01 tháng 7 năm 2026.

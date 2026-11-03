@@ -1,0 +1,5 @@
+# Exact public HTTPS hosts approved by deployment; API and gateway share this file.
+api.vilao.ai
+api.openai.com
+openrouter.ai
+generativelanguage.googleapis.com

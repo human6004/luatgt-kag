@@ -102,45 +102,20 @@ bộ trong khu vực đông dân cư
 
                                                                                    Bảng 1
 
-                                                   Tốc độ khai thác tối đa (km/h)
-
-      Loại xe cơ giới đường bộ                Đường đôi; đường         Đường hai chiều;
-                                              một chiều có từ hai     đường một chiều có
-                                             làn xe cơ giới trở lên    một làn xe cơ giới
-Các loại xe cơ giới, trừ các xe được quy
-                                                      60                      50
-định tại Điều 7 và Điều 8 Thông tư này
+| Loại xe cơ giới đường bộ | Tốc độ khai thác tối đa (km/h): Đường đôi; đường một chiều có từ hai làn xe cơ giới trở lên | Tốc độ khai thác tối đa (km/h): Đường hai chiều; đường một chiều có một làn xe cơ giới |
+| --- | --- | --- |
+| Các loại xe cơ giới, trừ các xe được quy định tại Điều 7 và Điều 8 Thông tư này | 60 | 50 |
 
     2. Tốc độ khai thác tối đa cho phép xe cơ giới tham gia giao thông trên đường
 bộ ngoài khu vực đông dân cư
                                                                            Bảng 2
 
-                                                   Tốc độ khai thác tối đa (km/h)
-
-                                             Đường đôi; đường          Đường hai chiều;
-      Loại xe cơ giới đường bộ               một chiều có từ hai       đường một chiều
-                                              làn xe cơ giới trở       có một làn xe cơ
-                                                     lên                    giới
-Xe ô tô chở người đến 28 chỗ không
-kể chỗ của người lái xe (trừ xe buýt);
-                                                       90                     80
-ô tô tải có trọng tải không lớn hơn 3,5
-tấn
-Xe ô tô chở người trên 28 chỗ không
-kể chỗ người lái xe (trừ xe buýt); ô tô
-                                                       80                     70
-tải có trọng tải trên 3,5 tấn (trừ ô tô xi
-téc)
-Xe buýt; ô tô đầu kéo kéo sơ mi rơ
-moóc (trừ ô tô đầu kéo kéo sơ mi rơ
-moóc xi téc); xe mô tô; ô tô chuyên                    70                     60
-dùng (trừ ô tô trộn vữa, ô tô trộn bê
-tông lưu động)
-Ô tô kéo rơ moóc; ô tô kéo xe khác; ô
-tô trộn vữa, ô tô trộn bê tông lưu
-động, ô tô xi téc, ô tô đầu kéo kéo sơ                 60                     50
-mi rơ moóc xi téc, ô tô kéo theo rơ
-moóc xi téc)
+| Loại xe cơ giới đường bộ | Tốc độ khai thác tối đa (km/h): Đường đôi; đường một chiều có từ hai làn xe cơ giới trở lên | Tốc độ khai thác tối đa (km/h): Đường hai chiều; đường một chiều có một làn xe cơ giới |
+| --- | --- | --- |
+| Xe ô tô chở người đến 28 chỗ không kể chỗ của người lái xe (trừ xe buýt); ô tô tải có trọng tải không lớn hơn 3,5 tấn | 90 | 80 |
+| Xe ô tô chở người trên 28 chỗ không kể chỗ người lái xe (trừ xe buýt); ô tô tải có trọng tải trên 3,5 tấn (trừ ô tô xi téc) | 80 | 70 |
+| Xe buýt; ô tô đầu kéo kéo sơ mi rơ moóc (trừ ô tô đầu kéo kéo sơ mi rơ moóc xi téc); xe mô tô; ô tô chuyên dùng (trừ ô tô trộn vữa, ô tô trộn bê tông lưu động) | 70 | 60 |
+| Ô tô kéo rơ moóc; ô tô kéo xe khác; ô tô trộn vữa, ô tô trộn bê tông lưu động, ô tô xi téc, ô tô đầu kéo kéo sơ mi rơ moóc xi téc, ô tô kéo theo rơ moóc xi téc) | 60 | 50 |
 
 #####    Điều 7. Tốc độ khai thác tối đa cho phép đối với xe máy chuyên dùng, xe
 gắn máy và các loại xe tương tự tham gia giao thông trên đường bộ (trừ
@@ -216,11 +191,12 @@ trơn trượt, địa hình bằng phẳng, đường thẳng, tầm nhìn bả
 toàn ứng với mỗi tốc độ được quy định như sau:
                                                                              Bảng 3
 
-     Tốc độ lưu hành (V km/h)                    Khoảng cách an toàn (m)
-               V = 60                                        35
-            60 < V ≤ 80                                      55
-            80 < V ≤ 100                                     70
-           100 < V ≤ 120                                    100
+| Tốc độ lưu hành (V km/h) | Khoảng cách an toàn (m) |
+| --- | --- |
+| V = 60 | 35 |
+| 60 < V ≤ 80 | 55 |
+| 80 < V ≤ 100 | 70 |
+| 100 < V ≤ 120 | 100 |
 
     Khi điều khiển xe chạy với tốc độ dưới 60 km/h, người lái xe, người điều
 khiển xe máy chuyên dùng phải chủ động giữ khoảng cách an toàn phù hợp với xe

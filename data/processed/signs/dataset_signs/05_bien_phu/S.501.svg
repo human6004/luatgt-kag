@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   sodipodi:docname="Vietnam_road_sign_S501.svg"
+   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
+   id="svg5907"
+   version="1.1"
+   viewBox="0 0 805.505 348.61514"
+   height="348.61514mm"
+   width="805.505mm">
+  <defs
+     id="defs5901" />
+  <sodipodi:namedview
+     inkscape:window-maximized="0"
+     inkscape:window-y="0"
+     inkscape:window-x="192"
+     inkscape:window-height="1030"
+     inkscape:window-width="1424"
+     showgrid="false"
+     inkscape:document-rotation="0"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="mm"
+     inkscape:cy="1503.0889"
+     inkscape:cx="695.57651"
+     inkscape:zoom="0.1964431"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base" />
+  <metadata
+     id="metadata5904">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     transform="translate(183.52631,133.48614)"
+     id="layer1"
+     inkscape:groupmode="layer"
+     inkscape:label="Layer 1">
+    <path
+       d="M -180.77381,-130.73364 H 619.2262 v 343.11013 h -800.00001 z"
+       style="opacity:1;fill:#000000;fill-rule:evenodd;stroke:none;stroke-width:5.505;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+       id="rect5121" />
+    <path
+       d="M -168.85098,-118.7975 H 607.28111 V 200.40955 H -168.85098 Z"
+       style="opacity:1;fill:#ffffff;fill-opacity:1;fill-rule:evenodd;stroke-width:0.305001;stroke-linejoin:round;paint-order:stroke fill markers"
+       id="rect5123" />
+    <path
+       d="m 550.65073,-102.23537 -34.59909,60.404404 h 22.94864 V 184.16638 h 23.31415 V -41.830966 h 22.9552 z"
+       style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.305001;stroke-linejoin:round;paint-order:stroke fill markers"
+       id="rect5129" />
+    <path
+       id="path5137"
+       style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.305001;stroke-linejoin:round;paint-order:stroke fill markers"
+       d="m -112.20582,-102.23537 -34.59909,60.404404 h 22.94865 V 184.16638 h 23.31414 V -41.830966 h 22.955215 z" />
+    <path
+       d="m 186.1048,-19.094346 c -12.7467,0 -23.00844,10.2616196 -23.00844,23.0079296 V 73.510964 c 0,12.74632 10.26174,23.00794 23.00844,23.00794 h 2.82448 c 12.74672,0 23.00845,-10.26162 23.00845,-23.00794 V 3.9135836 c 0,-12.74631 -10.26173,-23.0079296 -23.00845,-23.0079296 z m 1.4089,15.8701896 c 4.3103,0 7.78256,3.47241997 7.78256,7.78207 V 72.168304 c 0,4.30964 -3.47226,7.78206 -7.78256,7.78206 -4.31027,0 -7.77573,-3.47242 -7.77573,-7.78206 V 4.5579136 c 0,-4.30965003 3.46546,-7.78207 7.77573,-7.78207 z"
+       style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.305001;stroke-linejoin:round;paint-order:stroke fill markers"
+       id="rect5155" />
+    <path
+       id="path5162"
+       style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.305001;stroke-linejoin:round;paint-order:stroke fill markers"
+       d="m 240.88966,-19.094346 c -12.7467,0 -23.00843,10.2616196 -23.00843,23.0079296 V 73.510964 c 0,12.74632 10.26173,23.00794 23.00843,23.00794 h 2.82448 c 12.7467,0 23.00843,-10.26162 23.00843,-23.00794 V 3.9135836 c 0,-12.74631 -10.26173,-23.0079296 -23.00843,-23.0079296 z m 1.4089,15.8701896 c 4.31015,0 7.78243,3.47241997 7.78243,7.78207 V 72.168304 c 0,4.30964 -3.47228,7.78206 -7.78243,7.78206 -4.3103,0 -7.77576,-3.47242 -7.77576,-7.78206 V 4.5579136 c 0,-4.30965003 3.46546,-7.78207 7.77576,-7.78207 z" />
+    <path
+       d="m 128.29807,-19.108496 c -13.58921,0 -24.53039,9.8912296 -24.53039,22.1848396 V 19.751634 c 0,6.33908 3.54557,12.5534 8.34072,16.06311 -5.4356,3.59973 -8.34072,9.39608 -8.34072,15.52424 v 21.3013 c 0,11.84607 9.09926,24.36218 24.86924,24.3699 15.16814,0.008 24.19139,-12.4891 24.19139,-24.3699 v -21.3013 c 0,-6.12816 -3.06819,-12.11228 -8.35396,-15.52424 5.6415,-3.98042 8.35396,-9.72275 8.35396,-16.06311 V 3.0763436 c 0,-12.29361 -10.94103,-22.1848396 -24.53024,-22.1848396 z m -0.0515,16.1441296 c 4.54348,0 8.20108,3.65760997 8.20108,8.20005 V 21.419674 c 0,4.54243 -3.6576,8.20002 -8.20108,8.20002 -4.54345,0 -8.20119,-3.65759 -8.20119,-8.20002 V 5.2356836 c 0,-4.54244003 3.65774,-8.20005 8.20119,-8.20005 z m 0,44.8532604 c 4.54348,0 8.20108,3.65759 8.20108,8.20131 v 22.40347 c 0,4.54372 -3.6576,8.20133 -8.20108,8.20133 -4.54345,0 -8.20119,-3.65761 -8.20119,-8.20133 v -22.40347 c 0,-4.54372 3.65774,-8.20131 8.20119,-8.20131 z"
+       style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.305001;stroke-linejoin:round;paint-order:stroke fill markers"
+       id="rect5164" />
+    <path
+       d="m 337.87265,13.550174 c -6.32714,0 -11.85391,3.42353 -15.0332,8.60642 v -7.56985 H 306.3707 v 81.52062 h 13.59101 2.87774 v -58.59886 c 0,-4.49227 3.61527,-8.11385 8.10808,-8.11385 4.49276,0 8.10821,3.62158 8.10821,8.11385 v 58.59886 h 16.40221 v -58.59886 c 0,-4.49227 3.61532,-8.11385 8.10807,-8.11385 4.49281,0 8.11477,3.62158 8.11477,8.11385 v 58.59886 h 16.38901 l 0.0257,-63.74832 c 0,-10.42237 -8.39319,-18.80887 -18.81531,-18.80887 h -0.74464 c -6.58665,0 -12.35919,3.35665 -15.71779,8.45338 -3.53954,-5.62788 -8.67653,-8.45338 -14.94009,-8.45338 z"
+       style="opacity:1;fill:#000000;fill-opacity:1;fill-rule:evenodd;stroke-width:0.305001;stroke-linejoin:round;paint-order:stroke fill markers"
+       id="rect5181" />
+  </g>
+</svg>

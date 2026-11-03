@@ -4,6 +4,11 @@
 !.python-version
 !kag/
 !kag/**
+!data/
+!data/processed/
+!data/processed/**
+!artifacts/
+!artifacts/inputs/
 !vendor/
 !vendor/KAG/
 !vendor/KAG/**

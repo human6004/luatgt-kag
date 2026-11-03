@@ -35,10 +35,7 @@ xe quốc tế; tiêu chuẩn đào tạo, kiểm tra, cấp, cấp lại chứn
 pháp luật về giao thông đường bộ và tiêu chuẩn của cơ sở đào tạo người điều khiển 
 xe máy chuyên dùng thực hiện bồi dưỡng, kiểm tra, cấp chứng chỉ bồi dưỡng kiến 
 thức pháp luật về giao thông đường bộ. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 07.01.2025 09:09:28 +07:00
+
 
 11 
  
@@ -744,7 +741,7 @@ cháy và cứu nạn, cứu hộ
 giờ 
 4 
 4 
-4 
+4 4 
 
 23 
  
@@ -959,7 +956,7 @@ III. Tổng thời gian đào tạo
 giờ 
 29 
 38 
-75 
+75 57 
 
 25 
  
@@ -2803,8 +2800,7 @@ b) Có khả năng cung cấp tài khoản cho Sở Giao thông vận tải đ�
 quản lý thông tin chứng chỉ bồi dưỡng kiến thức pháp luật về giao thông đường bộ 
 do các cơ sở đào tạo thuộc quyền quản lý; 
 c) Có khả năng kết nối, chia sẻ dữ liệu với các hệ thống thông tin liên quan. 
-##### Điều 55. Yêu cầu đối với hệ thống thông tin về người điều khiển xe cơ giới, 
-xe máy chuyên dùng 
+##### Điều 55. Yêu cầu đối với hệ thống thông tin về người điều khiển xe cơ giới, xe máy chuyên dùng 
 1. Quản lý tối thiểu các thông tin: họ, tên; số định danh cá nhân; ngày, tháng, 
 năm sinh; quốc tịch; nơi cư trú; số giấy phép lái xe, hạng giấy phép lái xe, cơ quan 
 cấp giấy phép lái xe, số chứng chỉ bồi dưỡng kiến thức pháp luật về giao thông 
@@ -3422,10 +3418,7 @@ vận tải)
  
  
  
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 07.01.2025 09:09:52 +07:00
+
 
 3 
  
@@ -7304,7 +7297,7 @@ Thang điểm
 100 
 Điểm đạt tối thiểu 
 80 
-80 
+80 80 
 
 71 
  
@@ -9179,10 +9172,7 @@ trình sát hạch: không để người không có nhiệm vụ vào phòng s�
 để thí sinh mang điện thoại di động, thiết bị viễn thông liên lạc bằng hình ảnh, âm thanh 
 vào phòng sát hạch lý thuyết; không để thí sinh trao đổi, sử dụng tài liệu. Lập biên bản xử lý 
 thí sinh vi phạm và báo cáo Tổ trưởng sát hạch trong trường hợp thí sinh cố tình vi phạm. 
-Người ký: CỔNG THÔNG TIN ĐIỆN TỬ CHÍNH PHỦ
-Email: thongtinchinhphu@chinhphu.vn
-Cơ quan: VĂN PHÒNG CHÍNH PHỦ
-Thời gian ký: 07.01.2025 09:10:25 +07:00
+
 
 3 
  

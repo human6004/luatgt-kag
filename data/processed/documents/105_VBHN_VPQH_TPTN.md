@@ -393,8 +393,7 @@ giáo dục.
 chơi giải trí khác do trại giam tổ chức phù hợp với lứa tuổi, giới tính.  
 5. Được thông báo, giải thích về quyền và nghĩa vụ theo quy định của Luật này. 
 6. Các quyền và nghĩa vụ khác theo quy định của Luật này. 
-##### Điều 25. Xác định tuổi của người chưa thành niên là người bị buộc tội, 
-bị hại  
+##### Điều 25. Xác định tuổi của người chưa thành niên là người bị buộc tội, bị hại  
 1. Việc xác định tuổi của người chưa thành niên là người bị buộc tội, bị hại 
 do cơ quan, người có thẩm quyền tiến hành tố tụng thực hiện theo quy định của 
 pháp luật. Việc xác định tuổi căn cứ vào một trong các giấy tờ, tài liệu gồm: Giấy 
@@ -3189,8 +3188,7 @@ d) Tội cưỡng dâm người từ đủ 13 tuổi đến dưới 16 tuổi;
 #### Mục 2 
 QUYẾT ĐỊNH HÌNH PHẠT, TỔNG HỢP HÌNH PHẠT, 
 MIỄN GIẢM HÌNH PHẠT, XÓA ÁN TÍCH 
-##### Điều 120. Quyết định hình phạt trong trường hợp chuẩn bị phạm tội, 
-phạm tội chưa đạt 
+##### Điều 120. Quyết định hình phạt trong trường hợp chuẩn bị phạm tội, phạm tội chưa đạt 
 1. Tòa án quyết định hình phạt đối với người chưa thành niên trong trường 
 hợp chuẩn bị phạm tội hoặc phạm tội chưa đạt theo các điều của Bộ luật Hình sự 
 về các tội phạm tương ứng tùy theo tính chất, mức độ nguy hiểm cho xã hội của 
@@ -3713,8 +3711,7 @@ niên có biểu hiện trốn, hành vi chống đối, gây rối trật tự 
  
 #### Mục 3 
 THỦ TỤC KHỞI TỐ, ĐIỀU TRA, TRUY TỐ 
-##### Điều 142. Tiếp nhận, giải quyết nguồn tin về tội phạm, khởi tố, điều tra, 
-truy tố  
+##### Điều 142. Tiếp nhận, giải quyết nguồn tin về tội phạm, khởi tố, điều tra, truy tố  
 1. Mọi hoạt động tiếp nhận, giải quyết nguồn tin về tội phạm, khởi tố, điều 
 tra vụ án có người chưa thành niên là người bị tố giác, người bị kiến nghị khởi tố, 
 người bị giữ trong trường hợp khẩn cấp, người bị buộc tội phải được tiến hành 
@@ -3978,8 +3975,7 @@ quy định của pháp luật.
 5. Trường hợp cần thiết, cơ quan có thẩm quyền tiến hành tố tụng có thể yêu 
 cầu chuyên gia y tế, tâm lý, giáo dục, xã hội học hỗ trợ người chưa thành niên là 
 bị hại, người làm chứng khi tham gia tố tụng. 
-##### Điều 155. Giữ bí mật thông tin của người chưa thành niên là bị hại, 
-người làm chứng 
+##### Điều 155. Giữ bí mật thông tin của người chưa thành niên là bị hại, người làm chứng 
 1. Cơ quan, người có thẩm quyền tiến hành tố tụng phải áp dụng các biện 
 pháp phù hợp nhằm giữ bí mật cá nhân của người chưa thành niên là bị hại, người 
 làm chứng.   

@@ -24,7 +24,7 @@ SECRETS = ServiceSecrets(('q'*43,), ('i'*43,))
 
 
 class SampleFixture(EvidenceFixture):
-    def __init__(self, root):
+    def __init__(self, root, *, model_identity='OFFLINE-SYNTHETIC'):
         super().__init__(root)
         self.principal = {'user':'sample_reader', 'roles':['PUBLIC','reader'],
                           'passwordChangeRequired':False, 'suspended':False}
@@ -40,7 +40,7 @@ class SampleFixture(EvidenceFixture):
                 jobs.append({'node_type':kind,'node_id':identity,'property':prop,
                     'source_sha256':sha(text.encode()),'source_chars':len(text),
                     'source_bytes':len(text.encode()),'dimension':3072,
-                    'model_identity':'OFFLINE-SYNTHETIC','status':'SUCCESS','embedding_method':'DIRECT'})
+                    'model_identity':model_identity,'status':'SUCCESS','embedding_method':'DIRECT'})
             specs.append({'type':kind,'id':identity,'name':identity,'properties':node['properties']})
         for side, key in (('from',('VietRoadTraffic.LegalDocument','document-1')),
                           ('to',('VietRoadTraffic.LegalUnit','unit-1'))):

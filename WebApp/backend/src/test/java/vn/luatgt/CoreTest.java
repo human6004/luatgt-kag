@@ -59,7 +59,38 @@ class CoreTest {
         mvc.perform(asyncDispatch(result)).andExpect(status().isOk())
             .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_EVENT_STREAM));
     }
+    @Test void builderSourceCheckRequiresAdminAndRejectsClientInputs() throws Exception {
+        mvc.perform(post("/api/admin/kag/builder/inputs")).andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/admin/kag/builder/inputs").header("Authorization","Bearer "+register())).andExpect(status().isForbidden());
+        when(kag.checkBuilderInputs()).thenReturn(json.createObjectNode().put("fixture","CHECKING"));
+        mvc.perform(post("/api/admin/kag/builder/inputs").header("Authorization","Bearer "+admin)).andExpect(status().isAccepted()).andExpect(header().string("Cache-Control","no-store"));
+        verify(kag).checkBuilderInputs();clearInvocations(kag);
+        mvc.perform(post("/api/admin/kag/builder/inputs?path=/tmp/other").header("Authorization","Bearer "+admin)).andExpect(status().isBadRequest());
+        mvc.perform(post("/api/admin/kag/builder/inputs").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{}")).andExpect(status().isBadRequest());
+        mvc.perform(post("/api/admin/kag/builder/inputs").header("Authorization","Bearer "+admin).header("Transfer-Encoding","chunked")).andExpect(status().isBadRequest());
+        verifyNoInteractions(kag);
+    }
     @BeforeEach void admin() throws Exception { admin=token("admin@test.vn","TEST-only-admin-password"); }
+    @Test void builderConfigurationAndReadinessRequireAdminAndRejectNetworkParameters() throws Exception {
+        String user=register();
+        for(String path:List.of("configuration","preflight")) {
+            mvc.perform(post("/api/admin/kag/builder/"+path).contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isUnauthorized());
+            mvc.perform(post("/api/admin/kag/builder/"+path).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{}"))
+                .andExpect(status().isForbidden());
+        }
+        var metadata=json.createObjectNode().put("fixture","CONFIGURATION");
+        when(kag.builderConfiguration()).thenReturn(metadata);when(kag.checkBuilderReadiness()).thenReturn(metadata);
+        mvc.perform(get("/api/admin/kag/builder/configuration").header("Authorization","Bearer "+admin))
+            .andExpect(status().isOk()).andExpect(header().string("Cache-Control","no-store"));
+        mvc.perform(post("/api/admin/kag/builder/preflight").header("Authorization","Bearer "+admin))
+            .andExpect(status().isAccepted()).andExpect(header().string("Cache-Control","no-store"));
+        clearInvocations(kag);
+        mvc.perform(get("/api/admin/kag/builder/configuration?target=http://localhost").header("Authorization","Bearer "+admin)).andExpect(status().isBadRequest());
+        mvc.perform(post("/api/admin/kag/builder/preflight").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{}"))
+            .andExpect(status().isBadRequest());
+        verifyNoInteractions(kag);
+    }
     String token(String email,String password) throws Exception {
         return body(mvc.perform(post("/api/auth/login").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("email",email,"password",password)))).andExpect(status().isOk()).andReturn()).path("accessToken").asText();
     }
@@ -99,6 +130,7 @@ class CoreTest {
             mvc.perform(get("/api/admin/"+path).header("Authorization","Bearer "+police)).andExpect(status().isForbidden());
         mvc.perform(patch("/api/admin/users/"+id).header("Authorization","Bearer "+police).contentType(MediaType.APPLICATION_JSON).content("{\"role\":\"ADMIN\"}")).andExpect(status().isForbidden());
         mvc.perform(post("/api/admin/kag/builder/build").header("Authorization","Bearer "+police).contentType(MediaType.APPLICATION_JSON).content("{}")).andExpect(status().isForbidden());
+        mvc.perform(post("/api/admin/kag/builder/inputs").header("Authorization","Bearer "+police)).andExpect(status().isForbidden());
         mvc.perform(patch("/api/admin/users/"+id).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"role\":\"USER\"}")).andExpect(status().isOk());
         mvc.perform(get("/api/auth/me").header("Authorization","Bearer "+police)).andExpect(status().isUnauthorized());
         String demoted=token(email,"TEST-only-user-password");
@@ -328,9 +360,20 @@ class CoreTest {
         mvc.perform(get("/api/exams/"+expiredId).header("Authorization","Bearer "+user)).andExpect(jsonPath("$.score").value(0));
     }
     @Test void unavailableKagNeverFabricatesAnAnswer() throws Exception {
-        when(kag.query(any())).thenThrow(new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Dịch vụ KAG chưa khả dụng")); String user=register();
+        when(kag.query(any(),any(UUID.class))).thenThrow(new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Dịch vụ KAG chưa khả dụng")); String user=register();
         mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Mức phạt là gì?\"}")).andExpect(status().isServiceUnavailable());
         mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andExpect(status().isOk()).andExpect(jsonPath("$[0].state").value("UNAVAILABLE")).andExpect(jsonPath("$[0].answer").value(""));
+    }
+    @Test void unsupportedChatContextRejectedBeforeHistoryAndKag() throws Exception {
+        String user=register();
+        for(String path:List.of("/api/chat","/api/chat/stream?progress=true")) {
+            mvc.perform(post(path).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON)
+                .content("{\"message\":\"Căn cứ?\",\"contextId\":\"unsupported-session\"}"))
+                .andExpect(status().isBadRequest());
+        }
+        verifyNoInteractions(kag);
+        mvc.perform(get("/api/chat").header("Authorization","Bearer "+user))
+            .andExpect(status().isOk()).andExpect(jsonPath("$").isEmpty());
     }
     @Test @Transactional void verifiedNativeAbstentionPersistsRestSseAndHistoryWithoutReclassifyingLegacyRows() throws Exception {
         String user=register(); UUID owner=UUID.fromString(body(mvc.perform(get("/api/auth/me").header("Authorization","Bearer "+user)).andReturn()).path("id").asText());
@@ -338,7 +381,7 @@ class CoreTest {
         var wire=streamWire();
         try(var fixture=wire.new Fixture()) {
             fixture.status=503; fixture.body=KagClientTest.nativeAbstention(); fixture.identityHeaders=false; var actual=wire.client(fixture);
-            when(kag.query(any())).thenAnswer(call->actual.query(call.getArgument(0))); bridge(wire,fixture);
+            when(kag.query(any(),any(UUID.class))).thenAnswer(call->actual.query(call.getArgument(0),call.getArgument(1))); bridge(wire,fixture);
             var rest=body(mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Graph thiếu căn cứ?\"}"))
                 .andExpect(status().isOk()).andExpect(jsonPath("$.state").value("KAG_ABSTAINED")).andExpect(jsonPath("$.answer").value("")).andExpect(jsonPath("$.citations").isEmpty()).andReturn());
             var output=new ByteArrayOutputStream(); chat.stream(owner,new ChatRequest("Câu hỏi ngoài phạm vi chưa được phân loại","")).writeTo(output);
@@ -361,7 +404,7 @@ class CoreTest {
         var owner=streamOwner(); var wire=streamWire();
         try(var fixture=wire.new Fixture()) {
             fixture.status=status; fixture.body=KagClientTest.h1Failure(status); var actual=wire.client(fixture);
-            when(kag.query(any())).thenAnswer(call->actual.query(call.getArgument(0)));
+            when(kag.query(any(),any(UUID.class))).thenAnswer(call->actual.query(call.getArgument(0),call.getArgument(1)));
             doAnswer(call->{ actual.stream(call.getArgument(0),call.getArgument(1)); return null; }).when(kag).stream(any(),any());
             var error=assertThrows(ResponseStatusException.class,()->chat.ask(owner,new ChatRequest("Offline H1 integration","")));
             assertEquals(503,error.getStatusCode().value());
@@ -376,9 +419,11 @@ class CoreTest {
     @Test void chatDelegatesOnlyAuthenticatedOwnerAndRejectsBrowserIdentity() throws Exception {
         String user=register();
         UUID owner=UUID.fromString(body(mvc.perform(get("/api/auth/me").header("Authorization","Bearer "+user)).andReturn()).path("id").asText());
-        when(kag.query(any())).thenAnswer(invocation->{
+        when(kag.query(any(),any(UUID.class))).thenAnswer(invocation->{
             Map<?,?> request=invocation.getArgument(0);
             assertEquals(owner,request.get("user_id")); assertInstanceOf(UUID.class,request.get("user_id"));
+            UUID chatId=invocation.getArgument(1);
+            assertEquals(owner,chats.findById(chatId).orElseThrow().ownerId);
             assertEquals(Set.of("user_id","message","context_id","schema_contract"),request.keySet());
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Dịch vụ KAG chưa khả dụng");
         });
@@ -388,17 +433,54 @@ class CoreTest {
         verifyNoInteractions(kag);
         mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).header("X-User-ID",UUID.randomUUID().toString())
             .header("X-KAG-Token","forged-browser-token").contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Căn cứ?\"}")).andExpect(status().isServiceUnavailable());
-        verify(kag,times(1)).query(any());
+        verify(kag,times(1)).query(any(),any(UUID.class));
     }
     @Test void nativeAbstentionAndMixedInvalidCitationsCannotBecomeAnswers() throws Exception {
         String user=register();
         for(String response:List.of("{\"answer\":\"Không đủ căn cứ\",\"citations\":[]}",
             "{\"answer\":\"Nội dung thử\",\"citations\":[{\"doc_id\":\"missing\",\"unit_id\":\"missing::1\",\"quote\":\"Nguồn\"},{\"sign_id\":\"P.1\"}]}")) {
-            when(kag.query(any())).thenReturn(json.readTree(response));
+            when(kag.query(any(),any(UUID.class))).thenReturn(json.readTree(response));
             mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Căn cứ?\"}")).andExpect(status().isBadGateway());
         }
         var items=body(mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andReturn());
         assertEquals(2,items.size()); for(var item:items) { assertEquals("UNAVAILABLE",item.path("state").asText()); assertEquals("",item.path("answer").asText()); }
+    }
+    @Test void datasetGraphHistoryKeepsEachSnapshotWithoutWebappRecords() throws Exception {
+        String user=register(),docId="dataset-only-"+UUID.randomUUID();
+        assertTrue(contents.findByKindAndExternalId("documents",docId).isEmpty());
+        var expected=new HashMap<String,JsonNode>();
+        for(String graph:List.of("A","B")) {
+            String quote="Nguyên văn graph "+graph+" · tiếng Việt 😀";
+            var answer=json.createObjectNode().put("contract_version","graph-chat-v1").put("answer","Căn cứ "+graph);
+            var citation=answer.putArray("citations").addObject().put("doc_id",docId).putNull("unit_id").put("sign_id","sign-1").put("quote",quote);
+            citation.putObject("source").put("contract_version","graph-source-v1").put("release_id","release-"+graph).put("text",quote);
+            when(kag.query(any(),any(UUID.class))).thenReturn(answer);
+            var saved=body(mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON)
+                .content("{\"message\":\"Căn cứ graph "+graph+"?\"}")).andExpect(status().isOk()).andExpect(jsonPath("$.state").value("ANSWERED")).andReturn());
+            expected.put(saved.path("id").asText(),answer.path("citations"));
+        }
+        assertTrue(contents.findByKindAndExternalId("documents",docId).isEmpty());
+        var history=body(mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn());
+        assertEquals(2,history.size());for(var row:history)assertEquals(expected.get(row.path("id").asText()),row.path("citations"));
+    }
+    @Test void datasetViewAndSelectedTrialRequireAdminAndKeepExplicitTargets() throws Exception {
+        String user=register();
+        for(String path:List.of("/api/admin/kag/dataset/units","/api/admin/kag/graph/17/run-B/retrieve")) {
+            if(path.endsWith("retrieve")) {
+                mvc.perform(post(path).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Câu thử\",\"top_k\":3,\"expand\":false}")).andExpect(status().isUnauthorized());
+                mvc.perform(post(path).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Câu thử\",\"top_k\":3,\"expand\":false}")).andExpect(status().isForbidden());
+            } else {
+                mvc.perform(get(path)).andExpect(status().isUnauthorized());mvc.perform(get(path).header("Authorization","Bearer "+user)).andExpect(status().isForbidden());
+            }
+        }
+        verifyNoInteractions(kag);
+        when(kag.builderDataset("units",25,25)).thenReturn(json.createObjectNode().put("fixture","page"));
+        mvc.perform(get("/api/admin/kag/dataset/units?offset=25&limit=25").header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andExpect(header().string("Cache-Control","no-store"));
+        verify(kag).builderDataset("units",25,25);
+        when(kag.trialGraph(eq(17),eq("run-B"),any())).thenReturn(json.createObjectNode().put("fixture","trial-B"));
+        mvc.perform(post("/api/admin/kag/graph/17/run-B/retrieve").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Câu thử\",\"top_k\":3,\"expand\":false}")).andExpect(status().isOk());
+        verify(kag).trialGraph(eq(17),eq("run-B"),any());
+        mvc.perform(get("/api/admin/kag/dataset/units?path=secret").header("Authorization","Bearer "+admin)).andExpect(status().isBadRequest());
     }
     record StreamSource(Content document,LegalUnit unit,ObjectNode answer) {}
     StreamSource streamSource() throws Exception {

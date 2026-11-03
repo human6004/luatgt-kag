@@ -95,14 +95,14 @@ def request_principal(request: Request) -> ServicePrincipal:
     return principal
 
 
-async def bounded_body(request: Request) -> bytes:
+async def bounded_body(request: Request, *, limit=BODY_LIMIT) -> bytes:
     lengths = request.headers.getlist('content-length')
     expected = None
     if lengths:
         if len(lengths) != 1 or not re.fullmatch(r'[0-9]{1,20}', lengths[0]):
             raise ApiFailure('INVALID_REQUEST')
         expected = int(lengths[0])
-        if expected > BODY_LIMIT:
+        if expected > limit:
             raise ApiFailure('REQUEST_TOO_LARGE')
         if request.headers.get('transfer-encoding'):
             raise ApiFailure('INVALID_REQUEST')
@@ -116,7 +116,7 @@ async def bounded_body(request: Request) -> bytes:
     async def consume():
         body = bytearray()
         async for chunk in request.stream():
-            if len(body) + len(chunk) > BODY_LIMIT:
+            if len(body) + len(chunk) > limit:
                 raise ApiFailure('REQUEST_TOO_LARGE')
             body.extend(chunk)
         if expected is not None and expected != len(body):

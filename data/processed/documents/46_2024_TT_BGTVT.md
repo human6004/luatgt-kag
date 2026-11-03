@@ -2089,53 +2089,36 @@ kiểm tra
   xác
                               quá ± 0,3 (m-1) hoặc ± 2
                               (%HSU)
+
       D. Yêu cầu về phần mềm điều khiển thiết bị
                                                                        Kết quả     Đánh
 Mục               Hạng mục kiểm tra                   Yêu cầu
                                                                        kiểm tra    giá (3)
-                                                   Kết nối được với
- 1.    Phần mềm điều khiển thiết bị                các thiết bị kiểm
-                                                   tra
-                      Tính năng của phần mềm điều khiển thiết bị
-       Điều khiển các thiết bị hoạt động đúng
- 2.                                                  Thực hiện được
-       chức năng theo quy trình kiểm tra
- 3.    Hiển thị các giá trị đo theo thời gian thực     Hiển thị được
-       Đưa ra chỉ thị để người kiểm tra thực
- 4.                                                  Thực hiện được
-       hiện các thao tác
-       Đọc được các kết quả đo tương ứng với
-       từng thiết bị khi kết thúc quá trình kiểm
- 5.                                                  Thực hiện được
-       tra và lưu trữ trong cơ sở dữ liệu của
-       phần mềm
-                   Phương tiện chờ kiểm tra          Thực hiện được
-       Kết nối,    Kết quả kiểm tra của phương
-       trao đổi    tiện đã hoàn thành kiểm tra
-       thông tin kèm theo số nhận dạng hoặc
-                                                     Thực hiện được
- 6.    với phần số serial của thiết bị, thời
-       mềm         gian kiểm tra và ký hiệu của
-       Quản lý     phiên bản phần mềm
-       kiểm định Kết nối, trao đổi thông tin            Chính xác
-                   Dữ liệu kết quả kiểm tra            Được mã hóa
+ 1. Phần mềm điều khiển thiết bị | Yêu cầu: Kết nối được với các thiết bị kiểm tra
 
-                                                                        Kết quả     Đánh
-Mục                Hạng mục kiểm tra                     Yêu cầu
-                                                                        kiểm tra    giá (3)
-         Truy xuất dữ liệu để hiển thị và in ra kết
-  7.                                                Thực hiện được
-         quả của các lần kiểm tra được lưu trữ
-         Truy xuất được mã nhận dạng hoặc số
-  8.                                                Thực hiện được
-         serial của thiết bị
-                              Được mã hóa trên
-                                                     Được mã hóa
-         Dữ liệu của phần máy chủ của đơn vị
-  9.     mềm điều khiển Được sao lưu, lưu trữ
-         thiết bị             trong thời gian trên Tối thiểu 36 tháng
-                              máy chủ của đơn vị
-       III. Tài liệu của thiết bị
+2. Điều khiển các thiết bị hoạt động đúng chức năng theo quy trình kiểm tra | Yêu cầu: Thực hiện được
+
+3. Hiển thị các giá trị đo theo thời gian thực | Yêu cầu: Hiển thị được
+
+4. Đưa ra chỉ thị để người kiểm tra thực hiện các thao tác | Yêu cầu: Thực hiện được
+
+5. Đọc được các kết quả đo tương ứng với từng thiết bị khi kết thúc quá trình kiểm tra và lưu trữ trong cơ sở dữ liệu của phần mềm | Yêu cầu: Thực hiện được
+
+6. Kết nối, trao đổi thông tin với phần mềm Quản lý kiểm định
+Phương tiện chờ kiểm tra | Yêu cầu: Thực hiện được
+Kết quả kiểm tra của phương tiện đã hoàn thành kiểm tra kèm theo số nhận dạng hoặc số serial của thiết bị, thời gian kiểm tra và ký hiệu của phiên bản phần mềm | Yêu cầu: Thực hiện được
+Kết nối, trao đổi thông tin | Yêu cầu: Chính xác
+Dữ liệu kết quả kiểm tra | Yêu cầu: Được mã hóa
+
+7. Truy xuất dữ liệu để hiển thị và in ra kết quả của các lần kiểm tra được lưu trữ | Yêu cầu: Thực hiện được
+
+8. Truy xuất được mã nhận dạng hoặc số serial của thiết bị | Yêu cầu: Thực hiện được
+
+9. Dữ liệu của phần mềm điều khiển thiết bị
+Được mã hóa trên máy chủ của đơn vị | Yêu cầu: Được mã hóa
+Được sao lưu, lưu trữ trong thời gian trên máy chủ của đơn vị | Yêu cầu: Tối thiểu 36 tháng
+
+III. Tài liệu của thiết bị
                                                                    Kết quả kiểm     Đánh
 Mục                 Loại tài liệu                Yêu cầu
                                                                         tra         giá(3)
@@ -2267,59 +2250,36 @@ Mục                           Yêu cầu
                     3
                     5
                     7
+
      E. Yêu cầu về phần mềm điều khiển thiết bị
                                                                         Kết quả       Đánh
 Mục               Hạng mục kiểm tra                   Yêu cầu
                                                                         kiểm tra      giá (3)
-                                                Kết nối được với
-1.    Phần mềm điều khiển thiết bị
-                                                các thiết bị kiểm tra
+1. Phần mềm điều khiển thiết bị | Yêu cầu: Kết nối được với các thiết bị kiểm tra
 
-54
+2. Điều khiển các thiết bị hoạt động đúng chức năng theo quy trình kiểm tra | Yêu cầu: Thực hiện được
 
-                                                                         Kết quả    Đánh
-Mục               Hạng mục kiểm tra                       Yêu cầu
-                                                                         kiểm tra   giá (3)
-                        Tính năng của phần mềm điều khiển thiết bị
-        Điều khiển các thiết bị hoạt động đúng
- 2.                                                  Thực hiện được
-        chức năng theo quy trình kiểm tra
- 3.     Hiển thị các giá trị đo theo thời gian thực   Hiển thị được
-        Đưa ra chỉ thị để người kiểm tra thực
- 4.                                                  Thực hiện được
-        hiện các thao tác
-        Đọc được các kết quả đo tương ứng với
-        từng thiết bị khi kết thúc quá trình kiểm
- 5.                                                  Thực hiện được
-        tra và lưu trữ trong cơ sở dữ liệu của
-        phần mềm
-                     Phương tiện chờ kiểm tra        Thực hiện được
-        Kết nối,     Kết quả kiểm tra của phương
-        trao đổi     tiện đã hoàn thành kiểm tra
-        thông tin kèm theo số nhận dạng hoặc
-                                                     Thực hiện được
- 6.     với phần số serial của thiết bị, thời
-        mềm          gian kiểm tra và ký hiệu của
-        Quản lý      phiên bản phần mềm
-        kiểm định Kết nối, trao đổi thông tin           Chính xác
-                     Dữ liệu kết quả kiểm tra         Được mã hóa
-        Truy xuất dữ liệu để hiển thị và in ra kết
- 7.                                                  Thực hiện được
-        quả của các lần kiểm tra được lưu trữ
-        Truy xuất được mã nhận dạng hoặc số
- 8.                                                  Thực hiện được
-        serial của thiết bị
-                               Được mã hóa trên
-                                                      Được mã hóa
-                               máy chủ của đơn vị
-        Dữ liệu của phần
-                               Được sao lưu, lưu
- 9.     mềm điều khiển
-                               trữ trong thời gian
-        thiết bị                                    Tối thiểu 36 tháng
-                               trên máy chủ của
-                               đơn vị
-      III. Tài liệu của thiết bị
+3. Hiển thị các giá trị đo theo thời gian thực | Yêu cầu: Hiển thị được
+
+4. Đưa ra chỉ thị để người kiểm tra thực hiện các thao tác | Yêu cầu: Thực hiện được
+
+5. Đọc được các kết quả đo tương ứng với từng thiết bị khi kết thúc quá trình kiểm tra và lưu trữ trong cơ sở dữ liệu của phần mềm | Yêu cầu: Thực hiện được
+
+6. Kết nối, trao đổi thông tin với phần mềm Quản lý kiểm định
+Phương tiện chờ kiểm tra | Yêu cầu: Thực hiện được
+Kết quả kiểm tra của phương tiện đã hoàn thành kiểm tra kèm theo số nhận dạng hoặc số serial của thiết bị, thời gian kiểm tra và ký hiệu của phiên bản phần mềm | Yêu cầu: Thực hiện được
+Kết nối, trao đổi thông tin | Yêu cầu: Chính xác
+Dữ liệu kết quả kiểm tra | Yêu cầu: Được mã hóa
+
+7. Truy xuất dữ liệu để hiển thị và in ra kết quả của các lần kiểm tra được lưu trữ | Yêu cầu: Thực hiện được
+
+8. Truy xuất được mã nhận dạng hoặc số serial của thiết bị | Yêu cầu: Thực hiện được
+
+9. Dữ liệu của phần mềm điều khiển thiết bị
+Được mã hóa trên máy chủ của đơn vị | Yêu cầu: Được mã hóa
+Được sao lưu, lưu trữ trong thời gian trên máy chủ của đơn vị | Yêu cầu: Tối thiểu 36 tháng
+
+III. Tài liệu của thiết bị
                                                                     Kết quả kiểm    Đánh
 Mục                 Loại tài liệu                 Yêu cầu
                                                                          tra        giá(3)
@@ -2423,52 +2383,36 @@ Mục       Hạng mục kiểm tra                       Yêu cầu
                                      Chỉ số về âm lượng phải hiển thị
  5.     Khả năng làm việc            tương ứng với sự thay đổi của
                                      cường độ âm thanh
+
       C. Yêu cầu về phần mềm điều khiển thiết bị
                                                                              Kết quả    Đánh
 Mục               Hạng mục kiểm tra                       Yêu cầu
                                                                              kiểm tra   giá (3)
-                                                      Kết nối được với các
-1.     Phần mềm điều khiển thiết bị
-                                                      thiết bị kiểm tra
-                         Tính năng của phần mềm điều khiển thiết bị
-       Điều khiển các thiết bị hoạt động đúng
-2.                                                      Thực hiện được
-       chức năng theo quy trình kiểm tra
-3.     Hiển thị các giá trị đo theo thời gian thực       Hiển thị được
-       Đưa ra chỉ thị để người kiểm tra thực
-4.                                                      Thực hiện được
-       hiện các thao tác
-       Đọc được các kết quả đo tương ứng với từng
-5.     thiết bị khi kết thúc quá trình kiểm tra và lưu Thực hiện được
-       trữ trong cơ sở dữ liệu của phần mềm
-                     Phương tiện chờ kiểm tra           Thực hiện được
-       Kết nối,      Kết quả kiểm tra của phương
-       trao đổi      tiện đã hoàn thành kiểm tra
-       thông tin kèm theo số nhận dạng hoặc
-                                                        Thực hiện được
-6.     với phần số serial của thiết bị, thời
-       mềm           gian kiểm tra và ký hiệu của
-       Quản lý       phiên bản phần mềm
-       kiểm định Kết nối, trao đổi thông tin                Chính xác
-                     Dữ liệu kết quả kiểm tra             Được mã hóa
-       Truy xuất dữ liệu để hiển thị và in ra kết
-7.                                                      Thực hiện được
-       quả của các lần kiểm tra được lưu trữ
-       Truy xuất được mã nhận dạng hoặc số
-8.                                                      Thực hiện được
-       serial của thiết bị
-                               Được mã hóa trên
-                                                          Được mã hóa
-                               máy chủ của đơn vị
-       Dữ liệu của phần mềm
-9.                             Được sao lưu, lưu trữ
-       điều khiển thiết bị
-                               trong thời gian trên Tối thiểu 36 tháng
-                               máy chủ của đơn vị
+1. Phần mềm điều khiển thiết bị | Yêu cầu: Kết nối được với các thiết bị kiểm tra
 
-58
+2. Điều khiển các thiết bị hoạt động đúng chức năng theo quy trình kiểm tra | Yêu cầu: Thực hiện được
 
-       III. Tài liệu của thiết bị
+3. Hiển thị các giá trị đo theo thời gian thực | Yêu cầu: Hiển thị được
+
+4. Đưa ra chỉ thị để người kiểm tra thực hiện các thao tác | Yêu cầu: Thực hiện được
+
+5. Đọc được các kết quả đo tương ứng với từng thiết bị khi kết thúc quá trình kiểm tra và lưu trữ trong cơ sở dữ liệu của phần mềm | Yêu cầu: Thực hiện được
+
+6. Kết nối, trao đổi thông tin với phần mềm Quản lý kiểm định
+Phương tiện chờ kiểm tra | Yêu cầu: Thực hiện được
+Kết quả kiểm tra của phương tiện đã hoàn thành kiểm tra kèm theo số nhận dạng hoặc số serial của thiết bị, thời gian kiểm tra và ký hiệu của phiên bản phần mềm | Yêu cầu: Thực hiện được
+Kết nối, trao đổi thông tin | Yêu cầu: Chính xác
+Dữ liệu kết quả kiểm tra | Yêu cầu: Được mã hóa
+
+7. Truy xuất dữ liệu để hiển thị và in ra kết quả của các lần kiểm tra được lưu trữ | Yêu cầu: Thực hiện được
+
+8. Truy xuất được mã nhận dạng hoặc số serial của thiết bị | Yêu cầu: Thực hiện được
+
+9. Dữ liệu của phần mềm điều khiển thiết bị
+Được mã hóa trên máy chủ của đơn vị | Yêu cầu: Được mã hóa
+Được sao lưu, lưu trữ trong thời gian trên máy chủ của đơn vị | Yêu cầu: Tối thiểu 36 tháng
+
+III. Tài liệu của thiết bị
                                                                         Kết quả kiểm      Đánh
 Mục                      Loại tài liệu                  Yêu cầu
                                                                              tra          giá(3)
@@ -2635,58 +2579,36 @@ Hạng                                                                Đánh
           20000
           30000
           40000
+
       E. Yêu cầu về phần mềm điều khiển thiết bị
                                                                         Kết quả       Đánh
 Mục              Hạng mục kiểm tra                    Yêu cầu
                                                                         kiểm tra      giá (3)
-                                                   Kết nối được với
- 1.    Phần mềm điều khiển thiết bị                các thiết bị kiểm
-                                                   tra
-                      Tính năng của phần mềm điều khiển thiết bị
-       Điều khiển các thiết bị hoạt động đúng
- 2.                                                  Thực hiện được
-       chức năng theo quy trình kiểm tra
- 3.    Hiển thị các giá trị đo theo thời gian thực     Hiển thị được
-       Đưa ra chỉ thị để người kiểm tra thực
- 4.                                                  Thực hiện được
-       hiện các thao tác
-       Đọc được các kết quả đo tương ứng với
-       từng thiết bị khi kết thúc quá trình kiểm
- 5.                                                  Thực hiện được
-       tra và lưu trữ trong cơ sở dữ liệu của
-       phần mềm
+ 1. Phần mềm điều khiển thiết bị | Yêu cầu: Kết nối được với các thiết bị kiểm tra
 
-62
+2. Điều khiển các thiết bị hoạt động đúng chức năng theo quy trình kiểm tra | Yêu cầu: Thực hiện được
 
-                                                                                                                Kết quả            Đánh
-Mục                       Hạng mục kiểm tra                                            Yêu cầu
-                                                                                                                kiểm tra           giá (3)
-                            Phương tiện chờ kiểm tra                             Thực hiện được
-         Kết nối,           Kết quả kiểm tra của phương
-         trao đổi           tiện đã hoàn thành kiểm tra
-         thông tin          kèm theo số nhận dạng hoặc
-                                                                                 Thực hiện được
- 6.      với phần           số serial của thiết bị, thời
-         mềm                gian kiểm tra và ký hiệu của
-         Quản lý            phiên bản phần mềm
-         kiểm định          Kết nối, trao đổi thông tin                              Chính xác
-                            Dữ liệu kết quả kiểm tra                               Được mã hóa
-         Truy xuất dữ liệu để hiển thị và in ra kết
- 7.                                                                              Thực hiện được
-         quả của các lần kiểm tra được lưu trữ
-         Truy xuất được mã nhận dạng hoặc số
- 8.                                                                              Thực hiện được
-         serial của thiết bị
-                                            Được mã hóa trên
-                                                                                   Được mã hóa
-                                            máy chủ của đơn vị
-         Dữ liệu của phần
- 9.      mềm điều khiển Được sao lưu, lưu
-         thiết bị         trữ trong thời gian
-                                              Tối thiểu 36 tháng
-                          trên máy chủ của
-                          đơn vị
-      III. Tài liệu của thiết bị
+3. Hiển thị các giá trị đo theo thời gian thực | Yêu cầu: Hiển thị được
+
+4. Đưa ra chỉ thị để người kiểm tra thực hiện các thao tác | Yêu cầu: Thực hiện được
+
+5. Đọc được các kết quả đo tương ứng với từng thiết bị khi kết thúc quá trình kiểm tra và lưu trữ trong cơ sở dữ liệu của phần mềm | Yêu cầu: Thực hiện được
+
+6. Kết nối, trao đổi thông tin với phần mềm Quản lý kiểm định
+Phương tiện chờ kiểm tra | Yêu cầu: Thực hiện được
+Kết quả kiểm tra của phương tiện đã hoàn thành kiểm tra kèm theo số nhận dạng hoặc số serial của thiết bị, thời gian kiểm tra và ký hiệu của phiên bản phần mềm | Yêu cầu: Thực hiện được
+Kết nối, trao đổi thông tin | Yêu cầu: Chính xác
+Dữ liệu kết quả kiểm tra | Yêu cầu: Được mã hóa
+
+7. Truy xuất dữ liệu để hiển thị và in ra kết quả của các lần kiểm tra được lưu trữ | Yêu cầu: Thực hiện được
+
+8. Truy xuất được mã nhận dạng hoặc số serial của thiết bị | Yêu cầu: Thực hiện được
+
+9. Dữ liệu của phần mềm điều khiển thiết bị
+Được mã hóa trên máy chủ của đơn vị | Yêu cầu: Được mã hóa
+Được sao lưu, lưu trữ trong thời gian trên máy chủ của đơn vị | Yêu cầu: Tối thiểu 36 tháng
+
+III. Tài liệu của thiết bị
                                                                                                       Kết quả kiểm                 Đánh
 Mục                         Loại tài liệu                                   Yêu cầu
                                                                                                            tra                     giá(3)
@@ -2845,52 +2767,36 @@ Mục         Hạng mục kiểm tra                  Yêu cầu
                                         trong sai số cho phép
         trạng thái sẵn sàng làm việc
                                         của nhà sản xuất
+
       C. Yêu cầu về phần mềm điều khiển thiết bị
                                                                        Kết quả    Đánh
 Mục              Hạng mục kiểm tra                     Yêu cầu
                                                                        kiểm tra   giá (3)
-                                                   Kết nối được với
- 1.    Phần mềm điều khiển thiết bị                các thiết bị kiểm
-                                                   tra
-                      Tính năng của phần mềm điều khiển thiết bị
-       Điều khiển các thiết bị hoạt động đúng
- 2.                                                  Thực hiện được
-       chức năng theo quy trình kiểm tra
- 3.    Hiển thị các giá trị đo theo thời gian thực     Hiển thị được
-       Đưa ra chỉ thị để người kiểm tra thực
- 4.                                                  Thực hiện được
-       hiện các thao tác
-       Đọc được các kết quả đo tương ứng với
-       từng thiết bị khi kết thúc quá trình kiểm
- 5.                                                  Thực hiện được
-       tra và lưu trữ trong cơ sở dữ liệu của
-       phần mềm
-                   Phương tiện chờ kiểm tra          Thực hiện được
-       Kết nối,    Kết quả kiểm tra của phương
-       trao đổi    tiện đã hoàn thành kiểm tra
-       thông tin kèm theo số nhận dạng hoặc Thực hiện được
- 6.    với phần số serial của thiết bị, thời
-       mềm         gian kiểm tra và ký hiệu của
-       Quản lý     phiên bản phần mềm
-       kiểm định Kết nối, trao đổi thông tin          Chính xác
-                    Dữ liệu kết quả kiểm tra         Được mã hóa
-       Truy xuất dữ liệu để hiển thị và in ra kết
- 7.                                                 Thực hiện được
-       quả của các lần kiểm tra được lưu trữ
-       Truy xuất được mã nhận dạng hoặc số
- 8.                                                 Thực hiện được
-       serial của thiết bị
-                            Được mã hóa trên
-                                                     Được mã hóa
-                            máy chủ của đơn vị
-       Dữ liệu của phần
- 9.    mềm điều khiển Được sao lưu, lưu
-       thiết bị         trữ trong thời gian
-                                            Tối thiểu 36 tháng
-                        trên máy chủ của
-                        đơn vị
+ 1. Phần mềm điều khiển thiết bị | Yêu cầu: Kết nối được với các thiết bị kiểm tra
 
-       III. Tài liệu của thiết bị
+2. Điều khiển các thiết bị hoạt động đúng chức năng theo quy trình kiểm tra | Yêu cầu: Thực hiện được
+
+3. Hiển thị các giá trị đo theo thời gian thực | Yêu cầu: Hiển thị được
+
+4. Đưa ra chỉ thị để người kiểm tra thực hiện các thao tác | Yêu cầu: Thực hiện được
+
+5. Đọc được các kết quả đo tương ứng với từng thiết bị khi kết thúc quá trình kiểm tra và lưu trữ trong cơ sở dữ liệu của phần mềm | Yêu cầu: Thực hiện được
+
+6. Kết nối, trao đổi thông tin với phần mềm Quản lý kiểm định
+Phương tiện chờ kiểm tra | Yêu cầu: Thực hiện được
+Kết quả kiểm tra của phương tiện đã hoàn thành kiểm tra kèm theo số nhận dạng hoặc số serial của thiết bị, thời gian kiểm tra và ký hiệu của phiên bản phần mềm | Yêu cầu: Thực hiện được
+Kết nối, trao đổi thông tin | Yêu cầu: Chính xác
+Dữ liệu kết quả kiểm tra | Yêu cầu: Được mã hóa
+
+7. Truy xuất dữ liệu để hiển thị và in ra kết quả của các lần kiểm tra được lưu trữ | Yêu cầu: Thực hiện được
+
+8. Truy xuất được mã nhận dạng hoặc số serial của thiết bị | Yêu cầu: Thực hiện được
+
+9. Dữ liệu của phần mềm điều khiển thiết bị
+Được mã hóa trên máy chủ của đơn vị | Yêu cầu: Được mã hóa
+Được sao lưu, lưu trữ trong thời gian trên máy chủ của đơn vị | Yêu cầu: Tối thiểu 36 tháng
+
+III. Tài liệu của thiết bị
                                                                                                                                     Đánh
 Mục                          Loại tài liệu                                   Yêu cầu                Kết quả kiểm tra
                                                                                                                                     giá(3)
@@ -3143,51 +3049,36 @@ Mục Hạng mục kiểm tra                           Yêu cầu              
 
 72
 
+
       E. Yêu cầu về phần mềm điều khiển thiết bị
                                                                           Kết quả    Đánh
 Mục               Hạng mục kiểm tra                       Yêu cầu
                                                                           kiểm tra   giá (3)
-                                                    Kết nối được với
- 1.     Phần mềm điều khiển thiết bị                các thiết bị kiểm
-                                                    tra
-                        Tính năng của phần mềm điều khiển thiết bị
-        Điều khiển các thiết bị hoạt động đúng
- 2.                                                   Thực hiện được
-        chức năng theo quy trình kiểm tra
- 3.     Hiển thị các giá trị đo theo thời gian thực     Hiển thị được
-        Đưa ra chỉ thị để người kiểm tra thực
- 4.                                                   Thực hiện được
-        hiện các thao tác
-        Đọc được các kết quả đo tương ứng với
-        từng thiết bị khi kết thúc quá trình kiểm
- 5.                                                   Thực hiện được
-        tra và lưu trữ trong cơ sở dữ liệu của
-        phần mềm
-                     Phương tiện chờ kiểm tra         Thực hiện được
-        Kết nối,     Kết quả kiểm tra của phương
-        trao đổi     tiện đã hoàn thành kiểm tra
-        thông tin kèm theo số nhận dạng hoặc Thực hiện được
- 6.     với phần số serial của thiết bị, thời
-        mềm          gian kiểm tra và ký hiệu của
-        Quản lý      phiên bản phần mềm
-        kiểm định Kết nối, trao đổi thông tin            Chính xác
-                     Dữ liệu kết quả kiểm tra           Được mã hóa
-        Truy xuất dữ liệu để hiển thị và in ra kết
- 7.                                                   Thực hiện được
-        quả của các lần kiểm tra được lưu trữ
-        Truy xuất được mã nhận dạng hoặc số
- 8.                                                   Thực hiện được
-        serial của thiết bị
-                               Được mã hóa trên
-                                                        Được mã hóa
-                               máy chủ của đơn vị
-        Dữ liệu của phần
- 9.     mềm điều khiển Được sao lưu, lưu
-                               trữ trong thời gian
-        thiết bị                                     Tối thiểu 36 tháng
-                               trên máy chủ của
-                               đơn vị
-      III. Tài liệu của thiết bị
+ 1. Phần mềm điều khiển thiết bị | Yêu cầu: Kết nối được với các thiết bị kiểm tra
+
+2. Điều khiển các thiết bị hoạt động đúng chức năng theo quy trình kiểm tra | Yêu cầu: Thực hiện được
+
+3. Hiển thị các giá trị đo theo thời gian thực | Yêu cầu: Hiển thị được
+
+4. Đưa ra chỉ thị để người kiểm tra thực hiện các thao tác | Yêu cầu: Thực hiện được
+
+5. Đọc được các kết quả đo tương ứng với từng thiết bị khi kết thúc quá trình kiểm tra và lưu trữ trong cơ sở dữ liệu của phần mềm | Yêu cầu: Thực hiện được
+
+6. Kết nối, trao đổi thông tin với phần mềm Quản lý kiểm định
+Phương tiện chờ kiểm tra | Yêu cầu: Thực hiện được
+Kết quả kiểm tra của phương tiện đã hoàn thành kiểm tra kèm theo số nhận dạng hoặc số serial của thiết bị, thời gian kiểm tra và ký hiệu của phiên bản phần mềm | Yêu cầu: Thực hiện được
+Kết nối, trao đổi thông tin | Yêu cầu: Chính xác
+Dữ liệu kết quả kiểm tra | Yêu cầu: Được mã hóa
+
+7. Truy xuất dữ liệu để hiển thị và in ra kết quả của các lần kiểm tra được lưu trữ | Yêu cầu: Thực hiện được
+
+8. Truy xuất được mã nhận dạng hoặc số serial của thiết bị | Yêu cầu: Thực hiện được
+
+9. Dữ liệu của phần mềm điều khiển thiết bị
+Được mã hóa trên máy chủ của đơn vị | Yêu cầu: Được mã hóa
+Được sao lưu, lưu trữ trong thời gian trên máy chủ của đơn vị | Yêu cầu: Tối thiểu 36 tháng
+
+III. Tài liệu của thiết bị
                                                                                      Đánh
 Mục                 Loại tài liệu                 Yêu cầu        Kết quả kiểm tra
                                                                                      giá(3)

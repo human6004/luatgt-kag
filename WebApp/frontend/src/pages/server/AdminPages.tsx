@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { Link, Navigate, useSearchParams } from "react-router-dom"
 
@@ -89,8 +89,16 @@ function Table({ children }: { children: React.ReactNode }) {
   )
 }
 
+function sourceGraphContext(parameters: URLSearchParams) {
+  const projectId = parameters.get("project_id"), runId = parameters.get("run_id")
+  return projectId && /^[1-9][0-9]{0,9}$/.test(projectId) && runId && /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(runId)
+    ? `project_id=${projectId}&run_id=${encodeURIComponent(runId)}` : ""
+}
+
 export function ContentManager({ kind }: { kind: Kind }) {
   const resource = kind === "units" ? "/admin/units" : "/admin/content"
+  const [parameters] = useSearchParams()
+  const graphContext = sourceGraphContext(parameters)
 
   const data = useData<ContentRecord[]>(`/admin/${kind}`),
     task = useTask(),
@@ -105,6 +113,8 @@ export function ContentManager({ kind }: { kind: Kind }) {
     }[]>([]),
     [message, setMessage] = useState(""),
     [state, setState] = useState("")
+
+  useEffect(() => { setQuery(parameters.get("source_id") ?? ""); setSelected(null) }, [kind, parameters])
 
   const rows = (data.value || []).filter(
     (r) =>
@@ -167,7 +177,7 @@ export function ContentManager({ kind }: { kind: Kind }) {
       actions={
         <>
           <Link
-            to={`/admin/imports?type=${kind}`}
+            to={`/admin/imports?type=${kind}${graphContext ? `&${graphContext}` : ""}`}
             className="underline underline-offset-4 text-sm"
           >
             Nhập hàng loạt
@@ -203,6 +213,7 @@ export function ContentManager({ kind }: { kind: Kind }) {
         </>
       }
     >
+      {graphContext && <p className="mb-4 text-sm"><Link className="underline" to={`/admin/graph?${graphContext}`}>Quay lại đồ thị và kiểm tra lại nguồn</Link>. Kiểm duyệt, xuất bản văn bản trước đơn vị; bản phục vụ chỉ đổi sau khi xem trước và xác nhận.</p>}
       <Notice {...data} retry={data.reload} empty={!data.value?.length} />
       <Notice error={!selected ? task.error : undefined} />
       {message && (
@@ -754,5 +765,6 @@ export function Imports() {
   const [params] = useSearchParams()
   const requested = params.get("type")
   const kind = requested === "signs" || requested === "documents" || requested === "units" ? requested : "questions"
-  return <Navigate to={`/admin/imports?type=${kind}`} replace/>
+  const graphContext = sourceGraphContext(params)
+  return <Navigate to={`/admin/imports?type=${kind}${graphContext ? `&${graphContext}` : ""}`} replace/>
 }

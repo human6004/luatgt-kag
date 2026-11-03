@@ -2,23 +2,23 @@
   "scope": "DENY",
   "runtime_location": "container",
   "endpoints": {
-    "openspg": "http://127.0.0.1:8887",
-    "neo4j_http": "http://openspg-neo4j:7474",
-    "neo4j_uri": "bolt://openspg-neo4j:7687"
+    "openspg": "http://builder-openspg:8887",
+    "neo4j_http": "http://builder-neo4j:7474",
+    "neo4j_uri": "bolt://builder-neo4j:7687"
   },
   "database": "vietroadtraffic",
-  "project_id": 2,
-  "project_name": "VietRoadTrafficC43A10Pct",
+  "project_id": null,
+  "project_name": null,
   "namespace": "VietRoadTraffic",
   "vector_dimensions": 3072,
   "confirmation": null,
   "paths": {
     "c3_manifest": "/external/graph-plan/manifest.json",
-    "sample_manifest": "/external/sample/sample_manifest.json",
-    "vector_artifact": "/external/sample/vectorized_nodes.complete.jsonl",
-    "provenance": "/external/sample/vectorization_provenance.json",
-    "chunk_manifest": "/external/sample/chunk_manifest.json",
-    "source_checkpoint": "/external/sample/embedding_recovery_state.sqlite3",
+    "sample_manifest": null,
+    "vector_artifact": "/external/vectors/vectorized_nodes.complete.jsonl",
+    "provenance": "/external/vectors/vectorization_provenance.json",
+    "chunk_manifest": "/external/vectors/chunk_manifest.json",
+    "source_checkpoint": "/external/vectors/embedding_recovery_state.sqlite3",
     "run_root": "/runs",
     "lock_root": "/run/kag-locks"
   },
@@ -27,7 +27,7 @@
   "heartbeat_seconds": 5,
   "write_mode": "DENY",
   "vector_policy": "replay-existing",
-  "model_identity": "https://api.vilao.ai/v1|dg/text-embedding-3-large",
+  "model_identity": "https://embedding.example/v1|emb/text-embedding-3-large",
   "embedding_model": null,
   "fallback_config": {
     "enabled": true,

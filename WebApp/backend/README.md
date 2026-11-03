@@ -55,10 +55,10 @@ Ba vai trò: `ADMIN` toàn quyền; `POLICE` quản lý nội dung luật, câu 
 
 ## Schema và KAG
 
-Maven đóng gói [schema_contract.json](../../kag/schema/schema_contract.json) và [VietRoadTraffic.schema](../../kag/schema/VietRoadTraffic.schema), backend kiểm schema hash. Không duy trì schema Java riêng; đổi contract/schema cần build lại backend.
+Maven đóng gói [schema_contract.json](../../kag/schema/schema_contract.json) và [VietRoadTraffic.schema](../../kag/schema/VietRoadTraffic.schema) qua cấu hình resource trong pom; backend kiểm schema hash. Không duy trì schema Java riêng; đổi contract/schema cần build lại backend.
 
-[KagClient](src/main/java/vn/luatgt/integration/KagClient.java) gọi Python query/inspection; query, inspection, Builder dùng token files riêng. Browser chỉ giữ JWT WebApp. Cấu hình endpoint/release/snapshot/mạng theo [Docker](../../docker/README.md#cấu-hình-chatbot); Compose không publish KAG cho Java host.
+[KagClient](src/main/java/vn/luatgt/integration/KagClient.java) gọi Python query/inspection; query, inspection, Builder dùng token files riêng. Browser giữ JWT WebApp và phiên đăng nhập OpenSPG native trên cùng hostname. Java chỉ chuyển cookie OpenSPG đúng tên tới Worker khi đọc catalog/chọn target/preflight/Build/Resume; không lưu session hoặc chuyển JWT WebApp cho OpenSPG. Cấu hình endpoint/release/snapshot/mạng theo [Docker](../../docker/README.md#cấu-hình-chatbot); Compose không publish KAG cho Java host.
 
 Hợp đồng request/citations/SSE và phân biệt `KAG_ABSTAINED`/`UNAVAILABLE` nằm tại [kiến trúc](../../docs/architecture.md#hợp-đồng-http-và-chính-sách-tương-thích). Không bỏ validation nguồn/publication để ép success.
 
-Builder status/Build/Stop/Resume gọi Worker bằng control token, chịu policy/identity/lock. Mặc định bị chặn, production WRITE chưa mở, Delete không hỗ trợ. Backend không điều khiển Docker hoặc chạy benchmark. [Runner](../../docs/runner.md#điều-khiển-từ-pipeline-admin) là hướng dẫn bảo trì.
+Builder catalog/config/status/structure/selection/preflight/Build/Stop/Resume/Abandon/clear gọi Worker bằng control token, chịu quyền ADMIN/OpenSPG và kiểm nguồn/identity/lock. UI chọn project theo ID; preview chỉ đọc, apply cần xác nhận và revision hiện hành. Bỏ phiên giữ graph; xóa dữ liệu cần quyền riêng theo project/physical database, không áp dụng cho serving hoặc database dùng chung. Backend không điều khiển Docker hoặc chạy benchmark. [Runner](../../docs/runner.md#dựng-đồ-thị-qua-5-bước) giữ hướng dẫn; Builder hoàn tất không kích hoạt Chat.

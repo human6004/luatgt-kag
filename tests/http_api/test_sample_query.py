@@ -47,7 +47,7 @@ class SampleQueryTests(unittest.TestCase):
             with self.assertRaises(Exception):ProviderBudget(self.path,embedding_url='https://a/embeddings',
                 embedding_model='a',chat_url='https://b/chat/completions',chat_model='b',limits=limits)
 
-    def test_response_version_requires_pinned_route_and_arbitrary_echo_denies(self):
+    def test_response_version_requires_applied_test_or_pinned_route_and_arbitrary_echo_denies(self):
         from types import SimpleNamespace
         route=dict(schema='h1-proxy-routing-1.0',requested_model=self.module.CHAT_MODEL,
             response_version='gemini-3.8-flash-n',upstream='https://daily-cloudcode-pa.googleapis.com/v1internal:generateContent',
@@ -61,6 +61,10 @@ class SampleQueryTests(unittest.TestCase):
         self.assertFalse(self.module.response_model_matches(settings,'arbitrary'))
         route['requested_model']='other'
         with self.assertRaises(Exception):self.module.response_model_matches(settings,'gemini-3.8-flash-n')
+        settings.development_policy=None
+        settings.chat_response_model='tested-response-model'
+        self.assertTrue(self.module.response_model_matches(settings,'tested-response-model'))
+        self.assertFalse(self.module.response_model_matches(settings,'arbitrary'))
 
     def test_development_unlimited_preserves_consumed_ledger_and_binding(self):
         old=self.budget();old.reserve('embedding');old.reserve('chat')
@@ -114,6 +118,12 @@ class SampleQueryTests(unittest.TestCase):
                         raw.replace(b'dg/text-embedding-3-large',b'other')):
             with self.assertRaises(Exception):self.module.load_cache(invalid,hashlib.sha256(invalid).hexdigest())
         with self.assertRaises(Exception):self.module.load_cache(raw,'0'*64)
+        selected=raw.replace(b'dg/text-embedding-3-large',b'emb/text-embedding-3-large')
+        selected_hash=hashlib.sha256(selected).hexdigest()
+        with self.assertRaises(Exception):self.module.load_cache(selected,selected_hash)
+        cache=self.module.load_cache(selected,selected_hash,model='emb/text-embedding-3-large')
+        self.assertEqual(cache['model'],'emb/text-embedding-3-large')
+        self.assertEqual(cache['vector'],vector)
 
 
 class SampleQueryProofTests(unittest.TestCase):
@@ -123,7 +133,7 @@ class SampleQueryProofTests(unittest.TestCase):
         from test_sample_serving import SampleFixture,SECRETS
         from kag.http_api import artifacts,runtime
         root=Path(self.temp.name)/'release';root.mkdir()
-        self.fx=SampleFixture(root)
+        self.fx=SampleFixture(root,model_identity=self.module.EMBEDDING_URL+'|'+self.module.EMBEDDING_MODEL)
         self.fx.descriptor['webapp_snapshot_id']='synthetic-webapp'
         self.fx.seal(publication=True)
         self.fx.release=artifacts.load_release(self.fx.root,'synthetic-release')
@@ -162,6 +172,14 @@ class SampleQueryProofTests(unittest.TestCase):
         for _ in range(4):budget.reserve('chat')
         with self.assertRaises(Exception):self.load()
         self.assertEqual(self.load(capability='retrieve')[2].counts()['chat'],4)
+
+    def test_embedding_consumer_identity_matches_sealed_vector_provenance(self):
+        from kag.http_api import artifacts
+        identity=self.settings.embedding_url+'|'+self.settings.embedding_model
+        artifacts._verify_sample_provenance(self.fx.root,model_identity=identity)
+        with self.assertRaises(artifacts.ArtifactFailure):
+            artifacts._verify_sample_provenance(self.fx.root,model_identity=identity+'-different-model')
+        self.assertEqual(self.budget().counts(),{'embedding':0,'chat':0})
 
     def test_identity_fingerprint_caps_and_pins_deny_before_provider(self):
         for key,value in (('database_id','other'),('release_descriptor_sha256','0'*64),('graph_fingerprint','0'*64),
@@ -309,7 +327,7 @@ class SampleQueryProofTests(unittest.TestCase):
              patch.object(self.module.httpx,'AsyncHTTPTransport',side_effect=lambda **kw:httpx.MockTransport(reply)), \
              patch.object(runtime,'_new_embedding',side_effect=AssertionError('Exact cached query must not embed')):
             asyncio.run(exercise())
-        self.assertEqual(seen,[1,2,3,4,5]);self.assertEqual(self.budget().counts(),{'embedding':0,'chat':5})
+        self.assertEqual(seen,[1,2,3,4]);self.assertEqual(self.budget().counts(),{'embedding':0,'chat':4})
         metadata=json.loads(Path('/tmp/sample-provider-responses.json').read_bytes())
         self.assertTrue(metadata)
         self.assertTrue(all('content' not in row for row in metadata))
