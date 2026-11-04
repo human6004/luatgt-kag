@@ -17,7 +17,8 @@ public class KagController {
     @PostMapping("/admin/kag/serving/{action:preview|activate}") org.springframework.http.ResponseEntity<JsonNode> servingAction(
             @PathVariable String action,@RequestBody JsonNode change,@RequestParam Map<String,String> parameters) {
         if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Kích hoạt đồ thị không nhận tham số tùy ý");
-        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.servingAction(action,change));
+        var result=infrastructure.servingAction(action,change);
+        return org.springframework.http.ResponseEntity.status(result.path("contract_version").asText().equals("builder-serving-operation-v1")?202:200).cacheControl(org.springframework.http.CacheControl.noStore()).body(result);
     }
     @GetMapping("/admin/kag/config") org.springframework.http.ResponseEntity<JsonNode> configuration(
             @RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {

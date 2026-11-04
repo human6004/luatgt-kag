@@ -2,8 +2,16 @@ import { api, send, ApiError } from '../../api.ts'
 
 export type ServingSelection = { release_id: string; project_id: number; project_name: string; database: string; database_id: string; namespace: string; run_id: string; preview_id: string }
 export type ServingRun = { run_id: string; project_id: number; project_name: string; database: string; namespace: string; nodes: number; edges: number; vectors: number; dimension: number; model_identity: string; partial: boolean }
-export type ServingCatalog = { contract_version: 'builder-serving-v1'; active: ServingSelection | null; busy: boolean; runs: ServingRun[]; runtime_ready: boolean; chat_blockers: string[] }
-export type ServingPreview = { release_id: string; project_id: number; project_name: string; database: string; database_id: string; namespace: string; run_id: string; preview_id: string; counts: { nodes: number; edges: number; vectors: number }; dimension: number; partial: boolean; embedding: { base_url: string; model: string }; chat: { base_url: string; model: string } | null; previous: ServingSelection | null; chat_ready: boolean; chat_blockers: string[]; status?: 'ACTIVE' }
+export type ServingOperation = { contract_version: 'builder-serving-operation-v1'; state: 'NOT_RUN' | 'PREPARING' | 'COMPLETE' | 'FAILED' | 'INTERRUPTED'; project_id: number | null; run_id: string | null; code: string | null; result: ServingPreview | null }
+export type ServingCatalog = { contract_version: 'builder-serving-v1'; active: ServingSelection | null; busy: boolean; runs: ServingRun[]; runtime_ready: boolean; chat_blockers: string[]; operation?: ServingOperation | null }
+export type ServingPreview = { release_id: string; project_id: number; project_name: string; database: string; database_id: string; namespace: string; run_id: string; preview_id: string; counts: { nodes: number; edges: number; vectors: number }; dimension: number; partial: boolean; embedding: { base_url: string; model: string }; chat: { base_url: string; model: string } | null; previous: ServingSelection | null; chat_ready: boolean; chat_blockers: string[]; preparation_required?: boolean; status?: 'ACTIVE' }
+function validateServingOperation(value: ServingOperation): ServingOperation {
+  if (!shape(value,['contract_version','state','project_id','run_id','code','result']) || value.contract_version !== 'builder-serving-operation-v1' || !['NOT_RUN','PREPARING','COMPLETE','FAILED','INTERRUPTED'].includes(value.state) ||
+    (value.state === 'NOT_RUN' ? value.project_id !== null || value.run_id !== null : !Number.isInteger(value.project_id) || value.project_id! < 1 || typeof value.run_id !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value.run_id)) ||
+    (['FAILED','INTERRUPTED'].includes(value.state) ? typeof value.code !== 'string' || !/^[A-Z_]{1,64}$/.test(value.code) : value.code !== null) ||
+    (value.state === 'COMPLETE' ? value.result?.status !== 'ACTIVE' || value.result.project_id !== value.project_id || value.result.run_id !== value.run_id || !/^[0-9a-f]{64}$/.test(value.result.preview_id) : value.result !== null)) throw new ApiError('Trạng thái chuẩn bị đồ thị không hợp lệ',502)
+  return value
+}
 export const servingReasons: Record<string, string> = {
   GRAPH_REQUIRED: 'Chọn một đồ thị rồi bấm Dùng cho Chat.',
   SOURCE_MISSING: 'Bản nguồn của đồ thị chưa đầy đủ. Chọn lại phiên dựng và kiểm tra nguồn đi kèm.',
@@ -19,6 +27,7 @@ export async function loadServing(signal?: AbortSignal): Promise<ServingCatalog>
     typeof value.busy !== 'boolean' || typeof value.runtime_ready !== 'boolean' || value.runs.some(row => !Number.isInteger(row.project_id) ||
       typeof row.run_id !== 'string' || !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(row.namespace) ||
       [row.nodes, row.edges, row.vectors, row.dimension].some(n => !Number.isInteger(n) || n < 0))) throw new ApiError('Trạng thái đồ thị phục vụ không hợp lệ', 502)
+  if (value.operation != null) validateServingOperation(value.operation)
   return value
 }
 export type PackageModel = { provider: string; model: string; dimension: number }
@@ -87,8 +96,16 @@ export async function exportBuilderPackage(project_id: number, run_id: string): 
   if (!count(project_id, 2147483647) || project_id < 1 || typeof run_id !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(run_id)) throw new ApiError('Project hoặc phiên xuất không hợp lệ', 400)
   return validatePackageExport(await api<BuilderPackageExport>('/admin/kag/builder/packages/export', send('POST', { project_id, run_id })))
 }
-export async function changeServing(action: 'preview' | 'activate', project_id: number, run_id: string, preview_id?: string): Promise<ServingPreview> {
-  const value = await api<ServingPreview>(`/admin/kag/serving/${action}`, send('POST', { project_id, run_id, ...(action === 'activate' ? { preview_id } : {}) }))
+export function changeServing(action: 'preview', project_id: number, run_id: string): Promise<ServingPreview>
+export function changeServing(action: 'activate', project_id: number, run_id: string, preview_id: string): Promise<ServingPreview | ServingOperation>
+export async function changeServing(action: 'preview' | 'activate', project_id: number, run_id: string, preview_id?: string): Promise<ServingPreview | ServingOperation> {
+  const raw = await api<ServingPreview | ServingOperation>(`/admin/kag/serving/${action}`, send('POST', { project_id, run_id, ...(action === 'activate' ? { preview_id } : {}) }))
+  if ('contract_version' in raw && raw.contract_version === 'builder-serving-operation-v1') {
+    const operation=validateServingOperation(raw)
+    if (action !== 'activate' || operation.project_id !== project_id || operation.run_id !== run_id || operation.state !== 'PREPARING') throw new ApiError('Thao tác không thuộc đồ thị đang chọn',502)
+    return operation
+  }
+  const value=raw as ServingPreview
   if (value.project_id !== project_id || value.run_id !== run_id || !/^[0-9a-f]{64}$/.test(value.preview_id) ||
     !Array.isArray(value.chat_blockers) || action === 'activate' && value.status !== 'ACTIVE') throw new ApiError('Chưa xác nhận được kết quả; tải lại trạng thái trước khi thao tác tiếp', 502)
   return value

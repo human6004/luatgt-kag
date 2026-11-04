@@ -702,20 +702,40 @@ def create_app(*, control=None, token=None, state_dir=None):
         if request.query_params:raise ApiFailure('INVALID_REQUEST')
 
     serving_busy=False
+    serving_path=Path(state_dir)/'serving.json' if state_dir else None
+    serving_result=dict(contract_version='builder-serving-operation-v1',state='NOT_RUN',project_id=None,run_id=None,code=None,result=None)
+    if serving_path and serving_path.exists():
+        try:
+            saved=json.loads(serving_path.read_bytes())
+            if (type(saved) is not dict or set(saved)!=set(serving_result)
+                    or saved['contract_version']!=serving_result['contract_version']
+                    or saved['state'] not in ('NOT_RUN','PREPARING','COMPLETE','FAILED','INTERRUPTED')):raise ValueError
+            serving_result=saved
+            if serving_result['state']=='PREPARING':
+                serving_result=dict(serving_result,state='INTERRUPTED',code='NOT_READY')
+                atomic_json(serving_path,serving_result)
+        except (OSError,ValueError,TypeError):serving_result.update(state='FAILED',code='INTEGRITY')
+
+    def store_serving(value):
+        nonlocal serving_result
+        if serving_path:atomic_json(serving_path,value)
+        serving_result=value
 
     @app.get('/v1/serving')
     async def serving_catalog(request: Request):
         serving_auth(request)
         from kag.builder.serving import runs,active_selection
         try:
+            rows=await asyncio.to_thread(runs,session_token(request))
+            operation=serving_result if any(row['project_id']==serving_result['project_id'] for row in rows) else None
             return dict(contract_version='builder-serving-v1',active=await asyncio.to_thread(active_selection),busy=serving_busy,
-                runs=await asyncio.to_thread(runs,session_token(request)))
+                runs=rows,operation=copy.deepcopy(operation))
         except (ProjectCatalogError,RunBlocked) as error:
             raise HTTPException(409,error.code) from None
 
     @app.post('/v1/serving/{action}')
     async def serving_action(action: str,request: Request):
-        nonlocal serving_busy
+        nonlocal serving_busy,source_task
         if action not in ('preview','activate','deactivate','read','trial'):raise ApiFailure('INVALID_REQUEST')
         serving_auth(request,write=action in ('preview','activate','deactivate'))
         from kag.builder.serving import prepare,fixed_read,trial,deactivate
@@ -725,6 +745,25 @@ def create_app(*, control=None, token=None, state_dir=None):
         if action!='read':serving_busy=True
         try:
             body=json.loads(await bounded_body(request,limit=32*1024*1024 if action!='read' else 256*1024))
+            if action=='activate':
+                if (type(body) is not dict or set(body)!={'project_id','run_id','preview_id'}
+                        or type(body['project_id']) is not int or not 1<=body['project_id']<=2147483647
+                        or not isinstance(body['run_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,127}',body['run_id'])
+                        or not isinstance(body['preview_id'],str) or not re.fullmatch('[0-9a-f]{64}',body['preview_id'])):raise ApiFailure('INVALID_REQUEST')
+                if not structure_idle():raise ApiFailure('CONFIG_BUSY')
+                token=session_token(request)
+                store_serving(dict(serving_result,state='PREPARING',project_id=body['project_id'],run_id=body['run_id'],code=None,result=None))
+                async def activate():
+                    nonlocal serving_busy
+                    try:
+                        result=await asyncio.to_thread(prepare,body,token,activate=True)
+                        store_serving(dict(serving_result,state='COMPLETE',result=result))
+                    except Exception as error:
+                        code=error.code if isinstance(error,(ApiFailure,ProjectCatalogError,RunBlocked)) else 'NOT_READY'
+                        store_serving(dict(serving_result,state='FAILED',code=code))
+                    finally:serving_busy=False
+                source_task=asyncio.create_task(activate())
+                return JSONResponse(copy.deepcopy(serving_result),status_code=202)
             value=(await asyncio.to_thread(trial,body,session_token(request)) if action=='trial' else
                 await asyncio.to_thread(fixed_read,body) if action=='read' else
                 await asyncio.to_thread(deactivate,body,session_token(request)) if action=='deactivate' else
@@ -735,7 +774,7 @@ def create_app(*, control=None, token=None, state_dir=None):
         except ApiFailure:raise
         except Exception:raise ApiFailure('NOT_READY') from None
         finally:
-            if action!='read':serving_busy=False
+            if action!='read' and not (action=='activate' and serving_result['state']=='PREPARING'):serving_busy=False
 
     @app.get('/v1/builder/projects')
     async def projects(request: Request):

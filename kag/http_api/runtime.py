@@ -1118,7 +1118,7 @@ class RuntimeSupervisor:
     def apply_llm_config(self, role, revision, settings, release, policy):
         from .provider_budget import BudgetError, provider_route
         self._llm_revision(role, revision)
-        if self.busy or self.closed or self.draining or self._provider_test_task:
+        if self.busy or self.closed or self.draining or self._provider_test_task or self._serving_action:
             raise ApiFailure('CONFIG_BUSY')
         updated = deepcopy(self._llm_config)
         tested = updated['tested'][role]

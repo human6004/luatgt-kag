@@ -98,6 +98,27 @@ class KagClientTest {
         }
     }
     KagClient client(Fixture f) { return client(f,Map.of(),null); }
+    @Test void servingActivationAcceptsBackgroundStateAndRejectsWrongTarget() throws Exception {
+        try(var f=new Fixture()) {
+            var operation=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree("""
+                {"contract_version":"builder-serving-operation-v1","state":"PREPARING","project_id":2,"run_id":"build-fixture","code":null,"result":null}
+                """);
+            f.server.createContext("/v1/serving/activate",exchange->{
+                assertEquals("Bearer "+TOKEN,exchange.getRequestHeaders().getFirst("Authorization"));
+                f.received=json.readTree(exchange.getRequestBody().readAllBytes());
+                byte[] bytes=operation.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().set("Content-Type","application/json");exchange.sendResponseHeaders(202,bytes.length);
+                try(var out=exchange.getResponseBody()){out.write(bytes);}
+            });
+            var client=client(f,Map.of("app.kag-config-apply-token-file",secret.toString()),null);
+            var change=json.createObjectNode().put("project_id",2).put("run_id","build-fixture").put("preview_id","a".repeat(64));
+            assertEquals(operation,client.serving("activate",change,null));assertEquals(change,f.received);
+            operation.put("project_id",3);
+            assertEquals(503,assertThrows(ResponseStatusException.class,()->client.serving("activate",change,null)).getStatusCode().value());
+            operation.put("project_id",2).put("state","COMPLETE");
+            assertEquals(503,assertThrows(ResponseStatusException.class,()->client.serving("activate",change,null)).getStatusCode().value());
+        }
+    }
     @Test void failedQueryReportsSafeRemoteIdentityAndStage(CapturedOutput output) throws Exception {
         try(var f=new Fixture()) {
             f.status=503;

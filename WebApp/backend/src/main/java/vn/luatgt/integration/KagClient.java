@@ -137,6 +137,11 @@ public class KagClient {
             String session=openSpgSession();if(session!=null)request.header("X-OpenSPG-Session",session);
             return request.header(HttpHeaders.AUTHORIZATION,"Bearer "+token).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
                 var body=inspectionBody(res,token);
+                if(!read&&!deactivate&&action.equals("activate")&&res.getStatusCode().value()==202) {
+                    validateServingOperation(body);
+                    if(!body.path("state").asText().equals("PREPARING")||!body.path("project_id").equals(change.path("project_id"))||!body.path("run_id").equals(change.path("run_id")))throw new IOException();
+                    return body;
+                }
                 if(res.getStatusCode().value()!=200) {
                     String code=errorCode(body);
                     String reason=switch(code) {
@@ -152,6 +157,7 @@ public class KagClient {
                 if(read) {
                     if(!body.path("contract_version").asText().equals("builder-serving-v1")||!body.path("runs").isArray()||
                         !body.path("busy").isBoolean()||!body.path("runtime_ready").isBoolean()||!body.path("chat_blockers").isArray())throw new IOException();
+                    if(body.hasNonNull("operation"))validateServingOperation(body.path("operation"));
                 } else if(deactivate) {
                     if(!fields(body).equals(Set.of("project_id","database_id","status"))||!body.path("status").asText().equals("INACTIVE")||
                         !body.path("project_id").equals(change.path("project_id"))||!body.path("database_id").equals(change.path("database_id")))throw new IOException();
@@ -161,6 +167,15 @@ public class KagClient {
             });
         } catch(ResponseStatusException e) {throw e;}
         catch(Exception e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Chưa xác nhận được trạng thái đồ thị phục vụ; tải lại trước khi thao tác tiếp");}
+    }
+    private void validateServingOperation(JsonNode body) throws IOException {
+        String state=body.path("state").asText();
+        if(!fields(body).equals(Set.of("contract_version","state","project_id","run_id","code","result"))||
+            !body.path("contract_version").asText().equals("builder-serving-operation-v1")||!Set.of("NOT_RUN","PREPARING","COMPLETE","FAILED","INTERRUPTED").contains(state)||
+            (state.equals("NOT_RUN")?!body.path("project_id").isNull()||!body.path("run_id").isNull():!bounded(body.path("project_id"),1,Integer.MAX_VALUE)||!body.path("run_id").asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}"))||
+            (Set.of("FAILED","INTERRUPTED").contains(state)?!body.path("code").asText().matches("[A-Z_]{1,64}"):!body.path("code").isNull()))throw new IOException();
+        var result=body.path("result");
+        if(state.equals("COMPLETE")? !result.path("status").asText().equals("ACTIVE")||!result.path("project_id").equals(body.path("project_id"))||!result.path("run_id").equals(body.path("run_id"))||!result.path("preview_id").asText().matches("[0-9a-f]{64}"):!result.isNull())throw new IOException();
     }
     public JsonNode checkBuilderReadiness() {return builderRequest("preflight",null);}
     public JsonNode builderStructure(String action,JsonNode change) {

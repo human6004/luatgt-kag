@@ -270,9 +270,14 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
         restore_serving(application)
         application.state.runtime_settings = application.state.runtime_supervisor.restore_llm_runtime(
             application.state.runtime_settings, application.state.serving_release, application.state.provider_test_policy)
+        if settings.secrets.query_tokens or settings.secrets.inspect_tokens:observe_serving()
         try:
             yield
         finally:
+            if application.state.serving_task is not None:
+                application.state.serving_task.cancel()
+                try:await application.state.serving_task
+                except asyncio.CancelledError:pass
             await application.state.runtime_supervisor.close()
 
     app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None, debug=False)
@@ -282,6 +287,8 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
     app.state.runtime_settings = None
     app.state.evaluation_root = None
     app.state.provider_test_policy = None
+    app.state.serving_task = None
+    app.state.serving_pending = False
     from .inspection import configuration_view
     app.state.config_snapshot = configuration_view({}, {})
     app.state.solver_defaults = None
@@ -410,17 +417,47 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
     if not (settings.secrets.query_tokens or settings.secrets.inspect_tokens):
         return app
 
+    def reload_serving():
+        supervisor=app.state.runtime_supervisor
+        supervisor.load_llm_config(settings.secrets);restore_serving(app)
+        app.state.runtime_settings=supervisor.restore_llm_runtime(app.state.runtime_settings,
+            app.state.serving_release,app.state.provider_test_policy)
+        if getattr(supervisor,'_serving_uncertain',False):supervisor.closed=False
+        supervisor._serving_action=False;supervisor._serving_uncertain=False
+
+    async def watch_serving():
+        from .runtime import LLM_CONFIG_PATH
+        from kag.builder.serving import model_store
+        supervisor=app.state.runtime_supervisor
+        while True:
+            try:
+                if not app.state.serving_pending and LLM_CONFIG_PATH.exists():
+                    saved=(await asyncio.to_thread(model_store))._llm_config
+                    if app.state.serving_pending:continue
+                    status=Path(os.environ.get('KAG_BUILDER_STATE_DIR','/builder-state'))/'serving.json'
+                    operation=artifacts._json(status.read_bytes()) if status.exists() else {}
+                    preparing=operation.get('state')=='PREPARING'
+                    if saved!=supervisor._llm_config or not preparing and (getattr(supervisor,'_serving_uncertain',False) or supervisor._serving_action):
+                        reload_serving()
+                    if preparing:supervisor._serving_action=True
+            except asyncio.CancelledError:raise
+            except Exception:
+                supervisor._serving_uncertain=True;supervisor.closed=True
+            await asyncio.sleep(1)
+
+    def observe_serving():
+        if app.state.serving_task is None or app.state.serving_task.done():
+            app.state.serving_task=asyncio.create_task(watch_serving())
+
     @app.get('/v1/serving')
     async def serving_catalog(request: Request):
         authorize(request_principal(request),'inspect',None)
         if request.query_params:raise ApiFailure('INVALID_REQUEST')
         supervisor=app.state.runtime_supervisor
         value=await asyncio.to_thread(worker_request,'',request)
-        if getattr(supervisor,'_serving_uncertain',False) and not value['busy']:
-            supervisor.load_llm_config(settings.secrets);restore_serving(app)
-            app.state.runtime_settings=supervisor.restore_llm_runtime(app.state.runtime_settings,
-                app.state.serving_release,app.state.provider_test_policy)
-            supervisor.closed=False;supervisor._serving_action=False;supervisor._serving_uncertain=False
+        if not value['busy']:
+            if not app.state.serving_pending and (getattr(supervisor,'_serving_uncertain',False) or value['active']!=(supervisor._llm_config or {}).get('serving')):
+                reload_serving()
         release=app.state.serving_release
         from kag.builder.serving import chat_blockers
         blockers=chat_blockers(release) if type(release) is artifacts.ServingRelease and release.release_kind=='PRODUCTION' else ['GRAPH_REQUIRED']
@@ -438,22 +475,29 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
         supervisor=app.state.runtime_supervisor
         if (action!='deactivate' and supervisor.busy) or supervisor._provider_test_task or supervisor._serving_action:raise ApiFailure('CONFIG_BUSY')
         supervisor._serving_action=True
+        app.state.serving_pending=True
+        observe_serving()
         async def operation():
+            accepted=False
             try:
-                return await asyncio.to_thread(worker_request,'/'+action,request,body)
+                value=await asyncio.to_thread(worker_request,'/'+action,request,body)
+                if action=='activate' and value.get('contract_version')=='builder-serving-operation-v1':
+                    if value.get('state')!='PREPARING':raise ApiFailure('NOT_READY')
+                    accepted=True
+                    return JSONResponse(value,status_code=202)
+                return value
             except ApiFailure:raise
             except (Exception,asyncio.CancelledError):
                 supervisor._serving_uncertain=True;supervisor.closed=True
                 raise ApiFailure('BACKEND_UNAVAILABLE') from None
             finally:
-                if not getattr(supervisor,'_serving_uncertain',False):
-                    supervisor.load_llm_config(settings.secrets);restore_serving(app)
-                    app.state.runtime_settings=supervisor.restore_llm_runtime(app.state.runtime_settings,
-                        app.state.serving_release,app.state.provider_test_policy)
-                    supervisor._serving_action=False
+                app.state.serving_pending=False
+                if not accepted and not getattr(supervisor,'_serving_uncertain',False):reload_serving()
         try:return await operation() if action=='deactivate' else await supervisor.supervise(operation,time.monotonic()+180)
         except Exception:
-            if not supervisor.busy and not getattr(supervisor,'_serving_uncertain',False):supervisor._serving_action=False
+            if not supervisor.busy:
+                app.state.serving_pending=False
+                if not getattr(supervisor,'_serving_uncertain',False):supervisor._serving_action=False
             raise
 
     @app.post('/v1/serving/trial/{project_id}/{run_id}')
