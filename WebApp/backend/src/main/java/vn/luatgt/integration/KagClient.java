@@ -271,8 +271,13 @@ public class KagClient {
                             "Chưa tìm được duy nhất một model OpenSPG khớp. Mở OpenSPG để tạo đồ thị rồi tải lại danh sách":
                             "Chưa tạo được đồ thị. Tải lại danh sách hoặc kiểm tra OpenSPG trước khi thử tiếp");
                     }
-                    if("selection".equals(action)&&inspectionBody(res,token).path("detail").asText().equals("BUILDER_SELECTION_INVALID"))
-                        throw new ResponseStatusException(HttpStatus.CONFLICT,"Phạm vi quá nhỏ để giữ đủ loại, quan hệ và nguồn liên quan. Tăng giới hạn rồi xem trước lại");
+                    if("selection".equals(action)) {
+                        String selectionCode=inspectionBody(res,token).path("detail").asText();
+                        if(selectionCode.equals("BUILDER_SELECTION_INVALID"))
+                            throw new ResponseStatusException(HttpStatus.CONFLICT,"Phạm vi quá nhỏ để giữ đủ loại, quan hệ và nguồn liên quan. Tăng giới hạn rồi xem trước lại");
+                        if(selectionCode.equals("BUILDER_SELECTION_STALE"))
+                            throw new ResponseStatusException(HttpStatus.CONFLICT,"Phiên dựng trước chưa kết thúc");
+                    }
                     throw new ResponseStatusException(HttpStatus.CONFLICT,"Builder đang bận hoặc thao tác chưa an toàn; hãy tải lại trạng thái");
                 }
                 if(code==422)throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Yêu cầu Builder không hợp lệ");

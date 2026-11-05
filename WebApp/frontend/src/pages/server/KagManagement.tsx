@@ -65,7 +65,7 @@ function builderIssue(code: string | null) {
     INTEGRITY: 'Dữ liệu nguồn hoặc điểm lưu đã thay đổi. Kiểm tra đúng phiên bản dữ liệu rồi tải lại.',
     PLAN: 'Dữ liệu nguồn hoặc phạm vi không khớp gói đã chọn. Chọn đúng gói rồi tải lại.',
     PROVENANCE: 'Thông tin nguồn của dữ liệu tìm kiếm không khớp. Kiểm tra gói và model trước khi thử lại.',
-    VECTORS: 'Chưa đủ dữ liệu tìm kiếm cho phạm vi đã chọn. Kiểm tra lần dựng hoặc gói đã chọn rồi thử lại.',
+    VECTORS: 'Dịch vụ embedding đang lỗi. Bấm Tiếp tục khi dịch vụ hoạt động lại.',
     PROVIDER_BUDGET: 'Đã chạm giới hạn gọi dịch vụ của lần dựng. Tiếp tục không làm mới hạn mức; kiểm tra chi phí trước khi dựng lại.',
     INTERRUPTED: 'Tiến độ đã được lưu. Bấm Tiếp tục để kiểm tra và tiếp tục lần dựng này.',
     RUNTIME: 'Dịch vụ dựng gặp lỗi. Tải lại trạng thái hoặc nhờ quản trị kiểm tra.',
@@ -78,6 +78,7 @@ type LibraryRun = ServingCatalog['runs'][number]
 export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
   const [parameters, setParameters] = useSearchParams()
   const [catalog, setCatalog] = useState<BuilderProjects>()
+  const [projectData, setProjectData] = useState<Record<number, 'EMPTY' | 'OCCUPIED' | 'UNAVAILABLE'>>({})
   const [serving, setServing] = useState<ServingCatalog>()
   const [config, setConfig] = useState<BuilderConfiguration>()
   const [status, setStatus] = useState<BuilderStatus>()
@@ -104,6 +105,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     : scope === 'ALL' ? { mode: 'ALL', value: null } : { mode: 'PERCENT', value: Number(percent) }
   const requestKey = JSON.stringify(requestedScope)
   const building = status && ['RUNNING', 'STOPPING', 'STOPPED'].includes(status.state)
+  const running = status && ['RUNNING', 'STOPPING'].includes(status.state)
   const clearing = clearState && ['APPLYING','PARTIAL','INTERRUPTED'].includes(clearState.state)
   useEffect(() => {
     setWaitSeconds(0)
@@ -134,6 +136,21 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     void refresh()
     return () => { controller.abort(); clearTimeout(timer) }
   }, [busy, version])
+  useEffect(() => {
+    if (!mode) return
+    const controller = new AbortController()
+    setProjectData({})
+    // Take one snapshot on open; library polling must not scan every project again.
+    for (const row of catalog?.projects.filter(row => row.state === 'AVAILABLE') ?? []) {
+      loadGraphProject(row.project_id, controller.signal).then(graph => {
+        if (!controller.signal.aborted) setProjectData(current => ({ ...current,
+          [row.project_id]: graph.counts.nodes || graph.counts.edges ? 'OCCUPIED' : 'EMPTY' }))
+      }).catch(() => {
+        if (!controller.signal.aborted) setProjectData(current => ({ ...current, [row.project_id]: 'UNAVAILABLE' }))
+      })
+    }
+    return () => controller.abort()
+  }, [mode])
   useEffect(() => {
     if (!mode) return
     const controller = new AbortController()
@@ -180,7 +197,11 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
         const value = await previewBuilderSelection(config!.revision, requestedScope, controller.signal)
         if (id === choosing.current) setSelection(value)
       } catch (failure) {
-        if (id === choosing.current) { setError('Chưa đọc được phạm vi dữ liệu. Kiểm tra dữ liệu nguồn rồi tải lại.'); setDetailError(inspectionError(failure)) }
+        if (id === choosing.current) {
+          const detail = inspectionError(failure)
+          setError(detail === 'Phiên dựng trước chưa kết thúc' ? detail : 'Chưa đọc được phạm vi dữ liệu. Kiểm tra dữ liệu nguồn rồi tải lại.')
+          setDetailError(detail)
+        }
       } finally { if (id === choosing.current) setSourceLoading(false) }
     }
     return () => { choosing.current++; controller.abort(); clearTimeout(delay) }
@@ -244,8 +265,8 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
   function closeView() { setView(undefined); const next = new URLSearchParams(parameters); ['project_id','run_id','verify_run','bstep'].forEach(key => next.delete(key)); setParameters(next, { replace: true }) }
   return <section id="graph-library" className="space-y-5 mt-6" aria-label="Đồ thị">
     <div className="flex flex-wrap items-center justify-between gap-3"><h2 className="text-xl font-semibold">Đồ thị</h2><div className="flex flex-wrap gap-3">
-      <Button variant="primary" disabled={busy || serving?.busy || !!building || !!clearing || !!readError || !config} onClick={() => openFlow('build')}>+ Dựng đồ thị mới</Button>
-      <Button disabled={busy || serving?.busy || !!building || !!clearing || !!readError || !config} onClick={() => openFlow('import')}>+ Nhập từ gói</Button>
+      <Button variant="primary" disabled={busy || serving?.busy || !!running || !!clearing || !!readError || !config} onClick={() => openFlow('build')}>+ Dựng đồ thị mới</Button>
+      <Button disabled={busy || serving?.busy || !!running || !!clearing || !!readError || !config} onClick={() => openFlow('import')}>+ Nhập từ gói</Button>
       <Button disabled={busy} onClick={refresh}>Tải lại danh sách</Button>
     </div></div>
     <Card title={serving?.active ? `Đang dùng cho Chat: ${serving.active.project_name}` : 'Chưa chọn đồ thị'} right={<Button onClick={() => document.getElementById('graph-table')?.focus()}>Chọn đồ thị</Button>}>
@@ -287,7 +308,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
         <details open={fallback || !!projectId}><summary className="underline cursor-pointer">Dùng đồ thị trống đã có trong OpenSPG</summary><div className="space-y-3 mt-3">
           <p>Nếu chưa ánh xạ được model, tạo đồ thị trong OpenSPG rồi tải lại danh sách để chọn.</p>
           <div className="flex gap-3">{config?.links?.openspg && <a className="underline" target="_blank" rel="noreferrer" href={config.links.openspg}>Mở OpenSPG</a>}<Button disabled={busy} onClick={refresh}>Tải lại danh sách</Button></div>
-          <Field label="Đồ thị trống"><select className={inputCls} value={projectId} disabled={busy} onChange={event => setProjectId(event.target.value)}><option value="">Tạo đồ thị mới theo tên trên</option>{catalog?.projects.filter(row => row.state === 'AVAILABLE').map(row => <option key={row.project_id} value={row.project_id}>{row.project_name}</option>)}</select></Field>
+          <Field label="Đồ thị trống"><select className={inputCls} value={projectId} disabled={busy} onChange={event => setProjectId(event.target.value)}><option value="">Tạo đồ thị mới theo tên trên</option>{catalog?.projects.filter(row => row.state === 'AVAILABLE').map(row => <option key={row.project_id} value={row.project_id} disabled={projectData[row.project_id] !== 'EMPTY'}>{row.project_name}{projectData[row.project_id] === 'OCCUPIED' ? ' — Đã có dữ liệu' : projectData[row.project_id] === 'UNAVAILABLE' ? ' — Chưa đọc được dữ liệu' : !projectData[row.project_id] ? ' — Đang đọc dữ liệu' : ''}</option>)}</select></Field>
         </div></details>
         {mode === 'import' ? <><p>Chép ZIP vào thư mục {packages?.directory ?? 'graph-packages'} rồi tải lại.</p><Field label="Gói đồ thị"><select className={inputCls} value={packageName} disabled={busy} onChange={event => setPackageName(event.target.value)}><option value="">Chọn gói</option>{packages?.packages.map(row => <option key={row.name} value={row.name} disabled={!row.compatible}>{row.compatible ? '✓' : '✗'} {row.name}</option>)}</select></Field>
           {packages?.packages.filter(row => !row.compatible).map(row => <p key={row.name}>{row.name}: {packageReason(row.reason)}</p>)}

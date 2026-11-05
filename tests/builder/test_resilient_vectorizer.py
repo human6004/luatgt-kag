@@ -139,13 +139,16 @@ class ResilientVectorizerTest(unittest.TestCase):
 
     def test_transient_exhaustion_is_bounded_and_unresolved(self):
         with pinned_boundary(FakeModel([ProviderError(503)] * 5)) as batch:
-            result = self.make(batch).run([node()])
-        self.assertFalse(result.complete)
-        self.assertEqual(result.provider_requests, 4)
-        self.assertEqual(self.delays, [2, 5, 10])
-        self.assertEqual(result.counts['failed_exhausted'], 1)
-        self.assertEqual(result.jobs[0]['attempt_count'], 4)
-        self.assertNotIn('SECRET', json.dumps(result.jobs))
+            engine = self.make(batch)
+            with self.assertRaises(self.code.RunBlocked) as caught:
+                engine.run([node()])
+        self.assertEqual(caught.exception.code, 'VECTORS')
+        self.assertEqual(engine.requests, 3)
+        self.assertEqual(self.delays, [2, 5])
+        job = engine._entry(next(engine._jobs([node()])))
+        self.assertEqual(job['status'], 'PENDING')
+        self.assertEqual(len(job['attempts']), 3)
+        self.assertNotIn('SECRET', json.dumps(job))
 
     def test_batch_400_isolates_and_single_success(self):
         provider = FakeModel([ProviderError(400), None, None])

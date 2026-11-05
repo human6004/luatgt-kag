@@ -641,6 +641,7 @@ export function inspectionError(error: unknown) {
   if (status === 504 || error instanceof Error && /\bQUERY_TIMEOUT\b/.test(error.message)) return 'Chưa kiểm tra xong. Hãy thử lại; chưa có kết luận về đồ thị hoặc model.'
   if (status === 502 && error instanceof ApiError && error.message === 'Danh sách nguồn vượt giới hạn 32 MiB; chưa thể xem hoặc nhập qua màn này') return error.message
   if (status === 409 && error instanceof ApiError && error.message === 'Đăng nhập lại OpenSPG và kiểm quyền sở hữu project') return error.message
+  if (status === 409 && error instanceof ApiError && ['BUILDER_SELECTION_STALE', 'Phiên dựng trước chưa kết thúc'].includes(error.message)) return 'Phiên dựng trước chưa kết thúc'
   return status === 401 ? 'Phiên đã hết hạn. Vui lòng đăng nhập lại.' : status === 403 ? 'Chỉ ADMIN được sử dụng chức năng này.' : status === 422 || status === 400 ? 'Yêu cầu truy xuất không hợp lệ.' : status === 0 ? 'Không kết nối được backend. Hãy thử lại.' : status === 503 ? 'Truy xuất KAG chưa khả dụng hoặc thiếu cấu hình dịch vụ.' : 'Phản hồi KAG chưa đủ bằng chứng hoặc không hợp lệ.'
 }
 export async function loadKagStatus(signal?: AbortSignal): Promise<KagStatus> {

@@ -338,7 +338,8 @@ class BuilderControl:
                     status['state'] in ('ABANDONED','CLEARED')
                     or
                     status['state'] == 'PASS' and status['stage'] == 'release'
-                    or status['state'] == 'ERROR' and status['error_code'] == 'INTERRUPTED')
+                    or status['state'] == 'ERROR' and (status['error_code'] == 'INTERRUPTED'
+                        or status['stage'] == 'vectorize' and status['error_code'] == 'VECTORS'))
                     for (status, uncertain, _), _ in records)
 
     def _directory(self, run_id):
@@ -372,12 +373,17 @@ class BuilderControl:
                 raise ValueError
             if any(datetime.fromisoformat(status[key].replace('Z','+00:00')).tzinfo is None for key in ('started_at','updated_at')):
                 raise ValueError
+            if not (self.thread is not None and self.thread.is_alive()):
+                if status['state']=='RUNNING':
+                    status=dict(status,state='ERROR',error_code='INTERRUPTED')
+                elif status['state']=='BLOCKED' and status['stage']=='vectorize' and status['error_code']=='VECTORS':
+                    status=dict(status,state='ERROR')
             rows = []
             for name in STAGES:
                 done = total = None
                 code = None
                 if name==status['stage'] and status['error_code']:
-                    state = 'STOPPED' if status['error_code']=='INTERRUPTED' else 'BLOCKED'
+                    state = 'STOPPED' if status['error_code']=='INTERRUPTED' or name=='vectorize' and status['error_code']=='VECTORS' else 'BLOCKED'
                     done,total,code = status['done'],status['total'],status['error_code']
                 elif name in stages:
                     state = 'COMPLETE'
@@ -451,16 +457,16 @@ class BuilderControl:
                         code = durable['error_code']
                         if uncertain:
                             raise RunBlocked(uncertain)
-                        if self.failed:
+                        if self.failed and not (durable['state']=='ERROR' and code in ('INTERRUPTED','VECTORS')):
                             raise RunBlocked(code or 'INTEGRITY')
                         if self.result is not None and durable == self.previous_status:
                             raise RunBlocked('SCOPE' if self.result == 2 else 'RUNTIME')
-                        if self.result == 2:
-                            state, code = 'BLOCKED', code or 'SCOPE'
-                        elif durable['state'] in ('ABANDONED','CLEARED'):
+                        if durable['state'] in ('ABANDONED','CLEARED'):
                             state = durable['state']
-                        elif durable['state'] == 'ERROR' and code == 'INTERRUPTED':
+                        elif durable['state'] == 'ERROR' and code in ('INTERRUPTED','VECTORS'):
                             state = 'STOPPED'
+                        elif self.result == 2:
+                            state, code = 'BLOCKED', code or 'SCOPE'
                         elif durable['state'] == 'PASS' and durable['stage'] == 'release':
                             state = 'COMPLETE'
                         else:
@@ -1106,7 +1112,9 @@ def create_app(*, control=None, token=None, state_dir=None):
                     or type(body['revision']) is not int):raise ValueError
             limit=selection_limit(source_result['nodes'],body['mode'],body['value'])
         except (ValueError,TypeError):raise ApiFailure('INVALID_REQUEST') from None
-        if (not structure_idle() or source_result['state']!='VALID'
+        if (source_task is not None and not source_task.done()
+                or control is not None and control.status()['state'] in ('RUNNING','STOPPING')
+                or source_result['state']!='VALID'
                 or body['revision']!=(setup['revision'] if setup else 0)):
             raise HTTPException(409,'BUILDER_SELECTION_STALE')
         source_task=asyncio.current_task()
@@ -1158,7 +1166,7 @@ def create_app(*, control=None, token=None, state_dir=None):
                 stages=[],timing=None,binding=None,result=None)
         result = await asyncio.to_thread(control.status)
         if state_dir and (not setup or configuration_view()['readiness']['state']!='READY'):
-            result['actions'].update(build=False,resume=False)
+            result['actions'].update(build=False,resume=bool(setup) and result['actions']['resume'])
         return result
 
     @app.get('/v1/builder/packages')

@@ -693,7 +693,8 @@ def _vectorize(config, state, verified, replay_path, factory, stop):
             if engine is None:
                 batch = None if replay_path else (factory or _provider)(config, verified)
                 engine = ResilientVectorizer(batch, model_identity=config['model_identity'], dimension=config['vector_dimensions'],
-                    checkpoint_path=state._owned_file('vectors.sqlite3'), embedding_fallback=config['fallback_config'])
+                    checkpoint_path=state._owned_file('vectors.sqlite3'), embedding_fallback=config['fallback_config'],
+                    stop_event=stop if isinstance(stop,threading.Event) else None)
                 adapter_call = engine._adapter_call
                 def counted_call(texts, timeout):
                     nonlocal budget_exhausted
@@ -713,6 +714,9 @@ def _vectorize(config, state, verified, replay_path, factory, stop):
                                         artifact_dimension=config['vector_dimensions'], artifact_jobs=jobs)
             try:
                 result = engine.run(originals); result.require_complete()
+            except RunBlocked as error:
+                if error.code == 'INTERRUPTED':raise _Interrupted() from None
+                raise
             except IncompleteVectorization:
                 raise RunBlocked('PROVIDER_BUDGET' if budget_exhausted else 'VECTORS') from None
             output = _publish_jsonl(state._owned_file(f'vectors-{ordinal}.jsonl'), result.iter_nodes())
