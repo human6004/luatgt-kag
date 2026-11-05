@@ -876,7 +876,7 @@ class RuntimeSupervisor:
         if set(state) == legacy:
             state = dict(state, role_revisions={role: state['revision'] if state[role] else None for role in ('chat','embedding')},
                          tested=dict(chat=None, embedding=None), active=dict(chat=None, embedding=None), blocked=dict(chat=None, embedding=None))
-        if 'serving' in state:
+        if state.get('serving') is not None:
             from kag.builder.serving import validate_selection
             validate_selection(state['serving'])
         for role in ('chat', 'embedding'):
