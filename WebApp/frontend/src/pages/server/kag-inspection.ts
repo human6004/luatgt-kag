@@ -339,8 +339,8 @@ function validSelectionSummary(summary: SelectionSummary) {
         Object.values(counts).reduce((a, b) => a + b, 0) === summary[name === 'node_counts' ? 'nodes' : 'edges']
     })
 }
-export async function previewBuilderSelection(revision: number, request: SelectionRequest): Promise<BuilderSelection> {
-  const value = await api<BuilderSelection>('/admin/kag/builder/selection', send('POST', { revision, ...request }))
+export async function previewBuilderSelection(revision: number, request: SelectionRequest, signal?: AbortSignal): Promise<BuilderSelection> {
+  const value = await api<BuilderSelection>('/admin/kag/builder/selection', { ...send('POST', { revision, ...request }), signal })
   if (!shape(value, ['contract_version', 'revision', 'preview_id', 'node_limit', 'request', 'summary']) || value.contract_version !== 'builder-selection-v1' || value.revision !== revision || !hash(value.preview_id) ||
     !validSelectionRequest(value.request) || !validSelectionSummary(value.summary) || value.request.mode !== request.mode || value.request.value !== request.value ||
     (value.request.mode === 'ALL' ? value.node_limit !== null : !count(value.node_limit) || value.node_limit! < 3 || value.node_limit !== value.summary.nodes)) throw new ApiError('Bản xem trước phạm vi không hợp lệ', 502)
@@ -482,7 +482,7 @@ export function selectionVectorCount(summary: SelectionSummary): number {
     total + count * (name.split('.').pop() === 'TrafficSign' ? 2 : ['LegalDocument', 'LegalUnit'].includes(name.split('.').pop()!) ? 1 : 0), 0)
 }
 export async function startBuilderGraph(options: {
-  projectId: number; selection: BuilderSelection; planSha256: string; vectorPackage?: VectorPackageReference
+  projectId: number; selection: BuilderSelection; vectorPackage?: VectorPackageReference
 }, onProgress: (step: string) => void): Promise<BuilderStatus> {
   onProgress('Kiểm tra đồ thị trống')
   const graph = await loadGraphProject(options.projectId)
@@ -503,20 +503,11 @@ export async function startBuilderGraph(options: {
     if (structure.state !== 'COMPLETE' || structure.report?.target.project_id !== options.projectId) throw new ApiError('Chuẩn bị cấu trúc chưa hoàn tất. Tải lại trạng thái trước khi thử tiếp.', 409)
   } else if (!structure.report.build_ready) throw new ApiError('Cấu trúc chưa sẵn sàng. Mở chi tiết để kiểm tra.', 409)
   onProgress('Lưu phạm vi và cấu hình')
-  const selected = await previewBuilderSelection(config.revision, options.selection.request)
-  if (JSON.stringify(selected.summary) !== JSON.stringify(options.selection.summary)) throw new ApiError('Dữ liệu hoặc phạm vi đã đổi. Tải lại rồi xác nhận lại.', 409)
   config = await saveBuilderConfiguration({ revision: config.revision, embedding_revision: config.embedding!.revision,
     project_id: options.projectId, batch_size: config.batch_size, request_limit: config.request_limit,
-    selection_preview_id: selected.preview_id, vector_package: options.vectorPackage ?? null })
+    selection_preview_id: options.selection.preview_id, vector_package: options.vectorPackage ?? null })
   const savedRevision = config.revision
-  onProgress(options.vectorPackage ? 'Kiểm tra và nhập gói' : 'Kiểm tra dữ liệu nguồn')
-  let inputs = await loadBuilderInputs(undefined, true)
-  while (inputs.source_validation.state === 'CHECKING') {
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    inputs = await loadBuilderInputs()
-  }
-  if (inputs.source_validation.state !== 'VALID' || inputs.source_validation.plan_sha256 !== options.planSha256) throw new ApiError('Nguồn hoặc gói không khớp. Tải lại dữ liệu rồi xác nhận lại.', 409)
-  onProgress('Kiểm tra sẵn sàng')
+  onProgress(options.vectorPackage ? 'Chuẩn bị gói và kiểm tra sẵn sàng' : 'Kiểm tra sẵn sàng')
   config = await checkBuilderReadiness()
   while (config.readiness.state === 'CHECKING') {
     await new Promise(resolve => setTimeout(resolve, 1500))

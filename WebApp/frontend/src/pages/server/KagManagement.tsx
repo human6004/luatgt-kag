@@ -93,6 +93,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
   const [packageName, setPackageName] = useState(''), [selection, setSelection] = useState<BuilderSelection>()
   const [planSha256, setPlanSha256] = useState(''), [sourceLoading, setSourceLoading] = useState(false)
   const [sourcePreparing, setSourcePreparing] = useState(false)
+  const [waitSeconds, setWaitSeconds] = useState(0)
   const [progress, setProgress] = useState(''), [preview, setPreview] = useState<ServingPreview>()
   const [view, setView] = useState<LibraryRun>()
   const acting = useRef(false), choosing = useRef(0)
@@ -104,6 +105,12 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
   const requestKey = JSON.stringify(requestedScope)
   const building = status && ['RUNNING', 'STOPPING', 'STOPPED'].includes(status.state)
   const clearing = clearState && ['APPLYING','PARTIAL','INTERRUPTED'].includes(clearState.state)
+  useEffect(() => {
+    setWaitSeconds(0)
+    if (!mode || !sourcePreparing && !sourceLoading) return
+    const started = Date.now(), timer = setInterval(() => setWaitSeconds(Math.floor((Date.now() - started) / 1000)), 1000)
+    return () => clearInterval(timer)
+  }, [mode, sourcePreparing, sourceLoading])
   useEffect(() => {
     if (busy) return
     const controller = new AbortController(); let timer: ReturnType<typeof setTimeout>
@@ -141,7 +148,10 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
           if (controller.signal.aborted) return
           inputs = await loadBuilderInputs(controller.signal)
         }
-        if (inputs.source_validation.state !== 'VALID') throw new Error('Nguồn chưa sẵn sàng')
+        if (inputs.source_validation.state !== 'VALID') {
+          setError(builderIssue(inputs.source_validation.error_code ?? 'PLAN')); setDetailError(inputs.source_validation.error_code ?? '')
+          return
+        }
         if (!controller.signal.aborted) setPlanSha256(inputs.source_validation.plan_sha256!)
       } catch (failure) {
         if (!controller.signal.aborted) { setError('Chưa đọc được dữ liệu nguồn. Kiểm tra dữ liệu rồi tải lại.'); setDetailError(inspectionError(failure)) }
@@ -163,18 +173,17 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     if (!mode || !config || !planSha256 || mode === 'import' && !selectedPackage?.compatible) return
     if (requestedScope.mode !== 'ALL' && (!Number.isInteger(requestedScope.value) || requestedScope.value! < 1 || requestedScope.value! > (requestedScope.mode === 'PERCENT' ? 100 : 2147483647))) return
     setSourceLoading(true)
+    const controller = new AbortController()
+    const delay = setTimeout(() => void readSelection(), 250)
     async function readSelection() {
       try {
-        const inputs = await loadBuilderInputs()
-        if (inputs.source_validation.state !== 'VALID') throw new Error('Nguồn chưa sẵn sàng')
-        const value = await previewBuilderSelection(config!.revision, requestedScope)
-        if (id === choosing.current) { setSelection(value); setPlanSha256(inputs.source_validation.plan_sha256!) }
+        const value = await previewBuilderSelection(config!.revision, requestedScope, controller.signal)
+        if (id === choosing.current) setSelection(value)
       } catch (failure) {
         if (id === choosing.current) { setError('Chưa đọc được phạm vi dữ liệu. Kiểm tra dữ liệu nguồn rồi tải lại.'); setDetailError(inspectionError(failure)) }
       } finally { if (id === choosing.current) setSourceLoading(false) }
     }
-    void readSelection()
-    return () => { choosing.current++ }
+    return () => { choosing.current++; controller.abort(); clearTimeout(delay) }
   }, [mode, config?.revision, planSha256, requestKey, selectedPackage?.sha256, version])
   const refresh = () => setVersion(value => value + 1)
   async function act(operation: () => Promise<unknown>) {
@@ -200,7 +209,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
         catch (failure) { setFallback(true); throw failure }
         finally { setName('') }
       }
-      setStatus(await startBuilderGraph({ projectId: target, selection, planSha256, vectorPackage }, setProgress))
+      setStatus(await startBuilderGraph({ projectId: target, selection, vectorPackage }, setProgress))
       setMode(null); setProgress('')
     })
   }
@@ -284,7 +293,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
           {packages?.packages.filter(row => !row.compatible).map(row => <p key={row.name}>{row.name}: {packageReason(row.reason)}</p>)}
           {selectedPackage?.manifest && <p>Phạm vi từ gói: {selectedPackage.manifest.selection === null ? 'toàn bộ' : 'một phần'} · {selectedPackage.manifest.nodes.toLocaleString('vi-VN')} nội dung. Nhập vào đồ thị trống đã có không gọi embedding.</p>}</>
           : <><Field label="Phạm vi"><select className={inputCls} value={scope} disabled={busy} onChange={event => setScope(event.target.value)}><option value="ALL">Toàn bộ dữ liệu</option><option value="PERCENT">Một phần dữ liệu</option></select></Field>{scope === 'PERCENT' && <Field label="Tỷ lệ dữ liệu (%)"><input className={inputCls} type="number" min={1} max={100} value={percent} disabled={busy} onChange={event => setPercent(event.target.value)} /></Field>}{scope === 'PERCENT' && <p>Bản thử {percent}%</p>}</>}
-        {sourcePreparing ? <p>Đang đọc dữ liệu…</p> : sourceLoading ? <p>Đang đọc phạm vi…</p> : selection && <p>{selection.summary.nodes.toLocaleString('vi-VN')} nội dung · {selection.summary.edges.toLocaleString('vi-VN')} liên kết.{mode === 'build' && ` Cần tạo khoảng ${selectionVectorCount(selection.summary).toLocaleString('vi-VN')} vector.`}</p>}
+        {sourcePreparing ? <p role="status">Đang chuẩn bị dữ liệu nguồn · {waitSeconds} giây</p> : sourceLoading ? <p role="status">Đang tính phạm vi · {waitSeconds} giây</p> : selection && <p>{selection.summary.nodes.toLocaleString('vi-VN')} nội dung · {selection.summary.edges.toLocaleString('vi-VN')} liên kết.{mode === 'build' && ` Cần tạo khoảng ${selectionVectorCount(selection.summary).toLocaleString('vi-VN')} vector.`}</p>}
         {mode === 'build' && <p>Tạo vector có thể phát sinh phí embedding. Dựng xong chưa tự dùng cho Chat.</p>}
         {!selection && !sourceLoading && !sourcePreparing && <Button disabled={busy} onClick={() => void act(async () => {
           let value=await loadBuilderInputs(undefined,true)

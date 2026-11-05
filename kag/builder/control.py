@@ -100,10 +100,47 @@ def check_source_inputs(value):
         data['index'].close()
 
 
+def source_cache(state_dir, manifest_path=None, expected=()):
+    """Read preview metadata only; Runner still validates source content before writing."""
+    from kag.builder.inputs import SOURCE_FILES
+    root=Path(__file__).resolve().parents[2];state=Path(state_dir);cache=state/'source.json'
+    try:
+        saved=json.loads(cache.read_bytes()) if cache.exists() and manifest_path is None else None
+        if saved and not re.fullmatch('[0-9a-f]{64}',saved['plan_sha256']):return None
+        candidates=([Path(manifest_path)] if manifest_path is not None else
+            [state/'plans'/saved['plan_sha256']/'manifest.json'] if saved else
+            sorted((state/'plans').glob('*/manifest.json'),key=lambda p:p.stat().st_mtime_ns,reverse=True))
+        for path in candidates:
+            manifest=json.loads(path.read_bytes())
+            if not re.fullmatch('[0-9a-f]{64}',path.parent.name) or manifest['plan_sha256']!=path.parent.name:continue
+            names={row['name'] for row in manifest['input_manifest']}
+            required={name for _,name in SOURCE_FILES}|{p.relative_to(root).as_posix() for p in (root/'data/processed/documents').glob('*.md')}
+            if not required<=names:continue
+            sources=[root/name for name in names]+[root/'kag/schema'/name for name in ('VietRoadTraffic.schema','schema_contract.json')]
+            if any(not p.resolve().is_relative_to(root) for p in sources):continue
+            paths=sorted(set(sources+[path.parent/name for name in ('manifest.json','nodes.jsonl','edges.jsonl','plan.sha256')]))
+            checks=tuple((p,_input_version(p)) for p in paths)
+            directory=root/'data/processed/documents'
+            if directory.exists():checks=(*checks,(directory,_input_version(directory)))
+            if any(dict(checks).get(p)!=version for p,version in expected):return None
+            files=[[str(p),v[3],v[4]] for p,v in checks if p!=directory]
+            if saved and saved['files']!=files:return None
+            # Older plans have no stat cache; reuse only previews whose inputs predate the plan.
+            if manifest_path is None and not saved and any(p.stat().st_mtime_ns>path.stat().st_mtime_ns for p in sources):continue
+            summary=selection_summary(dict(manifest=manifest,edge_hashes=range(sum(manifest['edge_unique_counts'].values()))))
+            if not saved:atomic_json(cache,dict(plan_sha256=manifest['plan_sha256'],files=files),mode=0o600)
+            return (dict(state='VALID',error_code=None,plan_sha256=manifest['plan_sha256'],
+                nodes=summary['nodes'],edges=summary['edges'],summary=summary),checks)
+    except (OSError,ValueError,KeyError,TypeError):pass
+    return None
+
+
 def prepare_source_inputs(state_dir):
     """Prepare only the corpus shipped with this release; publish a complete content-addressed plan."""
     from kag.builder.graph_plan import build_graph_plan, plan_hash, write_dry_run
     from kag.builder.inputs import load_inputs
+    cached=source_cache(state_dir)
+    if cached:return cached
     root = Path(__file__).resolve().parents[2]
     state = Path(state_dir)
     if not state.is_absolute() or state.resolve().is_relative_to(root):
@@ -128,8 +165,9 @@ def prepare_source_inputs(state_dir):
         checks = data['file_versions']
         if any(_input_version(path) != version for path, version in checks):
             raise ValueError('Source changed during preparation')
-        return (dict(state='VALID', error_code=None, plan_sha256=data['manifest']['plan_sha256'],
-                     nodes=len(data['nodes']), edges=len(data['edges']),summary=selection_summary(data)), checks)
+        cached=source_cache(state_dir,destination/'manifest.json',checks)
+        if not cached:raise ValueError('Source changed during preparation')
+        return cached
     finally:
         data['index'].close()
 
@@ -940,7 +978,7 @@ def create_app(*, control=None, token=None, state_dir=None):
 
     @app.get('/v1/builder/inputs')
     async def inputs(request: Request):
-        nonlocal source_result,checked_files
+        nonlocal source_result,checked_files,checked_config
         authenticate_request(request)
         result=await asyncio.to_thread(inspect_inputs, configuration)
         if state_dir:
@@ -957,8 +995,13 @@ def create_app(*, control=None, token=None, state_dir=None):
                         raise ValueError
                 except (OSError,ValueError):
                     if source_result is cached_result:
-                        source_result=dict(state='INVALID',error_code='INTEGRITY',plan_sha256=None,nodes=None,edges=None)
+                        source_result=inspect_inputs(None)['source_validation']
                         checked_files=()
+        if state_dir and source_result['state']=='NOT_RUN':
+            cached=await asyncio.to_thread(source_cache,state_dir)
+            if cached:
+                source_result,checked_files=cached
+                checked_config=_spec_hash(configuration)
         result['source_validation']=dict(source_result,summary=source_result.get('summary')) if state_dir else {k:v for k,v in source_result.items() if k!='summary'}
         if source_result['state']=='VALID':
             for row in result['inputs']:
@@ -969,6 +1012,33 @@ def create_app(*, control=None, token=None, state_dir=None):
     async def dataset(group: str,offset: int,limit: int,request: Request):
         authenticate_request(request)
         return await asyncio.to_thread(read_dataset,Path(__file__).resolve().parents[2],group,offset,limit)
+
+    async def prepare_package_inputs(snapshot,validated,versions):
+        nonlocal setup,configuration,control,checked_config
+        from kag.builder import packages
+        try:model = _builder_model(secrets)
+        except (OSError,ValueError,KeyError,TypeError):raise packages.PackageError('PACKAGE_MODEL') from None
+        if model['revision'] != setup['embedding_revision']:raise packages.PackageError('PACKAGE_MODEL')
+        destination = Path(state_dir)/'package-imports'/snapshot['vector_package']['sha256']/_spec_hash(
+            [snapshot['namespace'],snapshot['model_identity']])
+        paths = await asyncio.to_thread(packages.prepare_package,snapshot['paths']['graph_package'],destination,
+            model=model,plan_sha256=validated['plan_sha256'],namespace=snapshot['namespace'],
+            expected_sha256=snapshot['vector_package']['sha256'])
+        prepared = copy.deepcopy(snapshot)
+        prepared['paths'].update(paths)
+        for name,path in paths.items():prepared['input_sha256'][name] = await asyncio.to_thread(packages.checksum,path)
+        prepared = _config(prepared)
+        if (checked_config != _spec_hash(configuration) or model['revision'] != _builder_model(secrets)['revision']
+                or any(_input_version(path)!=version for path,version in versions)):
+            raise RunBlocked('INTEGRITY')
+        next_control = await asyncio.to_thread(BuilderControl,prepared)
+        updated = dict(setup,runner=prepared)
+        atomic_json(setup_path,updated,mode=0o600)
+        setup,configuration,control = updated,prepared,next_control
+        checked_config = _spec_hash(prepared)
+        versions = (*versions,*[(Path(path),_input_version(path)) for name,path in prepared['paths'].items()
+            if path and name not in ('run_root','lock_root','c3_manifest','selection')])
+        return versions
 
     @app.post('/v1/builder/inputs',status_code=202)
     async def check_inputs(request: Request):
@@ -1001,28 +1071,7 @@ def create_app(*, control=None, token=None, state_dir=None):
                 if checked_config != _spec_hash(configuration):
                     raise ValueError('Configuration changed during validation')
                 if state_dir and snapshot and snapshot.get('vector_package'):
-                    try:model = _builder_model(secrets)
-                    except (OSError,ValueError,KeyError,TypeError):raise packages.PackageError('PACKAGE_MODEL') from None
-                    if model['revision'] != setup['embedding_revision']:raise packages.PackageError('PACKAGE_MODEL')
-                    destination = Path(state_dir)/'package-imports'/snapshot['vector_package']['sha256']/_spec_hash(
-                        [snapshot['namespace'],snapshot['model_identity']])
-                    paths = await asyncio.to_thread(packages.prepare_package,snapshot['paths']['graph_package'],destination,
-                        model=model,plan_sha256=validated['plan_sha256'],namespace=snapshot['namespace'],
-                        expected_sha256=snapshot['vector_package']['sha256'])
-                    prepared = copy.deepcopy(snapshot)
-                    prepared['paths'].update(paths)
-                    for name,path in paths.items():prepared['input_sha256'][name] = await asyncio.to_thread(packages.checksum,path)
-                    prepared = _config(prepared)
-                    if (checked_config != _spec_hash(configuration) or model['revision'] != _builder_model(secrets)['revision']
-                            or any(_input_version(path)!=version for path,version in versions)):
-                        raise RunBlocked('INTEGRITY')
-                    next_control = await asyncio.to_thread(BuilderControl,prepared)
-                    updated = dict(setup,runner=prepared)
-                    atomic_json(setup_path,updated,mode=0o600)
-                    setup,configuration,control = updated,prepared,next_control
-                    checked_config = _spec_hash(prepared)
-                    versions = (*versions,*[(Path(path),_input_version(path)) for name,path in prepared['paths'].items()
-                        if path and name not in ('run_root','lock_root','c3_manifest','selection')])
+                    versions=await prepare_package_inputs(snapshot,validated,versions)
                 source_result, checked_files = validated, versions
             except packages.PackageError as error:
                 stable = False
@@ -1064,27 +1113,32 @@ def create_app(*, control=None, token=None, state_dir=None):
         before=tuple(checked_files)
         try:
             def select():
-                contract=json.loads((Path(__file__).resolve().parents[1]/'schema/schema_contract.json').read_bytes())
                 manifest=Path(state_dir)/'plans'/source_result['plan_sha256']/'manifest.json'
-                data=validate_c3_manifest(contract,manifest)
-                try:
-                    selected=select_bounded_sources(data,limit,extended=True) if limit is not None else None
-                    summary=selection_summary(data,selected)
-                    path=None;digest=None
-                    if selected is not None:
-                        directory=manifest.parent/'selections';directory.mkdir(exist_ok=True)
-                        path=directory/(_spec_hash(selected)+'.json')
-                        if not path.exists():atomic_json(path,selected,mode=0o600)
-                        if json.loads(path.read_bytes())!=json.loads(json.dumps(selected)):raise RunBlocked('INTEGRITY')
-                        digest=hashlib.sha256(path.read_bytes()).hexdigest()
-                    return dict(selection=dict(node_limit=limit,request={k:body[k] for k in ('mode','value')},summary=summary),
-                        path=str(path) if path else None,sha256=digest)
-                finally:data['index'].close()
+                data=dict(manifest=json.loads(manifest.read_bytes()),edge_hashes=range(source_result['edges']))
+                selected=None;path=None;digest=None
+                if limit is not None:
+                    directory=manifest.parent/'selections';directory.mkdir(exist_ok=True)
+                    for candidate in directory.glob('*.json'):
+                        value=json.loads(candidate.read_bytes())
+                        if value.get('node_limit')==limit:
+                            selected=value;path=candidate;break
+                    if selected is None:
+                        nodes=[json.loads(line) for line in (manifest.parent/'nodes.jsonl').read_bytes().splitlines() if line.strip()]
+                        edges=[tuple(json.loads(line)['tuple']) for line in (manifest.parent/'edges.jsonl').read_bytes().splitlines() if line.strip()]
+                        data.update(nodes=nodes,node_hashes={(n['type'],n['id']):None for n in nodes},edge_hashes=dict.fromkeys(edges))
+                        selected=select_bounded_sources(data,limit,extended=True)
+                        path=directory/(_spec_hash(selected)+'.json');atomic_json(path,selected,mode=0o600)
+                    digest=hashlib.sha256(path.read_bytes()).hexdigest()
+                summary=selection_summary(data,selected)
+                return dict(selection=dict(node_limit=limit,request={k:body[k] for k in ('mode','value')},summary=summary),
+                    path=str(path) if path else None,sha256=digest)
             preview=await asyncio.to_thread(select)
             if (not before or any(_input_version(path)!=version for path,version in before)
                     or body['revision']!=(setup['revision'] if setup else 0)):
                 raise HTTPException(409,'BUILDER_SELECTION_STALE')
-            preview.update(revision=body['revision'],files=before)
+            files=before
+            if preview['path']:files=(*files,(Path(preview['path']),_input_version(preview['path'])))
+            preview.update(revision=body['revision'],files=files)
             preview['preview_id']=_spec_hash({k:v for k,v in preview.items() if k!='files'})
             scope_preview=preview
             return dict(contract_version='builder-selection-v1',revision=body['revision'],preview_id=preview['preview_id'],
@@ -1297,8 +1351,19 @@ def create_app(*, control=None, token=None, state_dir=None):
                     checks.append(dict(name=name,state='NOT_CHECKED',code=waiting))
             return checks, before
         async def check():
-            nonlocal readiness, ready_binding
-            checks, checked_binding = await asyncio.to_thread(inspect)
+            nonlocal readiness, ready_binding,source_result,checked_files
+            try:
+                if snapshot.get('vector_package'):
+                    validated,versions=await asyncio.to_thread(prepare_source_inputs,state_dir)
+                    checked_files=await prepare_package_inputs(snapshot,validated,versions)
+                    source_result=validated
+                    snapshot.clear();snapshot.update(copy.deepcopy(configuration))
+                checks, checked_binding = await asyncio.to_thread(inspect)
+            except Exception as error:
+                readiness=dict(state='BLOCKED',checked_at=datetime.now(timezone.utc).isoformat(),checks=[
+                    dict(name='source',state='BLOCKED',code=getattr(error,'code','INTEGRITY'))])
+                ready_binding=None
+                return
             ready = all(row['state']=='READY' for row in checks)
             try:
                 if ready and await asyncio.to_thread(binding,session_token(request))!=checked_binding:raise ValueError
