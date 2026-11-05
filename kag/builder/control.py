@@ -539,7 +539,9 @@ class BuilderControl:
                     meta=dict(db.execute("SELECT key,value FROM run_meta WHERE key IN ('identity','status','disposition')"))
                     durable=json.loads(meta['status'])
                     if (json.loads(meta['identity'])['config_hash']!=_spec_hash(self.config)
-                            or durable['state']!='ERROR' or durable['error_code']!='INTERRUPTED'
+                            or not (durable['state']=='RUNNING'
+                                or durable['state']=='ERROR' and durable['error_code']=='INTERRUPTED'
+                                or durable['state']=='BLOCKED' and durable['stage']=='vectorize' and durable['error_code']=='VECTORS')
                             or db.execute("SELECT 1 FROM run_batches WHERE state='INTENT' AND stage IN ('write-nodes','write-edges') LIMIT 1").fetchone()):
                         raise HTTPException(409,'BUILDER_ABANDON_BLOCKED')
                     lock.assert_owned(state['proof'].physical_database_id);state['identity'].validate(state['proof'])

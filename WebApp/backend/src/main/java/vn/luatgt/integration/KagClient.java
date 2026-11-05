@@ -216,6 +216,11 @@ public class KagClient {
         if(!action.equals("apply")||!fields(change).equals(Set.of("project_id","database_id"))||
             !bounded(change.path("project_id"),1,Integer.MAX_VALUE)||!change.path("database_id").asText().matches("[A-Za-z0-9._:-]{1,128}"))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Yêu cầu xóa dữ liệu không hợp lệ");
+        var previous=builderStatus();
+        if(previous.path("state").asText().equals("STOPPED")&&previous.path("target").path("project_id").equals(change.path("project_id"))) {
+            var configuration=builderConfiguration();
+            builderAction("abandon",previous.path("run_id").asText(),"\""+configuration.path("revision").asInt()+"\"");
+        }
         serving("deactivate",change,null);
         return builderRequest("clear-"+action,change);
     }
