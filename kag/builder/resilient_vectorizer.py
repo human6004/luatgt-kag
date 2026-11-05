@@ -113,6 +113,7 @@ class ResilientVectorizer:
         self.stop_event = stop_event
         self.service_failures = 0
         self.batch_success = False
+        self._retry_starts = {}
         self.fallback_config = {'enabled':False, 'max_chunk_chars':8000, 'overlap_chars':500,
             'min_chunk_chars':1000, 'max_split_depth':3, 'chunking_version':'boundary_offsets_v1'}
         if embedding_fallback is not None:
@@ -363,7 +364,7 @@ class ResilientVectorizer:
                 return
             attempts = entry['attempts']
             last = attempts[-1]
-            recovery = [a for a in attempts if a['phase'] == 'RECOVERY']
+            recovery = [a for a in attempts[self._retry_starts.get(job['key'], 0):] if a['phase'] == 'RECOVERY']
             info = last
             interrupted = info.get('error_class') == 'INTERRUPTED_REQUEST'
             large_timeout = job['source_chars'] > 100000 and (info.get('timeout', False) or
@@ -400,11 +401,12 @@ class ResilientVectorizer:
             except _Failure:
                 pass
 
-    def run(self, nodes, *, previous_failures=()):
+    def run(self, nodes, *, previous_failures=(), resume=False):
         self.revision += 1
         originals = copy.deepcopy(list(nodes))
         jobs = list(self._jobs(originals))
         self.service_failures = 0
+        self._retry_starts = {}
         self.batch_success = any(self._entry(job)['status'] == 'SUCCESS' for job in jobs)
         by_key = {(j['node_type'],j['node_id'],j['property']): j for j in jobs}
         with self.db:
@@ -423,8 +425,15 @@ class ResilientVectorizer:
                     entry['attempts'] = [info | {'phase':'ORIGINAL', 'timeout_seconds':60}]
                     self._store(job, entry)
             for job in jobs:
+                entry = self._entry(job)
+                if resume and entry['status'] in ('PENDING', 'FAILED_EXHAUSTED') and entry['attempts']:
+                    last = entry['attempts'][-1]
+                    if last.get('http_status') == 503 or last.get('timeout') or last.get('connection'):
+                        # A user resume starts a bounded retry window, preserving paid attempt history.
+                        self._retry_starts[job['key']] = len(entry['attempts'])
+                        entry.update(status='PENDING', classification=None)
+                        self._store(job, entry)
                 if job['text'] in (None, ''):
-                    entry = self._entry(job)
                     entry.update(status='SKIPPED_EMPTY', classification='PINNED_EMPTY_BEHAVIOR')
                     self._store(job, entry)
         before_requests, before_retries, before_http = self.requests, self.retries, self.http.copy()

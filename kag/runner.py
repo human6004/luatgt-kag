@@ -675,7 +675,7 @@ def _stop(stop, stage, ordinal):
         raise _Interrupted()
 
 
-def _vectorize(config, state, verified, replay_path, factory, stop):
+def _vectorize(config, state, verified, replay_path, factory, stop, *, resume=False):
     from kag.builder.resilient_vectorizer import ResilientVectorizer, IncompleteVectorization
     total = len(verified['node_hashes'])
     if not state.completed_stage('vectorize'):
@@ -713,7 +713,7 @@ def _vectorize(config, state, verified, replay_path, factory, stop):
                 engine.import_successes(originals, cached, artifact_model_identity=config['model_identity'],
                                         artifact_dimension=config['vector_dimensions'], artifact_jobs=jobs)
             try:
-                result = engine.run(originals); result.require_complete()
+                result = engine.run(originals, resume=resume); result.require_complete()
             except RunBlocked as error:
                 if error.code == 'INTERRUPTED':raise _Interrupted() from None
                 raise
@@ -973,7 +973,7 @@ def _execute(config, run_id, resume, project_client, reader, vectorizer_factory,
             for result in output.values(): _check_output(state, result)
         else:
             replay = _replay_index(config, state, verified) if config['vector_policy'] == 'replay-existing' else None
-            _vectorize(config, state, verified, replay, vectorizer_factory, stop)
+            _vectorize(config, state, verified, replay, vectorizer_factory, stop, resume=resume)
             output = _export(config, state, stop)
         expected_path = state._owned_file('expected.sqlite3')
         expected = index_expected(expected_path, _jsonl(_check_output(state, output['nodes'])),

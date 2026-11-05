@@ -99,6 +99,8 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
   const [view, setView] = useState<LibraryRun>()
   const acting = useRef(false), choosing = useRef(0)
   const selectedPackage = packages?.packages.find(row => row.name === packageName)
+  const selectedProjectReady = !projectId || (projectData[Number(projectId)] === 'EMPTY' &&
+    !!catalog?.projects.some(row => row.project_id === Number(projectId) && row.state === 'AVAILABLE'))
   const requestedScope: SelectionRequest = mode === 'import'
     ? selectedPackage?.manifest?.selection === null ? { mode: 'ALL', value: null }
       : { mode: 'COUNT', value: Number(selectedPackage?.manifest?.selection?.value) }
@@ -119,14 +121,15 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     async function refresh() {
       try {
         const [projects, serving, config, status, exported, cleared] = await Promise.all([
-          loadBuilderProjects(controller.signal), loadServing(controller.signal), loadBuilderConfiguration(controller.signal).then(value => {
+          mode ? Promise.resolve(undefined) : loadBuilderProjects(controller.signal), loadServing(controller.signal), loadBuilderConfiguration(controller.signal).then(value => {
             if (!controller.signal.aborted) setConfig(value)
             return value
           }),
           loadBuilderStatus(controller.signal), loadBuilderPackageExport(controller.signal), loadBuilderClear(controller.signal),
         ])
         if (controller.signal.aborted) return
-        setCatalog(projects); setServing(serving); setConfig(config); setStatus(status); setExportState(exported)
+        if (projects) setCatalog(projects)
+        setServing(serving); setConfig(config); setStatus(status); setExportState(exported)
         setClearState(cleared)
         setReadError('')
       } catch (failure) {
@@ -135,22 +138,31 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     }
     void refresh()
     return () => { controller.abort(); clearTimeout(timer) }
-  }, [busy, version])
+  }, [busy, version, mode])
   useEffect(() => {
     if (!mode) return
     const controller = new AbortController()
     setProjectData({})
-    // Take one snapshot on open; library polling must not scan every project again.
-    for (const row of catalog?.projects.filter(row => row.state === 'AVAILABLE') ?? []) {
-      loadGraphProject(row.project_id, controller.signal).then(graph => {
-        if (!controller.signal.aborted) setProjectData(current => ({ ...current,
-          [row.project_id]: graph.counts.nodes || graph.counts.edges ? 'OCCUPIED' : 'EMPTY' }))
-      }).catch(() => {
-        if (!controller.signal.aborted) setProjectData(current => ({ ...current, [row.project_id]: 'UNAVAILABLE' }))
-      })
-    }
+    // Refresh counts only on open or explicit reload, after reading the latest catalog.
+    loadBuilderProjects(controller.signal).then(projects => {
+      if (controller.signal.aborted) return
+      setCatalog(projects)
+      for (const row of projects.projects.filter(row => row.state === 'AVAILABLE')) {
+        loadGraphProject(row.project_id, controller.signal).then(graph => {
+          if (!controller.signal.aborted) setProjectData(current => ({ ...current,
+            [row.project_id]: graph.counts.nodes || graph.counts.edges ? 'OCCUPIED' : 'EMPTY' }))
+        }).catch(() => {
+          if (!controller.signal.aborted) setProjectData(current => ({ ...current, [row.project_id]: 'UNAVAILABLE' }))
+        })
+      }
+    }).catch(failure => {
+      if (!controller.signal.aborted) {
+        setError('Chưa đọc được danh sách đồ thị. Tải lại rồi thử tiếp.')
+        setDetailError(inspectionError(failure))
+      }
+    })
     return () => controller.abort()
-  }, [mode])
+  }, [mode, version])
   useEffect(() => {
     if (!mode) return
     const controller = new AbortController()
@@ -220,7 +232,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     setError(''); setDetailError('')
   }
   async function begin() {
-    if (!mode || !selection || !(projectId || name.trim()) || sourceLoading || sourcePreparing || mode === 'import' && (!selectedPackage?.compatible || !selectedPackage.sha256)) return
+    if (!mode || !selection || !(projectId || name.trim()) || !selectedProjectReady || sourceLoading || sourcePreparing || mode === 'import' && (!selectedPackage?.compatible || !selectedPackage.sha256)) return
     const vectorPackage = mode === 'import' ? { name: selectedPackage!.name, sha256: selectedPackage!.sha256! } : undefined
     await act(async () => {
       let target = Number(projectId)
@@ -300,7 +312,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     {exportState?.state === 'COMPLETE' && <p role="status" className="text-sm break-words">Đã xuất {exportState.name}. Lấy tệp tại {exportState.directory} để chép sang máy khác.</p>}
     {exportState?.state === 'FAILED' && <p role="alert">Xuất gói chưa hoàn tất. {packageReason(exportState.code ?? '')}</p>}
     {clearReport && clearState && clearState.state !== 'NOT_RUN' && <div className="text-sm space-y-2" role="status"><p>{clearState.state === 'COMPLETE' ? 'Đã xóa đồ thị. Có thể tái sử dụng đích trống trong OpenSPG.' : `Đã xóa ${clearState.deleted.nodes.toLocaleString('vi-VN')} nội dung và ${clearState.deleted.edges.toLocaleString('vi-VN')} liên kết; ${clearState.state === 'APPLYING' ? 'đang tiếp tục.' : 'chưa hoàn tất, tải lại để kiểm tra.'}`}</p>{clearState.code && <p>{['SCOPE','CLEAR_SERVING'].includes(clearState.code) ? 'Đồ thị vừa được dùng lại cho Chat. Tải lại rồi xác nhận xóa lại.' : builderIssue(clearState.code)}</p>}<details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><pre className="whitespace-pre-wrap break-all">{JSON.stringify(clearState,null,2)}</pre></details></div>}
-    <Modal open={mode !== null} title={mode === 'import' ? 'Nhập từ gói' : 'Dựng đồ thị mới'} onClose={() => { if (!busy) setMode(null) }} footer={<><Button disabled={busy} onClick={() => setMode(null)}>Hủy</Button><Button variant="primary" disabled={busy || !(projectId || name.trim()) || !selection || sourceLoading || sourcePreparing || !!building || mode === 'import' && !selectedPackage?.compatible} onClick={() => void begin()}>{mode === 'import' ? 'Xác nhận nhập' : 'Xác nhận dựng'}</Button></>}>
+    <Modal open={mode !== null} title={mode === 'import' ? 'Nhập từ gói' : 'Dựng đồ thị mới'} onClose={() => { if (!busy) setMode(null) }} footer={<><Button disabled={busy} onClick={() => setMode(null)}>Hủy</Button><Button variant="primary" disabled={busy || !(projectId || name.trim()) || !selectedProjectReady || !selection || sourceLoading || sourcePreparing || !!building || mode === 'import' && !selectedPackage?.compatible} onClick={() => void begin()}>{mode === 'import' ? 'Xác nhận nhập' : 'Xác nhận dựng'}</Button></>}>
       <div className="space-y-4 text-sm">
         <Field label="Tên đồ thị"><input className={inputCls} value={name} maxLength={255} disabled={busy || !!projectId} onChange={event => setName(event.target.value)} /></Field>
         {!projectId && <p>Tạo đồ thị mới sẽ gọi embedding 1 lần để kiểm tra model.</p>}
