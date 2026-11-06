@@ -6,7 +6,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlsplit
 from urllib.request import Request, HTTPRedirectHandler, ProxyHandler, build_opener
 
-from kag.backend_identity import _field, _store, bound_sdk_requests
+from kag.backend_identity import _field, _store
 
 
 class ProjectCatalogError(ValueError):
@@ -104,15 +104,6 @@ def project_metadata(records, owned_ids, neo4j_uri, serving_database):
     return sorted(rows, key=lambda row: row['project_id'])
 
 
-def _project_client(endpoint):
-    from kag.bootstrap import initialize
-    initialize()
-    from knext.project.client import ProjectClient
-    client = ProjectClient(host_addr=endpoint)
-    bound_sdk_requests(client)
-    return client
-
-
 def deployment_endpoints():
     from kag.builder.production_scope import _endpoint
     try:
@@ -131,7 +122,9 @@ def read_projects(token):
     try:
         endpoints, _ = deployment_endpoints()
         owned = owned_project_ids(endpoints['openspg'], token)
-        records = _project_client(endpoints['openspg'])._rest_client.project_get() if owned else []
+        records = _native_request(endpoints['openspg'], '/public/v1/project', token) if owned else []
+        if type(records) is not list:
+            raise ProjectCatalogError('UNAVAILABLE')
         projects = project_metadata(records, owned, endpoints['neo4j_uri'],
             os.environ.get('KAG_BUILDER_SERVING_DATABASE', 'neo4j'))
         from kag.builder.serving import active_selection

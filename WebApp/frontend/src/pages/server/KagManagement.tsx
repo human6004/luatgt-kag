@@ -42,6 +42,15 @@ export function useInspection<T>(load: (signal?: AbortSignal) => Promise<T>) {
 
 
 type LibraryRun = ServingCatalog['runs'][number]
+type LibraryRead = 'projects' | 'serving' | 'configuration' | 'status' | 'export' | 'clear'
+const libraryReadLabels: Record<LibraryRead, string> = {
+  projects: 'Danh sách project', serving: 'Thư viện đồ thị', configuration: 'Cấu hình dựng',
+  status: 'Trạng thái dựng', export: 'Trạng thái xuất gói', clear: 'Trạng thái xóa',
+}
+function libraryReadIssue(part: LibraryRead, failure: unknown) {
+  return (part === 'projects' || part === 'serving') && failure instanceof ApiError && [403, 409].includes(failure.status)
+    ? 'Đăng nhập lại OpenSPG rồi tải lại danh sách.' : inspectionError(failure)
+}
 
 export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
   const [parameters, setParameters] = useSearchParams()
@@ -54,7 +63,10 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
   const [exportState, setExportState] = useState<BuilderPackageExport>()
   const [clearState, setClearState] = useState<BuilderClear>(), [clearConfirmation, setClearConfirmation] = useState<GraphProject>()
   const [error, setError] = useState(''), [detailError, setDetailError] = useState('')
-  const [readError, setReadError] = useState('')
+  const [readErrors, setReadErrors] = useState<Partial<Record<LibraryRead, string>>>({})
+  const [libraryLoading, setLibraryLoading] = useState(true)
+  const libraryError = readErrors.projects || readErrors.serving
+  const readError = libraryError || readErrors.configuration || readErrors.status || readErrors.clear
   const [busy, setBusy] = useState(false), [version, setVersion] = useState(0)
   const [mode, setMode] = useState<'build' | 'import' | null>(null)
   const [projectId, setProjectId] = useState(''), [scope, setScope] = useState('ALL'), [percent, setPercent] = useState('10')
@@ -76,6 +88,10 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
   const building = status && ['RUNNING', 'STOPPING', 'STOPPED'].includes(status.state)
   const running = status && ['RUNNING', 'STOPPING'].includes(status.state)
   const clearing = clearState && ['APPLYING','PARTIAL','INTERRUPTED'].includes(clearState.state)
+  function acceptProjects(projects: BuilderProjects) {
+    if (!['AVAILABLE', 'EMPTY'].includes(projects.state)) throw new ApiError('Chưa đọc được danh sách project', projects.state === 'FORBIDDEN' ? 403 : 503)
+    setCatalog(projects)
+  }
   useEffect(() => {
     setWaitSeconds(0)
     if (!mode || !sourcePreparing && !sourceLoading) return
@@ -84,27 +100,36 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
   }, [mode, sourcePreparing, sourceLoading])
   useEffect(() => {
     if (busy) return
-    const controller = new AbortController(); let timer: ReturnType<typeof setTimeout>
-    async function refresh() {
+    const controller = new AbortController()
+    const timers: Partial<Record<LibraryRead, ReturnType<typeof setTimeout>>> = {}
+    async function read<T>(part: LibraryRead, load: () => Promise<T>, save: (value: T) => void) {
+      if (part === 'serving') setLibraryLoading(true)
       try {
-        const [projects, serving, config, status, exported, cleared] = await Promise.all([
-          mode ? Promise.resolve(undefined) : loadBuilderProjects(controller.signal), loadServing(controller.signal), loadBuilderConfiguration(controller.signal).then(value => {
-            if (!controller.signal.aborted) setConfig(value)
-            return value
-          }),
-          loadBuilderStatus(controller.signal), loadBuilderPackageExport(controller.signal), loadBuilderClear(controller.signal),
-        ])
+        const value = await load()
         if (controller.signal.aborted) return
-        if (projects) setCatalog(projects)
-        setServing(serving); setConfig(config); setStatus(status); setExportState(exported)
-        setClearState(cleared)
-        setReadError('')
+        save(value)
+        setReadErrors(current => ({ ...current, [part]: '' }))
       } catch (failure) {
-        if (!controller.signal.aborted) { setReadError('Chưa đọc được thư viện đồ thị. Tải lại hoặc đăng nhập OpenSPG rồi thử tiếp.'); setDetailError(inspectionError(failure)) }
-      } finally { if (!controller.signal.aborted) timer = setTimeout(refresh, 3000) }
+        if (controller.signal.aborted) return
+        if (failure instanceof ApiError && [403, 409].includes(failure.status)) {
+          if (part === 'projects') setCatalog(undefined)
+          if (part === 'serving') setServing(undefined)
+        }
+        setReadErrors(current => ({ ...current, [part]: libraryReadIssue(part, failure) }))
+      } finally {
+        if (!controller.signal.aborted) {
+          if (part === 'serving') setLibraryLoading(false)
+          timers[part] = setTimeout(() => void read(part, load, save), 3000)
+        }
+      }
     }
-    void refresh()
-    return () => { controller.abort(); clearTimeout(timer) }
+    if (!mode) void read('projects', () => loadBuilderProjects(controller.signal), acceptProjects)
+    void read('serving', () => loadServing(controller.signal), setServing)
+    void read('configuration', () => loadBuilderConfiguration(controller.signal), setConfig)
+    void read('status', () => loadBuilderStatus(controller.signal), setStatus)
+    void read('export', () => loadBuilderPackageExport(controller.signal), setExportState)
+    void read('clear', () => loadBuilderClear(controller.signal), setClearState)
+    return () => { controller.abort(); Object.values(timers).forEach(clearTimeout) }
   }, [busy, version, mode])
   useEffect(() => {
     if (!mode) return
@@ -113,7 +138,8 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     // Refresh counts only on open or explicit reload, after reading the latest catalog.
     loadBuilderProjects(controller.signal).then(projects => {
       if (controller.signal.aborted) return
-      setCatalog(projects)
+      acceptProjects(projects)
+      setReadErrors(current => ({ ...current, projects: '' }))
       for (const row of projects.projects.filter(row => row.state === 'AVAILABLE')) {
         loadGraphProject(row.project_id, controller.signal).then(graph => {
           if (!controller.signal.aborted) setProjectData(current => ({ ...current,
@@ -124,7 +150,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
       }
     }).catch(failure => {
       if (!controller.signal.aborted) {
-        setError('Chưa đọc được danh sách đồ thị. Tải lại rồi thử tiếp.')
+        setError(libraryReadIssue('projects', failure))
         setDetailError(inspectionError(failure))
       }
     })
@@ -241,29 +267,29 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
       <Button disabled={busy || serving?.busy || !!running || !!clearing || !!readError || !config} onClick={() => openFlow('import')}>+ Nhập từ gói</Button>
       <Button disabled={busy} onClick={refresh}>Tải lại danh sách</Button>
     </div></div>
-    <Card title={serving?.active ? `Đang dùng cho Chat: ${serving.active.project_name}` : 'Chưa chọn đồ thị'} right={<Button onClick={() => document.getElementById('graph-table')?.focus()}>Chọn đồ thị</Button>}>
+    <Card title={serving?.active ? `Đang dùng cho Chat: ${serving.active.project_name}` : !serving ? libraryError ? 'Chưa đọc được đồ thị' : 'Đang đọc đồ thị…' : 'Chưa chọn đồ thị'} right={<Button onClick={() => document.getElementById('graph-table')?.focus()}>Chọn đồ thị</Button>}>
       <div className="px-5 pb-5 text-sm space-y-3"><p>{serving?.active && serving.runtime_ready && !serving.chat_blockers.length ? 'Chat đang dùng đồ thị này để tìm căn cứ trả lời.' : 'Chọn đồ thị sẵn sàng để Chat tìm căn cứ trả lời.'}</p>
         {serving?.chat_blockers.filter(code => code !== 'GRAPH_REQUIRED').map(code => <p key={code}>{servingReasons[code] ?? 'Đồ thị chưa sẵn sàng. Mở Xem để kiểm tra.'}</p>)}
         <details><summary className="underline cursor-pointer">Tùy chọn tìm kiếm</summary><div className="mt-4">{searchOptions}</div></details>
       </div>
     </Card>
-    {(error || readError) && <div role="alert" className="text-sm space-y-2"><p>{error || readError}</p>{readError && config?.links?.openspg && <a className="underline" target="_blank" rel="noreferrer" href={config.links.openspg}>Mở OpenSPG</a>}<details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><pre className="whitespace-pre-wrap break-all">{detailError}</pre></details></div>}
+    {(error || Object.values(readErrors).some(Boolean)) && <div role="alert" className="text-sm space-y-2">{error && <p>{error}</p>}{Object.entries(readErrors).filter(([, message]) => message).map(([part, message]) => <p key={part}>{libraryReadLabels[part as LibraryRead]}: {message}</p>)}{libraryError && config?.links?.openspg && <a className="underline" target="_blank" rel="noreferrer" href={config.links.openspg}>Mở OpenSPG</a>}{detailError && <details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><pre className="whitespace-pre-wrap break-all">{detailError}</pre></details>}</div>}
     {serving?.operation?.state === 'PREPARING' && <p role="status">Đang chuẩn bị đồ thị cho Chat…</p>}
     {serving?.operation && ['FAILED','INTERRUPTED'].includes(serving.operation.state) && <div role="alert"><p>Chưa dùng được đồ thị cho Chat. Tải lại trạng thái trước khi thử tiếp.</p><details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><pre>{serving.operation.code}</pre></details></div>}
     <div id="graph-table" tabIndex={-1} className="overflow-x-auto rounded-2xl border border-line bg-surface">
       <table className="w-full text-sm" aria-label="Thư viện đồ thị"><thead><tr>{['Tên','Phạm vi','Nội dung','Liên kết','Vector','Trạng thái','Thao tác'].map(label => <Th key={label}>{label}</Th>)}</tr></thead><tbody>
         {status && (building || status.state === 'BLOCKED') && <tr><Td>{catalog?.projects.find(row => row.project_id === status.target?.project_id)?.project_name ?? 'Đồ thị đang dựng'}</Td><Td>{status.contract_version !== 'builder-control-v1' && status.binding?.node_limit ? 'Một phần' : 'Toàn bộ'}</Td><td colSpan={3} className="px-5 py-3">{status.progress && <p>{status.progress.done.toLocaleString('vi-VN')}/{status.progress.total.toLocaleString('vi-VN')}</p>}</td><Td>{builderStateLabel(status.state)}</Td><Td><div className="flex gap-2">
           <Button disabled={busy || !status.actions.stop} onClick={() => void act(async () => setStatus(await runBuilderAction('stop', status.run_id!)))}>Dừng</Button>
-          <Button disabled={busy || !status.actions.resume} onClick={() => void resume()}>Tiếp tục</Button>
-          {status.state === 'STOPPED' && status.target && <Button disabled={busy || !!clearing} onClick={() => void showClear(status.target!.project_id)}>Xóa</Button>}</div></Td></tr>}
+          <Button disabled={busy || !!readError || !status.actions.resume} onClick={() => void resume()}>Tiếp tục</Button>
+          {status.state === 'STOPPED' && status.target && <Button disabled={busy || !!readError || !!clearing} onClick={() => void showClear(status.target!.project_id)}>Xóa</Button>}</div></Td></tr>}
         {rows.map(row => <tr key={`${row.project_id}:${row.run_id}`} className="border-t border-line"><Td>{row.project_name}</Td><Td>{row.partial ? 'Một phần' : 'Toàn bộ'}</Td><Td>{row.nodes.toLocaleString('vi-VN')}</Td><Td>{row.edges.toLocaleString('vi-VN')}</Td><Td>{row.vectors.toLocaleString('vi-VN')}</Td><Td>{serving?.active?.database === row.database ? 'Đang dùng cho Chat' : 'Đã dựng'}</Td><Td><div className="flex flex-wrap gap-2">
-          <Button variant="primary" disabled={busy || serving?.busy || serving?.active?.database === row.database || !!clearing && clearReport?.target.database === row.database} onClick={() => void act(async () => setPreview(await changeServing('preview', row.project_id, row.run_id)))}>Dùng cho Chat</Button>
-          <Button disabled={busy || serving?.busy || exportState?.state === 'RUNNING'} onClick={() => void act(async () => setExportState(await exportBuilderPackage(row.project_id, row.run_id)))}>Xuất gói</Button>
+          <Button variant="primary" disabled={busy || !!libraryError || serving?.busy || serving?.active?.database === row.database || !!clearing && clearReport?.target.database === row.database} onClick={() => void act(async () => setPreview(await changeServing('preview', row.project_id, row.run_id)))}>Dùng cho Chat</Button>
+          <Button disabled={busy || !!libraryError || serving?.busy || exportState?.state === 'RUNNING'} onClick={() => void act(async () => setExportState(await exportBuilderPackage(row.project_id, row.run_id)))}>Xuất gói</Button>
           <Button disabled={busy} onClick={() => setView(row)}>Xem</Button>
-          <Button disabled={busy || serving?.busy || !!clearing && clearReport?.target.database !== row.database || clearState?.state === 'APPLYING' || status?.target?.project_id === row.project_id && ['RUNNING','STOPPING'].includes(status.state)} title={status?.target?.project_id === row.project_id && ['RUNNING','STOPPING'].includes(status.state) ? 'Dừng dựng trước' : clearing && clearReport?.target.database !== row.database ? 'Hoàn tất xóa đồ thị trước' : undefined} onClick={() => void showClear(row.project_id)}>Xóa</Button>
+          <Button disabled={busy || !!libraryError || serving?.busy || !!clearing && clearReport?.target.database !== row.database || clearState?.state === 'APPLYING' || status?.target?.project_id === row.project_id && ['RUNNING','STOPPING'].includes(status.state)} title={status?.target?.project_id === row.project_id && ['RUNNING','STOPPING'].includes(status.state) ? 'Dừng dựng trước' : clearing && clearReport?.target.database !== row.database ? 'Hoàn tất xóa đồ thị trước' : undefined} onClick={() => void showClear(row.project_id)}>Xóa</Button>
         </div></Td></tr>)}
-        {clearing && clearReport && !rows.some(row => row.database === clearReport.target.database) && <tr className="border-t border-line"><Td>{clearReport.target.project_name}</Td><Td>Đang xóa dữ liệu</Td><Td>{clearReport.counts.nodes.toLocaleString('vi-VN')}</Td><Td>{clearReport.counts.edges.toLocaleString('vi-VN')}</Td><Td>—</Td><Td>{clearState?.state === 'APPLYING' ? 'Đang xóa' : 'Chưa xóa xong'}</Td><Td><Button disabled={busy || clearState?.state === 'APPLYING'} onClick={() => void showClear(clearReport.target.project_id)}>Xóa tiếp</Button></Td></tr>}
-        {!rows.length && !building && status?.state !== 'BLOCKED' && <tr><td colSpan={7} className="px-5 py-3">{serving ? 'Chưa có đồ thị đã dựng. Dựng mới hoặc nhập từ gói để bắt đầu.' : 'Đang đọc danh sách đồ thị…'}</td></tr>}
+        {clearing && clearReport && !rows.some(row => row.database === clearReport.target.database) && <tr className="border-t border-line"><Td>{clearReport.target.project_name}</Td><Td>Đang xóa dữ liệu</Td><Td>{clearReport.counts.nodes.toLocaleString('vi-VN')}</Td><Td>{clearReport.counts.edges.toLocaleString('vi-VN')}</Td><Td>—</Td><Td>{clearState?.state === 'APPLYING' ? 'Đang xóa' : 'Chưa xóa xong'}</Td><Td><Button disabled={busy || !!readError || clearState?.state === 'APPLYING'} onClick={() => void showClear(clearReport.target.project_id)}>Xóa tiếp</Button></Td></tr>}
+        {!rows.length && !building && status?.state !== 'BLOCKED' && <tr><td colSpan={7} className="px-5 py-3">{libraryError || (!serving && libraryLoading ? 'Đang đọc danh sách đồ thị…' : 'Chưa có đồ thị đã dựng. Dựng mới hoặc nhập từ gói để bắt đầu.')}</td></tr>}
       </tbody></table>
     </div>
     {status && (building || status.state === 'BLOCKED') && <div className="text-sm space-y-2">{status.contract_version !== 'builder-control-v1' && status.stages.map(stage => <p key={stage.name}>{({ preflight:'Kiểm tra điều kiện',plan:'Chuẩn bị dữ liệu',vectorize:'Tạo vector','export-artifact':'Lưu vector','write-nodes':'Ghi nội dung','verify-nodes':'Kiểm nội dung','write-edges':'Ghi liên kết',verify:'Xác minh đồ thị',release:'Lưu kết quả' } as Record<string,string>)[stage.name]}: {({PENDING:'Chưa thực hiện',RUNNING:'Đang xử lý',COMPLETE:'Hoàn tất',STOPPED:'Đã dừng',BLOCKED:'Cần xử lý'})[stage.state]} {stage.done !== null ? `${stage.done}/${stage.total}` : ''}</p>)}
@@ -293,15 +319,15 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
         {progress && <p role="status">{progress}</p>}{error && <div role="alert"><p>{error}</p>{detailError && <details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><p>{detailError}</p></details>}</div>}
       </div>
     </Modal>
-    {preview && <Modal open title="Dùng đồ thị cho Chat" onClose={() => { if (!busy) setPreview(undefined) }} footer={<><Button disabled={busy} onClick={() => setPreview(undefined)}>Hủy</Button><Button variant="primary" disabled={busy || !preview.chat_ready} onClick={() => void act(async () => {
+    {preview && <Modal open title="Dùng đồ thị cho Chat" onClose={() => { if (!busy) setPreview(undefined) }} footer={<><Button disabled={busy} onClick={() => setPreview(undefined)}>Hủy</Button><Button variant="primary" disabled={busy || !!readError || !preview.chat_ready} onClick={() => void act(async () => {
       const result=await changeServing('activate',preview.project_id,preview.run_id,preview.preview_id)
       if ('contract_version' in result) setServing(value => value ? { ...value, busy:true, operation:result } : value)
       setPreview(undefined)
     })}>Xác nhận dùng cho Chat</Button></>}>
-      <div className="space-y-3 text-sm"><p>Chuyển từ {preview.previous?.project_name ?? 'chưa chọn'} sang {preview.project_name}.</p><p>{preview.counts.nodes.toLocaleString('vi-VN')} nội dung · {preview.counts.edges.toLocaleString('vi-VN')} liên kết.</p>{preview.preparation_required && <p>Cần chuẩn bị lần đầu. Đồ thị sẽ được xác minh ở nền sau khi xác nhận.</p>}{preview.chat_blockers.map(code => <p key={code}>{servingReasons[code] ?? 'Chưa thể dùng đồ thị. Kiểm tra model và dữ liệu.'}</p>)}<details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><pre className="whitespace-pre-wrap break-all">{JSON.stringify(preview,null,2)}</pre></details>{error && <p role="alert">{error}</p>}</div>
+      <div className="space-y-3 text-sm"><p>Chuyển từ {preview.previous?.project_name ?? 'chưa chọn'} sang {preview.project_name}.</p><p>{preview.counts.nodes.toLocaleString('vi-VN')} nội dung · {preview.counts.edges.toLocaleString('vi-VN')} liên kết.</p>{preview.preparation_required && <p>Cần chuẩn bị lần đầu. Đồ thị sẽ được xác minh ở nền sau khi xác nhận.</p>}{preview.chat_blockers.map(code => <p key={code}>{servingReasons[code] ?? 'Chưa thể dùng đồ thị. Kiểm tra model và dữ liệu.'}</p>)}<details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><pre className="whitespace-pre-wrap break-all">{JSON.stringify(preview,null,2)}</pre></details>{(error || readError) && <p role="alert">{readError || error}</p>}</div>
     </Modal>}
     {view && <Modal open title={view.project_name} onClose={closeView}><div className="space-y-5"><SelectedGraph projectId={view.project_id} links={config?.links} /><GraphSourceList key={view.run_id} projectId={view.project_id} runId={view.run_id} /><details><summary className="underline cursor-pointer">Thử tìm kiếm</summary><div className="mt-4"><TrialGraph projectId={view.project_id} runId={view.run_id} modelPath="/admin/chatbot?step=1" /></div></details><details><summary className="underline cursor-pointer">Chi tiết kỹ thuật phiên</summary><pre className="whitespace-pre-wrap break-all text-xs">{JSON.stringify({ selected: view, runs: serving?.runs.filter(row => row.database === view.database) },null,2)}</pre></details></div></Modal>}
-    {clearConfirmation && <Modal open title="Xóa đồ thị" onClose={() => { if (!busy) setClearConfirmation(undefined) }} footer={<><Button disabled={busy} onClick={() => setClearConfirmation(undefined)}>Hủy</Button><Button variant="primary" disabled={busy} onClick={() => void confirmClear()}>Xác nhận xóa</Button></>}><div className="space-y-3 text-sm"><p>Xóa đồ thị {clearConfirmation.target.project_name}, gồm {clearConfirmation.counts.nodes.toLocaleString('vi-VN')} nội dung. Không thể hoàn tác.</p>{serving?.active && (serving.active.database_id === clearConfirmation.database_id || serving.active.database === clearConfirmation.target.database) && <p>Chat tạm ngưng trả lời cho tới khi chọn đồ thị khác</p>}{error && <p role="alert">{error}</p>}</div></Modal>}
+    {clearConfirmation && <Modal open title="Xóa đồ thị" onClose={() => { if (!busy) setClearConfirmation(undefined) }} footer={<><Button disabled={busy} onClick={() => setClearConfirmation(undefined)}>Hủy</Button><Button variant="primary" disabled={busy || !!readError} onClick={() => void confirmClear()}>Xác nhận xóa</Button></>}><div className="space-y-3 text-sm"><p>Xóa đồ thị {clearConfirmation.target.project_name}, gồm {clearConfirmation.counts.nodes.toLocaleString('vi-VN')} nội dung. Không thể hoàn tác.</p>{serving?.active && (serving.active.database_id === clearConfirmation.database_id || serving.active.database === clearConfirmation.target.database) && <p>Chat tạm ngưng trả lời cho tới khi chọn đồ thị khác</p>}{(error || readError) && <p role="alert">{readError || error}</p>}</div></Modal>}
   </section>
 }
 
