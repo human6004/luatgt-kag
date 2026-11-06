@@ -250,27 +250,23 @@ class InputsTest(unittest.TestCase):
             return [json.loads(line) for line in (root/relative).read_text(encoding='utf-8').split('\n') if line]
         master = json.loads((root/'data/processed/signs/signs_app.json').read_text(encoding='utf-8'))
         self.assertTrue(all(r['image_status'] in ('not_checked', 'not_applicable', 'needs_review',
-                            'verified', 'missing', 'mismatch') for r in master))
+                            'verified', 'missing', 'mismatch', 'matched_zip') for r in master))
         units = {r['unit_id']: r for r in records('data/processed/units/units.jsonl')}
         documents = {r['doc_id']: r for r in records('data/processed/meta/documents.jsonl')}
         self.assertEqual(self.m.convert_signs(master, units, documents),
                          records('data/processed/signs/signs.jsonl'))
 
-    def test_sign_review_retains_specific_later_clauses_and_source_conflicts(self):
+    def test_sign_catalog_uses_2024_with_only_two_2019_exceptions(self):
         root = Path(__file__).resolve().parents[2]
         master = json.loads((root/'data/processed/signs/signs_app.json').read_text(encoding='utf-8'))
         indexed = {r['sign_id']: r for r in master}
-        for year, article in ((2019, 51), (2024, 47)):
-            row = indexed[f'QCVN 41:{year}/BGTVT::IE.453c']
-            self.assertEqual(row['description_scope'], 'specific')
-            self.assertIn(f'{article}.4.2.', row['legal_description'])
-            self.assertIn('IE.453c', row['legal_description'])
-            self.assertNotIn('IE.453a', row['legal_description'])
-            for code in ('IE.456a', 'IE.456b', 'IE.456c', 'W.242a', 'W.242b'):
-                self.assertEqual(indexed[f'QCVN 41:{year}/BGTVT::{code}']['description_scope'], 'specific')
-        for code in ('P.103', 'P.103a', 'W.239', 'W.239a'):
-            self.assertEqual(indexed[f'QCVN 41:2019/BGTVT::{code}']['verification_status'], 'source_conflict')
-            self.assertEqual(indexed[f'QCVN 41:2024/BGTVT::{code}']['verification_status'], 'verified_pdf')
+        self.assertEqual(len(indexed), len(master))
+        exceptions = {'QCVN 41:2019/BGTVT::W.211a', 'QCVN 41:2019/BGTVT::W.211b'}
+        self.assertEqual({r['sign_id'] for r in master if r['qcvn'] != 'QCVN 41:2024/BGTVT'},
+                         exceptions)
+        self.assertNotIn('QCVN 41:2024/BGTVT::W.211', indexed)
+        self.assertTrue(all(r['sign_id'] == r['qcvn']+'::'+r['sign_code'] for r in master))
+        self.assertEqual({r['verification_status'] for r in master}, {'review_required'})
 
     def test_load_inputs_relative_locator_and_whitelist(self):
         with tempfile.TemporaryDirectory() as directory:
