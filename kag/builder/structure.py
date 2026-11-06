@@ -129,7 +129,7 @@ def target_state(project_id, token, *, for_write=True, check_structure=False, di
     try:
         proof = identity.prove()
         if not for_write and not check_structure:
-            yield dict(target=target,reader=reader,identity=identity,proof=proof)
+            yield dict(target=target,reader=reader,identity=identity,proof=proof,token=token)
             return
         if for_write:
             serving_database = os.environ.get('KAG_BUILDER_SERVING_DATABASE','neo4j')
@@ -150,7 +150,7 @@ def target_state(project_id, token, *, for_write=True, check_structure=False, di
         script = (Path(__file__).resolve().parents[1]/'schema/VietRoadTraffic.schema').read_text(encoding='utf-8')
         script = script.replace('namespace VietRoadTraffic','namespace '+target['namespace'],1)
         desired = SPGSchemaMarkLang('',with_server=False,script_data_str=script).types
-        yield dict(target=target, reader=reader, identity=identity, proof=proof, session=session,
+        yield dict(target=target, reader=reader, identity=identity, proof=proof, session=session, token=token,
             desired=desired, dimension=dimension, native_dimension=native_dimension, store=_store(record)[0])
     finally:
         identity.close()
@@ -391,7 +391,7 @@ def apply(project_id, token, expected, lock_root, *, dimension=None):
 def clear_permissions(state, *, detached=True):
     """Require a dedicated owned target, currently detached from Chat."""
     from kag.backend_identity import _field
-    from kag.builder.projects import _project_client
+    from kag.builder.projects import _native_request
     target=state['target'];physical=state['proof'].physical_database_id
     from kag.builder.serving import protect_active
     if detached:
@@ -399,8 +399,9 @@ def clear_permissions(state, *, detached=True):
         except RunBlocked:raise RunBlocked('CLEAR_SERVING') from None
     reader=state['reader']
     endpoint=urlsplit(target['endpoints']['neo4j_uri'])
-    records=_project_client(target['endpoints']['openspg'])._rest_client.project_get()
+    records=_native_request(target['endpoints']['openspg'],'/public/v1/project',state['token'])
     try:
+        if type(records) is not list:raise RunBlocked('CLEAR_SHARED')
         for record in records:
             if str(_field(record,'id'))==str(target['project_id']):continue
             store,address=_store(record);other=urlsplit(address)
