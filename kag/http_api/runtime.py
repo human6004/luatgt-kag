@@ -158,10 +158,18 @@ async def _await_budget(awaitable, budget):
 
 class _CancellableTransport(httpx.BaseTransport):
     """Keep the pinned sync SDK; cancel its actual HTTP I/O through HTTPX async transport."""
-    def __init__(self, budget, *, response_limit=None):
+    def __init__(self, budget=None, *, response_limit=None, stop_event=None):
         self.budget, self.response_limit = budget, response_limit
+        self.stop_event = stop_event
 
     def handle_request(self, request):
+        budget = self.budget
+        if budget is None:
+            seconds = max((value for value in request.extensions.get('timeout', {}).values()
+                           if isinstance(value, (int,float))), default=60)
+            budget = _Budget(time.monotonic() + seconds)
+            if self.stop_event is not None:
+                budget.stopped = self.stop_event
         async def exchange():
             async with httpx.AsyncHTTPTransport(retries=0) as transport:
                 outgoing = httpx.Request(request.method, request.url, headers=request.headers,
@@ -177,7 +185,13 @@ class _CancellableTransport(httpx.BaseTransport):
                         stream=httpx.ByteStream(bytes(body)), extensions=response.extensions)
                 finally:
                     await response.aclose()
-        return asyncio.run(_await_budget(exchange(), self.budget))
+        loop = asyncio.new_event_loop()
+        try:
+            return loop.run_until_complete(_await_budget(exchange(), budget))
+        finally:
+            # Closing HTTP must not wait for an uncancellable OS DNS lookup in the executor.
+            loop.run_until_complete(loop.shutdown_asyncgens())
+            loop.close()
 
 
 class _DeadlineTransport(httpx.BaseTransport):

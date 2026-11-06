@@ -66,6 +66,7 @@ function builderIssue(code: string | null) {
     PLAN: 'Dữ liệu nguồn hoặc phạm vi không khớp gói đã chọn. Chọn đúng gói rồi tải lại.',
     PROVENANCE: 'Thông tin nguồn của dữ liệu tìm kiếm không khớp. Kiểm tra gói và model trước khi thử lại.',
     VECTORS: 'Dịch vụ embedding đang lỗi. Bấm Tiếp tục khi dịch vụ hoạt động lại.',
+    VECTORS_KEY: 'API hết hạn mức hoặc từ chối key. Đổi key cùng URL và model, rồi bấm Tiếp tục.',
     PROVIDER_BUDGET: 'Đã chạm giới hạn gọi dịch vụ của lần dựng. Tiếp tục không làm mới hạn mức; kiểm tra chi phí trước khi dựng lại.',
     INTERRUPTED: 'Tiến độ đã được lưu. Bấm Tiếp tục để kiểm tra và tiếp tục lần dựng này.',
     RUNTIME: 'Dịch vụ dựng gặp lỗi. Tải lại trạng thái hoặc nhờ quản trị kiểm tra.',

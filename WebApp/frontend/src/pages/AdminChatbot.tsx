@@ -235,7 +235,7 @@ export default function AdminChatbot() {
                           </legend>
                           <div className="space-y-1 text-xs">
                             <p>
-                              Bản lưu: <strong>{models.value?.[role] ? 'Đã lưu' : 'Chưa lưu model'}</strong>.
+                              Bản lưu: <strong>{models.value?.[role]?.model ?? 'Chưa lưu model'}</strong>.
                               {modelsDirty[role] && ' Có thay đổi chưa lưu.'}
                             </p>
                             <p>

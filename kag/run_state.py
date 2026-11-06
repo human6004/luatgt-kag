@@ -34,6 +34,7 @@ MESSAGES = {'CONFIG': 'Invalid runner configuration.', 'SCOPE': 'Scope verificat
     'UNCERTAIN_WRITE': 'A previous write has an uncertain result; operator reconciliation is required.',
     'LOCK_MOUNT': 'Shared graph lock requires the canonical writable Docker named volume.',
     'PLAN': 'Source plan verification refused.', 'VECTORS': 'Required vectors are not verified.',
+    'VECTORS_KEY': 'Embedding provider refused the API key or quota.',
     'PROVIDER_BUDGET': 'Configured embedding request limit reached.',
     'NODES': 'Node verification refused.', 'EDGES': 'Edge verification refused.',
     'INDEX': 'Vector index verification refused.', 'PROVENANCE': 'Vector provenance verification refused.',

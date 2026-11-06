@@ -677,9 +677,26 @@ def _stop(stop, stage, ordinal):
 
 def _vectorize(config, state, verified, replay_path, factory, stop, *, resume=False):
     from kag.builder.resilient_vectorizer import ResilientVectorizer, IncompleteVectorization
-    total = len(verified['node_hashes'])
-    if not state.completed_stage('vectorize'):
-        state.update('vectorize', 'RUNNING', _confirmed_progress(state, 'vectorize'), total)
+    from kag.vector_contract import TARGETS
+    total = sum(bool(node['properties'].get(prop))
+                for batch in iter_source_batches(state.run_dir / 'ledger.sqlite3', 'nodes', config['batch_size'])
+                for node in batch for prop, _ in TARGETS[node['type'].rsplit('.', 1)[-1]])
+    confirmed_batches = _batch_rows(state, 'vectorize')
+    confirmed_nodes = sum(result['count'] for _, result in confirmed_batches)
+    confirmed_vectors = sum(result['nonempty'] for _, result in confirmed_batches)
+    legacy_progress = (state.status['stage']=='vectorize'
+        and state.status['total']==len(verified['node_hashes']) and state.status['done']==confirmed_nodes
+        and confirmed_nodes!=confirmed_vectors)
+    def update_progress(done):
+        nonlocal legacy_progress
+        if legacy_progress:
+            # Old checkpoints count confirmed nodes; rebase to verified receipts/cache once.
+            state.status = dict(state.status, done=done, total=total)
+            legacy_progress = False
+        state.update('vectorize', 'RUNNING', done, total)
+    if not state.completed_stage('vectorize') and not legacy_progress:
+        done = state.status['done'] if state.status['stage']=='vectorize' else 0
+        update_progress(done)
     engine = None
     budget_exhausted = False
     try:
@@ -707,6 +724,11 @@ def _vectorize(config, state, verified, replay_path, factory, stop, *, resume=Fa
                     state.record_attempt('vectorize', str(ordinal), 'embedding_calls')
                     return adapter_call(texts, timeout)
                 engine._adapter_call = counted_call
+            confirmed = sum(result['nonempty'] for _, result in _batch_rows(state, 'vectorize'))
+            def progress():
+                successful = sum(engine._entry(job)['status']=='SUCCESS' for job in engine._jobs(originals))
+                update_progress(confirmed + successful)
+            engine.on_progress = progress
             jobs = None
             if replay_path:
                 cached, jobs = _cached_batch(config, replay_path, originals)
@@ -727,14 +749,16 @@ def _vectorize(config, state, verified, replay_path, factory, stop, *, resume=Fa
             state.confirm_batch('vectorize', str(ordinal), dict(count=len(originals), nodes=output, jobs=sidecar,
                 embedding_calls=attempts.get('embedding_calls', 0), candidates=len(records),
                 nonempty=result.counts['successful'], skipped_empty=result.counts['skipped_empty'], provenance=dict(methods)))
-            state.update('vectorize', 'RUNNING', _confirmed_progress(state, 'vectorize'), total)
+            progress()
             _stop(stop, 'vectorize', ordinal)
         methods, counts = Counter(), Counter()
         for _, result in _batch_rows(state, 'vectorize'):
             methods.update(result['provenance'])
             counts.update({k: result[k] for k in ('count', 'embedding_calls', 'candidates', 'nonempty', 'skipped_empty')})
         receipt = dict(counts, provenance=dict(methods), dimension=config['vector_dimensions'])
-        if not state.completed_stage('vectorize'): state.finish_stage('vectorize', receipt)
+        if not state.completed_stage('vectorize'):
+            update_progress(counts['nonempty'])
+            state.finish_stage('vectorize', receipt)
         elif state.completed_stage('vectorize') != receipt: raise RunBlocked('INTEGRITY')
     finally:
         if engine is not None: engine.close()

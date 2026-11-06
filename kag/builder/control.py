@@ -272,7 +272,9 @@ def _builder_runner(model):
     """Bind a saved secret to one run without writing it into Runner config or environment."""
     from kag.http_api.provider_budget import (AsyncGatewayTransport, GATEWAY, GatewayTransport, provider_route)
     resources = []
+    stop_event = None
     def vectorizer(config, verified):
+        from kag.http_api.runtime import _CancellableTransport
         policy = _builder_policy()
         route = provider_route(model['config'], 'embedding', policy)
         batch = _provider(config, verified, api_key=model['config']['api_key'])
@@ -281,11 +283,14 @@ def _builder_runner(model):
             sdk = getattr(batch.vectorize_model,name)
             sdk.max_retries = 0
             sdk._client.follow_redirects = False
-            sdk._client._transport = wrapper(sdk._client._transport,GATEWAY,policy['token'],
+            transport = _CancellableTransport(stop_event=stop_event) if name=='client' else sdk._client._transport
+            sdk._client._transport = wrapper(transport,GATEWAY,policy['token'],
                 model['config']['base_url'].rstrip('/')+'/embeddings',route)
             sdk._client._mounts = {}
         return batch
     def execute(config, **kwargs):
+        nonlocal stop_event
+        stop_event = kwargs.get('stop_event')
         try:
             return run(config,vectorizer_factory=vectorizer,**kwargs)
         finally:
@@ -339,7 +344,7 @@ class BuilderControl:
                     or
                     status['state'] == 'PASS' and status['stage'] == 'release'
                     or status['state'] == 'ERROR' and (status['error_code'] == 'INTERRUPTED'
-                        or status['stage'] == 'vectorize' and status['error_code'] == 'VECTORS'))
+                        or status['stage'] == 'vectorize' and status['error_code'] in ('VECTORS','VECTORS_KEY')))
                     for (status, uncertain, _), _ in records)
 
     def _directory(self, run_id):
@@ -376,18 +381,18 @@ class BuilderControl:
             if not (self.thread is not None and self.thread.is_alive()):
                 if status['state']=='RUNNING':
                     status=dict(status,state='ERROR',error_code='INTERRUPTED')
-                elif status['state']=='BLOCKED' and status['stage']=='vectorize' and status['error_code']=='VECTORS':
+                elif status['state']=='BLOCKED' and status['stage']=='vectorize' and status['error_code'] in ('VECTORS','VECTORS_KEY'):
                     status=dict(status,state='ERROR')
             rows = []
             for name in STAGES:
                 done = total = None
                 code = None
                 if name==status['stage'] and status['error_code']:
-                    state = 'STOPPED' if status['error_code']=='INTERRUPTED' or name=='vectorize' and status['error_code']=='VECTORS' else 'BLOCKED'
+                    state = 'STOPPED' if status['error_code']=='INTERRUPTED' or name=='vectorize' and status['error_code'] in ('VECTORS','VECTORS_KEY') else 'BLOCKED'
                     done,total,code = status['done'],status['total'],status['error_code']
                 elif name in stages:
                     state = 'COMPLETE'
-                    done = total = (stages[name]['count'] if name in ('vectorize','write-nodes','write-edges')
+                    done = total = (stages[name]['nonempty'] if name=='vectorize' else stages[name]['count'] if name in ('write-nodes','write-edges')
                         else stages[name]['nodes']['total'] if name=='verify-nodes'
                         else exported if name=='export-artifact' else 1)
                 elif name==status['stage']:
@@ -457,13 +462,13 @@ class BuilderControl:
                         code = durable['error_code']
                         if uncertain:
                             raise RunBlocked(uncertain)
-                        if self.failed and not (durable['state']=='ERROR' and code in ('INTERRUPTED','VECTORS')):
+                        if self.failed and not (durable['state']=='ERROR' and code in ('INTERRUPTED','VECTORS','VECTORS_KEY')):
                             raise RunBlocked(code or 'INTEGRITY')
                         if self.result is not None and durable == self.previous_status:
                             raise RunBlocked('SCOPE' if self.result == 2 else 'RUNTIME')
                         if durable['state'] in ('ABANDONED','CLEARED'):
                             state = durable['state']
-                        elif durable['state'] == 'ERROR' and code in ('INTERRUPTED','VECTORS'):
+                        elif durable['state'] == 'ERROR' and code in ('INTERRUPTED','VECTORS','VECTORS_KEY'):
                             state = 'STOPPED'
                         elif self.result == 2:
                             state, code = 'BLOCKED', code or 'SCOPE'
@@ -541,7 +546,7 @@ class BuilderControl:
                     if (json.loads(meta['identity'])['config_hash']!=_spec_hash(self.config)
                             or not (durable['state']=='RUNNING'
                                 or durable['state']=='ERROR' and durable['error_code']=='INTERRUPTED'
-                                or durable['state']=='BLOCKED' and durable['stage']=='vectorize' and durable['error_code']=='VECTORS')
+                                or durable['state']=='BLOCKED' and durable['stage']=='vectorize' and durable['error_code'] in ('VECTORS','VECTORS_KEY'))
                             or db.execute("SELECT 1 FROM run_batches WHERE state='INTENT' AND stage IN ('write-nodes','write-edges') LIMIT 1").fetchone()):
                         raise HTTPException(409,'BUILDER_ABANDON_BLOCKED')
                     lock.assert_owned(state['proof'].physical_database_id);state['identity'].validate(state['proof'])
@@ -657,7 +662,9 @@ def create_app(*, control=None, token=None, state_dir=None):
 
     def binding(session=None):
         model = _builder_model(secrets)
-        if not setup or model['revision'] != setup['embedding_revision']:
+        if (not setup or (configuration['vector_policy']=='provider'
+                and model['config']['base_url'].rstrip('/')+'|'+model['config']['model']!=configuration['model_identity'])
+                or configuration['vector_policy']!='provider' and model['revision']!=setup['embedding_revision']):
             raise RunBlocked('CONFIG')
         if session is not None:
             target = selected_target(configuration['project_id'],session)
@@ -1422,7 +1429,7 @@ def create_app(*, control=None, token=None, state_dir=None):
                 try:
                     if await asyncio.to_thread(binding,session_token(request))!=ready_binding:raise ValueError
                     model = _builder_model(secrets)
-                    if model['revision']!=setup['embedding_revision']:raise ValueError
+                    if model['revision']!=ready_binding[1]:raise ValueError
                     control.runner = _builder_runner(model) if configuration['vector_policy']=='provider' else run
                 except (OSError,ValueError,KeyError,TypeError):
                     raise HTTPException(409,'BUILDER_CONFIGURATION_CHANGED') from None
