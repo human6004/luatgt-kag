@@ -95,12 +95,6 @@ public class KagClient {
     public JsonNode checkBuilderInputs() {return builderRequest("check-inputs",null);}
     public JsonNode builderConfiguration() {return builderRequest("configuration",null);}
     public JsonNode builderProjects() {return builderRequest("projects",null);}
-    public JsonNode createBuilderProject(JsonNode change) {
-        if(!fields(change).equals(Set.of("name"))||!text(change.path("name"),255,true)||
-            change.path("name").asText().codePoints().anyMatch(c->Character.isISOControl(c)))
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Nhập tên đồ thị, tối đa 255 ký tự");
-        return builderRequest("create-project",change);
-    }
     public JsonNode builderPackages() {return builderRequest("packages",null);}
     public JsonNode builderPackageExport(JsonNode change) {
         if(change==null)return builderRequest("packages/export",null);
@@ -245,7 +239,6 @@ public class KagClient {
                 if(token.equals(other))throw new IOException();
             }
             boolean graph=action!=null&&action.matches("graph/[1-9][0-9]{0,9}");
-            boolean create="create-project".equals(action);
             boolean sources=action!=null&&action.startsWith("sources/");
             boolean dataset=action!=null&&action.startsWith("dataset/");
             boolean packages="packages".equals(action)||"packages/export".equals(action);
@@ -255,13 +248,13 @@ public class KagClient {
             boolean clear=action!=null&&action.startsWith("clear");
             boolean inputs="inputs".equals(action)||"check-inputs".equals(action);
             boolean configuration=Set.of("configuration","save-configuration","preflight").contains(action==null?"":action);
-            String path=action==null?"status":create?"projects":inputs?"inputs":action.equals("save-configuration")?"configuration":structure||clear?action.replace('-', '/'):action;
-            var transport=create||graph||sources||structure||clear||packages||Set.of("save-configuration","projects","selection","abandon").contains(action==null?"":action)?builderConfigurationClient:builderClient;
+            String path=action==null?"status":inputs?"inputs":action.equals("save-configuration")?"configuration":structure||clear?action.replace('-', '/'):action;
+            var transport=graph||sources||structure||clear||packages||Set.of("save-configuration","projects","selection","abandon").contains(action==null?"":action)?builderConfigurationClient:builderClient;
             RestClient.RequestHeadersSpec<?> request=read?transport.get().uri("/v1/builder/"+path):
                 transport.post().uri("/v1/builder/"+path).contentType(MediaType.APPLICATION_JSON).body(payload==null?Map.of():payload);
             if(revision!=null)request.header(HttpHeaders.IF_MATCH,revision);
             String packageSession=export?openSpgSession():null;
-            if(create||graph||sources||structure||clear||export||Set.of("projects","save-configuration","preflight","build","resume","abandon").contains(action==null?"":action)) {
+            if(graph||sources||structure||clear||export||Set.of("projects","save-configuration","preflight","build","resume","abandon").contains(action==null?"":action)) {
                 String session=export?packageSession:openSpgSession();
                 if(session!=null)request.header("X-OpenSPG-Session",session);
             }
@@ -270,12 +263,6 @@ public class KagClient {
                 if((graph||sources||export)&&(code==403||code==404))throw new ResponseStatusException(code==403?HttpStatus.FORBIDDEN:HttpStatus.NOT_FOUND,
                     code==403?"Đăng nhập lại OpenSPG và kiểm quyền sở hữu project":"Project không còn thuộc danh sách được phép xem; hãy tải lại");
                 if(code==409) {
-                    if(create) {
-                        String reason=inspectionBody(res,token).path("detail").asText();
-                        throw new ResponseStatusException(HttpStatus.CONFLICT,reason.equals("MODEL_NOT_UNIQUE")?
-                            "Chưa tìm được duy nhất một model OpenSPG khớp. Mở OpenSPG để tạo đồ thị rồi tải lại danh sách":
-                            "Chưa tạo được đồ thị. Tải lại danh sách hoặc kiểm tra OpenSPG trước khi thử tiếp");
-                    }
                     if("selection".equals(action)) {
                         String selectionCode=inspectionBody(res,token).path("detail").asText();
                         if(selectionCode.equals("BUILDER_SELECTION_INVALID"))
@@ -291,9 +278,8 @@ public class KagClient {
                 try { body=inspectionBody(res,token,sources?32*1024*1024:245760); }
                 catch(IOException e) { if(sources&&"Response too large".equals(e.getMessage()))throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"Danh sách nguồn vượt giới hạn 32 MiB; chưa thể xem hoặc nhập qua màn này");throw e; }
                 if(packageSession!=null&&body.toString().contains(packageSession))throw new IOException();
-                if(packages)validateBuilderPackages(body,export);else if(dataset)validateDataset(body,action);else if(sources)validateBuilderSources(body,action);else if(graph)validateGraphProject(body,Integer.parseInt(action.substring(6)));else if(structure)validateBuilderStructure(body);else if(clear)validateBuilderClear(body);else if("selection".equals(action))validateBuilderSelection(body);else if(create||"projects".equals(action))validateBuilderProjects(body);else if(inputs)validateBuilderInputs(body);else if(configuration)validateBuilderConfiguration(body);else validateBuilder(body);
-                if(create&&(body.path("projects").size()!=1||!body.path("projects").get(0).path("project_name").asText().equals(((JsonNode)payload).path("name").asText().strip())))throw new IOException();
-                if(!create&&!read&&!packages&&!inputs&&!configuration&&!structure&&!clear&&!"selection".equals(action)&&!body.path("run_id").asText().equals(((Map<?,?>)payload).get("run_id")))throw new IOException();
+                if(packages)validateBuilderPackages(body,export);else if(dataset)validateDataset(body,action);else if(sources)validateBuilderSources(body,action);else if(graph)validateGraphProject(body,Integer.parseInt(action.substring(6)));else if(structure)validateBuilderStructure(body);else if(clear)validateBuilderClear(body);else if("selection".equals(action))validateBuilderSelection(body);else if("projects".equals(action))validateBuilderProjects(body);else if(inputs)validateBuilderInputs(body);else if(configuration)validateBuilderConfiguration(body);else validateBuilder(body);
+                if(!read&&!packages&&!inputs&&!configuration&&!structure&&!clear&&!"selection".equals(action)&&!body.path("run_id").asText().equals(((Map<?,?>)payload).get("run_id")))throw new IOException();
                 return body;
             });
         } catch(ResponseStatusException e) {throw e;}

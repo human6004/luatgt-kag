@@ -2,13 +2,14 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import { Button, Card, Field, Modal, Td, Th, inputCls } from '../../admin/ui'
 import { Notice } from './shared'
+import { ApiError } from '../../api'
 import {
-  inspectionError, loadBuilderStatus, runBuilderAction, builderStateLabel, loadBuilderInputs,
+  builderIssue, inspectionError, loadBuilderStatus, runBuilderAction, builderStateLabel, loadBuilderInputs,
   loadBuilderConfiguration, checkBuilderReadiness, loadBuilderProjects, builderNeo4jLink,
   previewBuilderSelection, loadBuilderPackages, packageReason, loadServing, changeServing,
   loadBuilderPackageExport, exportBuilderPackage, loadGraphProject, runGraphRetrieval,
   selectionVectorCount, startBuilderGraph,
-  loadBuilderClear, clearBuilderData, createBuilderProject, loadGraphSources,
+  loadBuilderClear, clearBuilderData, loadGraphSources,
 } from './kag-inspection'
 import type { BuilderStatus, BuilderConfiguration, BuilderSelection, SelectionRequest,
   BuilderProjects, BuilderPackages, BuilderPackageExport, ServingCatalog, ServingPreview, GraphRetrieval, BuilderClear, GraphProject } from './kag-inspection'
@@ -39,41 +40,7 @@ export function useInspection<T>(load: (signal?: AbortSignal) => Promise<T>) {
   return { value, setValue, error, loading, reload: () => setVersion((v) => v + 1) }
 }
 
-function builderIssue(code: string | null) {
-  if (code?.startsWith('PACKAGE_')) return packageReason(code)
-  const messages: Record<string, string> = {
-    CONFIG: 'Cấu hình dựng đã đổi hoặc chưa đủ. Kiểm tra Model & API key rồi tải lại.',
-    INDEX: 'Cấu trúc tìm kiếm chưa phù hợp. Chọn đồ thị trống khác hoặc nhờ quản trị kiểm tra.',
-    SCHEMA: 'Đồ thị chưa có cấu trúc phù hợp. Chọn đồ thị trống khác để dựng.',
-    SCHEMA_CUSTOM: 'Đích có cấu trúc tùy chỉnh nên chưa thể chuẩn bị tự động. Chọn đồ thị trống khác.',
-    SCHEMA_DATA: 'Đồ thị đã có dữ liệu. Chọn đồ thị trống khác để tiếp tục.',
-    SCHEMA_REINDEX: 'Cấu trúc hiện tại cần quản trị kiểm tra. Chọn đồ thị trống khác.',
-    STRUCTURE_STALE: 'Thông tin đích đã đổi. Tải lại rồi xác nhận lại.',
-    STRUCTURE_INTERRUPTED: 'Chuẩn bị cấu trúc bị gián đoạn. Tải lại trạng thái trước khi thử tiếp.',
-    CLEAR_SHARED: 'Nơi lưu đồ thị đang được dùng chung. Chọn đồ thị khác hoặc nhờ quản trị xử lý.',
-    CLEAR_SERVING: 'Đồ thị vừa được dùng lại cho Chat. Tải lại rồi xác nhận xóa lại.',
-    CLEAR_STALE: 'Đích hoặc quyền xóa đã đổi. Tải lại rồi xác nhận lại.',
-    CLEAR_UNCERTAIN: 'Chưa xác định xóa đã kết thúc. Nhờ quản trị kiểm tra trước khi thử lại.',
-    TARGET_MODEL: 'Dữ liệu tìm kiếm không khớp model đã lưu. Chọn đồ thị trống hoặc dùng đúng model đã dựng đồ thị.',
-    FORBIDDEN: 'Đăng nhập lại OpenSPG, kiểm quyền sở hữu đồ thị rồi tải lại danh sách.',
-    NOT_FOUND: 'Đồ thị không còn thuộc tài khoản này. Tải lại danh sách và chọn lại.',
-    CONNECTION_NOT_CONFIGURED: 'Nơi lưu đồ thị chưa khớp cấu hình hệ thống. Nhờ quản trị kiểm tra kết nối.',
-    SERVING_PROTECTED: 'Đồ thị đang dùng cho Chat. Chọn đồ thị trống khác để dựng.',
-    LOCK: 'Đồ thị đang dựng hoặc có thao tác khác. Dừng dựng trước rồi tải lại.',
-    UNCERTAIN_WRITE: 'Lần dựng trước bị gián đoạn, chưa xác định đã ghi xong. Nhờ quản trị kiểm tra trước khi tiếp tục.',
-    LOCK_MOUNT: 'Dịch vụ dựng chưa được cài đặt đầy đủ. Nhờ quản trị kiểm tra rồi thử lại.',
-    INTEGRITY: 'Dữ liệu nguồn hoặc điểm lưu đã thay đổi. Kiểm tra đúng phiên bản dữ liệu rồi tải lại.',
-    PLAN: 'Dữ liệu nguồn hoặc phạm vi không khớp gói đã chọn. Chọn đúng gói rồi tải lại.',
-    PROVENANCE: 'Thông tin nguồn của dữ liệu tìm kiếm không khớp. Kiểm tra gói và model trước khi thử lại.',
-    VECTORS: 'Dịch vụ embedding đang lỗi. Bấm Tiếp tục khi dịch vụ hoạt động lại.',
-    VECTORS_KEY: 'API hết hạn mức hoặc từ chối key. Đổi key cùng URL và model, rồi bấm Tiếp tục.',
-    PROVIDER_BUDGET: 'Đã chạm giới hạn gọi dịch vụ của lần dựng. Tiếp tục không làm mới hạn mức; kiểm tra chi phí trước khi dựng lại.',
-    INTERRUPTED: 'Tiến độ đã được lưu. Bấm Tiếp tục để kiểm tra và tiếp tục lần dựng này.',
-    RUNTIME: 'Dịch vụ dựng gặp lỗi. Tải lại trạng thái hoặc nhờ quản trị kiểm tra.',
-    SCOPE: 'Đích lưu hoặc quyền ghi chưa hợp lệ. Nhờ quản trị kiểm tra kết nối và quyền sở hữu.',
-  }
-  return code ? messages[code] ?? 'Điều kiện dựng chưa đạt. Kiểm tra cấu hình và chi tiết kỹ thuật trước khi thử lại.' : ''
-}
+
 type LibraryRun = ServingCatalog['runs'][number]
 
 export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
@@ -91,7 +58,6 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
   const [busy, setBusy] = useState(false), [version, setVersion] = useState(0)
   const [mode, setMode] = useState<'build' | 'import' | null>(null)
   const [projectId, setProjectId] = useState(''), [scope, setScope] = useState('ALL'), [percent, setPercent] = useState('10')
-  const [name, setName] = useState(''), [fallback, setFallback] = useState(false)
   const [packageName, setPackageName] = useState(''), [selection, setSelection] = useState<BuilderSelection>()
   const [planSha256, setPlanSha256] = useState(''), [sourceLoading, setSourceLoading] = useState(false)
   const [sourcePreparing, setSourcePreparing] = useState(false)
@@ -100,7 +66,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
   const [view, setView] = useState<LibraryRun>()
   const acting = useRef(false), choosing = useRef(0)
   const selectedPackage = packages?.packages.find(row => row.name === packageName)
-  const selectedProjectReady = !projectId || (projectData[Number(projectId)] === 'EMPTY' &&
+  const selectedProjectReady = !!projectId && (projectData[Number(projectId)] === 'EMPTY' &&
     !!catalog?.projects.some(row => row.project_id === Number(projectId) && row.state === 'AVAILABLE'))
   const requestedScope: SelectionRequest = mode === 'import'
     ? selectedPackage?.manifest?.selection === null ? { mode: 'ALL', value: null }
@@ -224,26 +190,19 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     if (acting.current) return
     acting.current = true; setBusy(true); setError(''); setDetailError('')
     try { await operation() }
-    catch (failure) { setError('Thao tác chưa hoàn tất. Tải lại trạng thái trước khi thử tiếp.'); setDetailError(inspectionError(failure)) }
+    catch (failure) { setError(failure instanceof ApiError ? failure.message : 'Thao tác chưa hoàn tất. Tải lại trạng thái trước khi thử tiếp.'); setDetailError(inspectionError(failure)) }
     finally { acting.current = false; setBusy(false); refresh() }
   }
   function openFlow(next: 'build' | 'import') {
     setMode(next); setProgress(''); setProjectId(''); setPackageName(''); setScope('ALL'); setSelection(undefined)
-    setName(''); setFallback(false); setPlanSha256('')
+    setPlanSha256('')
     setError(''); setDetailError('')
   }
   async function begin() {
-    if (!mode || !selection || !(projectId || name.trim()) || !selectedProjectReady || sourceLoading || sourcePreparing || mode === 'import' && (!selectedPackage?.compatible || !selectedPackage.sha256)) return
+    if (!mode || !selection || !selectedProjectReady || sourceLoading || sourcePreparing || mode === 'import' && (!selectedPackage?.compatible || !selectedPackage.sha256)) return
     const vectorPackage = mode === 'import' ? { name: selectedPackage!.name, sha256: selectedPackage!.sha256! } : undefined
     await act(async () => {
-      let target = Number(projectId)
-      if (!target) {
-        setProgress('Tạo đồ thị trống')
-        try { target = await createBuilderProject(name); setProjectId(String(target)) }
-        catch (failure) { setFallback(true); throw failure }
-        finally { setName('') }
-      }
-      setStatus(await startBuilderGraph({ projectId: target, selection, vectorPackage }, setProgress))
+      setStatus(await startBuilderGraph({ projectId: Number(projectId), selection, vectorPackage }, setProgress))
       setMode(null); setProgress('')
     })
   }
@@ -313,16 +272,13 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     {exportState?.state === 'COMPLETE' && <p role="status" className="text-sm break-words">Đã xuất {exportState.name}. Lấy tệp tại {exportState.directory} để chép sang máy khác.</p>}
     {exportState?.state === 'FAILED' && <p role="alert">Xuất gói chưa hoàn tất. {packageReason(exportState.code ?? '')}</p>}
     {clearReport && clearState && clearState.state !== 'NOT_RUN' && <div className="text-sm space-y-2" role="status"><p>{clearState.state === 'COMPLETE' ? 'Đã xóa đồ thị. Có thể tái sử dụng đích trống trong OpenSPG.' : `Đã xóa ${clearState.deleted.nodes.toLocaleString('vi-VN')} nội dung và ${clearState.deleted.edges.toLocaleString('vi-VN')} liên kết; ${clearState.state === 'APPLYING' ? 'đang tiếp tục.' : 'chưa hoàn tất, tải lại để kiểm tra.'}`}</p>{clearState.code && <p>{['SCOPE','CLEAR_SERVING'].includes(clearState.code) ? 'Đồ thị vừa được dùng lại cho Chat. Tải lại rồi xác nhận xóa lại.' : builderIssue(clearState.code)}</p>}<details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><pre className="whitespace-pre-wrap break-all">{JSON.stringify(clearState,null,2)}</pre></details></div>}
-    <Modal open={mode !== null} title={mode === 'import' ? 'Nhập từ gói' : 'Dựng đồ thị mới'} onClose={() => { if (!busy) setMode(null) }} footer={<><Button disabled={busy} onClick={() => setMode(null)}>Hủy</Button><Button variant="primary" disabled={busy || !(projectId || name.trim()) || !selectedProjectReady || !selection || sourceLoading || sourcePreparing || !!building || mode === 'import' && !selectedPackage?.compatible} onClick={() => void begin()}>{mode === 'import' ? 'Xác nhận nhập' : 'Xác nhận dựng'}</Button></>}>
+    <Modal open={mode !== null} title={mode === 'import' ? 'Nhập từ gói' : 'Dựng đồ thị mới'} onClose={() => { if (!busy) setMode(null) }} footer={<><Button disabled={busy} onClick={() => setMode(null)}>Hủy</Button><Button variant="primary" disabled={busy || !selectedProjectReady || !selection || sourceLoading || sourcePreparing || !!building || mode === 'import' && !selectedPackage?.compatible} onClick={() => void begin()}>{mode === 'import' ? 'Xác nhận nhập' : 'Xác nhận dựng'}</Button></>}>
       <div className="space-y-4 text-sm">
-        <Field label="Tên đồ thị"><input className={inputCls} value={name} maxLength={255} disabled={busy || !!projectId} onChange={event => setName(event.target.value)} /></Field>
-        {!projectId && <p>Tạo đồ thị mới sẽ gọi embedding 1 lần để kiểm tra model.</p>}
-        {fallback && <p role="alert">Chưa tạo được đồ thị tự động. Kiểm tra OpenSPG hoặc tải lại danh sách; nếu đồ thị đã xuất hiện, chọn để tiếp tục.</p>}
-        <details open={fallback || !!projectId}><summary className="underline cursor-pointer">Dùng đồ thị trống đã có trong OpenSPG</summary><div className="space-y-3 mt-3">
-          <p>Nếu chưa ánh xạ được model, tạo đồ thị trong OpenSPG rồi tải lại danh sách để chọn.</p>
+        <div className="space-y-3">
+          <p>Tạo project trong OpenSPG, rồi tải lại danh sách và chọn đồ thị trống.</p>
           <div className="flex gap-3">{config?.links?.openspg && <a className="underline" target="_blank" rel="noreferrer" href={config.links.openspg}>Mở OpenSPG</a>}<Button disabled={busy} onClick={refresh}>Tải lại danh sách</Button></div>
-          <Field label="Đồ thị trống"><select className={inputCls} value={projectId} disabled={busy} onChange={event => setProjectId(event.target.value)}><option value="">Tạo đồ thị mới theo tên trên</option>{catalog?.projects.filter(row => row.state === 'AVAILABLE').map(row => <option key={row.project_id} value={row.project_id} disabled={projectData[row.project_id] !== 'EMPTY'}>{row.project_name}{projectData[row.project_id] === 'OCCUPIED' ? ' — Đã có dữ liệu' : projectData[row.project_id] === 'UNAVAILABLE' ? ' — Chưa đọc được dữ liệu' : !projectData[row.project_id] ? ' — Đang đọc dữ liệu' : ''}</option>)}</select></Field>
-        </div></details>
+          <Field label="Đồ thị trống"><select className={inputCls} value={projectId} disabled={busy} onChange={event => setProjectId(event.target.value)}><option value="" disabled>Chọn đồ thị trống trong OpenSPG</option>{catalog?.projects.filter(row => row.state === 'AVAILABLE').map(row => <option key={row.project_id} value={row.project_id} disabled={projectData[row.project_id] !== 'EMPTY'}>{row.project_name}{projectData[row.project_id] === 'OCCUPIED' ? ' — Đã có dữ liệu' : projectData[row.project_id] === 'UNAVAILABLE' ? ' — Chưa đọc được dữ liệu' : !projectData[row.project_id] ? ' — Đang đọc dữ liệu' : ''}</option>)}</select></Field>
+        </div>
         {mode === 'import' ? <><p>Chép ZIP vào thư mục {packages?.directory ?? 'graph-packages'} rồi tải lại.</p><Field label="Gói đồ thị"><select className={inputCls} value={packageName} disabled={busy} onChange={event => setPackageName(event.target.value)}><option value="">Chọn gói</option>{packages?.packages.map(row => <option key={row.name} value={row.name} disabled={!row.compatible}>{row.compatible ? '✓' : '✗'} {row.name}</option>)}</select></Field>
           {packages?.packages.filter(row => !row.compatible).map(row => <p key={row.name}>{row.name}: {packageReason(row.reason)}</p>)}
           {selectedPackage?.manifest && <p>Phạm vi từ gói: {selectedPackage.manifest.selection === null ? 'toàn bộ' : 'một phần'} · {selectedPackage.manifest.nodes.toLocaleString('vi-VN')} nội dung. Nhập vào đồ thị trống đã có không gọi embedding.</p>}</>
@@ -334,7 +290,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
           while(value.source_validation.state==='CHECKING'){await new Promise(resolve=>setTimeout(resolve,1500));value=await loadBuilderInputs()}
           if(value.source_validation.state!=='VALID')throw new Error('Nguồn chưa sẵn sàng')
         })}>Tải lại dữ liệu</Button>}
-        {progress && <p role="status">{progress}</p>}{error && <p role="alert">{error}</p>}
+        {progress && <p role="status">{progress}</p>}{error && <div role="alert"><p>{error}</p>{detailError && <details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><p>{detailError}</p></details>}</div>}
       </div>
     </Modal>
     {preview && <Modal open title="Dùng đồ thị cho Chat" onClose={() => { if (!busy) setPreview(undefined) }} footer={<><Button disabled={busy} onClick={() => setPreview(undefined)}>Hủy</Button><Button variant="primary" disabled={busy || !preview.chat_ready} onClick={() => void act(async () => {

@@ -481,6 +481,41 @@ export function selectionVectorCount(summary: SelectionSummary): number {
   return Object.entries(summary.node_counts).reduce((total, [name, count]) =>
     total + count * (name.split('.').pop() === 'TrafficSign' ? 2 : ['LegalDocument', 'LegalUnit'].includes(name.split('.').pop()!) ? 1 : 0), 0)
 }
+export function builderIssue(code: string | null) {
+  if (code?.startsWith('PACKAGE_')) return packageReason(code)
+  const messages: Record<string, string> = {
+    CONFIG: 'Cấu hình dựng đã đổi hoặc chưa đủ. Kiểm tra Model & API key rồi tải lại.',
+    INDEX: 'Cấu trúc tìm kiếm chưa phù hợp với số chiều model đã lưu. Tải lại và kiểm tra đồ thị đích.',
+    SCHEMA: 'Đồ thị chưa có cấu trúc phù hợp. Chọn đồ thị trống khác để dựng.',
+    SCHEMA_CUSTOM: 'Đích có cấu trúc tùy chỉnh nên chưa thể chuẩn bị tự động. Chọn đồ thị trống khác.',
+    SCHEMA_DATA: 'Đồ thị đã có dữ liệu. Chọn đồ thị trống khác để tiếp tục.',
+    SCHEMA_REINDEX: 'Cấu trúc hiện tại cần quản trị kiểm tra. Chọn đồ thị trống khác.',
+    STRUCTURE_STALE: 'Thông tin đích đã đổi. Tải lại rồi xác nhận lại.',
+    STRUCTURE_INTERRUPTED: 'Chuẩn bị cấu trúc bị gián đoạn. Tải lại trạng thái trước khi thử tiếp.',
+    CLEAR_SHARED: 'Nơi lưu đồ thị đang được dùng chung. Chọn đồ thị khác hoặc nhờ quản trị xử lý.',
+    CLEAR_SERVING: 'Đồ thị vừa được dùng lại cho Chat. Tải lại rồi xác nhận xóa lại.',
+    CLEAR_STALE: 'Đích hoặc quyền xóa đã đổi. Tải lại rồi xác nhận lại.',
+    CLEAR_UNCERTAIN: 'Chưa xác định xóa đã kết thúc. Nhờ quản trị kiểm tra trước khi thử lại.',
+    TARGET_MODEL: 'Dữ liệu tìm kiếm không khớp model đã lưu. Chọn đồ thị trống hoặc dùng đúng model đã dựng đồ thị.',
+    FORBIDDEN: 'Đăng nhập lại OpenSPG, kiểm quyền sở hữu đồ thị rồi tải lại danh sách.',
+    NOT_FOUND: 'Đồ thị không còn thuộc tài khoản này. Tải lại danh sách và chọn lại.',
+    CONNECTION_NOT_CONFIGURED: 'Nơi lưu đồ thị chưa khớp cấu hình hệ thống. Nhờ quản trị kiểm tra kết nối.',
+    SERVING_PROTECTED: 'Đồ thị đang dùng cho Chat. Chọn đồ thị trống khác để dựng.',
+    LOCK: 'Đồ thị đang dựng hoặc có thao tác khác. Dừng dựng trước rồi tải lại.',
+    UNCERTAIN_WRITE: 'Lần dựng trước bị gián đoạn, chưa xác định đã ghi xong. Nhờ quản trị kiểm tra trước khi tiếp tục.',
+    LOCK_MOUNT: 'Dịch vụ dựng chưa được cài đặt đầy đủ. Nhờ quản trị kiểm tra rồi thử lại.',
+    INTEGRITY: 'Dữ liệu nguồn hoặc điểm lưu đã thay đổi. Kiểm tra đúng phiên bản dữ liệu rồi tải lại.',
+    PLAN: 'Dữ liệu nguồn hoặc phạm vi không khớp gói đã chọn. Chọn đúng gói rồi tải lại.',
+    PROVENANCE: 'Thông tin nguồn của dữ liệu tìm kiếm không khớp. Kiểm tra gói và model trước khi thử lại.',
+    VECTORS: 'Dịch vụ embedding đang lỗi. Bấm Tiếp tục khi dịch vụ hoạt động lại.',
+    VECTORS_KEY: 'API hết hạn mức hoặc từ chối key. Đổi key cùng URL và model, rồi bấm Tiếp tục.',
+    PROVIDER_BUDGET: 'Đã chạm giới hạn gọi dịch vụ của lần dựng. Tiếp tục không làm mới hạn mức; kiểm tra chi phí trước khi dựng lại.',
+    INTERRUPTED: 'Tiến độ đã được lưu. Bấm Tiếp tục để kiểm tra và tiếp tục lần dựng này.',
+    RUNTIME: 'Dịch vụ dựng gặp lỗi. Tải lại trạng thái hoặc nhờ quản trị kiểm tra.',
+    SCOPE: 'Đích lưu hoặc quyền ghi chưa hợp lệ. Nhờ quản trị kiểm tra kết nối và quyền sở hữu.',
+  }
+  return code ? messages[code] ?? 'Điều kiện dựng chưa đạt. Kiểm tra cấu hình và chi tiết kỹ thuật trước khi thử lại.' : ''
+}
 export async function startBuilderGraph(options: {
   projectId: number; selection: BuilderSelection; vectorPackage?: VectorPackageReference
 }, onProgress: (step: string) => void): Promise<BuilderStatus> {
@@ -513,7 +548,12 @@ export async function startBuilderGraph(options: {
     await new Promise(resolve => setTimeout(resolve, 1500))
     config = await loadBuilderConfiguration()
   }
-  if (config.readiness.state !== 'READY' || config.target?.project_id !== options.projectId || config.revision !== savedRevision) throw new ApiError('Đồ thị chưa sẵn sàng hoặc cấu hình đã đổi. Tải lại trước khi thử tiếp.', 409)
+  if (config.readiness.state !== 'READY') {
+    const reasons = config.readiness.checks.filter(row => row.state === 'BLOCKED')
+      .map(row => `${builderIssue(row.code)} (${row.code})`)
+    throw new ApiError(reasons.join(' ') || 'Đồ thị chưa sẵn sàng. Tải lại trạng thái trước khi thử tiếp.', 409)
+  }
+  if (config.target?.project_id !== options.projectId || config.revision !== savedRevision) throw new ApiError('Cấu hình đã đổi. Tải lại trước khi thử tiếp.', 409)
   onProgress('Bắt đầu dựng đồ thị')
   return runBuilderAction('build', `build-${crypto.randomUUID()}`, config.revision)
 }
@@ -524,12 +564,6 @@ export type BuilderProjects = {
 }
 export async function loadBuilderProjects(signal?: AbortSignal): Promise<BuilderProjects> {
   return validateBuilderProjects(await api<BuilderProjects>('/admin/kag/builder/projects', { signal, cache: 'no-store' }))
-}
-export async function createBuilderProject(name: string): Promise<number> {
-  if (!name.trim() || name.length > 255 || /[\x00-\x1f\x7f-\x9f]/.test(name)) throw new ApiError('Nhập tên đồ thị, tối đa 255 ký tự', 400)
-  const value = validateBuilderProjects(await api<BuilderProjects>('/admin/kag/builder/projects', { method: 'POST', body: JSON.stringify({ name: name.trim() }) }))
-  if (value.projects.length !== 1 || value.projects[0].state !== 'AVAILABLE' || value.projects[0].project_name !== name.trim()) throw new ApiError('Chưa xác định đồ thị đã tạo. Tải lại danh sách trước khi thử tiếp.', 502)
-  return value.projects[0].project_id
 }
 function validateBuilderProjects(value: BuilderProjects): BuilderProjects {
   const invalid = () => { throw new ApiError('Danh sách project không hợp lệ', 502) }

@@ -113,7 +113,7 @@ def schema_changes(current, desired):
 
 
 @contextmanager
-def target_state(project_id, token, *, for_write=True, check_structure=False):
+def target_state(project_id, token, *, for_write=True, check_structure=False, dimension=None):
     from kag.bootstrap import initialize
     initialize()
     from knext.project.client import ProjectClient
@@ -143,20 +143,24 @@ def target_state(project_id, token, *, for_write=True, check_structure=False):
         record = projects.get(id=project_id)
         config = record.config if not isinstance(record, dict) else record['config']
         config = json.loads(config) if isinstance(config,str) else config
-        dimension = _dimension(config.get('vectorizer',{}).get('vector_dimensions'))
+        native_dimension = _dimension(config.get('vectorizer',{}).get('vector_dimensions'))
+        dimension = native_dimension if dimension is None else _dimension(dimension)
         client = SchemaClient(target['endpoints']['openspg'], project_id); bound_sdk_requests(client)
         session = SchemaSession(client._rest_client, project_id)
         script = (Path(__file__).resolve().parents[1]/'schema/VietRoadTraffic.schema').read_text(encoding='utf-8')
         script = script.replace('namespace VietRoadTraffic','namespace '+target['namespace'],1)
         desired = SPGSchemaMarkLang('',with_server=False,script_data_str=script).types
         yield dict(target=target, reader=reader, identity=identity, proof=proof, session=session,
-            desired=desired, dimension=dimension, store=_store(record)[0])
+            desired=desired, dimension=dimension, native_dimension=native_dimension, store=_store(record)[0])
     finally:
         identity.close()
 
 
 def inspect(state):
     target, reader, dimension = state['target'], state['reader'], state['dimension']
+    native_dimension = state.get('native_dimension',dimension)
+    counts=reader._query('structure_counts')[0]
+    if any(type(counts.get(k)) is not int or counts[k]<0 for k in ('nodes','edges')):raise RunBlocked('INTEGRITY')
     current = state['session'].spg_types
     desired = state['desired']; namespace = target['namespace']
     changes, updates, conflicts = schema_changes(current,desired)
@@ -185,6 +189,10 @@ def inspect(state):
             label=target['namespace']+'.'+local
             candidates=[r for r in rows if r.get('type')=='VECTOR' and r.get('labelsOrTypes')==[label] and r.get('properties')==[field]]
             status='KEEP' if candidates and all(_valid_index(r,dimension) for r in candidates) else 'BLOCKED' if candidates else 'ADD'
+            if status=='BLOCKED' and not any(counts.values()) and all(
+                    r['name'] in (_native_index_name(label,field),'luatgt_'+label.replace('.','_')+field)
+                    and _valid_index(r,r.get('options',{}).get('indexConfig',{}).get('vector.dimensions')) for r in candidates):
+                status='REBUILD'
             indexes.append(dict(label=label,property=field,action=status))
     default_labels={namespace+'.'+local for local in DEFAULT_TYPES}
     native_defaults={(_native_index_name(label,field),label,field) for label in default_labels
@@ -194,7 +202,7 @@ def inspect(state):
         labels, fields=row.get('labelsOrTypes') or [],row.get('properties') or []
         if set(labels)&default_labels:
             if (row.get('type')=='VECTOR' and len(labels)==len(fields)==1
-                    and (row['name'],labels[0],fields[0]) in native_defaults and _valid_index(row,dimension)):
+                    and (row['name'],labels[0],fields[0]) in native_defaults and _valid_index(row,native_dimension)):
                 obsolete.append(row)
             elif not (row.get('type')=='FULLTEXT' and row['name']=='_default_text_index'
                     and set(labels)<=default_labels|set(desired) and set(fields)<={'name','content','semanticType'}):
@@ -223,6 +231,8 @@ def inspect(state):
         labels,fields=row.get('labelsOrTypes') or [],row.get('properties') or []
         action='KEEP'
         if row in obsolete:action='REMOVE'
+        elif any(r['action']=='REBUILD' and labels==[r['label']] and fields==[r['property']] for r in indexes):
+            action='REBUILD'
         elif updates and row.get('type')=='VECTOR' and len(labels)==len(fields)==1 and (row['name'],labels[0],fields[0]) in native_vectors:
             action='REBUILD'
         elif updates and row.get('type')=='FULLTEXT' and row['name']=='_default_text_index' and set(labels)<=default_labels|set(desired) and set(fields)<={'name','content','semanticType'}:
@@ -249,8 +259,6 @@ def inspect(state):
     for row in indexes:
         if row['action']=='KEEP' and any(r['action']=='REBUILD' and r['labels']==[row['label']] and r['properties']==[row['property']] for r in index_changes):
             row['action']='REBUILD'
-    counts=reader._query('structure_counts')[0]
-    if any(type(counts.get(k)) is not int or counts[k]<0 for k in ('nodes','edges')):raise RunBlocked('INTEGRITY')
     # Native schema sync rebuilds indexes. It is restricted to an empty physical database.
     reason = ('SCHEMA_CUSTOM' if conflicts else 'SCHEMA_DATA' if (updates or obsolete) and any(counts.values())
         else 'INDEX' if any(r['action']=='BLOCKED' for r in indexes)
@@ -271,15 +279,15 @@ def inspect(state):
     return snapshot, updates
 
 
-def preview(project_id, token):
-    with target_state(project_id,token) as state:
+def preview(project_id, token, *, dimension=None):
+    with target_state(project_id,token,dimension=dimension) as state:
         return inspect(state)[0]
 
 
-def apply(project_id, token, expected, lock_root):
+def apply(project_id, token, expected, lock_root, *, dimension=None):
     from neo4j import GraphDatabase, Query
     from kag.runner import validate_target_schema
-    with target_state(project_id,token) as state:
+    with target_state(project_id,token,dimension=dimension) as state:
         proof=state['proof']
         lock=GraphLock(lock_root,proof.physical_database_id,
             dict(scope='PRODUCTION',project_id=project_id,namespace=state['target']['namespace'],database=state['target']['database']),
@@ -314,12 +322,32 @@ def apply(project_id, token, expected, lock_root):
                     actual=[r for r in current_rows if r['name']==row['name']]
                     if not actual:continue
                     if (len(actual)!=1 or actual[0]['labelsOrTypes']!=row['labels'] or actual[0]['properties']!=row['properties']
-                            or not _valid_index(actual[0],state['dimension'])):raise RunBlocked('STRUCTURE_STALE')
+                            or not _valid_index(actual[0],state.get('native_dimension',state['dimension']))):raise RunBlocked('STRUCTURE_STALE')
                     name=row['name'].replace('`','``')
                     with driver.session(database=state['target']['database']) as session:
                         session.run(Query(f'DROP INDEX `{name}` IF EXISTS',timeout=60)).consume()
                 for row in before['indexes']:
                     existing=[r for r in fresh if r.get('type')=='VECTOR' and r.get('labelsOrTypes')==[row['label']] and r.get('properties')==[row['property']]]
+                    for actual in existing:
+                        # Native sync may still be populating; final readback below requires ONLINE.
+                        online=dict(actual,state='ONLINE')
+                        if actual['state'] in ('ONLINE','POPULATING') and _valid_index(online,state['dimension']):continue
+                        if (actual['state'] not in ('ONLINE','POPULATING')
+                                or actual['name'] not in (_native_index_name(row['label'],row['property']),
+                                'luatgt_'+row['label'].replace('.','_')+row['property'])
+                                or not _valid_index(online,actual.get('options',{}).get('indexConfig',{}).get('vector.dimensions'))):
+                            raise RunBlocked('INDEX')
+                        lock.assert_owned(proof.physical_database_id);state['identity'].validate(proof)
+                        if selected_target(project_id,token)!=state['target']:raise RunBlocked('STRUCTURE_STALE')
+                        if any(state['reader']._query('structure_counts')[0].values()):raise RunBlocked('SCHEMA_DATA')
+                        name=actual['name'].replace('`','``')
+                        uncertain=True
+                        with driver.session(database=state['target']['database']) as session:
+                            session.run(Query(f'DROP INDEX `{name}` IF EXISTS',timeout=60)).consume()
+                            query=(f'CREATE VECTOR INDEX `{name}` FOR (n:`{row["label"]}`) ON (n.`{row["property"]}`) '
+                                'OPTIONS {indexConfig: {`vector.dimensions`: $dimension, `vector.similarity_function`: "cosine"}}')
+                            session.run(Query(query,timeout=60),dimension=state['dimension']).consume()
+                        uncertain=False
                     if existing:continue
                     lock.assert_owned(proof.physical_database_id);state['identity'].validate(proof)
                     name='luatgt_'+row['label'].replace('.','_')+row['property']
@@ -338,7 +366,9 @@ def apply(project_id, token, expected, lock_root):
                         if (not actual or actual['type']!=planned['type'] or actual['state']!='ONLINE'
                                 or set(actual['labelsOrTypes'])!=set(planned['labels'])
                                 or set(actual['properties'])!=set(planned['properties'])
-                                or actual['type']=='VECTOR' and not _valid_index(actual,state['dimension'])):
+                                or actual['type']=='VECTOR' and not _valid_index(actual,
+                                    state['dimension'] if any(planned['labels']==[r['label']] and planned['properties']==[r['property']] for r in before['indexes'])
+                                    else state.get('native_dimension',state['dimension']))):
                             raise RunBlocked('INDEX')
                     break
                 except RunBlocked:
@@ -355,7 +385,7 @@ def apply(project_id, token, expected, lock_root):
             # A lost native sync response can leave remote index work in flight, as with Runner writes.
             if uncertain:lock.retain()
             else:lock.release()
-    return preview(project_id,token)
+    return preview(project_id,token,dimension=dimension)
 
 
 def clear_permissions(state, *, detached=True):

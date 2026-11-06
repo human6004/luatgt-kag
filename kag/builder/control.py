@@ -834,26 +834,6 @@ def create_app(*, control=None, token=None, state_dir=None):
         authenticate_request(request)
         return await asyncio.to_thread(read_projects,session_token(request))
 
-    @app.post('/v1/builder/projects',status_code=202)
-    async def create_builder_project(request: Request):
-        nonlocal source_task
-        authenticate_request(request)
-        try:
-            body=json.loads(await bounded_body(request))
-            if type(body) is not dict or set(body)!={'name'}:raise ValueError
-        except (ValueError,TypeError):raise ApiFailure('INVALID_REQUEST') from None
-        if not structure_idle() or clear_result['state'] in ('APPLYING','PARTIAL','INTERRUPTED'):
-            raise HTTPException(409,'LOCK')
-        from kag.builder.projects import create_project
-        async def create():
-            try:return await asyncio.to_thread(create_project,body['name'],session_token(request),_builder_model(secrets),_builder_policy())
-            except (ProjectCatalogError,RunBlocked) as error:return error
-            except Exception:return ProjectCatalogError('CREATE_UNCERTAIN')
-        source_task=asyncio.create_task(create())
-        result=await asyncio.shield(source_task)
-        if isinstance(result,(ProjectCatalogError,RunBlocked)):raise HTTPException(409,result.code)
-        return result
-
     @app.get('/v1/builder/graph/{project_id}')
     async def graph_project(project_id: int, request: Request):
         authenticate_request(request)
@@ -943,6 +923,12 @@ def create_app(*, control=None, token=None, state_dir=None):
         from kag.builder import structure
         token=session_token(request)
         model=structure_model()
+        try:
+            tested=_builder_model(secrets)['test']
+            if not tested or tested['status']!='PASS':raise ValueError
+            dimension=structure._dimension(tested['dimension'])
+        except (OSError,ValueError,KeyError,TypeError,RunBlocked):
+            raise HTTPException(409,'BUILDER_EMBEDDING_NOT_READY') from None
         def envelope(report,state,code=None):
             report=copy.deepcopy(report)
             signature=report.pop('signature',None) if report else None
@@ -950,13 +936,13 @@ def create_app(*, control=None, token=None, state_dir=None):
                 preview_id=_spec_hash(dict(signature=signature,model=model,revision=body['revision'])),
                 checked_at=datetime.now(timezone.utc).isoformat(),can_apply=state=='PREVIEW' and report['code'] is None
                     and bool(any(r['action']!='KEEP' for r in report['changes'])
-                        or any(r['action']=='ADD' for r in report['indexes'])
+                        or any(r['action'] in ('ADD','REBUILD') for r in report['indexes'])
                         or any(r['action']=='REMOVE' for r in report.get('index_changes',[]))),
                 report=report,code=code)
         if operation=='preview':
             source_task=asyncio.current_task()
             try:
-                report=await asyncio.to_thread(structure.preview,body['project_id'],token)
+                report=await asyncio.to_thread(structure.preview,body['project_id'],token,dimension=dimension)
                 if body['revision']!=(setup['revision'] if setup else 0) or model!=structure_model():
                     raise RunBlocked('STRUCTURE_STALE')
                 # Hash includes the live schema/index/physical target and current saved model.
@@ -975,17 +961,17 @@ def create_app(*, control=None, token=None, state_dir=None):
         store_structure(dict(previous,state='APPLYING',can_apply=False,code=None))
         async def prepare_structure():
             try:
-                fresh=await asyncio.to_thread(structure.preview,body['project_id'],token)
+                fresh=await asyncio.to_thread(structure.preview,body['project_id'],token,dimension=dimension)
                 if envelope(copy.deepcopy(fresh),'PREVIEW')['preview_id']!=body['preview_id']:raise RunBlocked('STRUCTURE_STALE')
                 report=await asyncio.to_thread(structure.apply,body['project_id'],token,fresh['signature'],
-                    os.environ.get('KAG_BUILDER_LOCK_ROOT','/run/kag-locks'))
+                    os.environ.get('KAG_BUILDER_LOCK_ROOT','/run/kag-locks'),dimension=dimension)
                 if (report['code'] or any(r['action']!='KEEP' for r in report['changes'])
                         or any(r['action']!='KEEP' for r in report['indexes'])
                         or any(r['action']=='REMOVE' for r in report.get('index_changes',[]))):raise RunBlocked('SCHEMA')
                 store_structure(envelope(report,'COMPLETE'))
             except Exception as error:
                 code=error.code if isinstance(error,(RunBlocked,ProjectCatalogError)) else 'RUNTIME'
-                try:report=await asyncio.to_thread(structure.preview,body['project_id'],token)
+                try:report=await asyncio.to_thread(structure.preview,body['project_id'],token,dimension=dimension)
                 except Exception:report=None
                 store_structure(envelope(report,'PARTIAL',code))
         source_task=asyncio.create_task(prepare_structure())

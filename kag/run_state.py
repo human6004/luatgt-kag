@@ -29,6 +29,7 @@ MESSAGES = {'CONFIG': 'Invalid runner configuration.', 'SCOPE': 'Scope verificat
     'CLEAR_UNCERTAIN': 'A delete transaction may still be active. The graph lock is retained; operator reconciliation is required.',
     'STRUCTURE_STALE': 'Target, schema, indexes or model changed. Preview the structure again.',
     'SCHEMA': 'Target schema is missing or incompatible with the supplied LuatGT schema.',
+    'SCHEMA_DATA': 'Target contains data; index and schema replacement require an empty database.',
     'TARGET_MODEL': 'Existing target vectors lack matching model and exact readback provenance. Use an empty project or the original model and run history.',
     'INTEGRITY': 'Run or artifact integrity verification refused.', 'LOCK': 'Database writer lock unavailable.',
     'UNCERTAIN_WRITE': 'A previous write has an uncertain result; operator reconciliation is required.',

@@ -211,7 +211,8 @@ def prepare(change,token,*,activate=False):
     a._keys(change,('project_id','run_id',*(('preview_id',) if activate else ())))
     if type(change['project_id']) is not int or not 1<=change['project_id']<=2147483647: a._invalid()
     path,receipt=_run_directory(change['run_id'],change['project_id'])
-    with target_state(change['project_id'],token,for_write=False,check_structure=True) as state:
+    with target_state(change['project_id'],token,for_write=False,check_structure=True,
+            dimension=receipt['identity']['dimension']) as state:
         target=state['target'];proof=state['proof'];identity=receipt['identity']
         if (proof.physical_database_id!=identity['database_id'] or any(target[k]!=identity[k]
                 for k in ('project_id','project_name','database','namespace','endpoints'))): a._invalid()

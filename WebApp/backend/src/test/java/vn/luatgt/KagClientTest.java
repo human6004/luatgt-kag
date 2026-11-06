@@ -219,10 +219,10 @@ class KagClientTest {
             f.server.createContext("/v1/builder/projects",exchange->{
                 f.calls.incrementAndGet();session.set(exchange.getRequestHeaders().getFirst("X-OpenSPG-Session"));
                 cookie.set(exchange.getRequestHeaders().getFirst("Cookie"));
-                f.received=exchange.getRequestMethod().equals("POST")?json.readTree(exchange.getRequestBody().readAllBytes()):null;
+                assertEquals("GET",exchange.getRequestMethod());
                 byte[] bytes=response.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
                 exchange.getResponseHeaders().set("Content-Type","application/json");exchange.getResponseHeaders().set("Cache-Control","no-store");
-                exchange.sendResponseHeaders(exchange.getRequestMethod().equals("POST")?202:200,bytes.length);try(var out=exchange.getResponseBody()){out.write(bytes);}
+                exchange.sendResponseHeaders(200,bytes.length);try(var out=exchange.getResponseBody()){out.write(bytes);}
             });
             var client=client(f,Map.of("app.kag-builder-url",f.url(),"app.kag-builder-token-file",builderSecret.toString()),null);
             var request=new org.springframework.mock.web.MockHttpServletRequest();
@@ -231,12 +231,8 @@ class KagClientTest {
             org.springframework.web.context.request.RequestContextHolder.setRequestAttributes(new org.springframework.web.context.request.ServletRequestAttributes(request));
             try {
                 assertEquals(response,client.builderProjects());assertEquals("native-session",session.get());assertNull(cookie.get());
-                ((com.fasterxml.jackson.databind.node.ArrayNode)response.path("projects")).remove(1);
-                var creation=json.createObjectNode().put("name","Road");
-                assertEquals(response,client.createBuilderProject(creation));assertEquals(creation,f.received);assertEquals("native-session",session.get());
-                creation.put("modelId","forged");assertEquals(400,assertThrows(ResponseStatusException.class,()->client.createBuilderProject(creation)).getStatusCode().value());
                 request.setCookies(new jakarta.servlet.http.Cookie("OPEN_SPG_TOKEN","one"),new jakarta.servlet.http.Cookie("OPEN_SPG_TOKEN","two"));
-                assertThrows(ResponseStatusException.class,client::builderProjects);assertEquals(2,f.calls.get());
+                assertThrows(ResponseStatusException.class,client::builderProjects);assertEquals(1,f.calls.get());
             } finally { org.springframework.web.context.request.RequestContextHolder.resetRequestAttributes(); }
         }
     }
