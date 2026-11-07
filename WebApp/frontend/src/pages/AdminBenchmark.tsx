@@ -7,6 +7,40 @@ import { Notice } from './server/shared'
 
 const pct = (n: number) => (n * 100).toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'
 
+// Units follow the producers in kag/evaluation/metrics.py; unavailable-only diagnostics stay raw.
+const metricKinds: Record<string, 'ratio' | 'count'> = {
+  returned_top_k_MRR: 'ratio',
+  'document.returned_top_k_MRR': 'ratio',
+  'unit.returned_top_k_MRR': 'ratio',
+  'sign.returned_top_k_MRR': 'ratio',
+  'source_span.returned_top_k_MRR': 'ratio',
+  'source_span.evidence_recall': 'ratio',
+  'source_span.evidence_recall_required': 'ratio',
+  'source_span.context_precision': 'ratio',
+  citation_source_precision: 'ratio',
+  citation_source_recall: 'ratio',
+  citation_exact_precision: 'ratio',
+  citation_exact_recall: 'ratio',
+  citation_doc_accuracy: 'ratio',
+  citation_unit_accuracy: 'ratio',
+  citation_sign_accuracy: 'ratio',
+  abstention_accuracy: 'ratio',
+  correct_abstention: 'ratio',
+  false_answer_rate: 'ratio',
+  wrong_abstention_rate: 'ratio',
+  marker_coverage: 'ratio',
+  markers_all: 'ratio',
+  answer_correctness: 'ratio',
+  exact_eligible_citation_count: 'count',
+  exact_excluded_citation_count: 'count',
+  required_source_count: 'count',
+  acceptable_source_count: 'count',
+  citation_article_accuracy: 'count',
+  grounding: 'count',
+}
+// ranking_metrics emits Hit/Recall/MRR@k; source_span_metrics emits only Hit/Recall@k.
+const rankingMetric = /^(?:(?:document|unit|sign)\.)?(?:Hit|Recall|MRR)@\d+$|^source_span\.(?:Hit|Recall)@\d+$/
+
 function MetricBar({ value, kind = 'count' }: { value: number | null; kind?: 'ratio' | 'count' | 'latency' }) {
   if (value === null) return <span className="text-xs text-muted">Chưa đo</span>
   if (kind !== 'ratio') return <span className="tabular-nums">{kind === 'latency' ? `${Math.round(value)} ms` : value}</span>
@@ -40,6 +74,7 @@ export default function AdminBenchmark() {
       ? Object.entries(cat === 'all' ? run.metrics : run.by_category?.[cat] || {}).map(([name, m]) => ({
           key: `${mode}.${name}`,
           label: `${mode} · ${name}`,
+          name,
           value: m.value,
           group: cat === 'all' ? 'Tất cả' : cat,
           n: cat === 'all' ? run.requested_count : row?.metadata?.category_counts[cat],
@@ -144,8 +179,10 @@ export default function AdminBenchmark() {
             }
           >
             {measured.length ? (
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[480px]">
+              <>
+              <p className="px-4 pb-2 text-xs text-muted">Cuộn ngang để xem đủ 6 cột.</p>
+              <div className="max-h-[70vh] overflow-x-scroll pb-2" role="region" aria-label="Bảng kết quả benchmark" tabIndex={0}>
+                <table className="w-full min-w-[800px]">
                   <thead className="border-y border-line">
                     <tr>
                       <Th>Nhóm</Th>
@@ -162,9 +199,8 @@ export default function AdminBenchmark() {
                         <Td>{m.group}</Td>
                         <Td>{m.n ?? '—'}</Td>
                         <Td className="whitespace-nowrap text-navy">{m.label}</Td>
-                        <Td>
-                          {/* Summaries expose no unit; a value within 0..1 can also be a mean count. */}
-                          <MetricBar value={m.value} kind="count" />
+                        <Td className="min-w-40">
+                          <MetricBar value={m.value} kind={metricKinds[m.name] ?? (rankingMetric.test(m.name) ? 'ratio' : 'count')} />
                         </Td>
                         <Td>{m.scored}</Td>
                         <Td>{m.excluded}</Td>
@@ -173,6 +209,7 @@ export default function AdminBenchmark() {
                   </tbody>
                 </table>
               </div>
+              </>
             ) : (
               <p className="px-5 pb-5 text-sm text-muted">{cat === 'all' ? 'Chưa có execution artifact hợp lệ cho bộ câu hỏi này; các chỉ số chưa đo.' : `Nhóm ${cat} (${row?.metadata?.category_counts[cat] ?? 0} câu): Chưa đo.`}</p>
             )}
