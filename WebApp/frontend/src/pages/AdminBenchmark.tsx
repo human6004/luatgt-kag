@@ -105,6 +105,7 @@ export default function AdminBenchmark() {
       }
       if (!response.ok) throw new Error(response.status === 409 ? 'Tên bộ câu hỏi đã tồn tại.' : `Import thất bại (${response.status}).`)
       const result: { id: string; record_count: number } = await response.json()
+      setImportErrors([])
       notify(`Đã import ${result.record_count} câu.`)
       updateUrl({ dataset: result.id, cat: null })
       datasetData.reload()
@@ -148,7 +149,7 @@ export default function AdminBenchmark() {
                 <label className="block text-xs text-muted">
                   Tên bộ câu hỏi mới
                   <input className={`${inputCls} mt-1`} value={importName} maxLength={64} disabled={busy}
-                    onChange={(e) => setImportName(e.target.value)} placeholder="bo-cau-hoi-01" />
+                    onChange={(e) => { setImportName(e.target.value); setImportErrors([]) }} placeholder="bo-cau-hoi-01" />
                 </label>
                 <input ref={fileInput} type="file" accept=".json,application/json" className="hidden" disabled={busy}
                   onChange={(e) => { const file = e.target.files?.[0]; e.target.value = ''; if (file) void importFile(file) }} />

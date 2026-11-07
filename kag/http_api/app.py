@@ -673,8 +673,8 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
         if (set(request.query_params) != {'name'} or len(names) != 1
                 or not re.fullmatch(r'[A-Za-z0-9_.-]{1,64}', names[0]) or '..' in names[0] or names[0] == '.'):
             raise ApiFailure('INVALID_REQUEST')
-        from kag.evaluation.dataset import strict_json, canonical_dataset_bytes
-        from kag.evaluation.models import EvaluationRecord, ValidationError
+        from kag.evaluation.dataset import strict_json, dataset_from_records
+        from kag.evaluation.models import ValidationError
         try:
             values = strict_json((await bounded_body(request, limit=8*1024*1024)).decode('utf-8'))
         except (ValueError, UnicodeError, ValidationError, RecursionError):
@@ -683,16 +683,13 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
             return JSONResponse([dict(index=0, field='', code='ARRAY_REQUIRED', message='Cần một JSON array.')], status_code=422)
         if len(values) > 512:
             raise ApiFailure('REQUEST_TOO_LARGE')
-        records, issues = [], []
-        for index, value in enumerate(values):
-            try:
-                records.append(EvaluationRecord.from_dict(value))
-            except ValidationError as failure:
-                issues.extend(dict(index=index, field=issue.field, code=issue.code,
-                    message=f'{issue.code}: {issue.field}') for issue in failure.issues)
-        if issues:
+        try:
+            validated = dataset_from_records(values)
+        except ValidationError as failure:
+            issues = [dict(index=issue.line-1, field=issue.field, code=issue.code,
+                message=f'{issue.code}: {issue.field}') for issue in failure.issues]
             return Response(json.dumps(issues, ensure_ascii=True), media_type='application/json', status_code=422)
-        raw = canonical_dataset_bytes(records)
+        raw = validated.canonical_bytes
         from .inspection import LIMIT_BYTES
         if len(raw) > LIMIT_BYTES:
             raise ApiFailure('REQUEST_TOO_LARGE')
@@ -734,8 +731,8 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
         if status == 413:
             raise ApiFailure('REQUEST_TOO_LARGE')
         from collections import Counter
-        return JSONResponse(dict(id=f'{names[0]}/eval_questions.jsonl', record_count=len(records),
-            category_counts=dict(Counter(record.category for record in records))), status_code=201)
+        return JSONResponse(dict(id=f'{names[0]}/eval_questions.jsonl', record_count=len(validated.records),
+            category_counts=dict(Counter(record.category for record in validated.records))), status_code=201)
 
     @app.get('/v1/benchmark/datasets/{dataset_id:path}/export')
     async def export_benchmark(dataset_id: str, request: Request):
