@@ -957,7 +957,7 @@ class RuntimeSupervisor:
     def load_llm_config(self, secrets, *, read_only=False):
         self._llm_config, self._llm_error = None, None
         self._llm_secrets = (*secrets.query_tokens, *secrets.inspect_tokens, *secrets.credentials_write_tokens,
-                            *secrets.provider_test_tokens, *secrets.config_apply_tokens)
+                            *secrets.provider_test_tokens, *secrets.config_apply_tokens, *secrets.benchmark_write_tokens)
         self._llm_write_allowed = bool(secrets.credentials_write_tokens)
         self._llm_test_allowed, self._llm_apply_allowed = bool(secrets.provider_test_tokens), bool(secrets.config_apply_tokens)
         self._llm_bound, self._llm_runtime_error = {}, None

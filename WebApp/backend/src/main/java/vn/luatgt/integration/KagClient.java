@@ -38,6 +38,7 @@ public class KagClient {
     @Value("${app.kag-credentials-write-token-file:}") private String credentialsWriteTokenFile="";
     @Value("${app.kag-provider-test-token-file:}") private String providerTestTokenFile="";
     @Value("${app.kag-config-apply-token-file:}") private String configApplyTokenFile="";
+    @Value("${app.kag-benchmark-write-token-file:}") private String benchmarkWriteTokenFile="";
     private static final ZoneId LEGAL_ZONE=ZoneId.of("Asia/Saigon");
     private static final Set<String> REQUEST_FIELDS=Set.of("user_id","message","context_id","schema_contract");
     private static final Set<String> CITATION_FIELDS=Set.of("doc_id","unit_id","sign_id","evidence_id","field","start","end","quote");
@@ -907,6 +908,44 @@ public class KagClient {
         } catch(IllegalArgumentException e) {return false;}
     }
     public JsonNode benchmarkDatasets() { return inspectView("/v1/benchmark/datasets",false); }
+    public ResponseEntity<byte[]> benchmarkTemplate() {
+        return benchmarkTransfer("/v1/benchmark/template",null,null,"benchmark-template.json");
+    }
+    public ResponseEntity<byte[]> importBenchmark(String name,byte[] body) {
+        if(name==null||!name.matches("[A-Za-z0-9_.-]{1,64}")||name.contains("..")||name.equals("."))
+            throw vn.luatgt.exception.ApiErrors.bad("Tên bộ câu hỏi chỉ nhận 1–64 chữ, số, _, - và dấu chấm; không nhận ..");
+        if(body.length>8*1024*1024)throw new ResponseStatusException(HttpStatus.PAYLOAD_TOO_LARGE,"File vượt 8 MiB");
+        return benchmarkTransfer("/v1/benchmark/datasets",name,body,null);
+    }
+    public ResponseEntity<byte[]> exportBenchmark(String id) {
+        if(id==null||!id.matches("[A-Za-z0-9_.-]{1,128}(/eval_questions\\.jsonl)?")||id.contains("..")||id.equals("."))
+            throw vn.luatgt.exception.ApiErrors.bad("ID bộ câu hỏi không hợp lệ");
+        String filename=id.split("/")[0];
+        if(!id.contains("/")&&filename.endsWith(".jsonl"))filename=filename.substring(0,filename.length()-6);
+        return benchmarkTransfer("/v1/benchmark/datasets/"+id+"/export",null,null,filename+".json");
+    }
+    private ResponseEntity<byte[]> benchmarkTransfer(String path,String name,byte[] body,String filename) {
+        try {
+            boolean write=body!=null;
+            String token=write?readToken(benchmarkWriteTokenFile):inspectionToken();
+            if(write)for(String file:List.of(tokenFile,inspectTokenFile,credentialsWriteTokenFile,providerTestTokenFile,configApplyTokenFile))
+                if(!file.isBlank()&&token.equals(readToken(file)))throw new IOException("Distinct benchmark scope required");
+            RestClient.RequestHeadersSpec<?> request=write?
+                inspectionClient.post().uri(uri->uri.path(path).queryParam("name",name).build()).contentType(MediaType.APPLICATION_JSON).body(body):
+                inspectionClient.get().uri(path);
+            return request.header(HttpHeaders.AUTHORIZATION,"Bearer "+token).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
+                int status=res.getStatusCode().value();var media=res.getHeaders().getContentType();
+                if(media==null||!MediaType.APPLICATION_JSON.isCompatibleWith(media)||res.getHeaders().containsKey(HttpHeaders.CONTENT_ENCODING)||
+                    status!=(write?201:200)&&(status<400||status>599))throw new IOException("Invalid benchmark response");
+                byte[] raw=res.getBody().readNBytes(16*1024*1024+1);
+                if(raw.length>16*1024*1024)throw new IOException("Benchmark response too large");
+                var result=ResponseEntity.status(status).contentType(MediaType.APPLICATION_JSON).cacheControl(CacheControl.noStore());
+                if(!write&&status==200)result.header(HttpHeaders.CONTENT_DISPOSITION,ContentDisposition.attachment().filename(filename).build().toString());
+                return result.body(raw);
+            });
+        } catch(ResponseStatusException e) {throw e;}
+        catch(Exception e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Không đọc hoặc import được benchmark. Kiểm tra dịch vụ, scope và storage.");}
+    }
     public JsonNode sampleInspection() {
         try {
             headerIdentity(release);String token=inspectionToken();
@@ -1234,7 +1273,7 @@ public class KagClient {
         byte[] bytes=response.getBody().readNBytes(limit+1); if(bytes.length>limit) throw new IOException("Response too large");
         var body=parse(StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(bytes)).toString(),token);
         if(body==null||!body.isObject()) throw new IOException("Invalid response");
-        for(String file:List.of(tokenFile,inspectTokenFile,credentialsWriteTokenFile,providerTestTokenFile,configApplyTokenFile)) {
+        for(String file:List.of(tokenFile,inspectTokenFile,credentialsWriteTokenFile,providerTestTokenFile,configApplyTokenFile,benchmarkWriteTokenFile)) {
             String other=null; try {other=readToken(file);} catch(IOException ignored) {}
             if(other!=null&&body.toString().contains(other)) throw new IOException("Credentials reflected");
         }

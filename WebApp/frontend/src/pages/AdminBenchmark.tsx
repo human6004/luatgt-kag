@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useAdmin } from '../admin/store'
+import { apiResponse } from '../api'
 import { Badge, Button, Card, Page, Td, Th, inputCls } from '../admin/ui'
 import { useInspection } from './server/KagManagement'
-import { loadSampleInspection } from './server/kag-inspection'
+import { loadBenchmarkDatasets, loadSampleInspection } from './server/kag-inspection'
 import { Notice } from './server/shared'
 
 const pct = (n: number) => (n * 100).toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'
@@ -92,10 +93,17 @@ export default function AdminBenchmark() {
   const data = useInspection(loadSampleInspection)
   // Store departures from the default so async data also opens only the first channel.
   const [toggledChannels, setToggledChannels] = useState<Set<string>>(() => new Set())
+  const datasetData = useInspection(loadBenchmarkDatasets)
+  const fileInput = useRef<HTMLInputElement>(null)
+  const [importName, setImportName] = useState('')
+  const [busy, setBusy] = useState(false)
+  const [importErrors, setImportErrors] = useState<{ index: number; field: string; code: string; message: string }[]>([])
 
   const catalog = data.value?.datasets
+  const datasets = datasetData.value?.datasets ?? catalog?.datasets ?? []
   const requestedDataset = params.get('dataset') ?? ''
-  const row = catalog?.datasets.find((r) => r.id === requestedDataset) || catalog?.datasets[0]
+  const selected = datasets.find((r) => r.id === requestedDataset) || datasets[0]
+  const row = catalog?.datasets.find((r) => r.id === selected?.id)
   const categories: [string, number][] = Object.entries(row?.metadata?.category_counts || {})
   const maxCatCount = Math.max(1, ...categories.map(([, n]) => n))
 
@@ -144,6 +152,57 @@ export default function AdminBenchmark() {
     })
   }
 
+  async function download(path: string, filename: string) {
+    setBusy(true)
+    try {
+      const response = await apiResponse(path)
+      if (!response.ok) throw new Error(`Không tải được file (${response.status}).`)
+      const url = URL.createObjectURL(await response.blob())
+      const link = document.createElement('a')
+      link.href = url
+      link.download = filename
+      link.click()
+      URL.revokeObjectURL(url)
+    } catch (error) {
+      notify(error instanceof Error ? error.message : 'Không tải được file.')
+    } finally { setBusy(false) }
+  }
+
+  async function importFile(file: File) {
+    const name = importName.trim()
+    setImportErrors([])
+    if (!/^[A-Za-z0-9_.-]{1,64}$/.test(name) || name.includes('..') || name === '.') {
+      notify('Tên bộ câu hỏi cần 1–64 chữ, số, _, -, dấu chấm; không nhận ..')
+      return
+    }
+    if (!file.name.toLowerCase().endsWith('.json') || file.size > 8 * 1024 * 1024) {
+      notify('Chọn file .json không quá 8 MiB.')
+      return
+    }
+    setBusy(true)
+    try {
+      const response = await apiResponse(`/admin/kag/benchmark/datasets?name=${encodeURIComponent(name)}`, { method: 'POST', body: await file.text() })
+      if (response.status === 422) {
+        const errors: unknown = await response.json()
+        if (!Array.isArray(errors) || !errors.every((e) => e && Number.isSafeInteger(e.index) && e.index >= 0 && ['field', 'code', 'message'].every((k) => typeof e[k] === 'string'))) {
+          throw new Error('Phản hồi lỗi import không hợp lệ.')
+        }
+        setImportErrors(errors)
+        notify('File có lỗi; chưa lưu bộ câu hỏi.')
+        return
+      }
+      if (!response.ok) throw new Error(response.status === 409 ? 'Tên bộ câu hỏi đã tồn tại.' : `Import thất bại (${response.status}).`)
+      const result: { id: string; record_count: number } = await response.json()
+      setImportErrors([])
+      notify(`Đã import ${result.record_count} câu.`)
+      updateUrl({ dataset: result.id, cat: null })
+      datasetData.reload()
+      data.reload()
+    } catch (error) {
+      notify(error instanceof Error ? error.message : 'Import thất bại.')
+    } finally { setBusy(false) }
+  }
+
   return (
     <Page
       title="Benchmark"
@@ -155,24 +214,42 @@ export default function AdminBenchmark() {
       }
     >
       <Notice {...data} retry={data.reload} />
+      <Notice {...datasetData} retry={datasetData.reload} />
 
       <div className="grid gap-5 xl:grid-cols-[320px_minmax(0,1fr)]">
         <div className="space-y-5">
-          <Card title="Bộ câu hỏi chuẩn" right={<span className="text-[11.5px] text-muted">{row?.record_count ?? '—'} câu</span>}>
+          <Card title="Bộ câu hỏi chuẩn" right={<span className="text-[11.5px] text-muted">{selected?.record_count ?? '—'} câu</span>}>
             <div className="px-5 mb-4">
               <select
                 aria-label="Dataset"
                 className={inputCls}
-                value={row?.id || ''}
+                value={selected?.id || ''}
                 onChange={(e) => updateUrl({ dataset: e.target.value, cat: null })}
               >
-                {catalog?.datasets.map((r) => (
+                {datasets.map((r) => (
                   <option key={r.id}>{r.id}</option>
                 ))}
               </select>
               <p className="mt-2 text-xs text-muted">
-                {row ? `${row.dataset_status} · ${row.dataset_eligibility}` : 'Chưa có catalog bộ câu hỏi'}
+                {selected ? `${selected.dataset_status} · ${selected.dataset_eligibility}` : 'Chưa có catalog bộ câu hỏi'}
               </p>
+              <div className="mt-3 space-y-2">
+                <label className="block text-xs text-muted">
+                  Tên bộ câu hỏi mới
+                  <input className={`${inputCls} mt-1`} value={importName} maxLength={64} disabled={busy}
+                    onChange={(e) => { setImportName(e.target.value); setImportErrors([]) }} placeholder="bo-cau-hoi-01" />
+                </label>
+                <input ref={fileInput} type="file" accept=".json,application/json" className="hidden" disabled={busy}
+                  onChange={(e) => { const file = e.target.files?.[0]; e.target.value = ''; if (file) void importFile(file) }} />
+                <div className="flex flex-wrap gap-2">
+                  <Button size="sm" disabled={busy} onClick={() => void download('/admin/kag/benchmark/template', 'benchmark-template.json')}>Tải file mẫu</Button>
+                  <Button size="sm" disabled={busy || !importName.trim()} onClick={() => fileInput.current?.click()}>Import</Button>
+                  {selected && <Button size="sm" disabled={busy} onClick={() => void download(`/admin/kag/benchmark/datasets/${selected.id.split('/').map(encodeURIComponent).join('/')}/export`, `${selected.id.includes('/') ? selected.id.split('/')[0] : selected.id.replace(/\.jsonl$/, '')}.json`)}>Export</Button>}
+                </div>
+                {importErrors.length > 0 && <ul role="alert" className="max-h-60 overflow-y-auto space-y-1 text-xs text-red-700 break-words">
+                  {importErrors.map((error, index) => <li key={index}>Câu {error.index + 1} · {error.field || 'record'} · {error.message}</li>)}
+                </ul>}
+              </div>
             </div>
             {categories.length ? (
               <ul className="px-5 pb-5 space-y-1.5">

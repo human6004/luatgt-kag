@@ -49,7 +49,8 @@ $state = if ([IO.Path]::IsPathRooted($statePath)) { [IO.Path]::GetFullPath($stat
 $tokenNames = @('query', 'inspect', 'builder', 'egress')
 $tokenFiles = @($tokenNames | ForEach-Object { Join-Path $state "$_.token" })
 foreach ($entry in @(@('KAG_CREDENTIALS_WRITE_SECRET_FILE', 'credentials-write'),
-                     @('KAG_PROVIDER_TEST_SECRET_FILE', 'provider-test'), @('KAG_CONFIG_APPLY_SECRET_FILE', 'config-apply'))) {
+                     @('KAG_PROVIDER_TEST_SECRET_FILE', 'provider-test'), @('KAG_CONFIG_APPLY_SECRET_FILE', 'config-apply'),
+                     @('KAG_BENCHMARK_WRITE_SECRET_FILE', 'benchmark-write'))) {
     $setting = [regex]::Match($content, "(?m)^$($entry[0])=([^\r\n]+)")
     $path = if ($setting.Success) { $setting.Groups[1].Value.Trim().Trim([char]34, [char]39) } else { "../luatgt-state/$($entry[1]).token" }
     $tokenFiles += if ([IO.Path]::IsPathRooted($path)) { [IO.Path]::GetFullPath($path) } else { [IO.Path]::GetFullPath((Join-Path $PWD.Path $path)) }
@@ -93,9 +94,9 @@ Write-Host 'Đã chuẩn bị .env và token; giữ nguyên các file đã có. 
 Kết quả mặc định:
 
 - `.env`: mật khẩu và biến triển khai; xem `ADMIN_EMAIL`/`ADMIN_PASSWORD` để đăng nhập.
-- `.secrets/`: bảy file `query.token`, `inspect.token`, `builder.token`, `egress.token`, `credentials-write.token`, `provider-test.token`, `config-apply.token`.
+- `.secrets/`: tám file `query.token`, `inspect.token`, `builder.token`, `egress.token`, `credentials-write.token`, `provider-test.token`, `config-apply.token`, `benchmark-write.token`.
 
-Đường dẫn thực tế lấy từ `KAG_STATE_DIR` và ba biến `KAG_*_SECRET_FILE` trong `.env`. Dùng đường dẫn tương đối với root repository hoặc tuyệt đối, dùng dấu `/` trên Windows. Nếu đổi thư mục secrets cho cài mới, sửa cả bốn biến trước khi chạy đoạn lệnh; không dùng cú pháp tham chiếu biến trong các đường dẫn của đoạn PowerShell này. Cài đặt cũ giữ nguyên đường dẫn và fallback `../luatgt-state`, không tự chuyển file. Không commit `.env`, token hoặc backup; giới hạn quyền đọc cho người vận hành và Docker Desktop. Giữ chúng khi cập nhật.
+Đường dẫn thực tế lấy từ `KAG_STATE_DIR` và bốn biến `KAG_*_SECRET_FILE` trong `.env`. Dùng đường dẫn tương đối với root repository hoặc tuyệt đối, dùng dấu `/` trên Windows. Nếu đổi thư mục secrets cho cài mới, sửa cả năm biến trước khi chạy đoạn lệnh; không dùng cú pháp tham chiếu biến trong các đường dẫn của đoạn PowerShell này. Cài đặt cũ giữ nguyên đường dẫn và fallback `../luatgt-state`, không tự chuyển file. Không commit `.env`, token hoặc backup; giới hạn quyền đọc cho người vận hành và Docker Desktop. Giữ chúng khi cập nhật.
 
 Có thể mở cấu hình tại máy riêng:
 

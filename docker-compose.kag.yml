@@ -162,6 +162,7 @@ services:
       KAG_HTTP_CREDENTIALS_WRITE_SECRET_FILE: /run/secrets/credentials_write_token
       KAG_HTTP_PROVIDER_TEST_SECRET_FILE: /run/secrets/provider_test_token
       KAG_HTTP_CONFIG_APPLY_SECRET_FILE: /run/secrets/config_apply_token
+      KAG_HTTP_BENCHMARK_WRITE_SECRET_FILE: /run/secrets/benchmark_write_token
       KAG_HTTP_PROVIDER_TEST_ENABLED: ${KAG_PROVIDER_ENABLED:-0}
       KAG_HTTP_PROVIDER_TEST_GATEWAY_TOKEN_FILE: ${KAG_PROVIDER_ENABLED:+/run/secrets/egress_token}
       KAG_HTTP_PROVIDER_ALLOWED_HOSTS_FILE: /run/provider-hosts.lst
@@ -174,8 +175,7 @@ services:
       KAG_HTTP_RELEASE_ID: ${KAG_RELEASE_ID:-}
       KAG_HTTP_SAMPLE_PROOF_SHA256: ${KAG_SAMPLE_PROOF_SHA256:-}
       KAG_HTTP_SAMPLE_PROOF_SHA256_FILE: ${KAG_BROKER_URL:+/run/api-credentials/sample-proof.sha256}
-      # Optional read-only datasets under the existing external release mount.
-      KAG_HTTP_EVALUATION_ROOT: ${KAG_EVALUATION_ENABLED:+/release/evaluation}
+      KAG_HTTP_EVALUATION_ROOT: /benchmark-data
       KAG_HTTP_READER_USERNAME: ${KAG_READER_USERNAME:-}
       KAG_HTTP_READER_PASSWORD_FILE: ${KAG_READER_USERNAME:+/run/api-credentials/reader.password}
       KAG_HTTP_BROKER_URL: ${KAG_BROKER_URL:-}
@@ -194,7 +194,7 @@ services:
       KAG_PRODUCTION_WRITE: BLOCKED
       KAG_PROVIDER_EGRESS: DENY
       KAG_DEBUG_DUMP_CONFIG: "0"
-    secrets: [query_token, inspect_token, egress_token, credentials_write_token, provider_test_token, config_apply_token]
+    secrets: [query_token, inspect_token, egress_token, credentials_write_token, provider_test_token, config_apply_token, benchmark_write_token]
     volumes:
       - type: bind
         source: ${KAG_PROVIDER_HOSTS_FILE:-./docker/kag-ingress/provider-hosts.lst}
@@ -214,6 +214,9 @@ services:
       - type: volume
         source: kag-provider-state
         target: /provider-state
+      - type: volume
+        source: kag-benchmark-data
+        target: /benchmark-data
       - type: volume
         source: kag-builder-state
         target: /builder-state
@@ -382,6 +385,7 @@ networks:
   ingress:
     internal: false
 volumes:
+  kag-benchmark-data:
   kag-builder-state:
   kag-builder-graph-locks:
     name: ${KAG_GRAPH_LOCK_VOLUME:-${COMPOSE_PROJECT_NAME:-luatgt}_kag-builder-graph-locks}
@@ -400,6 +404,7 @@ volumes:
     name: ${KAG_STORAGE_PROJECT:-${COMPOSE_PROJECT_NAME:-luatgt}}_openspg-minio-data
     external: ${KAG_STORAGE_EXTERNAL:-false}
 secrets:
+  benchmark_write_token: {file: "${KAG_BENCHMARK_WRITE_SECRET_FILE:-../luatgt-state/benchmark-write.token}"}
   provider_test_token: {file: "${KAG_PROVIDER_TEST_SECRET_FILE:-../luatgt-state/provider-test.token}"}
   config_apply_token: {file: "${KAG_CONFIG_APPLY_SECRET_FILE:-../luatgt-state/config-apply.token}"}
   credentials_write_token: {file: "${KAG_CREDENTIALS_WRITE_SECRET_FILE:-../luatgt-state/credentials-write.token}"}

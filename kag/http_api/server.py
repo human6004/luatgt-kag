@@ -101,7 +101,8 @@ def create_app():
                     'KAG_HTTP_QUERY_PREVIOUS_SECRET_FILE','KAG_HTTP_INSPECT_PREVIOUS_SECRET_FILE',
                     'KAG_HTTP_CREDENTIALS_WRITE_SECRET_FILE','KAG_HTTP_CREDENTIALS_WRITE_PREVIOUS_SECRET_FILE',
                     'KAG_HTTP_PROVIDER_TEST_SECRET_FILE','KAG_HTTP_PROVIDER_TEST_PREVIOUS_SECRET_FILE',
-                    'KAG_HTTP_CONFIG_APPLY_SECRET_FILE','KAG_HTTP_CONFIG_APPLY_PREVIOUS_SECRET_FILE'):
+                    'KAG_HTTP_CONFIG_APPLY_SECRET_FILE','KAG_HTTP_CONFIG_APPLY_PREVIOUS_SECRET_FILE',
+                    'KAG_HTTP_BENCHMARK_WRITE_SECRET_FILE','KAG_HTTP_BENCHMARK_WRITE_PREVIOUS_SECRET_FILE'):
             if key in os.environ and not Path(os.environ[key]).is_absolute():
                 raise ConfigurationError()
         settings = ApiSettings.from_env()
@@ -151,7 +152,7 @@ def create_app():
         from .inspection import configuration_view
         app.state.config_snapshot = configuration_view(os.environ, provider_keys,
             (*settings.secrets.query_tokens, *settings.secrets.inspect_tokens, *settings.secrets.credentials_write_tokens,
-             *settings.secrets.provider_test_tokens, *settings.secrets.config_apply_tokens,
+             *settings.secrets.provider_test_tokens, *settings.secrets.config_apply_tokens, *settings.secrets.benchmark_write_tokens,
              *provider_keys.values(), reader_password, broker_token, gateway_token))
         if release_id:
             if not Path(root).is_absolute():

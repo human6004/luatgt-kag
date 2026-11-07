@@ -64,6 +64,7 @@ services:
       KAG_CREDENTIALS_WRITE_TOKEN_FILE: /run/secrets/credentials_write_token
       KAG_PROVIDER_TEST_TOKEN_FILE: /run/secrets/provider_test_token
       KAG_CONFIG_APPLY_TOKEN_FILE: /run/secrets/config_apply_token
+      KAG_HTTP_BENCHMARK_WRITE_SECRET_FILE: /run/secrets/benchmark_write_token
       KAG_BUILDER_URL: http://openspg-server:8010
       KAG_BUILDER_TOKEN_FILE: /run/secrets/builder_token
       KAG_RELEASE_ID: ${KAG_RELEASE_ID:-}
@@ -71,7 +72,7 @@ services:
       KAG_QUERY_TIMEOUT_SECONDS: ${KAG_QUERY_TIMEOUT_SECONDS:-180}
       KAG_INSPECTION_TIMEOUT_SECONDS: ${KAG_INSPECTION_TIMEOUT_SECONDS:-2}
       TZ: Asia/Ho_Chi_Minh
-    secrets: [kag_query_token, kag_inspect_token, builder_token, credentials_write_token, provider_test_token, config_apply_token]
+    secrets: [kag_query_token, kag_inspect_token, builder_token, credentials_write_token, provider_test_token, config_apply_token, benchmark_write_token]
     networks: [default, readbus]
     depends_on:
       mysql: {condition: service_healthy}
