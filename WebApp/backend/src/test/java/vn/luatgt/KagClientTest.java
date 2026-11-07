@@ -307,7 +307,10 @@ class KagClientTest {
                 f.server.createContext("/v1/builder/clear",exchange->{
                     assertEquals("native-session",exchange.getRequestHeaders().getFirst("X-OpenSPG-Session"));
                     assertEquals("Bearer "+"b".repeat(43),exchange.getRequestHeaders().getFirst("Authorization"));
-                    if(exchange.getRequestMethod().equals("POST"))assertTrue(deactivated.get());
+                    if(exchange.getRequestMethod().equals("POST")) {
+                        assertFalse(deactivated.get());
+                        assertEquals("/v1/builder/clear/apply",exchange.getRequestURI().getPath());
+                    }
                     f.received=exchange.getRequestMethod().equals("POST")?json.readTree(exchange.getRequestBody().readAllBytes()):null;
                     byte[] bytes=clear.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
                     exchange.getResponseHeaders().set("Content-Type","application/json");exchange.sendResponseHeaders(exchange.getRequestMethod().equals("POST")?202:200,bytes.length);

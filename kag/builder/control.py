@@ -867,7 +867,7 @@ def create_app(*, control=None, token=None, state_dir=None):
 
     @app.post('/v1/builder/clear/apply',status_code=202)
     async def clear_operation(request: Request):
-        nonlocal source_task,readiness,ready_binding
+        nonlocal source_task,readiness,ready_binding,serving_busy
         authenticate_request(request)
         try:
             body=json.loads(await bounded_body(request))
@@ -875,8 +875,10 @@ def create_app(*, control=None, token=None, state_dir=None):
                     or type(body['project_id']) is not int or not 1<=body['project_id']<=2147483647
                     or not isinstance(body['database_id'],str) or not re.fullmatch(r'[A-Za-z0-9._:-]{1,128}',body['database_id'])):raise ValueError
         except (ValueError,TypeError):raise ApiFailure('INVALID_REQUEST') from None
-        if (not state_dir or source_task is not None and not source_task.done()
-                or control is not None and control.status()['state'] in ('RUNNING','STOPPING')
+        current=control.status() if control is not None else None
+        if (not state_dir or source_task is not None and not source_task.done() or serving_busy
+                or current is not None and current['state'] in ('RUNNING','STOPPING')
+                    and current['target']['project_id']!=body['project_id']
                 or clear_result['state'] in ('PARTIAL','INTERRUPTED') and clear_result['report']
                     and clear_result['report']['database_id']!=body['database_id']):
             raise HTTPException(409,'LOCK')
@@ -892,16 +894,30 @@ def create_app(*, control=None, token=None, state_dir=None):
         readiness,ready_binding=dict(state='NOT_RUN',checks=[],checked_at=None),None
         store_clear(dict(contract_version='builder-clear-v1',state='APPLYING',revision=setup['revision'] if setup else 0,
             preview_id=None,report=report,deleted=dict(nodes=0,edges=0),checked_at=datetime.now(timezone.utc).isoformat(),code=None))
+        serving_busy=True
         async def clear():
+            nonlocal serving_busy
             try:
+                if current is not None and current.get('target') and current['target']['project_id']==body['project_id']:
+                    if current['state'] in ('RUNNING','STOPPING'):await asyncio.to_thread(control.close)
+                    if control.status()['state']=='STOPPED':
+                        def abandon():
+                            with structure.target_state(body['project_id'],token,for_write=False) as state:
+                                return control.abandon(current['run_id'],state)
+                        await asyncio.to_thread(abandon)
+                from kag.builder.serving import deactivate
+                await asyncio.to_thread(deactivate,body,token)
                 def progress(counts):store_clear(dict(clear_result,deleted=counts,checked_at=datetime.now(timezone.utc).isoformat()))
-                await asyncio.to_thread(structure.apply_clear,body['project_id'],token,body['database_id'],
+                after=await asyncio.to_thread(structure.apply_clear,body['project_id'],token,body['database_id'],
                     os.environ.get('KAG_BUILDER_LOCK_ROOT','/run/kag-locks'),
-                    started=lambda physical:structure.clear_runs(physical,mark=True),progress=progress)
-                store_clear(dict(clear_result,state='COMPLETE',code=None,checked_at=datetime.now(timezone.utc).isoformat()))
+                    progress=progress)
+                if any(after['report']['counts'].values()):raise RunBlocked('CLEAR_STALE')
+                store_clear(dict(clear_result,state='COMPLETE',report=after['report'],code=None,checked_at=datetime.now(timezone.utc).isoformat()))
             except Exception as error:
-                code=error.code if isinstance(error,(RunBlocked,ProjectCatalogError)) else 'RUNTIME'
+                code=error.code if isinstance(error,(RunBlocked,ProjectCatalogError)) else error.detail if isinstance(error,HTTPException) else 'RUNTIME'
                 store_clear(dict(clear_result,state='PARTIAL',code=code,checked_at=datetime.now(timezone.utc).isoformat()))
+            finally:
+                serving_busy=False
         source_task=asyncio.create_task(clear())
         return copy.deepcopy(clear_result)
 

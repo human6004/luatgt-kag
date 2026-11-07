@@ -461,7 +461,7 @@ def clear_snapshot(state):
         signature=_spec_hash(dict(report=report,structure=structure_signature,data=digest.hexdigest())))
 
 
-def apply_clear(project_id,token,expected,lock_root,*,started,progress):
+def apply_clear(project_id,token,expected,lock_root,*,progress):
     """Empty a dedicated database after unselecting Chat; retain schema and history."""
     from neo4j import GraphDatabase,Query
     with target_state(project_id,token,for_write=False,check_structure=True) as state:
@@ -476,7 +476,7 @@ def apply_clear(project_id,token,expected,lock_root,*,started,progress):
             if proof.physical_database_id!=expected:raise RunBlocked('CLEAR_STALE')
             before=clear_snapshot(state)
             if selected_target(project_id,token,for_write=False)!=target:raise RunBlocked('CLEAR_STALE')
-            started(proof.physical_database_id)
+            clear_runs(proof.physical_database_id)
             store=state['store'];deleted=dict(nodes=0,edges=0)
             with GraphDatabase.driver(target['endpoints']['neo4j_uri'],auth=(store['user'],store['password']),
                     connection_timeout=10,connection_acquisition_timeout=10,max_transaction_retry_time=0) as driver:
@@ -497,6 +497,7 @@ def apply_clear(project_id,token,expected,lock_root,*,started,progress):
             after=clear_snapshot(state)
             if any(after['report']['counts'].values()) or before['structure_signature']!=after['structure_signature']:
                 raise RunBlocked('CLEAR_STALE')
+            clear_runs(proof.physical_database_id,mark=True)
             return after
         except Exception:
             if uncertain:raise RunBlocked('CLEAR_UNCERTAIN') from None
