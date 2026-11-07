@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useAdmin } from '../admin/store'
 import { Badge, Button, Card, Page, Td, Th, inputCls } from '../admin/ui'
@@ -41,6 +42,37 @@ const metricKinds: Record<string, 'ratio' | 'count'> = {
 // ranking_metrics emits Hit/Recall/MRR@k; source_span_metrics emits only Hit/Recall@k.
 const rankingMetric = /^(?:(?:document|unit|sign)\.)?(?:Hit|Recall|MRR)@\d+$|^source_span\.(?:Hit|Recall)@\d+$/
 
+const displayName: Record<string, string> = {
+  returned_top_k_MRR: 'MRR (toàn kết quả)',
+  citation_source_precision: 'Chính xác nguồn trích dẫn',
+  citation_source_recall: 'Phủ nguồn trích dẫn',
+  citation_exact_precision: 'Chính xác trích dẫn chính xác',
+  citation_exact_recall: 'Phủ trích dẫn chính xác',
+  abstention_accuracy: 'Chính xác từ chối trả lời',
+  correct_abstention: 'Từ chối đúng',
+  false_answer_rate: 'Trả lời khi nên từ chối',
+  wrong_abstention_rate: 'Từ chối khi nên trả lời',
+  marker_coverage: 'Độ phủ từ khoá',
+  markers_all: 'Tất cả từ khoá',
+  answer_correctness: 'Độ chính xác câu trả lời',
+  citation_doc_accuracy: 'Độ chính xác văn bản',
+  citation_unit_accuracy: 'Độ chính xác đơn vị',
+  citation_sign_accuracy: 'Độ chính xác biển báo',
+  evidence_recall: 'Phủ căn cứ',
+  evidence_recall_required: 'Phủ căn cứ bắt buộc',
+  context_precision: 'Chính xác ngữ cảnh',
+}
+const channels = ['document', 'sign', 'unit', 'source_span', '']
+const families = ['Hit', 'Recall', 'MRR', 'returned_top_k']
+
+function parseMetric(mode: string, name: string) {
+  const channel = channels.find((c) => c && name.startsWith(`${c}.`)) || ''
+  const metric = channel ? name.slice(channel.length + 1) : name
+  const ranking = /^(Hit|Recall|MRR)@(\d+)$/.exec(metric)
+  const family = ranking?.[1] ?? (metric === 'returned_top_k_MRR' ? 'returned_top_k' : metric)
+  return { mode, channel, family, k: ranking ? Number(ranking[2]) : 0, label: ranking ? metric : Object.prototype.hasOwnProperty.call(displayName, metric) ? displayName[metric] : name }
+}
+
 function MetricBar({ value, kind = 'count' }: { value: number | null; kind?: 'ratio' | 'count' | 'latency' }) {
   if (value === null) return <span className="text-xs text-muted">Chưa đo</span>
   if (kind !== 'ratio') return <span className="tabular-nums">{kind === 'latency' ? `${Math.round(value)} ms` : value}</span>
@@ -58,6 +90,8 @@ export default function AdminBenchmark() {
   const [params, setParams] = useSearchParams()
   const { notify } = useAdmin()
   const data = useInspection(loadSampleInspection)
+  // Store departures from the default so async data also opens only the first channel.
+  const [toggledChannels, setToggledChannels] = useState<Set<string>>(() => new Set())
 
   const catalog = data.value?.datasets
   const requestedDataset = params.get('dataset') ?? ''
@@ -71,18 +105,33 @@ export default function AdminBenchmark() {
   const runs = row?.smoke?.runs
   const measured = Object.entries(runs || {}).flatMap(([mode, run]) =>
     run
-      ? Object.entries(cat === 'all' ? run.metrics : run.by_category?.[cat] || {}).map(([name, m]) => ({
-          key: `${mode}.${name}`,
-          label: `${mode} · ${name}`,
-          name,
-          value: m.value,
-          group: cat === 'all' ? 'Tất cả' : cat,
-          n: cat === 'all' ? run.requested_count : row?.metadata?.category_counts[cat],
-          scored: m.scored_count,
-          excluded: m.excluded_count,
-        }))
+      ? Object.entries(cat === 'all' ? run.by_category ?? { 'Tất cả': run.metrics } : { [cat]: run.by_category?.[cat] || {} })
+          .flatMap(([group, metrics]) => Object.entries(metrics).map(([name, m]) => ({
+            ...parseMetric(mode, name),
+            key: `${mode}.${group}.${name}`,
+            name,
+            value: m.value,
+            group,
+            n: group === 'Tất cả' ? run.requested_count : row?.metadata?.category_counts[group] ?? 0,
+            scored: m.scored_count,
+            excluded: m.excluded_count,
+          })))
       : [],
-  )
+  ).sort((a, b) => a.mode.localeCompare(b.mode)
+    || channels.indexOf(a.channel) - channels.indexOf(b.channel)
+    || (families.includes(a.family) ? families.indexOf(a.family) : families.length) - (families.includes(b.family) ? families.indexOf(b.family) : families.length)
+    || a.family.localeCompare(b.family) || a.k - b.k || a.group.localeCompare(b.group))
+  const metricGroups: { key: string; mode: string; channel: string; metrics: typeof measured }[] = []
+  for (const metric of measured) {
+    const key = `${metric.mode}.${metric.channel}`
+    if (metricGroups.at(-1)?.key !== key) metricGroups.push({ key, mode: metric.mode, channel: metric.channel, metrics: [] })
+    metricGroups.at(-1)!.metrics.push(metric)
+  }
+  function countRange(field: 'scored' | 'excluded') {
+    const values = measured.map((m) => m[field])
+    const min = Math.min(...values), max = Math.max(...values)
+    return min === max ? String(min) : `${min}–${max}`
+  }
 
   function updateUrl(patch: Record<string, string | null>) {
     setParams((prev) => {
@@ -161,7 +210,7 @@ export default function AdminBenchmark() {
 
         <div className="space-y-5 min-w-0">
           <Card
-            title="Kết quả đo KAG"
+            title={cat === 'all' ? 'Kết quả đo KAG' : `${cat} · ${row?.metadata?.category_counts[cat] ?? '—'} câu${measured.length ? ` · ${countRange('scored')} đã chấm · ${countRange('excluded')} bị loại` : ' · Chưa đo'}`}
             right={
               <select
                 className="rounded-lg border border-line bg-transparent px-2 py-1 text-[12px] text-navy"
@@ -179,37 +228,51 @@ export default function AdminBenchmark() {
             }
           >
             {measured.length ? (
-              <>
-              <p className="px-4 pb-2 text-xs text-muted">Cuộn ngang để xem đủ 6 cột.</p>
-              <div className="max-h-[70vh] overflow-x-scroll pb-2" role="region" aria-label="Bảng kết quả benchmark" tabIndex={0}>
-                <table className="w-full min-w-[800px]">
-                  <thead className="border-y border-line">
-                    <tr>
-                      <Th>Nhóm</Th>
-                      <Th>n</Th>
-                      <Th>Metric</Th>
-                      <Th>KAG (thực đo)</Th>
-                      <Th>Đã chấm</Th>
-                      <Th>Bị loại</Th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {measured.map((m) => (
-                      <tr key={m.key} className="border-b border-line/60 last:border-0">
-                        <Td>{m.group}</Td>
-                        <Td>{m.n ?? '—'}</Td>
-                        <Td className="whitespace-nowrap text-navy">{m.label}</Td>
-                        <Td className="min-w-40">
-                          <MetricBar value={m.value} kind={metricKinds[m.name] ?? (rankingMetric.test(m.name) ? 'ratio' : 'count')} />
-                        </Td>
-                        <Td>{m.scored}</Td>
-                        <Td>{m.excluded}</Td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+              <div role="region" aria-label="Bảng kết quả benchmark">
+                {cat !== 'all' && <p className="px-3 pb-3 text-xs text-muted">Đã chấm / bị loại theo metric; khoảng số thể hiện các metric có số câu khác nhau.</p>}
+                {metricGroups.map((group, index) => {
+                  const open = (index === 0) !== toggledChannels.has(group.key)
+                  return (
+                    <section key={group.key} className="border-t border-line">
+                      <button type="button" className="w-full px-3 py-3 text-left text-sm font-semibold text-navy hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong"
+                        aria-label={`${group.mode} · ${group.channel || 'Chung'}`} aria-expanded={open}
+                        onClick={() => setToggledChannels((prev) => {
+                          const next = new Set(prev)
+                          if (next.has(group.key)) next.delete(group.key)
+                          else next.add(group.key)
+                          return next
+                        })}>
+                        {open ? '▼' : '▶'} {group.mode} · {group.channel || 'Chung'}
+                      </button>
+                      {open && <table className="w-full table-fixed" aria-label={`${group.mode} · ${group.channel || 'Chung'}`}>
+                        <thead className="border-y border-line">
+                          <tr>
+                            {cat === 'all' ? <><Th className="hidden sm:table-cell sm:w-[15%] !px-2">Nhóm</Th><Th className="hidden sm:table-cell sm:w-[7%] !px-2">n</Th></> : <Th className="hidden sm:table-cell sm:w-[12%] !px-2">Mode</Th>}
+                            <Th className="hidden sm:table-cell sm:w-[16%] !px-2">Channel</Th>
+                            <Th className="w-1/2 sm:w-auto !px-2">Metric</Th>
+                            <Th className="w-[26%] sm:w-[22%] !px-2">Điểm</Th>
+                            <Th className="w-[24%] sm:w-[14%] !px-2">Đã chấm</Th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {group.metrics.map((m) => (
+                            <tr key={m.key} className="border-b border-line/60 last:border-0">
+                              {cat === 'all' ? <><Td className="hidden sm:table-cell !px-2">{m.group}</Td><Td className="hidden sm:table-cell !px-2">{m.n ?? '—'}</Td></> : <Td className="hidden sm:table-cell !px-2">{m.mode}</Td>}
+                              <Td className="hidden sm:table-cell !px-2">{m.channel || 'Chung'}</Td>
+                              <Td className="!px-2 text-navy [overflow-wrap:anywhere]">
+                                <span title={m.name}>{m.label}</span>
+                                {cat === 'all' && <span className="block text-xs text-muted sm:hidden">{m.group} · {m.n ?? '—'} câu</span>}
+                              </Td>
+                              <Td className="!px-2"><MetricBar value={m.value} kind={metricKinds[m.name] ?? (rankingMetric.test(m.name) ? 'ratio' : 'count')} /></Td>
+                              <Td className="!px-2">{m.scored}</Td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>}
+                    </section>
+                  )
+                })}
               </div>
-              </>
             ) : (
               <p className="px-5 pb-5 text-sm text-muted">{cat === 'all' ? 'Chưa có execution artifact hợp lệ cho bộ câu hỏi này; các chỉ số chưa đo.' : `Nhóm ${cat} (${row?.metadata?.category_counts[cat] ?? 0} câu): Chưa đo.`}</p>
             )}
