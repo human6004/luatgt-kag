@@ -56,6 +56,7 @@ public class InfrastructureService {
     public JsonNode builderAction(String action,String runId) { return kag.builderAction(action,runId); }
     public JsonNode builderAction(String action,String runId,String revision) { return kag.builderAction(action,runId,revision); }
     public JsonNode benchmarkDatasets() { return kag.benchmarkDatasets(); }
+    public org.springframework.http.ResponseEntity<JsonNode> benchmarkRun(String jobId,boolean stop,JsonNode change) {return kag.benchmarkRun(jobId,stop,change);}
     public org.springframework.http.ResponseEntity<byte[]> benchmarkTemplate() {return kag.benchmarkTemplate();}
     public org.springframework.http.ResponseEntity<byte[]> importBenchmark(String name,byte[] body) {return kag.importBenchmark(name,body);}
     public org.springframework.http.ResponseEntity<byte[]> exportBenchmark(String id) {return kag.exportBenchmark(id);}

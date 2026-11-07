@@ -1,10 +1,11 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useAdmin } from '../admin/store'
 import { apiResponse } from '../api'
 import { Badge, Button, Card, Page, Td, Th, inputCls } from '../admin/ui'
 import { useInspection } from './server/KagManagement'
-import { loadBenchmarkDatasets, loadSampleInspection } from './server/kag-inspection'
+import { inspectionError, loadBenchmarkDatasets, loadSampleInspection, loadServing, loadBenchmarkRun, startBenchmarkRun, stopBenchmarkRun } from './server/kag-inspection'
+import type { BenchmarkJob, BenchmarkMode, SmokeRun } from './server/kag-inspection'
 import { Notice } from './server/shared'
 
 const pct = (n: number) => (n * 100).toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'
@@ -94,6 +95,16 @@ export default function AdminBenchmark() {
   // Store departures from the default so async data also opens only the first channel.
   const [toggledChannels, setToggledChannels] = useState<Set<string>>(() => new Set())
   const datasetData = useInspection(loadBenchmarkDatasets)
+  const serving = useInspection(loadServing)
+  const [graphKey, setGraphKey] = useState('')
+  const [mode, setMode] = useState<BenchmarkMode>('BOTH')
+  const [limit, setLimit] = useState('')
+  const [job, setJob] = useState<BenchmarkJob | null>(null)
+  const [jobError, setJobError] = useState('')
+  const [runBusy, setRunBusy] = useState(false)
+  const [stopRequested, setStopRequested] = useState(false)
+  const [pollVersion, setPollVersion] = useState(0)
+  const [now, setNow] = useState(Date.now())
   const fileInput = useRef<HTMLInputElement>(null)
   const [importName, setImportName] = useState('')
   const [busy, setBusy] = useState(false)
@@ -104,23 +115,59 @@ export default function AdminBenchmark() {
   const requestedDataset = params.get('dataset') ?? ''
   const selected = datasets.find((r) => r.id === requestedDataset) || datasets[0]
   const row = catalog?.datasets.find((r) => r.id === selected?.id)
-  const categories: [string, number][] = Object.entries(row?.metadata?.category_counts || {})
+  const jobId = params.get('job') ?? ''
+  const currentJob = job?.run_id_job === jobId ? job : null
+  const selectedJob = currentJob?.dataset_id === selected?.id ? currentJob : null
+  const graphRuns = serving.value?.runs ?? []
+  const graph = graphRuns.find((r) => `${r.project_id}/${r.run_id}` === graphKey) ?? graphRuns[0]
+  const categoryCounts = selectedJob?.category_counts ?? row?.metadata?.category_counts ?? {}
+  const categories: [string, number][] = Object.entries(categoryCounts)
   const maxCatCount = Math.max(1, ...categories.map(([, n]) => n))
+
+  useEffect(() => {
+    setJob((previous) => previous?.run_id_job === jobId ? previous : null)
+    setJobError('')
+    setStopRequested(false)
+    if (!jobId) return
+    const controller = new AbortController()
+    let pending = false
+    let timer: ReturnType<typeof setInterval> | undefined
+    async function poll() {
+      if (pending || controller.signal.aborted) return
+      pending = true
+      try {
+        const value = await loadBenchmarkRun(jobId, controller.signal)
+        if (!controller.signal.aborted) {
+          setJob((previous) => previous?.run_id_job === jobId && previous.state !== 'RUNNING' ? previous : value)
+          setJobError('')
+          setNow(Date.now())
+          if (value.state === 'RUNNING' && timer === undefined) timer = setInterval(() => { void poll() }, 2000)
+          else if (value.state !== 'RUNNING') clearInterval(timer)
+        }
+      } catch (error) {
+        if (!controller.signal.aborted) setJobError(inspectionError(error))
+      } finally { pending = false }
+    }
+    void poll()
+    return () => { controller.abort(); clearInterval(timer) }
+  }, [jobId, pollVersion])
 
   const rawCat = params.get('cat') ?? 'all'
   const cat = rawCat === 'all' || categories.some(([id]) => id === rawCat) ? rawCat : 'all'
 
-  const runs = row?.smoke?.runs
+  const runs: Record<string, Pick<SmokeRun, 'metrics' | 'by_category' | 'requested_count'> | null> | undefined = selectedJob ? Object.fromEntries(Object.entries(selectedJob.metrics ?? {}).map(([mode, metrics]) => [mode, {
+    metrics: metrics.overall, by_category: metrics.by_category, requested_count: metrics.requested_count,
+  }])) : row?.smoke?.runs
   const measured = Object.entries(runs || {}).flatMap(([mode, run]) =>
     run
-      ? Object.entries(cat === 'all' ? run.by_category ?? { 'Tất cả': run.metrics } : { [cat]: run.by_category?.[cat] || {} })
+      ? Object.entries(cat === 'all' ? { ...(run.by_category ?? {}), 'Tất cả': run.metrics } : { [cat]: run.by_category?.[cat] || {} })
           .flatMap(([group, metrics]) => Object.entries(metrics).map(([name, m]) => ({
             ...parseMetric(mode, name),
             key: `${mode}.${group}.${name}`,
             name,
             value: m.value,
             group,
-            n: group === 'Tất cả' ? run.requested_count : row?.metadata?.category_counts[group] ?? 0,
+            n: group === 'Tất cả' ? run.requested_count : m.eligible_count + m.excluded_count,
             scored: m.scored_count,
             excluded: m.excluded_count,
           })))
@@ -150,6 +197,32 @@ export default function AdminBenchmark() {
       }
       return next
     })
+  }
+
+  async function runBenchmark() {
+    const count = limit.trim() === '' ? null : Number(limit)
+    if (!selected || !graph || count !== null && (!/^\d+$/.test(limit.trim()) || !Number.isSafeInteger(count) || count < 1 || count > (selected.record_count ?? 0))) {
+      notify('Chọn bộ câu hỏi, đồ thị và số câu từ 1 đến số câu trong bộ; để trống để chạy toàn bộ.')
+      return
+    }
+    setRunBusy(true)
+    try {
+      const result = await startBenchmarkRun({ dataset_id: selected.id, project_id: graph.project_id, run_id: graph.run_id, mode, limit: count })
+      updateUrl({ job: result.run_id_job, dataset: selected.id, cat: null })
+    } catch (error) { notify(inspectionError(error)) }
+    finally { setRunBusy(false) }
+  }
+
+  async function stopBenchmark() {
+    if (!currentJob || currentJob.state !== 'RUNNING') return
+    setRunBusy(true)
+    try {
+      const result = await stopBenchmarkRun(currentJob.run_id_job)
+      setJob((previous) => previous?.run_id_job === result.run_id_job && previous.state !== 'RUNNING' ? previous : result)
+      setStopRequested(true)
+      setJobError('')
+    } catch (error) { notify(inspectionError(error)) }
+    finally { setRunBusy(false) }
   }
 
   async function download(path: string, filename: string) {
@@ -207,14 +280,49 @@ export default function AdminBenchmark() {
     <Page
       title="Benchmark"
       subtitle="Đọc catalog bộ câu hỏi và artifact đánh giá thực tế của KAG từ backend."
-      actions={
-        <Button variant="dark" onClick={() => notify('Chức năng đang phát triển')}>
-          ▶ Chạy & đánh giá <Badge tone="gray">Đang phát triển</Badge>
-        </Button>
-      }
     >
       <Notice {...data} retry={data.reload} />
       <Notice {...datasetData} retry={datasetData.reload} />
+      <Notice {...serving} retry={serving.reload} />
+
+      <Card title="Chạy benchmark">
+        <div className="px-5 pb-5 space-y-3 text-sm">
+          <div className="grid gap-3 sm:grid-cols-3">
+            <label>Đồ thị đã PASS
+              <select aria-label="Đồ thị benchmark" className={`${inputCls} mt-1`} value={graph ? `${graph.project_id}/${graph.run_id}` : ''} disabled={runBusy || currentJob?.state === 'RUNNING'} onChange={(e) => setGraphKey(e.target.value)}>
+                {!graph && <option value="">Chưa có đồ thị đã PASS</option>}
+                {graphRuns.map((r) => <option key={`${r.project_id}/${r.run_id}`} value={`${r.project_id}/${r.run_id}`}>{r.project_name} · {r.run_id}</option>)}
+              </select>
+            </label>
+            <label>Mode
+              <select aria-label="Mode benchmark" className={`${inputCls} mt-1`} value={mode} disabled={runBusy || currentJob?.state === 'RUNNING'} onChange={(e) => setMode(e.target.value as BenchmarkMode)}>
+                <option value="G1">G1 · Truy xuất</option><option value="G2">G2 · Trả lời</option><option value="BOTH">G1 + G2</option>
+              </select>
+            </label>
+            <label>Số câu · để trống = toàn bộ
+              <input aria-label="Số câu benchmark" type="number" min={1} max={selected?.record_count ?? undefined} step={1} className={`${inputCls} mt-1`} value={limit} disabled={runBusy || currentJob?.state === 'RUNNING'} onChange={(e) => setLimit(e.target.value)} placeholder="Toàn bộ" />
+            </label>
+          </div>
+          {(selectedJob?.dataset_status ?? selected?.dataset_status) === 'PROVISIONAL' && <p className="text-amber-700">Bộ chưa cố định — số liệu tạm, không so sánh được giữa các lần chạy.</p>}
+          {selectedJob?.dataset_status === 'FROZEN' && <p className="break-all text-xs">FROZEN · dataset_hash: {selectedJob.dataset_hash} · frozen_at: {selectedJob.frozen_at}</p>}
+          <p className="text-xs text-amber-700">GraphLock giữ suốt lượt chạy; không thể xóa hoặc dựng lại đồ thị đến khi lượt chạy kết thúc hoặc dừng.</p>
+          <div className="flex flex-wrap gap-2">
+            <Button variant="dark" disabled={runBusy || !!jobId && !currentJob || currentJob?.state === 'RUNNING' || !graph || serving.value?.busy || !selected?.record_count || !selected.dataset_hash || !['PROVISIONAL', 'FROZEN'].includes(selected.dataset_status ?? '')} onClick={runBenchmark}>Chạy benchmark</Button>
+            {currentJob?.state === 'RUNNING' && <Button disabled={runBusy || stopRequested} onClick={stopBenchmark}>Dừng benchmark</Button>}
+            {jobId && <Button size="sm" onClick={() => updateUrl({ job: null })} disabled={runBusy || currentJob?.state === 'RUNNING'}>Đóng lượt chạy</Button>}
+          </div>
+          {jobError && <div role="alert" className="text-red-700">{jobError} <Button size="sm" onClick={() => setPollVersion((v) => v + 1)}>Thử lại trạng thái</Button></div>}
+          {jobId && !currentJob && !jobError && <p role="status">Đang tải trạng thái lượt chạy…</p>}
+          {currentJob && <div role="status" className="space-y-1 text-xs">
+            <p>{currentJob.state} · {currentJob.dataset_id} · {currentJob.project_id}/{currentJob.run_id}</p>
+            {Object.entries(currentJob.progress).map(([m, p]) => <p key={m}>{m} {p.done}/{p.total} câu</p>)}
+            <p>Thời gian: {Math.max(0, Math.floor(((currentJob.finished_at ? Date.parse(currentJob.finished_at) : now) - Date.parse(currentJob.started_at)) / 1000))} giây</p>
+            {stopRequested && currentJob.state === 'RUNNING' && <p>Đã yêu cầu dừng; chờ câu đang xử lý kết thúc.</p>}
+            {currentJob.state === 'STOPPED' && <p className="text-amber-700">Đã dừng — kết quả một phần, chưa đánh giá toàn bộ tập đã chọn.</p>}
+            {currentJob.state === 'FAILED' && <p className="text-red-700">Lượt chạy thất bại · {currentJob.code}</p>}
+          </div>}
+        </div>
+      </Card>
 
       <div className="grid gap-5 xl:grid-cols-[320px_minmax(0,1fr)]">
         <div className="space-y-5">
@@ -287,7 +395,7 @@ export default function AdminBenchmark() {
 
         <div className="space-y-5 min-w-0">
           <Card
-            title={cat === 'all' ? 'Kết quả đo KAG' : `${cat} · ${row?.metadata?.category_counts[cat] ?? '—'} câu${measured.length ? ` · ${countRange('scored')} đã chấm · ${countRange('excluded')} bị loại` : ' · Chưa đo'}`}
+            title={cat === 'all' ? 'Kết quả đo KAG' : `${cat} · ${categoryCounts[cat] ?? '—'} câu${measured.length ? ` · ${countRange('scored')} đã chấm · ${countRange('excluded')} bị loại` : ' · Chưa đo'}`}
             right={
               <select
                 className="rounded-lg border border-line bg-transparent px-2 py-1 text-[12px] text-navy"
@@ -326,9 +434,10 @@ export default function AdminBenchmark() {
                           <tr>
                             {cat === 'all' ? <><Th className="hidden sm:table-cell sm:w-[15%] !px-2">Nhóm</Th><Th className="hidden sm:table-cell sm:w-[7%] !px-2">n</Th></> : <Th className="hidden sm:table-cell sm:w-[12%] !px-2">Mode</Th>}
                             <Th className="hidden sm:table-cell sm:w-[16%] !px-2">Channel</Th>
-                            <Th className="w-1/2 sm:w-auto !px-2">Metric</Th>
-                            <Th className="w-[26%] sm:w-[22%] !px-2">Điểm</Th>
-                            <Th className="w-[24%] sm:w-[14%] !px-2">Đã chấm</Th>
+                            <Th className="w-[40%] sm:w-auto !px-2">Metric</Th>
+                            <Th className="w-[24%] sm:w-[22%] !px-2">Điểm</Th>
+                            <Th className="w-[20%] sm:w-[12%] !px-2">Đã chấm</Th>
+                            <Th className="w-[16%] sm:w-[10%] !px-2">Bị loại</Th>
                           </tr>
                         </thead>
                         <tbody>
@@ -340,8 +449,9 @@ export default function AdminBenchmark() {
                                 <span title={m.name}>{m.label}</span>
                                 {cat === 'all' && <span className="block text-xs text-muted sm:hidden">{m.group} · {m.n ?? '—'} câu</span>}
                               </Td>
-                              <Td className="!px-2"><MetricBar value={m.value} kind={metricKinds[m.name] ?? (rankingMetric.test(m.name) ? 'ratio' : 'count')} /></Td>
+                              <Td className="!px-2">{m.name === 'answer_correctness' && m.value === null ? <span className="text-xs text-muted">Chưa có giám khảo</span> : <MetricBar value={m.value} kind={metricKinds[m.name] ?? (rankingMetric.test(m.name) ? 'ratio' : 'count')} />}</Td>
                               <Td className="!px-2">{m.scored}</Td>
+                              <Td className="!px-2">{m.excluded}</Td>
                             </tr>
                           ))}
                         </tbody>
@@ -351,12 +461,22 @@ export default function AdminBenchmark() {
                 })}
               </div>
             ) : (
-              <p className="px-5 pb-5 text-sm text-muted">{cat === 'all' ? 'Chưa có execution artifact hợp lệ cho bộ câu hỏi này; các chỉ số chưa đo.' : `Nhóm ${cat} (${row?.metadata?.category_counts[cat] ?? 0} câu): Chưa đo.`}</p>
+              <p className="px-5 pb-5 text-sm text-muted">{cat === 'all' ? 'Chưa có execution artifact hợp lệ cho bộ câu hỏi này; các chỉ số chưa đo.' : `Nhóm ${cat} (${categoryCounts[cat] ?? 0} câu): Chưa đo.`}</p>
             )}
           </Card>
 
           <Card title="Artifact KAG · API thật">
             <div className="px-5 pb-5 text-xs space-y-2 break-words">
+              {selectedJob && <>
+                <p>Job: {selectedJob.run_id_job} · Fingerprint: {selectedJob.graph_fingerprint}</p>
+                <p>Dataset hash: {selectedJob.dataset_hash} · {selectedJob.dataset_status} · frozen_at: {selectedJob.frozen_at ?? '—'}</p>
+                <p>Provider requests · embedding: {selectedJob.provider_requests.embedding} · chat: {selectedJob.provider_requests.chat}</p>
+                {Object.entries(selectedJob.metrics ?? {}).map(([m, metrics]) => <div key={m} className="space-y-1">
+                  <p>{m} · Đã xử lý: {metrics.requested_count} · Không đủ điều kiện: {metrics.ineligible_count} · Lỗi: {metrics.failed_count}</p>
+                  <p>Latency mean: <MetricBar value={metrics.latency_ms.all_attempted.mean} kind="latency" /></p>
+                  <p>Failure rate: <MetricBar value={metrics.failure_rate.value} kind="ratio" /></p>
+                </div>)}
+              </>}
               {data.value && (
                 <details>
                   <summary className="cursor-pointer underline">Danh tính graph và cấu hình quan sát</summary>
@@ -377,7 +497,7 @@ export default function AdminBenchmark() {
                     Review: {row.smoke?.review_status ?? 'Chưa có'} · official {String(row.official_benchmark)} · state{' '}
                     {row.smoke?.state ?? 'NOT_RUN'}
                   </p>
-                  {Object.entries(runs || {}).map(([mode, run]) => (
+                  {Object.entries(row.smoke?.runs || {}).map(([mode, run]) => (
                     <details key={mode}>
                       <summary className="cursor-pointer underline">
                         {mode}: {run?.status ?? 'NOT_RUN'}
@@ -395,7 +515,7 @@ export default function AdminBenchmark() {
                           <pre className="whitespace-pre-wrap break-all">{JSON.stringify(run.configuration, null, 2)}</pre>
                           {Object.entries(run.metrics).map(([name, m]) => (
                             <p key={name}>
-                              {name}: {m.value ?? 'Chưa đo'} · Scored {m.scored_count}/{m.eligible_count} · Failed{' '}
+                              {name}: {m.value ?? (name === 'answer_correctness' ? 'Chưa có giám khảo' : 'Chưa đo')} · Scored {m.scored_count}/{m.eligible_count} · Failed{' '}
                               {m.failed_count} · Excluded {m.excluded_count}
                             </p>
                           ))}

@@ -750,6 +750,88 @@ export async function loadBenchmarkDatasets(signal?: AbortSignal): Promise<Bench
   const value = await api<BenchmarkDatasets>('/admin/kag/benchmark/datasets', { signal })
   return validateBenchmark(value)
 }
+export type BenchmarkMode = 'G1' | 'G2' | 'BOTH'
+export type BenchmarkRequest = { dataset_id: string; project_id: number; run_id: string; mode: BenchmarkMode; limit: number | null }
+export type BenchmarkMetrics = Omit<SmokeRun, 'configuration' | 'status' | 'started_at' | 'finished_at' | 'metrics'> & {
+  schema_version: '1.0'; eval_version: '1.0'; protocol_hash: string; dataset_hash: string; dataset_version: string;
+  dataset_status: 'PROVISIONAL' | 'FROZEN'; official_benchmark: boolean; paper_eligible: false; mode: 'G1' | 'G2'; release_id: string | null;
+  completed_count: number; scored_count: number; overall: Record<string, SmokeMetric>; by_category: Record<string, Record<string, SmokeMetric>>;
+  by_source: Record<string, Record<string, SmokeMetric>>; failure_rate: { value: number | null; numerator: number; denominator: number; status: 'OK' | 'UNAVAILABLE' };
+  rank_semantics: 'channel_projected_returned_top_k'; top_k: number; ks: number[]; execution_outcomes?: Record<'answered' | 'abstained' | 'unanswered' | 'error', number>
+}
+export type BenchmarkJob = Omit<BenchmarkRequest, 'limit'> & {
+  run_id_job: string; state: 'RUNNING' | 'COMPLETE' | 'FAILED' | 'STOPPED'; done: number; total: number;
+  progress: Partial<Record<'G1' | 'G2', { done: number; total: number }>>; started_at: string; finished_at: string | null; code: string | null;
+  metrics: Partial<Record<'G1' | 'G2', BenchmarkMetrics>> | null; dataset_status: 'PROVISIONAL' | 'FROZEN'; dataset_hash: string; frozen_at: string | null;
+  category_counts: Record<string, number>; graph_fingerprint: string; provider_requests: { embedding: number; chat: number }
+}
+const benchmarkDatasetId = (v: unknown) => typeof v === 'string' && /^[A-Za-z0-9_.-]{1,128}(?:\/eval_questions\.jsonl)?$/.test(v) && !v.includes('..') && v !== '.'
+const benchmarkJobId = (v: unknown) => typeof v === 'string' && /^[0-9a-f]{32}$/.test(v)
+function validateBenchmarkJob(value: BenchmarkJob, jobId: string): BenchmarkJob {
+  const invalid = () => { throw new ApiError('Trạng thái benchmark không hợp lệ', 502) }
+  const stamp = (v: unknown) => typeof v === 'string' && v.length <= 64 && Number.isFinite(Date.parse(v))
+  if (!shape(value, ['run_id_job','dataset_id','project_id','run_id','state','mode','done','total','progress','started_at','finished_at','code','metrics','dataset_status','dataset_hash','frozen_at','category_counts','graph_fingerprint','provider_requests']) ||
+    value.run_id_job !== jobId || !benchmarkJobId(value.run_id_job) || !benchmarkDatasetId(value.dataset_id) || !count(value.project_id,2147483647) || value.project_id < 1 ||
+    typeof value.run_id !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value.run_id) || !['G1','G2','BOTH'].includes(value.mode) ||
+    !['RUNNING','COMPLETE','FAILED','STOPPED'].includes(value.state) || !count(value.total,2000000) || value.total < 1 || !count(value.done,value.total) ||
+    !['PROVISIONAL','FROZEN'].includes(value.dataset_status) || !hash(value.dataset_hash) || !hash(value.graph_fingerprint) || !stamp(value.started_at) ||
+    (value.state === 'RUNNING' ? value.finished_at !== null : !stamp(value.finished_at) || Date.parse(value.finished_at!) < Date.parse(value.started_at)) ||
+    value.frozen_at !== null && !stamp(value.frozen_at) || value.dataset_status === 'FROZEN' && value.frozen_at === null ||
+    value.code !== null && (typeof value.code !== 'string' || !/^[A-Z][A-Z0-9_]{0,63}$/.test(value.code)) || value.state === 'FAILED' && value.code === null ||
+    !shape(value.provider_requests,['embedding','chat']) || !Object.values(value.provider_requests).every(v => count(v,2147483647))) invalid()
+  const modes = value.mode === 'BOTH' ? ['G1','G2'] as const : [value.mode] as ('G1' | 'G2')[]
+  const n = value.total / modes.length
+  if (!count(n) || n < 1 || !shape(value.progress,[...modes]) || Object.values(value.progress).some(p => !shape(p,['done','total']) || p.total !== n || !count(p.done,n)) ||
+    Object.values(value.progress).reduce((sum,p) => sum+p.done,0) !== value.done || value.state === 'COMPLETE' && value.done !== value.total ||
+    value.mode === 'BOTH' && value.progress.G2!.done > 0 && value.progress.G1!.done !== n ||
+    !value.category_counts || Array.isArray(value.category_counts) || Object.keys(value.category_counts).some(c => !benchmarkCategories.includes(c)) ||
+    !Object.values(value.category_counts).every(v => count(v,n)) || Object.values(value.category_counts).reduce((a,b) => a+b,0) !== n ||
+    value.state === 'RUNNING' && value.metrics !== null) invalid()
+  if (value.metrics !== null) {
+    if (typeof value.metrics !== 'object' || Array.isArray(value.metrics) || Object.keys(value.metrics).some(m => !modes.includes(m as 'G1' | 'G2'))) invalid()
+    for (const [mode, m] of Object.entries(value.metrics)) {
+      const done = value.progress[mode as 'G1' | 'G2']!.done
+      if (!shape(m,['schema_version','eval_version','protocol_hash','dataset_hash','dataset_version','dataset_status','official_benchmark','paper_eligible','mode','release_id','requested_count','completed_count','attempted_count','failed_count','ineligible_count','scored_count','failure_rate','overall','by_category','by_source','latency_ms','rank_semantics','top_k','ks',...('macro' in m ? ['macro'] : []),...('execution_outcomes' in m ? ['execution_outcomes'] : [])]) ||
+        m.schema_version !== '1.0' || m.eval_version !== '1.0' || !hash(m.protocol_hash) || !hash(m.dataset_hash) || typeof m.dataset_version !== 'string' || !m.dataset_version.trim() || m.dataset_version.length > 512 ||
+        m.dataset_status !== value.dataset_status || typeof m.official_benchmark !== 'boolean' || m.paper_eligible !== false || m.mode !== mode || m.release_id !== null && (typeof m.release_id !== 'string' || !m.release_id || m.release_id.length > 200) ||
+        m.requested_count !== done || m.completed_count !== done || !count(m.scored_count,m.attempted_count-m.failed_count) || m.rank_semantics !== 'channel_projected_returned_top_k' ||
+        !count(m.top_k,10) || m.top_k < 1 || !Array.isArray(m.ks) || !m.ks.length || m.ks.some((k,i) => !count(k,m.top_k) || k < 1 || i > 0 && k <= m.ks[i-1]) ||
+        !m.overall || Object.keys(m.overall).some(name => !/^[A-Za-z][A-Za-z0-9_@.:-]{0,127}$/.test(name)) || !shape(m.by_category,benchmarkCategories) ||
+        !m.by_source || typeof m.by_source !== 'object' || Array.isArray(m.by_source) || Object.keys(m.by_source).length > 1000000) invalid()
+      const groupCounts = Object.fromEntries(Object.entries(m.by_category).map(([c,metrics]) => [c,Object.values(Object.values(metrics)[0]?.status_counts ?? {}).reduce((a,b) => a+b,0)]))
+      const projected: SmokeRun = { status:'COMPLETE',started_at:value.started_at,finished_at:value.finished_at!,requested_count:done,attempted_count:m.attempted_count,failed_count:m.failed_count,ineligible_count:m.ineligible_count,metrics:m.overall,by_category:m.by_category,latency_ms:m.latency_ms,...(m.macro ? {macro:m.macro} : {}) }
+      validateSmoke({state:'AVAILABLE',review_status:value.dataset_status,g1_eligible_count:0,graph_fingerprint:value.graph_fingerprint,official_benchmark:false,runs:{G1:projected,G2:null}},done,value.graph_fingerprint,groupCounts)
+      for (const [source,metrics] of Object.entries(m.by_source)) {
+        const count = Object.values(Object.values(metrics)[0]?.status_counts ?? {}).reduce((a,b) => a+b,0)
+        if (source.length > 512 || !shape(metrics,Object.keys(m.overall)) || count > done) invalid()
+        validateSmokeMetrics(metrics,count)
+      }
+      const rate=m.failure_rate
+      if (!shape(rate,['value','numerator','denominator','status']) || rate.numerator !== m.failed_count || rate.denominator !== m.attempted_count ||
+        rate.status !== (m.attempted_count ? 'OK' : 'UNAVAILABLE') || (m.attempted_count ? typeof rate.value !== 'number' || !Number.isFinite(rate.value) || Math.abs(rate.value-m.failed_count/m.attempted_count) > 1e-12 : rate.value !== null)) invalid()
+      if (m.execution_outcomes && (!shape(m.execution_outcomes,['answered','abstained','unanswered','error']) || m.execution_outcomes.error !== m.failed_count ||
+        !Object.values(m.execution_outcomes).every(v => count(v,m.attempted_count)) || Object.values(m.execution_outcomes).reduce((a,b) => a+b,0) > m.attempted_count)) invalid()
+    }
+  }
+  if (value.state === 'COMPLETE' && !shape(value.metrics,[...modes])) invalid()
+  return value
+}
+export async function startBenchmarkRun(request: BenchmarkRequest): Promise<{ run_id_job: string }> {
+  if (!shape(request,['dataset_id','project_id','run_id','mode','limit']) || !benchmarkDatasetId(request.dataset_id) || !count(request.project_id,2147483647) || request.project_id < 1 ||
+    typeof request.run_id !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(request.run_id) || !['G1','G2','BOTH'].includes(request.mode) ||
+    request.limit !== null && (!count(request.limit) || request.limit < 1)) throw new ApiError('Chọn bộ câu hỏi, đồ thị, mode và số câu hợp lệ',422)
+  const value = await api<{run_id_job:string}>('/admin/kag/benchmark/runs',send('POST',request))
+  if (!shape(value,['run_id_job']) || !benchmarkJobId(value.run_id_job)) throw new ApiError('Mã lượt benchmark không hợp lệ',502)
+  return value
+}
+export async function loadBenchmarkRun(jobId: string, signal?: AbortSignal): Promise<BenchmarkJob> {
+  if (!benchmarkJobId(jobId)) throw new ApiError('Mã lượt benchmark không hợp lệ',422)
+  return validateBenchmarkJob(await api<BenchmarkJob>(`/admin/kag/benchmark/runs/${jobId}`,{signal,cache:'no-store'}),jobId)
+}
+export async function stopBenchmarkRun(jobId: string): Promise<BenchmarkJob> {
+  if (!benchmarkJobId(jobId)) throw new ApiError('Mã lượt benchmark không hợp lệ',422)
+  return validateBenchmarkJob(await api<BenchmarkJob>(`/admin/kag/benchmark/runs/${jobId}/stop`,send('POST')),jobId)
+}
 function validateBenchmark(value: BenchmarkDatasets, sample = false): BenchmarkDatasets {
   if (!value || Object.keys(value).sort().join() !== ['contract_version', 'state', 'datasets', 'execution_allowed', 'execution_blockers', 'metrics'].sort().join() || value.contract_version !== 'h1-inspect-v1.0' || value.execution_allowed !== false || value.metrics !== null || !Array.isArray(value.execution_blockers) || value.execution_blockers.join() !== 'OPERATIONAL_PROOF_REQUIRED,BENCHMARK_EXECUTION_NOT_AUTHORIZED' || !['AVAILABLE', 'NOT_CONFIGURED', 'UNAVAILABLE', 'LIMIT_EXCEEDED'].includes(value.state) || !Array.isArray(value.datasets) || value.datasets.length > 20 || (value.state !== 'AVAILABLE' && value.datasets.length)) throw new ApiError('Invalid benchmark proof', 502)
   const seen = new Set<string>()
@@ -767,7 +849,7 @@ export type SampleNode = { entity_type: string; entity_id: string; properties: R
 export type SampleEdge = { from: [string, string]; predicate: string; to: [string, string]; properties: Record<string, unknown> }
 type BenchmarkConfig = { protocol_version: '1.0'; eval_version: '1.0'; metric_policy_version: '1.0' | '1.1'; ks: number[]; top_k: number; expand: false; rank_semantics: 'channel_projected_returned_top_k'; identity_catalog_hash: string | null; release_id: string | null; judge_config: null | { name: string; version: string; model: string; prompt_version: string; temperature: number; seed: number | null; calibrated: boolean } }
 type SmokeMetric = { value: number | null; scored_count: number; eligible_count: number; excluded_count: number; failed_count: number; status_counts: Record<'OK' | 'NOT_APPLICABLE' | 'UNAVAILABLE' | 'UNKNOWN', number> }
-type SmokeRun = { configuration?: BenchmarkConfig; status: 'COMPLETE'; started_at: string; finished_at: string; requested_count: number; attempted_count: number; failed_count: number; ineligible_count: number; metrics: Record<string, SmokeMetric>; by_category?: Record<string, Record<string, SmokeMetric>>; macro?: Record<string, { value: number | null; scored_category_count: number }>; latency_ms: Record<'successful' | 'all_attempted', { count: number; min: number | null; mean: number | null; median: number | null; p95: number | null; max: number | null }> }
+export type SmokeRun = { configuration?: BenchmarkConfig; status: 'COMPLETE'; started_at: string; finished_at: string; requested_count: number; attempted_count: number; failed_count: number; ineligible_count: number; metrics: Record<string, SmokeMetric>; by_category?: Record<string, Record<string, SmokeMetric>>; macro?: Record<string, { value: number | null; scored_category_count: number }>; latency_ms: Record<'successful' | 'all_attempted', { count: number; min: number | null; mean: number | null; median: number | null; p95: number | null; max: number | null }> }
 type Smoke = { state: 'NOT_RUN' | 'AVAILABLE' | 'INVALID_RECEIPT'; review_status: 'PROVISIONAL' | 'FROZEN' | 'NOT_ATTESTED'; g1_eligible_count: number; graph_fingerprint: string; official_benchmark: boolean; runs: Record<'G1' | 'G2', SmokeRun | null> }
 type Coverage = BenchmarkDatasets['datasets'][number] & { metadata?: { dataset_version: string | null; category_counts: Record<string, number>; generation_method: string | null }; eligible_count: number; ineligible_count: number; invalid_count: number | null; gold_count: number | null; missing_gold: Record<'document' | 'unit' | 'sign', string[]>; eligibility_scope: 'G1_RETRIEVAL_GOLD_COVERAGE'; smoke?: Smoke }
 export type SampleInspection = {
@@ -782,14 +864,15 @@ const hash = (v: unknown) => typeof v === 'string' && /^[0-9a-f]{64}$/.test(v)
 const count = (v: unknown, max = 1000000): v is number => typeof v === 'number' && Number.isSafeInteger(v) && v >= 0 && v <= max
 const shape = (v: unknown, keys: string[]) => !!v && typeof v === 'object' && Object.keys(v).sort().join() === keys.sort().join()
 const benchmarkCategories = ['definition','obligation','sanction_numeric','effectiveness_metadata','inter_document','multi_hop','unanswerable','traffic_sign']
-function validateSmoke(smoke: Smoke, total: number | null, fingerprint: string, categoryCounts?: Record<string, number>) {
-  const invalid = () => { throw new ApiError('Invalid smoke proof', 502) }
-  function validateMetrics(metrics: Record<string, SmokeMetric>, n: number) {
+function validateSmokeMetrics(metrics: Record<string, SmokeMetric>, n: number) {
+    const invalid = () => { throw new ApiError('Invalid smoke proof', 502) }
     if (!metrics || typeof metrics !== 'object' || Array.isArray(metrics) || Object.keys(metrics).length > 128) invalid()
     for (const metric of Object.values(metrics)) {
       if (!shape(metric,['value','scored_count','status_counts','eligible_count','excluded_count','failed_count']) || !shape(metric.status_counts,['OK','NOT_APPLICABLE','UNAVAILABLE','UNKNOWN']) || (metric.value !== null && (!Number.isFinite(metric.value) || metric.value < 0)) || ![metric.scored_count,metric.eligible_count,metric.excluded_count,metric.failed_count,...Object.values(metric.status_counts)].every(v => count(v,n)) || Object.values(metric.status_counts).reduce((a,b) => a+b,0) !== n || metric.eligible_count + metric.excluded_count !== n || metric.scored_count !== metric.status_counts.OK || (metric.value === null) !== (metric.scored_count === 0)) invalid()
     }
-  }
+}
+function validateSmoke(smoke: Smoke, total: number | null, fingerprint: string, categoryCounts?: Record<string, number>) {
+  const invalid = () => { throw new ApiError('Invalid smoke proof', 502) }
   if (!shape(smoke,['state','review_status','g1_eligible_count','graph_fingerprint','official_benchmark','runs']) || !['NOT_RUN','AVAILABLE','INVALID_RECEIPT'].includes(smoke.state) || !['PROVISIONAL','FROZEN','NOT_ATTESTED'].includes(smoke.review_status) || !count(smoke.g1_eligible_count,total ?? 0) || smoke.graph_fingerprint !== fingerprint || typeof smoke.official_benchmark !== 'boolean' || !shape(smoke.runs,['G1','G2'])) invalid()
   let hasRun = false
   for (const run of Object.values(smoke.runs)) {
@@ -802,13 +885,13 @@ function validateSmoke(smoke: Smoke, total: number | null, fingerprint: string, 
       const j = c.judge_config
       if (j !== null && (!shape(j,['name','version','model','prompt_version','temperature','seed','calibrated']) || typeof j.name !== 'string' || !j.name.trim() || ![j.version,j.model,j.prompt_version].every(v=>typeof v==='string') || typeof j.temperature !== 'number' || !Number.isFinite(j.temperature) || typeof j.calibrated !== 'boolean' || j.seed !== null && !Number.isSafeInteger(j.seed))) invalid()
     }
-    validateMetrics(run.metrics,total ?? 0)
+    validateSmokeMetrics(run.metrics,total ?? 0)
     if ('by_category' in run) {
       if (!shape(run.by_category,benchmarkCategories) || !categoryCounts) invalid()
       for (const [category, metrics] of Object.entries(run.by_category!)) {
         const n = categoryCounts![category] ?? 0
         if (!count(n,total ?? 0) || !shape(metrics,Object.keys(run.metrics))) invalid()
-        validateMetrics(metrics,n)
+        validateSmokeMetrics(metrics,n)
       }
     }
     if ('macro' in run) {

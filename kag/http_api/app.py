@@ -314,22 +314,24 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
         except Exception:
             application.state.serving_release=None;application.state.runtime_settings=None
 
-    def worker_request(path,request,body=None):
+    def worker_request(path,request,body=None,*,benchmark=False,stop=False):
         import json
         from urllib.request import Request as Outgoing,build_opener,ProxyHandler
         from urllib.error import HTTPError
         from kag.verify import _NoRedirect
         values=request.headers.getlist('x-openspg-session')
-        token=(settings.secrets.config_apply_tokens if body is not None and path!='/trial' else settings.secrets.inspect_tokens)
+        token=(settings.secrets.benchmark_write_tokens if benchmark and (body is not None or stop) else
+               settings.secrets.config_apply_tokens if not benchmark and body is not None and path!='/trial' else settings.secrets.inspect_tokens)
         if not token:raise ApiFailure('SCOPE_DENIED')
-        outgoing=Outgoing('http://openspg-server:8010/v1/serving'+path,
+        outgoing=Outgoing('http://openspg-server:8010/v1/'+('benchmark/runs' if benchmark else 'serving')+path,
             data=artifacts.canonical_json(body).encode() if body is not None else None,
+            method='POST' if stop else None,
             headers={'Authorization':'Bearer '+token[0],'Content-Type':'application/json',
                 'X-OpenSPG-Session':values[0] if len(values)==1 else ''})
         try:
             with build_opener(ProxyHandler({}),_NoRedirect()).open(outgoing,timeout=120) as response:
-                raw=response.read(245761)
-            if len(raw)>245760:raise ApiFailure('RESULT_LIMIT_EXCEEDED')
+                raw=response.read((2*1024*1024 if benchmark else 245760)+1)
+            if len(raw)>(2*1024*1024 if benchmark else 245760):raise ApiFailure('RESULT_LIMIT_EXCEEDED')
             return artifacts._json(raw)
         except HTTPError as error:
             try:
@@ -337,7 +339,8 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                 code=failure.get('error',{}).get('code') or failure.get('detail')
                 if code=='LOCK':code='CONFIG_BUSY'
             except Exception:code=None
-            raise ApiFailure(code if code in ('CONFIG_BUSY','CONFIG_CONFLICT','SCOPE_DENIED','RELEASE_MISMATCH','NOT_READY') else 'NOT_READY') from None
+            raise ApiFailure(code if code in ('CONFIG_BUSY','CONFIG_CONFLICT','SCOPE_DENIED','RELEASE_MISMATCH','NOT_READY',
+                'INVALID_REQUEST','REQUEST_TOO_LARGE','RESULT_LIMIT_EXCEEDED') else 'NOT_READY') from None
 
     def sample_guard(request, release, runtime_settings):
         if (time.monotonic() >= request.state.request_deadline
@@ -639,6 +642,34 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
             raise ApiFailure('INVALID_REQUEST')
         from .inspection import dataset_catalog
         return await asyncio.to_thread(dataset_catalog, app.state.evaluation_root)
+
+    @app.post('/v1/benchmark/runs')
+    async def start_benchmark(request: Request):
+        authorize(request_principal(request),'benchmark-write',None)
+        if request.query_params:
+            raise ApiFailure('INVALID_REQUEST')
+        raw=await bounded_body(request)
+        try:
+            body=artifacts._json(raw)
+        except (artifacts.ArtifactFailure,ValueError,UnicodeError):
+            raise ApiFailure('INVALID_JSON') from None
+        contract._object(body,('dataset_id','project_id','run_id','mode','limit'))
+        value=await asyncio.to_thread(worker_request,'',request,body,benchmark=True)
+        return JSONResponse(value,status_code=202,headers={'Cache-Control':'no-store'})
+
+    @app.get('/v1/benchmark/runs/{job_id}')
+    async def benchmark_status(job_id: str,request: Request):
+        authorize(request_principal(request),'inspect',None)
+        if request.query_params or not re.fullmatch('[0-9a-f]{32}',job_id) or request.headers.get('transfer-encoding') or request.headers.get('content-length','0')!='0':
+            raise ApiFailure('INVALID_REQUEST')
+        return await asyncio.to_thread(worker_request,'/'+job_id,request,benchmark=True)
+
+    @app.post('/v1/benchmark/runs/{job_id}/stop')
+    async def stop_benchmark(job_id: str,request: Request):
+        authorize(request_principal(request),'benchmark-write',None)
+        if request.query_params or not re.fullmatch('[0-9a-f]{32}',job_id) or request.headers.get('transfer-encoding') or request.headers.get('content-length','0')!='0':
+            raise ApiFailure('INVALID_REQUEST')
+        return await asyncio.to_thread(worker_request,'/'+job_id+'/stop',request,benchmark=True,stop=True)
 
     def benchmark_root():
         root = app.state.evaluation_root

@@ -707,15 +707,21 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
         paths = self.app.openapi()['paths']
         self.assertEqual(set(paths),{'/v1/health','/v1/graph/release','/v1/query',
                                     '/v1/pipeline/status','/v1/benchmark/datasets',
+                                    '/v1/benchmark/template','/v1/benchmark/datasets/{dataset_id}/export',
+                                    '/v1/benchmark/runs','/v1/benchmark/runs/{job_id}','/v1/benchmark/runs/{job_id}/stop',
                                     '/v1/config','/v1/config/retrieval','/v1/config/models',
                                     '/v1/config/models/{role}/{action}',
                                     '/v1/config/retrieval/{action}',
                                     '/v1/serving','/v1/serving/{action}', '/v1/serving/trial/{project_id}/{run_id}'})
         self.assertEqual(set(paths['/v1/query']),{'post'})
-        for path in ('/v1/pipeline/status','/v1/benchmark/datasets'):
+        for path in ('/v1/pipeline/status',):
             self.assertEqual(set(paths[path]),{'get'})
             self.assertEqual((await self.client.post(path)).status_code,405)
         for path, methods in {
+                '/v1/benchmark/datasets': {'get','post'}, '/v1/benchmark/template': {'get'},
+                '/v1/benchmark/datasets/{dataset_id}/export': {'get'},
+                '/v1/benchmark/runs': {'post'}, '/v1/benchmark/runs/{job_id}': {'get'},
+                '/v1/benchmark/runs/{job_id}/stop': {'post'},
                 '/v1/config': {'get'}, '/v1/config/retrieval': {'get'},
                 '/v1/config/models': {'get','post'},
                 '/v1/config/models/{role}/{action}': {'post'},
@@ -730,6 +736,8 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
         protected += [('post','/v1/config/retrieval/'+action) for action in ('save','apply','restore')]
         protected += [('post','/v1/serving/'+action) for action in ('preview','activate')]
         protected += [('post','/v1/serving/trial/17/run-B')]
+        protected += [('post','/v1/benchmark/runs'),('get','/v1/benchmark/runs/'+'a'*32),
+                      ('post','/v1/benchmark/runs/'+'a'*32+'/stop')]
         for method, path in protected:
             with self.subTest(method=method,path=path):
                 self.error(await self.client.request(method,path),401,'AUTH_REQUIRED')

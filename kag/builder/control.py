@@ -718,12 +718,15 @@ def create_app(*, control=None, token=None, state_dir=None):
     @asynccontextmanager
     async def lifespan(app):
         yield
+        await app.state.benchmark_runner.close()
         if source_task is not None:
             await source_task
         if control is not None:
             await asyncio.to_thread(control.close)
 
     app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
+    from kag.http_api.benchmark_runner import install_worker_routes
+    install_worker_routes(app)
 
     @app.exception_handler(ApiFailure)
     async def denied(request, error):

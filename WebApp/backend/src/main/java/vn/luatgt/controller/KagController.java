@@ -164,6 +164,23 @@ public class KagController {
     @PostMapping("/admin/kag/builder/abandon") @ResponseStatus(org.springframework.http.HttpStatus.ACCEPTED)
     JsonNode abandon(@Valid @RequestBody BuilderRunRequest request,@RequestHeader(value="If-Match",required=false) String revision) { return infrastructure.builderAction("abandon",request.runId(),revision); }
     @GetMapping("/admin/kag/benchmark/datasets") JsonNode datasets() { return infrastructure.benchmarkDatasets(); }
+    @PostMapping("/admin/kag/benchmark/runs")
+    org.springframework.http.ResponseEntity<JsonNode> startBenchmark(@RequestBody JsonNode change,@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Chạy benchmark không nhận tham số tùy ý");
+        return infrastructure.benchmarkRun(null,false,change);
+    }
+    @GetMapping("/admin/kag/benchmark/runs/{jobId}")
+    org.springframework.http.ResponseEntity<JsonNode> benchmarkRun(@PathVariable String jobId,@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)
+            throw vn.luatgt.exception.ApiErrors.bad("Trạng thái benchmark chỉ nhận ID phiên chạy");
+        return infrastructure.benchmarkRun(jobId,false,null);
+    }
+    @PostMapping("/admin/kag/benchmark/runs/{jobId}/stop")
+    org.springframework.http.ResponseEntity<JsonNode> stopBenchmark(@PathVariable String jobId,@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)
+            throw vn.luatgt.exception.ApiErrors.bad("Dừng benchmark chỉ nhận ID phiên chạy");
+        return infrastructure.benchmarkRun(jobId,true,null);
+    }
     @GetMapping("/admin/kag/benchmark/template")
     org.springframework.http.ResponseEntity<byte[]> benchmarkTemplate(@RequestParam Map<String,String> parameters) {
         if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("File mẫu không nhận tham số");

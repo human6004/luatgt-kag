@@ -908,6 +908,146 @@ public class KagClient {
         } catch(IllegalArgumentException e) {return false;}
     }
     public JsonNode benchmarkDatasets() { return inspectView("/v1/benchmark/datasets",false); }
+    public ResponseEntity<JsonNode> benchmarkRun(String jobId,boolean stop,JsonNode change) {
+        boolean start=jobId==null,write=start||stop;
+        if(start?(stop||!fields(change).equals(Set.of("dataset_id","project_id","run_id","mode","limit"))||
+            !benchmarkDatasetId(change.path("dataset_id"))||!bounded(change.path("project_id"),1,Integer.MAX_VALUE)||
+            !change.path("run_id").isTextual()||!change.path("run_id").asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}")||
+            !Set.of("G1","G2","BOTH").contains(change.path("mode").asText())||!change.path("limit").isNull()&&!bounded(change.path("limit"),1,Integer.MAX_VALUE)):
+            (!jobId.matches("[0-9a-f]{32}")||change!=null))throw vn.luatgt.exception.ApiErrors.bad("Chọn bộ câu hỏi, project, phiên dựng, chế độ và giới hạn benchmark hợp lệ");
+        try {
+            String token=write?readToken(benchmarkWriteTokenFile):inspectionToken();
+            if(write)for(String file:List.of(tokenFile,inspectTokenFile,credentialsWriteTokenFile,providerTestTokenFile,configApplyTokenFile))
+                if(!file.isBlank()&&token.equals(readToken(file)))throw new IOException("Distinct benchmark scope required");
+            String path="/v1/benchmark/runs"+(start?"":"/"+jobId+(stop?"/stop":""));
+            RestClient.RequestHeadersSpec<?> request=start?servingClient.post().uri(path).contentType(MediaType.APPLICATION_JSON).body(change):
+                stop?servingClient.post().uri(path):inspectionClient.get().uri(path);
+            String session=openSpgSession();if(session!=null)request.header("X-OpenSPG-Session",session);
+            return request.header(HttpHeaders.AUTHORIZATION,"Bearer "+token).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
+                int status=res.getStatusCode().value();var body=inspectionBody(res,token,2*1024*1024);
+                if(session!=null&&body.toString().contains(session))throw new IOException("Session reflected");
+                if(status>=400&&status<=599) {
+                    String code=body.at("/error/code").asText();
+                    if(!code.matches("[A-Z][A-Z0-9_]{0,63}"))throw new IOException("Invalid benchmark error");
+                    String message=switch(code) {
+                        case "RELEASE_MISMATCH" -> "Model embedding không khớp đồ thị đã dựng; chọn lại cấu hình hoặc dựng lại đồ thị";
+                        case "CONFIG_BUSY" -> "Đang có thao tác trên đồ thị; chờ hoàn tất rồi thử lại";
+                        case "SCOPE_DENIED" -> "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project";
+                        default -> "Không thực hiện được benchmark ("+code+")";
+                    };
+                    body=json.valueToTree(Map.of("error",Map.of("code",code,"message",message)));
+                } else {
+                    if(status!=(start?202:200))throw new IOException("Invalid benchmark status");
+                    if(start) {
+                        if(!fields(body).equals(Set.of("run_id_job"))||!body.path("run_id_job").isTextual()||!body.path("run_id_job").asText().matches("[0-9a-f]{32}"))throw new IOException("Invalid benchmark admission");
+                    } else {validateBenchmarkJob(body);if(!body.path("run_id_job").asText().equals(jobId))throw new IOException("Benchmark job mismatch");}
+                }
+                return ResponseEntity.status(status).contentType(MediaType.APPLICATION_JSON).cacheControl(CacheControl.noStore()).body(body);
+            });
+        } catch(ResponseStatusException e) {throw e;}
+        catch(Exception e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Không xác nhận được phiên benchmark; tải lại trạng thái trước khi chạy tiếp");}
+    }
+    private static boolean benchmarkDatasetId(JsonNode value) {
+        if(!value.isTextual())return false;String id=value.asText();
+        return id.matches("[A-Za-z0-9_.-]{1,128}(/eval_questions\\.jsonl)?")&&!id.contains("..")&&id.endsWith(".jsonl");
+    }
+    private static final Set<String> BENCHMARK_CATEGORIES=Set.of("definition","obligation","sanction_numeric","effectiveness_metadata","inter_document","multi_hop","unanswerable","traffic_sign");
+    private void validateBenchmarkJob(JsonNode body) throws IOException {
+        String mode=body.path("mode").asText(),state=body.path("state").asText();
+        Set<String> modes=mode.equals("BOTH")?Set.of("G1","G2"):Set.of(mode);
+        if(!fields(body).equals(Set.of("run_id_job","dataset_id","project_id","run_id","state","mode","done","total","progress","started_at","finished_at","code","metrics","dataset_status","dataset_hash","frozen_at","category_counts","graph_fingerprint","provider_requests"))||
+            !body.path("run_id_job").isTextual()||!body.path("run_id_job").asText().matches("[0-9a-f]{32}")||!benchmarkDatasetId(body.path("dataset_id"))||
+            !bounded(body.path("project_id"),1,Integer.MAX_VALUE)||!body.path("run_id").isTextual()||!body.path("run_id").asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}")||
+            !Set.of("G1","G2","BOTH").contains(mode)||!Set.of("RUNNING","COMPLETE","FAILED","STOPPED").contains(state)||
+            !bounded(body.path("total"),1,2000000)||!bounded(body.path("done"),0,body.path("total").asInt())||
+            !fields(body.path("progress")).equals(modes)||!fields(body.path("provider_requests")).equals(Set.of("embedding","chat"))||
+            !Set.of("PROVISIONAL","FROZEN").contains(body.path("dataset_status").asText())||
+            !body.path("dataset_hash").isTextual()||!body.path("dataset_hash").asText().matches("[0-9a-f]{64}")||
+            !body.path("graph_fingerprint").isTextual()||!body.path("graph_fingerprint").asText().matches("[0-9a-f]{64}")||
+            !body.path("code").isNull()&&(!body.path("code").isTextual()||!body.path("code").asText().matches("[A-Z][A-Z0-9_]{0,63}")))throw new IOException("Invalid benchmark job");
+        int total=body.path("total").asInt()/modes.size(),done=0;
+        for(String name:modes) {
+            var progress=body.path("progress").path(name);
+            if(!fields(progress).equals(Set.of("done","total"))||!bounded(progress.path("total"),total,total)||!bounded(progress.path("done"),0,total))throw new IOException("Invalid benchmark progress");
+            done+=progress.path("done").asInt();
+        }
+        if(total<1||total*modes.size()!=body.path("total").asInt()||done!=body.path("done").asInt()||state.equals("COMPLETE")&&done!=body.path("total").asInt())throw new IOException("Inconsistent benchmark progress");
+        for(var count:body.path("provider_requests"))if(!bounded(count,0,Integer.MAX_VALUE))throw new IOException("Invalid provider request count");
+        var categories=body.path("category_counts");int categoryTotal=0;
+        if(!categories.isObject()||!BENCHMARK_CATEGORIES.containsAll(fields(categories)))throw new IOException("Invalid benchmark categories");
+        for(var count:categories){if(!bounded(count,0,total))throw new IOException("Invalid benchmark category count");categoryTotal+=count.asInt();}
+        if(categoryTotal!=total)throw new IOException("Inconsistent benchmark category count");
+        var started=benchmarkTime(body.path("started_at"));
+        if(state.equals("RUNNING")?!body.path("finished_at").isNull():benchmarkTime(body.path("finished_at")).isBefore(started))throw new IOException("Invalid benchmark finish time");
+        if(!body.path("frozen_at").isNull())benchmarkTime(body.path("frozen_at"));
+        if(body.path("dataset_status").asText().equals("FROZEN")&&body.path("frozen_at").isNull())throw new IOException("Missing freeze time");
+        var metrics=body.path("metrics");
+        if(state.equals("RUNNING")&&!metrics.isNull())throw new IOException("Unexpected running benchmark metrics");
+        if(!metrics.isNull()) {
+            if(!metrics.isObject()||!modes.containsAll(fields(metrics)))throw new IOException("Invalid benchmark modes");
+            for(String name:fields(metrics))validateBenchmarkMetrics(metrics.path(name),name,total,body.path("progress").path(name).path("done").asInt(),body.path("dataset_status").asText());
+        }
+        if(state.equals("COMPLETE")&&(metrics.isNull()||!fields(metrics).equals(modes)))throw new IOException("Missing completed benchmark metrics");
+    }
+    private static Instant benchmarkTime(JsonNode value) throws IOException {
+        if(!text(value,64,true))throw new IOException("Invalid benchmark time");
+        try{return Instant.parse(value.asText());}catch(java.time.format.DateTimeParseException e){throw new IOException("Invalid benchmark time");}
+    }
+    private void validateBenchmarkMetrics(JsonNode metrics,String mode,int total,int done,String datasetStatus) throws IOException {
+        var expected=new HashSet<>(Set.of("schema_version","eval_version","protocol_hash","dataset_hash","dataset_version","dataset_status","official_benchmark","paper_eligible","mode","release_id","requested_count","completed_count","attempted_count","failed_count","ineligible_count","scored_count","failure_rate","overall","by_category","by_source","latency_ms","rank_semantics","top_k","ks"));
+        for(String field:List.of("macro","execution_outcomes"))if(metrics.has(field))expected.add(field);
+        int completed=metrics.path("completed_count").asInt(-1),attempted=metrics.path("attempted_count").asInt(-1),failed=metrics.path("failed_count").asInt(-1);
+        if(!fields(metrics).equals(expected)||!metrics.path("schema_version").asText().equals("1.0")||!metrics.path("eval_version").asText().equals("1.0")||
+            !metrics.path("protocol_hash").isTextual()||!metrics.path("protocol_hash").asText().matches("[0-9a-f]{64}")||
+            !metrics.path("dataset_hash").isTextual()||!metrics.path("dataset_hash").asText().matches("[0-9a-f]{64}")||
+            !text(metrics.path("dataset_version"),512,true)||!metrics.path("dataset_status").asText().equals(datasetStatus)||!metrics.path("mode").asText().equals(mode)||
+            !metrics.path("official_benchmark").isBoolean()||!metrics.path("paper_eligible").isBoolean()||metrics.path("paper_eligible").asBoolean()||
+            !metrics.path("release_id").isNull()&&!text(metrics.path("release_id"),200,true)||
+            !bounded(metrics.path("requested_count"),done,done)||!bounded(metrics.path("completed_count"),1,done)||completed!=done||
+            !bounded(metrics.path("attempted_count"),0,completed)||!bounded(metrics.path("failed_count"),0,attempted)||!bounded(metrics.path("scored_count"),0,attempted-failed)||
+            !bounded(metrics.path("ineligible_count"),0,completed)||attempted+metrics.path("ineligible_count").asInt()!=completed||
+            !metrics.path("rank_semantics").asText().equals("channel_projected_returned_top_k")||!bounded(metrics.path("top_k"),1,10)||
+            !metrics.path("ks").isArray()||metrics.path("ks").isEmpty()||metrics.path("ks").size()>10)throw new IOException("Invalid framework benchmark metrics");
+        int previous=0;for(var k:metrics.path("ks")){if(!bounded(k,previous+1,metrics.path("top_k").asInt()))throw new IOException("Invalid benchmark cutoff");previous=k.asInt();}
+        var rate=metrics.path("failure_rate");
+        if(!fields(rate).equals(Set.of("value","numerator","denominator","status"))||!bounded(rate.path("numerator"),failed,failed)||!bounded(rate.path("denominator"),attempted,attempted)||
+            !rate.path("status").asText().equals(attempted==0?"UNAVAILABLE":"OK")||
+            (attempted==0?!rate.path("value").isNull():!rate.path("value").isNumber()||!Double.isFinite(rate.path("value").asDouble())||Math.abs(rate.path("value").asDouble()-(double)failed/attempted)>1e-12))throw new IOException("Invalid benchmark failure rate");
+        var overall=metrics.path("overall");validateSmokeMetrics(overall,completed);
+        for(String name:fields(overall))if(!name.matches("[A-Za-z][A-Za-z0-9_@.:-]{0,127}"))throw new IOException("Invalid benchmark metric name");
+        if(!fields(metrics.path("by_category")).equals(BENCHMARK_CATEGORIES)||!metrics.path("by_source").isObject()||metrics.path("by_source").size()>1000000)throw new IOException("Invalid benchmark grouping");
+        for(String grouping:List.of("by_category","by_source")) {
+            var groups=metrics.path(grouping).fields();
+            while(groups.hasNext()) {
+                var entry=groups.next();var group=entry.getValue();
+                if(entry.getKey().length()>512||!fields(group).equals(fields(overall)))throw new IOException("Invalid benchmark group");
+                int count=0;
+                if(!group.isEmpty())for(var value:group.elements().next().path("status_counts")) {if(!bounded(value,0,completed))throw new IOException("Invalid benchmark group count");count+=value.asInt();}
+                if(count>completed)throw new IOException("Invalid benchmark group total");validateSmokeMetrics(group,count);
+            }
+        }
+        if(metrics.has("macro")) {
+            if(!fields(metrics.path("macro")).equals(fields(overall)))throw new IOException("Invalid benchmark macro");
+            for(String name:fields(overall)) {
+                var value=metrics.path("macro").path(name);int scored=0;
+                for(var group:metrics.path("by_category"))if(!group.path(name).path("value").isNull())scored++;
+                if(!fields(value).equals(Set.of("value","scored_category_count"))||!bounded(value.path("scored_category_count"),scored,scored)||
+                    (scored==0?!value.path("value").isNull():!value.path("value").isNumber()||!Double.isFinite(value.path("value").asDouble())||value.path("value").asDouble()<0))throw new IOException("Invalid benchmark macro metric");
+            }
+        }
+        if(metrics.has("execution_outcomes")) {
+            var outcomes=metrics.path("execution_outcomes");int count=0;
+            if(!fields(outcomes).equals(Set.of("answered","abstained","unanswered","error"))||!bounded(outcomes.path("error"),failed,failed))throw new IOException("Invalid benchmark outcomes");
+            for(var value:outcomes){if(!bounded(value,0,attempted))throw new IOException("Invalid benchmark outcome count");count+=value.asInt();}
+            if(count>attempted)throw new IOException("Inconsistent benchmark outcomes");
+        }
+        if(!fields(metrics.path("latency_ms")).equals(Set.of("successful","all_attempted")))throw new IOException("Invalid benchmark latency");
+        for(String name:List.of("successful","all_attempted")) {
+            var latency=metrics.path("latency_ms").path(name);
+            if(!fields(latency).equals(Set.of("count","min","mean","median","p95","max"))||!bounded(latency.path("count"),0,name.equals("successful")?attempted-failed:attempted))throw new IOException("Invalid benchmark latency count");
+            for(String field:List.of("min","mean","median","p95","max"))if(latency.path("count").asInt()==0?!latency.path(field).isNull():!latency.path(field).isNumber()||!Double.isFinite(latency.path(field).asDouble())||latency.path(field).asDouble()<0)throw new IOException("Invalid benchmark latency value");
+        }
+    }
     public ResponseEntity<byte[]> benchmarkTemplate() {
         return benchmarkTransfer("/v1/benchmark/template",null,null,"benchmark-template.json");
     }

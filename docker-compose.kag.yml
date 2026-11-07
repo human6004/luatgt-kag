@@ -246,7 +246,7 @@ services:
     cpus: 1.0
     pids_limit: 128
     init: true
-    stop_grace_period: 120s
+    stop_grace_period: 240s
     entrypoint: [python, -B, -m, kag.builder.control]
     environment:
       KAG_GRAPH_LOCK_VOLUME: ${KAG_GRAPH_LOCK_VOLUME:-${COMPOSE_PROJECT_NAME:-luatgt}_kag-builder-graph-locks}
@@ -259,6 +259,8 @@ services:
       KAG_BUILDER_TOKEN_FILE: /run/secrets/builder_token
       KAG_HTTP_INSPECT_SECRET_FILE: /run/secrets/inspect_token
       KAG_HTTP_CONFIG_APPLY_SECRET_FILE: /run/secrets/config_apply_token
+      KAG_HTTP_BENCHMARK_WRITE_SECRET_FILE: /run/secrets/benchmark_write_token
+      KAG_HTTP_EVALUATION_ROOT: /benchmark-data
       KAG_BUILDER_PROJECT_ID: ${KAG_BUILDER_PROJECT_ID:-}
       KAG_BUILDER_PROJECT_NAME: ${KAG_BUILDER_PROJECT_NAME:-}
       KAG_BUILDER_DATABASE: ${KAG_BUILDER_DATABASE:-}
@@ -283,6 +285,9 @@ services:
       # Runner config, target identity and GraphLock enforce Worker write admission.
       KAG_DEBUG_DUMP_CONFIG: "0"
     volumes:
+      - type: volume
+        source: kag-benchmark-data
+        target: /benchmark-data
       - type: volume
         source: kag-builder-state
         target: /builder-state
@@ -315,7 +320,7 @@ services:
         source: kag-builder-graph-locks
         target: /run/kag-locks
     tmpfs: ["/tmp:rw,noexec,nosuid,size=512m,mode=1777"]
-    secrets: [builder_token, egress_token, inspect_token, config_apply_token]
+    secrets: [builder_token, egress_token, inspect_token, config_apply_token, benchmark_write_token]
     network_mode: service:openspg-server
     depends_on:
       openspg-server: {condition: service_started, restart: true}
