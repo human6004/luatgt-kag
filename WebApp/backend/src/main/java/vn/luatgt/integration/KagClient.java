@@ -1076,6 +1076,8 @@ public class KagClient {
             if(run.isNull())continue;hasRun=true;
             var runFields=new HashSet<String>(Set.of("status","started_at","finished_at","requested_count","attempted_count","failed_count","ineligible_count","metrics","latency_ms"));
             if(run.has("configuration"))runFields.add("configuration");
+            if(run.has("by_category"))runFields.add("by_category");
+            if(run.has("macro"))runFields.add("macro");
             if(!available||!Set.of("PROVISIONAL","FROZEN").contains(smoke.path("review_status").asText())||!fields(run).equals(runFields)||
                 !run.path("status").asText().equals("COMPLETE")||!bounded(run.path("requested_count"),1,1000000)||!run.path("requested_count").equals(total)||
                 !bounded(run.path("attempted_count"),0,total.asInt())||!bounded(run.path("failed_count"),0,run.path("attempted_count").asInt())||
@@ -1099,14 +1101,28 @@ public class KagClient {
             }
             try {if(java.time.Instant.parse(run.path("finished_at").asText()).isBefore(java.time.Instant.parse(run.path("started_at").asText())))throw new IOException("Invalid smoke timestamps");}
             catch(java.time.format.DateTimeParseException invalid){throw new IOException("Invalid smoke timestamps");}
-            for(var metric:run.path("metrics")) {
-                if(!fields(metric).equals(Set.of("value","scored_count","status_counts","eligible_count","excluded_count","failed_count"))||
-                    !fields(metric.path("status_counts")).equals(Set.of("OK","NOT_APPLICABLE","UNAVAILABLE","UNKNOWN"))||
-                    (!metric.path("value").isNull()&&(!metric.path("value").isNumber()||!Double.isFinite(metric.path("value").asDouble())||metric.path("value").asDouble()<0)))throw new IOException("Invalid smoke metric");
-                for(String k:List.of("scored_count","eligible_count","excluded_count","failed_count"))if(!bounded(metric.path(k),0,total.asInt()))throw new IOException("Invalid smoke metric count");
-                int statusCount=0;for(var count:metric.path("status_counts")){if(!bounded(count,0,total.asInt()))throw new IOException("Invalid metric status");statusCount+=count.asInt();}
-                if(statusCount!=total.asInt()||metric.path("eligible_count").asInt()+metric.path("excluded_count").asInt()!=total.asInt()||
-                    metric.path("scored_count").asInt()!=metric.at("/status_counts/OK").asInt()||(metric.path("value").isNull()!=(metric.path("scored_count").asInt()==0)))throw new IOException("Inconsistent smoke metrics");
+            validateSmokeMetrics(run.path("metrics"),total.asInt());
+            var categories=Set.of("definition","obligation","sanction_numeric","effectiveness_metadata","inter_document","multi_hop","unanswerable","traffic_sign");
+            if(run.has("by_category")) {
+                var groups=run.path("by_category");var counts=dataset.at("/metadata/category_counts");
+                if(!groups.isObject()||!fields(groups).equals(categories)||!counts.isObject())throw new IOException("Invalid metric categories");
+                for(String category:categories) {
+                    var metrics=groups.path(category);var count=counts.path(category);
+                    if((!count.isMissingNode()&&!bounded(count,0,total.asInt()))||!fields(metrics).equals(fields(run.path("metrics"))))throw new IOException("Invalid category metrics");
+                    validateSmokeMetrics(metrics,count.asInt(0));
+                }
+            }
+            if(run.has("macro")) {
+                var macro=run.path("macro");
+                if(!run.has("by_category")||!macro.isObject()||!fields(macro).equals(fields(run.path("metrics"))))throw new IOException("Invalid macro metrics");
+                var entries=macro.fields();
+                while(entries.hasNext()) {
+                    var entry=entries.next();var metric=entry.getValue();var value=metric.path("value");var count=metric.path("scored_category_count");
+                    int availableCategories=0;for(var group:run.path("by_category"))if(!group.path(entry.getKey()).path("value").isNull())availableCategories++;
+                    if(!fields(metric).equals(Set.of("value","scored_category_count"))||!bounded(count,0,categories.size())||
+                        (!value.isNull()&&(!value.isNumber()||!Double.isFinite(value.asDouble())||value.asDouble()<0))||
+                        value.isNull()!=(count.asInt()==0)||count.asInt()!=availableCategories)throw new IOException("Invalid macro metric");
+                }
             }
             for(var latency:run.path("latency_ms")) {
                 if(!fields(latency).equals(Set.of("count","min","mean","median","p95","max"))||!bounded(latency.path("count"),0,total.asInt()))throw new IOException("Invalid smoke latency");
@@ -1114,6 +1130,18 @@ public class KagClient {
             }
         }
         if(available!=hasRun)throw new IOException("Missing smoke execution");
+    }
+    private void validateSmokeMetrics(JsonNode metrics,int total) throws IOException {
+        if(!metrics.isObject()||metrics.size()>128)throw new IOException("Invalid smoke metrics");
+        for(var metric:metrics) {
+            if(!fields(metric).equals(Set.of("value","scored_count","status_counts","eligible_count","excluded_count","failed_count"))||
+                !fields(metric.path("status_counts")).equals(Set.of("OK","NOT_APPLICABLE","UNAVAILABLE","UNKNOWN"))||
+                (!metric.path("value").isNull()&&(!metric.path("value").isNumber()||!Double.isFinite(metric.path("value").asDouble())||metric.path("value").asDouble()<0)))throw new IOException("Invalid smoke metric");
+            for(String k:List.of("scored_count","eligible_count","excluded_count","failed_count"))if(!bounded(metric.path(k),0,total))throw new IOException("Invalid smoke metric count");
+            int statusCount=0;for(var count:metric.path("status_counts")){if(!bounded(count,0,total))throw new IOException("Invalid metric status");statusCount+=count.asInt();}
+            if(statusCount!=total||metric.path("eligible_count").asInt()+metric.path("excluded_count").asInt()!=total||
+                metric.path("scored_count").asInt()!=metric.at("/status_counts/OK").asInt()||(metric.path("value").isNull()!=(metric.path("scored_count").asInt()==0)))throw new IOException("Inconsistent smoke metrics");
+        }
     }
     private String inspectionToken() throws IOException {
         if(inspectTokenFile.isBlank()||!Path.of(inspectTokenFile).isAbsolute()) throw new IOException("Inspection credentials unavailable");

@@ -5,10 +5,11 @@ import { useInspection } from './server/KagManagement'
 import { loadSampleInspection } from './server/kag-inspection'
 import { Notice } from './server/shared'
 
-const pct = (n: number) => (n * 100).toFixed(1) + '%'
+const pct = (n: number) => (n * 100).toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'
 
-function MetricBar({ value }: { value: number | null }) {
+function MetricBar({ value, kind = 'count' }: { value: number | null; kind?: 'ratio' | 'count' | 'latency' }) {
   if (value === null) return <span className="text-xs text-muted">Chưa đo</span>
+  if (kind !== 'ratio') return <span className="tabular-nums">{kind === 'latency' ? `${Math.round(value)} ms` : value}</span>
   return (
     <div className="flex items-center gap-2" title={pct(value)}>
       <span className="h-2 flex-1 rounded-r bg-line/50">
@@ -36,10 +37,14 @@ export default function AdminBenchmark() {
   const runs = row?.smoke?.runs
   const measured = Object.entries(runs || {}).flatMap(([mode, run]) =>
     run
-      ? Object.entries(run.metrics).map(([name, m]) => ({
+      ? Object.entries(cat === 'all' ? run.metrics : run.by_category?.[cat] || {}).map(([name, m]) => ({
           key: `${mode}.${name}`,
           label: `${mode} · ${name}`,
           value: m.value,
+          group: cat === 'all' ? 'Tất cả' : cat,
+          n: cat === 'all' ? run.requested_count : row?.metadata?.category_counts[cat],
+          scored: m.scored_count,
+          excluded: m.excluded_count,
         }))
       : [],
   )
@@ -138,33 +143,38 @@ export default function AdminBenchmark() {
               </select>
             }
           >
-            {cat !== 'all' ? (
-              <div className="px-5 pb-5 text-sm text-muted">
-                Nhóm <strong className="text-navy">{cat}</strong> ({categories.find(([id]) => id === cat)?.[1] ?? 0} câu): artifact hiện chỉ tổng hợp theo toàn bộ tập câu hỏi, chưa tách metric từng nhóm.
-              </div>
-            ) : measured.length ? (
+            {measured.length ? (
               <div className="overflow-x-auto">
                 <table className="w-full min-w-[480px]">
                   <thead className="border-y border-line">
                     <tr>
+                      <Th>Nhóm</Th>
+                      <Th>n</Th>
                       <Th>Metric</Th>
                       <Th>KAG (thực đo)</Th>
+                      <Th>Đã chấm</Th>
+                      <Th>Bị loại</Th>
                     </tr>
                   </thead>
                   <tbody>
                     {measured.map((m) => (
                       <tr key={m.key} className="border-b border-line/60 last:border-0">
+                        <Td>{m.group}</Td>
+                        <Td>{m.n ?? '—'}</Td>
                         <Td className="whitespace-nowrap text-navy">{m.label}</Td>
                         <Td>
-                          <MetricBar value={m.value} />
+                          {/* Summaries expose no unit; a value within 0..1 can also be a mean count. */}
+                          <MetricBar value={m.value} kind="count" />
                         </Td>
+                        <Td>{m.scored}</Td>
+                        <Td>{m.excluded}</Td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
             ) : (
-              <p className="px-5 pb-5 text-sm text-muted">Chưa có execution artifact hợp lệ cho bộ câu hỏi này; các chỉ số chưa đo.</p>
+              <p className="px-5 pb-5 text-sm text-muted">{cat === 'all' ? 'Chưa có execution artifact hợp lệ cho bộ câu hỏi này; các chỉ số chưa đo.' : `Nhóm ${cat} (${row?.metadata?.category_counts[cat] ?? 0} câu): Chưa đo.`}</p>
             )}
           </Card>
 
@@ -204,11 +214,11 @@ export default function AdminBenchmark() {
                           <p>
                             {run.started_at} → {run.finished_at}
                           </p>
-                          <p>Latency mean: {run.latency_ms.all_attempted.mean ?? 'Chưa đo'} ms</p>
+                          <p>Latency mean: <MetricBar value={run.latency_ms.all_attempted.mean} kind="latency" /></p>
                           <pre className="whitespace-pre-wrap break-all">{JSON.stringify(run.configuration, null, 2)}</pre>
                           {Object.entries(run.metrics).map(([name, m]) => (
                             <p key={name}>
-                              {name}: {m.value ?? 'UNAVAILABLE / NOT_APPLICABLE'} · Scored {m.scored_count}/{m.eligible_count} · Failed{' '}
+                              {name}: {m.value ?? 'Chưa đo'} · Scored {m.scored_count}/{m.eligible_count} · Failed{' '}
                               {m.failed_count} · Excluded {m.excluded_count}
                             </p>
                           ))}
