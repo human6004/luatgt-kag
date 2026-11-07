@@ -32,6 +32,7 @@ app:
   kag-credentials-write-token-file: ${KAG_CREDENTIALS_WRITE_TOKEN_FILE:}
   kag-provider-test-token-file: ${KAG_PROVIDER_TEST_TOKEN_FILE:}
   kag-config-apply-token-file: ${KAG_CONFIG_APPLY_TOKEN_FILE:}
+  kag-benchmark-write-token-file: ${KAG_HTTP_BENCHMARK_WRITE_SECRET_FILE:}
   kag-builder-url: ${KAG_BUILDER_URL:}
   kag-builder-token-file: ${KAG_BUILDER_TOKEN_FILE:}
   kag-release-id: ${KAG_RELEASE_ID:}

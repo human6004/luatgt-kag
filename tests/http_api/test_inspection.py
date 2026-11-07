@@ -31,7 +31,8 @@ class InspectionTests(unittest.IsolatedAsyncioTestCase):
                 self.assertEqual((await self.get(path, '')).status_code, 401)
                 self.assertEqual((await self.get(path, 'q'*43)).status_code, 403)
                 self.assertEqual((await self.get(path+'?override=true')).status_code, 422)
-                self.assertEqual((await self.client.post(path)).status_code, 405)
+                self.assertEqual((await self.client.post(path)).status_code,
+                                 401 if path == '/v1/benchmark/datasets' else 405)
         with patch('kag.http_api.runtime.make_runtime', side_effect=AssertionError('runtime constructed')):
             response = await self.get('/v1/pipeline/status')
         self.assertEqual(response.status_code, 200)

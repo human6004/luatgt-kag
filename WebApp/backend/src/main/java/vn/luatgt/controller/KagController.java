@@ -164,6 +164,21 @@ public class KagController {
     @PostMapping("/admin/kag/builder/abandon") @ResponseStatus(org.springframework.http.HttpStatus.ACCEPTED)
     JsonNode abandon(@Valid @RequestBody BuilderRunRequest request,@RequestHeader(value="If-Match",required=false) String revision) { return infrastructure.builderAction("abandon",request.runId(),revision); }
     @GetMapping("/admin/kag/benchmark/datasets") JsonNode datasets() { return infrastructure.benchmarkDatasets(); }
+    @GetMapping("/admin/kag/benchmark/template")
+    org.springframework.http.ResponseEntity<byte[]> benchmarkTemplate(@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("File mẫu không nhận tham số");
+        return infrastructure.benchmarkTemplate();
+    }
+    @PostMapping(value="/admin/kag/benchmark/datasets",consumes="application/json")
+    org.springframework.http.ResponseEntity<byte[]> importBenchmark(@RequestParam String name,@RequestParam Map<String,String> parameters,@RequestBody byte[] body) {
+        if(!parameters.keySet().equals(Set.of("name")))throw vn.luatgt.exception.ApiErrors.bad("Import chỉ nhận tên bộ câu hỏi");
+        return infrastructure.importBenchmark(name,body);
+    }
+    @GetMapping({"/admin/kag/benchmark/datasets/{id}/export","/admin/kag/benchmark/datasets/{id}/eval_questions.jsonl/export"})
+    org.springframework.http.ResponseEntity<byte[]> exportBenchmark(@PathVariable String id,@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Export chỉ nhận ID bộ câu hỏi");
+        return infrastructure.exportBenchmark(id+(request.getRequestURI().endsWith("/"+id+"/eval_questions.jsonl/export")?"/eval_questions.jsonl":""));
+    }
     @PostMapping("/admin/kag/retrieve") JsonNode retrieve(@Valid @RequestBody KagRetrieveRequest request) { return infrastructure.retrieve(request); }
     @PostMapping("/admin/kag/graph/{projectId}/{runId}/retrieve")
     org.springframework.http.ResponseEntity<JsonNode> trialGraph(@PathVariable int projectId,@PathVariable String runId,

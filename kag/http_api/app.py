@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 from ipaddress import ip_address
 import os
 import math
+import re
+import tempfile
 from pathlib import Path
 import time
 from uuid import uuid4
@@ -55,7 +57,7 @@ class ApiSettings:
             return tuple(result)
         return cls(ServiceSecrets(tokens('KAG_HTTP_QUERY_'), tokens('KAG_HTTP_INSPECT_'),
                                   tokens('KAG_HTTP_CREDENTIALS_WRITE_'), tokens('KAG_HTTP_PROVIDER_TEST_'),
-                                  tokens('KAG_HTTP_CONFIG_APPLY_')))
+                                  tokens('KAG_HTTP_CONFIG_APPLY_'), tokens('KAG_HTTP_BENCHMARK_WRITE_')))
 
 
 def _failure(request: Request, code: str, *, status=None, extra=None):
@@ -637,6 +639,136 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
             raise ApiFailure('INVALID_REQUEST')
         from .inspection import dataset_catalog
         return await asyncio.to_thread(dataset_catalog, app.state.evaluation_root)
+
+    def benchmark_root():
+        root = app.state.evaluation_root
+        if root is None:
+            raise ApiFailure('NOT_READY')
+        root = Path(root)
+        if not root.is_absolute() or root.is_symlink() or not root.is_dir():
+            raise ApiFailure('NOT_READY')
+        return root
+
+    @app.get('/v1/benchmark/template')
+    async def benchmark_template(request: Request):
+        authorize(request_principal(request), 'inspect', None)
+        if request.query_params:
+            raise ApiFailure('INVALID_REQUEST')
+        from kag.evaluation.models import CATEGORIES, EvaluationRecord
+        records = [EvaluationRecord.from_dict(dict(schema_version='1.0', dataset_version='1.0',
+            dataset_status='PROVISIONAL', qid=f'{category}-{index}', category=category,
+            question=f'Câu hỏi mẫu {index} — {category}', expected_abstain=category == 'unanswerable',
+            as_of=None, gold_doc_ids=[], gold_unit_ids=[], citation_gold=[],
+            notes='Mẫu cấu trúc; cần biên soạn câu hỏi và kiểm tra căn cứ trước khi đánh giá.')).to_dict()
+            for category in CATEGORIES for index in (1, 2)]
+        return JSONResponse(records, headers={'Content-Disposition':'attachment; filename="benchmark-template.json"'})
+
+    benchmark_write_lock = asyncio.Lock()
+
+    @app.post('/v1/benchmark/datasets')
+    async def import_benchmark(request: Request):
+        authorize(request_principal(request), 'benchmark-write', None)
+        root = benchmark_root()
+        names = request.query_params.getlist('name')
+        if (set(request.query_params) != {'name'} or len(names) != 1
+                or not re.fullmatch(r'[A-Za-z0-9_.-]{1,64}', names[0]) or '..' in names[0] or names[0] == '.'):
+            raise ApiFailure('INVALID_REQUEST')
+        from kag.evaluation.dataset import strict_json, canonical_dataset_bytes
+        from kag.evaluation.models import EvaluationRecord, ValidationError
+        try:
+            values = strict_json((await bounded_body(request, limit=8*1024*1024)).decode('utf-8'))
+        except (ValueError, UnicodeError, ValidationError, RecursionError):
+            raise ApiFailure('INVALID_JSON') from None
+        if type(values) is not list:
+            return JSONResponse([dict(index=0, field='', code='ARRAY_REQUIRED', message='Cần một JSON array.')], status_code=422)
+        if len(values) > 512:
+            raise ApiFailure('REQUEST_TOO_LARGE')
+        records, issues = [], []
+        for index, value in enumerate(values):
+            try:
+                records.append(EvaluationRecord.from_dict(value))
+            except ValidationError as failure:
+                issues.extend(dict(index=index, field=issue.field, code=issue.code,
+                    message=f'{issue.code}: {issue.field}') for issue in failure.issues)
+        if issues:
+            return Response(json.dumps(issues, ensure_ascii=True), media_type='application/json', status_code=422)
+        raw = canonical_dataset_bytes(records)
+        from .inspection import LIMIT_BYTES
+        if len(raw) > LIMIT_BYTES:
+            raise ApiFailure('REQUEST_TOO_LARGE')
+        target = root/names[0]
+
+        def store():
+            try:
+                target.mkdir()
+            except FileExistsError:
+                return 409
+            temporary = None
+            try:
+                from .inspection import _files
+                if len(_files(root)) >= 20:
+                    target.rmdir()
+                    return 413
+                with tempfile.NamedTemporaryFile(dir=target, delete=False) as stream:
+                    temporary = Path(stream.name)
+                    stream.write(raw)
+                    stream.flush()
+                    os.fsync(stream.fileno())
+                os.replace(temporary, target/'eval_questions.jsonl')
+            except (OSError, OverflowError):
+                if temporary is not None:
+                    temporary.unlink(missing_ok=True)
+                target.rmdir()
+                raise
+            return 201
+
+        try:
+            async with benchmark_write_lock:
+                status = await asyncio.to_thread(store)
+        except OverflowError:
+            raise ApiFailure('REQUEST_TOO_LARGE') from None
+        except OSError:
+            raise ApiFailure('NOT_READY') from None
+        if status == 409:
+            return JSONResponse({'message':'Tên bộ câu hỏi đã tồn tại.'}, status_code=409)
+        if status == 413:
+            raise ApiFailure('REQUEST_TOO_LARGE')
+        from collections import Counter
+        return JSONResponse(dict(id=f'{names[0]}/eval_questions.jsonl', record_count=len(records),
+            category_counts=dict(Counter(record.category for record in records))), status_code=201)
+
+    @app.get('/v1/benchmark/datasets/{dataset_id:path}/export')
+    async def export_benchmark(dataset_id: str, request: Request):
+        authorize(request_principal(request), 'inspect', None)
+        if request.query_params:
+            raise ApiFailure('INVALID_REQUEST')
+        root = benchmark_root()
+        parts = dataset_id.split('/')
+        if (len(parts) > 2 or any(not re.fullmatch(r'[A-Za-z0-9_.-]{1,128}', part)
+                or '..' in part or part == '.' for part in parts)
+                or len(parts) == 2 and parts[1] != 'eval_questions.jsonl'):
+            raise ApiFailure('INVALID_REQUEST')
+        path = root.joinpath(*parts)
+        if path.is_dir():
+            path = path/'eval_questions.jsonl'
+        if (any(root.joinpath(*path.relative_to(root).parts[:i]).is_symlink()
+                for i in range(1, len(path.relative_to(root).parts)+1)) or not path.is_file()):
+            return JSONResponse({'message':'Không tìm thấy bộ câu hỏi.'}, status_code=404)
+        from kag.evaluation.dataset import strict_json
+
+        def read_records():
+            with path.open('rb') as stream:
+                raw = stream.read(16*1024*1024+1)
+            if len(raw) > 16*1024*1024:
+                raise ApiFailure('RESULT_LIMIT_EXCEEDED')
+            return [strict_json(line) for line in raw.decode('utf-8').splitlines() if line.strip()]
+
+        try:
+            records = await asyncio.to_thread(read_records)
+        except (OSError, ValueError, UnicodeError, RecursionError):
+            raise ApiFailure('NOT_READY') from None
+        filename = parts[0].removesuffix('.jsonl') if len(parts) == 1 and parts[0].endswith('.jsonl') else parts[0]
+        return JSONResponse(records, headers={'Content-Disposition':f'attachment; filename="{filename}.json"'})
 
     @app.get('/v1/graph/release')
     async def graph_release(request: Request):
