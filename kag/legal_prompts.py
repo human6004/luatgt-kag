@@ -310,11 +310,6 @@ class LegalPlanningPrompt(DefaultIterativePlanningPrompt):
             try:
                 validate_subquery(kwargs.get('query'), arguments['query'], sources)
             except ValueError as exc:
-                original = material_constraints(kwargs.get('query', ''))
-                proposed = material_constraints(arguments['query'])
-                grounded = material_constraints('\n'.join(sources))
-                if any(proposed[kind] - original[kind] - grounded[kind] for kind in original):
-                    raise
                 raise UnsafeSubqueryError(name, str(exc)) from exc
         return super().parse_response(value, **kwargs)
 
