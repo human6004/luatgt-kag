@@ -326,7 +326,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     })}>Xác nhận dùng cho Chat</Button></>}>
       <div className="space-y-3 text-sm"><p>Chuyển từ {preview.previous?.project_name ?? 'chưa chọn'} sang {preview.project_name}.</p><p>{preview.counts.nodes.toLocaleString('vi-VN')} nội dung · {preview.counts.edges.toLocaleString('vi-VN')} liên kết.</p>{preview.preparation_required && <p>Cần chuẩn bị lần đầu. Đồ thị sẽ được xác minh ở nền sau khi xác nhận.</p>}{preview.chat_blockers.map(code => <p key={code}>{servingReasons[code] ?? 'Chưa thể dùng đồ thị. Kiểm tra model và dữ liệu.'}</p>)}<details><summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary><pre className="whitespace-pre-wrap break-all">{JSON.stringify(preview,null,2)}</pre></details>{(error || readError) && <p role="alert">{readError || error}</p>}</div>
     </Modal>}
-    {view && <Modal open title={view.project_name} onClose={closeView}><div className="space-y-5"><SelectedGraph projectId={view.project_id} links={config?.links} /><GraphSourceList key={view.run_id} projectId={view.project_id} runId={view.run_id} /><details><summary className="underline cursor-pointer">Thử tìm kiếm</summary><div className="mt-4"><TrialGraph projectId={view.project_id} runId={view.run_id} modelPath="/admin/chatbot?step=1" /></div></details><details><summary className="underline cursor-pointer">Chi tiết kỹ thuật phiên</summary><pre className="whitespace-pre-wrap break-all text-xs">{JSON.stringify({ selected: view, runs: serving?.runs.filter(row => row.database === view.database) },null,2)}</pre></details></div></Modal>}
+    {view && <Modal open title={view.project_name} onClose={closeView}><div className="space-y-5"><SelectedGraph projectId={view.project_id} links={config?.links} /><GraphSourceList key={view.run_id} projectId={view.project_id} runId={view.run_id} /><details><summary className="underline cursor-pointer">Thử tìm kiếm</summary><div className="mt-4"><TrialGraph projectId={view.project_id} runId={view.run_id} modelPath="/admin/chatbot?step=1" builtModel={view.model_identity} dimension={view.dimension} /></div></details><details><summary className="underline cursor-pointer">Chi tiết kỹ thuật phiên</summary><pre className="whitespace-pre-wrap break-all text-xs">{JSON.stringify({ selected: view, runs: serving?.runs.filter(row => row.database === view.database) },null,2)}</pre></details></div></Modal>}
     {clearConfirmation && <Modal open title="Xóa đồ thị" onClose={() => { if (!busy) setClearConfirmation(undefined) }} footer={<><Button disabled={busy} onClick={() => setClearConfirmation(undefined)}>Hủy</Button><Button variant="primary" disabled={busy || !!readError} onClick={() => void confirmClear()}>Xác nhận xóa</Button></>}><div className="space-y-3 text-sm"><p>Xóa đồ thị {clearConfirmation.target.project_name}, gồm {clearConfirmation.counts.nodes.toLocaleString('vi-VN')} nội dung. Không thể hoàn tác.</p>{serving?.active && (serving.active.database_id === clearConfirmation.database_id || serving.active.database === clearConfirmation.target.database) && <p>Chat tạm ngưng trả lời cho tới khi chọn đồ thị khác</p>}{(error || readError) && <p role="alert">{readError || error}</p>}</div></Modal>}
   </section>
 }
@@ -347,7 +347,7 @@ function GraphSourcePage({ projectId, runId }: { projectId: number; runId: strin
   </>}</div>
 }
 
-function TrialGraph({ projectId, runId, modelPath }: { projectId: number; runId: string; modelPath: string }) {
+function TrialGraph({ projectId, runId, modelPath, builtModel, dimension }: { projectId: number; runId: string; modelPath: string; builtModel: string; dimension: number }) {
   const location = useLocation(), saved = location.state?.trialDraft
   const draft = saved?.projectId === projectId && saved?.runId === runId ? saved : undefined
   const [question, setQuestion] = useState(typeof draft?.question === 'string' ? draft.question.slice(0, 4000) : '')
@@ -375,6 +375,7 @@ function TrialGraph({ projectId, runId, modelPath }: { projectId: number; runId:
   return (
     <section className="space-y-4 text-sm">
       <p>Tìm nguồn trong đồ thị đang xem; không tạo câu trả lời và không đổi đồ thị Chat. Gửi câu thử có thể tính phí Embedding.</p>
+      <p>Đồ thị dựng bằng <strong className="break-all">{builtModel.split('|').pop()}</strong> · {dimension.toLocaleString('vi-VN')} chiều. Embedding đang chọn phải trùng địa chỉ kết nối và tên model này; đổi model thì phải dựng lại đồ thị.</p>
       <form className="space-y-4" onSubmit={event => { event.preventDefault(); void retrieve() }}>
         <Field label="Câu hỏi thử">
           <textarea className={inputCls} maxLength={4000} required rows={3} value={question} onChange={event => setQuestion(event.target.value)} />

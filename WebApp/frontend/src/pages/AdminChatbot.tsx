@@ -21,8 +21,8 @@ const modelErrors: Record<string, string> = {
   TEST_REQUIRED: 'Cần kiểm thử thành công bản đã lưu trước khi áp dụng.',
   TEST_IN_PROGRESS: 'Kiểm thử chưa hoàn tất. Tải lại trước khi thử tiếp.',
   RELEASE_UNAVAILABLE: 'Chưa chọn đồ thị phục vụ. Chọn đồ thị đã dựng trong thư viện rồi xác nhận dùng cho Chat.',
-  RELEASE_MISMATCH: 'Model hoặc địa chỉ kết nối không tương thích với dữ liệu đang phục vụ.',
-  VECTOR_IDENTITY_MISMATCH: 'Embedding không khớp model và chỉ mục đã dùng để dựng đồ thị.',
+  RELEASE_MISMATCH: 'Embedding đang chọn khác embedding đã dựng đồ thị. Giữ nguyên địa chỉ kết nối và tên model thì chỉ cần đổi API key; đổi địa chỉ hoặc model thì phải dựng lại đồ thị.',
+  VECTOR_IDENTITY_MISMATCH: 'Embedding không khớp model và chỉ mục đã dùng để dựng đồ thị. Chỉ đổi được API key khi giữ nguyên địa chỉ và tên model.',
   ACTIVE_CONFIG_INVALID: 'Cấu hình đang áp dụng không còn hợp lệ. Kiểm tra dữ liệu và quyền kết nối.',
   PROXY_POLICY_UNVERIFIED: 'Chưa xác định được giới hạn lượt gọi qua proxy. Cần quản trị triển khai kiểm tra trước khi thử kết nối.',
   BLOCKED: 'Địa chỉ kết nối chưa được hệ thống cho phép. Cần quản trị triển khai cấp quyền.',
@@ -338,6 +338,9 @@ export default function AdminChatbot() {
                   </div>
                   <p className="text-xs text-muted">
                     Kiểm tra kết nối gửi tối đa 1 request thật và có thể phát sinh phí; chỉ gửi sau xác nhận. Khi dựng đồ thị, hệ thống dùng Embedding đã lưu và kiểm tra thành công (không cần chờ Áp dụng cho Chat).
+                  </p>
+                  <p className="text-xs text-muted">
+                    Embedding phải khớp đồ thị đang dùng. Hết hạn mức thì chỉ đổi API key, giữ nguyên địa chỉ kết nối và tên model. Đổi địa chỉ hoặc model thì đồ thị cũ phải dựng lại mới dùng được.
                   </p>
                 </>
               )}

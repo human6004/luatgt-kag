@@ -142,7 +142,7 @@ public class KagClient {
                         case "CONFIG_CONFLICT" -> "Bản xem trước đã cũ. Tải lại và xem trước lần nữa";
                         case "CONFIG_BUSY" -> deactivate?"Đồ thị đang dựng hoặc có thao tác khác. Dừng dựng trước rồi tải lại":"Dịch vụ đang xử lý yêu cầu khác. Chờ rồi tải lại trạng thái";
                         case "SCOPE_DENIED" -> "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project";
-                        case "RELEASE_MISMATCH" -> "Model Embedding hoặc số chiều không khớp phiên dựng. Chọn lại và kiểm tra model";
+                        case "RELEASE_MISMATCH" -> "Embedding đang chọn không khớp embedding đã dựng đồ thị (địa chỉ, model hoặc số chiều). Giữ nguyên địa chỉ và model, chỉ đổi API key; nếu đổi model thì phải dựng lại đồ thị";
                         case "SOURCE_VALIDATION_FAILED" -> "Nguồn graph chưa đầy đủ hoặc khác bản đã xác minh. Kiểm văn bản nguồn và phạm vi dựng trước khi xuất bản";
                         default -> "Chưa thể dùng đồ thị. Kiểm phiên đã xác minh, cấu trúc/chỉ mục và model đã kiểm tra ("+code+")";
                     };
@@ -1291,7 +1291,7 @@ public class KagClient {
                         case "QUERY_TIMEOUT" -> "Chưa đọc xong kết quả trong thời gian cho phép. Đợi lượt xử lý kết thúc rồi thử lại";
                         case "CONFIG_BUSY","CONCURRENCY_LIMIT" -> "Đồ thị đang được xử lý. Chờ rồi thử lại";
                         case "SCOPE_DENIED" -> "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project";
-                        case "RELEASE_MISMATCH" -> "Embedding đã lưu không khớp phiên dựng. Chỉnh model phù hợp rồi thử lại";
+                        case "RELEASE_MISMATCH" -> "Embedding đang chọn khác embedding đã dựng đồ thị. Giữ nguyên địa chỉ kết nối và tên model thì chỉ cần đổi API key; đổi địa chỉ hoặc model thì phải dựng lại đồ thị";
                         default -> "Chưa thể thử đồ thị. Kiểm kết nối, phiên dựng và model đã lưu";
                     };
                     throw new ResponseStatusException(HttpStatus.CONFLICT,message+" ("+code+")");
