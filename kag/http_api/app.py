@@ -680,19 +680,23 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
             raise ApiFailure('NOT_READY')
         return root
 
+    template_cache = []
+
     @app.get('/v1/benchmark/template')
     async def benchmark_template(request: Request):
         authorize(request_principal(request), 'inspect', None)
         if request.query_params:
             raise ApiFailure('INVALID_REQUEST')
-        from kag.evaluation.models import CATEGORIES, EvaluationRecord
-        records = [EvaluationRecord.from_dict(dict(schema_version='1.0', dataset_version='1.0',
-            dataset_status='PROVISIONAL', qid=f'{category}-{index}', category=category,
-            question=f'Câu hỏi mẫu {index} — {category}', expected_abstain=category == 'unanswerable',
-            as_of=None, gold_doc_ids=[], gold_unit_ids=[], citation_gold=[],
-            notes='Mẫu cấu trúc; cần biên soạn câu hỏi và kiểm tra căn cứ trước khi đánh giá.')).to_dict()
-            for category in CATEGORIES for index in (1, 2)]
-        return JSONResponse(records, headers={'Content-Disposition':'attachment; filename="benchmark-template.json"'})
+        if not template_cache:
+            from kag.evaluation.dataset import dataset_from_records, strict_json
+            from kag.evaluation.models import ValidationError
+            try:
+                raw = (Path(__file__).with_name('benchmark_template.json')).read_bytes()
+                records = [record.to_dict() for record in dataset_from_records(strict_json(raw.decode('utf-8'))).records]
+            except (OSError, ValueError, UnicodeError, ValidationError, RecursionError):
+                raise ApiFailure('NOT_READY') from None
+            template_cache.append(records)
+        return JSONResponse(template_cache[0], headers={'Content-Disposition':'attachment; filename="benchmark-template.json"'})
 
     benchmark_write_lock = asyncio.Lock()
 
