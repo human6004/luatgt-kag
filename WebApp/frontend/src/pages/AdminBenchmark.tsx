@@ -174,7 +174,7 @@ export default function AdminBenchmark() {
   }])) : row?.smoke?.runs
   const measured = Object.entries(runs || {}).flatMap(([mode, run]) =>
     run
-      ? Object.entries(cat === 'all' ? { ...(run.by_category ?? {}), 'Tất cả': run.metrics } : { [cat]: run.by_category?.[cat] || {} })
+      ? Object.entries(cat === 'all' ? { 'Tất cả': run.metrics } : { [cat]: run.by_category?.[cat] || {} })
           .flatMap(([group, metrics]) => Object.entries(metrics).map(([name, m]) => ({
             ...parseMetric(mode, name),
             key: `${mode}.${group}.${name}`,
@@ -458,9 +458,6 @@ export default function AdminBenchmark() {
                           </div>
                         ))}
                       </div>
-                      <details className="mt-3">
-                        <summary className="text-xs text-muted cursor-pointer hover:text-navy">Xem toàn bộ chỉ số chi tiết</summary>
-                      </details>
                     </div>
                   )
                 })()}
@@ -482,7 +479,7 @@ export default function AdminBenchmark() {
                       {open && <table className="w-full table-fixed" aria-label={`${group.mode} · ${group.channel || 'Chung'}`}>
                         <thead className="border-y border-line">
                           <tr>
-                            {cat === 'all' ? <><Th className="hidden sm:table-cell sm:w-[15%] !px-2">Nhóm</Th><Th className="hidden sm:table-cell sm:w-[7%] !px-2">n</Th></> : <Th className="hidden sm:table-cell sm:w-[12%] !px-2">Mode</Th>}
+                            <Th className="hidden sm:table-cell sm:w-[12%] !px-2">Mode</Th>
                             <Th className="hidden sm:table-cell sm:w-[16%] !px-2">Channel</Th>
                             <Th className="w-[40%] sm:w-auto !px-2">Metric</Th>
                             <Th className="w-[24%] sm:w-[22%] !px-2">Điểm</Th>
@@ -493,11 +490,10 @@ export default function AdminBenchmark() {
                         <tbody>
                           {group.metrics.map((m) => (
                             <tr key={m.key} className="border-b border-line/60 last:border-0">
-                              {cat === 'all' ? <><Td className="hidden sm:table-cell !px-2">{m.group}</Td><Td className="hidden sm:table-cell !px-2">{m.n ?? '—'}</Td></> : <Td className="hidden sm:table-cell !px-2">{m.mode}</Td>}
+                              <Td className="hidden sm:table-cell !px-2">{m.mode}</Td>
                               <Td className="hidden sm:table-cell !px-2">{m.channel || 'Chung'}</Td>
                               <Td className="!px-2 text-navy [overflow-wrap:anywhere]">
                                 <span title={m.name}>{m.label}</span>
-                                {cat === 'all' && <span className="block text-xs text-muted sm:hidden">{m.group} · {m.n ?? '—'} câu</span>}
                               </Td>
                               <Td className="!px-2">{m.name === 'answer_correctness' && m.value === null ? <span className="text-xs text-muted">Chưa có giám khảo</span> : <MetricBar value={m.value} kind={metricKinds[m.name] ?? (rankingMetric.test(m.name) ? 'ratio' : 'count')} />}</Td>
                               <Td className="!px-2">{m.scored}</Td>
