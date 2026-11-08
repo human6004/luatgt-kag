@@ -1313,7 +1313,11 @@ public class KagClient {
     private void validateSmokeMetrics(JsonNode metrics,int total) throws IOException {
         if(!metrics.isObject()||metrics.size()>128)throw new IOException("Invalid smoke metrics");
         for(var metric:metrics) {
-            if(!fields(metric).equals(Set.of("value","scored_count","status_counts","eligible_count","excluded_count","failed_count"))||
+            var fieldsOfMetric=new HashSet<>(Set.of("value","scored_count","status_counts","eligible_count","excluded_count","failed_count"));
+            if(metric.has("ci_low"))fieldsOfMetric.addAll(Set.of("ci_low","ci_high"));
+            if(!fields(metric).equals(fieldsOfMetric)||
+                (metric.has("ci_low")&&(!metric.path("ci_low").isNull()&&(!metric.path("ci_low").isNumber()||!Double.isFinite(metric.path("ci_low").asDouble())||metric.path("ci_low").asDouble()<0)||
+                                        !metric.path("ci_high").isNull()&&(!metric.path("ci_high").isNumber()||!Double.isFinite(metric.path("ci_high").asDouble())||metric.path("ci_high").asDouble()<0)))||
                 !fields(metric.path("status_counts")).equals(Set.of("OK","NOT_APPLICABLE","UNAVAILABLE","UNKNOWN"))||
                 (!metric.path("value").isNull()&&(!metric.path("value").isNumber()||!Double.isFinite(metric.path("value").asDouble())||metric.path("value").asDouble()<0)))throw new IOException("Invalid smoke metric");
             for(String k:List.of("scored_count","eligible_count","excluded_count","failed_count"))if(!bounded(metric.path(k),0,total))throw new IOException("Invalid smoke metric count");
