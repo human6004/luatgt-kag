@@ -298,9 +298,9 @@ export default function AdminBenchmark() {
       <Notice {...datasetData} retry={datasetData.reload} />
       <Notice {...serving} retry={serving.reload} />
 
-      <Card title="Chạy benchmark">
+      <Card title="Chạy benchmark" className="mb-6">
         <div className="px-5 pb-5 space-y-3 text-sm">
-          <div className="grid gap-3 sm:grid-cols-3">
+          <div className="grid gap-3 lg:grid-cols-3">
             <label>Đồ thị đã PASS
               <select aria-label="Đồ thị benchmark" className={`${inputCls} mt-1`} value={graph ? `${graph.project_id}/${graph.run_id}` : ''} disabled={runBusy || currentJob?.state === 'RUNNING'} onChange={(e) => setGraphKey(e.target.value)}>
                 {!graph && <option value="">Chưa có đồ thị đã PASS</option>}
@@ -346,9 +346,9 @@ export default function AdminBenchmark() {
         </div>
       </Card>
 
-      <div className="grid gap-5 xl:grid-cols-[320px_minmax(0,1fr)]">
-        <div className="space-y-5">
-          <Card title="Bộ câu hỏi chuẩn" right={<span className="text-[11.5px] text-muted">{selected?.record_count ?? '—'} câu</span>}>
+      <div className="grid items-start gap-6 xl:grid-cols-[360px_minmax(0,1fr)]">
+        <div className="min-w-0">
+          <Card title="Bộ câu hỏi chuẩn" className="[&>header]:min-h-10" right={<span className="text-[11.5px] text-muted">{selected?.record_count ?? '—'} câu</span>}>
             <div className="px-5 mb-4">
               <select
                 aria-label="Dataset"
@@ -387,13 +387,13 @@ export default function AdminBenchmark() {
                 {categories.map(([id, n]) => (
                   <li
                     key={id}
-                    className={`grid grid-cols-[minmax(0,1fr)_80px_28px] items-center gap-2 text-[12.5px] cursor-pointer rounded px-1 py-0.5 ${
+                    className={`grid grid-cols-[minmax(0,1fr)_64px_24px] items-center gap-2 text-[12.5px] cursor-pointer rounded px-1 py-1 ${
                       cat === id ? 'bg-selected font-medium text-navy' : 'text-text-secondary hover:bg-bg'
                     }`}
                     onClick={() => updateUrl({ cat: cat === id ? null : id })}
                     title={`${id}: ${n} câu`}
                   >
-                    <span className="truncate">{id}</span>
+                    <span className="min-w-0 break-words">{id}</span>
                     <span className="h-2 rounded-r bg-line/50">
                       <span className="block h-full rounded-r bg-accent" style={{ width: `${(n / maxCatCount) * 100}%` }} />
                     </span>
@@ -405,15 +405,15 @@ export default function AdminBenchmark() {
               <p className="px-5 pb-5 text-xs text-muted">Chưa có phân bố</p>
             )}
           </Card>
-
         </div>
 
-        <div className="space-y-5 min-w-0">
+        <div className="space-y-6 min-w-0">
           <Card
+            className="[&>header]:min-h-10"
             title={cat === 'all' ? 'Kết quả đo KAG' : `${cat} · ${categoryCounts?.[cat] ?? '—'} câu${measured.length ? ` · ${countRange('scored')} đã chấm · ${countRange('excluded')} bị loại` : ' · Chưa đo'}`}
             right={
               <select
-                className="rounded-lg border border-line bg-transparent px-2 py-1 text-[12px] text-navy"
+                className={`${inputCls} sm:w-52`}
                 value={cat}
                 onChange={(e) => updateUrl({ cat: e.target.value === 'all' ? null : e.target.value })}
                 aria-label="Nhóm câu hỏi"
@@ -476,11 +476,14 @@ export default function AdminBenchmark() {
                 })}
               </div>
             ) : (
-              <p className="px-5 pb-5 text-sm text-muted">{cat === 'all' ? 'Chưa có execution artifact hợp lệ cho bộ câu hỏi này; các chỉ số chưa đo.' : `Nhóm ${cat} (${categoryCounts?.[cat] ?? 0} câu): Chưa đo.`}</p>
+              <div className="flex min-h-48 flex-col items-center justify-center gap-2 px-5 pb-6 text-center">
+                <p className="text-sm font-medium text-navy">Chưa có kết quả đánh giá</p>
+                <p className="max-w-md text-sm text-muted">{cat === 'all' ? 'Chưa có execution artifact hợp lệ cho bộ câu hỏi này; các chỉ số chưa đo.' : `Nhóm ${cat} (${categoryCounts?.[cat] ?? 0} câu): Chưa đo.`}</p>
+              </div>
             )}
           </Card>
 
-          <Card title="Artifact KAG · API thật">
+          {(selectedJob || data.value || row) && <Card title="Artifact KAG · API thật">
             <div className="px-5 pb-5 text-xs space-y-2 break-words">
               {selectedJob && <>
                 <p>Job: {selectedJob.run_id_job} · Fingerprint: {selectedJob.graph_fingerprint}</p>
@@ -551,23 +554,24 @@ export default function AdminBenchmark() {
                 </>
               )}
             </div>
-          </Card>
-
-          <Card
-            title="Smoke test kiểm tra nhanh"
-            right={
-              <Button size="sm" variant="primary" onClick={() => notify('Chức năng đang phát triển')}>
-                ▶ Chạy smoke <Badge tone="gray">Đang phát triển</Badge>
-              </Button>
-            }
-          >
-            <div className="px-5 pb-5 flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
-              <span>Chạy nhanh bộ câu hỏi đối chứng trên đồ thị đang phục vụ.</span>
-              <Badge tone="gray">Đang phát triển</Badge>
-            </div>
-          </Card>
+          </Card>}
         </div>
       </div>
+
+      <Card
+        className="mt-6"
+        title="Smoke test kiểm tra nhanh"
+        right={
+          <Button size="sm" variant="primary" onClick={() => notify('Chức năng đang phát triển')}>
+            ▶ Chạy smoke <Badge tone="gray">Đang phát triển</Badge>
+          </Button>
+        }
+      >
+        <div className="px-5 pb-5 flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
+          <span>Chạy nhanh bộ câu hỏi đối chứng trên đồ thị đang phục vụ.</span>
+          <Badge tone="gray">Đang phát triển</Badge>
+        </div>
+      </Card>
     </Page>
   )
 }
