@@ -406,14 +406,6 @@ export default function AdminBenchmark() {
             )}
           </Card>
 
-          <Card title="Thiết lập & So sánh HybridRAG · NativeRAG" right={<Badge tone="gray">Đang phát triển</Badge>}>
-            <div className="px-5 pb-5 space-y-3 text-xs text-muted">
-              <p>Cấu hình tham số chạy benchmark trực tiếp từ WebApp và đối chiếu KAG với HybridRAG / NativeRAG.</p>
-              <Button size="sm" onClick={() => notify('Chức năng đang phát triển')}>
-                Cấu hình so sánh <Badge tone="gray">Đang phát triển</Badge>
-              </Button>
-            </div>
-          </Card>
         </div>
 
         <div className="space-y-5 min-w-0">
