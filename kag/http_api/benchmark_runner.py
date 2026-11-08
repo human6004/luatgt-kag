@@ -95,7 +95,7 @@ def graph_session(change, token):
 
 @contextmanager
 def question_runtime(graph, mode, job):
-    from kag.http_api.runtime import (RuntimeSettings, RequestRuntime, _Budget, REQUEST_SECONDS,
+    from kag.http_api.runtime import (RuntimeSettings, RequestRuntime, _Budget, REQUEST_SECONDS, BENCHMARK_TRANSPORT_SECONDS,
                                       _new_embedding, _new_llm, initialize_runtime,_ReaderBoundary)
     from kag.http_api.provider_budget import ProviderBudget,disable_instance_retries
     from kag.retriever.retriever import Retriever
@@ -110,6 +110,7 @@ def question_runtime(graph, mode, job):
         chat_response_model=chat['test'].get('observed_model') or config.get('model') if chat else None)
     deadline = time.monotonic()+REQUEST_SECONDS
     runtime = RequestRuntime(None,None,None,deadline,_Budget(deadline),'',None,capability='benchmark')
+    runtime.budget.transport_seconds = BENCHMARK_TRANSPORT_SECONDS
     attempts = job['directory']/'provider-attempts'
     attempts.mkdir(exist_ok=True)
     runtime.provider_budget = ProviderBudget(attempts/f'{mode}-{job["index"]}.json',
@@ -121,12 +122,12 @@ def question_runtime(graph, mode, job):
     runtime.request_id=job['value']['run_id_job']
     runtime.provider_budget.request_id=runtime.request_id
     opener=graph['reader']._opener
-    graph['reader']._opener=_ReaderBoundary(opener,runtime.budget)
+    graph['reader']._opener=_ReaderBoundary(opener,runtime.budget,transport_seconds=BENCHMARK_TRANSPORT_SECONDS)
     try:
-        retriever = Retriever(graph['reader'], _new_embedding(settings,runtime), graph['contract'])
+        retriever = Retriever(graph['reader'], _new_embedding(settings,runtime,timeout=BENCHMARK_TRANSPORT_SECONDS), graph['contract'])
         pipeline = None
         if mode == 'G2':
-            llm = _new_llm(settings,runtime)
+            llm = _new_llm(settings,runtime,timeout=BENCHMARK_TRANSPORT_SECONDS)
             pipeline = build_pipeline(retriever,llm)
             disable_instance_retries(pipeline,llm)
         elif retriever.namespace != 'VietRoadTraffic':

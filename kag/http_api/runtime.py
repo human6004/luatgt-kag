@@ -43,7 +43,16 @@ def _request_seconds():
     return seconds-TRANSPORT_SECONDS
 
 
+def _benchmark_transport_seconds():
+    message = 'KAG_BENCHMARK_TRANSPORT_SECONDS must be a number from 5 to 600'
+    try: seconds=float(os.environ.get('KAG_BENCHMARK_TRANSPORT_SECONDS','60'))
+    except ValueError: raise ValueError(message) from None
+    if not 5<=seconds<=600:raise ValueError(message)
+    return seconds
+
+
 REQUEST_SECONDS = _request_seconds()
+BENCHMARK_TRANSPORT_SECONDS = _benchmark_transport_seconds()
 CHAT_CONFIG_PATH = Path('/provider-state/admin-config.json')
 LLM_CONFIG_PATH = Path('/provider-state/llm-credentials.json')
 _CURRENT = ContextVar('kag_admitted_runtime', default=None)
@@ -537,11 +546,11 @@ def _embedding_response_metadata(response):
         embedding_type=type(value).__name__,dimension=dimension)),flush=True)
 
 
-def _new_embedding(settings, runtime):
+def _new_embedding(settings, runtime, *, timeout=TRANSPORT_SECONDS):
     from kag.common.vectorize_model.openai_model import OpenAIVectorizeModel
     model = _sdk_instance(OpenAIVectorizeModel,runtime,model=settings.embedding_model,
         api_key=settings.embedding_key,base_url=settings.embedding_url,
-        vector_dimensions=settings.dimension,timeout=TRANSPORT_SECONDS)
+        vector_dimensions=settings.dimension,timeout=timeout)
     if settings.production:
         _configure_production_model(settings,model,'embedding',runtime)
     if settings.query_proof_sha256:
@@ -568,10 +577,10 @@ def _new_embedding(settings, runtime):
     return embed
 
 
-def _new_llm(settings, runtime):
+def _new_llm(settings, runtime, *, timeout=TRANSPORT_SECONDS):
     from kag.common.llm.openai_client import OpenAIClient
     model = _sdk_instance(OpenAIClient,runtime,name='kag-'+uuid4().hex,model=settings.chat_model,
-        api_key=settings.chat_key,base_url=settings.chat_url,enable_check=False,timeout=TRANSPORT_SECONDS)
+        api_key=settings.chat_key,base_url=settings.chat_url,enable_check=False,timeout=timeout)
     if settings.production:
         _configure_production_model(settings,model,'chat',runtime)
     if settings.query_proof_sha256:
