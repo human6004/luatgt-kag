@@ -750,6 +750,17 @@ export async function loadBenchmarkDatasets(signal?: AbortSignal): Promise<Bench
   const value = await api<BenchmarkDatasets>('/admin/kag/benchmark/datasets', { signal })
   return validateBenchmark(value)
 }
+export async function loadBenchmarkCategoryCounts(datasetId: string, signal?: AbortSignal): Promise<Record<string, number>> {
+  if (!benchmarkDatasetId(datasetId)) throw new ApiError('Mã bộ câu hỏi không hợp lệ', 422)
+  const records = await api<unknown>(`/admin/kag/benchmark/datasets/${datasetId.split('/').map(encodeURIComponent).join('/')}/export`, { signal })
+  if (!Array.isArray(records)) throw new ApiError('Phân bố bộ câu hỏi không hợp lệ', 502)
+  const counts: Record<string, number> = Object.fromEntries(benchmarkCategories.map(category => [category, 0]))
+  for (const record of records) {
+    if (!record || typeof record !== 'object' || !benchmarkCategories.includes(record.category)) throw new ApiError('Phân bố bộ câu hỏi không hợp lệ', 502)
+    counts[record.category]++
+  }
+  return counts
+}
 export type BenchmarkMode = 'G1' | 'G2' | 'BOTH'
 export type BenchmarkRequest = { dataset_id: string; project_id: number; run_id: string; mode: BenchmarkMode; limit: number | null }
 export type BenchmarkMetrics = Omit<SmokeRun, 'configuration' | 'status' | 'started_at' | 'finished_at' | 'metrics'> & {
@@ -863,7 +874,7 @@ export type SampleInspection = {
 const hash = (v: unknown) => typeof v === 'string' && /^[0-9a-f]{64}$/.test(v)
 const count = (v: unknown, max = 1000000): v is number => typeof v === 'number' && Number.isSafeInteger(v) && v >= 0 && v <= max
 const shape = (v: unknown, keys: string[]) => !!v && typeof v === 'object' && Object.keys(v).sort().join() === keys.sort().join()
-const benchmarkCategories = ['definition','obligation','sanction_numeric','effectiveness_metadata','inter_document','multi_hop','unanswerable','traffic_sign']
+export const benchmarkCategories = ['definition','obligation','sanction_numeric','effectiveness_metadata','inter_document','multi_hop','unanswerable','traffic_sign']
 function validateSmokeMetrics(metrics: Record<string, SmokeMetric>, n: number) {
     const invalid = () => { throw new ApiError('Invalid smoke proof', 502) }
     if (!metrics || typeof metrics !== 'object' || Array.isArray(metrics) || Object.keys(metrics).length > 128) invalid()

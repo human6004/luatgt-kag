@@ -4,7 +4,7 @@ import { useAdmin } from '../admin/store'
 import { apiResponse } from '../api'
 import { Badge, Button, Card, Page, Td, Th, inputCls } from '../admin/ui'
 import { useInspection } from './server/KagManagement'
-import { inspectionError, loadBenchmarkDatasets, loadSampleInspection, loadServing, loadBenchmarkRun, startBenchmarkRun, stopBenchmarkRun } from './server/kag-inspection'
+import { benchmarkCategories, inspectionError, loadBenchmarkCategoryCounts, loadBenchmarkDatasets, loadSampleInspection, loadServing, loadBenchmarkRun, startBenchmarkRun, stopBenchmarkRun } from './server/kag-inspection'
 import type { BenchmarkJob, BenchmarkMode, SmokeRun } from './server/kag-inspection'
 import { Notice } from './server/shared'
 
@@ -105,13 +105,14 @@ export default function AdminBenchmark() {
   const [stopRequested, setStopRequested] = useState(false)
   const [pollVersion, setPollVersion] = useState(0)
   const [now, setNow] = useState(Date.now())
+  const [distribution, setDistribution] = useState<{ id: string; hash: string | null; counts: Record<string, number> } | null>(null)
   const fileInput = useRef<HTMLInputElement>(null)
   const [importName, setImportName] = useState('')
   const [busy, setBusy] = useState(false)
   const [importErrors, setImportErrors] = useState<{ index: number; field: string; code: string; message: string }[]>([])
 
   const catalog = data.value?.datasets
-  const datasets = datasetData.value?.datasets ?? catalog?.datasets ?? []
+  const datasets = datasetData.value?.datasets ?? []
   const requestedDataset = params.get('dataset') ?? ''
   const selected = datasets.find((r) => r.id === requestedDataset) || datasets[0]
   const row = catalog?.datasets.find((r) => r.id === selected?.id)
@@ -120,9 +121,21 @@ export default function AdminBenchmark() {
   const selectedJob = currentJob?.dataset_id === selected?.id ? currentJob : null
   const graphRuns = serving.value?.runs ?? []
   const graph = graphRuns.find((r) => `${r.project_id}/${r.run_id}` === graphKey) ?? graphRuns[0]
-  const categoryCounts = selectedJob?.category_counts ?? row?.metadata?.category_counts ?? {}
-  const categories: [string, number][] = Object.entries(categoryCounts)
+  const fullJobCounts = selectedJob?.dataset_hash === selected?.dataset_hash && Object.values(selectedJob?.category_counts ?? {}).reduce((a, b) => a + b, 0) === selected?.record_count ? selectedJob?.category_counts : undefined
+  const categoryCounts = fullJobCounts ?? (distribution?.id === selected?.id && distribution?.hash === selected?.dataset_hash ? distribution?.counts : undefined)
+  const categories: [string, number][] = categoryCounts ? benchmarkCategories.map(category => [category, categoryCounts[category] ?? 0]) : []
   const maxCatCount = Math.max(1, ...categories.map(([, n]) => n))
+  const evaluatedCount = selectedJob ? Object.values(selectedJob.progress)[0]?.total : undefined
+
+  useEffect(() => {
+    setDistribution(null)
+    if (!selected) return
+    const controller = new AbortController()
+    void loadBenchmarkCategoryCounts(selected.id, controller.signal).then(counts => {
+      if (!controller.signal.aborted && Object.values(counts).reduce((a, b) => a + b, 0) === selected.record_count) setDistribution({ id: selected.id, hash: selected.dataset_hash, counts })
+    }).catch(() => { /* Optional distribution; benchmark controls remain available. */ })
+    return () => controller.abort()
+  }, [selected?.id, selected?.dataset_hash, selected?.record_count])
 
   useEffect(() => {
     setJob((previous) => previous?.run_id_job === jobId ? previous : null)
@@ -281,7 +294,6 @@ export default function AdminBenchmark() {
       title="Benchmark"
       subtitle="Đọc catalog bộ câu hỏi và artifact đánh giá thực tế của KAG từ backend."
     >
-      <Notice {...data} retry={data.reload} />
       <Notice {...datasetData} retry={datasetData.reload} />
       <Notice {...serving} retry={serving.reload} />
 
@@ -314,9 +326,18 @@ export default function AdminBenchmark() {
           {jobError && <div role="alert" className="text-red-700">{jobError} <Button size="sm" onClick={() => setPollVersion((v) => v + 1)}>Thử lại trạng thái</Button></div>}
           {jobId && !currentJob && !jobError && <p role="status">Đang tải trạng thái lượt chạy…</p>}
           {currentJob && <div role="status" className="space-y-1 text-xs">
-            <p>{currentJob.state} · {currentJob.dataset_id} · {currentJob.project_id}/{currentJob.run_id}</p>
-            {Object.entries(currentJob.progress).map(([m, p]) => <p key={m}>{m} {p.done}/{p.total} câu</p>)}
-            <p>Thời gian: {Math.max(0, Math.floor(((currentJob.finished_at ? Date.parse(currentJob.finished_at) : now) - Date.parse(currentJob.started_at)) / 1000))} giây</p>
+            <p className="break-all">{currentJob.state} · {currentJob.dataset_id} · {currentJob.project_id}/{currentJob.run_id}</p>
+            {Object.entries(currentJob.progress).map(([m, p]) => <div key={m}>
+              <div className="grid grid-cols-[1.5rem_minmax(0,1fr)_auto] items-center gap-2">
+                <span>{m}</span>
+                <div role="progressbar" aria-label={`Tiến độ ${m}`} aria-valuemin={0} aria-valuemax={p.total} aria-valuenow={p.done} aria-valuetext={`${p.done}/${p.total} câu`} className="h-2 rounded-r bg-line/50">
+                  <div className={`h-full rounded-r ${currentJob.state === 'FAILED' ? 'bg-red-600' : 'bg-accent-strong'}`} style={{ width: `${Math.min(100, Math.max(0, p.total ? p.done / p.total * 100 : 0))}%` }} />
+                </div>
+                <span className="tabular-nums">{p.done}/{p.total} câu</span>
+              </div>
+              {currentJob.state === 'STOPPED' && <p className="text-amber-700">Đã dừng ở {p.done}/{p.total}</p>}
+            </div>)}
+            <p>{currentJob.state === 'RUNNING' ? 'Thời gian đã chạy' : currentJob.state === 'COMPLETE' ? 'Tổng thời gian' : 'Thời gian'}: {Math.max(0, Math.floor(((currentJob.finished_at ? Date.parse(currentJob.finished_at) : now) - Date.parse(currentJob.started_at)) / 1000))} giây</p>
             {stopRequested && currentJob.state === 'RUNNING' && <p>Đã yêu cầu dừng; chờ câu đang xử lý kết thúc.</p>}
             {currentJob.state === 'STOPPED' && <p className="text-amber-700">Đã dừng — kết quả một phần, chưa đánh giá toàn bộ tập đã chọn.</p>}
             {currentJob.state === 'FAILED' && <p className="text-red-700">Lượt chạy thất bại · {currentJob.code}</p>}
@@ -359,6 +380,7 @@ export default function AdminBenchmark() {
                 </ul>}
               </div>
             </div>
+            {evaluatedCount !== undefined && selected?.record_count && evaluatedCount < selected.record_count ? <p className="px-5 pb-2 text-xs text-muted">{evaluatedCount}/{selected.record_count} câu được đánh giá</p> : null}
             {categories.length ? (
               <ul className="px-5 pb-5 space-y-1.5">
                 {categories.map(([id, n]) => (
@@ -379,7 +401,7 @@ export default function AdminBenchmark() {
                 ))}
               </ul>
             ) : (
-              <p className="px-5 pb-5 text-xs text-muted">Chưa đọc được phân bố nhóm câu hỏi.</p>
+              <p className="px-5 pb-5 text-xs text-muted">Chưa có phân bố</p>
             )}
           </Card>
 
@@ -395,7 +417,7 @@ export default function AdminBenchmark() {
 
         <div className="space-y-5 min-w-0">
           <Card
-            title={cat === 'all' ? 'Kết quả đo KAG' : `${cat} · ${categoryCounts[cat] ?? '—'} câu${measured.length ? ` · ${countRange('scored')} đã chấm · ${countRange('excluded')} bị loại` : ' · Chưa đo'}`}
+            title={cat === 'all' ? 'Kết quả đo KAG' : `${cat} · ${categoryCounts?.[cat] ?? '—'} câu${measured.length ? ` · ${countRange('scored')} đã chấm · ${countRange('excluded')} bị loại` : ' · Chưa đo'}`}
             right={
               <select
                 className="rounded-lg border border-line bg-transparent px-2 py-1 text-[12px] text-navy"
@@ -461,7 +483,7 @@ export default function AdminBenchmark() {
                 })}
               </div>
             ) : (
-              <p className="px-5 pb-5 text-sm text-muted">{cat === 'all' ? 'Chưa có execution artifact hợp lệ cho bộ câu hỏi này; các chỉ số chưa đo.' : `Nhóm ${cat} (${categoryCounts[cat] ?? 0} câu): Chưa đo.`}</p>
+              <p className="px-5 pb-5 text-sm text-muted">{cat === 'all' ? 'Chưa có execution artifact hợp lệ cho bộ câu hỏi này; các chỉ số chưa đo.' : `Nhóm ${cat} (${categoryCounts?.[cat] ?? 0} câu): Chưa đo.`}</p>
             )}
           </Card>
 
