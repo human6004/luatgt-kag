@@ -125,7 +125,8 @@ export default function AdminBenchmark() {
   const categoryCounts = fullJobCounts ?? (distribution?.id === selected?.id && distribution?.hash === selected?.dataset_hash ? distribution?.counts : undefined)
   const categories: [string, number][] = categoryCounts ? benchmarkCategories.map(category => [category, categoryCounts[category] ?? 0]) : []
   const maxCatCount = Math.max(1, ...categories.map(([, n]) => n))
-  const evaluatedCount = selectedJob ? Object.values(selectedJob.progress)[0]?.total : undefined
+  const progressMode = selectedJob?.mode === 'BOTH' ? 'G1' : selectedJob?.mode
+  const evaluatedCount = progressMode && selectedJob ? selectedJob.progress[progressMode]?.total : undefined
 
   useEffect(() => {
     setDistribution(null)
