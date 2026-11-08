@@ -429,7 +429,42 @@ export default function AdminBenchmark() {
           >
             {measured.length ? (
               <div role="region" aria-label="Bảng kết quả benchmark">
-                {cat !== 'all' && <p className="px-3 pb-3 text-xs text-muted">Đã chấm / bị loại theo metric; khoảng số thể hiện các metric có số câu khác nhau.</p>}
+                {(() => {
+                  const KEY_METRICS: { name: string; label: string; help: string }[] = [
+                    { name: 'Hit@5', label: 'Hit@5', help: 'Trong 5 kết quả đầu có ít nhất 1 đúng' },
+                    { name: 'Recall@5', label: 'Recall@5', help: 'Lấy được bao nhiêu % đáp án đúng' },
+                    { name: 'returned_top_k_MRR', label: 'MRR (toàn kết quả)', help: 'Đáp án đúng nằm ở vị trí thứ mấy' },
+                    { name: 'false_answer_rate', label: 'Trả lời khi nên từ chối', help: 'Thấp = tốt; hệ bịa căn cứ khi không có' },
+                    { name: 'abstention_accuracy', label: 'Từ chối đúng', help: 'Câu nên từ chối → hệ có từ chối không' },
+                    { name: 'citation_source_precision', label: 'Chính xác trích dẫn', help: 'Trong nguồn trích, bao nhiêu phần đúng' },
+                  ]
+                  const byName = Object.fromEntries(measured.map(m => [m.name, m]))
+                  const keyRows = KEY_METRICS.map(k => ({ ...k, m: byName[k.name] })).filter(k => k.m)
+                  if (!keyRows.length) return null
+                  return (
+                    <div className="px-3 pt-1 pb-4 border-b border-line">
+                      <p className="text-xs font-semibold text-navy mb-2">Tiêu chí chính</p>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        {keyRows.map(({ name, label, help, m }) => (
+                          <div key={name} className="rounded-lg border border-line bg-bg p-2 space-y-1" title={help}>
+                            <p className="text-[11px] text-muted truncate">{label}</p>
+                            <div className="text-sm font-semibold text-navy">
+                              {m.value === null
+                                ? <span className="text-xs font-normal text-muted">Chưa đo</span>
+                                : name === 'false_answer_rate'
+                                  ? <span className={m.value > 0.2 ? 'text-red-600' : 'text-emerald-700'}>{(m.value * 100).toFixed(1)}%</span>
+                                  : <span>{(m.value * 100).toFixed(1)}%</span>}
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                      <details className="mt-3">
+                        <summary className="text-xs text-muted cursor-pointer hover:text-navy">Xem toàn bộ chỉ số chi tiết</summary>
+                      </details>
+                    </div>
+                  )
+                })()}
+                {cat !== 'all' && <p className="px-3 pb-3 pt-2 text-xs text-muted">Đã chấm / bị loại theo metric; khoảng số thể hiện các metric có số câu khác nhau.</p>}
                 {metricGroups.map((group, index) => {
                   const open = (index === 0) !== toggledChannels.has(group.key)
                   return (
