@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useAdmin } from '../admin/store'
 import { apiResponse } from '../api'
@@ -88,6 +88,72 @@ function MetricBar({ value, kind = 'count' }: { value: number | null; kind?: 'ra
   )
 }
 
+// Business capabilities, not evaluator channels: each name resolves against whichever run emitted it.
+type RowSpec = { name: string; label: string }
+const primarySpecs: RowSpec[] = [
+  { name: 'source_span.evidence_recall', label: 'Bằng chứng tìm được' },
+  { name: 'source_span.Recall@5', label: 'Bằng chứng top-5' },
+  { name: 'marker_coverage', label: 'Ý đúng trong trả lời' },
+  { name: 'markers_all', label: 'Đủ hết ý' },
+  { name: 'citation_unit_accuracy', label: 'Trích đúng điều/khoản' },
+  { name: 'citation_source_recall', label: 'Phủ nguồn bắt buộc' },
+  { name: 'correct_abstention', label: 'Từ chối đúng' },
+  { name: 'false_answer_rate', label: 'Trả lời khi nên từ chối ↓' },
+]
+const diagnosticSpecs: RowSpec[] = [
+  { name: 'source_span.returned_top_k_MRR', label: 'MRR' },
+  { name: 'source_span.Hit@5', label: 'Hit@5' },
+  { name: 'source_span.context_precision', label: 'Độ chính xác ngữ cảnh' },
+  { name: 'citation_source_precision', label: 'Độ chính xác trích dẫn' },
+  { name: 'citation_doc_accuracy', label: 'Trích đúng văn bản' },
+]
+
+type MetricRow = RowSpec & { key: string; micro: number | null; macro: number | null; ciLow: number | null; ciHigh: number | null; n: number; na: number; kind: 'ratio' | 'latency'; danger?: boolean }
+
+function Score({ value, kind, danger }: { value: number | null; kind: 'ratio' | 'latency'; danger?: boolean }) {
+  if (value === null) return <span className="text-muted">—</span>
+  if (kind === 'latency') return <span className="tabular-nums">{Math.round(value)}</span>
+  return <span className={`tabular-nums font-semibold ${danger && value > 0.2 ? 'text-red-600' : 'text-navy'}`}>{pct(value)}</span>
+}
+
+function MetricTable({ rows, label }: { rows: MetricRow[]; label: string }) {
+  return (
+    <table className="w-full table-fixed text-sm" aria-label={label}>
+      <thead className="border-y border-line">
+        <tr>
+          <Th className="w-[36%] !px-2">Metric</Th>
+          <Th className="w-[20%] sm:w-[14%] !px-2">Micro</Th>
+          <Th className="hidden sm:table-cell sm:w-[14%] !px-2">Macro</Th>
+          <Th className="hidden sm:table-cell sm:w-[22%] !px-2">95% CI</Th>
+          <Th className="w-[14%] sm:w-[7%] !px-2">n</Th>
+          <Th className="w-[14%] sm:w-[7%] !px-2">N/A</Th>
+        </tr>
+      </thead>
+      <tbody>
+        {rows.map((r) => (
+          <tr key={r.key} className="border-b border-line/60 last:border-0">
+            <Td className="!px-2 text-navy [overflow-wrap:anywhere]"><span title={r.name}>{r.label}</span></Td>
+            <Td className="!px-2">{r.name === 'answer_correctness' && r.micro === null ? <span className="text-xs text-muted">Chưa có giám khảo</span> : <Score value={r.micro} kind={r.kind} danger={r.danger} />}</Td>
+            <Td className="hidden sm:table-cell !px-2"><Score value={r.macro} kind={r.kind} /></Td>
+            <Td className="hidden sm:table-cell !px-2 text-xs tabular-nums">{r.ciLow === null || r.ciHigh === null ? <span className="text-muted">—</span> : `[${pct(r.ciLow)}, ${pct(r.ciHigh)}]`}</Td>
+            <Td className="!px-2 tabular-nums">{r.n}</Td>
+            <Td className="!px-2 tabular-nums">{r.na}</Td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  )
+}
+
+function Section({ title, children }: { title: string; children: ReactNode }) {
+  return (
+    <details className="border-t border-line">
+      <summary className="cursor-pointer px-3 py-3 text-sm font-semibold text-navy hover:bg-selected">{title}</summary>
+      {children}
+    </details>
+  )
+}
+
 export default function AdminBenchmark() {
   const [params, setParams] = useSearchParams()
   const { notify } = useAdmin()
@@ -169,8 +235,9 @@ export default function AdminBenchmark() {
   const rawCat = params.get('cat') ?? 'all'
   const cat = rawCat === 'all' || categories.some(([id]) => id === rawCat) ? rawCat : 'all'
 
-  const runs: Record<string, Pick<SmokeRun, 'metrics' | 'by_category' | 'requested_count'> | null> | undefined = selectedJob ? Object.fromEntries(Object.entries(selectedJob.metrics ?? {}).map(([mode, metrics]) => [mode, {
-    metrics: metrics.overall, by_category: metrics.by_category, requested_count: metrics.requested_count,
+  type Run = Pick<SmokeRun, 'metrics' | 'by_category' | 'macro' | 'latency_ms' | 'requested_count'>
+  const runs: Record<string, Run | null> | undefined = selectedJob ? Object.fromEntries(Object.entries(selectedJob.metrics ?? {}).map(([mode, metrics]) => [mode, {
+    metrics: metrics.overall, by_category: metrics.by_category, macro: metrics.macro, latency_ms: metrics.latency_ms, requested_count: metrics.requested_count,
   }])) : row?.smoke?.runs
   const measured = Object.entries(runs || {}).flatMap(([mode, run]) =>
     run
@@ -196,6 +263,39 @@ export default function AdminBenchmark() {
     if (metricGroups.at(-1)?.key !== key) metricGroups.push({ key, mode: metric.mode, channel: metric.channel, metrics: [] })
     metricGroups.at(-1)!.metrics.push(metric)
   }
+  const runEntries: [string, Run][] = Object.entries(runs || {}).flatMap(([mode, run]) => run ? [[mode, run] as [string, Run]] : [])
+  const suffix = (mode: string) => runEntries.length > 1 ? ` · ${mode}` : ''
+  // A metric only shows when some run emitted it, so a G1-only run hides every G2 row outright.
+  function buildRows(specs: RowSpec[]): MetricRow[] {
+    return specs.flatMap(({ name, label }) => {
+      for (const [mode, run] of runEntries) {
+        const overall = run.metrics[name]
+        if (!overall) continue
+        const m = (cat === 'all' ? run.metrics : run.by_category?.[cat])?.[name] ?? overall
+        return [{
+          key: `${mode}.${name}`, name, label, kind: 'ratio' as const, danger: name === 'false_answer_rate',
+          micro: m.value, macro: cat === 'all' ? run.macro?.[name]?.value ?? null : null,
+          ciLow: m.ci_low ?? null, ciHigh: m.ci_high ?? null,
+          n: m.scored_count, na: m.status_counts?.NOT_APPLICABLE ?? 0,
+        }]
+      }
+      return []
+    })
+  }
+  const primaryRows = buildRows(primarySpecs).concat(runEntries.flatMap(([mode, run]) => {
+    const latency = run.latency_ms?.all_attempted
+    return latency?.mean == null ? [] : [{ key: `${mode}.latency`, name: 'latency_ms', label: `Thời gian (ms) ↓${suffix(mode)}`, kind: 'latency' as const, micro: latency.mean, macro: null, ciLow: null, ciHigh: null, n: latency.count, na: 0 }]
+  }))
+  // failure_rate sits beside the metric map in BenchmarkMetrics, not inside it.
+  const diagnosticRows = buildRows(diagnosticSpecs).concat(Object.entries(selectedJob?.metrics ?? {}).flatMap(([mode, m]) =>
+    m.failure_rate?.value == null ? [] : [{ key: `${mode}.failure_rate`, name: 'failure_rate', label: `Tỷ lệ lỗi ↓${suffix(mode)}`, kind: 'ratio' as const, micro: m.failure_rate.value, macro: null, ciLow: null, ciHigh: null, n: m.failure_rate.denominator, na: 0 }]))
+  const breakdownSpecs = primarySpecs.filter((s) => runEntries.some(([, run]) => run.metrics[s.name]))
+  const breakdownCats = categories.filter(([id]) => runEntries.some(([, run]) => Object.values(run.by_category?.[id] ?? {}).some((m) => m.eligible_count > 0 || m.scored_count > 0))).map(([id]) => id)
+  const breakdownValue = (id: string, name: string) => {
+    for (const [, run] of runEntries) { const m = run.by_category?.[id]?.[name]; if (m) return m.value }
+    return null
+  }
+
   function countRange(field: 'scored' | 'excluded') {
     const values = measured.map((m) => m[field])
     const min = Math.min(...values), max = Math.max(...values)
@@ -429,80 +529,30 @@ export default function AdminBenchmark() {
           >
             {measured.length ? (
               <div role="region" aria-label="Bảng kết quả benchmark">
-                {(() => {
-                  const KEY_METRICS: { name: string; label: string; help: string }[] = [
-                    { name: 'Hit@5', label: 'Hit@5', help: 'Trong 5 kết quả đầu có ít nhất 1 đúng' },
-                    { name: 'Recall@5', label: 'Recall@5', help: 'Lấy được bao nhiêu % đáp án đúng' },
-                    { name: 'returned_top_k_MRR', label: 'MRR (toàn kết quả)', help: 'Đáp án đúng nằm ở vị trí thứ mấy' },
-                    { name: 'false_answer_rate', label: 'Trả lời khi nên từ chối', help: 'Thấp = tốt; hệ bịa căn cứ khi không có' },
-                    { name: 'abstention_accuracy', label: 'Từ chối đúng', help: 'Câu nên từ chối → hệ có từ chối không' },
-                    { name: 'citation_source_precision', label: 'Chính xác trích dẫn', help: 'Trong nguồn trích, bao nhiêu phần đúng' },
-                  ]
-                  // G1 emits the same metric names once per channel (document/unit/sign/source_span);
-                  // the summary shows the document channel, which every answer needs.
-                  const short = (n: string) => n.replace(/^(?:document|unit|sign|source_span)\./, '')
-                  const byName: Record<string, (typeof measured)[number]> = {}
-                  for (const m of measured) {
-                    const k = short(m.name)
-                    if (!(k in byName) || m.channel === 'document') byName[k] = m
-                  }
-                  const keyRows = KEY_METRICS.map(k => ({ ...k, m: byName[k.name] })).filter(k => k.m)
-                  const channelRows = Object.values(measured.reduce<Record<string, { key: string; mode: string; channel: string; scored: number; values: Record<string, number | null> }>>((acc, m) => {
-                    const row = (acc[`${m.mode}.${m.channel}`] ??= { key: `${m.mode}.${m.channel}`, mode: m.mode, channel: m.channel, scored: 0, values: {} })
-                    row.values[short(m.name)] = m.value
-                    row.scored = Math.max(row.scored, m.scored)
-                    return acc
-                  }, {}))
-                  const overview: { name: string; label: string }[] = [
-                    { name: 'Hit@1', label: 'Hit@1' },
-                    { name: 'Hit@5', label: 'Hit@5' },
-                    { name: 'Recall@5', label: 'Recall@5' },
-                    { name: 'returned_top_k_MRR', label: 'MRR' },
-                  ]
-                  return (
-                    <div className="px-3 pt-1 pb-4 border-b border-line space-y-4">
-                      {keyRows.length > 0 && <div>
-                        <p className="text-xs font-semibold text-navy mb-2">Tiêu chí chính</p>
-                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                          {keyRows.map(({ name, label, help, m }) => (
-                            <div key={name} className="rounded-lg border border-line bg-bg p-2 space-y-1" title={help}>
-                              <p className="text-[11px] text-muted truncate">{label}</p>
-                              <div className="text-sm font-semibold text-navy">
-                                {m.value === null
-                                  ? <span className="text-xs font-normal text-muted">Chưa đo</span>
-                                  : name === 'false_answer_rate'
-                                    ? <span className={m.value > 0.2 ? 'text-red-600' : 'text-emerald-700'}>{(m.value * 100).toFixed(1)}%</span>
-                                    : <span>{(m.value * 100).toFixed(1)}%</span>}
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>}
-                      <div>
-                        <p className="text-xs font-semibold text-navy mb-2">Tổng quát theo kênh</p>
-                        <table className="w-full table-fixed text-sm">
-                          <thead className="border-y border-line">
-                            <tr>
-                              <Th className="!px-2">Mode · Kênh</Th>
-                              <Th className="!px-2">Đã chấm</Th>
-                              {overview.map(o => <Th key={o.name} className="hidden sm:table-cell !px-2">{o.label}</Th>)}
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {channelRows.map(row => (
-                              <tr key={row.key} className="border-b border-line/60 last:border-0">
-                                <Td className="!px-2">{row.mode} · {row.channel || 'Chung'}</Td>
-                                <Td className="!px-2">{row.scored}</Td>
-                                {overview.map(o => <Td key={o.name} className="hidden sm:table-cell !px-2"><MetricBar value={row.values[o.name] ?? null} kind="ratio" /></Td>)}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    </div>
-                  )
-                })()}
+                {primaryRows.length > 0 && <MetricTable rows={primaryRows} label="Chỉ số chính" />}
+                {diagnosticRows.length > 0 && <Section title="Chẩn đoán"><MetricTable rows={diagnosticRows} label="Chẩn đoán" /></Section>}
+                {breakdownSpecs.length > 0 && breakdownCats.length > 0 && <Section title="Theo danh mục">
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm" aria-label="Kết quả theo danh mục">
+                      <thead className="border-y border-line">
+                        <tr>
+                          <Th className="!px-2">Metric</Th>
+                          {breakdownCats.map((id) => <Th key={id} className="!px-2">{id}</Th>)}
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {breakdownSpecs.map((s) => (
+                          <tr key={s.name} className="border-b border-line/60 last:border-0">
+                            <Td className="!px-2 text-navy [overflow-wrap:anywhere]"><span title={s.name}>{s.label}</span></Td>
+                            {breakdownCats.map((id) => <Td key={id} className="!px-2"><Score value={breakdownValue(id, s.name)} kind="ratio" danger={s.name === 'false_answer_rate'} /></Td>)}
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </Section>}
                 {cat !== 'all' && <p className="px-3 pb-3 pt-2 text-xs text-muted">Đã chấm / bị loại theo metric; khoảng số thể hiện các metric có số câu khác nhau.</p>}
+                <Section title="Kỹ thuật">
                 {metricGroups.map((group, index) => {
                   const open = (index === 0) !== toggledChannels.has(group.key)
                   return (
@@ -546,6 +596,7 @@ export default function AdminBenchmark() {
                     </section>
                   )
                 })}
+                </Section>
               </div>
             ) : (
               <div className="flex min-h-48 flex-col items-center justify-center gap-2 px-5 pb-6 text-center">
