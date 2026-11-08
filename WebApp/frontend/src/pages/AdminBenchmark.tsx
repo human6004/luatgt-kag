@@ -438,25 +438,66 @@ export default function AdminBenchmark() {
                     { name: 'abstention_accuracy', label: 'Từ chối đúng', help: 'Câu nên từ chối → hệ có từ chối không' },
                     { name: 'citation_source_precision', label: 'Chính xác trích dẫn', help: 'Trong nguồn trích, bao nhiêu phần đúng' },
                   ]
-                  const byName = Object.fromEntries(measured.map(m => [m.name, m]))
+                  // G1 emits the same metric names once per channel (document/unit/sign/source_span);
+                  // the summary shows the document channel, which every answer needs.
+                  const short = (n: string) => n.replace(/^(?:document|unit|sign|source_span)\./, '')
+                  const byName: Record<string, (typeof measured)[number]> = {}
+                  for (const m of measured) {
+                    const k = short(m.name)
+                    if (!(k in byName) || m.channel === 'document') byName[k] = m
+                  }
                   const keyRows = KEY_METRICS.map(k => ({ ...k, m: byName[k.name] })).filter(k => k.m)
-                  if (!keyRows.length) return null
+                  const channelRows = Object.values(measured.reduce<Record<string, { key: string; mode: string; channel: string; scored: number; values: Record<string, number | null> }>>((acc, m) => {
+                    const row = (acc[`${m.mode}.${m.channel}`] ??= { key: `${m.mode}.${m.channel}`, mode: m.mode, channel: m.channel, scored: 0, values: {} })
+                    row.values[short(m.name)] = m.value
+                    row.scored = Math.max(row.scored, m.scored)
+                    return acc
+                  }, {}))
+                  const overview: { name: string; label: string }[] = [
+                    { name: 'Hit@1', label: 'Hit@1' },
+                    { name: 'Hit@5', label: 'Hit@5' },
+                    { name: 'Recall@5', label: 'Recall@5' },
+                    { name: 'returned_top_k_MRR', label: 'MRR' },
+                  ]
                   return (
-                    <div className="px-3 pt-1 pb-4 border-b border-line">
-                      <p className="text-xs font-semibold text-navy mb-2">Tiêu chí chính</p>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                        {keyRows.map(({ name, label, help, m }) => (
-                          <div key={name} className="rounded-lg border border-line bg-bg p-2 space-y-1" title={help}>
-                            <p className="text-[11px] text-muted truncate">{label}</p>
-                            <div className="text-sm font-semibold text-navy">
-                              {m.value === null
-                                ? <span className="text-xs font-normal text-muted">Chưa đo</span>
-                                : name === 'false_answer_rate'
-                                  ? <span className={m.value > 0.2 ? 'text-red-600' : 'text-emerald-700'}>{(m.value * 100).toFixed(1)}%</span>
-                                  : <span>{(m.value * 100).toFixed(1)}%</span>}
+                    <div className="px-3 pt-1 pb-4 border-b border-line space-y-4">
+                      {keyRows.length > 0 && <div>
+                        <p className="text-xs font-semibold text-navy mb-2">Tiêu chí chính</p>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                          {keyRows.map(({ name, label, help, m }) => (
+                            <div key={name} className="rounded-lg border border-line bg-bg p-2 space-y-1" title={help}>
+                              <p className="text-[11px] text-muted truncate">{label}</p>
+                              <div className="text-sm font-semibold text-navy">
+                                {m.value === null
+                                  ? <span className="text-xs font-normal text-muted">Chưa đo</span>
+                                  : name === 'false_answer_rate'
+                                    ? <span className={m.value > 0.2 ? 'text-red-600' : 'text-emerald-700'}>{(m.value * 100).toFixed(1)}%</span>
+                                    : <span>{(m.value * 100).toFixed(1)}%</span>}
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
+                      </div>}
+                      <div>
+                        <p className="text-xs font-semibold text-navy mb-2">Tổng quát theo kênh</p>
+                        <table className="w-full table-fixed text-sm">
+                          <thead className="border-y border-line">
+                            <tr>
+                              <Th className="!px-2">Mode · Kênh</Th>
+                              <Th className="!px-2">Đã chấm</Th>
+                              {overview.map(o => <Th key={o.name} className="hidden sm:table-cell !px-2">{o.label}</Th>)}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {channelRows.map(row => (
+                              <tr key={row.key} className="border-b border-line/60 last:border-0">
+                                <Td className="!px-2">{row.mode} · {row.channel || 'Chung'}</Td>
+                                <Td className="!px-2">{row.scored}</Td>
+                                {overview.map(o => <Td key={o.name} className="hidden sm:table-cell !px-2"><MetricBar value={row.values[o.name] ?? null} kind="ratio" /></Td>)}
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
                       </div>
                     </div>
                   )
