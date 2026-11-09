@@ -39,6 +39,12 @@ React → Spring Boot (auth/rate limit/lịch sử) → Python HTTP API
 
 `Trích nội dung văn bản: ...` chỉ tra nội dung văn bản xác định, ghi rõ không xác nhận hiệu lực hiện hành.
 
+### Chẩn đoán Chat
+
+`KAG_CHAT_TRACE_QUESTION` mặc định rỗng (tắt). Khi cần đo thời gian, đặt `KAG_CHAT_TRACE_QUESTION=*timings*` trong `.env`, áp dụng lại cấu hình service `kag-api`, rồi đọc `docker compose logs kag-api kag-ingress`. `LEGAL_TRACE` ghi stdout với `request_id`, `stage`, `data`, `elapsed_ms`, `truncated`; chế độ này chỉ giữ `duration_ms`/`outcome`, riêng `request.closed` có `data` rỗng. Mã request được chuyển tới log `KAG_GATEWAY` của HAProxy để đối chiếu thời gian provider; header trace bị bỏ trước khi gửi upstream.
+
+Đặt biến bằng nguyên văn một câu hỏi sẽ bật trace chi tiết cho câu đó: câu hỏi/subquery, nguồn truy xuất, nội dung model và câu trả lời/trích dẫn. Bộ lọc che secrets/token nhưng **không che dữ liệu cá nhân trong câu hỏi**. Mỗi event giới hạn khoảng 1 MiB, mỗi request khoảng 4 MiB; dữ liệu dài bị cắt. Sink không ghi file/volume riêng; log được Docker thu theo cấu hình logging. Sau chẩn đoán, xóa giá trị biến và áp dụng lại cấu hình service.
+
 ## Đọc và ghi graph
 
 SDK writer ghi qua OpenSPG Server. Retriever/verifier đọc Neo4j bằng truy vấn được cho phép. SAMPLE Community dùng `BrokerRetrievalClient` gửi operation DTO tới Read Broker; API không giữ credential DB ở đường này. Đường reader trực tiếp cần cấu hình/mạng riêng. Danh tính project/namespace/physical database phải khớp; endpoint hoặc receipt cũ không cấp quyền.
