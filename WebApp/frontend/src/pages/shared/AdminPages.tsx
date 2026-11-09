@@ -115,6 +115,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
     }[]>([]),
     [message, setMessage] = useState("")
   const [checked, setChecked] = useState<Set<string>>(() => new Set())
+  const [batchError, setBatchError] = useState("")
 
   useEffect(() => {
     setQuery(urlQuery)
@@ -190,6 +191,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
 
   function closeEdit() {
     if (task.busy) return
+    task.clearError()
     applySelection(null)
     updateUrl({ id: null })
   }
@@ -222,7 +224,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
     })
   }
 
-  async function save() {
+  async function save(showMessage = true) {
     if (!selected) return
     const next = await api<ContentRecord>(
       `${resource}/${selected.id}`,
@@ -230,7 +232,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
     )
     applySelection(next)
     data.reload()
-    setMessage("Đã lưu bản nháp.")
+    if (showMessage) setMessage("Đã lưu bản nháp.")
   }
 
   return (
@@ -307,11 +309,17 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
             disabled={task.busy || data.loading || !chosen.length || chosen.length > 600}
             onClick={() => void task.run(async () => {
               setMessage("")
-              await api("/admin/signs/publication-batch", send("POST", {
-                rows: chosen.map(({ id, version }) => ({ id, version })),
-                reviewed: true,
-                published: true,
-              }))
+              setBatchError("")
+              try {
+                await api("/admin/signs/publication-batch", send("POST", {
+                  rows: chosen.map(({ id, version }) => ({ id, version })),
+                  reviewed: true,
+                  published: true,
+                }))
+              } catch (error) {
+                setBatchError(error instanceof Error ? error.message : "Yêu cầu xuất bản thất bại.")
+                return
+              }
               setChecked(new Set())
               setMessage(`Đã xuất bản ${chosen.length} biển báo.`)
               data.reload()
@@ -321,6 +329,14 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
           </Button>
           {chosen.length > 600 && <p className="w-full text-xs text-muted">Mỗi lần xuất bản tối đa 600 biển báo.</p>}
         </div>
+      )}
+      {kind === "signs" && batchError && (
+        <section role="alert" className="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800">
+          <h3 className="font-semibold">Đợt xuất bản chưa hoàn tất</h3>
+          <ul className="mt-2 max-h-56 list-disc space-y-1 overflow-y-auto pl-5">
+            {batchError.split("\n").map((line, index) => <li key={index}>{line}</li>)}
+          </ul>
+        </section>
       )}
       <Table>
         <thead>
@@ -399,7 +415,8 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                   disabled={task.busy}
                   onClick={() =>
                     task.run(async () => {
-                      await save()
+                      setMessage("")
+                      await save(false)
                       const current = await api<ContentRecord[]>(
                         `/admin/${kind}`,
                       )
@@ -488,7 +505,9 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
               >
                 {kind === "units" && key === "text"
                   ? "Nội dung pháp lý"
-                  : labels[key]}
+                  : kind === "signs" && key === "doc_id"
+                    ? "Mã văn bản nguồn (không bắt buộc nhập)"
+                    : labels[key]}
                 {["text", "meaning"].includes(key) ||
                 (kind === "signs" && ["name", "group"].includes(key)) ? (
                   <textarea
