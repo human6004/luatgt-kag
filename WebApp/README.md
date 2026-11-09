@@ -59,16 +59,26 @@ Thi thật hạng B dùng server và đáp án đã duyệt; các giới hạn h
 
 ## Nhập ngân hàng bằng script
 
-Lựa chọn thay cho nhập UI, sau khi stack đã chạy. Từ root repository:
+Lựa chọn thay cho nhập UI, sau khi stack đã chạy. Dùng credentials ADMIN hiện tại và chọn đúng installation trước khi nhập.
 
-**Bước 1:** chọn bộ bằng tham số bắt buộc `-Set 250` hoặc `-Set 600`; công cụ nhập nháp và ghép ảnh từ ZIP trong thư mục tương ứng, bỏ qua mã đã tồn tại:
+1. Trong **Câu hỏi thi → Bộ câu hỏi & Quy tắc thi**, tạo **hai bộ riêng** cho ngân hàng 250 và 600 câu.
+2. Lấy UUID của từng bộ trên chính installation người nhận: mở Developer Tools của trình duyệt → Network, tải lại trang Câu hỏi thi, xem response của GET `/api/admin/questions/sets`. Đối chiếu `set_name`/`set_code` và chép `set_id` tương ứng. UUID có dạng chuẩn 8-4-4-4-12 ký tự hexadecimal, không gồm dấu ngoặc. **Hai bộ phải dùng hai UUID khác nhau**; không dùng UUID máy khác hoặc hardcode UUID vào script.
+3. Từ root repository, đặt hai biến bằng UUID vừa lấy rồi chạy lần lượt:
 
 ```powershell
-./WebApp/scripts/import-question-bank.ps1 -Set 250
+$set250Id = Read-Host 'UUID bộ 250 của installation này'
+$set600Id = Read-Host 'UUID bộ 600 của installation này'
+if ($set250Id -eq $set600Id) { throw 'Hai bộ phải dùng hai UUID khác nhau.' }
+./WebApp/scripts/import-question-bank.ps1 -Set 250 -SetId $set250Id
+./WebApp/scripts/import-question-bank.ps1 -Set 600 -SetId $set600Id
 ```
 
-Đổi thành `-Set 600` để nhập bộ 600 câu. Kết quả: số thêm/bỏ qua và ảnh ghép. Có thể truyền `-EnvFile` nếu `.env` ở vị trí khác; cổng khác mặc định truyền `-BaseUrl` đúng API, dùng credentials ADMIN hiện tại. Script ghi câu hỏi và ảnh vào backend đích; chỉ chạy khi đã chọn đúng môi trường cần nhập.
+4. Kiểm tổng kết có đúng tiền tố bộ/UUID, số thêm/bỏ qua/cập nhật và ảnh đã ghép/chưa khớp. Với hai bộ mới trống, dự kiến thêm 250 và 600 câu, bỏ qua/cập nhật 0; ghép 125 và 318 ảnh, chưa khớp 0. Trong UI, lọc từng bộ và đối chiếu câu/ảnh, đặc biệt Q329/Q457 chỉ có ảnh ở bộ 600 theo gói hiện tại. Kiểm nguồn/đáp án/điểm liệt rồi mới duyệt xuất bản.
 
-**Bước 2:** mở Ngân hàng câu hỏi, kiểm nguồn/đáp án/điểm liệt/ảnh rồi xuất bản câu thật đủ điều kiện.
+`-Set` chọn dữ liệu nguồn; `-SetId` chọn bộ đích. Script kiểm UUID/bộ tồn tại trước khi ghi, truyền cùng questionSetId cho câu hỏi và ZIP; backend tách ID theo bộ, giữ mã nguồn để ghép ảnh. Hai JSON và ZIP nguồn giữ nguyên.
+
+Bộ đã có câu hỏi **hoặc bản nháp**: script cảnh báo rồi dừng, chưa ghi. Chỉ thêm `-Force` sau khi đã kiểm đúng bộ đích và muốn nhập tiếp/chạy lại, ví dụ `./WebApp/scripts/import-question-bank.ps1 -Set 250 -SetId $set250Id -Force`. Cờ này xác nhận nhập vào bộ có dữ liệu; mã đã tồn tại trong bộ vẫn bị bỏ qua (`updateExisting=false`), ảnh đã có giữ nguyên. Không dùng cùng UUID cho hai ngân hàng; script không tự chuyển hoặc sửa các câu LEGACY đã nhập trước đây.
+
+Có thể truyền `-EnvFile` nếu cấu hình installation ở vị trí khác; cổng khác mặc định truyền `-BaseUrl` đúng API. Script ghi câu hỏi nháp và ảnh vào backend đã chọn; nhập không tự xuất bản.
 
 `scripts/verify-stack.ps1` là kiểm thử tùy chọn, tạo tài khoản/lịch sử thử; `-WithExam` cần dữ liệu đã xuất bản. Đọc source và chọn môi trường thử riêng trước khi chạy; không phải điều kiện startup.
