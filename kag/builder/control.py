@@ -18,7 +18,7 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from kag.builder.production_scope import (ProductionSettings, _input_version, _spec_hash,
-    validate_c3_manifest, selection_limit, selection_summary, select_bounded_sources)
+    validate_source_manifest, selection_limit, selection_summary, select_bounded_sources)
 from kag.http_api.contract import ApiFailure
 from kag.http_api.security import ServiceSecrets, authenticate, bounded_body
 from kag.run_state import MESSAGES, STAGES, RunBlocked, GraphLock, graph_lock_status, _shared_lock_root, atomic_json, validate_run_directory
@@ -83,7 +83,7 @@ def read_dataset(root,group,offset,limit):
 def check_source_inputs(value):
     config = _config(value)
     contract = json.loads((Path(__file__).resolve().parents[1]/'schema/schema_contract.json').read_bytes())
-    data = validate_c3_manifest(contract, config['paths']['c3_manifest'])
+    data = validate_source_manifest(contract, config['paths']['c3_manifest'])
     try:
         _files(dict(config,input_sha256={'c3_manifest':config['input_sha256']['c3_manifest']}))
         result = dict(state='VALID',error_code=None,plan_sha256=data['manifest']['plan_sha256'],
@@ -156,11 +156,11 @@ def prepare_source_inputs(state_dir):
         with tempfile.TemporaryDirectory(prefix='prepare-', dir=state) as temporary:
             output = Path(temporary) / 'plan'
             write_dry_run(plan, output)
-            data = validate_c3_manifest(contract, output / 'manifest.json')
+            data = validate_source_manifest(contract, output / 'manifest.json')
             data['index'].close()
             # Rename publishes all files together; existing plans and runs remain immutable.
             output.rename(destination)
-    data = validate_c3_manifest(contract, destination / 'manifest.json')
+    data = validate_source_manifest(contract, destination / 'manifest.json')
     try:
         checks = data['file_versions']
         if any(_input_version(path) != version for path, version in checks):
@@ -232,7 +232,7 @@ def _builder_config(state_dir, target, model, revision, batch_size, request_limi
     elif node_limit is not None:
         from kag.builder.production_scope import select_bounded_sources
         contract = json.loads((Path(__file__).resolve().parents[1]/'schema/schema_contract.json').read_bytes())
-        data = validate_c3_manifest(contract, manifest)
+        data = validate_source_manifest(contract, manifest)
         try:
             config['selection'] = select_bounded_sources(data, node_limit)
             if target['namespace'] != contract['namespace']:

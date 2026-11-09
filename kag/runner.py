@@ -377,7 +377,7 @@ def preflight(config, *, project_client, reader, backend_transport=None):
             node_hashes, edge_hashes = proof.node_hashes, proof.edge_hashes
             checksums.extend(proof.file_checksums)
         else:
-            data = c3.validate_c3_manifest(contract, config['paths']['c3_manifest'])
+            data = c3.validate_source_manifest(contract, config['paths']['c3_manifest'])
             source_index = data['index']
             source_identity = {key:data['manifest'][key] for key in c3.IDENTITY_FIELDS}
             manifest = json.loads(Path(config['paths']['sample_manifest']).read_bytes())
@@ -887,7 +887,7 @@ def _execute_source(config, directory, run_id, resume, stop, verify_only):
         state.start_heartbeat(config['heartbeat_seconds'])
         _stop(stop, 'preflight', -1)
         contract = json.loads((ROOT / 'kag/schema/schema_contract.json').read_bytes())
-        data = c3.validate_c3_manifest(contract, config['paths']['c3_manifest'],
+        data = c3.validate_source_manifest(contract, config['paths']['c3_manifest'],
                                       db_path=state._owned_file('source-validation.sqlite3'))
         if source_identity != {key:data['manifest'][key] for key in c3.IDENTITY_FIELDS}:
             raise RunBlocked('INTEGRITY')

@@ -345,7 +345,7 @@ class _DiskHashes(Mapping):
         return row[0]
 
 
-def validate_c3_manifest(contract, manifest_path, *, project_root=None, db_path=None):
+def validate_source_manifest(contract, manifest_path, *, project_root=None, db_path=None):
     """Verify C3 data only; returns no project/scope authorization or writer proof."""
     root = Path(project_root if project_root is not None else ROOT).resolve()
     path = Path(manifest_path).absolute()
@@ -472,7 +472,7 @@ def validate_production_scope(settings, contract, manifest_path, *, project_root
     canonical = json.loads((ROOT / 'kag/schema/schema_contract.json').read_bytes())
     if contract != target_contract(settings.namespace):
         raise ProductionScopeError('target contract differs from the supplied LuatGT schema')
-    data = validate_c3_manifest(canonical, manifest_path, project_root=project_root)
+    data = validate_source_manifest(canonical, manifest_path, project_root=project_root)
     index = data['index']
     try:
         settings.validate(data['manifest']['plan_sha256'])
