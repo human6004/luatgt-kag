@@ -34,7 +34,7 @@ def _distribution(records):
             'source':dict(sorted(Counter(_source(r) for r in records).items()))}
 
 
-def build_demo_slice(eval_path, sample_keys, output_path):
+def build_eval_slice(eval_path, sample_keys, output_path):
     """Copy complete eligible source lines byte-for-byte, in original order."""
     source, target = Path(eval_path).resolve(), Path(output_path).resolve()
     if source == target or target.exists():

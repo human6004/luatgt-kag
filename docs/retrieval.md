@@ -1,4 +1,4 @@
-# Retrieval và helper đánh giá sample
+# Retrieval và helper đánh giá
 
 [`kag/retriever/`](../kag/retriever/) tìm vector và đọc nguyên văn theo exact ID. Chỉ đọc graph, có thể gọi embedding câu hỏi; không gọi Solver/generate answer/writer hoặc đổi project/schema. Frozen slice helper không phải benchmark pháp lý chính thức; framework đầy đủ: [benchmark](../benchmark/README.md).
 
@@ -26,7 +26,7 @@ Expansion mặc định tắt; bật thì một hop, mặc định tối đa 50 
 
 ## Frozen slice và metrics
 
-[`build_demo_slice`](../kag/retriever/evaluation.py) chỉ chọn câu có gold_unit_ids không rỗng và thuộc exact sample unit IDs. Giữ bytes/thứ tự/metadata nguồn; tạo artifact mới ngoài repo với manifest/hash/identity/lý do loại, không sửa source/gold/sample.
+[`build_eval_slice`](../kag/retriever/evaluation.py) chỉ chọn câu có gold_unit_ids không rỗng và thuộc exact sample unit IDs. Giữ bytes/thứ tự/metadata nguồn; tạo artifact mới ngoài repo với manifest/hash/identity/lý do loại, không sửa source/gold/sample.
 
 `evaluate(questions, predictions, ks=(1,5,10))` cần đúng một prediction mỗi QID. Ranking unit lấy LegalUnit evidence order, dedup exact ID; document/sign không chiếm rank, TrafficSign.unit_id không tự thành unit được retrieve.
 

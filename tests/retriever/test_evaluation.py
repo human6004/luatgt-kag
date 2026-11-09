@@ -19,7 +19,7 @@ class EvaluationTests(unittest.TestCase):
             source, target = Path(directory)/'source.jsonl', Path(directory)/'slice.jsonl'
             raw = b''.join((json.dumps(r,ensure_ascii=False)+'\r\n').encode() for r in records)
             source.write_bytes(raw)
-            receipt = module.build_demo_slice(source, keys, target)
+            receipt = module.build_eval_slice(source, keys, target)
             self.assertEqual(source.read_bytes(),raw)
             return receipt, target.read_bytes(), raw
 

@@ -31,7 +31,7 @@ React/TypeScript; Spring Boot/Java; Python và OpenSPG KAG. MySQL lưu nghiệp 
 
 - [Docker](docker/README.md), [WebApp](WebApp/README.md), [frontend](WebApp/frontend/README.md), [backend](WebApp/backend/README.md).
 - [Kiến trúc](docs/architecture.md), [runtime](docs/runtime.md), [runner](docs/runner.md), [backend identity](docs/backend-identity.md).
-- [Mô hình miền](docs/domain_model.md), [schema](docs/schema.md), [retrieval](docs/retrieval-demo.md).
+- [Mô hình miền](docs/domain_model.md), [schema](docs/schema.md), [retrieval](docs/retrieval.md).
 - [Dữ liệu](data/README.md), [datasheet](data/DATASHEET.md), [điều kiện sử dụng](data/LICENSE.md).
 - [Benchmark](benchmark/README.md), [tests](tests/README.md): phục vụ phát triển, không phải bước khởi động.
 
