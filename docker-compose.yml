@@ -12,7 +12,10 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD:?Set credentials in .env}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set credentials in .env}
       TZ: UTC
-    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_0900_bin", "--default-time-zone=+00:00"]
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_0900_bin", "--default-time-zone=+00:00",
+      "--performance-schema=OFF", "--innodb-buffer-pool-size=64M", "--innodb-log-buffer-size=16M"]
+    mem_limit: 384m
+    memswap_limit: 384m
     ports: ["127.0.0.1:${MYSQL_PORT:-3306}:3306"]
     volumes: ["kag-data:/var/lib/mysql"]
     healthcheck:
@@ -26,6 +29,8 @@ services:
     command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:?Set credentials in .env}"]
     environment:
       REDISCLI_AUTH: ${REDIS_PASSWORD:?Set credentials in .env}
+    mem_limit: 128m
+    memswap_limit: 128m
     ports: ["127.0.0.1:${REDIS_PORT:-6379}:6379"]
     volumes: ["redis-data:/data"]
     healthcheck:
@@ -37,6 +42,8 @@ services:
     build:
       context: ./docker/minio
     command: ["server", "/data", "--console-address", ":9001"]
+    mem_limit: 256m
+    memswap_limit: 256m
     environment:
       MINIO_ROOT_USER: ${MINIO_USER:-luatgt-local}
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD:?Set credentials in .env}
@@ -47,7 +54,10 @@ services:
       context: .
       dockerfile: docker/backend/Dockerfile
     ports: ["127.0.0.1:${BACKEND_PORT:-8080}:8080"]
+    mem_limit: 1024m
+    memswap_limit: 1024m
     environment:
+      JAVA_TOOL_OPTIONS: -Xmx384m
       DB_URL: jdbc:mysql://mysql:3306/luatgt?connectionTimeZone=UTC&forceConnectionTimeZoneToSession=true
       DB_USER: luatgt
       DB_PASSWORD: ${DB_PASSWORD:?Set credentials in .env}
@@ -85,6 +95,8 @@ services:
       context: ./WebApp/frontend
       dockerfile: ../../docker/frontend/Dockerfile
     ports: ["127.0.0.1:${WEBAPP_PORT:-8081}:80"]
+    mem_limit: 64m
+    memswap_limit: 64m
     depends_on: [backend]
 volumes:
   kag-data:

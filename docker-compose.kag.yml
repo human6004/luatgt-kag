@@ -6,7 +6,8 @@ services:
     image: spg-registry.us-west-1.cr.aliyuncs.com/spg/openspg-mysql@sha256:71eb546d5fc5faf70b3d8a358c022f601591b54a029b79298f2fa0302e46de9a
     platform: linux/amd64
     restart: "no"
-    mem_limit: 384m
+    mem_limit: 256m
+    memswap_limit: 256m
     cpus: 0.5
     pids_limit: 128
     environment:
@@ -28,7 +29,8 @@ services:
     image: spg-registry.us-west-1.cr.aliyuncs.com/spg/openspg-neo4j@sha256:4bc5b7f6b83d333b1d2c8f60ac145c068d77d50bca65b3a07c927f9e2a541eb9
     platform: linux/amd64
     restart: "no"
-    mem_limit: 2048m
+    mem_limit: 1408m
+    memswap_limit: 1408m
     cpus: 1.0
     pids_limit: 256
     environment:
@@ -37,13 +39,13 @@ services:
       NEO4J_initial_dbms_default__database: ${KAG_DATABASE:-neo4j}
       NEO4J_server_databases_read__only: ${KAG_READ_ONLY_DATABASES:-}
       NEO4J_server_memory_heap_initial__size: 256M
-      NEO4J_server_memory_heap_max__size: 768M
-      NEO4J_server_memory_pagecache_size: 512M
+      NEO4J_server_memory_heap_max__size: 512M
+      NEO4J_server_memory_pagecache_size: 256M
     volumes: ["openspg-neo4j-data:/data", "openspg-neo4j-logs:/logs"]
     networks:
       private: {aliases: [neo4j]}
     healthcheck:
-      test: ["CMD-SHELL", "cypher-shell -a bolt://localhost:7687 -u neo4j -p \"$${NEO4J_AUTH#*/}\" 'RETURN 1' >/dev/null"]
+      test: ["CMD-SHELL", "wget -q -O - --user neo4j --password \"$${NEO4J_AUTH#*/}\" --header 'Content-Type: application/json' --post-data '{\"statements\":[{\"statement\":\"RETURN 1\"}]}' \"http://127.0.0.1:7474/db/$${NEO4J_initial_dbms_default__database}/tx/commit\" | grep -q '\"errors\":\\[\\]'"]
       interval: 10s
       timeout: 5s
       retries: 30
@@ -56,6 +58,7 @@ services:
     platform: linux/amd64
     restart: "no"
     mem_limit: 256m
+    memswap_limit: 256m
     cpus: 0.5
     pids_limit: 128
     command: ["server", "/data", "--console-address", ":9001"]
@@ -72,7 +75,8 @@ services:
     user: "0:0"
     platform: linux/amd64
     restart: "no"
-    mem_limit: 1536m
+    mem_limit: 1024m
+    memswap_limit: 1024m
     cpus: 1.0
     pids_limit: 256
     environment:
@@ -100,7 +104,7 @@ services:
     command:
       - -Dfile.encoding=UTF-8
       - -Xms256m
-      - -Xmx768m
+      - -Xmx512m
       - -jar
       - arks-sofaboot-0.0.1-SNAPSHOT-executable.jar
       - --server.address=0.0.0.0
@@ -145,8 +149,8 @@ services:
     read_only: true
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
-    mem_limit: 1024m
-    memswap_limit: 1024m
+    mem_limit: 768m
+    memswap_limit: 1280m
     cpus: 1.0
     pids_limit: 128
     stop_grace_period: 40s
@@ -195,6 +199,7 @@ services:
       KAG_PRODUCTION_WRITE: BLOCKED
       KAG_PROVIDER_EGRESS: DENY
       KAG_DEBUG_DUMP_CONFIG: "0"
+      MALLOC_ARENA_MAX: "2"
     secrets: [query_token, inspect_token, egress_token, credentials_write_token, provider_test_token, config_apply_token, benchmark_write_token]
     volumes:
       - type: bind
@@ -243,7 +248,8 @@ services:
     read_only: true
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
-    mem_limit: 1024m
+    mem_limit: 1280m
+    memswap_limit: 1536m
     cpus: 1.0
     pids_limit: 128
     init: true
@@ -286,6 +292,7 @@ services:
       KAG_NEO4J_PASSWORD: ${KAG_NEO4J_PASSWORD:?Set independent credentials in .env}
       # Runner config, target identity and GraphLock enforce Worker write admission.
       KAG_DEBUG_DUMP_CONFIG: "0"
+      MALLOC_ARENA_MAX: "2"
     volumes:
       - type: volume
         source: kag-benchmark-data

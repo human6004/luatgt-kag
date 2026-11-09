@@ -688,16 +688,20 @@ def _backend(reader, release, *, include_access=False):
     return access
 
 
+def _read_batches(read, keys):
+    for start in range(0,len(keys),32):
+        try:
+            batch = read([list(k) for k in keys[start:start+32]])
+        except Exception:
+            raise ArtifactFailure(VerificationState.UNAVAILABLE) from None
+        yield from batch
+
+
 def _readback(reader, records, contract):
     selected = {(r.entity_type,r.entity_id):r for r in records}
     keys = sorted(selected)
-    try:
-        nodes = [node for start in range(0,len(keys),32)
-                 for node in reader.read_nodes([list(k) for k in keys[start:start+32]])]
-    except Exception:
-        raise ArtifactFailure(VerificationState.UNAVAILABLE) from None
     seen = set()
-    for node in nodes:
+    for node in _read_batches(reader.read_nodes,keys):
         kinds = [k for k in TARGETS if contract['namespace']+'.'+k in node['labels']]
         if len(kinds) != 1:
             _invalid('SOURCE_VALIDATION_FAILED')
@@ -724,14 +728,8 @@ def _readback(reader, records, contract):
             if key in relations and relations[key] != relation:
                 _invalid('SOURCE_VALIDATION_FAILED')
             relations[key] = relation
-    try:
-        keys=sorted(relations)
-        edges = [edge for start in range(0,len(keys),32)
-                 for edge in reader.read_edges([list(k) for k in keys[start:start+32]])]
-    except Exception:
-        raise ArtifactFailure(VerificationState.UNAVAILABLE) from None
     seen = set()
-    for edge in edges:
+    for edge in _read_batches(reader.read_edges,sorted(relations)):
         endpoints = []
         for side in ('from','to'):
             labels = [l for l in edge[side]['labels'] if l in
