@@ -4,9 +4,12 @@ React/TypeScript/Vite/Tailwind; gọi API Spring Boot. Cài sản phẩm: [INSTA
 
 ## Phát triển và kiểm thử
 
-**Bước 1 — Dependencies:** dùng Node 24, pnpm 10.11.0 như [Dockerfile](../../docker/frontend/Dockerfile). Từ root repository:
+**Bước 1 — Dependencies:** dùng Node 24, pnpm 10.11.0 như [Dockerfile](../../docker/frontend/Dockerfile). Trên host mới, cài Node 24 (kèm npm), rồi cài pnpm đúng pin trước dev/test:
 
 ```powershell
+npm install --global pnpm@10.11.0
+pnpm --version
+# Kết quả phải là 10.11.0. Từ root repository:
 Set-Location WebApp/frontend
 pnpm install --frozen-lockfile
 ```

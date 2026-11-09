@@ -12,7 +12,7 @@ Cài stack theo [INSTALL](../../docs/INSTALL.md); API mặc định `http://127.
 
 **Bước 1 — Phát triển trên host:** nếu chạy ngoài Docker, dùng Java 21/Maven và MySQL/Redis/MinIO riêng. Đặt biến theo [application.yml](src/main/resources/application.yml), gồm `DB_PASSWORD`, `REDIS_URL`, `JWT_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `MINIO_USER`, `MINIO_PASSWORD`; đổi `DB_URL`, `DB_USER`, `MINIO_URL` nếu cần. Redis URL phải chứa mật khẩu; Java không tự đọc `.env`.
 
-Từ `WebApp/backend/`:
+Mọi lệnh Maven trong hướng dẫn này chạy tại `WebApp/backend/` (nơi có `pom.xml`):
 
 ```powershell
 mvn spring-boot:run
@@ -31,9 +31,10 @@ Compose dùng cấu hình trong `.env`; `--no-deps` không kéo các service KAG
 
 Compose mặc định dùng `ADMIN_EMAIL=admin@luatgt.local`. Bootstrap chỉ tạo tài khoản nếu email chưa tồn tại; nếu email đã thuộc tài khoản không phải `ADMIN`, backend dừng với lỗi. Nếu tài khoản `ADMIN` đã tồn tại, bootstrap không đổi mật khẩu của tài khoản đó. `ADMIN_PASSWORD` phải dài ít nhất 12 ký tự và tối đa 72 byte UTF-8.
 
-**Bước 3 — Kiểm thử:**
+**Bước 3 — Kiểm thử:** quay lại `WebApp/backend/` trước mọi lệnh Maven. Nếu vừa chạy Bước 2 ở root repository:
 
 ```powershell
+Set-Location WebApp/backend
 mvn verify
 ```
 
