@@ -4,7 +4,7 @@ import { api, send } from '../api'
 import { useAuth } from '../auth'
 import { useAdmin } from '../admin/store'
 import { Badge, Button, Card, FilterTabs, Page, Td, Th, Toggle, inputCls, type Tone } from '../admin/ui'
-import { Notice, useData, useTask, saveBlob } from './server/shared'
+import { Notice, useData, useTask, saveBlob } from './shared/shared'
 
 type UserRoleLabel = 'Người học' | 'Cảnh sát' | 'Quản trị viên'
 type UserRecord = { id: string; name: string; email: string; role: string; enabled: boolean }

@@ -3,10 +3,10 @@ import { useSearchParams } from 'react-router-dom'
 import { api, send, type ContentRecord } from '../api'
 import { useAdmin } from '../admin/store'
 import { Badge, Button, Card, Field, Modal, Page, Td, Th, Toggle, inputCls } from '../admin/ui'
-import { ImportPanel } from './server/AdminPages'
-import QuestionBankSettings, { type QuestionSet } from './server/QuestionBankSettings'
-import { Asset, Notice, useData, useTask, saveBlob } from './server/shared'
-import { chapterNames as chapters } from './server/import-normalization'
+import { ImportPanel } from './shared/AdminPages'
+import QuestionBankSettings, { type QuestionSet } from './shared/QuestionBankSettings'
+import { Asset, Notice, useData, useTask, saveBlob } from './shared/shared'
+import { chapterNames as chapters } from './shared/import-normalization'
 
 interface QuestionItem {
   id: string

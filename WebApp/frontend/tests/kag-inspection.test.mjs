@@ -1,8 +1,8 @@
 import assert from 'node:assert/strict'
 import { test, beforeEach } from 'node:test'
-import { loadKagStatus, runRetrieval, inspectionError, loadPipelineStatus, loadBenchmarkDatasets, loadSampleInspection, loadBuilderInputs, loadBuilderStatus, loadBuilderConfiguration, saveBuilderConfiguration, checkBuilderReadiness, runBuilderAction, builderStages, loadLLMCredentials, loadBuilderProjects, builderNeo4jLink, loadBuilderStructure, prepareBuilderStructure, previewBuilderSelection, loadBuilderClear, clearBuilderData } from '../src/pages/server/kag-inspection.ts'
+import { loadKagStatus, runRetrieval, inspectionError, loadPipelineStatus, loadBenchmarkDatasets, loadSampleInspection, loadBuilderInputs, loadBuilderStatus, loadBuilderConfiguration, saveBuilderConfiguration, checkBuilderReadiness, runBuilderAction, builderStages, loadLLMCredentials, loadBuilderProjects, builderNeo4jLink, loadBuilderStructure, prepareBuilderStructure, previewBuilderSelection, loadBuilderClear, clearBuilderData } from '../src/pages/shared/kag-inspection.ts'
 import { ApiError, tokenKey } from '../src/api.ts'
-import { runGraphRetrieval, loadDataset } from '../src/pages/server/kag-inspection.ts'
+import { runGraphRetrieval, loadDataset } from '../src/pages/shared/kag-inspection.ts'
 
 let calls, tokens
 const failure = { state: 'NOT_READY', httpStatus: 503, code: 'NOT_READY' }

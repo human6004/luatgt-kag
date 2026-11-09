@@ -1,8 +1,8 @@
 import { useLocation, useSearchParams } from 'react-router-dom'
 import { api, send as request } from '../api'
 import { NavLinkButton } from '../admin/ui'
-import { Notice, useTask } from './server/shared'
-import { createChat, chatView, loadCitationSource } from './server/chat-state'
+import { Notice, useTask } from './shared/shared'
+import { createChat, chatView, loadCitationSource } from './shared/chat-state'
 import LogoMark from '../components/LogoMark'
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 

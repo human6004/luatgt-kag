@@ -1,9 +1,9 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Badge, Button, Card, Field, Modal, Page, inputCls } from '../admin/ui'
 import { ApiError } from '../api'
-import { Notice, useData } from './server/shared'
-import type { SchemaResponse } from './server/KagSchemaPage'
-import { GraphLibrary, useInspection } from './server/KagManagement'
+import { Notice, useData } from './shared/shared'
+import type { SchemaResponse } from './shared/KagSchemaPage'
+import { GraphLibrary, useInspection } from './shared/KagManagement'
 import {
   changeChatRetrieval,
   changeLLMModel,
@@ -15,7 +15,7 @@ import {
   loadServing,
   saveLLMCredentials,
   type ChatRetrievalValues,
-} from './server/kag-inspection'
+} from './shared/kag-inspection'
 
 const modelErrors: Record<string, string> = {
   TEST_REQUIRED: 'Cần kiểm thử thành công bản đã lưu trước khi áp dụng.',

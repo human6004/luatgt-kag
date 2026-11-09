@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { Button, Page } from '../admin/ui'
-import { ContentManager, ImportPanel, type ContentKind } from './server/AdminPages'
+import { ContentManager, ImportPanel, type ContentKind } from './shared/AdminPages'
 
 const tabs: readonly [ContentKind, string][] = [
   ['documents', 'Văn bản'],

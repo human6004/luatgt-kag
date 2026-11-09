@@ -26,4 +26,4 @@ Kết quả chỉ xác nhận hợp đồng offline của suite, không chạy g
 
 Runner tests dùng GraphLock cần volume local chung mount `/run/kag-locks` đúng [run_state.py](../kag/run_state.py). Dùng identity synthetic, không database đang phục vụ/spoof mountinfo/bypass shared lock guard. Khóa: [runner](../docs/runner.md#resume-trạng-thái-và-lock).
 
-Audit hook kiểm unlink symlink theo directory entry, không resolve target. Kiểm Docker/API có thể tạo tài khoản/state; cần môi trường thử riêng theo [WebApp](../WebApp/README.MD).
+Audit hook kiểm unlink symlink theo directory entry, không resolve target. Kiểm Docker/API có thể tạo tài khoản/state; cần môi trường thử riêng theo [WebApp](../WebApp/README.md).

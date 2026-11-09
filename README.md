@@ -19,7 +19,7 @@ Xem thao tác và giới hạn từng chức năng trong [USER-GUIDE](docs/USER-
 
 Docker chạy **một project `luatgt`, 12 services, một `.env` chung**. Không cần cài Python/Java/Node trên máy người dùng.
 
-Chưa cần KAG: xem [lifecycle WebApp riêng và FE dev với BE Docker](WebApp/README.MD#webapp-khi-chưa-chạy-kag).
+Chưa cần KAG: xem [lifecycle WebApp riêng và FE dev với BE Docker](WebApp/README.md#webapp-khi-chưa-chạy-kag).
 
 **Cài mới không tự nạp nội dung, dựng graph hoặc cấu hình model.** Học/thi cần dữ liệu đã xuất bản. Builder cần project riêng và Embedding đã lưu/kiểm. Sau Build, [chọn graph phục vụ](docs/runner.md#chọn-graph-phục-vụ-truy-xuấtchat), kiểm nguồn/model rồi xác nhận kích hoạt để dùng truy xuất/Chat. Container `healthy` chưa chứng minh chatbot trả lời được.
 
@@ -29,7 +29,7 @@ React/TypeScript; Spring Boot/Java; Python và OpenSPG KAG. MySQL lưu nghiệp 
 
 ## Tài liệu bảo trì
 
-- [Docker](docker/README.md), [WebApp](WebApp/README.MD), [frontend](WebApp/frontend/README.md), [backend](WebApp/backend/README.md).
+- [Docker](docker/README.md), [WebApp](WebApp/README.md), [frontend](WebApp/frontend/README.md), [backend](WebApp/backend/README.md).
 - [Kiến trúc](docs/architecture.md), [runtime](docs/runtime.md), [runner](docs/runner.md), [backend identity](docs/backend-identity.md).
 - [Mô hình miền](docs/domain_model.md), [schema](docs/schema.md), [retrieval](docs/retrieval-demo.md).
 - [Dữ liệu](data/README.md), [datasheet](data/DATASHEET.md), [điều kiện sử dụng](data/LICENSE.md).

@@ -20,7 +20,7 @@ mvn spring-boot:run
 
 Kết quả: backend khởi động. ADMIN bootstrap chỉ tạo email chưa có, không đặt lại mật khẩu/nâng USER thành ADMIN; tự đăng ký luôn là USER.
 
-**Bước 2 — Chạy bằng Docker sau khi sửa backend:** bảo đảm MySQL, Redis và MinIO đang chạy theo hướng dẫn [WebApp khi chưa chạy KAG](../README.MD#webapp-khi-chưa-chạy-kag). Từ thư mục gốc repository, build và cập nhật riêng backend:
+**Bước 2 — Chạy bằng Docker sau khi sửa backend:** bảo đảm MySQL, Redis và MinIO đang chạy theo hướng dẫn [WebApp khi chưa chạy KAG](../README.md#webapp-khi-chưa-chạy-kag). Từ thư mục gốc repository, build và cập nhật riêng backend:
 
 ```powershell
 docker compose build backend

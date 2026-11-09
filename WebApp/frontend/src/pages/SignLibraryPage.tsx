@@ -1,6 +1,6 @@
 import { type ContentRecord } from '../api'
 import { FilterTabs } from '../admin/ui'
-import { Asset, Notice, useData } from './server/shared'
+import { Asset, Notice, useData } from './shared/shared'
 import { useEffect, useState, useMemo } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 

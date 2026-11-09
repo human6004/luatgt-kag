@@ -5,9 +5,9 @@ import { api, send } from "../api"
 
 import { Button, Card, Field, Modal, NavLinkButton, Page, inputCls } from "../admin/ui"
 
-import { Asset, Notice, useData, useTask } from "./server/shared"
+import { Asset, Notice, useData, useTask } from "./shared/shared"
 
-import type { ExamRule } from "./server/QuestionBankSettings"
+import type { ExamRule } from "./shared/QuestionBankSettings"
 
 type Question = {
   questionId: string

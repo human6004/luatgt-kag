@@ -1,9 +1,9 @@
 import { api, send, type ContentRecord } from '../api'
-import { Asset, Notice, useData, useTask } from './server/shared'
+import { Asset, Notice, useData, useTask } from './shared/shared'
 import { Button, FilterTabs, NavLinkButton } from '../admin/ui'
 import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
-import type { QuestionSet } from './server/QuestionBankSettings'
+import type { QuestionSet } from './shared/QuestionBankSettings'
 
 export type ChapterStatus = 'not_started' | 'in_progress' | 'completed'
 

@@ -15,8 +15,8 @@ import Users from './pages/AdminUsers'
 import Questions from './pages/AdminQuestions'
 import Sources from './pages/AdminSources'
 import Benchmark from './pages/AdminBenchmark'
-import { Infrastructure } from './pages/server/OperationsPages'
-import KagSchemaPage from './pages/server/KagSchemaPage'
+import { Infrastructure } from './pages/shared/OperationsPages'
+import KagSchemaPage from './pages/shared/KagSchemaPage'
 
 function Toast() {
   const { toast } = useAdmin()

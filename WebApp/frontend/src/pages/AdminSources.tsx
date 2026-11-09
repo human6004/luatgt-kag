@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { Button, Field, Page, inputCls } from '../admin/ui'
-import { Notice } from './server/shared'
-import { useInspection } from './server/KagManagement'
-import { loadDataset } from './server/kag-inspection'
+import { Notice } from './shared/shared'
+import { useInspection } from './shared/KagManagement'
+import { loadDataset } from './shared/kag-inspection'
 
 const groups: Record<string, string> = {
   documents: 'Văn bản',

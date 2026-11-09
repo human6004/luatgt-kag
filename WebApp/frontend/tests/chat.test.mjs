@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test, beforeEach } from 'node:test'
-import { createChat, chatView, loadCitationSource } from '../src/pages/server/chat-state.ts'
+import { createChat, chatView, loadCitationSource } from '../src/pages/shared/chat-state.ts'
 import { tokenKey } from '../src/api.ts'
 
 const citation = { doc_id: 'fixture-doc', unit_id: 'fixture-unit', quote: 'TEST ONLY — trích đoạn kiểm thử.\nKhông phải căn cứ pháp luật.' }

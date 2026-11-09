@@ -5,12 +5,12 @@ if [ -z "${KAG_BROKER_DATABASE_ID:-}" ] && [ -z "${KAG_BROKER_SERVER_ID:-}" ]; t
     exec java "$@"
 fi
 if [ -z "${KAG_BROKER_DATABASE_ID:-}" ] || [ -z "${KAG_BROKER_SERVER_ID:-}" ]; then
-    echo 'Sample read broker configuration unavailable.' >&2
+    echo 'Read broker configuration unavailable.' >&2
     exit 1
 fi
 for secret in "${KAG_BROKER_PASSWORD_FILE:-}" "${KAG_BROKER_TOKEN_FILE:-}"; do
     if [ ! -f "$secret" ] || [ ! -r "$secret" ] || [ -L "$secret" ]; then
-        echo 'Sample read broker configuration unavailable.' >&2
+        echo 'Read broker configuration unavailable.' >&2
         exit 1
     fi
 done
@@ -36,7 +36,7 @@ try:
 except SystemExit:
     raise
 except Exception:
-    raise SystemExit('Sample server unavailable.') from None
+    raise SystemExit('OpenSPG server unavailable.') from None
 finally:
     for child in children:
         if child.poll() is None:
