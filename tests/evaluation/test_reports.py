@@ -78,7 +78,7 @@ class ReportTests(unittest.TestCase):
     def test_required_artifacts_provisional_labels_and_hashes(self):
         e,d,m,r = module('evaluate'),module('dataset'),module('models'),module('report')
         self.assertTrue(hasattr(r,'write_report'),'report export missing')
-        from test_g1 import LocalRetriever,evidence
+        from test_retrieval_eval import LocalRetriever,evidence
         with tempfile.TemporaryDirectory() as temp:
             out = Path(temp)/'run'
             ds = d.dataset_from_records([record(qid='z'),record(qid='a',gold_unit_ids=['u'])])
@@ -126,7 +126,7 @@ class ReportTests(unittest.TestCase):
     def test_run_failure_publication_and_frozen_fixture_never_official(self):
         r,m,d,e = module('report'),module('models'),module('dataset'),module('evaluate')
         self.assertTrue(hasattr(r,'write_report'),'report export missing')
-        from test_g1 import LocalRetriever,evidence
+        from test_retrieval_eval import LocalRetriever,evidence
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp)
             source=root/'s.jsonl'
