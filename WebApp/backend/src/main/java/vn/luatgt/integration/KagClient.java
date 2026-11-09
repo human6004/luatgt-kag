@@ -1515,6 +1515,36 @@ public class KagClient {
         }catch(ResponseStatusException e){throw e;}
         catch(Exception e){throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Chưa đọc được kết quả thử đồ thị; lựa chọn Chat được giữ nguyên");}
     }
+    public record ChatContext(String question,String clarification,String summary) {}
+
+    public ChatContext chatContext(Map<String,Object> request,String summary,List<Map<String,String>> earlier,List<Map<String,String>> recent) {
+        try {
+            var admitted=admit(request,null);
+            var body=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree(admitted.body());
+            body.put("summary",summary);
+            body.set("earlier",json.valueToTree(earlier));
+            body.set("recent",json.valueToTree(recent));
+            var context=new Admitted(json.writeValueAsBytes(body),admitted.token(),admitted.date(),admitted.pins());
+            return breaker.executeSupplier(()->post("/v1/chat/context",context).exchange((req,res)->{
+                if(res.getStatusCode().value()!=200) throw new IOException("Context unavailable");
+                var media=res.getHeaders().getContentType();
+                if(media==null||!MediaType.APPLICATION_JSON.includes(media)||res.getHeaders().containsKey(HttpHeaders.CONTENT_ENCODING))
+                    throw new IOException("Invalid context media");
+                byte[] bytes=res.getBody().readNBytes(32*1024+1);
+                if(bytes.length>32*1024) throw new IOException("Context response too large");
+                var result=parse(StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(bytes)).toString(),admitted.token());
+                if(!fields(result).equals(Set.of("question","clarification","summary"))||
+                    !text(result.path("question"),4000,false)||!text(result.path("clarification"),500,false)||
+                    !text(result.path("summary"),1600,false)) throw new IOException("Invalid context response");
+                var value=new ChatContext(result.path("question").asText().strip(),result.path("clarification").asText().strip(),result.path("summary").asText().strip());
+                if(value.question().isEmpty()==value.clarification().isEmpty()||value.summary().isEmpty()!=earlier.isEmpty())
+                    throw new IOException("Invalid context outcome");
+                currentDate(admitted.date());
+                return value;
+            }));
+        } catch(Exception e) {throw unavailable();}
+    }
+
     public JsonNode query(Object request) {
         return query(request,UUID.randomUUID());
     }

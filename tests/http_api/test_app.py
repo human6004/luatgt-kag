@@ -705,7 +705,7 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_only_step5_approved_public_routes_and_methods(self):
         paths = self.app.openapi()['paths']
-        self.assertEqual(set(paths),{'/v1/health','/v1/graph/release','/v1/query',
+        self.assertEqual(set(paths),{'/v1/health','/v1/graph/release','/v1/query','/v1/chat/context',
                                     '/v1/pipeline/status','/v1/benchmark/datasets',
                                     '/v1/benchmark/template','/v1/benchmark/datasets/{dataset_id}/export',
                                     '/v1/benchmark/runs','/v1/benchmark/runs/{job_id}','/v1/benchmark/runs/{job_id}/stop',
@@ -718,6 +718,7 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
             self.assertEqual(set(paths[path]),{'get'})
             self.assertEqual((await self.client.post(path)).status_code,405)
         for path, methods in {
+                '/v1/chat/context': {'post'},
                 '/v1/benchmark/datasets': {'get','post'}, '/v1/benchmark/template': {'get'},
                 '/v1/benchmark/datasets/{dataset_id}/export': {'get'},
                 '/v1/benchmark/runs': {'post'}, '/v1/benchmark/runs/{job_id}': {'get'},

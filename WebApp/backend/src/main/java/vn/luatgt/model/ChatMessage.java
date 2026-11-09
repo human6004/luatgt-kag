@@ -8,6 +8,9 @@ import java.util.UUID;
 public class ChatMessage {
     @Id public UUID id = UUID.randomUUID();
     public UUID ownerId;
+    public UUID conversationId;
+    @Column(columnDefinition="text",insertable=false,updatable=false) public String contextSummary;
+    @Column(insertable=false,updatable=false) public UUID contextThrough;
     @Column(columnDefinition="longtext") public String question;
     @Column(columnDefinition="longtext") public String answer;
     @Column(columnDefinition="longtext") public String citations = "[]";

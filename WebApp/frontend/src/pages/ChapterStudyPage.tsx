@@ -1,8 +1,7 @@
-import { api, send, type ContentRecord } from '../api'
-import { Asset, Notice, useData, useTask } from './shared/shared'
+import type { ContentRecord } from '../api'
+import { Notice, useData } from './shared/shared'
 import { Button, FilterTabs, NavLinkButton } from '../admin/ui'
-import { useState } from 'react'
-import { Link, useSearchParams } from 'react-router-dom'
+import { Navigate, useNavigate, useSearchParams } from 'react-router-dom'
 import type { QuestionSet } from './shared/QuestionBankSettings'
 
 export type ChapterStatus = "not_started" | "in_progress" | "completed";
@@ -17,15 +16,13 @@ export interface ChapterItem {
 
 export default function ChapterStudyPage() {
   const [params, setParams] = useSearchParams()
+  const navigate = useNavigate()
   const sets = useData<QuestionSet[]>('/question-sets')
   const setId = params.get('set') || ''
   const selectedSet = setId || sets.value?.[0]?.set_id || ''
   const suffix = selectedSet ? '?questionSetId=' + encodeURIComponent(selectedSet) : ''
   const questions = useData<ContentRecord[]>('/questions' + suffix)
   const progress = useData<{ chapter: number; practiced: number; correct: number; attempts: number }[]>('/progress' + suffix)
-  const task = useTask()
-  const [practiceIndex, setPracticeIndex] = useState(0)
-  const [answer, setAnswer] = useState<{ correct: boolean; correctAnswer: number; critical: boolean; explanation: string } | null>(null)
   const chapterIds = [...new Set((questions.value || []).map((q) => Number(q.data.chapter)))].filter((id) => Number.isInteger(id) && id > 0).sort((a, b) => a - b)
   const chapters: ChapterItem[] = chapterIds.map((id) => {
     const total = questions.value!.filter((q) => Number(q.data.chapter) === id).length
@@ -44,7 +41,6 @@ export default function ChapterStudyPage() {
   const rawChapter = Number(params.get('chapter'))
   const selectedProgressChapterId = Number.isInteger(rawChapter) && rawChapter > 0 ? rawChapter : 1
   const rawPractice = Number(params.get('practice'))
-  const activePracticeModal = Number.isInteger(rawPractice) && rawPractice > 0 ? (chapters.find((c) => c.id === rawPractice) ?? null) : null
 
   function updateUrl(patch: Record<string, string | null>) {
     setParams((prev) => {
@@ -57,9 +53,6 @@ export default function ChapterStudyPage() {
     })
   }
 
-  const currentPractice = chapters.find((c) => c.id === activePracticeModal?.id)
-  const practiceQuestions = questions.value?.filter((q) => Number(q.data.chapter) === activePracticeModal?.id) || []
-  const question = practiceQuestions[practiceIndex]
 
   const totalAllQuestions = chapters.reduce((acc, c) => acc + c.totalQuestions, 0)
   const totalStudied = chapters.reduce((acc, c) => acc + c.studiedQuestions, 0)
@@ -76,10 +69,12 @@ export default function ChapterStudyPage() {
     return c.status === filterStatus;
   });
 
-  function openPractice(c: ChapterItem) {
-    setPracticeIndex(0)
-    setAnswer(null)
-    updateUrl({ practice: String(c.id) })
+  function practicePath(chapterId: number) {
+    return '/on-thi/luyen-tap/' + chapterId + '?questionSetId=' + encodeURIComponent(selectedSet)
+  }
+
+  if (selectedSet && chapters.some((chapter) => chapter.id === rawPractice)) {
+    return <Navigate replace to={practicePath(rawPractice)} />
   }
 
   return (
@@ -87,7 +82,6 @@ export default function ChapterStudyPage() {
       <Notice {...sets} retry={sets.reload} />
       <Notice {...questions} retry={questions.reload} />
       <Notice {...progress} retry={progress.reload} />
-      <Notice error={task.error} />
       {/* Header */}
       <div className="mb-6">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -103,8 +97,6 @@ export default function ChapterStudyPage() {
               className="min-w-0 max-w-full sm:max-w-xs border border-line bg-surface rounded-md p-2"
               value={selectedSet}
               onChange={(e) => {
-                setPracticeIndex(0)
-                setAnswer(null)
                 updateUrl({ set: e.target.value || null, practice: null })
               }}
             >
@@ -121,9 +113,6 @@ export default function ChapterStudyPage() {
             <h1 className="font-sans font-semibold text-2xl sm:text-3xl text-navy tracking-normal">
               Ôn thi lý thuyết
             </h1>
-            <p className="text-muted text-sm mt-1">
-              {questions.value ? chapters.length : '—'} chương · Câu hỏi đã xuất bản trong bộ đã chọn
-            </p>
           </div>
           <div className="flex items-center gap-2">
             <NavLinkButton to="/exam">Vào phòng thi thử</NavLinkButton>
@@ -183,7 +172,7 @@ export default function ChapterStudyPage() {
                         variant={chapter.status === 'not_started' ? 'primary' : 'dark'}
                         className="w-full sm:w-auto"
                         disabled={!ready || chapter.totalQuestions === 0}
-                        onClick={() => openPractice(chapter)}
+                        onClick={() => navigate(practicePath(chapter.id))}
                       >
                         {chapter.status === 'completed' ? 'Ôn tập lại' : chapter.status === 'in_progress' ? 'Tiếp tục học' : 'Bắt đầu học'}
                       </Button>
@@ -313,261 +302,6 @@ export default function ChapterStudyPage() {
         )
       )}
 
-      {/* Modal học tập chương */}
-      {activePracticeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-navy/40 backdrop-blur-xs">
-          <div className="bg-bg w-full max-w-xl rounded-2xl border border-line shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div className="flex items-start justify-between gap-3 px-6 py-4 border-b border-line bg-surface">
-              <div className="min-w-0 break-words">
-                <span className="text-[11px] font-mono font-bold text-accent-strong">
-                  Chương {activePracticeModal.id} • Bộ đã chọn
-                </span>
-                <h3 className="font-sans text-lg font-semibold text-navy">{activePracticeModal.title}</h3>
-              </div>
-              <button
-                type="button"
-                aria-label="Đóng luyện tập chương"
-                onClick={() => updateUrl({ practice: null })}
-                className="shrink-0 p-1 rounded-lg text-muted hover:bg-selected hover:text-navy"
-              >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="p-6 space-y-4 max-h-[65vh] overflow-y-auto">
-              <div className="p-4 bg-surface rounded-xl border border-line space-y-2">
-                {question ? (
-                  <>
-                    <p className="text-xs text-muted">
-                      Câu {practiceIndex + 1}/{practiceQuestions.length}
-                    </p>
-                    <p className="text-sm font-medium text-navy">{String(question.data.text)}</p>
-                    {!!question.data.imageKey && (
-                      <Asset id={question.id} path={`/question-sets/${selectedSet}/questions/${question.id}/media`} alt="Ảnh câu hỏi" />
-                    )}
-                    <div className="space-y-1.5 pt-2">
-                      {(question.data.options as string[]).map((o, i) => (
-                        <Button
-                          key={i}
-                          disabled={task.busy || !!answer}
-                          className="w-full justify-start text-left whitespace-normal"
-                          onClick={() =>
-                            void task.run(async () => {
-                              setAnswer(
-                                await api(`/study/${question.id}/answer`, send('POST', { selected: i, questionSetId: selectedSet })),
-                              )
-                              progress.reload()
-                            })
-                          }
-                        >
-                          {i + 1}. {o}
-                        </Button>
-                      ))}
-                    </div>
-                    {answer && (
-                      <div role="status" className="text-sm">
-                        <p>
-                          {answer.correct ? 'Đúng' : 'Sai'} · Đáp án {answer.correctAnswer + 1}
-                          {answer.critical ? ' · Điểm liệt' : ''}
-                        </p>
-                        <p>{answer.explanation}</p>
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <p>Chưa có câu hỏi đã xuất bản cho chương này.</p>
-                )}
-              </div>
-              <div className="p-3.5 bg-selected rounded-xl text-xs text-text-secondary flex items-center justify-between">
-                <span>
-                  Tiến độ chương này: <strong>{currentPractice?.studiedQuestions ?? 0}</strong> /{' '}
-                  {currentPractice?.totalQuestions ?? 0} câu
-                </span>
-                <span className="text-accent-strong font-semibold">
-                  {Math.round(((currentPractice?.studiedQuestions ?? 0) / ((currentPractice?.totalQuestions ?? 0) || 1)) * 100)}%
-                </span>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap items-center justify-between gap-3 px-6 py-3.5 bg-sidebar border-t border-line">
-              <Link
-                to="/chat"
-                state={{ initialQuery: `Giải thích chi tiết các quy tắc giao thông trong ${activePracticeModal.title}` }}
-                className="text-xs text-navy hover:text-accent-strong font-medium"
-              >
-                Hỏi Chatbot KAG giải thích
-              </Link>
-              <div className="flex items-center gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setAnswer(null)
-                    setPracticeIndex((i) => (practiceQuestions.length ? (i + 1) % practiceQuestions.length : 0))
-                  }}
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-navy bg-accent hover:bg-accent-hover transition-colors shadow-2xs"
-                >
-                  <svg
-                    aria-hidden="true"
-                    className="h-5 w-5"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M3 4v6h6" />
-                    <path d="M3.7 10a8 8 0 1 1 .5 5.8" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* Overall Percentage Card */}
-              <div className="bg-bg rounded-xl p-5 border border-line">
-                <div className="flex items-baseline justify-between mb-2">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-muted">
-                    Tổng tiến độ hoàn thành
-                  </span>
-                  <span className="font-sans text-3xl font-bold text-navy">
-                    {ready ? overallPercentage : "—"}%
-                  </span>
-                </div>
-
-                {/* Thanh progress màu xanh pastel */}
-                <div className="w-full bg-line h-3.5 rounded-full overflow-hidden p-0.5">
-                  <div
-                    className="h-full rounded-full bg-progress transition-all duration-500 ease-out"
-                    style={{
-                      width: `${ready ? overallPercentage : "—"}%`,
-                    }}
-                  />
-                </div>
-
-                <div className="flex flex-wrap justify-between items-center gap-x-3 gap-y-1 text-xs text-muted mt-2.5">
-                  <span>
-                    Đã học:{" "}
-                    <strong className="text-navy">
-                      {ready ? totalStudied : "—"}
-                    </strong>{" "}
-                    / {ready ? totalAllQuestions : "—"} câu
-                  </span>
-                  <span>
-                    Hoàn tất:{" "}
-                    <strong className="text-navy">
-                      {ready ? completedChaptersCount : "—"}
-                    </strong>{" "}
-                    / {chapters.length} chương
-                  </span>
-                </div>
-              </div>
-
-              {/* Tiến độ từng chương */}
-              <div className="space-y-4">
-                <label
-                  htmlFor="chapter-progress-selection"
-                  className="block text-xs font-semibold uppercase tracking-wider text-muted"
-                >
-                  Tiến độ chi tiết từng chương
-                </label>
-                <div className="relative">
-                  <select
-                    id="chapter-progress-selection"
-                    value={selectedProgressChapter.id}
-                    onChange={(event) =>
-                      setSelectedProgressChapterId(Number(event.target.value))
-                    }
-                    className="w-full min-w-0 appearance-none rounded-xl border border-line bg-bg py-3 pl-3 pr-9 text-xs font-medium text-navy cursor-pointer outline-none transition-colors hover:border-accent focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/25"
-                  >
-                    {chapters.map((chapter) => (
-                      <option key={chapter.id} value={chapter.id}>
-                        {chapter.title}
-                      </option>
-                    ))}
-                  </select>
-                  <svg
-                    className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-accent-strong"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                    aria-hidden="true"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="1.8"
-                      d="m6 9 6 6 6-6"
-                    />
-                  </svg>
-                </div>
-
-                <div
-                  className="rounded-xl border border-line bg-bg p-4 space-y-3"
-                  aria-live="polite"
-                  aria-atomic="true"
-                >
-                  <div className="flex items-start justify-between gap-3">
-                    <span className="text-xs font-medium leading-relaxed text-navy">
-                      {selectedProgressChapter.title}
-                    </span>
-                    <span className="shrink-0 font-mono text-sm font-bold text-accent-strong">
-                      {selectedProgressPercentage}%
-                    </span>
-                  </div>
-                  <div
-                    className="w-full bg-selected h-2 rounded-full overflow-hidden"
-                    role="progressbar"
-                    aria-label={`Tiến độ ${selectedProgressChapter.title}`}
-                    aria-valuenow={selectedProgressPercentage}
-                    aria-valuemin={0}
-                    aria-valuemax={100}
-                  >
-                    <div
-                      className="h-full rounded-full bg-progress transition-all duration-300"
-                      style={{ width: `${selectedProgressPercentage}%` }}
-                    />
-                  </div>
-                  <div className="flex justify-between gap-2 text-[11px] text-muted">
-                    <span>
-                      Đã học:{" "}
-                      <strong className="text-navy">
-                        {ready ? selectedProgressChapter.studiedQuestions : "—"}
-                      </strong>{" "}
-                      / {ready ? selectedProgressChapter.totalQuestions : "—"}{" "}
-                      câu
-                    </span>
-                    <span>Còn {selectedProgressRemaining} câu</span>
-                  </div>
-                  <p className="text-[11px] text-muted leading-relaxed">
-                    {selectedProgressChapter.status === "completed"
-                      ? "Đã hoàn thành"
-                      : selectedProgressChapter.status === "in_progress"
-                        ? "Đang ôn tập"
-                        : "Chưa bắt đầu học"}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      ) : (
-        !questions.loading &&
-        !questions.error &&
-        !sets.loading &&
-        !sets.error && (
-          <section className="rounded-2xl border border-line bg-surface p-6 text-center">
-            <h2 className="text-base font-semibold text-navy">
-              Chưa có nội dung ôn tập
-            </h2>
-            <p className="mt-2 text-sm text-muted">
-              {selectedSet
-                ? "Bộ này chưa có câu hỏi đã xuất bản. Nội dung sẽ xuất hiện sau khi người quản lý nhập và duyệt câu hỏi."
-                : "Chưa có bộ câu hỏi để ôn tập. Vui lòng quay lại sau."}
-            </p>
-          </section>
-        )
-      )}
     </div>
-  );
+  )
 }

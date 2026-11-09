@@ -1,6 +1,5 @@
 import { useLocation, useSearchParams } from 'react-router-dom'
 import { api, send as request } from '../api'
-import { NavLinkButton } from '../admin/ui'
 import { Notice, useTask } from './shared/shared'
 import { citationAnswerPrefix, createChat, chatView, loadCitationSource } from './shared/chat-state'
 import LogoMark from '../components/LogoMark'
@@ -14,6 +13,7 @@ interface LegalReference {
 }
 
 interface Message {
+  turnId: string;
   role: "user" | "bot";
   text: string;
   status?: string;
@@ -115,7 +115,8 @@ export default function ChatPage() {
   const activeId = params.get('c')
   const urlQ = params.get('q') ?? ''
   const rawCite = params.get('cite')
-  const citeIndex = rawCite !== null && /^\d+$/.test(rawCite) ? Number(rawCite) : null
+  const citeMatch = rawCite?.match(/^(?:([^:]+):)?(\d+)$/)
+  const citeIndex = citeMatch ? Number(citeMatch[2]) : null
 
   const [pinned, setPinned] = useState<Set<string>>(new Set())
   const [notice, setNotice] = useState('')
@@ -143,20 +144,24 @@ export default function ChatPage() {
     )
   }
 
-  const sessions: Session[] = data.rows.map((row) => {
-    const view = chatView(row)
-    return {
-      id: row.id,
-      title: row.question,
-      group: 'Hôm nay',
-      pinned: pinned.has(row.id),
-      messages: [
-        { role: 'user', text: row.question },
+  const sessions = useMemo(() => {
+    const byId = new Map<string, Session>()
+    for (const row of data.rows) {
+      const id = row.conversationId ?? row.id
+      let session = byId.get(id)
+      if (!session) {
+        session = { id, title: row.question, group: 'Hôm nay', pinned: pinned.has(id), messages: [] }
+        byId.set(id, session)
+      }
+      if (row.id === id) session.title = row.question
+      const view = chatView(row)
+      session.messages.push(
         {
+          turnId: row.id,
           role: 'bot',
           text: view.answer,
           status: view.status,
-          rich: !!view.answer,
+          rich: row.state === 'ANSWERED' && !!view.answer,
           citations: view.citations.map((c) => ({
             title: typeof c.source?.document_metadata.title === 'string' && c.source.document_metadata.title.trim()
               ? c.source.document_metadata.title : c.doc_id,
@@ -165,9 +170,12 @@ export default function ChatPage() {
             raw: c,
           })),
         },
-      ],
+        { turnId: row.id, role: 'user', text: row.question },
+      )
     }
-  })
+    for (const session of byId.values()) session.messages.reverse()
+    return [...byId.values()]
+  }, [data.rows, pinned])
 
   useEffect(() => {
     void chat.load()
@@ -177,7 +185,7 @@ export default function ChatPage() {
   useEffect(() => {
     if (data.currentId && data.currentId !== lastSubmittedId.current) {
       lastSubmittedId.current = data.currentId
-      updateUrl({ c: data.currentId, cite: null })
+      if (data.currentId !== activeId) updateUrl({ c: data.currentId, cite: null })
     }
   }, [data.currentId])
 
@@ -195,7 +203,10 @@ export default function ChatPage() {
 
   const active = sessions.find((s) => s.id === activeId) ?? null
   const messages = active?.messages ?? []
-  const selectedReference = citeIndex !== null ? messages[1]?.citations?.[citeIndex] : undefined
+  const citationTurn = citeMatch?.[1] ?? activeId
+  const selectedReference = citeIndex !== null
+    ? messages.find((message) => message.role === 'bot' && message.turnId === citationTurn)?.citations?.[citeIndex]
+    : undefined
   const selectedCitation = selectedReference?.raw
 
   const filtered = useMemo(
@@ -228,25 +239,23 @@ export default function ChatPage() {
   }, [input]);
 
   function newChat() {
+    if (thinking) return
     updateUrl({ c: null, cite: null })
     setInput('')
   }
 
   async function send(text = input) {
     if (blocked || !text.trim()) return
-    if (await chat.submit(text)) {
-      const nextId = chat.getSnapshot().rows[0]?.id ?? null
-      lastSubmittedId.current = nextId ?? undefined
-      updateUrl({ c: nextId, cite: null })
+    if (await chat.submit(text, active?.id)) {
       setInput('')
       if (window.innerWidth < 768) setShowList(false)
     }
   }
 
-  function openCitation(index: number, trigger: HTMLButtonElement) {
+  function openCitation(turnId: string, index: number, trigger: HTMLButtonElement) {
     citationTriggerRef.current = trigger
-    if (index === citeIndex) citationCloseRef.current?.focus()
-    else updateUrl({ cite: String(index) })
+    if (turnId === citationTurn && index === citeIndex) citationCloseRef.current?.focus()
+    else updateUrl({ cite: `${turnId}:${index}` })
   }
 
   function answerText(message: Message) {
@@ -261,13 +270,13 @@ export default function ChatPage() {
           {citation.raw.quote}
           <button
             type="button"
-            onClick={(event) => openCitation(index, event.currentTarget)}
+            onClick={(event) => openCitation(message.turnId, index, event.currentTarget)}
             aria-label={`Trích dẫn ${index + 1} – ${citation.label}`}
-            aria-expanded={citeIndex === index}
-            aria-controls={citeIndex === index ? 'legal-citation-panel' : undefined}
+            aria-expanded={citationTurn === message.turnId && citeIndex === index}
+            aria-controls={citationTurn === message.turnId && citeIndex === index ? 'legal-citation-panel' : undefined}
             title={`${citation.title}\n${citation.raw.quote.slice(0, 180)}${citation.raw.quote.length > 180 ? '…' : ''}`}
             className={`mx-1 inline-block rounded px-1.5 py-0.5 align-super text-xs font-semibold leading-none hover:bg-accent hover:text-navy focus-visible:outline-2 focus-visible:outline-accent-strong ${
-              citeIndex === index ? 'bg-accent text-navy' : 'bg-selected text-accent-strong'
+              citationTurn === message.turnId && citeIndex === index ? 'bg-accent text-navy' : 'bg-selected text-accent-strong'
             }`}
           >
             {index + 1}
@@ -277,23 +286,22 @@ export default function ChatPage() {
     </>
   }
 
-  function messageAction(action: string, text: string) {
+  function messageAction(action: string, message: Message, question: string) {
     if (action === 'Sao chép') {
       void navigator.clipboard
-        .writeText(text)
+        .writeText(message.text)
         .then(() => setNotice('Đã sao chép'))
         .catch(() => setNotice('Không sao chép được'))
       return
     }
     if (action === 'Tạo lại') {
-      const q = active?.messages[0]?.text
-      if (q) setInput(q)
+      setInput(question)
       setNotice('Câu hỏi đã đưa vào ô nhập. Gửi để tạo lượt hỏi mới.')
       return
     }
     if (active) {
       void task.run(async () => {
-        await api(`/chat/${active.id}/feedback`, request('POST', { feedback: action === 'Hữu ích' ? 'HELPFUL' : action, note: '' }))
+        await api(`/chat/${message.turnId}/feedback`, request('POST', { feedback: action === 'Hữu ích' ? 'HELPFUL' : action, note: '' }))
         setNotice('Đã lưu phản hồi')
       })
     }
@@ -384,6 +392,7 @@ export default function ChatPage() {
               <button
                 type="button"
                 onClick={newChat}
+                disabled={thinking}
                 aria-label="Cuộc trò chuyện mới"
                 title="Cuộc trò chuyện mới"
                 className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-navy cursor-pointer hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong"
@@ -556,12 +565,12 @@ export default function ChatPage() {
                       {m.citations && m.citations.length > 0 && (
                         <div className="mt-3 flex flex-wrap gap-2">
                           {m.citations.map((citation, referenceIndex) => {
-                            const isSelected = citeIndex === referenceIndex
+                            const isSelected = citationTurn === m.turnId && citeIndex === referenceIndex
                             return (
                               <button
                                 key={`${citation.title}-${citation.clause}-${referenceIndex}`}
                                 type="button"
-                                onClick={(event) => openCitation(referenceIndex, event.currentTarget)}
+                                onClick={(event) => openCitation(m.turnId, referenceIndex, event.currentTarget)}
                                 aria-controls={
                                   isSelected
                                     ? "legal-citation-panel"
@@ -595,7 +604,7 @@ export default function ChatPage() {
                           <button
                             type="button"
                             disabled={blocked}
-                            onClick={() => messageAction(a.t, m.text)}
+                            onClick={() => messageAction(a.t, m, messages[i - 1].text)}
                             key={a.t}
                             aria-label={a.label ?? a.t}
                             title={a.label ?? a.t}
@@ -604,9 +613,6 @@ export default function ChatPage() {
                             <Icon d={a.d} className="w-3.5 h-3.5" />
                           </button>
                         ))}
-                        <NavLinkButton to="/on-thi" size="sm" className="ml-auto rounded-lg">
-                          Ôn tập theo chương
-                        </NavLinkButton>
                       </div>
                     </div>
                   ),
@@ -656,7 +662,7 @@ export default function ChatPage() {
               <Icon d={ic.close} />
             </button>
           </div>
-          <CitationSource key={`${activeId}:${citeIndex}`} reference={selectedReference} />
+          <CitationSource key={`${citationTurn}:${citeIndex}`} reference={selectedReference} />
         </aside>
       )}
     </div>

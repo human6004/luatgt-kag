@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { normalizeImport } from "./import-normalization"
 import { api, send, type ContentRecord } from "../../api"
-import { Button, Card, FilterTabs, Modal, Th, Td, inputCls } from "../../admin/ui"
+import { Button, Card, FilePicker, FilterTabs, Modal, Th, Td, inputCls } from "../../admin/ui"
 import { useAdmin } from "../../admin/store"
 import { csvSamples, parseCsv, tableObjects, type ImportKind } from "../../admin/import-data"
 import { useData, useTask, Notice, Asset, download, saveBlob } from "./shared"
@@ -100,6 +100,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
   const urlQuery = parameters.get("q") ?? parameters.get("source_id") ?? ""
   const rawStatus = parameters.get("status")
   const state = rawStatus === "published" || rawStatus === "draft" ? rawStatus : ""
+  const signGroup = kind === "signs" ? parameters.get("group") ?? "" : ""
   const editId = parameters.get("id") ?? ""
 
   const data = useData<ContentRecord[]>(`/admin/${kind}`),
@@ -113,10 +114,15 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
       data: string
     }[]>([]),
     [message, setMessage] = useState("")
+  const [checked, setChecked] = useState<Set<string>>(() => new Set())
 
   useEffect(() => {
     setQuery(urlQuery)
   }, [urlQuery])
+
+  useEffect(() => {
+    setChecked(new Set())
+  }, [urlQuery, state, signGroup])
 
   function updateUrl(patch: Record<string, string | null>, replace = false) {
     setParameters(
@@ -163,11 +169,17 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
 
   const rows = (data.value || []).filter(
     (r) =>
-      `${r.externalId} ${r.data.name || r.data.title || r.data.text || ""}`
+      `${r.externalId} ${r.data.name || r.data.title || r.data.text || ""}${kind === "signs" ? ` ${r.data.code ?? ""} ${r.data.meaning ?? ""}` : ""}`
         .toLowerCase()
         .includes(query.toLowerCase()) &&
-      (!state || (state === "published" ? r.published : !r.published)),
+      (!state || (state === "published" ? r.published : !r.published)) &&
+      (!signGroup || r.data.group === signGroup),
   )
+  const signGroups = [...new Set((data.value ?? []).map((r) => String(r.data.group ?? "")).filter(Boolean))]
+    .sort((a, b) => a.localeCompare(b, "vi"))
+  const drafts = kind === "signs" ? rows.filter((r) => !r.published) : []
+  const chosen = drafts.filter((r) => checked.has(r.id))
+  const allChecked = drafts.length > 0 && chosen.length === drafts.length
 
   function openEdit(row: ContentRecord) {
     task.clearError()
@@ -250,18 +262,33 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
           </Card>
         ))}
       </div>
-      <input
-        aria-label="Tìm nội dung"
-        value={query}
-        onChange={(e) => {
-          const v = e.target.value
-          setQuery(v)
-          updateUrl({ q: v || null }, true)
-        }}
-        placeholder="Tìm theo mã hoặc nội dung"
-        className={`${inputCls} mb-3`}
-      />
-      <FilterTabs
+      <div className={kind === "signs" ? "mb-4 grid gap-3 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,0.8fr)]" : "mb-3"}>
+        <input
+          aria-label="Tìm nội dung"
+          value={query}
+          onChange={(e) => {
+            const v = e.target.value
+            setQuery(v)
+            updateUrl({ q: v || null }, true)
+          }}
+          placeholder={kind === "signs" ? "Tìm biển báo, mã, nội dung…" : "Tìm theo mã hoặc nội dung"}
+          className={inputCls}
+        />
+        {kind === "signs" && (
+          <>
+            <select className={inputCls} aria-label="Nhóm biển báo" value={signGroup} onChange={(e) => updateUrl({ group: e.target.value })}>
+              <option value="">Tất cả nhóm biển</option>
+              {signGroups.map((group) => <option key={group}>{group}</option>)}
+            </select>
+            <select className={inputCls} aria-label="Trạng thái xuất bản" value={state} onChange={(e) => updateUrl({ status: e.target.value })}>
+              <option value="">Mọi trạng thái</option>
+              <option value="published">Đã xuất bản</option>
+              <option value="draft">Bản nháp</option>
+            </select>
+          </>
+        )}
+      </div>
+      {kind !== "signs" && <FilterTabs
         label="Lọc trạng thái xuất bản"
         value={state}
         onChange={(v) => updateUrl({ status: v || null })}
@@ -271,10 +298,42 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
           { value: "published", label: "Đã xuất bản" },
           { value: "draft", label: "Bản nháp" },
         ]}
-      />
+      />}
+      {kind === "signs" && (
+        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+          <span className="text-sm text-muted" role="status">Chọn {chosen.length} / {drafts.length} bản nháp</span>
+          <Button
+            variant="primary"
+            disabled={task.busy || data.loading || !chosen.length || chosen.length > 600}
+            onClick={() => void task.run(async () => {
+              setMessage("")
+              await api("/admin/signs/publication-batch", send("POST", {
+                rows: chosen.map(({ id, version }) => ({ id, version })),
+                reviewed: true,
+                published: true,
+              }))
+              setChecked(new Set())
+              setMessage(`Đã xuất bản ${chosen.length} biển báo.`)
+              data.reload()
+            })}
+          >
+            Duyệt và xuất bản các biển đã chọn
+          </Button>
+          {chosen.length > 600 && <p className="w-full text-xs text-muted">Mỗi lần xuất bản tối đa 600 biển báo.</p>}
+        </div>
+      )}
       <Table>
         <thead>
           <tr>
+            {kind === "signs" && <Th className="w-12">
+              <input
+                type="checkbox"
+                aria-label="Chọn tất cả biển báo bản nháp đang lọc"
+                checked={allChecked}
+                disabled={task.busy || data.loading || !drafts.length}
+                onChange={(e) => setChecked(new Set(e.target.checked ? drafts.map((r) => r.id) : []))}
+              />
+            </Th>}
             <Th>Mã</Th>
             <Th>Nội dung</Th>
             <Th>Trạng thái</Th>
@@ -284,6 +343,23 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
         <tbody>
           {rows.map((r) => (
             <tr key={r.id}>
+              {kind === "signs" && <Td>
+                {!r.published && <input
+                  type="checkbox"
+                  aria-label={`Chọn biển ${r.data.code || r.externalId}`}
+                  checked={checked.has(r.id)}
+                  disabled={task.busy || data.loading}
+                  onChange={(e) => {
+                    const isChecked = e.target.checked
+                    setChecked((prev) => {
+                      const next = new Set(prev)
+                      if (isChecked) next.add(r.id)
+                      else next.delete(r.id)
+                      return next
+                    })
+                  }}
+                />}
+              </Td>}
               <Td>{r.externalId}</Td>
               <Td>
                 <p className="max-w-xl">
@@ -311,12 +387,43 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
           onClose={closeEdit}
           footer={
             <>
-              <Button disabled={task.busy} onClick={closeEdit}>
+              <Button variant="ghost" disabled={task.busy} onClick={closeEdit}>
                 Đóng
               </Button>
-              <Button disabled={task.busy} type="submit" form="content-editor" variant="dark">
+              <Button disabled={task.busy} type="submit" form="content-editor" variant={selected.id ? "outline" : "dark"}>
                 Lưu bản nháp
               </Button>
+              {selected.id && (
+                <Button
+                  variant={selected.published ? "danger" : "primary"}
+                  disabled={task.busy}
+                  onClick={() =>
+                    task.run(async () => {
+                      await save()
+                      const current = await api<ContentRecord[]>(
+                        `/admin/${kind}`,
+                      )
+                      const record = current.find((r) => r.id === selected.id)!
+                      const updated = await api<ContentRecord>(
+                        `${resource}/${record.id}/publication`,
+                        send("POST", {
+                          version: record.version,
+                          published: !selected.published,
+                        }),
+                      )
+                      applySelection(updated)
+                      data.reload()
+                      setMessage(
+                        selected.published
+                          ? "Đã ngừng xuất bản."
+                          : "Đã xuất bản.",
+                      )
+                    })
+                  }
+                >
+                  {selected.published ? "Ngừng xuất bản" : "Xuất bản"}
+                </Button>
+              )}
             </>
           }
         >
@@ -325,6 +432,20 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
             <p role="status" className="mb-4 text-sm text-emerald-700">
               {message}
             </p>
+          )}
+          {kind === "signs" && selected.id && (
+            <section className="rounded-xl border border-line bg-surface p-4">
+              <h3 className="text-sm font-semibold text-navy">Xem trước ảnh biển báo</h3>
+              {Boolean(selected.data.imageKey || selected.data.hasDatasetImage) ? (
+                <Asset key={selected.version} id={selected.id} alt="Ảnh minh họa biển báo" className="mx-auto mt-3 max-h-40 max-w-full object-contain" />
+              ) : (
+                <p className="mt-1 text-xs text-muted">
+                  {Array.isArray(selected.data.children_codes) && selected.data.children_codes.length
+                    ? `Biển này chưa có ảnh riêng. Mở từng biển con để xem ảnh: ${selected.data.children_codes.join(", ")}.`
+                    : "Chưa có ảnh cho biển này. Bạn có thể tải ảnh lên ở cuối biểu mẫu."}
+                </p>
+              )}
+            </section>
           )}
           <form
             id="content-editor"
@@ -368,9 +489,10 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                 {kind === "units" && key === "text"
                   ? "Nội dung pháp lý"
                   : labels[key]}
-                {["text", "meaning"].includes(key) ? (
+                {["text", "meaning"].includes(key) ||
+                (kind === "signs" && ["name", "group"].includes(key)) ? (
                   <textarea
-                    rows={3}
+                    rows={["name", "group"].includes(key) ? 2 : 3}
                     value={String(form[key] || "")}
                     onChange={(e) => field(key, e.target.value)}
                     className={`${inputCls} mt-2`}
@@ -454,20 +576,18 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
             </label>
           </form>
           {selected.id && (
-            <div className="mt-5 space-y-4">
-              <p className="text-xs text-muted">
-                Phiên bản {selected.version} ·{" "}
-                {selected.published ? "Đã xuất bản" : "Bản nháp"}
-              </p>
-              {kind !== "documents" && !!selected.data.imageKey && (
-                <Asset id={selected.id} alt="Ảnh nguồn đã lưu" />
-              )}
+            <div className="mt-5 space-y-4 rounded-xl border border-line bg-surface p-4">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <span className="rounded-full bg-sidebar px-2.5 py-1 text-xs font-medium text-navy">
+                  {selected.published ? "Đã xuất bản" : "Bản nháp"}
+                </span>
+                <span className="text-xs text-muted">Phiên bản {selected.version}</span>
+              </div>
               {kind !== "units" && (
-                <label className="block text-sm">
-                  {kind === "documents" ? "Tài liệu PDF nguồn" : "Ảnh PNG/JPEG"}
-                  <input
-                    aria-label="Tải tệp nguồn"
-                    type="file"
+                <div className="space-y-3 border-y border-line py-3">
+                  <FilePicker
+                    title={kind === "documents" ? "Tải tài liệu nguồn" : "Tải ảnh biển báo"}
+                    hint={kind === "documents" ? "PDF · Tối đa 20 MB" : "PNG hoặc JPEG · Tối đa 5 MB"}
                     accept={kind === "documents" ? ".pdf" : ".png,.jpg,.jpeg"}
                     disabled={task.busy}
                     onChange={(e) => {
@@ -484,41 +604,14 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                         data.reload()
                       })
                     }}
-                    className="block mt-2"
                   />
-                </label>
+                </div>
               )}
-              <div className="flex flex-wrap gap-2">
-                <Button
-                  disabled={task.busy}
-                  onClick={() =>
-                    task.run(async () => {
-                      await save()
-                      const current = await api<ContentRecord[]>(
-                        `/admin/${kind}`,
-                      )
-                      const record = current.find((r) => r.id === selected.id)!
-                      const updated = await api<ContentRecord>(
-                        `${resource}/${record.id}/publication`,
-                        send("POST", {
-                          version: record.version,
-                          published: !selected.published,
-                        }),
-                      )
-                      applySelection(updated)
-                      data.reload()
-                      setMessage(
-                        selected.published
-                          ? "Đã ngừng xuất bản."
-                          : "Đã xuất bản.",
-                      )
-                    })
-                  }
-                >
-                  {selected.published ? "Ngừng xuất bản" : "Xuất bản"}
-                </Button>
+              <div className="flex flex-wrap gap-2 empty:hidden">
                 {kind !== "units" && (
                   <Button
+                    size="sm"
+                    variant="ghost"
                     disabled={task.busy}
                     onClick={() =>
                       task.run(async () =>
@@ -533,6 +626,8 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                 )}
                 {!!selected.data.fileKey && (
                   <Button
+                    size="sm"
+                    variant="ghost"
                     onClick={() => task.run(async () => download(selected.id))}
                   >
                     Tải PDF nguồn
@@ -781,7 +876,9 @@ export function ImportPanel({
       message?: string
     }[]>([]),
     [update, setUpdate] = useState(false),
-    [message, setMessage] = useState("")
+    [message, setMessage] = useState(""),
+    [dataInputVersion, setDataInputVersion] = useState(0),
+    [zipInputVersion, setZipInputVersion] = useState(0)
   const task = useTask()
 
   useEffect(() => {
@@ -825,8 +922,8 @@ export function ImportPanel({
             . Nhập vẫn là bản nháp; kiểm duyệt và xuất bản trước khi quay lại.
           </p>
         )}
-        <p className="text-xs text-muted">
-          Dữ liệu được kiểm tra trên server, lưu nháp và chỉ xuất bản sau khi duyệt.
+        <p className="mb-4 rounded-lg border border-line bg-bg px-3 py-2 text-xs text-muted">
+          Dữ liệu được kiểm tra trên máy chủ và lưu thành bản nháp; chỉ xuất bản sau khi duyệt.
         </p>
         {kind === "questions" && <Notice {...sets} retry={sets.reload} />}
         <Notice error={task.error} />
@@ -835,160 +932,220 @@ export function ImportPanel({
             {message}
           </p>
         )}
-        {kind === "questions" && (
-          <div className="my-3 space-y-2 text-sm">
-            <label className="block">
-              Bộ câu hỏi nhận dữ liệu
-              <select
-                aria-label="Bộ câu hỏi nhận dữ liệu"
-                className={`${inputCls} mt-1 max-w-md`}
-                value={selectedSet}
+        <div className={`grid items-start gap-4 ${kind === "questions" || kind === "signs" ? "lg:grid-cols-2" : ""}`}>
+          <section className="min-w-0 rounded-xl border border-line bg-white p-4 sm:p-5">
+            <header className="mb-4 flex items-center gap-3 border-b border-line pb-3">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-semibold text-accent-strong">01</span>
+              <div>
+                <h3 className="text-sm font-semibold text-navy">Nhập tệp dữ liệu</h3>
+                <p className="mt-0.5 text-xs text-muted">CSV, Excel (.xlsx) hoặc JSON</p>
+              </div>
+            </header>
+            {kind === "questions" && (
+              <div className="mb-4 space-y-2">
+                <label className="block text-xs font-medium text-text-secondary">
+                  Bộ câu hỏi nhận dữ liệu
+                  <select
+                    aria-label="Bộ câu hỏi nhận dữ liệu"
+                    className={`${inputCls} mt-1.5 bg-bg text-sm`}
+                    value={selectedSet}
+                    onChange={(e) => {
+                      const nextSet = e.target.value
+                      setQuestionSetId(nextSet)
+                      if (rows.length && nextSet) {
+                        void task.run(async () => {
+                          setPreview(
+                            await api(
+                              "/admin/imports/questions/preview",
+                              send("POST", {
+                                rows,
+                                updateExisting: update,
+                                questionSetId: nextSet,
+                              }),
+                            ),
+                          )
+                        })
+                      }
+                    }}
+                  >
+                    <option value="">Chọn bộ câu hỏi đã tạo</option>
+                    {sets.value?.map((s) => (
+                      <option key={s.set_id} value={s.set_id}>
+                        {s.release_code} / {s.set_name}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+                <p className="text-xs text-muted">
+                  Chưa có bộ?{" "}
+                  <Link className="font-medium text-accent-strong underline underline-offset-2" to="/admin/questions?tab=sets">
+                    Tạo bộ câu hỏi
+                  </Link>
+                </p>
+              </div>
+            )}
+            <FilePicker
+              key={`${kind}-${dataInputVersion}`}
+              title="Chọn tệp dữ liệu"
+              hint="CSV, Excel (.xlsx) hoặc JSON · Tối đa 10 MB"
+              accept=".csv,.xlsx,.json"
+              disabled={task.busy}
+              onChange={(e) => {
+                const file = e.target.files?.[0]
+                if (!file) return
+                setRows([])
+                setPreview([])
+                task.run(async () => {
+                  if (kind === "questions" && !selectedSet)
+                    throw new Error("Chọn bộ câu hỏi trước khi tải tệp câu hỏi.")
+                  if (file.size > 10 * 1024 * 1024)
+                    throw new Error("Tệp dữ liệu tối đa 10 MB.")
+                  let input: unknown
+                  if (file.name.endsWith(".json"))
+                    input = JSON.parse(await file.text())
+                  else if (file.name.endsWith(".xlsx")) {
+                    const { readSheet } = await import("read-excel-file/browser")
+                    input = tableObjects(await readSheet(file))
+                  } else input = tableObjects(parseCsv(await file.text()))
+                  if (!Array.isArray(input))
+                    throw new Error("Cần danh sách dữ liệu.")
+                  input = input.map((row) => normalizeImport(kind, row))
+                  setRows(input as unknown[])
+                  setPreview(
+                    await api(
+                      `/admin/imports/${kind}/preview`,
+                      send("POST", {
+                        rows: input,
+                        updateExisting: update,
+                        ...(kind === "questions" ? { questionSetId: selectedSet } : {}),
+                      }),
+                    ),
+                  )
+                  setMessage("Đã kiểm tra tệp.")
+                })
+              }}
+            />
+            <label className="mt-3 flex cursor-pointer items-center gap-2 text-xs text-text-secondary">
+              <input
+                type="checkbox"
+                className="mt-0.5 accent-accent-strong"
+                checked={update}
+                disabled={task.busy}
                 onChange={(e) => {
-                  const nextSet = e.target.value
-                  setQuestionSetId(nextSet)
-                  if (rows.length && nextSet) {
-                    void task.run(async () => {
+                  const nextUpdate = e.target.checked
+                  setUpdate(nextUpdate)
+                  if (rows.length) {
+                    task.run(async () => {
                       setPreview(
                         await api(
-                          "/admin/imports/questions/preview",
+                          `/admin/imports/${kind}/preview`,
                           send("POST", {
                             rows,
-                            updateExisting: update,
-                            questionSetId: nextSet,
+                            updateExisting: nextUpdate,
+                            ...(kind === "questions" ? { questionSetId: selectedSet } : {}),
                           }),
                         ),
                       )
                     })
                   }
                 }}
-              >
-                <option value="">Chọn bộ câu hỏi đã tạo</option>
-                {sets.value?.map((s) => (
-                  <option key={s.set_id} value={s.set_id}>
-                    {s.release_code} / {s.set_name}
-                  </option>
-                ))}
-              </select>
+              />
+              <span>Cập nhật bản ghi trùng mã (chuyển về bản nháp)</span>
             </label>
-            <p className="text-xs text-muted">
-              Chưa có bộ phù hợp? Mở tab{" "}
-              <Link className="underline" to="/admin/questions?tab=sets">
-                Bộ câu hỏi & Quy tắc thi
-              </Link>{" "}
-              để tạo bộ 250 hoặc 600 câu trước khi nhập.
-            </p>
-          </div>
-        )}
-        <label className="block my-4 text-sm">
-          Tệp CSV, Excel (.xlsx) hoặc JSON
-          <input
-            key={kind}
-            aria-label="Tệp dữ liệu nhập"
-            type="file"
-            accept=".csv,.xlsx,.json"
-            disabled={task.busy}
-            className="block mt-2"
-            onChange={(e) => {
-              const file = e.target.files?.[0]
-              if (!file) return
-              setRows([])
-              setPreview([])
-              task.run(async () => {
-                if (kind === "questions" && !selectedSet)
-                  throw new Error("Chọn bộ câu hỏi trước khi tải tệp câu hỏi.")
-                if (file.size > 10 * 1024 * 1024)
-                  throw new Error("Tệp dữ liệu tối đa 10 MB.")
-                let input: unknown
-                if (file.name.endsWith(".json"))
-                  input = JSON.parse(await file.text())
-                else if (file.name.endsWith(".xlsx")) {
-                  const { readSheet } = await import("read-excel-file/browser")
-                  input = tableObjects(await readSheet(file))
-                } else input = tableObjects(parseCsv(await file.text()))
-                if (!Array.isArray(input))
-                  throw new Error("Cần danh sách dữ liệu.")
-                input = input.map((row) => normalizeImport(kind, row))
-                setRows(input as unknown[])
-                setPreview(
-                  await api(
-                    `/admin/imports/${kind}/preview`,
-                    send("POST", {
-                      rows: input,
-                      updateExisting: update,
-                      ...(kind === "questions" ? { questionSetId: selectedSet } : {}),
-                    }),
-                  ),
-                )
-                setMessage("Đã kiểm tra tệp.")
-              })
-            }}
-          />
-        </label>
-        <label className="text-sm">
-          <input
-            type="checkbox"
-            checked={update}
-            disabled={task.busy}
-            onChange={(e) => {
-              const nextUpdate = e.target.checked
-              setUpdate(nextUpdate)
-              if (rows.length) {
-                task.run(async () => {
-                  setPreview(
-                    await api(
-                      `/admin/imports/${kind}/preview`,
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-3 border-t border-line pt-3">
+              <p className="flex flex-wrap gap-x-3 gap-y-1 text-xs text-muted">
+                <span><strong className="text-emerald-700">{preview.filter((r) => r.valid).length}</strong> hợp lệ</span>
+                <span><strong className={preview.some((r) => !r.valid) ? "text-red-700" : "text-muted"}>{preview.filter((r) => !r.valid).length}</strong> lỗi</span>
+                <span><strong className="text-navy">{preview.filter((r) => r.existing).length}</strong> đã có</span>
+              </p>
+              <Button
+                variant="dark"
+                size="sm"
+                disabled={
+                  task.busy ||
+                  !rows.length ||
+                  preview.some((r) => !r.valid) ||
+                  (kind === "questions" && !selectedSet)
+                }
+                onClick={() =>
+                  task.run(async () => {
+                    const result = await api<{
+                      inserted: number
+                      updated: number
+                      skipped: number
+                    }>(
+                      `/admin/imports/${kind}/confirm`,
                       send("POST", {
                         rows,
-                        updateExisting: nextUpdate,
+                        updateExisting: update,
                         ...(kind === "questions" ? { questionSetId: selectedSet } : {}),
                       }),
-                    ),
-                  )
-                })
-              }
-            }}
-          />{" "}
-          Cập nhật bản ghi đã tồn tại (quay về nháp)
-        </label>
-        <p className="my-3 text-sm">
-          {preview.filter((r) => r.valid).length} dòng hợp lệ ·{" "}
-          {preview.filter((r) => !r.valid).length} dòng lỗi ·{" "}
-          {preview.filter((r) => r.existing).length} dòng đã tồn tại
-        </p>
-        <Button
-          variant="dark"
-          disabled={
-            task.busy ||
-            !rows.length ||
-            preview.some((r) => !r.valid) ||
-            (kind === "questions" && !selectedSet)
-          }
-          onClick={() =>
-            task.run(async () => {
-              const result = await api<{
-                inserted: number
-                updated: number
-                skipped: number
-              }>(
-                `/admin/imports/${kind}/confirm`,
-                send("POST", {
-                  rows,
-                  updateExisting: update,
-                  ...(kind === "questions" ? { questionSetId: selectedSet } : {}),
-                }),
-              )
-              setRows([])
-              setPreview([])
-              setMessage(
-                `Đã thêm ${result.inserted}, cập nhật ${result.updated}, bỏ qua ${result.skipped} bản ghi.`,
-              )
-              notify("Đã nhập bản nháp; chưa xuất bản")
-              onImported?.()
-            })
-          }
-        >
-          Xác nhận nhập bản nháp
-        </Button>
+                    )
+                    setRows([])
+                    setPreview([])
+                    setDataInputVersion((version) => version + 1)
+                    setMessage(
+                      `Đã thêm ${result.inserted}, cập nhật ${result.updated}, bỏ qua ${result.skipped} bản ghi.`,
+                    )
+                    notify("Đã nhập bản nháp; chưa xuất bản")
+                    onImported?.()
+                  })
+                }
+              >
+                Nhập bản nháp
+              </Button>
+            </div>
+          </section>
+          {(kind === "questions" || kind === "signs") && (
+            <section className="min-w-0 rounded-xl border border-line bg-white p-4 sm:p-5">
+              <header className="mb-4 flex items-center gap-3 border-b border-line pb-3">
+                <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-selected text-xs font-semibold text-accent-strong">02</span>
+                <div>
+                  <h3 className="text-sm font-semibold text-navy">Ghép ảnh qua ZIP</h3>
+                  <p className="mt-0.5 text-xs text-muted">Chọn tệp để tải lên và ghép ảnh</p>
+                </div>
+              </header>
+              <p className="mb-4 text-xs leading-5 text-muted">
+                Tên ảnh theo mã: {kind === "questions" ? "Q301.png" : "DP.127.png"}. ZIP tối đa 20 MB; ảnh PNG/JPEG tối đa 5 MB mỗi tệp.
+              </p>
+              <FilePicker
+                key={`${kind}-${zipInputVersion}`}
+                title="Chọn ZIP ảnh"
+                hint="ZIP · Tối đa 20 MB mỗi tệp"
+                accept=".zip"
+                multiple
+                disabled={task.busy}
+                onChange={(e) => {
+                  const files = Array.from(e.target.files || [])
+                  if (!files.length) return
+                  task.run(async () => {
+                    if (kind === "questions" && !selectedSet)
+                      throw new Error("Chọn bộ câu hỏi trước khi ghép ảnh câu hỏi.")
+                    const messages = []
+                    const zipUrl =
+                      kind === "questions"
+                        ? `/admin/questions/images-zip?questionSetId=${encodeURIComponent(selectedSet)}`
+                        : `/admin/${kind}/images-zip`
+                    for (const file of files) {
+                      const body = new FormData()
+                      body.append("file", file)
+                      const result = await api<{
+                        matched: string[]
+                        unmatched: string[]
+                      }>(zipUrl, { method: "POST", body })
+                      messages.push(
+                        `${file.name}: ghép ${result.matched.length} ảnh; chưa khớp ${result.unmatched.join(", ") || "không có"}`,
+                      )
+                    }
+                    setZipInputVersion((version) => version + 1)
+                    setMessage(messages.join("\n"))
+                    onImported?.()
+                  })
+                }}
+              />
+            </section>
+          )}
+        </div>
         {preview.length > 0 && (
           <Table>
             <thead>
@@ -1014,49 +1171,6 @@ export function ImportPanel({
               ))}
             </tbody>
           </Table>
-        )}
-        {(kind === "questions" || kind === "signs") && (
-          <section className="mt-6 border-t border-line pt-4">
-            <h3 className="text-sm font-semibold text-navy">Ghép ảnh qua ZIP</h3>
-            <p className="text-xs text-muted my-2">
-              Nhập dữ liệu trước, sau đó tải ZIP. Tên ảnh theo mã:{" "}
-              {kind === "questions" ? "Q301.png" : "DP.127.png"}. Mỗi ZIP tối đa
-              20 MB; PNG/JPEG, mỗi ảnh tối đa 5 MB.
-            </p>
-            <input
-              aria-label="ZIP ảnh"
-              type="file"
-              accept=".zip"
-              multiple
-              disabled={task.busy}
-              onChange={(e) => {
-                const files = Array.from(e.target.files || [])
-                if (!files.length) return
-                task.run(async () => {
-                  if (kind === "questions" && !selectedSet)
-                    throw new Error("Chọn bộ câu hỏi trước khi ghép ảnh câu hỏi.")
-                  const messages = []
-                  const zipUrl =
-                    kind === "questions"
-                      ? `/admin/questions/images-zip?questionSetId=${encodeURIComponent(selectedSet)}`
-                      : `/admin/${kind}/images-zip`
-                  for (const file of files) {
-                    const body = new FormData()
-                    body.append("file", file)
-                    const result = await api<{
-                      matched: string[]
-                      unmatched: string[]
-                    }>(zipUrl, { method: "POST", body })
-                    messages.push(
-                      `${file.name}: ghép ${result.matched.length} ảnh; chưa khớp ${result.unmatched.join(", ") || "không có"}`,
-                    )
-                  }
-                  setMessage(messages.join("\n"))
-                  onImported?.()
-                })
-              }}
-            />
-          </section>
         )}
       </div>
     </Card>

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.*;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,10 +30,58 @@ public class ChatService {
     }
     public ChatService(ChatRepository chats,ContentRepository contents,ContentService data,KagClient kag,RateLimit rate,KagSchema schema,LegalUnitService units) { this.chats=chats; this.contents=contents; this.data=data; this.kag=kag; this.rate=rate; this.schema=schema; this.units=units; }
     private ChatMessage start(UUID owner,ChatRequest input) {
-        rate.check("chat:"+owner,20,60); var chat=new ChatMessage(); chat.ownerId=owner; chat.question=input.message(); chat.state="PROCESSING"; return chats.save(chat);
+        var chat=new ChatMessage(); chat.ownerId=owner; chat.question=input.message(); chat.conversationId=input.conversationId(); chat.state="PROCESSING"; return chats.save(chat);
     }
-    private Map<String,Object> request(UUID owner,ChatRequest input) { return Map.of("user_id",owner,"message",input.message(),"context_id",input.contextId()==null?"":input.contextId(),"schema_contract",schema.identity()); }
+    private record Context(ChatMessage root,List<ChatMessage> earlier,List<ChatMessage> recent) {}
+
+    private Context context(UUID owner,UUID id) {
+        if(id==null) return null;
+        var root=chats.findByIdAndOwnerIdAndConversationIdIsNull(id,owner).orElseThrow(ApiErrors::missing);
+        var recent=new ArrayList<>(chats.recentTurns(owner,id,PageRequest.of(0,4)));
+        Collections.reverse(recent);
+        var cursor=root.contextThrough==null?root:chats.findById(root.contextThrough).orElseThrow();
+        var candidates=new ArrayList<ChatMessage>();
+        if(root.contextThrough==null) candidates.add(root);
+        candidates.addAll(chats.turnsAfter(owner,id,cursor.createdAt,cursor.id,PageRequest.of(0,4)));
+        var earlier=new ArrayList<ChatMessage>();
+        for(var turn:candidates) {
+            if(earlier.size()==4||turn.state.equals("PROCESSING")||recent.stream().anyMatch(item->item.id.equals(turn.id))) break;
+            earlier.add(turn);
+        }
+        return new Context(root,earlier,recent);
+    }
+
+    private Map<String,String> contextTurn(ChatMessage turn) {
+        return Map.of("question",clip(turn.question),"answer",
+            ("ANSWERED".equals(turn.state)||"CLARIFY".equals(turn.state))&&turn.answer!=null?clip(turn.answer):"");
+    }
+
+    private String clip(String text) {
+        if(text.length()<=1000) return text;
+        return text.substring(0,Character.isHighSurrogate(text.charAt(999))?999:1000);
+    }
+
+    private JsonNode answer(ChatMessage chat,Context context) {
+        String question=chat.question;
+        if(context!=null&&!context.recent().isEmpty()) {
+            var root=context.root();
+            var earlier=context.earlier().stream().map(this::contextTurn).toList();
+            var recent=context.recent().stream().map(this::contextTurn).toList();
+            var prepared=kag.chatContext(request(chat.ownerId,question),Objects.toString(root.contextSummary,""),earlier,recent);
+            if(!earlier.isEmpty()) chats.updateContext(chat.ownerId,root.id,root.contextThrough,context.earlier().getLast().id,prepared.summary());
+            if(!prepared.clarification().isEmpty())
+                return data.mapper().createObjectNode().put("state","CLARIFY").put("clarification",prepared.clarification());
+            question=prepared.question();
+        }
+        return kag.query(request(chat.ownerId,question),chat.id);
+    }
+    private Map<String,Object> request(UUID owner,String question) { return Map.of("user_id",owner,"message",question,"context_id","","schema_contract",schema.identity()); }
     private void complete(ChatMessage chat,JsonNode response) {
+        if(response!=null&&response.size()==2&&response.path("state").asText().equals("CLARIFY")&&
+                response.path("clarification").isTextual()&&!response.path("clarification").asText().isBlank()&&
+                response.path("clarification").asText().length()<=500) {
+            chat.state="CLARIFY"; chat.answer=response.path("clarification").asText(); chats.save(chat); return;
+        }
         if(response!=null&&response.isObject()&&response.size()==1&&response.path("state").isTextual()&&response.path("state").asText().equals("KAG_ABSTAINED")) {
             chat.state="KAG_ABSTAINED"; chats.save(chat); return;
         }
@@ -53,15 +102,16 @@ public class ChatService {
         chat.answer=response.path("answer").asText(); chat.citations=data.write(response.path("citations")); chat.state="ANSWERED"; chats.save(chat);
     }
     private Map<String,Object> view(ChatMessage c) {
-        return Map.of("id",c.id,"question",c.question,"answer",c.answer==null?"":c.answer,"citations",parse(c.citations),"state",c.state,"createdAt",c.createdAt);
+        return Map.of("id",c.id,"conversationId",c.conversationId==null?c.id:c.conversationId,"question",c.question,"answer",c.answer==null?"":c.answer,"citations",parse(c.citations),"state",c.state,"createdAt",c.createdAt);
     }
     private JsonNode parse(String value) { try { return data.mapper().readTree(value); } catch(Exception e) { throw new IllegalStateException(e); } }
     public StreamingResponseBody progress(UUID owner,ChatRequest input) {
         if(!streams.tryAcquire()) throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,"Đang có nhiều truy vấn, vui lòng thử lại");
         Pending job;
         try {
-            var chat=start(owner,input); var payload=request(owner,input);
-            job=new Pending(chat,()->kag.query(payload,chat.id)); pending.put(chat.id,job);
+            rate.check("chat:"+owner,20,60);
+            var context=context(owner,input.conversationId()); var chat=start(owner,input);
+            job=new Pending(chat,()->answer(chat,context)); pending.put(chat.id,job);
         } catch(RuntimeException e) {streams.release();throw e;}
         return output -> {
             Thread.startVirtualThread(()->{
@@ -128,5 +178,8 @@ public class ChatService {
         try { output.write(("event: "+event+"\ndata: "+data.mapper().writeValueAsString(value)+"\n\n").getBytes(java.nio.charset.StandardCharsets.UTF_8)); output.flush(); }
         catch(IOException e) { throw new UncheckedIOException(e); }
     }
-    public List<Map<String,Object>> history(UUID owner) { return chats.findTop50ByOwnerIdOrderByCreatedAtDesc(owner).stream().map(this::view).toList(); }
+    public List<Map<String,Object>> history(UUID owner) {
+        var ids=chats.recentConversationIds(owner,PageRequest.of(0,50));
+        return ids.isEmpty()?List.of():chats.conversationHistory(owner,ids).stream().map(this::view).toList();
+    }
 }

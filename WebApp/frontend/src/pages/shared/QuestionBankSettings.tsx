@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 import { api, send } from "../../api"
 
@@ -31,6 +31,8 @@ export type QuestionSet = {
 
   rule_count: number
 }
+
+export type QuestionBankTab = "sets" | "chapters" | "rules"
 
 export type ExamRule = {
   rule_id: string
@@ -75,11 +77,30 @@ type RuleForm = {
 
 const emptyRule = (): RuleForm => ({ setId: "", license: "", validFrom: "", validTo: "", totalQuestions: "", durationMinutes: "", minimumCorrect: "", criticalSlots: "", failOnCritical: true, quotas: Array.from({length:6},(_,i)=>({chapter:i+1,value:""})) })
 
-export default function QuestionBankSettings({ embedded = false }: { embedded?: boolean } = {}) {
-  const [tab, setTab] = useState('sets')
+export default function QuestionBankSettings({
+  embedded = false,
+  tab: selectedTab,
+  onTabChange,
+}: {
+  embedded?: boolean
+  tab?: QuestionBankTab
+  onTabChange?: (tab: QuestionBankTab) => void
+} = {}) {
+  const [localTab, setLocalTab] = useState<QuestionBankTab>('sets')
   const sets = useData<QuestionSet[]>("/admin/questions/sets"),
     rules = useData<ExamRule[]>("/admin/questions/rules"),
     task = useTask()
+  const tab = selectedTab ?? localTab
+
+  useEffect(() => {
+    if (embedded) task.clearError()
+  }, [embedded, selectedTab])
+
+  function changeTab(nextTab: QuestionBankTab) {
+    task.clearError()
+    if (onTabChange) onTabChange(nextTab)
+    else setLocalTab(nextTab)
+  }
 
   const [dialog, setDialog] = useState<"set" | "rule" | null>(null)
 
@@ -143,7 +164,18 @@ export default function QuestionBankSettings({ embedded = false }: { embedded?: 
   const content = (
     <>
       <div className="space-y-6">
-        <FilterTabs label="Quản lý ngân hàng câu hỏi" value={tab} onChange={value=>{task.clearError();setTab(value)}} items={[{value:'sets',label:'Bộ câu hỏi'},{value:'chapters',label:'Chương'},{value:'rules',label:'Quy tắc đề thi'}]}/>
+        {!embedded && (
+          <FilterTabs
+            label="Quản lý ngân hàng câu hỏi"
+            value={tab}
+            onChange={changeTab}
+            items={[
+              { value: 'sets', label: 'Bộ câu hỏi' },
+              { value: 'chapters', label: 'Chương' },
+              { value: 'rules', label: 'Quy tắc đề thi' },
+            ]}
+          />
+        )}
         {tab==='chapters'&&<><Notice {...sets} retry={sets.reload}/><ChapterSettings sets={sets.value||[]}/></>}
         <Notice error={!dialog && !endingRule && !pendingDelete ? task.error : undefined} />
         {tab==='sets'&&<section aria-labelledby="created-sets-heading" className="space-y-4">

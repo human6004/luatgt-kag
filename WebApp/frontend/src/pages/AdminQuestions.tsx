@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { api, send, type ContentRecord } from '../api'
 import { useAdmin } from '../admin/store'
-import { Badge, Button, Card, Field, Modal, Page, Td, Th, Toggle, inputCls } from '../admin/ui'
+import { Badge, Button, Card, Field, FilePicker, Modal, Page, Td, Th, Toggle, inputCls } from '../admin/ui'
 import { ImportPanel } from './shared/AdminPages'
-import QuestionBankSettings, { type QuestionSet } from './shared/QuestionBankSettings'
+import QuestionBankSettings, { type QuestionBankTab, type QuestionSet } from './shared/QuestionBankSettings'
 import { Asset, Notice, useData, useTask, saveBlob } from './shared/shared'
 import { chapterNames as chapters } from './shared/import-normalization'
 
@@ -41,7 +41,11 @@ export default function AdminQuestions() {
   const data = useData<ContentRecord[]>('/admin/questions')
   const sets = useData<QuestionSet[]>('/admin/questions/sets')
 
-  const tab: 'questions' | 'sets' = params.get('tab') === 'sets' ? 'sets' : 'questions'
+  const rawTab = params.get('tab')
+  const tab: 'questions' | QuestionBankTab =
+    rawTab === 'sets' || rawTab === 'chapters' || rawTab === 'rules'
+      ? rawTab
+      : 'questions'
   const urlQ = params.get('q') ?? ''
   const [q, setQ] = useState(urlQ)
   const chapter = params.get('chapter') ?? 'all'
@@ -96,9 +100,9 @@ export default function AdminQuestions() {
     )
   }
 
-  function switchTab(nextTab: 'questions' | 'sets') {
+  function switchTab(nextTab: 'questions' | QuestionBankTab) {
     const next = new URLSearchParams()
-    if (nextTab === 'sets') next.set('tab', 'sets')
+    if (nextTab !== 'questions') next.set('tab', nextTab)
     setParams(next)
   }
 
@@ -210,7 +214,7 @@ export default function AdminQuestions() {
     <Page
       title="Câu hỏi thi"
       subtitle={
-        tab === 'sets'
+        tab !== 'questions'
           ? 'Quản lý bộ nhận dữ liệu và cấu hình đề thi theo từng hạng giấy phép lái xe.'
           : `${data.value ? qbank.length : '—'} câu · ${data.value ? qbank.filter((x) => x.critical).length : '—'} câu điểm liệt`
       }
@@ -228,33 +232,34 @@ export default function AdminQuestions() {
         ) : undefined
       }
     >
-      <div className="flex flex-wrap gap-6 border-b border-line mb-6" role="tablist" aria-label="Quản lý câu hỏi và bộ đề">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={tab === 'questions'}
-          onClick={() => switchTab('questions')}
-          className={`pb-3 text-sm cursor-pointer border-b-2 transition-colors ${
-            tab === 'questions' ? 'border-navy text-navy font-semibold' : 'border-transparent text-muted hover:text-navy'
-          }`}
-        >
-          Ngân hàng câu hỏi ({data.value ? qbank.length : '—'})
-        </button>
-        <button
-          type="button"
-          role="tab"
-          aria-selected={tab === 'sets'}
-          onClick={() => switchTab('sets')}
-          className={`pb-3 text-sm cursor-pointer border-b-2 transition-colors ${
-            tab === 'sets' ? 'border-navy text-navy font-semibold' : 'border-transparent text-muted hover:text-navy'
-          }`}
-        >
-          Bộ câu hỏi & Quy tắc thi ({sets.value ? sets.value.length : '—'})
-        </button>
+      <div
+        className="mb-6 flex min-w-0 max-w-full items-center gap-5 overflow-x-auto border-b border-line"
+        role="tablist"
+        aria-label="Quản lý câu hỏi và bộ đề"
+      >
+        {([
+          { value: 'questions', label: `Ngân hàng câu hỏi (${data.value ? qbank.length : '—'})` },
+          { value: 'sets', label: `Bộ câu hỏi (${sets.value ? sets.value.length : '—'})` },
+          { value: 'chapters', label: 'Chương' },
+          { value: 'rules', label: 'Quy tắc đề thi' },
+        ] as const).map(({ value, label }) => (
+          <button
+            key={value}
+            type="button"
+            role="tab"
+            aria-selected={tab === value}
+            onClick={() => switchTab(value)}
+            className={`min-h-10 shrink-0 whitespace-nowrap border-b-2 py-2 text-sm font-medium transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-accent-strong ${
+              tab === value ? 'border-navy text-navy font-semibold' : 'border-transparent text-muted hover:text-navy'
+            }`}
+          >
+            {label}
+          </button>
+        ))}
       </div>
 
-      {tab === 'sets' ? (
-        <QuestionBankSettings embedded />
+      {tab !== 'questions' ? (
+        <QuestionBankSettings embedded tab={tab} onTabChange={switchTab} />
       ) : (
         <>
           <Notice {...data} retry={data.reload} />
@@ -539,23 +544,22 @@ export default function AdminQuestions() {
                       {record.published ? 'Đã xuất bản' : 'Bản nháp'} · Version {record.version}
                     </p>
                     {!!record.data.imageKey && <Asset id={record.id} path={`/admin/content/${record.id}/media`} alt="Ảnh câu hỏi" />}
-                    <Field label="Ảnh nguồn">
-                      <input
-                        type="file"
-                        accept=".png,.jpg,.jpeg"
-                        disabled={task.busy}
-                        onChange={(e) => {
-                          const file = e.target.files?.[0]
-                          if (!file) return
-                          void task.run(async () => {
-                            const body = new FormData()
-                            body.append('file', file)
-                            await api(`/admin/content/${record.id}/media`, { method: 'POST', body })
-                            data.reload()
-                          })
-                        }}
-                      />
-                    </Field>
+                    <FilePicker
+                      title="Tải ảnh câu hỏi"
+                      hint="PNG hoặc JPEG · Tối đa 5 MB"
+                      accept=".png,.jpg,.jpeg"
+                      disabled={task.busy}
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (!file) return
+                        void task.run(async () => {
+                          const body = new FormData()
+                          body.append('file', file)
+                          await api(`/admin/content/${record.id}/media`, { method: 'POST', body })
+                          data.reload()
+                        })
+                      }}
+                    />
                     <Button
                       disabled={task.busy}
                       onClick={() => void task.run(async () => setHistory(await api(`/admin/content/${record.id}/history`)))}

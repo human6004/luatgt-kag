@@ -12,21 +12,39 @@ services:
       MYSQL_PASSWORD: ${DB_PASSWORD:?Set credentials in .env}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set credentials in .env}
       TZ: UTC
-    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_0900_bin", "--default-time-zone=+00:00",
-      "--performance-schema=OFF", "--innodb-buffer-pool-size=64M", "--innodb-log-buffer-size=16M"]
+    command:
+      [
+        "--character-set-server=utf8mb4",
+        "--collation-server=utf8mb4_0900_bin",
+        "--default-time-zone=+00:00",
+        "--performance-schema=OFF",
+        "--innodb-buffer-pool-size=64M",
+        "--innodb-log-buffer-size=16M",
+      ]
     mem_limit: 384m
     memswap_limit: 384m
     ports: ["127.0.0.1:${MYSQL_PORT:-3306}:3306"]
     volumes: ["kag-data:/var/lib/mysql"]
     healthcheck:
-      test: ["CMD-SHELL", "MYSQL_PWD=$$MYSQL_PASSWORD mysql -h 127.0.0.1 -u luatgt luatgt -e 'SELECT 1'"]
+      test:
+        [
+          "CMD-SHELL",
+          "MYSQL_PWD=$$MYSQL_PASSWORD mysql -h 127.0.0.1 -u luatgt luatgt -e 'SELECT 1'",
+        ]
       interval: 5s
       timeout: 3s
       retries: 20
       start_period: 60s
   redis:
     image: redis:7.4-bookworm
-    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:?Set credentials in .env}"]
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--requirepass",
+        "${REDIS_PASSWORD:?Set credentials in .env}",
+      ]
     environment:
       REDISCLI_AUTH: ${REDIS_PASSWORD:?Set credentials in .env}
     mem_limit: 128m
@@ -47,13 +65,19 @@ services:
     environment:
       MINIO_ROOT_USER: ${MINIO_USER:-luatgt-local}
       MINIO_ROOT_PASSWORD: ${MINIO_PASSWORD:?Set credentials in .env}
-    ports: ["127.0.0.1:${MINIO_PORT:-9000}:9000", "127.0.0.1:${MINIO_CONSOLE_PORT:-9001}:9001"]
+    ports:
+      [
+        "127.0.0.1:${MINIO_PORT:-9000}:9000",
+        "127.0.0.1:${MINIO_CONSOLE_PORT:-9001}:9001",
+      ]
     volumes: ["minio-data:/data"]
   backend:
     build:
       context: .
       dockerfile: docker/backend/Dockerfile
     ports: ["127.0.0.1:${BACKEND_PORT:-8080}:8080"]
+    volumes:
+      - ./data/processed/signs/dataset_signs:/app/data/processed/signs/dataset_signs:ro
     mem_limit: 1024m
     memswap_limit: 1024m
     environment:
@@ -82,14 +106,23 @@ services:
       KAG_QUERY_TIMEOUT_SECONDS: ${KAG_QUERY_TIMEOUT_SECONDS:-180}
       KAG_INSPECTION_TIMEOUT_SECONDS: ${KAG_INSPECTION_TIMEOUT_SECONDS:-2}
       TZ: Asia/Ho_Chi_Minh
-    secrets: [kag_query_token, kag_inspect_token, builder_token, credentials_write_token, provider_test_token, config_apply_token, benchmark_write_token]
+    secrets:
+      [
+        kag_query_token,
+        kag_inspect_token,
+        builder_token,
+        credentials_write_token,
+        provider_test_token,
+        config_apply_token,
+        benchmark_write_token,
+      ]
     networks: [default, readbus]
     depends_on:
-      mysql: {condition: service_healthy}
-      redis: {condition: service_healthy}
-      minio: {condition: service_started}
-      kag-api: {condition: service_healthy}
-      kag-builder: {condition: service_healthy}
+      mysql: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      minio: { condition: service_started }
+      kag-api: { condition: service_healthy }
+      kag-builder: { condition: service_healthy }
   frontend:
     build:
       context: ./WebApp/frontend

@@ -19,6 +19,6 @@ public class ContentController {
     @PostMapping("/admin/imports/{kind}/confirm") Map<String,Integer> confirm(@PathVariable String kind,@Valid @RequestBody ImportRequest input) { return service.confirm(kind,input); }
     @PutMapping("/admin/content/{id}") Map<String,Object> edit(@PathVariable UUID id,@Valid @RequestBody ContentChangeRequest input) { return service.edit(id,input); }
     @PostMapping("/admin/content/{id}/publication") Map<String,Object> publish(@PathVariable UUID id,@Valid @RequestBody PublicationRequest input) { return service.publish(id,input); }
-    @PostMapping("/admin/questions/publication-batch") void batch(@Valid @RequestBody BatchPublicationRequest input) { service.batchPublication(input); }
+    @PostMapping("/admin/{kind:questions|signs}/publication-batch") void batch(@PathVariable String kind,@Valid @RequestBody BatchPublicationRequest input) { service.batchPublication(kind,input); }
     @DeleteMapping("/admin/questions/{id}") void deleteQuestion(@PathVariable UUID id,@RequestParam long version) { service.deleteQuestion(id,version); }
 }

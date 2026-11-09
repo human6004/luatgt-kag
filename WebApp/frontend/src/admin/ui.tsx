@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 export function Page({ title, subtitle, actions, children }: { title: string; subtitle?: string; actions?: React.ReactNode; children: React.ReactNode }) {
@@ -83,6 +83,41 @@ export function EditIconButton({ label = 'Chỉnh sửa', title = label, disable
         <path d="m13 6 5 5" />
       </svg>
     </button>
+  )
+}
+
+export function FilePicker({ title, hint, accept, multiple, disabled, onChange }: {
+  title: string
+  hint: string
+  accept: string
+  multiple?: boolean
+  disabled?: boolean
+  onChange: React.ChangeEventHandler<HTMLInputElement>
+}) {
+  const [selection, setSelection] = useState('')
+  return (
+    <label className={`relative flex min-w-0 flex-col items-center gap-2 rounded-xl border border-dashed border-accent-strong/45 bg-bg px-4 py-5 text-center focus-within:ring-2 focus-within:ring-accent-strong ${disabled ? 'cursor-not-allowed opacity-60' : 'cursor-pointer hover:bg-sidebar'}`}>
+      <span className="text-sm font-medium text-navy">{title}</span>
+      <span className="text-xs text-muted">{hint}</span>
+      <span className="mt-1 rounded-md bg-accent px-4 py-2 text-sm font-semibold text-navy">
+        {multiple ? 'Chọn các tệp' : 'Chọn tệp'}
+      </span>
+      <input
+        type="file"
+        className="sr-only"
+        aria-label={title}
+        accept={accept}
+        multiple={multiple}
+        disabled={disabled}
+        onChange={(event) => {
+          const input = event.currentTarget
+          onChange(event)
+          const files = input.files
+          setSelection(files?.length === 1 ? files[0].name : files?.length ? `${files.length} tệp đã chọn` : '')
+        }}
+      />
+      {selection && <span className="max-w-full break-all text-xs text-muted">{selection}</span>}
+    </label>
   )
 }
 

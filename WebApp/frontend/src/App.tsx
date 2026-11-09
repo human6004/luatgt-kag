@@ -6,6 +6,7 @@ import LoginPage from './pages/LoginPage'
 import { AuthProvider, RequireRole, SessionHome } from './auth'
 import Chat from './pages/ChatPage'
 import Study from './pages/ChapterStudyPage'
+import ChapterPractice from './pages/ChapterPracticePage'
 import Exam from './pages/ExamPage'
 import Signs from './pages/SignLibraryPage'
 import Dashboard from './pages/AdminDashboard'
@@ -68,6 +69,7 @@ export default function App() {
               <Route element={<UserLayout />}>
                 <Route path="/bien-bao" element={<Signs />} />
                 <Route path="/on-thi" element={<Study />} />
+                <Route path="/on-thi/luyen-tap/:chapterId" element={<ChapterPractice />} />
                 <Route path="/tien-do" element={<RedirectWithParams to="/on-thi" />} />
                 <Route path="/exam" element={<Exam />} />
               </Route>

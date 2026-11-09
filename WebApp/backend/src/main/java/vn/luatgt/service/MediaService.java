@@ -1,6 +1,7 @@
 package vn.luatgt.service;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.zip.*;
 import javax.imageio.ImageIO;
@@ -15,7 +16,8 @@ import vn.luatgt.repository.ContentRepository;
 @Service
 public class MediaService {
     private final ContentRepository contents; private final ContentService data; private final ObjectStorage storage;
-    public MediaService(ContentRepository contents,ContentService data,ObjectStorage storage) { this.contents=contents; this.data=data; this.storage=storage; }
+    private final SignDatasetImages signImages;
+    public MediaService(ContentRepository contents,ContentService data,ObjectStorage storage,SignDatasetImages signImages) { this.contents=contents; this.data=data; this.storage=storage; this.signImages=signImages; }
     public record Download(byte[] bytes,String mime) {}
     private String imageMime(byte[] bytes) {
         if(bytes.length>5*1024*1024) throw ApiErrors.bad("Ảnh vượt 5 MB");
@@ -100,12 +102,16 @@ public class MediaService {
         if(count==0) throw ApiErrors.bad("ZIP trống hoặc không hợp lệ");
         assets.forEach(this::attach); contents.flush(); return Map.of("matched",matched,"unmatched",unmatched,"kept",kept);
     }
-    public Download download(UUID id,boolean canReadDrafts) {
+    public Download download(UUID id,boolean canReadDrafts) throws IOException {
         var c=contents.findById(id).orElseThrow(ApiErrors::missing); var n=data.read(c);
         if(!canReadDrafts&&(!c.published||!data.isEffective(c))) throw ApiErrors.missing();
         if(!canReadDrafts&&c.kind.equals("signs")&&!n.path("image_status").asText().equals("verified"))throw ApiErrors.missing();
         String key=c.kind.equals("documents")?"fileKey":"imageKey", mime=c.kind.equals("documents")?"fileMime":"imageMime";
-        if(!n.hasNonNull(key)) throw ApiErrors.missing();
+        if(!n.hasNonNull(key)) {
+            var path=c.kind.equals("signs")?signImages.find(n):null;
+            if(path==null) throw ApiErrors.missing();
+            return new Download(Files.readAllBytes(path),"image/svg+xml");
+        }
         return new Download(storage.get(n.path(key).asText()),n.path(mime).asText("application/octet-stream"));
     }
 }

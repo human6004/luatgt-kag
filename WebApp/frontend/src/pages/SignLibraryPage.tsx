@@ -21,7 +21,7 @@ export interface SignItem {
     demerit?: string
     clause: string
   }[]
-  imageKey?: string
+  hasImage: boolean
   source?: Record<string, unknown>
 }
 
@@ -41,7 +41,7 @@ export default function SignLibraryPage() {
         meaning: String(r.data.meaning || ''),
         applicableCases: String(r.data.applicableCases || 'Chưa có thông tin từ backend'),
         relatedViolations: [],
-        imageKey: r.data.image_status === 'verified' && r.data.imageKey ? String(r.data.imageKey) : undefined,
+        hasImage: r.data.image_status === 'verified' && Boolean(r.data.imageKey || r.data.hasDatasetImage),
         source: r.data,
       })),
     [data.value],
@@ -179,7 +179,7 @@ export default function SignLibraryPage() {
             >
               <div>
                 <div className="w-24 h-24 mx-auto mb-4 p-2 bg-bg rounded-xl border border-selected flex items-center justify-center group-hover:scale-105 transition-transform">
-                  {sign.imageKey ? (
+                  {sign.hasImage ? (
                     <Asset id={sign.id} alt={sign.name} className="h-full w-full object-contain" />
                   ) : (
                     <p className="text-center text-xs text-muted">Chưa có ảnh nguồn</p>
@@ -239,7 +239,7 @@ export default function SignLibraryPage() {
             <div className="p-6 max-h-[75vh] overflow-y-auto space-y-6">
               <div className="flex flex-col sm:flex-row gap-5 items-start bg-surface p-4 rounded-xl border border-line">
                 <div className="w-28 h-28 shrink-0 mx-auto sm:mx-0 p-3 bg-bg rounded-xl border border-selected flex items-center justify-center">
-                  {selectedSign.imageKey ? (
+                  {selectedSign.hasImage ? (
                     <Asset id={selectedSign.id} alt={selectedSign.name} className="h-full w-full object-contain" />
                   ) : (
                     <p className="text-center text-xs text-muted">Chưa có ảnh nguồn</p>

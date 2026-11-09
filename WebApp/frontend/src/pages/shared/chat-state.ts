@@ -4,18 +4,21 @@ type Citation = { doc_id: string; unit_id: string | null; sign_id?: string | nul
   contract_version: string; release_id: string; source_snapshot_id: string; entity_type: string; entity_id: string;
   text: string; metadata: Record<string, unknown>; document_metadata: Record<string, unknown>
 } }
-type ChatRecord = { id: string; question: string; answer: string; state: string; citations: Citation[] }
-type ChatState = { rows: ChatRecord[]; loading: boolean; error: string; busy: boolean; stopping: boolean; currentId?: string; requestError: string; observed: 'idle' | 'answered' | 'abstained' | 'unavailable' | 'offline' | 'error' | 'cancelled' }
+type ChatRecord = { id: string; conversationId?: string; question: string; answer: string; state: string; citations: Citation[] }
+type ChatState = { rows: ChatRecord[]; loading: boolean; error: string; busy: boolean; stopping: boolean; currentId?: string; requestError: string; observed: 'idle' | 'answered' | 'clarify' | 'abstained' | 'unavailable' | 'offline' | 'error' | 'cancelled' }
 const unavailableMessage = 'Dịch vụ tra cứu pháp luật hiện đang gặp sự cố hoặc chưa sẵn sàng. Vui lòng thử lại sau.'
 
 function record(value: unknown): value is ChatRecord {
   if (!value || typeof value !== 'object') return false
   const row = value as ChatRecord
-  return typeof row.id === 'string' && !!row.id && typeof row.question === 'string' && typeof row.answer === 'string' && typeof row.state === 'string' && Array.isArray(row.citations)
+  return typeof row.id === 'string' && !!row.id &&
+    (row.conversationId === undefined || (typeof row.conversationId === 'string' && !!row.conversationId)) &&
+    typeof row.question === 'string' && typeof row.answer === 'string' && typeof row.state === 'string' && Array.isArray(row.citations)
 }
 
 export function chatView(row: ChatRecord) {
   const empty = { answer: '', citations: [] as Citation[] }
+  if (row.state === 'CLARIFY') return { status: 'Cần làm rõ câu hỏi', ...empty, answer: row.answer.trim().length <= 500 ? row.answer : '' }
   if (row.state === 'KAG_ABSTAINED') return { status: 'Hiện tôi chưa tìm được đủ căn cứ pháp lý được xác minh để trả lời chính xác câu hỏi này.', ...empty }
   if (row.state === 'UNAVAILABLE') return { status: unavailableMessage, ...empty }
   if (row.state === 'CANCELLED') return { status: 'Đã dừng trả lời', ...empty }
@@ -78,8 +81,8 @@ export function createChat() {
     if (current !== operation) return
     const view = chatView(row)
     if (row.state === 'ANSWERED' && !view.answer) throw new ApiError('Invalid chat response', 502)
-    update({ rows: [row, ...state.rows.filter(old => old.id !== row.id)].slice(0, 50), currentId: row.id,
-      ...(row.state === 'PROCESSING' ? {} : { observed: view.answer ? 'answered' : row.state === 'KAG_ABSTAINED' ? 'abstained' : row.state === 'CANCELLED' ? 'cancelled' : 'unavailable', requestError: row.state === 'UNAVAILABLE' ? unavailableMessage : '' }) })
+    update({ rows: [row, ...state.rows.filter(old => old.id !== row.id)], currentId: row.conversationId ?? row.id,
+      ...(row.state === 'PROCESSING' ? {} : { observed: row.state === 'CLARIFY' ? 'clarify' : view.answer ? 'answered' : row.state === 'KAG_ABSTAINED' ? 'abstained' : row.state === 'CANCELLED' ? 'cancelled' : 'unavailable', requestError: row.state === 'UNAVAILABLE' ? unavailableMessage : '' }) })
   }
   async function stop(operation: Pending) {
     if (current !== operation || !operation.id || operation.stopTask) return operation.stopTask
@@ -87,7 +90,7 @@ export function createChat() {
       try {
         const row = await api<unknown>(`/chat/${operation.id}/stop`, { ...send('POST'), signal: operation.controller.signal })
         if (current !== operation || operation.terminal) return
-        if (!record(row) || row.id !== operation.id || !['CANCELLED', 'ANSWERED', 'KAG_ABSTAINED', 'UNAVAILABLE'].includes(row.state)) throw new ApiError('Stop not confirmed', 502)
+        if (!record(row) || row.id !== operation.id || !['CANCELLED', 'ANSWERED', 'CLARIFY', 'KAG_ABSTAINED', 'UNAVAILABLE'].includes(row.state)) throw new ApiError('Stop not confirmed', 502)
         receive(row, operation); operation.terminal = row; operation.controller.abort()
       } catch {
         if (current === operation && !operation.terminal) update({ stopping: false, requestError: 'Chưa xác nhận được việc dừng. Kiểm tra kết nối và tải lại lịch sử.' })
@@ -108,14 +111,14 @@ export function createChat() {
     }).finally(() => { history = undefined; update({ loading: false }) })
     return history
   }
-  async function submit(message: string) {
+  async function submit(message: string, conversationId?: string) {
     if (state.busy || state.loading || !message.trim() || message.length > 4000) return false
     update({ busy: true, stopping: false, currentId: undefined, observed: 'idle', requestError: '' })
     const operation: Pending = { controller: new AbortController(), stopRequested: false, disposed: false }
     current = operation
     let reader: ReadableStreamDefaultReader<Uint8Array> | undefined
     try {
-      const response = await apiResponse('/chat/stream', { ...send('POST', { message }), signal: operation.controller.signal })
+      const response = await apiResponse('/chat/stream', { ...send('POST', { message, conversationId }), signal: operation.controller.signal })
       if (!response.ok) throw new ApiError('Chat unavailable', response.status)
       if (!response.headers.get('Content-Type')?.toLowerCase().startsWith('text/event-stream') || !response.body) throw new ApiError('Invalid chat response', 502)
       reader = response.body.getReader()
@@ -137,11 +140,12 @@ export function createChat() {
           else if (line === '' && payload) {
             let row: unknown
             try { row = JSON.parse(payload) } catch { throw new ApiError('Invalid chat JSON', 502) }
-            if (!record(row) || row.question !== message || (operation.id && row.id !== operation.id)) throw new ApiError('Invalid chat response', 502)
+            if (!record(row) || row.question !== message || (operation.id && row.id !== operation.id) ||
+              (conversationId && row.conversationId !== conversationId)) throw new ApiError('Invalid chat response', 502)
             if (event === 'started' && !operation.id && row.state === 'PROCESSING') {
               operation.id = row.id; receive(row, operation)
               if (operation.stopRequested) void stop(operation)
-            } else if (operation.id && ((event === 'done' && ['ANSWERED', 'KAG_ABSTAINED', 'CANCELLED'].includes(row.state)) || (event === 'error' && row.state === 'UNAVAILABLE'))) {
+            } else if (operation.id && ((event === 'done' && ['ANSWERED', 'CLARIFY', 'KAG_ABSTAINED', 'CANCELLED'].includes(row.state)) || (event === 'error' && row.state === 'UNAVAILABLE'))) {
               if (!operation.terminal) { receive(row, operation); operation.terminal = row }
               return operation.terminal.state !== 'CANCELLED'
             } else throw new ApiError('Invalid chat event', 502)

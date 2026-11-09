@@ -9,7 +9,7 @@ from uuid import UUID
 
 from starlette.requests import ClientDisconnect, Request
 
-from .contract import ApiFailure, QueryV1Request, RetrieveRequest
+from .contract import ApiFailure, ChatContextRequest, QueryV1Request, RetrieveRequest
 
 BODY_LIMIT = 65536
 BODY_TIMEOUT_SECONDS = 5
@@ -142,10 +142,10 @@ async def admit_request(request: Request, scope: str, dto=QueryV1Request):
         authorize(principal, 'inspect', None)
     if any(name in request.headers for name in ('x-user-id', 'user_id', 'x-service-id')):
         raise ApiFailure('INVALID_REQUEST')
-    if dto not in (QueryV1Request, RetrieveRequest, SampleVectorRequest):
+    if dto not in (QueryV1Request, ChatContextRequest, RetrieveRequest, SampleVectorRequest):
         raise ApiFailure('NOT_READY')
     parsed = dto.from_json(await bounded_body(request))
-    if dto is QueryV1Request:
+    if dto in (QueryV1Request, ChatContextRequest):
         user_id = UUID(parsed.user_id)
         authorize(principal, scope, user_id)
         request.state.delegated_user_id = user_id

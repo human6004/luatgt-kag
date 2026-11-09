@@ -176,6 +176,30 @@ class QueryV1Request(_Request):
 
 
 @dataclass(frozen=True)
+class ChatContextRequest(QueryV1Request):
+    summary: str
+    earlier: list
+    recent: list
+
+    @classmethod
+    def from_dict(cls, value):
+        _object(value, ('user_id','message','context_id','schema_contract','summary','earlier','recent'))
+        return cls(**{**value,'schema_contract':SchemaIdentity.from_dict(value['schema_contract'])})
+
+    def __post_init__(self):
+        super().__post_init__()
+        if not _text(self.summary) or utf16_units(self.summary)>1600:
+            raise ApiFailure('INVALID_REQUEST')
+        for turns in (self.earlier,self.recent):
+            if type(turns) is not list or len(turns)>4:
+                raise ApiFailure('INVALID_REQUEST')
+            for turn in turns:
+                _object(turn, ('question','answer'))
+                if any(not _text(value) or utf16_units(value)>1000 for value in turn.values()) or not turn['question'].strip():
+                    raise ApiFailure('INVALID_REQUEST')
+
+
+@dataclass(frozen=True)
 class RetrieveRequest(_Request):
     """Service-only request for the h1-read-v1.1 retrieve contract."""
     message: str

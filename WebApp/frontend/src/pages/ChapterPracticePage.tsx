@@ -23,7 +23,7 @@ function ChapterPractice({setId,chapterId}:{setId:string;chapterId:number}) {
   const answer=question?answers[question.id]:undefined
   const answered=practiceQuestions.filter(q=>answers[q.id]).length
   const correct=practiceQuestions.filter(q=>answers[q.id]?.correct).length
-  const backTo='/on-thi?questionSetId='+encodeURIComponent(setId)
+  const backTo='/on-thi?set='+encodeURIComponent(setId)
 
   function selectQuestion(next:number) {
     setIndex(next)
@@ -97,6 +97,9 @@ function ChapterPractice({setId,chapterId}:{setId:string;chapterId:number}) {
           </div>
           {answered===practiceQuestions.length&&<p role="status" className="mt-4 text-sm font-medium text-navy">Đã hoàn thành lượt luyện tập: đúng {correct} / {practiceQuestions.length} câu.</p>}
         </div>
+        <Link to="/chat" state={{ initialQuery: `Giải thích chi tiết các quy tắc giao thông trong chương ${chapterId}` }} className="text-xs text-muted hover:text-navy">
+          Hỏi Chatbot KAG giải thích
+        </Link>
       </aside>
     </div> : !questions.loading&&!questions.error&&<p className="rounded-2xl border border-line bg-surface p-6 text-muted">Chưa có câu hỏi đã xuất bản cho chương này.</p>}
   </div>

@@ -833,6 +833,31 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
             if len(raw)>245760:raise ApiFailure('RESULT_LIMIT_EXCEEDED')
             return Response(raw,media_type='application/json',headers={'X-KAG-Release-ID':release.release_id})
 
+    async def delegated_operation(request, work):
+        from .runtime import RuntimeFailure
+        watching = True
+
+        async def disconnected():
+            while watching:
+                if hasattr(request.state,'delegated_user_id') and await request.is_disconnected():
+                    return True
+                await asyncio.sleep(.02)
+
+        operation, watcher = asyncio.create_task(work), asyncio.create_task(disconnected())
+        try:
+            done,_ = await asyncio.wait({operation,watcher},return_when=asyncio.FIRST_COMPLETED)
+            if watcher in done and watcher.result():
+                raise asyncio.CancelledError
+            return operation.result()
+        except RuntimeFailure as exc:
+            raise ApiFailure(exc.code) from None
+        finally:
+            watching = False
+            for task in (operation,watcher):
+                if not task.done():
+                    task.cancel()
+            await asyncio.gather(operation,watcher,return_exceptions=True)
+
     async def verified_query(request: Request):
         from . import runtime as core
         release, settings = app.state.serving_release, app.state.runtime_settings
@@ -915,39 +940,29 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                     source_header[0]:source_header[1],'X-KAG-As-Of':instance.as_of.isoformat()},instance.as_of
             return await asyncio.to_thread(verified_bytes)
 
-        watching = True
-        async def disconnected():
-            while watching:
-                if (hasattr(request.state,'delegated_user_id') and await request.is_disconnected()):
-                    return True
-                await asyncio.sleep(.02)
-
-        operation = asyncio.create_task(supervisor.query(request,settings,release,
+        raw,headers,as_of = await delegated_operation(request,supervisor.query(request,settings,release,
             finalize=finalize,factory=app.state.runtime_factory))
-        watcher = asyncio.create_task(disconnected())
-        try:
-            done,_ = await asyncio.wait({operation,watcher},return_when=asyncio.FIRST_COMPLETED)
-            if watcher in done and watcher.result():
-                raise asyncio.CancelledError
-            raw,headers,as_of = operation.result()
-            if core._today() != as_of:
-                raise ApiFailure('DATE_BOUNDARY_CHANGED')
-            if time.monotonic() >= request.state.request_deadline:
-                raise ApiFailure('QUERY_TIMEOUT')
-            request.state.query_verified, request.state.query_as_of = True, as_of
-            return Response(raw,media_type='application/json',headers=headers)
-        except core.RuntimeFailure as exc:
-            raise ApiFailure(exc.code) from None
-        finally:
-            watching = False
-            for task in (operation,watcher):
-                if not task.done():
-                    task.cancel()
-            await asyncio.gather(operation,watcher,return_exceptions=True)
+        if core._today() != as_of:
+            raise ApiFailure('DATE_BOUNDARY_CHANGED')
+        if time.monotonic() >= request.state.request_deadline:
+            raise ApiFailure('QUERY_TIMEOUT')
+        request.state.query_verified, request.state.query_as_of = True, as_of
+        return Response(raw,media_type='application/json',headers=headers)
 
     @app.post('/v1/query')
     async def query(request: Request):
         return await verified_query(request)
+
+    @app.post('/v1/chat/context')
+    async def chat_context(request: Request):
+        release, settings = app.state.serving_release, app.state.runtime_settings
+        supervisor = getattr(app.state,'runtime_supervisor',None)
+        if (type(release) is not artifacts.ServingRelease or settings is None or supervisor is None
+                or settings.secrets != app.state.http_settings.secrets):
+            await admit_request(request,'query',contract.ChatContextRequest)
+            raise ApiFailure('NOT_READY')
+        value = await delegated_operation(request,supervisor.chat_context(request,settings,release))
+        return JSONResponse(value,headers={'Cache-Control':'no-store'})
 
     if enable_sample_routes:
         @app.post('/v1/retrieve/vector')

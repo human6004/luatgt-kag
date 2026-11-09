@@ -1,8 +1,8 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useAdmin } from '../admin/store'
 import { apiResponse } from '../api'
-import { Button, Card, Page, Td, Th, inputCls } from '../admin/ui'
+import { Button, Card, FilePicker, Page, Td, Th, inputCls } from '../admin/ui'
 import { useInspection } from './shared/KagManagement'
 import { benchmarkCategories, inspectionError, loadBenchmarkCategoryCounts, loadBenchmarkDatasets, loadSampleInspection, loadServing, loadBenchmarkRun, startBenchmarkRun, stopBenchmarkRun } from './shared/kag-inspection'
 import type { BenchmarkJob, BenchmarkMode, SmokeRun } from './shared/kag-inspection'
@@ -174,7 +174,6 @@ export default function AdminBenchmark() {
   const [pollVersion, setPollVersion] = useState(0)
   const [now, setNow] = useState(Date.now())
   const [distribution, setDistribution] = useState<{ id: string; hash: string | null; counts: Record<string, number> } | null>(null)
-  const fileInput = useRef<HTMLInputElement>(null)
   const [importName, setImportName] = useState('')
   const [busy, setBusy] = useState(false)
   const [importErrors, setImportErrors] = useState<{ index: number; field: string; code: string; message: string }[]>([])
@@ -466,11 +465,10 @@ export default function AdminBenchmark() {
                   <input className={`${inputCls} mt-1`} value={importName} maxLength={64} disabled={busy}
                     onChange={(e) => { setImportName(e.target.value); setImportErrors([]) }} placeholder="bo-cau-hoi-01" />
                 </label>
-                <input ref={fileInput} type="file" accept=".json,application/json" className="hidden" disabled={busy}
+                <FilePicker title="Nhập bộ câu hỏi benchmark" hint={importName.trim() ? "JSON" : "JSON · Nhập tên bộ câu hỏi trước"} accept=".json,application/json" disabled={busy || !importName.trim()}
                   onChange={(e) => { const file = e.target.files?.[0]; e.target.value = ''; if (file) void importFile(file) }} />
                 <div className="flex flex-wrap gap-2">
                   <Button size="sm" disabled={busy} onClick={() => void download('/admin/kag/benchmark/template', 'benchmark-template.json')}>Tải file mẫu</Button>
-                  <Button size="sm" disabled={busy || !importName.trim()} onClick={() => fileInput.current?.click()}>Import</Button>
                   {selected && <Button size="sm" disabled={busy} onClick={() => void download(`/admin/kag/benchmark/datasets/${selected.id.split('/').map(encodeURIComponent).join('/')}/export`, `${selected.id.includes('/') ? selected.id.split('/')[0] : selected.id.replace(/\.jsonl$/, '')}.json`)}>Export</Button>}
                 </div>
                 {importErrors.length > 0 && <ul role="alert" className="max-h-60 overflow-y-auto space-y-1 text-xs text-red-700 break-words">

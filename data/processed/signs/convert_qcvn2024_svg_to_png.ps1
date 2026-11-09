@@ -14,16 +14,22 @@ if (-not (Test-Path -LiteralPath $sourceRoot -PathType Container)) {
   throw "Không tìm thấy thư mục SVG: $sourceRoot"
 }
 
-$rows = @(Get-Content -LiteralPath $jsonPath -Raw -Encoding UTF8 | ConvertFrom-Json | Where-Object {
+$allRows = Get-Content -LiteralPath $jsonPath -Raw -Encoding UTF8 | ConvertFrom-Json
+$rows = @($allRows | Where-Object {
   $_.qcvn -eq 'QCVN 41:2024/BGTVT' -and $_.image_required -eq $true -and $_.image_id
 })
 if ($rows.Count -eq 0) {
   throw 'Không có biển QCVN 2024 cần ảnh để chuyển.'
 }
 
-$duplicates = @($rows | Group-Object sign_code | Where-Object { -not $_.Name -or $_.Count -gt 1 })
-if ($duplicates.Count -gt 0) {
-  throw "Mã biển trống hoặc trùng: $($duplicates.Name -join ', ')"
+$missingCodes = @($rows | Where-Object { [string]::IsNullOrWhiteSpace([string]$_.sign_code) })
+if ($missingCodes.Count -gt 0) {
+  $details = ($missingCodes | ForEach-Object { "$($_.sign_id) (image_id=$($_.image_id))" }) -join ', '
+  throw "Thiếu mã biển ở dòng: $details"
+}
+$duplicateCodes = @($rows | Group-Object -Property { ([string]$_.sign_code).Trim().ToUpperInvariant() } | Where-Object { $_.Count -gt 1 })
+if ($duplicateCodes.Count -gt 0) {
+  throw "Mã biển bị lặp: $($duplicateCodes.Name -join ', ')"
 }
 
 $sourceByName = @{}

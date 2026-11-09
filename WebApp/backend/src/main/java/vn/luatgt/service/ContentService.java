@@ -27,8 +27,9 @@ public class ContentService {
     private final vn.luatgt.repository.LegalUnitRepository units;
     private final vn.luatgt.repository.LearningCatalogRepository bank;
     private final vn.luatgt.repository.SignCatalogRepository signs;
+    private final SignDatasetImages signImages;
     public ObjectMapper mapper() { return json; }
-    public ContentService(ContentRepository contents,ObjectMapper json,ContentHistoryRepository history,LawRelationRepository relations,KagSchema schema,vn.luatgt.repository.LegalUnitRepository units,vn.luatgt.repository.LearningCatalogRepository bank,vn.luatgt.repository.SignCatalogRepository signs) { this.contents=contents; this.json=json; this.history=history; this.relations=relations; this.schema=schema; this.units=units;this.bank=bank;this.signs=signs; }
+    public ContentService(ContentRepository contents,ObjectMapper json,ContentHistoryRepository history,LawRelationRepository relations,KagSchema schema,vn.luatgt.repository.LegalUnitRepository units,vn.luatgt.repository.LearningCatalogRepository bank,vn.luatgt.repository.SignCatalogRepository signs,SignDatasetImages signImages) { this.contents=contents; this.json=json; this.history=history; this.relations=relations; this.schema=schema; this.units=units;this.bank=bank;this.signs=signs;this.signImages=signImages; }
     public void remember(Content c) { var h=new ContentHistory(); h.contentId=c.id; h.contentVersion=c.version; h.data=c.data; h.published=c.published; history.save(h); }
     public boolean isEffective(Content c) {
         if(!effective(read(c))) return false;
@@ -122,7 +123,7 @@ public class ContentService {
                 for(var item:n.path(field))if(!item.isTextual()||item.asText().isBlank())throw ApiErrors.bad(field+": cần mảng chuỗi không trống");
             }
             if(n.hasNonNull("image_required")&&!n.path("image_required").isBoolean())throw ApiErrors.bad("image_required: cần boolean hoặc null");
-            if(publish && (!n.path("reviewed").asBoolean(false)||!n.hasNonNull("imageKey"))) throw ApiErrors.bad("Biển báo cần ảnh và reviewed=true trước khi xuất bản");
+            if(publish && (!n.path("reviewed").asBoolean(false)||(!n.hasNonNull("imageKey")&&signImages.find(n)==null))) throw ApiErrors.bad("Biển báo cần ảnh và reviewed=true trước khi xuất bản");
             if(publish) {
                 signs.validateRelations(n);
                 var doc=contents.findByKindAndExternalId("documents",n.path("doc_id").asText());
@@ -140,6 +141,7 @@ public class ContentService {
     }
     public Map<String,Object> view(Content c,boolean admin) {
         var n=read(c);
+        if(c.kind.equals("signs")) n.put("hasDatasetImage",!n.hasNonNull("imageKey")&&signImages.find(n)!=null);
         if(!admin&&c.kind.equals("questions")) n.retain(List.of("externalId","text","chapter","options","source","imageRequired","imageKey","imageMime"));
         return Map.of("id",c.id,"externalId",c.externalId,"version",c.version,"published",c.published,"data",n);
     }
@@ -220,13 +222,22 @@ public class ContentService {
         contents.saveAndFlush(c);sync(c); return view(c,true);
     }
     @Transactional
-    public void batchPublication(BatchPublicationRequest input) {
+    public void batchPublication(String kind,BatchPublicationRequest input) {
         var seen=new HashSet<UUID>();
         for(var row:input.rows()) {
             if(!seen.add(row.id())) throw ApiErrors.bad("Trùng ID trong danh sách");
-            var c=contents.findById(row.id()).filter(q -> q.kind.equals("questions")).orElseThrow(ApiErrors::missing);
-            if(c.version!=row.version()) throw new ResponseStatusException(HttpStatus.CONFLICT,"Câu hỏi vừa thay đổi: "+c.externalId);
-            var n=read(c); n.put("reviewed",input.reviewed()); if(input.published()) validate(c.kind,n,true);
+            var c=contents.findById(row.id()).filter(q -> q.kind.equals(kind)).orElseThrow(ApiErrors::missing);
+            if(c.version!=row.version()) throw new ResponseStatusException(HttpStatus.CONFLICT,"Bản ghi vừa thay đổi: "+c.externalId);
+            var n=read(c);
+            n.put("reviewed",input.reviewed());
+            if(input.published()) {
+                try {
+                    n=publicationData(c,n);
+                } catch(ResponseStatusException e) {
+                    if(!kind.equals("signs")) throw e;
+                    throw new ResponseStatusException(e.getStatusCode(),n.path("code").asText(c.externalId)+": "+e.getReason(),e);
+                }
+            }
             remember(c); c.data=write(n); c.published=input.published(); contents.save(c);sync(c);
         }
         contents.flush();
@@ -245,12 +256,16 @@ public class ContentService {
         var c=contents.findById(id).orElseThrow(ApiErrors::missing);
         if(c.version!=input.version()) throw new ResponseStatusException(HttpStatus.CONFLICT,"Bản ghi vừa thay đổi");
         var n=read(c);
-        if(input.published()) {
-            validate(c.kind,n,true);
-            if(c.kind.equals("signs")) {n.put("image_status","verified");n.put("verification_status","verified");}
-        }
+        if(input.published()) n=publicationData(c,n);
         remember(c);
         c.data=write(n);c.published=input.published(); contents.saveAndFlush(c);sync(c); return view(c,true);
+    }
+    private ObjectNode publicationData(Content c,ObjectNode data) {
+        var validated=validate(c.kind,data,true);
+        if(!c.kind.equals("signs")) return data;
+        validated.put("image_status","verified");
+        validated.put("verification_status","verified");
+        return validated;
     }
     private JsonNode scoped(String kind,JsonNode row,UUID set) {
         if(set==null)return row;
