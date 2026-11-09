@@ -40,7 +40,7 @@ _READONLY = {
 class BrokerFailure(Exception):
     def __init__(self,status=400):
         self.status = status
-        super().__init__('Sample read denied.')
+        super().__init__('Read denied.')
 
 
 class _OversizedResponse(BrokerFailure, GraphResponseTooLarge):
@@ -266,7 +266,7 @@ def _constant(value):
 
 
 class _Handler(BaseHTTPRequestHandler):
-    server_version,sys_version = 'SampleReadBroker',''
+    server_version,sys_version = 'ReadBroker',''
     def log_message(self,*args): pass
     def send_error(self,code,message=None,explain=None): self._reply(code,{'error':'DENIED'})
     def _reply(self,status,value):
