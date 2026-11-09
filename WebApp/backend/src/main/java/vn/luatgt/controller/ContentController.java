@@ -20,4 +20,5 @@ public class ContentController {
     @PutMapping("/admin/content/{id}") Map<String,Object> edit(@PathVariable UUID id,@Valid @RequestBody ContentChangeRequest input) { return service.edit(id,input); }
     @PostMapping("/admin/content/{id}/publication") Map<String,Object> publish(@PathVariable UUID id,@Valid @RequestBody PublicationRequest input) { return service.publish(id,input); }
     @PostMapping("/admin/questions/publication-batch") void batch(@Valid @RequestBody BatchPublicationRequest input) { service.batchPublication(input); }
+    @DeleteMapping("/admin/questions/{id}") void deleteQuestion(@PathVariable UUID id,@RequestParam long version) { service.deleteQuestion(id,version); }
 }

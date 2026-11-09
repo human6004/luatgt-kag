@@ -4,7 +4,7 @@ import { Link, Navigate, useSearchParams } from "react-router-dom"
 
 import { api, send, media, type ContentRecord } from "../../api"
 
-import { Page, Button, Card, FilterTabs, Modal, Th, Td } from "../../admin/ui"
+import { Page, Button, Card, EditIconButton, FilterTabs, Modal, RequiredMark, Th, Td } from "../../admin/ui"
 
 import { useData, useTask, Notice, Asset, inputClass, download } from "./shared"
 
@@ -55,10 +55,17 @@ const fields: Record<Kind, string[]> = {
   ],
 }
 
+const requiredFields: Record<Kind, string[]> = {
+  questions: ["externalId", "text", "chapter"],
+  signs: ["externalId", "code", "name", "group"],
+  documents: ["externalId", "title"],
+  units: ["externalId", "doc_id", "unit_type", "so_hieu", "text", "order"],
+}
+
 const labels: Record<string, string> = {
   externalId: "Mã định danh",
   text: "Câu hỏi",
-  chapter: "Chương (1–6)",
+  chapter: "Số chương",
   source: "Nguồn",
   explanation: "Giải thích",
   code: "Mã biển",
@@ -327,9 +334,7 @@ export function ContentManager({ kind }: { kind: Kind }) {
               </Td>
               <Td>{r.published ? "Đã xuất bản" : "Bản nháp"}</Td>
               <Td>
-                <Button size="sm" onClick={() => edit(r)}>
-                  Chỉnh sửa
-                </Button>
+                <EditIconButton label="Chỉnh sửa nội dung" onClick={() => edit(r)} />
               </Td>
             </tr>
           ))}
@@ -379,8 +384,10 @@ export function ContentManager({ kind }: { kind: Kind }) {
                 {kind === "units" && key === "text"
                   ? "Nội dung pháp lý"
                   : labels[key]}
+                {requiredFields[kind].includes(key) && <RequiredMark />}
                 {["text", "meaning", "explanation"].includes(key) ? (
                   <textarea
+                    required={requiredFields[kind].includes(key)}
                     rows={3}
                     value={String(form[key] || "")}
                     onChange={(e) => field(key, e.target.value)}
@@ -388,6 +395,7 @@ export function ContentManager({ kind }: { kind: Kind }) {
                   />
                 ) : (
                   <input
+                    required={requiredFields[kind].includes(key)}
                     readOnly={
                       !!selected.id &&
                       ((key === "externalId" && kind !== "questions") ||
@@ -423,8 +431,9 @@ export function ContentManager({ kind }: { kind: Kind }) {
             {kind === "questions" && (
               <>
                 <label className="sm:col-span-2 text-sm">
-                  Các phương án, mỗi dòng một phương án
+                  Các phương án, mỗi dòng một phương án<RequiredMark />
                   <textarea
+                    required
                     rows={4}
                     value={(form.options as string[] || []).join("\n")}
                     onChange={(e) =>
@@ -655,8 +664,8 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
           {r.type === "REPLACES" ? "thay thế" : "sửa đổi"}{" "}
           {documents.find((d) => d.id === r.predecessor)?.externalId} ·{" "}
           {r.effectiveDate} · {r.note}{" "}
-          <Button
-            size="sm"
+          <EditIconButton
+            label="Chỉnh sửa quan hệ văn bản"
             onClick={() => {
               task.clearError()
               setEditing(true)
@@ -668,9 +677,7 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
               setRelationId(r.id)
               setRelationVersion(r.version)
             }}
-          >
-            Chỉnh sửa
-          </Button>
+          />
         </p>
       ))}
       </div></Card>}
@@ -708,7 +715,7 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
           ["Văn bản mới", successor, setSuccessor],
         ].map(([label, value, setter]) => (
           <label key={String(label)} className="text-sm">
-            {String(label)}
+            {String(label)}<RequiredMark />
             <select
               required
               value={String(value)}
@@ -725,8 +732,9 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
           </label>
         ))}
         <label className="text-sm">
-          Quan hệ
+          Quan hệ<RequiredMark />
           <select
+            required
             value={type}
             onChange={(e) => setType(e.target.value)}
             className={`${inputClass} mt-2`}
@@ -736,7 +744,7 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
           </select>
         </label>
         <label className="text-sm">
-          Ngày bắt đầu quan hệ
+          Ngày bắt đầu quan hệ<RequiredMark />
           <input
             type="date"
             required
@@ -746,7 +754,7 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
           />
         </label>
         <label className="sm:col-span-2 text-sm">
-          Phạm vi/căn cứ
+          Phạm vi/căn cứ<RequiredMark />
           <input
             required
             maxLength={1000}

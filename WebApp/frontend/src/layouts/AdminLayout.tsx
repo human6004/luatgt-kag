@@ -7,7 +7,7 @@ import { NavLink, Outlet, useNavigate, useLocation } from "react-router-dom"
 
 const groups = [
   { label: "Tổng quan", items: [["/admin/dashboard", "Tổng quan"]] },
-  { label: "Ngân hàng câu hỏi", items: [["/admin/questions", "Ngân hàng câu hỏi"], ["/admin/question-bank-settings", "Bộ câu hỏi và quy tắc đề thi"], ["/admin/imports", "Nhập dữ liệu hàng loạt"]] },
+  { label: "Ngân hàng câu hỏi", items: [["/admin/questions", "Ngân hàng câu hỏi"], ["/admin/question-bank-settings", "Quản lý ngân hàng câu hỏi"], ["/admin/imports", "Nhập dữ liệu hàng loạt"]] },
   { label: "Ngân hàng biển báo", items: [["/admin/signs", "Biển báo"]] },
   { label: "Dữ liệu nguồn", items: [["/admin/sources", "Bộ dữ liệu"], ["/admin/schema", "Schema & quan hệ"]] },
   { label: "Đồ thị của tôi", items: [["/admin/graph", "Đồ thị của tôi"], ["/admin/pipeline", "Dựng mới / đang dựng"]] },
@@ -18,7 +18,7 @@ const groups = [
 ]
 
 const menuLinkClass = (active: boolean) =>
-  `flex min-h-11 items-center border-l-2 px-3 py-2.5 text-[13px] leading-5 break-words transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-strong ${active ? 'border-accent-strong bg-selected text-navy font-semibold' : 'border-transparent text-text-secondary hover:bg-selected/60 hover:text-navy'}`
+  `flex min-h-11 items-center rounded-xl px-3 py-2.5 text-[13px] leading-5 break-words transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-strong ${active ? 'bg-selected text-navy font-semibold shadow-2xs' : 'text-text-secondary hover:bg-selected/70 hover:text-navy'}`
 
 export default function AdminLayout() {
   const navigate = useNavigate(),
@@ -41,7 +41,7 @@ export default function AdminLayout() {
             if (group.items.length === 1) {
               const [to, label] = group.items[0]
               return <div key={group.label} className="border-b border-line/60 py-2 last:border-0">
-                <NavLink to={to} className={({ isActive }) => `${menuLinkClass(isActive)} text-[13.5px] font-semibold`}>
+                <NavLink to={to} className={({ isActive }) => `${menuLinkClass(isActive)} text-[13.5px]`}>
                   {group.label === 'Người dùng' ? label : group.label}
                 </NavLink>
               </div>

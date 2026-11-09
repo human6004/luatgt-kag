@@ -12,8 +12,19 @@ import static vn.luatgt.repository.LearningCatalogRepository.*;
 @Repository
 public class SignCatalogRepository {
     private final JdbcTemplate db; private final ObjectMapper json;
+    private volatile Boolean supportsVisualDescription;
     public SignCatalogRepository(JdbcTemplate db,ObjectMapper json) {this.db=db;this.json=json;}
+    private boolean hasVisualDescription() {
+        if(supportsVisualDescription==null) supportsVisualDescription=Boolean.TRUE.equals(db.execute((org.springframework.jdbc.core.ConnectionCallback<Boolean>) connection -> {
+            try(var columns=connection.getMetaData().getColumns(connection.getCatalog(),null,null,null)) {
+                while(columns.next()) if("signs".equalsIgnoreCase(columns.getString("TABLE_NAME"))&&"visual_description".equalsIgnoreCase(columns.getString("COLUMN_NAME"))) return true;
+            }
+            return false;
+        }));
+        return supportsVisualDescription;
+    }
     public void sync(Content c,ObjectNode n) {
+        boolean hasVisualDescription=hasVisualDescription();
         String group=n.path("group").asText();String qcvn=n.path("qcvn").asText(null);
         if(db.queryForObject("SELECT COUNT(*) FROM nhom_enum WHERE nhom_id=?",Long.class,group)==0) db.update("INSERT INTO nhom_enum VALUES (?,?)",group,group);
         if(qcvn!=null&&db.queryForObject("SELECT COUNT(*) FROM qcvn_enum WHERE qcvn_id=?",Long.class,qcvn)==0) db.update("INSERT INTO qcvn_enum VALUES (?,?)",qcvn,qcvn);
@@ -23,17 +34,22 @@ public class SignCatalogRepository {
             image=images.isEmpty()?binary(UUID.randomUUID()):images.getFirst();
             if(images.isEmpty()) db.update("INSERT INTO images VALUES (?,?,?,?)",image,key,n.path("imageFileName").asText(null),"{\"mime\":\""+n.path("imageMime").asText("image/png")+"\"}");
         }
-        Object[] args={n.path("code").asText(),group,n.path("name").asText(),n.path("meaning").asText(null),qcvn,n.path("record_type").asText(null),n.path("parent_code").asText(null),n.hasNonNull("children_codes")?n.path("children_codes").toString():null,n.path("description_scope").asText(null),n.path("unit_id").asText(null),n.hasNonNull("image_required")?n.path("image_required").asBoolean():null,image,n.path("image_status").asText(null),n.path("verification_status").asText(null),n.hasNonNull("note")?n.path("note").toString():null,binary(c.id)};
-        if(db.update("UPDATE signs SET ma_bien=?,nhom=?,ten=?,mo_ta=?,qcvn=?,record_type=?,parent_code=?,children_codes=?,description_scope=?,unit_id=?,image_required=?,image_id=?,image_status=?,verification_status=?,note=? WHERE content_id=?",args)==0) {
+        Object[] args=hasVisualDescription
+            ? new Object[]{n.path("code").asText(),group,n.path("name").asText(),n.path("meaning").asText(null),n.path("visual_description").asText(null),qcvn,n.path("record_type").asText(null),n.path("parent_code").asText(null),n.hasNonNull("children_codes")?n.path("children_codes").toString():null,n.path("description_scope").asText(null),n.path("unit_id").asText(null),n.hasNonNull("image_required")?n.path("image_required").asBoolean():null,image,n.path("image_status").asText(null),n.path("verification_status").asText(null),n.hasNonNull("note")?n.path("note").toString():null,binary(c.id)}
+            : new Object[]{n.path("code").asText(),group,n.path("name").asText(),n.path("meaning").asText(null),qcvn,n.path("record_type").asText(null),n.path("parent_code").asText(null),n.hasNonNull("children_codes")?n.path("children_codes").toString():null,n.path("description_scope").asText(null),n.path("unit_id").asText(null),n.hasNonNull("image_required")?n.path("image_required").asBoolean():null,image,n.path("image_status").asText(null),n.path("verification_status").asText(null),n.hasNonNull("note")?n.path("note").toString():null,binary(c.id)};
+        String updateSql=hasVisualDescription
+            ? "UPDATE signs SET ma_bien=?,nhom=?,ten=?,mo_ta=?,visual_description=?,qcvn=?,record_type=?,parent_code=?,children_codes=?,description_scope=?,unit_id=?,image_required=?,image_id=?,image_status=?,verification_status=?,note=? WHERE content_id=?"
+            : "UPDATE signs SET ma_bien=?,nhom=?,ten=?,mo_ta=?,qcvn=?,record_type=?,parent_code=?,children_codes=?,description_scope=?,unit_id=?,image_required=?,image_id=?,image_status=?,verification_status=?,note=? WHERE content_id=?";
+        if(db.update(updateSql,args)==0) {
             db.update("INSERT INTO signs(sign_id,content_id,ma_bien,nhom,ten) VALUES (?,?,?,?,?)",c.externalId,binary(c.id),n.path("code").asText(),group,n.path("name").asText());
-            db.update("UPDATE signs SET ma_bien=?,nhom=?,ten=?,mo_ta=?,qcvn=?,record_type=?,parent_code=?,children_codes=?,description_scope=?,unit_id=?,image_required=?,image_id=?,image_status=?,verification_status=?,note=? WHERE content_id=?",args);
+            db.update(updateSql,args);
         }
     }
     public ObjectNode read(Content c,ObjectNode n) {
         var rows=db.queryForList("SELECT s.*,i.image_url,i.metadata FROM signs s LEFT JOIN images i ON i.image_id=s.image_id WHERE s.content_id=?",binary(c.id));
         if(rows.isEmpty()) return n;
         var row=rows.getFirst();var normalized=new HashMap<String,Object>();row.forEach((key,value)->normalized.put(key.toLowerCase(Locale.ROOT),value));
-        for(String[] pair:new String[][]{{"sign_id","sign_id"},{"ma_bien","code"},{"nhom","group"},{"ten","name"},{"mo_ta","meaning"},{"qcvn","qcvn"},{"record_type","record_type"},{"parent_code","parent_code"},{"description_scope","description_scope"},{"unit_id","unit_id"},{"image_required","image_required"},{"image_status","image_status"},{"verification_status","verification_status"}}) {
+        for(String[] pair:new String[][]{{"sign_id","sign_id"},{"ma_bien","code"},{"nhom","group"},{"ten","name"},{"mo_ta","meaning"},{"visual_description","visual_description"},{"qcvn","qcvn"},{"record_type","record_type"},{"parent_code","parent_code"},{"description_scope","description_scope"},{"unit_id","unit_id"},{"image_required","image_required"},{"image_status","image_status"},{"verification_status","verification_status"}}) {
             Object value=normalized.get(pair[0]);if(value!=null)n.set(pair[1],json.valueToTree(value));
         }
         for(String field:List.of("children_codes","note")) if(normalized.get(field)!=null) try { n.set(field,json.readTree(normalized.get(field).toString())); } catch(Exception e) {throw new IllegalStateException(e);}

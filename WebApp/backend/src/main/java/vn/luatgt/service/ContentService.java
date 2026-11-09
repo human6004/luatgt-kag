@@ -82,7 +82,7 @@ public class ContentService {
             alias(n,"choiceMode","choice_mode");if(n.hasNonNull("choiceMode")&&!n.path("choiceMode").asText().equals("single"))throw ApiErrors.bad("Hiện chỉ hỗ trợ câu hỏi chọn một đáp án");
             if(n.hasNonNull("questionSetId")) try {bank.set(UUID.fromString(n.path("questionSetId").asText()));}catch(IllegalArgumentException e){throw ApiErrors.bad("questionSetId: UUID không hợp lệ");}
             if(n.hasNonNull("number")&&(!n.path("number").canConvertToInt()||!n.path("number").isIntegralNumber()||n.path("number").asInt()<1)) throw ApiErrors.bad("number: cần số thứ tự dương trong bộ");
-            if(!n.path("chapter").isIntegralNumber() || !n.path("chapter").canConvertToInt() || n.path("chapter").asInt()<1 || n.path("chapter").asInt()>6) throw ApiErrors.bad("chapter: cần số từ 1 đến 6");
+            if(!n.path("chapter").isIntegralNumber() || !n.path("chapter").canConvertToInt() || n.path("chapter").asInt()<1 || n.path("chapter").asInt()>32767) throw ApiErrors.bad("chapter: cần số nguyên từ 1 đến 32767");
             var options=n.path("options");
             if(!options.isArray() || options.size()<2 || options.size()>4) throw ApiErrors.bad("options: cần 2–4 đáp án");
             for(var option:options) if(!option.isTextual() || option.asText().isBlank() || option.asText().length()>3000) throw ApiErrors.bad("Đáp án trống hoặc quá dài");
@@ -90,13 +90,26 @@ public class ContentService {
             if(n.hasNonNull("critical") && !n.get("critical").isBoolean()) throw ApiErrors.bad("critical: phải là boolean");
             if(n.hasNonNull("imageRequired") && !n.get("imageRequired").isBoolean()) throw ApiErrors.bad("imageRequired: phải là boolean");
             text(n,"source",2000,publish); text(n,"explanation",10000,false);
-            if(publish && (!n.hasNonNull("correctAnswer")||!n.hasNonNull("critical")||!n.path("reviewed").asBoolean(false))) throw ApiErrors.bad("Cần kiểm duyệt đáp án, phân loại điểm liệt và reviewed=true");
-            if(publish && n.path("imageRequired").asBoolean(false) && !n.hasNonNull("imageKey")) throw ApiErrors.bad("Câu hỏi còn thiếu ảnh");
+            if(publish) {
+                String label="Câu "+n.path("sourceExternalId").asText(n.path("externalId").asText());
+                if(!n.hasNonNull("correctAnswer")) throw ApiErrors.bad(label+" chưa có đáp án đúng. Mở Sửa để chọn đáp án trước khi xuất bản.");
+                if(!n.hasNonNull("critical")) throw ApiErrors.bad(label+" chưa được phân loại điểm liệt. Mở Sửa để xác nhận câu có hoặc không thuộc nhóm điểm liệt.");
+                if(!n.path("reviewed").asBoolean(false)) throw ApiErrors.bad(label+" chưa được kiểm duyệt. Xác nhận đã kiểm tra đáp án và nguồn, hoặc dùng Duyệt và xuất bản các câu đã chọn.");
+                if(n.path("imageRequired").asBoolean(false) && !n.hasNonNull("imageKey")) throw ApiErrors.bad(label+" còn thiếu ảnh bắt buộc. Ghép ảnh trước khi xuất bản.");
+            }
         } else if(kind.equals("signs")) {
-            alias(n,"externalId","sign_id"); sourceAlias(n,"code","ma_bien"); sourceAlias(n,"name","ten"); sourceAlias(n,"group","nhom"); sourceAlias(n,"meaning","mo_ta");
+            alias(n,"externalId","sign_id"); sourceAlias(n,"code","sign_code"); sourceAlias(n,"code","ma_bien"); sourceAlias(n,"name","ten"); sourceAlias(n,"group","category"); sourceAlias(n,"group","nhom"); sourceAlias(n,"meaning","legal_description"); sourceAlias(n,"meaning","mo_ta");
             if(!n.hasNonNull("externalId")) n.put("externalId",n.path("code").asText());
+            if(n.hasNonNull("unit_id")) {
+                var source=units.findByUnitId(n.path("unit_id").asText()).flatMap(unit -> contents.findById(unit.documentId)).filter(document -> document.kind.equals("documents"));
+                if(source.isPresent()) {
+                    var document=read(source.get());
+                    if(!n.hasNonNull("doc_id")) n.put("doc_id",source.get().externalId);
+                    for(String field:List.of("so_hieu","ngay_hieu_luc","ngay_het_hieu_luc")) if(!n.hasNonNull(field)&&document.hasNonNull(field)) n.set(field,document.get(field));
+                }
+            }
             KagSchema.exactId(n,"externalId",250); sourceText(n,"code",100,true); sourceText(n,"name",500,true);
-            sourceText(n,"group",200,true); sourceText(n,"meaning",20000,publish);
+            sourceText(n,"group",200,true); sourceText(n,"meaning",20000,publish); sourceText(n,"visual_description",20000,false);
             if(publish||n.hasNonNull("doc_id")) KagSchema.exactId(n,"doc_id",250);
             if(publish||n.hasNonNull("unit_id")) KagSchema.exactId(n,"unit_id",500);
             sourceText(n,"qcvn",200,publish); sourceText(n,"so_hieu",200,publish);
@@ -143,7 +156,7 @@ public class ContentService {
         if(set!=null) {
             if(!kind.equals("questions"))throw ApiErrors.bad("Chỉ câu hỏi có bộ câu hỏi");
             return bank.questions(set).stream().filter(q->chapter==null||q.path("chapter").asInt()==chapter).map(q->{
-                String id=q.path("questionId").asText();q.retain(List.of("externalId","text","chapter","options","imageKey","imageMime"));q.put("questionSetId",set.toString());
+                String id=q.path("questionId").asText();q.retain(List.of("externalId","text","chapter","chapterName","options","imageKey","imageMime"));q.put("questionSetId",set.toString());
                 return Map.<String,Object>of("id",id,"externalId",q.path("externalId").asText(),"version",0,"published",true,"data",q);
             }).toList();
         }
@@ -151,7 +164,14 @@ public class ContentService {
             .filter(c -> isEffective(c) && (chapter==null||read(c).path("chapter").asInt()==chapter)).map(c -> view(c,false)).toList();
     }
     
-    public List<Map<String,Object>> admin(String kind) { return contents.findByKindOrderByExternalId(kind).stream().map(c -> view(c,true)).toList(); }
+    public List<Map<String,Object>> admin(String kind) {
+        var names=kind.equals("questions")?bank.chapterNames():Map.<String,String>of();
+        return contents.findByKindOrderByExternalId(kind).stream().map(c -> {
+            var result=view(c,true);var n=(ObjectNode)result.get("data");
+            if(kind.equals("questions"))n.put("chapterName",names.getOrDefault(n.path("questionSetId").asText()+":"+n.path("chapter").asInt(),"Chương "+n.path("chapter").asInt()));
+            return result;
+        }).toList();
+    }
     
     public List<Map<String,Object>> preview(String kind,ImportRequest input) {
         kind(kind); var seen=new HashSet<String>(); var result=new ArrayList<Map<String,Object>>(); int line=0;
@@ -210,6 +230,15 @@ public class ContentService {
             remember(c); c.data=write(n); c.published=input.published(); contents.save(c);sync(c);
         }
         contents.flush();
+    }
+    @Transactional
+    public void deleteQuestion(UUID id,long version) {
+        var c=contents.findById(id).filter(row -> row.kind.equals("questions")).orElseThrow(ApiErrors::missing);
+        if(c.version!=version) throw new ResponseStatusException(HttpStatus.CONFLICT,"Câu hỏi vừa thay đổi. Tải lại trước khi xóa.");
+        if(c.published) throw ApiErrors.bad("Hủy xuất bản câu hỏi trước khi xóa.");
+        bank.deleteQuestion(id);
+        history.deleteAll(history.findByContentIdOrderByChangedAtDesc(id));
+        contents.delete(c); contents.flush();
     }
     @Transactional
     public Map<String,Object> publish(UUID id,PublicationRequest input) {

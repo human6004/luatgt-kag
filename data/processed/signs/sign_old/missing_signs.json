@@ -1,0 +1,512 @@
+[
+  {
+    "ma_bien": "DP.127",
+    "ten": "Biển hết tốc độ tối đa cho phép theo biển ghép",
+    "nhom": "Biển hết cấm",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "DP.127d",
+    "ten": "Biển hết tốc độ tối đa cho phép theo biển ghép",
+    "nhom": "Biển hết cấm",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.405",
+    "ten": "Đường cụt",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.407",
+    "ten": "Đường một chiều",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.413",
+    "ten": "Rẽ ra đường có làn đường dành cho ô tô khách",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.414",
+    "ten": "Chỉ hướng đường",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.417",
+    "ten": "Chỉ hướng đường phải đi cho từng loại xe",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.419",
+    "ten": "Chỉ dẫn địa giới",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.422",
+    "ten": "Di tích lịch sử",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.423",
+    "ten": "Vị trí người đi bộ sang ngang",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.424",
+    "ten": "Cầu vượt qua đường cho người đi bộ",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.428a",
+    "ten": "Cửa hàng xăng dầu",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.433",
+    "ten": "Báo hiệu nơi cắm trại, nhà nghỉ lưu động",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.441",
+    "ten": "Báo hiệu phía trước có công trường thi công",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.444",
+    "ten": "Biển báo chỉ dẫn địa điểm",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.445",
+    "ten": "Biển báo kiểu mô tả tình trạng đường",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.447",
+    "ten": "Cầu vượt liên thông",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.448",
+    "ten": "Làn đường cứu nạn hay làn dừng xe khẩn cấp",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "I.453c",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "IE.450",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn trên đường cao tốc",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "IE.451",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn trên đường cao tốc",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "IE.453",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn trên đường cao tốc",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "IE.456",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn trên đường cao tốc",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "IE.457",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn trên đường cao tốc",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "IE.459",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn trên đường cao tốc",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "IE.460",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn trên đường cao tốc",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "IE.461",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn trên đường cao tốc",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "IE.463",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn trên đường cao tốc",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "IE.464",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn trên đường cao tốc",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "IE.467",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn trên đường cao tốc",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "IE.468",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn trên đường cao tốc",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "IE.469",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn trên đường cao tốc",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "IE.472",
+    "ten": "",
+    "nhom": "Biển chỉ dẫn trên đường cao tốc",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "P.103",
+    "ten": "Cấm xe ô tô rẽ trái",
+    "nhom": "Biển báo cấm",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "P.106",
+    "ten": "Cấm xe ô tô tải",
+    "nhom": "Biển báo cấm",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "P.110",
+    "ten": "",
+    "nhom": "Biển báo cấm",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "P.111",
+    "ten": "Cấm xe ba",
+    "nhom": "Biển báo cấm",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "P.123",
+    "ten": "Cấm rẽ trái",
+    "nhom": "Biển báo cấm",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "P.124",
+    "ten": "Cấm quay đầu xe",
+    "nhom": "Biển báo cấm",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "P.124a",
+    "ten": "Cấm quay đầu xe",
+    "nhom": "Biển báo cấm",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "P.124b",
+    "ten": "Cấm ô",
+    "nhom": "Biển báo cấm",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "P.127",
+    "ten": "Tốc độ tối đa cho phép",
+    "nhom": "Biển báo cấm",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "P.131",
+    "ten": "Cấm đỗ xe",
+    "nhom": "Biển báo cấm",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.122",
+    "ten": "Dừng lại",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.301",
+    "ten": "",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.301h",
+    "ten": "các xe chỉ được rẽ trái và rẽ phải",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.302",
+    "ten": "Hướng phải đi vòng chướng ngại vật",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.308",
+    "ten": "Tuyến đường cầu vượt cắt qua",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.310",
+    "ten": "Hướng đi phải theo cho các xe chở hàng nguy hiểm",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.403",
+    "ten": "",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.404",
+    "ten": "",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.412",
+    "ten": "",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.412l",
+    "ten": "Kết thúc làn đường dành cho xe máy",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.413",
+    "ten": "",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.413i",
+    "ten": "Kết",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.413j",
+    "ten": "Kết thúc làn đường dành cho xe ô tô con",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.413k",
+    "ten": "Kết",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.413l",
+    "ten": "Kết thúc",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.413m",
+    "ten": "Kết",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.413n",
+    "ten": "Kết thúc",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.413o",
+    "ten": "Kết thúc làn đường dành cho xe máy và xe đạp",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.413p",
+    "ten": "Kết thúc làn",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "R.415",
+    "ten": "Biển gộp làn đường theo phương tiện",
+    "nhom": "Biển hiệu lệnh",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "S.503",
+    "ten": "Hướng tác dụng của biển",
+    "nhom": "Biển phụ",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "S.506",
+    "ten": "Hướng đường ưu tiên",
+    "nhom": "Biển phụ",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "S.508",
+    "ten": "Biểu thị thời gian",
+    "nhom": "Biển phụ",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "S.509",
+    "ten": "Thuyết minh biển chính",
+    "nhom": "Biển phụ",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "S.510a",
+    "ten": "Chú ý đường trơn có băng tuyết",
+    "nhom": "Biển phụ",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.201",
+    "ten": "Chỗ ngoặt nguy hiểm",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.202",
+    "ten": "Nhiều chỗ ngoặt nguy hiểm liên tiếp",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.203",
+    "ten": "Đường bị thu hẹp",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.205",
+    "ten": "Đường giao nhau",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.207",
+    "ten": "",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.207k",
+    "ten": "",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.211",
+    "ten": "Giao nhau với đường sắt không có rào chắn",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.215",
+    "ten": "Kè, vực sâu bên đường phía bên phải",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.216",
+    "ten": "",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.221",
+    "ten": "Đường không bằng phẳng",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.222",
+    "ten": "",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.223",
+    "ten": "Vách núi nguy hiểm",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.228",
+    "ten": "Đá lở",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.242",
+    "ten": "Nơi đường sắt giao vuông góc với đường bộ",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.243",
+    "ten": "Nơi đường sắt giao không vuông góc với đường bộ",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.245",
+    "ten": "Đi chậm (a), Đi chậm có chỉ dẫn tiếng Anh (b)",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  },
+  {
+    "ma_bien": "W.246",
+    "ten": "Chú ý chướng ngại vật",
+    "nhom": "Biển báo nguy hiểm và cảnh báo",
+    "hien_hanh": true
+  }
+]

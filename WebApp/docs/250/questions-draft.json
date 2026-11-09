@@ -4,6 +4,7 @@
     "number": 1,
     "text": "Phần của đường bộ được sử dụng cho phương tiện giao thông đường bộ đi lại là gì?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -29,6 +30,7 @@
     "number": 2,
     "text": "Làn đường là gì?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -54,6 +56,7 @@
     "number": 3,
     "text": "Khổ giới hạn của đường bộ được hiểu như thế nào là đúng?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -79,6 +82,7 @@
     "number": 4,
     "text": "Dải phân cách được lắp đặt để làm gì?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -104,6 +108,7 @@
     "number": 5,
     "text": "Vạch kẻ đường là gì?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -130,6 +135,7 @@
     "number": 6,
     "text": "Người điều khiển phương tiện tham gia giao thông đường bộ được hiểu như thế nào là đúng?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -155,6 +161,7 @@
     "number": 7,
     "text": "Người lái xe được hiểu như thế nào là đúng?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -180,6 +187,7 @@
     "number": 8,
     "text": "Trong nhóm các phương tiện giao thông đường bộ dưới đây, nhóm phương tiện nào là xe cơ giới?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -204,6 +212,7 @@
     "number": 9,
     "text": "Trong nhóm các phương tiện giao thông đường bộ dưới đây, nhóm phương tiện nào là xe thô sơ?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -229,6 +238,7 @@
     "number": 10,
     "text": "Phương tiện giao thông đường bộ gồm những loại nào?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -254,6 +264,7 @@
     "number": 11,
     "text": "Người tham gia giao thông đường bộ gồm những đối tượng nào?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -279,6 +290,7 @@
     "number": 12,
     "text": "Người điều khiển phương tiện tham gia giao thông đường bộ gồm những đối tượng nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -304,6 +316,7 @@
     "number": 13,
     "text": "Người điều khiển giao thông đường bộ được hiểu như thế nào là đúng?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -329,6 +342,7 @@
     "number": 19,
     "text": "Hành vi nào dưới đây bị nghiêm cấm?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -354,6 +368,7 @@
     "number": 20,
     "text": "Hành vi đưa xe cơ giới, xe máy chuyên dùng tham gia giao thông đường bộ nào dưới đây bị cấm?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -379,6 +394,7 @@
     "number": 21,
     "text": "Tổ chức đua xe được phép thực hiện khi nào?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -404,6 +420,7 @@
     "number": 22,
     "text": "Hành vi đua xe trái phép bị xử lý như thế nào?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -428,6 +445,7 @@
     "number": 24,
     "text": "Người điều khiển phương tiện tham gia giao thông đường bộ mà trong máu hoặc hơi thở có nồng độ cồn có bị nghiêm cấm không?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -453,6 +471,7 @@
     "number": 26,
     "text": "Theo Luật Phòng chống tác hại của rượu, bia, đối tượng nào dưới đây bị cấm sử dụng rượu, bia khi tham gia giao thông?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -479,6 +498,7 @@
     "number": 27,
     "text": "Hành vi giao xe ô tô, mô tô cho người nào sau đây tham gia giao thông đường bộ bị nghiêm cấm?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       3
     ],
@@ -505,6 +525,7 @@
     "number": 28,
     "text": "Hành vi nào sau đây bị nghiêm cấm?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -530,6 +551,7 @@
     "number": 29,
     "text": "Các hành vi nào sau đây bị cấm đối với phương tiện tham gia giao thông đường bộ?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -554,6 +576,7 @@
     "number": 30,
     "text": "Hành vi nào sau đây bị cấm?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -579,6 +602,7 @@
     "number": 31,
     "text": "Việc sản xuất, sử dụng, mua, bán trái phép biển số xe có bị nghiêm cấm hay không?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -604,6 +628,7 @@
     "number": 32,
     "text": "Khi điều khiển phương tiện tham gia giao thông, những hành vi nào dưới đây bị nghiêm cấm?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -630,6 +655,7 @@
     "number": 33,
     "text": "Có bao nhiêu nhóm biển báo hiệu đường bộ?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -655,6 +681,7 @@
     "number": 34,
     "text": "Tại nơi có vạch kẻ đường hoặc tại nơi mà người đi bộ, xe lăn của người khuyết tật đang qua đường, người điều khiển phương tiện tham gia giao thông phải thực hiện như thế nào?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -680,6 +707,7 @@
     "number": 35,
     "text": "Người điều khiển xe mô tô phải phải quan sát, giảm tốc độ hoặc dừng lại để bảo đảm an toàn trong các trường hợp nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       3
     ],
@@ -706,6 +734,7 @@
     "number": 36,
     "text": "Khi gặp hiệu lệnh điều khiển của Cảnh sát giao thông như hình dưới đây thì người tham gia giao thông đường bộ phải đi như thế nào là đúng quy tắc giao thông? phía bên trái người điều khiển phải dừng lại.",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       3
     ],
@@ -735,6 +764,7 @@
     "number": 37,
     "text": "Khi gặp hiệu lệnh điều khiển của Cảnh sát giao thông như hình dưới đây thì người tham gia giao thông đường bộ phải đi như thế nào là đúng quy tắc giao thông?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -763,6 +793,7 @@
     "number": 38,
     "text": "Khi hiệu lệnh của người điều khiển giao thông trái với tín hiệu đèn giao thông hoặc biển báo hiệu đường bộ thì người tham gia giao thông đường bộ phải chấp hành báo hiệu đường bộ nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -788,6 +819,7 @@
     "number": 39,
     "text": "Khi ở một vị trí vừa có biển báo hiệu đặt cố định vừa có biển báo hiệu tạm thời mà hai biển có ý nghĩa khác nhau, người tham gia giao thông đường bộ phải chấp hành hiệu lệnh của biển báo hiệu nào?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -813,6 +845,7 @@
     "number": 40,
     "text": "Tại nơi đường giao nhau, khi đèn điều khiển giao thông có tín hiệu màu vàng, người điều khiển phương tiện tham gia giao thông phải chấp hành như thế nào là đúng quy tắc giao thông?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -839,6 +872,7 @@
     "number": 41,
     "text": "Người lái xe trên đường cần chấp hành quy định về tốc độ tối đa như thế nào?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -864,6 +898,7 @@
     "number": 43,
     "text": "Phương tiện tham gia giao thông đường bộ di chuyển với tốc độ thấp hơn phải đi như thế nào?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -889,6 +924,7 @@
     "number": 44,
     "text": "Trên một chiều đường có vạch kẻ phân làn đường, người lái xe cơ giới, xe máy chuyên dùng phải điều khiển xe đi trên làn đường nào?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -914,6 +950,7 @@
     "number": 45,
     "text": "Người lái xe phải giảm tốc độ, có tín hiệu rẽ phải và đi sát về bên phải của phần đường xe chạy trong các trường hợp nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -940,6 +977,7 @@
     "number": 46,
     "text": "Vượt xe là gì?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -964,6 +1002,7 @@
     "number": 47,
     "text": "Người lái xe được phép vượt xe trên cầu hẹp có một làn đường, đường cong có tầm nhìn bị hạn chế hay không?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -990,6 +1029,7 @@
     "number": 48,
     "text": "Muốn vượt xe phía trước, người lái xe mô tô phải có tín hiệu như thế nào dưới đây để bảo đảm an toàn?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -1015,6 +1055,7 @@
     "number": 49,
     "text": "Khi lái xe trong khu đông dân cư, khu vực cơ sở khám bệnh, chữa bệnh trừ các khu vực có biển cấm sử dụng còi, người lái xe được sử dụng còi trong thời gian nào?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -1040,6 +1081,7 @@
     "number": 51,
     "text": "Người lái xe sử dụng đèn như thế nào khi đi trên các đoạn đường qua khu đông dân cư có hệ thống chiếu sáng đang hoạt động?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -1065,6 +1107,7 @@
     "number": 52,
     "text": "Khi điều khiển phương tiện tham gia giao thông, hành vi nào sau đây bị cấm?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -1089,6 +1132,7 @@
     "number": 53,
     "text": "Người lái xe không được vượt xe khác khi gặp trường hợp nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -1114,6 +1158,7 @@
     "number": 54,
     "text": "Nơi nào cấm quay đầu xe?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -1139,6 +1184,7 @@
     "number": 56,
     "text": "Trước khi cho xe chuyển hướng, người lái xe phải làm gì để bảo đảm an toàn giao thông?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       3
     ],
@@ -1165,6 +1211,7 @@
     "number": 57,
     "text": "Khi chuyển làn đường, người lái xe phải bật đèn tín hiệu báo rẽ như thế nào là đúng quy tắc giao thông?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -1190,6 +1237,7 @@
     "number": 59,
     "text": "Người điều khiển phương tiện tham gia giao thông không được dừng xe, đỗ xe ở những vị trí nào sau đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -1215,6 +1263,7 @@
     "number": 63,
     "text": "Người điều khiển xe mô tô hai bánh, xe mô tô ba bánh, xe gắn máy có được phép sử dụng xe để kéo hoặc đẩy các phương tiện khác khi tham gia giao thông không?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       3
     ],
@@ -1241,6 +1290,7 @@
     "number": 64,
     "text": "Khi điều khiển xe mô tô hai bánh, xe mô tô ba bánh, xe gắn máy, những hành vi nào sau đây không được phép?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -1265,6 +1315,7 @@
     "number": 65,
     "text": "Khi điều khiển xe mô tô hai bánh, xe mô tô ba bánh, xe gắn máy, những hành vi nào sau đây không được phép? giao thông đường bộ.",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -1292,6 +1343,7 @@
     "number": 66,
     "text": "Người được chở trên xe mô tô hai bánh, xe mô tô ba bánh, xe gắn máy khi tham gia giao thông đường bộ không được thực hiện hành vi nào sau đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       3
     ],
@@ -1318,6 +1370,7 @@
     "number": 67,
     "text": "Người được chở trên xe mô tô hai bánh, xe mô tô ba bánh, xe gắn máy khi tham gia giao thông đường bộ có được bám, kéo hoặc đẩy các phương tiện khác không?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       3
     ],
@@ -1344,6 +1397,7 @@
     "number": 68,
     "text": "Người lái xe, người được chở trên xe mô tô hai bánh, xe mô tô ba bánh, xe gắn máy phải thực hiện quy định nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -1369,6 +1423,7 @@
     "number": 69,
     "text": "Người lái xe mô tô hai bánh, xe gắn máy được phép chở tối đa hai người trong những trường hợp nào?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -1394,6 +1449,7 @@
     "number": 70,
     "text": "Người lái xe mô tô hai bánh, xe mô tô ba bánh, xe gắn máy không được thực hiện các hành vi nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       3
     ],
@@ -1420,6 +1476,7 @@
     "number": 71,
     "text": "Người lái xe mô tô hai bánh, xe mô tô ba bánh, xe gắn máy không được thực hiện các hành vi nào sau đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -1445,6 +1502,7 @@
     "number": 72,
     "text": "Người lái xe mô tô hai bánh, xe mô tô ba bánh, xe gắn máy không được thực hiện hành vi nào sau đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -1470,6 +1528,7 @@
     "number": 73,
     "text": "Người được chở trên xe mô tô hai bánh, xe mô tô ba bánh, xe gắn máy khi tham gia giao thông đường bộ có được sử dụng ô khi trời mưa hay không?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -1496,6 +1555,7 @@
     "number": 74,
     "text": "Người được chở trên xe mô tô có được kéo theo người đang điều khiển xe đạp hay không?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -1521,6 +1581,7 @@
     "number": 75,
     "text": "Trường hợp người được chở trên xe mô tô, xe gắn máy, các loại xe tương tự xe mô tô và các loại xe tương tự xe gắn máy không đội \"mũ bảo hiểm cho người đi mô tô, xe máy\" hoặc không cài quai đúng quy cách (trừ trường hợp chở người bệnh đi cấp cứu, trẻ em dưới 06 tuổi, áp giải người có hành vi vi phạm pháp luật) thì việc xử phạt vi phạm hành chính được quy định như thế nào?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       3
     ],
@@ -1547,6 +1608,7 @@
     "number": 76,
     "text": "Trong các trường hợp dưới đây, để bảo đảm an toàn khi tham gia giao thông, người lái xe mô tô cần thực hiện như thế nào? quy cách, không sử dụng ô, điện thoại di động, thiết bị âm thanh (trừ thiết bị trợ thính).",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -1573,6 +1635,7 @@
     "number": 77,
     "text": "Thứ tự xuống phà như thế nào là đúng quy tắc giao thông?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -1598,6 +1661,7 @@
     "number": 80,
     "text": "Khi lái xe trong đô thị và khu đông dân cư trong thời gian từ 22 giờ ngày hôm trước đến 05 giờ ngày hôm sau, nếu cần vượt một xe khác, người lái xe phải báo hiệu như thế nào là đúng quy tắc giao thông?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -1623,6 +1687,7 @@
     "number": 81,
     "text": "Khi điều khiển xe chạy trên đường, biết có xe sau xin vượt, nếu đủ điều kiện an toàn người điều khiển phương tiện phải làm gì?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -1648,6 +1713,7 @@
     "number": 87,
     "text": "Trên đường không phân chia thành hai chiều xe chạy riêng biệt, người điều khiển phương tiện tham gia giao thông đường bộ phải tránh xe đi ngược chiều như thế nào để bảo đảm an toàn?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -1673,6 +1739,7 @@
     "number": 88,
     "text": "Khi tránh xe đi ngược chiều, các xe phải nhường đường như thế nào là đúng quy tắc giao thông?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       3
     ],
@@ -1700,6 +1767,7 @@
     "number": 90,
     "text": "Người lái xe phải làm gì để bảo đảm an toàn khi lái xe trên đường cong có tầm nhìn bị hạn chế?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -1725,6 +1793,7 @@
     "number": 91,
     "text": "Tại nơi đường giao nhau, người lái xe đang đi trên đường không ưu tiên, đường nhánh phải nhường đường như thế nào là đúng quy tắc giao thông?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -1750,6 +1819,7 @@
     "number": 92,
     "text": "Tại nơi đường giao nhau có báo hiệu đi theo vòng xuyến, người lái xe phải nhường đường như thế nào là đúng quy tắc giao thông?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -1775,6 +1845,7 @@
     "number": 93,
     "text": "Tại nơi đường giao nhau không có báo hiệu đi theo vòng xuyến, người điều khiển phương tiện phải nhường đường như thế nào là đúng quy tắc giao thông?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -1800,6 +1871,7 @@
     "number": 94,
     "text": "Người lái xe phải nhanh chóng giảm tốc độ, đi sát lề đường bên phải hoặc dừng lại để nhường đường cho các loại xe nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -1825,6 +1897,7 @@
     "number": 96,
     "text": "Khi có tín hiệu của xe ưu tiên, người và phương tiện tham gia giao thông đường bộ phải tuân thủ quy định nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -1850,6 +1923,7 @@
     "number": 97,
     "text": "Khi đang lái xe, phía trước có một xe Cảnh sát giao thông không phát tín hiệu ưu tiên, người lái xe có được phép vượt hay không?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -1875,6 +1949,7 @@
     "number": 98,
     "text": "Khi đang lái xe, phía trước có một xe cứu thương đang phát tín hiệu ưu tiên, người lái xe có được phép vượt hay không?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -1901,6 +1976,7 @@
     "number": 99,
     "text": "Khi tới đường ngang không có người gác, chắn đường bộ, chuông, đèn tín hiệu, người tham gia giao thông đường bộ phải làm gì để bảo đảm an toàn?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -1926,6 +2002,7 @@
     "number": 100,
     "text": "Tại đường ngang, cầu chung đường sắt, khi có hiệu lệnh của nhân viên gác chắn, đèn đỏ sáng nhấp nháy, chuông kêu, chắn đường bộ đang dịch chuyển hoặc đã đóng, người tham gia giao thông đường bộ phải làm gì để bảo đảm an toàn?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -1951,6 +2028,7 @@
     "number": 102,
     "text": "Người tham gia giao thông đường bộ phải dừng lại về bên phải đường của mình trước vạch dừng xe tại đường ngang, cầu chung đường sắt khi có báo hiệu nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       3
     ],
@@ -1978,6 +2056,7 @@
     "number": 103,
     "text": "Người điều khiển phương tiện tham gia giao thông trong hầm đường bộ ngoài việc phải tuân thủ các quy tắc giao thông còn phải thực hiện những quy định nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -2003,6 +2082,7 @@
     "number": 107,
     "text": "Người điều khiển phương tiện tham gia giao thông đường bộ phải quan sát, giảm tốc độ hoặc dừng lại để bảo đảm an toàn trong các trường hợp nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       3
     ],
@@ -2029,6 +2109,7 @@
     "number": 109,
     "text": "Người lái xe được phép vượt xe khác về bên phải trong trường hợp nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -2054,6 +2135,7 @@
     "number": 110,
     "text": "Khi có xe xin vượt, người lái xe mô tô xử lý như thế nào nếu đủ điều kiện an toàn cho xe phía sau vượt?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -2079,6 +2161,7 @@
     "number": 111,
     "text": "Những trường hợp nào dưới đây không được đi trên đường cao tốc, trừ người, phương tiện giao thông đường bộ và thiết bị phục vụ việc quản lý, bảo trì đường cao tốc?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -2105,6 +2188,7 @@
     "number": 119,
     "text": "Theo quy định về độ tuổi, người đủ bao nhiêu tuổi trở lên thì được cấp giấy phép lái xe mô tô hai bánh có dung tích xi lanh đến 125 cm3 và xe ô tô chở người đến 8 chỗ (không kể chỗ của người lái xe); xe ô tô tải và ô tô chuyên dùng có khối lượng toàn bộ theo thiết kế đến 3.500 kg?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -2130,6 +2214,7 @@
     "number": 123,
     "text": "Người đủ 16 tuổi đến dưới 18 tuổi chỉ được điều khiển các loại xe nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -2156,6 +2241,7 @@
     "number": 124,
     "text": "Người có Giấy phép lái xe mô tô hạng A1 không được phép điều khiển loại xe nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -2181,6 +2267,7 @@
     "number": 125,
     "text": "Người có Giấy phép lái xe mô tô hạng A1 được cấp sau ngày 01/01/2025 được phép điều khiển loại xe nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -2206,6 +2293,7 @@
     "number": 126,
     "text": "Người có Giấy phép lái xe mô tô hạng A được phép điều khiển loại xe nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -2232,6 +2320,7 @@
     "number": 137,
     "text": "Người lái xe khi tham gia giao thông đường bộ phải đảm bảo các điều kiện nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -2257,6 +2346,7 @@
     "number": 138,
     "text": "Khi tham gia giao thông đường bộ, người lái xe phải mang theo các giấy tờ gì?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       3
     ],
@@ -2283,6 +2373,7 @@
     "number": 140,
     "text": "Người có giấy phép lái xe chưa bị trừ hết 12 điểm, được phục hồi điểm giấy phép lái xe trong trường hợp nào sau đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -2307,6 +2398,7 @@
     "number": 141,
     "text": "Người có giấy phép lái xe đã bị trừ hết điểm phải làm gì để phục hồi điểm giấy phép lái xe?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -2332,6 +2424,7 @@
     "number": 142,
     "text": "Trách nhiệm của tổ chức, cá nhân đứng tên trong giấy chứng nhận đăng ký xe khi chưa thực hiện thu hồi chứng nhận đăng ký xe, biển số xe được quy định như thế nào?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -2356,6 +2449,7 @@
     "number": 145,
     "text": "Trên đường bộ, trong khu vực đông dân cư, đường đôi hoặc đường một chiều có từ hai làn xe cơ giới trở lên, xe mô tô hai bánh, ô tô chở người đến 28 chỗ không kể chỗ của người lái xe tham gia giao thông với tốc độ khai thác tối đa cho phép là bao nhiêu?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -2381,6 +2475,7 @@
     "number": 146,
     "text": "Trên đường bộ (trừ đường cao tốc) trong khu vực đông dân cư, đường hai chiều hoặc đường một chiều có một làn xe cơ giới, xe mô tô hai bánh, ô tô chở người đến 28 chỗ không kể chỗ của người lái xe tham gia giao thông với tốc độ khai thác tối đa cho phép là bao nhiêu?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -2406,6 +2501,7 @@
     "number": 151,
     "text": "Trên đường bộ ngoài khu vực đông dân cư, đường đôi hoặc đường một chiều có từ hai làn xe cơ giới trở lên (trừ đường cao tốc) loại xe nào dưới đây được tham gia giao thông với tốc độ khai thác tối đa cho phép là 70 km/h?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -2432,6 +2528,7 @@
     "number": 155,
     "text": "Trên đường bộ ngoài khu vực đông dân cư, đường hai chiều hoặc đường một chiều có một làn xe cơ giới (trừ đường cao tốc), loại xe nào dưới đây được tham gia giao thông với tốc độ khai thác tối đa cho phép là 60 km/h?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -2458,6 +2555,7 @@
     "number": 163,
     "text": "Người lái xe phải giảm tốc độ thấp hơn tốc độ tối đa cho phép đến mức cần thiết, chú ý quan sát và chuẩn bị sẵn sàng những tình huống có thể xảy ra để phòng ngừa tai nạn trong các trường hợp nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       0
     ],
@@ -2485,6 +2583,7 @@
     "number": 167,
     "text": "Khi gặp xe buýt đang dừng đón, trả khách, người điều khiển xe mô tô phải xử lý như thế nào dưới đây?",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       1
     ],
@@ -2509,6 +2608,7 @@
     "number": 178,
     "text": "Việc sử dụng xe mô tô, xe gắn máy, xe thô sơ để vận chuyển hành khách, hàng hóa phải thực hiện các quy định nào dưới đây để đảm bảo an toàn giao thông? NĂNG PHÒNG CHÁY, CHỮA CHÁY VÀ CỨU HỘ, CỨU NẠN",
     "chapter": 1,
+    "chapterName": "Quy định chung và quy tắc giao thông đường bộ",
     "answerCandidates": [
       2
     ],
@@ -2535,6 +2635,7 @@
     "number": 182,
     "text": "Những hành vi nào sau đây thể hiện là người có văn hóa giao thông?",
     "chapter": 2,
+    "chapterName": "Văn hóa giao thông, đạo đức người lái xe, kỹ năng phòng cháy, chữa cháy và cứu hộ, cứu nạn",
     "answerCandidates": [
       0
     ],
@@ -2561,6 +2662,7 @@
     "number": 185,
     "text": "Khái niệm về văn hóa giao thông được hiểu như thế nào là đúng?",
     "chapter": 2,
+    "chapterName": "Văn hóa giao thông, đạo đức người lái xe, kỹ năng phòng cháy, chữa cháy và cứu hộ, cứu nạn",
     "answerCandidates": [
       2
     ],
@@ -2586,6 +2688,7 @@
     "number": 187,
     "text": "Người lái xe không điều khiển xe đi đúng làn đường quy định, phóng nhanh, vượt ẩu, vượt đèn đỏ, đi vào đường cấm được coi là hành vi nào trong các hành vi dưới đây?",
     "chapter": 2,
+    "chapterName": "Văn hóa giao thông, đạo đức người lái xe, kỹ năng phòng cháy, chữa cháy và cứu hộ, cứu nạn",
     "answerCandidates": [
       0
     ],
@@ -2610,6 +2713,7 @@
     "number": 189,
     "text": "Người lái xe có văn hóa giao thông khi tham gia giao thông đường bộ phải đáp ứng các điều kiện nào dưới đây?",
     "chapter": 2,
+    "chapterName": "Văn hóa giao thông, đạo đức người lái xe, kỹ năng phòng cháy, chữa cháy và cứu hộ, cứu nạn",
     "answerCandidates": [
       0
     ],
@@ -2634,6 +2738,7 @@
     "number": 191,
     "text": "Người lái xe mô tô có văn hóa giao thông khi tham gia giao thông phải tuân thủ những quy định nào dưới đây?",
     "chapter": 2,
+    "chapterName": "Văn hóa giao thông, đạo đức người lái xe, kỹ năng phòng cháy, chữa cháy và cứu hộ, cứu nạn",
     "answerCandidates": [
       0
     ],
@@ -2659,6 +2764,7 @@
     "number": 192,
     "text": "Trong các hành vi dưới đây, người lái xe có văn hóa giao thông phải ứng xử như thế nào?",
     "chapter": 2,
+    "chapterName": "Văn hóa giao thông, đạo đức người lái xe, kỹ năng phòng cháy, chữa cháy và cứu hộ, cứu nạn",
     "answerCandidates": [
       0
     ],
@@ -2685,6 +2791,7 @@
     "number": 193,
     "text": "Khi tham gia giao thông việc sử dụng còi xe nên dùng như thế nào để thể hiện là người có văn hóa giao thông?",
     "chapter": 2,
+    "chapterName": "Văn hóa giao thông, đạo đức người lái xe, kỹ năng phòng cháy, chữa cháy và cứu hộ, cứu nạn",
     "answerCandidates": [
       0
     ],
@@ -2711,6 +2818,7 @@
     "number": 194,
     "text": "Người điều khiển phương tiện tham giao thông đường bộ gây ra tai nạn giao thông đường bộ, người liên quan đến vụ tai nạn giao thông đường bộ có trách nhiệm gì dưới đây?",
     "chapter": 2,
+    "chapterName": "Văn hóa giao thông, đạo đức người lái xe, kỹ năng phòng cháy, chữa cháy và cứu hộ, cứu nạn",
     "answerCandidates": [
       3
     ],
@@ -2737,6 +2845,7 @@
     "number": 195,
     "text": "Người có mặt tại nơi xảy ra vụ tai giao thông đường bộ có trách nhiệm gì dưới đây?",
     "chapter": 2,
+    "chapterName": "Văn hóa giao thông, đạo đức người lái xe, kỹ năng phòng cháy, chữa cháy và cứu hộ, cứu nạn",
     "answerCandidates": [
       0
     ],
@@ -2761,6 +2870,7 @@
     "number": 200,
     "text": "Trong đoạn đường hai chiều tại khu đông dân cư đang ùn tắc, người điều khiển xe mô tô có văn hóa giao thông sẽ lựa chọn cách xử lý tình huống nào dưới đây?",
     "chapter": 2,
+    "chapterName": "Văn hóa giao thông, đạo đức người lái xe, kỹ năng phòng cháy, chữa cháy và cứu hộ, cứu nạn",
     "answerCandidates": [
       2
     ],
@@ -2786,6 +2896,7 @@
     "number": 206,
     "text": "Khi điều khiển xe mô tô tay ga xuống đường dốc dài, độ dốc cao, người lái xe cần thực hiện các thao tác nào dưới đây để bảo đảm an toàn?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       0
     ],
@@ -2811,6 +2922,7 @@
     "number": 215,
     "text": "Khi điều khiển xe trên đường vòng người lái xe cần phải làm gì để bảo đảm an toàn?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       0
     ],
@@ -2835,6 +2947,7 @@
     "number": 219,
     "text": "Khi điều khiển xe qua đường sắt, người lái xe cần phải thực hiện các thao tác nào dưới đây để bảo đảm an toàn?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       2
     ],
@@ -2860,6 +2973,7 @@
     "number": 232,
     "text": "Trong các loại nhiên liệu dưới đây, loại nhiên liệu nào giảm thiểu ô nhiễm môi trường?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       1
     ],
@@ -2885,6 +2999,7 @@
     "number": 233,
     "text": "Các biện pháp tiết kiệm nhiên liệu khi chạy xe?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       2
     ],
@@ -2910,6 +3025,7 @@
     "number": 240,
     "text": "Khi tầm nhìn bị hạn chế bởi sương mù hoặc mưa to, người lái xe phải thực hiện các thao tác nào để bảo đảm an toàn?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       1
     ],
@@ -2935,6 +3051,7 @@
     "number": 241,
     "text": "Khi đèn pha của xe đi ngược chiều gây chói mắt, làm giảm khả năng quan sát trên đường, người lái xe xử lý như thế nào dưới đây để bảo đảm an toàn?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       0
     ],
@@ -2961,6 +3078,7 @@
     "number": 242,
     "text": "Để đạt được hiệu quả phanh cao nhất, người lái xe mô tô phải sử dụng các kỹ năng như thế nào dưới đây?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       2
     ],
@@ -2986,6 +3104,7 @@
     "number": 254,
     "text": "Khi đang lái xe mô tô hoặc ô tô, nếu có nhu cầu sử dụng điện thoại để nhắn tin hoặc gọi điện, người lái xe phải thực hiện như thế nào trong các tình huống nêu dưới đây?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       1
     ],
@@ -3011,6 +3130,7 @@
     "number": 255,
     "text": "Những thói quen nào dưới đây khi điều khiển xe mô tô tay ga tham gia giao thông dễ gây tai nạn nguy hiểm?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       2
     ],
@@ -3036,6 +3156,7 @@
     "number": 257,
     "text": "Khi điều khiển xe mô tô quay đầu, người lái xe cần thực hiện như thế nào để bảo đảm an toàn?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       3
     ],
@@ -3062,6 +3183,7 @@
     "number": 258,
     "text": "Tay ga trên xe mô tô hai bánh có tác dụng gì dưới đây?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       3
     ],
@@ -3088,6 +3210,7 @@
     "number": 259,
     "text": "Gương chiếu hậu của xe mô tô hai bánh có tác dụng gì dưới đây?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       2
     ],
@@ -3115,6 +3238,7 @@
     "number": 260,
     "text": "Để bảo đảm an toàn khi tham gia giao thông, người lái xe mô tô hai bánh cần điều khiển tay ga như thế nào?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       2
     ],
@@ -3141,6 +3265,7 @@
     "number": 261,
     "text": "Để tránh đổ, ngã khi điều khiển xe mô tô hai bánh ở nơi đường xấu, nhỏ và hẹp, người lái xe cần xử lý như thế nào?",
     "chapter": 3,
+    "chapterName": "Kỹ thuật lái xe",
     "answerCandidates": [
       3
     ],
@@ -3167,6 +3292,7 @@
     "number": 303,
     "text": "Biển nào cấm máy kéo?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -3195,6 +3321,7 @@
     "number": 304,
     "text": "Biển nào báo hiệu cấm xe mô tô ba bánh chở hàng đi qua?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -3222,6 +3349,7 @@
     "number": 305,
     "text": "Biển nào dưới đây xe gắn máy được phép đi vào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -3249,6 +3377,7 @@
     "number": 306,
     "text": "Biển nào báo hiệu cấm xe mô tô đi vào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -3277,6 +3406,7 @@
     "number": 307,
     "text": "Khi gặp biển nào thì xe mô tô hai bánh được đi vào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -3305,6 +3435,7 @@
     "number": 313,
     "text": "Biển nào cấm quay đầu xe?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -3333,6 +3464,7 @@
     "number": 314,
     "text": "Biển nào cấm xe rẽ trái?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -3361,6 +3493,7 @@
     "number": 315,
     "text": "Khi gặp biển nào xe được rẽ trái?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -3388,6 +3521,7 @@
     "number": 317,
     "text": "Biển nào cấm các phương tiện rẽ phải?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -3416,6 +3550,7 @@
     "number": 318,
     "text": "Biển nào cấm các phương tiện rẽ trái?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -3445,6 +3580,7 @@
     "number": 322,
     "text": "Biển nào xe được phép rẽ trái?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -3472,6 +3608,7 @@
     "number": 323,
     "text": "Biển nào xe quay đầu không bị cấm?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -3499,6 +3636,7 @@
     "number": 324,
     "text": "Biển nào xe được phép quay đầu nhưng không được rẽ trái?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -3527,6 +3665,7 @@
     "number": 325,
     "text": "Biển nào là biển \"Cấm đi ngược chiều\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -3554,6 +3693,7 @@
     "number": 326,
     "text": "Biển nào dưới đây các phương tiện không được phép đi vào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -3581,6 +3721,7 @@
     "number": 329,
     "text": "Khi gặp biển nào xe ưu tiên theo luật định vẫn phải dừng lại?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -3607,6 +3748,7 @@
     "number": 330,
     "text": "Biển nào cấm tất cả các loại xe cơ giới và thô sơ đi lại trên đường, trừ xe ưu tiên theo luật định (nếu đường vẫn cho xe chạy được)?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -3634,6 +3776,7 @@
     "number": 335,
     "text": "Biển báo này có ý nghĩa như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -3660,6 +3803,7 @@
     "number": 345,
     "text": "Biển này có hiệu lực đối với xe mô tô hai bánh, ba bánh chở hàng không?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0,
       1
@@ -3687,6 +3831,7 @@
     "number": 346,
     "text": "Biển này có ý nghĩa như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -3714,6 +3859,7 @@
     "number": 347,
     "text": "Biển phụ đặt dưới biển cấm bóp còi có ý nghĩa như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -3741,6 +3887,7 @@
     "number": 348,
     "text": "Chiều dài đoạn đường 500 m từ nơi đặt biển này, người lái xe có được phép bấm còi không?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -3767,6 +3914,7 @@
     "number": 349,
     "text": "Biển nào xe mô tô hai bánh được đi vào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -3794,6 +3942,7 @@
     "number": 350,
     "text": "Biển nào xe mô tô hai bánh không được đi vào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -3821,6 +3970,7 @@
     "number": 351,
     "text": "Ba biển này có hiệu lực như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -3847,6 +3997,7 @@
     "number": 354,
     "text": "Biển này có ý nghĩa như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -3874,6 +4025,7 @@
     "number": 360,
     "text": "Biển nào là biển \"Tốc độ tối đa cho phép về ban đêm\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -3901,6 +4053,7 @@
     "number": 362,
     "text": "Biển nào báo hiệu hạn chế tốc độ của phương tiện không vượt quá trị số ghi trên biển? 1 2",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -3927,6 +4080,7 @@
     "number": 364,
     "text": "Số 50 ghi trên biển báo dưới đây có ý nghĩa như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0,
       1
@@ -3954,6 +4108,7 @@
     "number": 366,
     "text": "Biển báo dưới đây có ý nghĩa như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -3981,6 +4136,7 @@
     "number": 367,
     "text": "Gặp biển nào người lái xe phải nhường đường cho người đi bộ?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -4008,6 +4164,7 @@
     "number": 368,
     "text": "Biển nào chỉ đường dành cho người đi bộ, các loại xe không được đi vào khi gặp biển này?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -4036,6 +4193,7 @@
     "number": 369,
     "text": "Biển nào báo hiệu \"Đường dành cho xe thô sơ\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -4064,6 +4222,7 @@
     "number": 370,
     "text": "Biển nào báo hiệu sắp đến chỗ giao nhau nguy hiểm?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       3
     ],
@@ -4092,6 +4251,7 @@
     "number": 371,
     "text": "Biển nào báo hiệu \"Giao nhau với đường sắt có rào chắn\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -4119,6 +4279,7 @@
     "number": 372,
     "text": "Biển nào báo hiệu \"Giao nhau có tín hiệu đèn\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -4147,6 +4308,7 @@
     "number": 373,
     "text": "Biển nào báo hiệu nguy hiểm giao nhau với đường sắt?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -4175,6 +4337,7 @@
     "number": 374,
     "text": "Biển nào báo hiệu đường bộ giao nhau với đường sắt không có rào chắn?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -4203,6 +4366,7 @@
     "number": 375,
     "text": "Biển nào báo hiệu sắp đến chỗ giao nhau giữa đường bộ và đường sắt?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -4231,6 +4395,7 @@
     "number": 376,
     "text": "Biển nào báo hiệu \"Cửa chui\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -4258,6 +4423,7 @@
     "number": 377,
     "text": "Hai biển này có ý nghĩa như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -4285,6 +4451,7 @@
     "number": 380,
     "text": "Biển nào báo hiệu \"Hết đoạn đường ưu tiên\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -4312,6 +4479,7 @@
     "number": 381,
     "text": "Biển nào báo hiệu, chỉ dẫn xe đi trên đường này được quyền ưu tiên qua nơi giao nhau?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -4341,6 +4509,7 @@
     "number": 382,
     "text": "Biển nào báo hiệu \"Giao nhau với đường không ưu tiên\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -4369,6 +4538,7 @@
     "number": 386,
     "text": "Biển nào báo hiệu \"Giao nhau với đường ưu tiên\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -4397,6 +4567,7 @@
     "number": 387,
     "text": "Biển nào báo hiệu \"Đường giao nhau\" của các tuyến đường cùng cấp?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -4425,6 +4596,7 @@
     "number": 389,
     "text": "Biển nào báo hiệu \"Đường hai chiều\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -4452,6 +4624,7 @@
     "number": 390,
     "text": "Biển nào báo hiệu phải giảm tốc độ, nhường đường cho xe cơ giới đi ngược chiều qua đường hẹp?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -4479,6 +4652,7 @@
     "number": 391,
     "text": "Biển nào chỉ dẫn \"Được ưu tiên qua đường hẹp\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -4508,6 +4682,7 @@
     "number": 393,
     "text": "Biển nào báo hiệu \"Đường đôi\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -4535,6 +4710,7 @@
     "number": 394,
     "text": "Biển nào báo hiệu \"Kết thúc đường đôi\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -4562,6 +4738,7 @@
     "number": 395,
     "text": "Biển nào báo hiệu \"Giao nhau với đường hai chiều\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -4589,6 +4766,7 @@
     "number": 397,
     "text": "Biển nào báo hiệu \"Giao nhau với đường hai chiều\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -4617,6 +4795,7 @@
     "number": 398,
     "text": "Biển nào báo hiệu \"Chú ý chướng ngại vật\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -4644,6 +4823,7 @@
     "number": 400,
     "text": "Biển nào báo hiệu \"Đường hầm\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -4671,6 +4851,7 @@
     "number": 401,
     "text": "Biển nào dưới đây là biển \"Cầu hẹp\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -4699,6 +4880,7 @@
     "number": 411,
     "text": "Gặp biển nào người tham gia giao thông phải đi chậm và thận trọng đề phòng khả năng xuất hiện và di chuyển bất ngờ của trẻ em trên mặt đường?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -4725,6 +4907,7 @@
     "number": 412,
     "text": "Biển nào chỉ dẫn nơi bắt đầu đoạn đường dành cho người đi bộ?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -4752,6 +4935,7 @@
     "number": 413,
     "text": "Biển nào dưới đây báo hiệu gần đến đoạn đường thường có trẻ em đi ngang qua?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -4780,6 +4964,7 @@
     "number": 415,
     "text": "Biển nào sau đây là biển \"Dốc xuống nguy hiểm\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0,
       1
@@ -4807,6 +4992,7 @@
     "number": 419,
     "text": "Biển báo này có ý nghĩa như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0,
       1
@@ -4834,6 +5020,7 @@
     "number": 422,
     "text": "Các biển báo này có ý nghĩa như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -4861,6 +5048,7 @@
     "number": 427,
     "text": "Biển nào báo hiệu các phương tiện phải tuân thủ tốc độ tối đa cho phép trên từng làn đường?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -4889,6 +5077,7 @@
     "number": 430,
     "text": "Khi gặp biển nào thì các phương tiện không được đi vào, trừ xe ô tô và xe mô tô?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0,
       1
@@ -4916,6 +5105,7 @@
     "number": 431,
     "text": "Biển này có ý nghĩa như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -4943,6 +5133,7 @@
     "number": 432,
     "text": "Biển nào (đặt trước ngã ba, ngã tư) cho phép xe được rẽ sang hướng khác?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -4971,6 +5162,7 @@
     "number": 433,
     "text": "Biển nào báo hiệu \"Hướng đi thẳng phải theo\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0,
       1
@@ -4998,6 +5190,7 @@
     "number": 434,
     "text": "Biển nào báo hiệu \"Đường một chiều\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -5025,6 +5218,7 @@
     "number": 435,
     "text": "Trong các biển dưới đây biển nào là biển \"Hết tốc độ tối đa cho phép\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -5054,6 +5248,7 @@
     "number": 437,
     "text": "Trong các biển dưới đây biển nào là biển \"Hết tốc độ tối thiểu\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -5082,6 +5277,7 @@
     "number": 438,
     "text": "Biển nào dưới đây báo hiệu hết cấm vượt?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       3
     ],
@@ -5110,6 +5306,7 @@
     "number": 439,
     "text": "Trong các biển dưới đây biển nào là biển \"Hết mọi lệnh cấm\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -5138,6 +5335,7 @@
     "number": 440,
     "text": "Biển nào cho phép được quay đầu xe đi theo hướng ngược lại khi đặt biển trước ngã ba, ngã tư?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -5166,6 +5364,7 @@
     "number": 441,
     "text": "Biển nào không cho phép rẽ phải?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -5194,6 +5393,7 @@
     "number": 442,
     "text": "Khi đến chỗ giao nhau, gặp biển nào thì người lái xe không được cho xe đi thẳng, phải rẽ sang hướng khác?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -5222,6 +5422,7 @@
     "number": 445,
     "text": "Biển số 1 có ý nghĩa như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -5249,6 +5450,7 @@
     "number": 450,
     "text": "Biển nào chỉ dẫn cho người đi bộ sử dụng cầu vượt qua đường?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -5277,6 +5479,7 @@
     "number": 451,
     "text": "Biển nào chỉ dẫn cho người đi bộ sử dụng hầm chui qua đường?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -5305,6 +5508,7 @@
     "number": 452,
     "text": "Biển nào báo hiệu \"Nơi đỗ xe dành cho người khuyết tật\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -5332,6 +5536,7 @@
     "number": 454,
     "text": "Gặp biển báo này, người tham gia giao thông phải xử lý như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -5359,6 +5564,7 @@
     "number": 455,
     "text": "Gặp biển báo dưới đây, người lái xe có bắt buộc phải chạy vòng theo đảo an toàn theo hướng mũi tên khi muốn chuyển hướng hay không?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0,
       1
@@ -5386,6 +5592,7 @@
     "number": 457,
     "text": "Biển nào báo hiệu \"Cầu vượt liên thông\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -5413,6 +5620,7 @@
     "number": 458,
     "text": "Biển số 1 có ý nghĩa như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -5440,6 +5648,7 @@
     "number": 459,
     "text": "Biển nào báo hiệu \"Tuyến đường cầu vượt cắt qua\"?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -5467,6 +5676,7 @@
     "number": 460,
     "text": "Biển báo dưới đây có ý nghĩa như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0
     ],
@@ -5495,6 +5705,7 @@
     "number": 461,
     "text": "Tại đoạn đường có biển \"Làn đường dành riêng cho từng loại xe\" dưới đây, các phương tiện có được phép chuyển sang làn khác để đi theo hành trình mong muốn khi đến gần nơi đường bộ giao nhau hay không?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       0,
       1
@@ -5522,6 +5733,7 @@
     "number": 474,
     "text": "Biển nào chỉ dẫn người lái xe đi được cả hai hướng?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -5548,6 +5760,7 @@
     "number": 475,
     "text": "Biển này có ý nghĩa như thế nào?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -5574,6 +5787,7 @@
     "number": 476,
     "text": "Vạch mũi tên chỉ hướng trên mặt đường nào dưới đây cho phép xe chỉ được đi thẳng và rẽ phải?",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       2
     ],
@@ -5603,6 +5817,7 @@
     "number": 478,
     "text": "Vạch kẻ đường nào dưới đây là vạch phân chia hai chiều xe chạy (vạch tim đường), xe không được lấn làn, không được đè lên vạch? TÌNH HUỐNG GIAO THÔNG",
     "chapter": 5,
+    "chapterName": "Báo hiệu đường bộ",
     "answerCandidates": [
       1
     ],
@@ -5632,6 +5847,7 @@
     "number": 486,
     "text": "Theo hướng mũi tên, xe nào chấp hành đúng quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       2
     ],
@@ -5659,6 +5875,7 @@
     "number": 487,
     "text": "Theo hướng mũi tên, thứ tự các xe đi như thế nào là đúng quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       1
     ],
@@ -5687,6 +5904,7 @@
     "number": 490,
     "text": "Theo hướng mũi tên, thứ tự các xe đi như thế nào là đúng quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       2
     ],
@@ -5715,6 +5933,7 @@
     "number": 492,
     "text": "Trường hợp này xe nào được quyền đi trước?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       1
     ],
@@ -5741,6 +5960,7 @@
     "number": 495,
     "text": "Xe nào được quyền đi trước trong trường hợp này?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       1
     ],
@@ -5768,6 +5988,7 @@
     "number": 499,
     "text": "Theo tín hiệu đèn, xe nào được phép đi?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       0
     ],
@@ -5794,6 +6015,7 @@
     "number": 500,
     "text": "Theo tín hiệu đèn, xe nào đi là đúng quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       1
     ],
@@ -5821,6 +6043,7 @@
     "number": 503,
     "text": "Các xe đi theo hướng mũi tên, những xe nào vi phạm quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       0
     ],
@@ -5848,6 +6071,7 @@
     "number": 504,
     "text": "Theo hướng mũi tên, thứ tự các xe đi như thế nào là đúng quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       2
     ],
@@ -5876,6 +6100,7 @@
     "number": 505,
     "text": "Trong trường hợp này xe nào đỗ vi phạm quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       0
     ],
@@ -5904,6 +6129,7 @@
     "number": 507,
     "text": "Theo hướng mũi tên, những hướng nào xe gắn máy được phép đi?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       0
     ],
@@ -5931,6 +6157,7 @@
     "number": 508,
     "text": "Xe nào đỗ vi phạm quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       0
     ],
@@ -5959,6 +6186,7 @@
     "number": 509,
     "text": "Xe nào đỗ vi phạm quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       2
     ],
@@ -5988,6 +6216,7 @@
     "number": 517,
     "text": "Xe nào được quyền đi trước trong trường hợp này?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       1
     ],
@@ -6014,6 +6243,7 @@
     "number": 520,
     "text": "Theo hướng mũi tên, thứ tự các xe đi như thế nào là đúng quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       3
     ],
@@ -6042,6 +6272,7 @@
     "number": 525,
     "text": "Xe nào được quyền đi trước trong trường hợp này?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       0
     ],
@@ -6068,6 +6299,7 @@
     "number": 527,
     "text": "Xe nào vi phạm quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       2
     ],
@@ -6096,6 +6328,7 @@
     "number": 528,
     "text": "Các xe đi như thế nào là đúng quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       2
     ],
@@ -6123,6 +6356,7 @@
     "number": 529,
     "text": "Theo hướng mũi tên, xe nào được phép đi?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       2
     ],
@@ -6151,6 +6385,7 @@
     "number": 538,
     "text": "Trong hình dưới đây, xe nào chấp hành đúng quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       1
     ],
@@ -6178,6 +6413,7 @@
     "number": 539,
     "text": "Theo hướng mũi tên, những hướng nào xe mô tô được phép đi?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       2
     ],
@@ -6206,6 +6442,7 @@
     "number": 540,
     "text": "Trong trường hợp này, thứ tự xe đi như thế nào là đúng quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       1
     ],
@@ -6233,6 +6470,7 @@
     "number": 543,
     "text": "Trong hình dưới, những xe nào vi phạm quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       0
     ],
@@ -6261,6 +6499,7 @@
     "number": 548,
     "text": "Trong hình dưới, những xe nào vi phạm quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       2
     ],
@@ -6289,6 +6528,7 @@
     "number": 553,
     "text": "Theo tín hiệu đèn, xe nào phải dừng lại là đúng quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       2
     ],
@@ -6316,6 +6556,7 @@
     "number": 556,
     "text": "Bạn có được phép vượt xe mô tô phía trước không?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       1
     ],
@@ -6342,6 +6583,7 @@
     "number": 559,
     "text": "Theo tín hiệu đèn của xe cơ giới, xe nào vi phạm quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       3
     ],
@@ -6370,6 +6612,7 @@
     "number": 560,
     "text": "Các xe đi theo hướng mũi tên, xe nào vi phạm quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       1
     ],
@@ -6397,6 +6640,7 @@
     "number": 562,
     "text": "Các xe đi theo hướng mũi tên, xe nào vi phạm quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       1
     ],
@@ -6425,6 +6669,7 @@
     "number": 565,
     "text": "Các xe đi theo hướng mũi tên, xe nào chấp hành đúng quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       1
     ],
@@ -6453,6 +6698,7 @@
     "number": 567,
     "text": "Các xe đi theo thứ tự nào là đúng quy tắc giao thông đường bộ?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       2
     ],
@@ -6480,6 +6726,7 @@
     "number": 568,
     "text": "Các xe đi theo thứ tự nào là đúng quy tắc giao thông đường bộ?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       1
     ],
@@ -6507,6 +6754,7 @@
     "number": 583,
     "text": "Các xe đi theo thứ tự nào là đúng quy tắc giao thông đường bộ?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       2
     ],
@@ -6534,6 +6782,7 @@
     "number": 592,
     "text": "Xe nào dừng đúng theo quy tắc giao thông?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       0
     ],
@@ -6561,6 +6810,7 @@
     "number": 600,
     "text": "Trong tình huống dưới đây, xe đầu kéo kéo rơ moóc (xe container) đang rẽ phải, xe con màu xanh và xe máy phía sau xe container đi như thế nào để bảo đảm an toàn?",
     "chapter": 6,
+    "chapterName": "Giải thế sa hình và kỹ năng xử lý tình huống giao thông",
     "answerCandidates": [
       1
     ],

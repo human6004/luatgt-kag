@@ -235,6 +235,28 @@ class CoreTest {
         try(var zip=new java.util.zip.ZipOutputStream(bad)) { zip.putNextEntry(new java.util.zip.ZipEntry("../DP.127.png")); zip.write(png.toByteArray()); zip.closeEntry(); }
         mvc.perform(multipart("/api/admin/signs/images-zip").file(new org.springframework.mock.web.MockMultipartFile("file","bad.zip","application/zip",bad.toByteArray())).header("Authorization","Bearer "+admin)).andExpect(status().isBadRequest());
     }
+    @Test @Transactional void deleteQuestionsRequiresPermissionAndPreservesStudyHistory() throws Exception {
+        String user=register();
+        var set=body(mvc.perform(post("/api/admin/questions/sets").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("releaseCode","DEL-"+UUID.randomUUID().toString().substring(0,8),"releaseTitle","Test only","setCode","TEST","setName","Delete test")))).andExpect(status().isOk()).andReturn());
+        var n=json.createObjectNode().put("externalId","DELETE-"+UUID.randomUUID()).put("questionSetId",set.path("id").asText()).put("text","Delete test").put("chapter",1).put("correctAnswer",0).put("critical",false).put("source","test-only");n.putArray("options").add("A").add("B");
+        var c=new Content();c.kind="questions";c.externalId=n.path("externalId").asText();c.data=n.toString();c=contents.saveAndFlush(c);
+        catalog.publish(c,n);
+        var h=new ContentHistory();h.contentId=c.id;h.contentVersion=c.version;h.data=c.data;history.saveAndFlush(h);
+        String path="/api/admin/questions/"+c.id;
+        mvc.perform(delete(path).param("version",Long.toString(c.version)).header("Authorization","Bearer "+user)).andExpect(status().isForbidden());
+        mvc.perform(delete(path).param("version",Long.toString(c.version+1)).header("Authorization","Bearer "+admin)).andExpect(status().isConflict());
+        c.published=true;c=contents.saveAndFlush(c);
+        mvc.perform(delete(path).param("version",Long.toString(c.version)).header("Authorization","Bearer "+admin)).andExpect(status().isBadRequest());
+        c.published=false;c=contents.saveAndFlush(c);
+        UUID questionId=c.id;
+        mvc.perform(delete(path).param("version",Long.toString(c.version)).header("Authorization","Bearer "+admin)).andExpect(status().isOk());
+        assertTrue(contents.findById(questionId).isEmpty());assertTrue(history.findByContentIdOrderByChangedAtDesc(questionId).isEmpty());
+        assertEquals(0,jdbc.queryForObject("SELECT COUNT(*) FROM question_revision WHERE question_id=?",Integer.class,LearningCatalogRepository.binary(questionId)));
+        var used=new Content();used.kind="questions";used.externalId="USED-"+UUID.randomUUID();used.data=n.toString();used=contents.saveAndFlush(used);
+        jdbc.update("INSERT INTO study_attempts VALUES (?,?,?,?,?,?)",LearningCatalogRepository.binary(UUID.randomUUID()),LearningCatalogRepository.binary(accounts.findByEmail("admin@test.vn").orElseThrow().id),LearningCatalogRepository.binary(used.id),1,true,java.sql.Timestamp.from(Instant.now()));
+        mvc.perform(delete("/api/admin/questions/"+used.id).param("version",Long.toString(used.version)).header("Authorization","Bearer "+admin)).andExpect(status().isBadRequest());
+        assertTrue(contents.findById(used.id).isPresent());
+    }
     void bank() throws Exception {
         penalties.deleteAllInBatch(); relations.deleteAllInBatch(); history.deleteAllInBatch();
         jdbc.update("DELETE FROM signs");contents.deleteAllInBatch();
@@ -286,6 +308,20 @@ class CoreTest {
             when(storage.put(any(),eq("image/png"))).thenReturn("test-image-"+code);
             mvc.perform(multipart("/api/admin/questions/images-zip").file(new org.springframework.mock.web.MockMultipartFile("file","images.zip","application/zip",archive.toByteArray())).param("questionSetId",set).header("Authorization","Bearer "+officer)).andExpect(status().isOk()).andExpect(jsonPath("$.matched[0]").value("Q001"));
             c=contents.findById(c.id).orElseThrow();
+            long imageVersion=c.version;
+            when(storage.get("test-image-"+code)).thenReturn(png.toByteArray());
+            mvc.perform(get("/api/admin/content/"+c.id+"/media").header("Authorization","Bearer "+officer)).andExpect(status().isOk()).andExpect(content().contentType("image/png")).andExpect(content().bytes(png.toByteArray()));
+            mvc.perform(get("/api/admin/content/"+c.id+"/media").header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andExpect(content().bytes(png.toByteArray()));
+            mvc.perform(get("/api/admin/content/"+c.id+"/media").header("Authorization","Bearer "+user)).andExpect(status().isForbidden());
+            clearInvocations(storage);
+            mvc.perform(multipart("/api/admin/questions/images-zip").file(new org.springframework.mock.web.MockMultipartFile("file","images.zip","application/zip",archive.toByteArray())).param("questionSetId",set).header("Authorization","Bearer "+officer)).andExpect(status().isOk()).andExpect(jsonPath("$.kept[0]").value("Q001")).andExpect(jsonPath("$.matched").isEmpty());
+            assertEquals(imageVersion,contents.findById(c.id).orElseThrow().version);
+            verify(storage,never()).put(any(),any());
+            mvc.perform(multipart("/api/admin/questions/images-zip").file(new org.springframework.mock.web.MockMultipartFile("file","images.zip","application/zip",archive.toByteArray())).file(new org.springframework.mock.web.MockMultipartFile("replacements","replacements.json","application/json",json.writeValueAsBytes(Map.of(c.id.toString(),imageVersion+1)))).param("questionSetId",set).header("Authorization","Bearer "+officer)).andExpect(status().isConflict());
+            verify(storage,never()).put(any(),any());
+            mvc.perform(multipart("/api/admin/questions/images-zip").file(new org.springframework.mock.web.MockMultipartFile("file","images.zip","application/zip",archive.toByteArray())).file(new org.springframework.mock.web.MockMultipartFile("replacements","replacements.json","application/json",json.writeValueAsBytes(Map.of(c.id.toString(),imageVersion)))).param("questionSetId",set).header("Authorization","Bearer "+officer)).andExpect(status().isOk()).andExpect(jsonPath("$.matched[0]").value("Q001")).andExpect(jsonPath("$.kept").isEmpty());
+            verify(storage,times(1)).put(any(),eq("image/png"));
+            c=contents.findById(c.id).orElseThrow();
             mvc.perform(post("/api/admin/questions/publication-batch").header("Authorization","Bearer "+officer).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("rows",List.of(Map.of("id",c.id,"version",c.version)),"reviewed",true,"published",true)))).andExpect(status().isOk());
         }
         assertNotEquals(ids.get(0),ids.get(1));
@@ -319,6 +355,83 @@ class CoreTest {
         c=contents.findById(c.id).orElseThrow();
         mvc.perform(post("/api/admin/content/"+c.id+"/publication").header("Authorization","Bearer "+officer).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("version",c.version,"published",true)))).andExpect(status().isBadRequest());
         mvc.perform(post("/api/admin/questions/sets").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{}")).andExpect(status().isForbidden());
+        String other=register();
+        UUID owner=UUID.fromString(json.readTree(java.util.Base64.getUrlDecoder().decode(user.split("\\.")[1])).path("sub").asText());
+        UUID otherOwner=UUID.fromString(json.readTree(java.util.Base64.getUrlDecoder().decode(other.split("\\.")[1])).path("sub").asText());
+        catalog.study(owner,q1,0);catalog.study(otherOwner,q0,0);
+        jdbc.update("INSERT INTO study_attempts(id,owner_id,question_id,chapter,correct,created_at) VALUES (?,?,?,?,?,?)",LearningCatalogRepository.binary(UUID.randomUUID()),LearningCatalogRepository.binary(owner),LearningCatalogRepository.binary(UUID.fromString(question)),1,true,java.sql.Timestamp.from(Instant.now()));
+        mvc.perform(delete("/api/progress").param("questionSetId",ids.getFirst())).andExpect(status().isUnauthorized());
+        mvc.perform(delete("/api/progress").header("Authorization","Bearer "+user)).andExpect(status().isBadRequest());
+        mvc.perform(delete("/api/progress").param("questionSetId",UUID.randomUUID().toString()).header("Authorization","Bearer "+user)).andExpect(status().isNotFound());
+        mvc.perform(delete("/api/progress").param("questionSetId",ids.getFirst()).header("Authorization","Bearer "+user)).andExpect(status().isOk()).andExpect(jsonPath("$.cleared").value(2));
+        mvc.perform(get("/api/progress").param("questionSetId",ids.getFirst()).header("Authorization","Bearer "+user)).andExpect(status().isOk()).andExpect(jsonPath("$[0].practiced").value(0));
+        mvc.perform(get("/api/progress").param("questionSetId",ids.get(1)).header("Authorization","Bearer "+user)).andExpect(status().isOk()).andExpect(jsonPath("$[0].practiced").value(1));
+        mvc.perform(get("/api/progress").param("questionSetId",ids.getFirst()).header("Authorization","Bearer "+other)).andExpect(status().isOk()).andExpect(jsonPath("$[0].practiced").value(1));
+        mvc.perform(get("/api/exams/"+started.path("id").asText()).header("Authorization","Bearer "+user)).andExpect(status().isOk()).andExpect(jsonPath("$.score").value(1));
+        mvc.perform(delete("/api/progress").param("questionSetId",ids.getFirst()).header("Authorization","Bearer "+user)).andExpect(status().isOk()).andExpect(jsonPath("$.cleared").value(0));
+    }
+
+    @Test @Transactional void chapterSettingsPersistNamesAndProtectUsedChapters() throws Exception {
+        String user=register(),release="UI-"+UUID.randomUUID();
+        var set=body(mvc.perform(post("/api/admin/questions/sets").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("releaseCode",release,"releaseTitle","Chapter settings","setCode","A","setName","A")))).andExpect(status().isOk()).andReturn());
+        String setId=set.path("id").asText(),path="/api/admin/questions/sets/"+setId+"/chapters";
+        mvc.perform(get(path)).andExpect(status().isUnauthorized());
+        mvc.perform(get(path).header("Authorization","Bearer "+user)).andExpect(status().isForbidden());
+        mvc.perform(post(path).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"chapter\":7,\"name\":\"Seven\"}")).andExpect(status().isForbidden());
+        mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"chapter\":7,\"name\":\"Seven\"}")).andExpect(status().isOk());
+        mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"chapter\":7,\"name\":\"Duplicate\"}")).andExpect(status().isBadRequest());
+        mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"chapter\":0,\"name\":\"Invalid\"}")).andExpect(status().isBadRequest());
+        mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"chapter\":8,\"name\":\" \"}")).andExpect(status().isBadRequest());
+        var chapters=body(mvc.perform(get(path).header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andReturn());String topic=chapters.get(0).path("topic_id").asText();
+        mvc.perform(put(path+"/"+topic).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"chapter\":8,\"name\":\"Renumber\"}")).andExpect(status().isBadRequest());
+        var shared=body(mvc.perform(post("/api/admin/questions/sets").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("releaseCode",release,"releaseTitle","Chapter settings","setCode","B","setName","B")))).andExpect(status().isOk()).andReturn());
+        String sharedPath="/api/admin/questions/sets/"+shared.path("id").asText()+"/chapters";
+        mvc.perform(put(sharedPath+"/"+topic).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"chapter\":7,\"name\":\"Updated seven\"}")).andExpect(status().isOk());
+        mvc.perform(get(path).header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andExpect(jsonPath("$[0].topic_name").value("Updated seven"));
+        var other=body(mvc.perform(post("/api/admin/questions/sets").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("releaseCode","UI-"+UUID.randomUUID(),"releaseTitle","Other","setCode","A","setName","A")))).andExpect(status().isOk()).andReturn());
+        String otherPath="/api/admin/questions/sets/"+other.path("id").asText()+"/chapters/"+topic;
+        mvc.perform(put(otherPath).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"chapter\":7,\"name\":\"Wrong release\"}")).andExpect(status().isNotFound());
+        mvc.perform(delete(otherPath).header("Authorization","Bearer "+admin)).andExpect(status().isNotFound());
+        var question=json.createObjectNode().put("externalId","UI-Q7").put("number",7).put("chapter",7).put("text","Chapter question").put("correctAnswer",0).put("critical",false).put("reviewed",true).put("source","test-only");question.putArray("options").add("A").add("B");
+        mvc.perform(post("/api/admin/imports/questions/confirm").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("rows",List.of(question),"questionSetId",setId)))).andExpect(status().isOk());
+        mvc.perform(get(path).header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andExpect(jsonPath("$[0].question_count").value(1));
+        mvc.perform(delete(path+"/"+topic).header("Authorization","Bearer "+admin)).andExpect(status().isBadRequest());
+        var c=contents.findByKindAndExternalId("questions",setId+"::UI-Q7").orElseThrow();
+        mvc.perform(post("/api/admin/content/"+c.id+"/publication").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("version",c.version,"published",true)))).andExpect(status().isOk());
+        mvc.perform(get("/api/questions").param("questionSetId",setId).header("Authorization","Bearer "+user)).andExpect(status().isOk()).andExpect(jsonPath("$[0].data.chapterName").value("Updated seven"));
+        mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"chapter\":8,\"name\":\"Unused\"}")).andExpect(status().isOk());
+        chapters=body(mvc.perform(get(path).header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andReturn());String unused=chapters.get(1).path("topic_id").asText();
+        mvc.perform(delete(path+"/"+unused).header("Authorization","Bearer "+admin)).andExpect(status().isOk());
+        var payload=json.createObjectNode().put("setId",setId).put("license","A1").put("validFrom","2000-01-01").put("totalQuestions",1).put("durationMinutes",1).put("minimumCorrect",1).put("criticalSlots",0).put("failOnCritical",true);payload.putArray("quotas").addObject().put("chapter",9).put("question_quota",1);
+        mvc.perform(post("/api/admin/questions/rules").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload.toString())).andExpect(status().isOk());
+        chapters=body(mvc.perform(get(path).header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andReturn());String usedByRule=chapters.get(1).path("topic_id").asText();
+        mvc.perform(delete(path+"/"+usedByRule).header("Authorization","Bearer "+admin)).andExpect(status().isBadRequest());
+    }
+
+    @Test @Transactional void rulesSupportExtraAndRemovedChapters() throws Exception {
+        String user=register();
+        var set=body(mvc.perform(post("/api/admin/questions/sets").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("releaseCode","F-"+UUID.randomUUID(),"releaseTitle","Flexible chapters","setCode","FLEX","setName","Flexible chapters")))).andExpect(status().isOk()).andReturn());
+        String setId=set.path("id").asText();
+        var question=json.createObjectNode().put("externalId","Q007").put("number",7).put("chapter",7).put("text","Chapter seven").put("correctAnswer",0).put("critical",false).put("reviewed",true).put("source","test-only");question.putArray("options").add("A").add("B");
+        mvc.perform(post("/api/admin/imports/questions/confirm").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("rows",List.of(question),"questionSetId",setId)))).andExpect(status().isOk());
+        var c=contents.findByKindAndExternalId("questions",setId+"::Q007").orElseThrow();
+        mvc.perform(post("/api/admin/content/"+c.id+"/publication").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("version",c.version,"published",true)))).andExpect(status().isOk());
+        var payload=json.createObjectNode().put("setId",setId).put("license","A1").put("validFrom","2000-01-01").put("totalQuestions",1).put("durationMinutes",1).put("minimumCorrect",1).put("criticalSlots",0).put("failOnCritical",true);
+        var quotas=payload.putArray("quotas");for(int ch=1;ch<=7;ch++)quotas.addObject().put("chapter",ch).put("question_quota",ch==7?1:0);
+        var rule=body(mvc.perform(post("/api/admin/questions/rules").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload.toString())).andExpect(status().isOk()).andReturn());
+        UUID ruleId=UUID.fromString(rule.path("rule_id").asText());assertEquals(7,catalog.quotas(ruleId).size());
+        payload.putArray("quotas").addObject().put("chapter",7).put("question_quota",1);
+        mvc.perform(put("/api/admin/questions/rules/"+ruleId).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload.toString())).andExpect(status().isOk());
+        assertEquals(1,catalog.quotas(ruleId).size());assertEquals(7,catalog.quotas(ruleId).getFirst().path("chapter").asInt());
+        payload.withArray("quotas").addObject().put("chapter",7).put("question_quota",0);
+        mvc.perform(put("/api/admin/questions/rules/"+ruleId).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload.toString())).andExpect(status().isBadRequest());
+        payload.putArray("quotas").addObject().put("chapter",0).put("question_quota",1);
+        mvc.perform(put("/api/admin/questions/rules/"+ruleId).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload.toString())).andExpect(status().isBadRequest());
+        var started=body(mvc.perform(post("/api/exams").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("ruleId",ruleId.toString())))).andExpect(status().isOk()).andReturn());
+        assertEquals(7,started.path("questions").get(0).path("chapter").asInt());
+        mvc.perform(post("/api/study/"+c.id+"/answer").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("selected",0,"questionSetId",setId)))).andExpect(status().isOk());
+        var progress=body(mvc.perform(get("/api/progress").param("questionSetId",setId).header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn());
+        assertEquals(7,progress.get(6).path("chapter").asInt());assertEquals(1,progress.get(6).path("practiced").asInt());
     }
 
     @Test @Transactional void examHasQuotasOwnershipSnapshotAndCriticalFailure() throws Exception {

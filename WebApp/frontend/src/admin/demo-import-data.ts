@@ -6,9 +6,9 @@ export type ImportRecord = SignRecord | QBankItem | LegalDoc
 export type PreviewRow = { line: number; key: string; title: string; record?: ImportRecord; errors: string[] }
 
 export const samples: Record<ImportKind, string> = {
-  signs: 'code,name,group,meaning,source\nP.DEMO,Biển mẫu,Cấm,Nội dung cần kiểm duyệt,Nguồn cần bổ sung\n',
-  questions: 'id,chapter,question,option1,option2,answer,critical,explanation,source\nDEMO-1,Khái niệm và quy tắc,Câu hỏi mẫu,Phương án 1,Phương án 2,1,false,Giải thích mẫu,Nguồn cần bổ sung\n',
-  documents: 'id,name,type,effective\nDOC-DEMO,Văn bản mẫu,Nghị định,2025-01-01\n',
+  signs: 'code,name,group,meaning,source\n',
+  questions: 'id,chapter,question,option1,option2,option3,option4,answer,critical,explanation,source\n',
+  documents: 'id,name,type,effective\n',
 }
 
 export { parseCsv, tableObjects } from './import-data'

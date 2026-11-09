@@ -64,11 +64,18 @@ public class LearningService {
     public List<Map<String,Object>> progress(JwtAuthenticationToken auth) {
         return progress(auth,null);
     }
+    @Transactional
+    public Map<String,Integer> resetProgress(JwtAuthenticationToken auth,UUID set) {
+        bank.set(set);
+        return Map.of("cleared",bank.resetProgress(AuthService.user(auth),set));
+    }
     public List<Map<String,Object>> progress(JwtAuthenticationToken auth,UUID set) {
         var attempts=new ArrayList<>(studies.findByOwnerId(AuthService.user(auth))); var result=new ArrayList<Map<String,Object>>();
         if(set!=null) {var ids=bank.questions(set).stream().map(q->UUID.fromString(q.path("questionId").asText())).collect(java.util.stream.Collectors.toSet());attempts.removeIf(a->!ids.contains(a.questionId));}
         for(var row:bank.progress(AuthService.user(auth))) {if(set!=null&&!row.path("set_id").asText().equals(set.toString()))continue;var a=new StudyAttempt();a.questionId=UUID.fromString(row.path("question_id").asText());a.chapter=row.path("chapter").asInt();a.correct=row.path("correct").asBoolean();attempts.add(a);}
-        for(int chapter=1;chapter<=6;chapter++) {
+        var chapters=new TreeSet<Integer>();for(int chapter=1;chapter<=6;chapter++)chapters.add(chapter);
+        attempts.forEach(a->chapters.add(a.chapter));
+        for(int chapter:chapters) {
             final int ch=chapter; var selected=attempts.stream().filter(a -> a.chapter==ch).toList();
             result.add(Map.of("chapter",ch,"attempts",selected.size(),"correct",selected.stream().filter(a -> a.correct).count(),"practiced",selected.stream().map(a -> a.questionId).distinct().count()));
         }

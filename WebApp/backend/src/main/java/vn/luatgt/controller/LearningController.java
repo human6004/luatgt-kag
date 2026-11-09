@@ -22,6 +22,7 @@ public class LearningController {
     }
     @PostMapping("/study/{questionId}/answer") Map<String,Object> study(@PathVariable UUID questionId,@Valid @RequestBody AnswerRequest choice,JwtAuthenticationToken auth) { return service.study(questionId,choice,auth); }
     @GetMapping("/progress") List<Map<String,Object>> progress(JwtAuthenticationToken auth,@RequestParam(required=false) UUID questionSetId) { return service.progress(auth,questionSetId); }
+    @DeleteMapping("/progress") Map<String,Integer> resetProgress(JwtAuthenticationToken auth,@RequestParam UUID questionSetId) { return service.resetProgress(auth,questionSetId); }
     @PostMapping("/exams") Map<String,Object> start(JwtAuthenticationToken auth,@Valid @RequestBody(required=false) vn.luatgt.dto.StartExamRequest request) { return service.start(auth,request==null?null:request.ruleId()); }
     @GetMapping("/exams/{id}") Map<String,Object> exam(@PathVariable UUID id,JwtAuthenticationToken auth) { return service.exam(id,auth); }
     @PutMapping("/exams/{id}/answers/{questionId}") Map<String,Object> answer(@PathVariable UUID id,@PathVariable UUID questionId,@Valid @RequestBody AnswerRequest choice,JwtAuthenticationToken auth) { return service.answer(id,questionId,choice,auth); }

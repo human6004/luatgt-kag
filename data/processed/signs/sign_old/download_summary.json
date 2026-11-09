@@ -1,0 +1,10 @@
+{
+  "run_at": "2026-10-14T16:55:45.955564+00:00",
+  "total_processed": 446,
+  "matched_on_wikipedia": 361,
+  "downloaded_new": 358,
+  "already_existed": 3,
+  "download_errors_count": 0,
+  "missing_from_wikipedia_count": 85,
+  "output_directory": "data\\processed\\signs\\dataset_signs"
+}

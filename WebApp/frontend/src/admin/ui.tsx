@@ -69,6 +69,23 @@ export function Button({ variant = 'outline', size = 'md', className = '', ...p 
   )
 }
 
+export function EditIconButton({ label = 'Chỉnh sửa', title = label, disabled, onClick }: {
+  label?: string
+  title?: string
+  disabled?: boolean
+  onClick: React.MouseEventHandler<HTMLButtonElement>
+}) {
+  return (
+    <button type="button" aria-label={label} title={title} disabled={disabled} onClick={onClick}
+      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted transition-colors hover:bg-selected hover:text-navy disabled:cursor-not-allowed disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-accent-strong">
+      <svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="m16 3 5 5-13 13H3v-5L16 3Z" />
+        <path d="m13 6 5 5" />
+      </svg>
+    </button>
+  )
+}
+
 const tones = {
   green: 'text-emerald-700',
   amber: 'text-amber-700',
@@ -85,7 +102,7 @@ export function Badge({ tone = 'gray', children }: { tone?: Tone; children: Reac
   )
 }
 
-export function Modal({ open, title, onClose, children, footer }: { open: boolean; title: string; onClose: () => void; children: React.ReactNode; footer?: React.ReactNode }) {
+export function Modal({ open, title, onClose, children, footer, size = 'md' }: { open: boolean; title: string; onClose: () => void; children: React.ReactNode; footer?: React.ReactNode; size?: 'md' | 'lg' }) {
   const dialogRef = useRef<HTMLDialogElement>(null)
   useEffect(() => {
     if (!open || !dialogRef.current) return
@@ -102,7 +119,7 @@ export function Modal({ open, title, onClose, children, footer }: { open: boolea
   if (!open) return null
   return (
     <dialog ref={dialogRef} aria-label={title} aria-modal="true"
-      className="fixed inset-0 m-auto w-[calc(100%_-_2rem)] max-w-lg max-h-[90dvh] border-0 bg-transparent p-0 text-navy backdrop:bg-navy/30 backdrop:backdrop-blur-[2px]"
+      className={`fixed inset-0 m-auto w-[calc(100%_-_2rem)] ${size === 'lg' ? 'max-w-4xl' : 'max-w-lg'} max-h-[90dvh] border-0 bg-transparent p-0 text-navy backdrop:bg-navy/30 backdrop:backdrop-blur-[2px]`}
       onCancel={e => { e.preventDefault(); onClose() }}
       onKeyDown={e => {
         if (e.key !== 'Tab') return
@@ -128,10 +145,14 @@ export function Modal({ open, title, onClose, children, footer }: { open: boolea
   )
 }
 
-export function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+export function RequiredMark() {
+  return <span aria-hidden="true" className="ml-1 font-semibold text-red-700">*</span>
+}
+
+export function Field({ label, hint, required = false, children }: { label: string; hint?: string; required?: boolean; children: React.ReactNode }) {
   return (
     <label className="block min-w-0">
-      <span className="block text-xs font-medium text-text-secondary mb-1.5">{label}</span>
+      <span className="block text-xs font-medium text-text-secondary mb-1.5">{label}{required && <RequiredMark />}</span>
       {children}
       {hint && <span className="block mt-1 text-[11.5px] text-muted">{hint}</span>}
     </label>

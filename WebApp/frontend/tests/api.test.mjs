@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict'
-import { api, send, tokenKey } from '../src/api.ts'
+import { api, media, send, tokenKey } from '../src/api.ts'
 import { normalizeImport } from '../src/pages/server/import-normalization.ts'
+import { publicationBatchBody } from '../src/pages/server/question-publication.ts'
 
 const values = new Map([[tokenKey, 'test-token']])
 globalThis.sessionStorage = { getItem: key => values.get(key), removeItem: key => values.delete(key) }
@@ -12,6 +13,24 @@ globalThis.fetch = async (url, options) => {
   return new Response(JSON.stringify({ role: 'USER' }))
 }
 assert.deepEqual(await api('/auth/me'), { role: 'USER' })
+let mediaRequest
+const originalCreateObjectURL = URL.createObjectURL
+URL.createObjectURL = blob => {
+  assert.ok(blob instanceof Blob)
+  return 'blob:test-image'
+}
+globalThis.fetch = async (url, options) => {
+  mediaRequest = { url, authorization: options.headers.get('Authorization') }
+  return new Response('image-bytes')
+}
+assert.equal(await media('Q1'), 'blob:test-image')
+assert.deepEqual(mediaRequest, { url: '/api/content/Q1/media', authorization: 'Bearer test-token' })
+globalThis.fetch = async () => new Response('Unauthorized', { status: 401 })
+await assert.rejects(media('Q1'), error => error.status === 401 && /Phiên đã hết hạn/.test(error.message))
+assert.equal(expired, true)
+assert.equal(values.has(tokenKey), false)
+URL.createObjectURL = originalCreateObjectURL
+
 globalThis.fetch = async () => new Response(JSON.stringify({ message: 'Phiên đã hết hạn' }), { status: 401 })
 await assert.rejects(api('/questions'), /Phiên đã hết hạn/)
 assert.equal(expired, true)
@@ -31,6 +50,30 @@ assert.equal(values.get(tokenKey), 'test-token')
 globalThis.fetch = async () => { throw new Error('offline') }
 await assert.rejects(api('/questions'), /Không kết nối được backend/)
 assert.equal(send('POST', { selected: 0 }).body, '{"selected":0}')
+const mixedBatch = publicationBatchBody([
+  { id: 'ready-question', version: 2 },
+  { id: 'question-needs-review', version: 4 },
+])
+let submittedBatch
+globalThis.fetch = async (url, options) => {
+  assert.equal(url, '/api/admin/questions/publication-batch')
+  assert.equal(options.headers.get('Authorization'), 'Bearer test-token')
+  submittedBatch = JSON.parse(options.body)
+  return new Response(JSON.stringify({ message: 'Câu hỏi cần kiểm duyệt' }), { status: 400 })
+}
+await assert.rejects(
+  api('/admin/questions/publication-batch', send('POST', mixedBatch)),
+  /Câu hỏi cần kiểm duyệt/,
+)
+assert.deepEqual(submittedBatch, {
+  rows: [
+    { id: 'ready-question', version: 2 },
+    { id: 'question-needs-review', version: 4 },
+  ],
+  reviewed: true,
+  published: true,
+})
+assert.equal(values.get(tokenKey), 'test-token')
 const csv = normalizeImport('questions', { id: 'Q1', question: 'Câu?', chapter: '5', option1: 'A', option2: 'B', answer: '2', critical: 'false' })
 assert.equal(csv.externalId, 'Q1')
 assert.deepEqual(csv.options, ['A','B'])

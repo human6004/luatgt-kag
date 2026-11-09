@@ -29,6 +29,60 @@ body {
   color: var(--color-text);
 }
 
+.question-bank-table {
+  width: 100%;
+  min-width: 60rem;
+  table-layout: auto;
+}
+
+.question-bank-table th,
+.question-bank-table td {
+  padding-inline: 0.5rem;
+}
+
+.question-bank-table .question-chapter,
+.question-bank-table .question-source,
+.question-bank-table .question-check,
+.question-bank-table .question-actions {
+  width: 1%;
+  white-space: nowrap;
+}
+
+.question-bank-table .question-chapter > div,
+.question-bank-table .question-source > div {
+  width: max-content;
+  max-width: 12rem;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.question-bank-table .question-check {
+  padding-inline: 0.25rem;
+}
+
+.question-bank-table .question-select {
+  width: 2.5rem;
+  text-align: center;
+}
+
+.chapter-practice-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  gap: 1.5rem;
+}
+
+@media (min-width: 48rem) {
+  .chapter-practice-layout {
+    grid-template-columns: minmax(0, 1fr) 18rem;
+  }
+
+  .chapter-practice-layout > aside {
+    position: sticky;
+    top: 1.5rem;
+  }
+}
+
 @layer base {
   thead {
     background-color: var(--color-sidebar);

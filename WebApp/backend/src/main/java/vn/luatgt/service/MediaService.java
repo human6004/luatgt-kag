@@ -58,9 +58,16 @@ public class MediaService {
     }
     @Transactional
     public Map<String,Object> zip(MultipartFile file,String kind,UUID questionSetId) throws IOException {
+        return zip(file,kind,questionSetId,Map.of());
+    }
+    @Transactional
+    public Map<String,Object> zip(MultipartFile file,String kind,UUID questionSetId,Map<UUID,Long> replacements) throws IOException {
+        if(replacements==null) replacements=Map.of();
+        if(replacements.size()>1000||replacements.values().stream().anyMatch(v->v==null||v<0)) throw ApiErrors.bad("Xác nhận thay ảnh không hợp lệ");
         if(!Set.of("signs","questions").contains(kind)) throw ApiErrors.bad("ZIP chỉ dùng cho biển báo/câu hỏi");
         if(file.isEmpty()||file.getSize()>20*1024*1024) throw ApiErrors.bad("ZIP tối đa 20 MB");
         var matched=new ArrayList<String>(); var unmatched=new ArrayList<String>(); var seen=new HashSet<String>();
+        var kept=new ArrayList<String>();
         long total=0; int count=0;
         // Validate the entire archive before uploading: no partial DB import on malformed input.
         var assets=new LinkedHashMap<Content,byte[]>();
@@ -81,11 +88,17 @@ public class MediaService {
                 if(!seen.add(code.toUpperCase(Locale.ROOT))) throw ApiErrors.bad("Trùng tên ảnh: "+code);
                 var candidates=signs.stream().filter(c -> (kind.equals("signs")?data.read(c).path("code").asText():data.read(c).path("sourceExternalId").asText(c.externalId)).equalsIgnoreCase(code)).toList();
                 if(candidates.size()!=1) { unmatched.add(name); continue; }
-                assets.put(candidates.getFirst(),bytes); matched.add(code);
+                var candidate=candidates.getFirst();
+                if(data.read(candidate).hasNonNull("imageKey")) {
+                    Long approvedVersion=replacements.get(candidate.id);
+                    if(approvedVersion==null) { kept.add(code); continue; }
+                    if(approvedVersion!=candidate.version) throw new org.springframework.web.server.ResponseStatusException(org.springframework.http.HttpStatus.CONFLICT,"Ảnh hoặc câu hỏi đã thay đổi. Xem lại ảnh cũ và xác nhận lại: "+code);
+                }
+                assets.put(candidate,bytes); matched.add(code);
             }
         } catch(ZipException e) { throw ApiErrors.bad("Tệp ZIP lỗi"); }
         if(count==0) throw ApiErrors.bad("ZIP trống hoặc không hợp lệ");
-        assets.forEach(this::attach); contents.flush(); return Map.of("matched",matched,"unmatched",unmatched);
+        assets.forEach(this::attach); contents.flush(); return Map.of("matched",matched,"unmatched",unmatched,"kept",kept);
     }
     public Download download(UUID id,boolean canReadDrafts) {
         var c=contents.findById(id).orElseThrow(ApiErrors::missing); var n=data.read(c);

@@ -14,6 +14,13 @@ public class QuestionBankService {
     private final com.fasterxml.jackson.databind.ObjectMapper json;
     public QuestionBankService(LearningCatalogRepository bank,com.fasterxml.jackson.databind.ObjectMapper json) {this.bank=bank;this.json=json;}
     public List<ObjectNode> sets() {return bank.sets();}
+    public List<ObjectNode> chapters(UUID set) {return bank.chapters(set);}
+    @Transactional public void saveChapter(UUID set,UUID topic,ObjectNode n) {
+        if(!n.path("chapter").isIntegralNumber()||!n.path("chapter").canConvertToInt()||n.path("chapter").asInt()<1||n.path("chapter").asInt()>32767)throw ApiErrors.bad("Số chương phải là số nguyên từ 1 đến 32767");
+        ContentService.text(n,"name",500,true);
+        bank.saveChapter(set,topic,n.path("chapter").asInt(),n.path("name").asText());
+    }
+    @Transactional public void deleteChapter(UUID set,UUID topic) {bank.deleteChapter(set,topic);}
     @Transactional public void endRule(UUID id,ObjectNode n) {ContentService.date(n,"validTo",true);bank.endRule(id,LocalDate.parse(n.path("validTo").asText()));}
     @Transactional public void updateSet(UUID id,ObjectNode n) {
         for(String field:List.of("releaseCode","setCode")) {
@@ -59,8 +66,14 @@ public class QuestionBankService {
         for(String field:List.of("totalQuestions","durationMinutes","minimumCorrect","criticalSlots")) if(!n.path(field).isIntegralNumber()||!n.path(field).canConvertToInt())throw ApiErrors.bad(field+": cần số nguyên");
         int total=n.path("totalQuestions").asInt(),minimum=n.path("minimumCorrect").asInt(),critical=n.path("criticalSlots").asInt(),minutes=n.path("durationMinutes").asInt();
         if(total<1||total>200||minutes<1||minutes>240||minimum<1||minimum>total||critical<0||critical>total||!n.path("failOnCritical").isBoolean())throw ApiErrors.bad("Số câu, thời gian, ngưỡng đạt hoặc cấu hình điểm liệt không hợp lệ");
-        if(!n.path("quotas").isArray()||n.path("quotas").size()!=6)throw ApiErrors.bad("quotas cần sáu chỉ tiêu câu thường theo chương; câu điểm liệt tính riêng");
-        int sum=critical;for(var quota:n.path("quotas")) {if(!quota.isIntegralNumber()||!quota.canConvertToInt()||quota.asInt()<0||quota.asInt()>total)throw ApiErrors.bad("Chỉ tiêu chương không hợp lệ");sum+=quota.asInt();}
+        if(!n.path("quotas").isArray()||n.path("quotas").size()>32767)throw ApiErrors.bad("Danh sách phân bổ chương không hợp lệ");
+        var chapters=new HashSet<Integer>(); int sum=critical,index=0;
+        for(var quota:n.path("quotas")) {
+            index++;var count=quota.isObject()?quota.path("question_quota"):quota;
+            var chapter=quota.isObject()?quota.path("chapter"):json.valueToTree(index);
+            if(!chapter.isIntegralNumber()||!chapter.canConvertToInt()||chapter.asInt()<1||chapter.asInt()>32767||!chapters.add(chapter.asInt()))throw ApiErrors.bad("Số chương phải là số nguyên dương và không được trùng");
+            if(!count.isIntegralNumber()||!count.canConvertToInt()||count.asInt()<0||count.asInt()>total)throw ApiErrors.bad("Chỉ tiêu chương không hợp lệ");sum+=count.asInt();
+        }
         if(sum!=total)throw ApiErrors.bad("Tổng chỉ tiêu câu thường và câu điểm liệt phải bằng tổng số câu");
     }
 }

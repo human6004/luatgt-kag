@@ -1,174 +1,299 @@
-import { useLocation } from 'react-router-dom'
-import { api, send as request } from '../api'
-import { Notice, useTask } from './server/shared'
-import { createChat, chatView, loadCitationSource } from './server/chat-state'
-import LogoMark from '../components/LogoMark'
-import { NavLinkButton } from '../admin/ui'
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { useLocation } from "react-router-dom";
+import { api, send as request } from "../api";
+import { Notice, useTask } from "./server/shared";
+import { createChat, chatView, loadCitationSource } from "./server/chat-state";
+import LogoMark from "../components/LogoMark";
+import { NavLinkButton } from "../admin/ui";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
 interface LegalReference {
-  title: string
-  clause: string
-  label: string
-  raw: Parameters<typeof loadCitationSource>[0]
+  title: string;
+  clause: string;
+  label: string;
+  raw: Parameters<typeof loadCitationSource>[0];
 }
 
 interface Message {
-  role: 'user' | 'bot'
-  text: string
-  status?: string
-  rich?: boolean
-  citations?: LegalReference[]
+  role: "user" | "bot";
+  text: string;
+  status?: string;
+  rich?: boolean;
+  citations?: LegalReference[];
 }
 
 interface Session {
-  id: string
-  title: string
-  group: 'Hôm nay' | 'Hôm qua' | '7 ngày trước' | '30 ngày trước'
-  pinned?: boolean
-  messages: Message[]
+  id: string;
+  title: string;
+  group: "Hôm nay" | "Hôm qua" | "7 ngày trước" | "30 ngày trước";
+  pinned?: boolean;
+  messages: Message[];
 }
 
 const starters = [
-  { label: 'Tra mức phạt', q: 'Xe máy không đội mũ bảo hiểm bị phạt bao nhiêu?' },
-  { label: 'Nồng độ cồn', q: 'Ô tô vi phạm nồng độ cồn mức 1 bị xử lý thế nào?' },
-  { label: 'Biển báo', q: 'Biển P.102 nghĩa là gì?' },
-  { label: 'Ôn thi', q: 'Giải thích quy tắc nhường đường tại nơi giao nhau' },
-]
+  {
+    label: "Tra mức phạt",
+    q: "Xe máy không đội mũ bảo hiểm bị phạt bao nhiêu?",
+  },
+  {
+    label: "Nồng độ cồn",
+    q: "Ô tô vi phạm nồng độ cồn mức 1 bị xử lý thế nào?",
+  },
+  { label: "Biển báo", q: "Biển P.102 nghĩa là gì?" },
+  { label: "Ôn thi", q: "Giải thích quy tắc nhường đường tại nơi giao nhau" },
+];
 
-const groups: Session['group'][] = ['Hôm nay', 'Hôm qua', '7 ngày trước', '30 ngày trước']
+const groups: Session["group"][] = [
+  "Hôm nay",
+  "Hôm qua",
+  "7 ngày trước",
+  "30 ngày trước",
+];
 
-function Icon({ d, className = 'w-4 h-4' }: { d: string; className?: string }) {
+function Icon({ d, className = "w-4 h-4" }: { d: string; className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.7} strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <svg
+      className={className}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth={1.7}
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
       <path d={d} />
     </svg>
-  )
+  );
 }
 
 const ic = {
-  plus: 'M12 5v14M5 12h14',
-  search: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4',
-  panel: 'M4 5h16v14H4zM9 5v14',
-  book: 'M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4zM5 16a4 4 0 0 1 4-4h10',
-  send: 'M12 19V5M6 11l6-6 6 6',
-  dots: 'M5 12h.01M12 12h.01M19 12h.01',
-  pin: 'M9 4h6l-1 6 4 3H6l4-3zM12 13v7',
-  copy: 'M9 9h10v10H9zM5 15V5h10',
-  up: 'M7 10v10M7 10l4-6a2 2 0 0 1 3 2l-1 4h5a2 2 0 0 1 2 2l-2 6a2 2 0 0 1-2 2H7',
-  retry: 'M4 12a8 8 0 1 0 3-6.2M4 4v4h4',
-  clip: 'M20 12l-8 8a5 5 0 0 1-7-7l8-8a3 3 0 0 1 5 5l-8 8a1 1 0 0 1-2-2l7-7',
-  close: 'M6 6l12 12M18 6 6 18',
-}
+  plus: "M12 5v14M5 12h14",
+  search: "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4",
+  panel: "M4 5h16v14H4zM9 5v14",
+  book: "M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4zM5 16a4 4 0 0 1 4-4h10",
+  send: "M12 19V5M6 11l6-6 6 6",
+  dots: "M5 12h.01M12 12h.01M19 12h.01",
+  pin: "M9 4h6l-1 6 4 3H6l4-3zM12 13v7",
+  copy: "M9 9h10v10H9zM5 15V5h10",
+  up: "M7 10v10M7 10l4-6a2 2 0 0 1 3 2l-1 4h5a2 2 0 0 1 2 2l-2 6a2 2 0 0 1-2 2H7",
+  retry: "M4 12a8 8 0 1 0 3-6.2M4 4v4h4",
+  clip: "M20 12l-8 8a5 5 0 0 1-7-7l8-8a3 3 0 0 1 5 5l-8 8a1 1 0 0 1-2-2l7-7",
+  close: "M6 6l12 12M18 6 6 18",
+};
 
-function RichAnswer({text}:{text:string}) {
-  return <div className="text-navy leading-[1.7]"><p className="font-sans text-[16px] whitespace-pre-wrap break-words mb-5">{text}</p>
-    <div className="font-sans grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">{['Phạt tiền','Trừ điểm GPLX','Hình thức bổ sung'].map((label,i)=><div key={label} className={`relative overflow-hidden rounded-xl border px-4 py-3.5 ${i===0?'border-accent/50 bg-selected':'border-line bg-surface'}`}>
-    {i===0&&<span className="absolute inset-y-0 left-0 w-[3px] bg-accent" aria-hidden/>}<p className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-muted mb-1.5">{label}</p><p className="text-[17px] font-semibold tracking-tight leading-tight">Chưa có dữ liệu cấu trúc</p><p className="mt-0.5 text-[11.5px] text-muted">Đọc câu trả lời và căn cứ; không suy đoán giá trị.</p></div>)}</div>
-    <p className="mb-4 text-[15px] text-text-secondary border-l-2 border-line pl-4">Hiệu lực và ngoại lệ: xem căn cứ được backend trả về.</p>
-  </div>
+function RichAnswer({ text }: { text: string }) {
+  return (
+    <div className="text-navy leading-[1.7]">
+      <p className="font-sans text-[16px] whitespace-pre-wrap break-words mb-5">
+        {text}
+      </p>
+      <div className="font-sans grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">
+        {["Phạt tiền", "Trừ điểm GPLX", "Hình thức bổ sung"].map((label, i) => (
+          <div
+            key={label}
+            className={`relative overflow-hidden rounded-xl border px-4 py-3.5 ${i === 0 ? "border-accent/50 bg-selected" : "border-line bg-surface"}`}
+          >
+            {i === 0 && (
+              <span
+                className="absolute inset-y-0 left-0 w-[3px] bg-accent"
+                aria-hidden
+              />
+            )}
+            <p className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-muted mb-1.5">
+              {label}
+            </p>
+            <p className="text-[17px] font-semibold tracking-tight leading-tight">
+              Chưa có dữ liệu cấu trúc
+            </p>
+            <p className="mt-0.5 text-[11.5px] text-muted">
+              Đọc câu trả lời và căn cứ; không suy đoán giá trị.
+            </p>
+          </div>
+        ))}
+      </div>
+      <p className="mb-4 text-[15px] text-text-secondary border-l-2 border-line pl-4">
+        Hiệu lực và ngoại lệ: xem căn cứ được backend trả về.
+      </p>
+    </div>
+  );
 }
 
 export default function ChatPage() {
-  const [chat] = useState(createChat)
-  const data = useSyncExternalStore(chat.subscribe, chat.getSnapshot), task = useTask()
-  const location = useLocation()
-  const [pinned, setPinned] = useState<Set<string>>(new Set())
-  const [notice, setNotice] = useState('')
-  const [source, setSource] = useState<Awaited<ReturnType<typeof loadCitationSource>>>()
-  const [sourceError, setSourceError] = useState(''), [sourceBusy, setSourceBusy] = useState(false)
-  const sourceRequest = useRef(0)
-  const sessions: Session[] = data.rows.map(row => {
-    const view = chatView(row)
-    return { id: row.id, title: row.question, group: 'Hôm nay', pinned: pinned.has(row.id), messages: [
-      { role: 'user', text: row.question },
-      { role: 'bot', text: view.answer, status: view.status, rich: !!view.answer, citations: view.citations.map(c => ({title:c.doc_id, clause:c.unit_id ?? c.sign_id ?? '', label:`${c.doc_id}${c.unit_id || c.sign_id ? ` · ${c.unit_id ?? c.sign_id}` : ''}`, raw:c})) },
-    ] }
-  })
+  const [chat] = useState(createChat);
+  const data = useSyncExternalStore(chat.subscribe, chat.getSnapshot),
+    task = useTask();
+  const location = useLocation();
+  const [pinned, setPinned] = useState<Set<string>>(new Set());
+  const [notice, setNotice] = useState("");
+  const [source, setSource] =
+    useState<Awaited<ReturnType<typeof loadCitationSource>>>();
+  const [sourceError, setSourceError] = useState(""),
+    [sourceBusy, setSourceBusy] = useState(false);
+  const sourceRequest = useRef(0);
+  const sessions: Session[] = data.rows.map((row) => {
+    const view = chatView(row);
+    return {
+      id: row.id,
+      title: row.question,
+      group: "Hôm nay",
+      pinned: pinned.has(row.id),
+      messages: [
+        { role: "user", text: row.question },
+        {
+          role: "bot",
+          text: view.answer,
+          status: view.status,
+          rich: !!view.answer,
+          citations: view.citations.map((c) => ({
+            title: c.doc_id,
+            clause: c.unit_id ?? c.sign_id ?? "",
+            label: `${c.doc_id}${c.unit_id || c.sign_id ? ` · ${c.unit_id ?? c.sign_id}` : ""}`,
+            raw: c,
+          })),
+        },
+      ],
+    };
+  });
   // Backend stores one question per record and exposes no session date/grouping.
-  useEffect(() => { void chat.load(); return () => chat.dispose() }, [chat])
-  useEffect(() => { if (data.currentId) setActiveId(data.currentId) }, [data.currentId])
-  useEffect(() => { const q=location.state?.initialQuery; if(typeof q==='string') setInput(q) }, [location.state])
-  const [activeId, setActiveId] = useState<string | null>(null)
-  const [input, setInput] = useState('')
-  const [query, setQuery] = useState('')
-  const [showList, setShowList] = useState(() => window.innerWidth >= 768)
+  useEffect(() => {
+    void chat.load();
+    return () => chat.dispose();
+  }, [chat]);
+  useEffect(() => {
+    if (data.currentId) setActiveId(data.currentId);
+  }, [data.currentId]);
+  useEffect(() => {
+    const q = location.state?.initialQuery;
+    if (typeof q === "string") setInput(q);
+  }, [location.state]);
+  const [activeId, setActiveId] = useState<string | null>(null);
+  const [input, setInput] = useState("");
+  const [query, setQuery] = useState("");
+  const [showList, setShowList] = useState(() => window.innerWidth >= 768);
   const [selectedCitation, setSelectedCitation] = useState<{
-    sessionId: string
-    messageIndex: number
-    referenceIndex: number
-  } | null>(null)
-  const thinking = data.busy
-  const blocked = data.busy || data.loading || task.busy
-  const endRef = useRef<HTMLDivElement>(null)
-  const taRef = useRef<HTMLTextAreaElement>(null)
-  const citationTriggerRef = useRef<HTMLButtonElement | null>(null)
-  const citationCloseRef = useRef<HTMLButtonElement>(null)
+    sessionId: string;
+    messageIndex: number;
+    referenceIndex: number;
+  } | null>(null);
+  const thinking = data.busy;
+  const blocked = data.busy || data.loading || task.busy;
+  const endRef = useRef<HTMLDivElement>(null);
+  const taRef = useRef<HTMLTextAreaElement>(null);
+  const citationTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const citationCloseRef = useRef<HTMLButtonElement>(null);
 
-  const active = sessions.find((s) => s.id === activeId) ?? null
-  const messages = active?.messages ?? []
-  const selectedReference = selectedCitation?.sessionId === activeId
-    ? messages[selectedCitation.messageIndex]?.citations?.[selectedCitation.referenceIndex]
-    : undefined
+  const active = sessions.find((s) => s.id === activeId) ?? null;
+  const messages = active?.messages ?? [];
+  const selectedReference =
+    selectedCitation?.sessionId === activeId
+      ? messages[selectedCitation.messageIndex]?.citations?.[
+          selectedCitation.referenceIndex
+        ]
+      : undefined;
 
   const filtered = useMemo(
-    () => sessions.filter((s) => s.title.toLowerCase().includes(query.toLowerCase())),
-    [sessions, query]
-  )
+    () =>
+      sessions.filter((s) =>
+        s.title.toLowerCase().includes(query.toLowerCase()),
+      ),
+    [sessions, query],
+  );
 
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages.length, thinking])
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages.length, thinking]);
 
   useEffect(() => {
-    setSelectedCitation(null)
-  }, [activeId])
+    setSelectedCitation(null);
+  }, [activeId]);
 
   useEffect(() => {
-    if (!selectedCitation) return
-    citationCloseRef.current?.focus()
+    if (!selectedCitation) return;
+    citationCloseRef.current?.focus();
     function handleEscape(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        setSelectedCitation(null)
-        citationTriggerRef.current?.focus()
+      if (event.key === "Escape") {
+        setSelectedCitation(null);
+        citationTriggerRef.current?.focus();
       }
     }
-    document.addEventListener('keydown', handleEscape)
-    return () => document.removeEventListener('keydown', handleEscape)
-  }, [selectedCitation])
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [selectedCitation]);
 
   useEffect(() => {
-    const ta = taRef.current
-    if (!ta) return
-    ta.style.height = 'auto'
-    ta.style.height = Math.min(ta.scrollHeight, 200) + 'px'
-  }, [input])
+    const ta = taRef.current;
+    if (!ta) return;
+    ta.style.height = "auto";
+    ta.style.height = Math.min(ta.scrollHeight, 200) + "px";
+  }, [input]);
 
   function newChat() {
-    setActiveId(null)
-    setInput('')
+    setActiveId(null);
+    setInput("");
   }
 
   async function send(text = input) {
-    if (blocked || !text.trim()) return
-    if (await chat.submit(text)) { setActiveId(chat.getSnapshot().rows[0]?.id ?? null); setInput(''); if(window.innerWidth<768) setShowList(false) }
+    if (blocked || !text.trim()) return;
+    if (await chat.submit(text)) {
+      setActiveId(chat.getSnapshot().rows[0]?.id ?? null);
+      setInput("");
+      if (window.innerWidth < 768) setShowList(false);
+    }
   }
   async function readSource() {
-    if (!selectedReference) return
-    const id=++sourceRequest.current; setSourceBusy(true); setSourceError(''); setSource(undefined)
-    try { const result=await loadCitationSource(selectedReference.raw); if(id===sourceRequest.current)setSource(result) }
-    catch { if(id===sourceRequest.current)setSourceError('Chi tiết nguồn chưa khả dụng hoặc không khớp trích đoạn. Trích dẫn backend được giữ nguyên.') }
-    finally { if(id===sourceRequest.current)setSourceBusy(false) }
+    if (!selectedReference) return;
+    const id = ++sourceRequest.current;
+    setSourceBusy(true);
+    setSourceError("");
+    setSource(undefined);
+    try {
+      const result = await loadCitationSource(selectedReference.raw);
+      if (id === sourceRequest.current) setSource(result);
+    } catch {
+      if (id === sourceRequest.current)
+        setSourceError(
+          "Chi tiết nguồn chưa khả dụng hoặc không khớp trích đoạn. Trích dẫn backend được giữ nguyên.",
+        );
+    } finally {
+      if (id === sourceRequest.current) setSourceBusy(false);
+    }
   }
   function messageAction(action: string, text: string) {
-    if(action==='Sao chép') { void navigator.clipboard.writeText(text).then(()=>setNotice('Đã sao chép')).catch(()=>setNotice('Không sao chép được')); return }
-    if(action==='Tạo lại') { const q=active?.messages[0]?.text; if(q)setInput(q); setNotice('Câu hỏi đã đưa vào ô nhập. Gửi để tạo lượt hỏi mới.'); return }
-    if(active) void task.run(async()=>{ await api(`/chat/${active.id}/feedback`,request('POST',{feedback:action==='Hữu ích'?'HELPFUL':action,note:''})); setNotice('Đã lưu phản hồi') })
+    if (action === "Sao chép") {
+      void navigator.clipboard
+        .writeText(text)
+        .then(() => setNotice("Đã sao chép"))
+        .catch(() => setNotice("Không sao chép được"));
+      return;
+    }
+    if (action === "Tạo lại") {
+      const q = active?.messages[0]?.text;
+      if (q) setInput(q);
+      setNotice("Câu hỏi đã đưa vào ô nhập. Gửi để tạo lượt hỏi mới.");
+      return;
+    }
+    if (active)
+      void task.run(async () => {
+        await api(
+          `/chat/${active.id}/feedback`,
+          request("POST", {
+            feedback: action === "Hữu ích" ? "HELPFUL" : action,
+            note: "",
+          }),
+        );
+        setNotice("Đã lưu phản hồi");
+      });
   }
   function handleKey(e: React.KeyboardEvent) {
-    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
-      e.preventDefault()
-      send()
+    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+      e.preventDefault();
+      send();
     }
   }
 
@@ -181,18 +306,36 @@ export default function ChatPage() {
         maxLength={4000}
         rows={1}
         className="block w-full min-h-[52px] resize-none overflow-y-auto bg-transparent px-4 pt-3.5 pb-1 text-[15px] leading-relaxed outline-none placeholder:text-muted/80 text-navy [scrollbar-width:thin]"
-        placeholder={active ? 'Hỏi tiếp…' : 'Hỏi về luật giao thông hoặc thi bằng lái…'}
+        placeholder={
+          active ? "Hỏi tiếp…" : "Hỏi về luật giao thông hoặc thi bằng lái…"
+        }
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKey}
       />
       <div className="flex flex-wrap items-center justify-between gap-2 px-3 pb-3">
         <div className="flex items-center gap-1">
-          <button onClick={() => setNotice("Demo: đính kèm ảnh chưa có API. Dùng thư viện biển báo để tra cứu.")} className="p-2 rounded-lg text-muted hover:bg-selected" title="Đính kèm ảnh biển báo · Demo">
+          <button
+            onClick={() =>
+              setNotice(
+                "Demo: đính kèm ảnh chưa có API. Dùng thư viện biển báo để tra cứu.",
+              )
+            }
+            className="p-2 rounded-lg text-muted hover:bg-selected"
+            title="Đính kèm ảnh biển báo · Demo"
+          >
             <Icon d={ic.clip} />
           </button>
         </div>
-        {thinking && <button onClick={() => void chat.cancel()} disabled={data.stopping} className="border border-line rounded-lg px-3 py-2 text-xs disabled:opacity-50">{data.stopping ? 'Đang dừng…' : 'Dừng'}</button>}
+        {thinking && (
+          <button
+            onClick={() => void chat.cancel()}
+            disabled={data.stopping}
+            className="border border-line rounded-lg px-3 py-2 text-xs disabled:opacity-50"
+          >
+            {data.stopping ? "Đang dừng…" : "Dừng"}
+          </button>
+        )}
         <button
           onClick={() => void send()}
           disabled={!input.trim() || blocked}
@@ -203,29 +346,50 @@ export default function ChatPage() {
         </button>
       </div>
     </div>
-  )
+  );
 
   return (
     <div className="relative flex h-full bg-bg">
       {/* Sessions */}
       {showList && (
-        <aside aria-label="Lịch sử câu hỏi" className="absolute inset-y-0 left-0 z-10 w-64 max-w-full md:static shrink-0 flex flex-col border-r border-line bg-bg shadow-lg md:shadow-none">
+        <aside
+          aria-label="Lịch sử câu hỏi"
+          className="absolute inset-y-0 left-0 z-10 w-64 max-w-full md:static shrink-0 flex flex-col border-r border-line bg-bg shadow-lg md:shadow-none"
+        >
           <div className="p-3 space-y-2">
-            <Notice loading={data.loading} error={data.error} retry={chat.load} />
+            <Notice
+              loading={data.loading}
+              error={data.error}
+              retry={chat.load}
+            />
             <div className="flex items-center gap-1">
-              <button type="button" onClick={() => setShowList(false)}
-                aria-label="Ẩn lịch sử" title="Ẩn lịch sử" aria-expanded={true}
-                className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-navy cursor-pointer hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong">
+              <button
+                type="button"
+                onClick={() => setShowList(false)}
+                aria-label="Ẩn lịch sử"
+                title="Ẩn lịch sử"
+                aria-expanded={true}
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-navy cursor-pointer hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong"
+              >
                 <Icon d={ic.panel} className="w-4 h-4" />
               </button>
-              <button type="button" disabled={thinking || data.loading} onClick={chat.load}
-                aria-label="Tải lại lịch sử" title="Tải lại lịch sử"
-                className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-navy cursor-pointer hover:bg-selected disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent-strong">
+              <button
+                type="button"
+                disabled={thinking || data.loading}
+                onClick={chat.load}
+                aria-label="Tải lại lịch sử"
+                title="Tải lại lịch sử"
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-navy cursor-pointer hover:bg-selected disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent-strong"
+              >
                 <Icon d={ic.retry} className="w-4 h-4" />
               </button>
-              <button type="button" onClick={newChat}
-                aria-label="Cuộc trò chuyện mới" title="Cuộc trò chuyện mới"
-                className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-navy cursor-pointer hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong">
+              <button
+                type="button"
+                onClick={newChat}
+                aria-label="Cuộc trò chuyện mới"
+                title="Cuộc trò chuyện mới"
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-navy cursor-pointer hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong"
+              >
                 <Icon d={ic.plus} className="w-4 h-4" />
               </button>
             </div>
@@ -244,23 +408,59 @@ export default function ChatPage() {
           <div className="flex-1 overflow-y-auto px-2 pb-4">
             {filtered.some((s) => s.pinned) && (
               <Section label="Đã ghim">
-                {filtered.filter((s) => s.pinned).map((s) => (
-                  <SessionItem key={s.id} s={s} active={s.id === activeId} onClick={() => { setActiveId(s.id); if(window.innerWidth<768)setShowList(false) }} onPin={() => setPinned(p=>{const n=new Set(p); n.has(s.id)?n.delete(s.id):n.add(s.id); return n})} />
-                ))}
+                {filtered
+                  .filter((s) => s.pinned)
+                  .map((s) => (
+                    <SessionItem
+                      key={s.id}
+                      s={s}
+                      active={s.id === activeId}
+                      onClick={() => {
+                        setActiveId(s.id);
+                        if (window.innerWidth < 768) setShowList(false);
+                      }}
+                      onPin={() =>
+                        setPinned((p) => {
+                          const n = new Set(p);
+                          n.has(s.id) ? n.delete(s.id) : n.add(s.id);
+                          return n;
+                        })
+                      }
+                    />
+                  ))}
               </Section>
             )}
             {groups.map((g) => {
-              const items = filtered.filter((s) => s.group === g && !s.pinned)
-              if (!items.length) return null
+              const items = filtered.filter((s) => s.group === g && !s.pinned);
+              if (!items.length) return null;
               return (
-                <Section key={g} label="Lịch sử backend · mỗi mục một lượt hỏi">
+                <Section key={g}>
                   {items.map((s) => (
-                    <SessionItem key={s.id} s={s} active={s.id === activeId} onClick={() => { setActiveId(s.id); if(window.innerWidth<768)setShowList(false) }} onPin={() => setPinned(p=>{const n=new Set(p); n.has(s.id)?n.delete(s.id):n.add(s.id); return n})} />
+                    <SessionItem
+                      key={s.id}
+                      s={s}
+                      active={s.id === activeId}
+                      onClick={() => {
+                        setActiveId(s.id);
+                        if (window.innerWidth < 768) setShowList(false);
+                      }}
+                      onPin={() =>
+                        setPinned((p) => {
+                          const n = new Set(p);
+                          n.has(s.id) ? n.delete(s.id) : n.add(s.id);
+                          return n;
+                        })
+                      }
+                    />
                   ))}
                 </Section>
-              )
+              );
             })}
-            {!filtered.length && <p className="px-3 py-6 text-xs text-muted">Không tìm thấy cuộc trò chuyện.</p>}
+            {!filtered.length && (
+              <p className="px-3 py-6 text-xs text-muted">
+                Không tìm thấy cuộc trò chuyện.
+              </p>
+            )}
           </div>
         </aside>
       )}
@@ -269,24 +469,42 @@ export default function ChatPage() {
       <div className="flex-1 flex flex-col min-w-0">
         <header className="h-14 shrink-0 flex items-center justify-between px-4 border-b border-line/70 bg-bg/85 backdrop-blur">
           <div className="flex items-center gap-2 min-w-0">
-            {!showList && <button type="button"
-              onClick={() => setShowList(true)}
-              className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-muted cursor-pointer hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong"
-              title="Hiện lịch sử" aria-label="Hiện lịch sử" aria-expanded={false}
-            >
-              <Icon d={ic.panel} />
-            </button>}
-            <h1 className="font-sans font-semibold text-[15px] text-navy truncate">{active?.title ?? 'Cuộc trò chuyện mới'}</h1>
+            {!showList && (
+              <button
+                type="button"
+                onClick={() => setShowList(true)}
+                className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-muted cursor-pointer hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong"
+                title="Hiện lịch sử"
+                aria-label="Hiện lịch sử"
+                aria-expanded={false}
+              >
+                <Icon d={ic.panel} />
+              </button>
+            )}
+            <h1 className="font-sans font-semibold text-[15px] text-navy truncate">
+              {active?.title ?? "Cuộc trò chuyện mới"}
+            </h1>
           </div>
         </header>
 
-        <div className="px-4"><Notice error={data.requestError || task.error} /><Notice error={data.error} retry={chat.load} />{notice && <p role="status" className="py-2 text-xs text-muted">{notice}</p>}</div>
+        <div className="px-4">
+          <Notice error={data.requestError || task.error} />
+          <Notice error={data.error} retry={chat.load} />
+          {notice && (
+            <p role="status" className="py-2 text-xs text-muted">
+              {notice}
+            </p>
+          )}
+        </div>
         {!active ? (
           /* Empty state */
           <div className="flex-1 flex flex-col items-center justify-center px-4 pb-24">
             <div className="w-full max-w-2xl">
               <h2 className="flex items-center justify-center gap-3 font-sans font-semibold text-2xl sm:text-3xl tracking-normal text-center text-navy mb-8">
-                <Icon d={ic.book} className="h-7 w-7 shrink-0 text-accent-strong" />
+                <Icon
+                  d={ic.book}
+                  className="h-7 w-7 shrink-0 text-accent-strong"
+                />
                 Tra cứu luật giao thông
               </h2>
               {composer}
@@ -308,10 +526,12 @@ export default function ChatPage() {
             <div className="flex-1 overflow-y-auto">
               <div className="mx-auto w-full max-w-2xl px-4 py-8 space-y-10">
                 {messages.length === 0 && (
-                  <p className="text-center text-sm text-muted py-12">Cuộc trò chuyện này chưa có tin nhắn.</p>
+                  <p className="text-center text-sm text-muted py-12">
+                    Cuộc trò chuyện này chưa có tin nhắn.
+                  </p>
                 )}
                 {messages.map((m, i) =>
-                  m.role === 'user' ? (
+                  m.role === "user" ? (
                     <div key={i} className="flex justify-end">
                       <div className="max-w-[78%] px-4 py-3 rounded-[20px] rounded-br-md bg-selected border border-accent/20 text-[15px] leading-relaxed text-navy">
                         {m.text}
@@ -324,56 +544,104 @@ export default function ChatPage() {
                           <LogoMark size={15} />
                         </span>
                         Trợ lý LuậtGT
-                        <span className="font-normal text-muted">· trích từ {m.citations?.length ?? 0} văn bản</span>
+                        <span className="font-normal text-muted">
+                          · trích từ {m.citations?.length ?? 0} văn bản
+                        </span>
                       </div>
-                      <p role="status" className="text-xs text-muted">{m.status}</p>{m.rich?<RichAnswer text={m.text}/>:<p className="font-sans text-[16px] leading-[1.7] text-navy whitespace-pre-wrap break-words">{m.text}</p>}
+                      <p role="status" className="text-xs text-muted">
+                        {m.status}
+                      </p>
+                      {m.rich ? (
+                        <RichAnswer text={m.text} />
+                      ) : (
+                        <p className="font-sans text-[16px] leading-[1.7] text-navy whitespace-pre-wrap break-words">
+                          {m.text}
+                        </p>
+                      )}
                       {m.citations && m.citations.length > 0 && (
                         <div className="mt-3 flex flex-wrap gap-2">
                           {m.citations.map((citation, referenceIndex) => {
-                            const isSelected = selectedCitation?.sessionId === activeId
-                              && selectedCitation.messageIndex === i
-                              && selectedCitation.referenceIndex === referenceIndex
+                            const isSelected =
+                              selectedCitation?.sessionId === activeId &&
+                              selectedCitation.messageIndex === i &&
+                              selectedCitation.referenceIndex ===
+                                referenceIndex;
                             return (
                               <button
                                 key={`${citation.title}-${citation.clause}`}
                                 type="button"
                                 onClick={(event) => {
-                                  if (!active) return
-                                  citationTriggerRef.current = event.currentTarget
-                                  sourceRequest.current++; setSource(undefined); setSourceError(''); setSourceBusy(false); setSelectedCitation({ sessionId: active.id, messageIndex: i, referenceIndex })
+                                  if (!active) return;
+                                  citationTriggerRef.current =
+                                    event.currentTarget;
+                                  sourceRequest.current++;
+                                  setSource(undefined);
+                                  setSourceError("");
+                                  setSourceBusy(false);
+                                  setSelectedCitation({
+                                    sessionId: active.id,
+                                    messageIndex: i,
+                                    referenceIndex,
+                                  });
                                 }}
-                                aria-controls={isSelected ? 'legal-citation-panel' : undefined}
+                                aria-controls={
+                                  isSelected
+                                    ? "legal-citation-panel"
+                                    : undefined
+                                }
                                 aria-expanded={isSelected}
-                                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-medium text-left text-xs text-accent-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${isSelected ? 'border-accent bg-selected' : 'border-line bg-surface hover:border-accent/60 hover:bg-selected'}`}
+                                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-medium text-left text-xs text-accent-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${isSelected ? "border-accent bg-selected" : "border-line bg-surface hover:border-accent/60 hover:bg-selected"}`}
                               >
-                                <Icon d={ic.book} className="w-3.5 h-3.5 shrink-0" />
+                                <Icon
+                                  d={ic.book}
+                                  className="w-3.5 h-3.5 shrink-0"
+                                />
                                 <span>{citation.label}</span>
                               </button>
-                            )
+                            );
                           })}
                         </div>
                       )}
                       <div className="mt-4 pt-3 border-t border-dashed border-line flex flex-wrap items-center gap-1 text-muted opacity-70 group-hover:opacity-100 transition-opacity">
                         {[
-                          { d: ic.copy, t: 'Sao chép' },
-                          { d: ic.up, t: 'Hữu ích' },
-                          { d: ic.retry, t: 'Tạo lại' },
-                          { d: ic.up, t: 'WRONG', label: 'Câu trả lời sai' },
-                          { d: ic.up, t: 'NO_BASIS', label: 'Thiếu căn cứ' },
-                          { d: ic.up, t: 'OUTDATED', label: 'Thông tin lỗi thời' },
+                          { d: ic.copy, t: "Sao chép" },
+                          { d: ic.up, t: "Hữu ích" },
+                          { d: ic.retry, t: "Tạo lại" },
+                          { d: ic.up, t: "WRONG", label: "Câu trả lời sai" },
+                          { d: ic.up, t: "NO_BASIS", label: "Thiếu căn cứ" },
+                          {
+                            d: ic.up,
+                            t: "OUTDATED",
+                            label: "Thông tin lỗi thời",
+                          },
                         ].map((a) => (
-                          <button disabled={blocked} onClick={() => messageAction(a.t,m.text)} key={a.t} aria-label={a.label ?? a.t} title={a.label ?? a.t} className="p-1.5 rounded-md hover:bg-selected hover:text-navy">
+                          <button
+                            disabled={blocked}
+                            onClick={() => messageAction(a.t, m.text)}
+                            key={a.t}
+                            aria-label={a.label ?? a.t}
+                            title={a.label ?? a.t}
+                            className="p-1.5 rounded-md hover:bg-selected hover:text-navy"
+                          >
                             <Icon d={a.d} className="w-3.5 h-3.5" />
                           </button>
                         ))}
-                        <NavLinkButton to="/on-thi" size="sm" className="ml-auto rounded-lg">Ôn tập theo chương</NavLinkButton>
+                        <NavLinkButton
+                          to="/on-thi"
+                          size="sm"
+                          className="ml-auto rounded-lg"
+                        >
+                          Ôn tập theo chương
+                        </NavLinkButton>
                       </div>
                     </div>
-                  )
+                  ),
                 )}
                 {thinking && (
                   <div className="flex items-center gap-2 text-sm text-muted">
-                    <span className="text-accent-strong animate-spin [animation-duration:2.4s]">✻</span>
+                    <span className="text-accent-strong animate-spin [animation-duration:2.4s]">
+                      ✻
+                    </span>
                     Đang tra cứu văn bản…
                   </div>
                 )}
@@ -384,7 +652,8 @@ export default function ChatPage() {
             <div className="mx-auto w-full max-w-2xl px-4 pb-3">
               {composer}
               <p className="mt-2 text-center text-[11px] text-muted">
-                Nội dung mang tính tham khảo, không thay thế tư vấn pháp lý chính thức.
+                Nội dung mang tính tham khảo, không thay thế tư vấn pháp lý
+                chính thức.
               </p>
             </div>
           </>
@@ -393,15 +662,20 @@ export default function ChatPage() {
 
       {/* Legal refs */}
       {selectedReference && (
-        <aside id="legal-citation-panel" aria-label="Nguồn trích dẫn" className="absolute inset-y-0 right-0 z-20 w-80 max-w-full shrink-0 border-l border-line bg-sidebar flex flex-col shadow-lg lg:static lg:shadow-none">
+        <aside
+          id="legal-citation-panel"
+          aria-label="Nguồn trích dẫn"
+          className="absolute inset-y-0 right-0 z-20 w-80 max-w-full shrink-0 border-l border-line bg-sidebar flex flex-col shadow-lg lg:static lg:shadow-none"
+        >
           <div className="h-14 shrink-0 flex items-center justify-between gap-2 px-4 text-[13px] font-semibold text-navy border-b border-line">
             <span>Nguồn trích dẫn</span>
             <button
               ref={citationCloseRef}
               type="button"
               onClick={() => {
-                sourceRequest.current++; setSelectedCitation(null)
-                citationTriggerRef.current?.focus()
+                sourceRequest.current++;
+                setSelectedCitation(null);
+                citationTriggerRef.current?.focus();
               }}
               aria-label="Đóng nguồn trích dẫn"
               className="p-2 rounded-lg text-muted hover:bg-selected hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
@@ -415,44 +689,90 @@ export default function ChatPage() {
                 <Icon d={ic.book} className="w-3.5 h-3.5" />
                 Căn cứ pháp lý
               </div>
-              <h2 className="text-[15px] font-semibold leading-relaxed text-navy mb-3">{selectedReference.title}</h2>
-              <p className="text-xs text-muted leading-relaxed">{selectedReference.clause}</p>
-              <blockquote className="mt-3 text-sm whitespace-pre-wrap break-words">{selectedReference.raw.quote}</blockquote>
-              <button disabled={sourceBusy} onClick={() => void readSource()} className="mt-3 border border-line rounded-lg px-3 py-2 text-xs">Đối chiếu chi tiết nguồn</button><Notice error={sourceError} />
-              {source && <details open className="mt-3 text-xs"><summary>{source.title} · {source.number} · {source.unitType}</summary><p className="whitespace-pre-wrap mt-2">{source.text}</p><p>Trích đoạn khớp nguồn; không xác nhận hiệu lực hiện hành.</p></details>}
+              <h2 className="text-[15px] font-semibold leading-relaxed text-navy mb-3">
+                {selectedReference.title}
+              </h2>
+              <p className="text-xs text-muted leading-relaxed">
+                {selectedReference.clause}
+              </p>
+              <blockquote className="mt-3 text-sm whitespace-pre-wrap break-words">
+                {selectedReference.raw.quote}
+              </blockquote>
+              <button
+                disabled={sourceBusy}
+                onClick={() => void readSource()}
+                className="mt-3 border border-line rounded-lg px-3 py-2 text-xs"
+              >
+                Đối chiếu chi tiết nguồn
+              </button>
+              <Notice error={sourceError} />
+              {source && (
+                <details open className="mt-3 text-xs">
+                  <summary>
+                    {source.title} · {source.number} · {source.unitType}
+                  </summary>
+                  <p className="whitespace-pre-wrap mt-2">{source.text}</p>
+                  <p>
+                    Trích đoạn khớp nguồn; không xác nhận hiệu lực hiện hành.
+                  </p>
+                </details>
+              )}
             </div>
           </div>
         </aside>
       )}
     </div>
-  )
+  );
 }
 
-function Section({ label, children }: { label: string; children: React.ReactNode }) {
+function Section({
+  label,
+  children,
+}: {
+  label?: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="mt-3">
-      <p className="px-3 pb-1 text-[11px] font-medium text-muted">{label}</p>
+      {label && (
+        <p className="px-3 pb-1 text-[11px] font-medium text-muted">{label}</p>
+      )}
       <div className="space-y-px">{children}</div>
     </div>
-  )
+  );
 }
 
-function SessionItem({ s, active, onClick, onPin }: { s: Session; active: boolean; onClick: () => void; onPin: () => void }) {
+function SessionItem({
+  s,
+  active,
+  onClick,
+  onPin,
+}: {
+  s: Session;
+  active: boolean;
+  onClick: () => void;
+  onPin: () => void;
+}) {
   return (
     <div
       onClick={onClick}
       className={`group flex items-center gap-2 px-3 py-1.5 rounded-lg cursor-pointer text-[13px] transition-colors ${
-        active ? 'bg-selected text-navy font-medium' : 'text-text-secondary hover:bg-selected'
+        active
+          ? "bg-selected text-navy font-medium"
+          : "text-text-secondary hover:bg-selected"
       }`}
     >
       <span className="flex-1 truncate">{s.title}</span>
       <button
-        onClick={(e) => {e.stopPropagation(); onPin()}}
+        onClick={(e) => {
+          e.stopPropagation();
+          onPin();
+        }}
         className="opacity-0 group-hover:opacity-100 p-0.5 rounded text-muted hover:text-navy"
         aria-label="Ghim trong phiên giao diện"
       >
         <Icon d={ic.dots} />
       </button>
     </div>
-  )
+  );
 }

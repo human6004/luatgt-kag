@@ -1,72 +1,80 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
-import { api, send } from "../api"
+import { api, send } from "../api";
 
-import { Button, Card, Field, Modal, NavLinkButton, Page, inputCls } from "../admin/ui"
+import {
+  Button,
+  Card,
+  Field,
+  Modal,
+  NavLinkButton,
+  Page,
+  inputCls,
+} from "../admin/ui";
 
-import { Asset, Notice, useData, useTask } from "./server/shared"
+import { Asset, Notice, useData, useTask } from "./server/shared";
 
-import type { ExamRule } from "./server/QuestionBankSettings"
+import type { ExamRule } from "./server/QuestionBankSettings";
 
 type Question = {
-  questionId: string
-  text: string
-  chapter: number
-  options: string[]
-  imageKey?: string
-  correctAnswer?: number
-  critical?: boolean
-  explanation?: string
-}
+  questionId: string;
+  text: string;
+  chapter: number;
+  options: string[];
+  imageKey?: string;
+  correctAnswer?: number;
+  critical?: boolean;
+  explanation?: string;
+};
 
 type Exam = {
-  id: string
-  license: string
-  ruleset: string
-  expiresAt: string
-  serverTime: string
-  startedAt: string
-  questions: Question[]
-  answers: Record<string, number>
-  submittedAt: string | null
-  score?: number
-  passed?: boolean
-  criticalFailed?: boolean
-  minimumCorrect?: number
-  durationMinutes?: number
-}
+  id: string;
+  license: string;
+  ruleset: string;
+  expiresAt: string;
+  serverTime: string;
+  startedAt: string;
+  questions: Question[];
+  answers: Record<string, number>;
+  submittedAt: string | null;
+  score?: number;
+  passed?: boolean;
+  criticalFailed?: boolean;
+  minimumCorrect?: number;
+  durationMinutes?: number;
+};
 
 type History = {
-  id: string
-  license: string
-  total: number
-  startedAt: string
-  submittedAt: string | null
-  score: number | null
-  passed: boolean | null
-  criticalFailed: boolean | null
-}
+  id: string;
+  license: string;
+  total: number;
+  startedAt: string;
+  submittedAt: string | null;
+  score: number | null;
+  passed: boolean | null;
+  criticalFailed: boolean | null;
+};
 
 export default function ExamPage() {
   const rules = useData<ExamRule[]>("/exam-rules"),
     history = useData<History[]>("/exams"),
-    task = useTask()
+    task = useTask();
 
   const [ruleId, setRuleId] = useState(""),
     [exam, setExam] = useState<Exam | null>(null),
     [current, setCurrent] = useState(0),
-    [left, setLeft] = useState(0)
+    [left, setLeft] = useState(0);
 
   const [flags, setFlags] = useState<Set<string>>(new Set()),
     [confirm, setConfirm] = useState(false),
-    [wrongOnly, setWrongOnly] = useState(false)
+    [wrongOnly, setWrongOnly] = useState(false);
 
   const selected =
-    rules.value?.find((r) => r.rule_id === ruleId) ?? rules.value?.[0]
+    rules.value?.find((r) => r.rule_id === ruleId) ?? rules.value?.[0];
 
   function accept(value: Exam) {
-    setExam(value)
-    sessionStorage.setItem("luatgt-active-exam", value.id)
+    setExam(value);
+    sessionStorage.setItem("luatgt-active-exam", value.id);
 
     setLeft(
       Math.max(
@@ -75,54 +83,54 @@ export default function ExamPage() {
           (Date.parse(value.expiresAt) - Date.parse(value.serverTime)) / 1000,
         ),
       ),
-    )
+    );
   }
 
   async function open(id: string) {
-    accept(await api<Exam>(`/exams/${id}`))
-    setCurrent(0)
-    setFlags(new Set())
-    setWrongOnly(false)
+    accept(await api<Exam>(`/exams/${id}`));
+    setCurrent(0);
+    setFlags(new Set());
+    setWrongOnly(false);
   }
 
   useEffect(() => {
-    const id = sessionStorage.getItem("luatgt-active-exam")
-    if (!id) return
-    const controller = new AbortController()
+    const id = sessionStorage.getItem("luatgt-active-exam");
+    if (!id) return;
+    const controller = new AbortController();
     void task.run(async () => {
       const value = await api<Exam>(`/exams/${id}`, {
         signal: controller.signal,
-      })
-      if (!controller.signal.aborted) accept(value)
-    })
-    return () => controller.abort()
-  }, [])
+      });
+      if (!controller.signal.aborted) accept(value);
+    });
+    return () => controller.abort();
+  }, []);
 
   useEffect(() => {
-    if (!exam || exam.submittedAt) return
+    if (!exam || exam.submittedAt) return;
     const timer = window.setInterval(
       () => setLeft((v) => Math.max(0, v - 1)),
       1000,
-    )
-    return () => window.clearInterval(timer)
-  }, [exam?.id, exam?.submittedAt])
+    );
+    return () => window.clearInterval(timer);
+  }, [exam?.id, exam?.submittedAt]);
 
   async function submit() {
-    if (!exam || task.busy) return
+    if (!exam || task.busy) return;
     await task.run(async () => {
-      accept(await api<Exam>(`/exams/${exam.id}/submit`, send("POST")))
-      setConfirm(false)
-      history.reload()
-    })
+      accept(await api<Exam>(`/exams/${exam.id}/submit`, send("POST")));
+      setConfirm(false);
+      history.reload();
+    });
   }
 
   useEffect(() => {
     if (exam && !exam.submittedAt && left === 0 && !task.busy && !task.error)
-      void submit()
-  }, [left, exam?.id, exam?.submittedAt, task.busy, task.error])
+      void submit();
+  }, [left, exam?.id, exam?.submittedAt, task.busy, task.error]);
 
   function choose(questionId: string, selected: number) {
-    if (!exam || task.busy || exam.submittedAt || left <= 0) return
+    if (!exam || task.busy || exam.submittedAt || left <= 0) return;
     void task.run(async () =>
       accept(
         await api<Exam>(
@@ -130,43 +138,43 @@ export default function ExamPage() {
           send("PUT", { selected }),
         ),
       ),
-    )
+    );
   }
 
   function toggleFlag(id: string) {
     setFlags((before) => {
-      const next = new Set(before)
-      if (next.has(id)) next.delete(id)
-      else next.add(id)
-      return next
-    })
+      const next = new Set(before);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   }
 
   useEffect(() => {
-    if (!exam || exam.submittedAt || confirm) return
+    if (!exam || exam.submittedAt || confirm) return;
 
     const handler = (e: KeyboardEvent) => {
-      if ((e.target as HTMLElement).closest("input,select,textarea")) return
-      const question = exam.questions[current]
-      const number = Number(e.key)
+      if ((e.target as HTMLElement).closest("input,select,textarea")) return;
+      const question = exam.questions[current];
+      const number = Number(e.key);
       if (number >= 1 && number <= question.options.length)
-        choose(question.questionId, number - 1)
+        choose(question.questionId, number - 1);
       else if (e.key === "ArrowRight")
-        setCurrent((i) => Math.min(exam.questions.length - 1, i + 1))
-      else if (e.key === "ArrowLeft") setCurrent((i) => Math.max(0, i - 1))
-      else if (e.key.toLowerCase() === "f") toggleFlag(question.questionId)
-    }
+        setCurrent((i) => Math.min(exam.questions.length - 1, i + 1));
+      else if (e.key === "ArrowLeft") setCurrent((i) => Math.max(0, i - 1));
+      else if (e.key.toLowerCase() === "f") toggleFlag(question.questionId);
+    };
 
-    window.addEventListener("keydown", handler)
-    return () => window.removeEventListener("keydown", handler)
-  }, [exam, current, confirm, task.busy, left])
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, [exam, current, confirm, task.busy, left]);
 
   function close() {
-    setExam(null)
-    setConfirm(false)
-    setWrongOnly(false)
-    sessionStorage.removeItem("luatgt-active-exam")
-    history.reload()
+    setExam(null);
+    setConfirm(false);
+    setWrongOnly(false);
+    sessionStorage.removeItem("luatgt-active-exam");
+    history.reload();
   }
 
   if (!exam)
@@ -180,76 +188,158 @@ export default function ExamPage() {
         <Notice {...history} retry={history.reload} />
         <Notice error={task.error} />
         <div className="grid min-w-0 gap-6 lg:grid-cols-2 items-start">
-        <Card title="Chọn bài thi">
-          <div className="px-5 pb-5 space-y-5">
-            {selected ? <>
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
-                <Field label="Bộ câu hỏi">
-                  <select aria-label="Bộ câu hỏi" className={inputCls} value={selected.set_id} disabled={task.busy || rules.loading}
-                    onChange={e => setRuleId(rules.value?.find(r => r.set_id === e.target.value)?.rule_id || '')}>
-                    {Array.from(new Map((rules.value || []).map(r => [r.set_id, r.set_name]))).map(([id, name]) => <option key={id} value={id}>{name}</option>)}
-                  </select>
-                </Field>
-                <Field label="Hạng thi">
-                  <select aria-label="Hạng thi" className={inputCls} value={selected.rule_id} disabled={task.busy || rules.loading} onChange={e => setRuleId(e.target.value)}>
-                    {rules.value?.filter(r => r.set_id === selected.set_id).map(r => <option key={r.rule_id} value={r.rule_id}>Hạng {r.class_code}</option>)}
-                  </select>
-                </Field>
-              </div>
-              <dl className="grid grid-cols-3 gap-3 border-y border-line py-4 text-sm">
-                <div><dt className="text-xs text-muted">Số câu</dt><dd className="mt-1 font-semibold text-navy">{selected.total_questions} câu</dd></div>
-                <div><dt className="text-xs text-muted">Thời gian</dt><dd className="mt-1 font-semibold text-navy">{selected.duration_minutes} phút</dd></div>
-                <div><dt className="text-xs text-muted">Điểm đạt</dt><dd className="mt-1 font-semibold text-navy">{selected.minimum_correct}/{selected.total_questions}</dd></div>
-              </dl>
-              {selected.fail_on_critical && <p className="text-sm text-muted">Không sai hoặc bỏ trống câu điểm liệt.</p>}
-              <Button variant="primary" className="w-full sm:w-auto" disabled={task.busy || rules.loading} onClick={() => void task.run(async () => {
-                accept(await api<Exam>('/exams', send('POST', {ruleId: selected.rule_id})))
-                setCurrent(0)
-                setFlags(new Set())
-              })}>{task.busy ? 'Đang tạo bài thi…' : 'Bắt đầu thi'}</Button>
-            </> : !rules.loading && !rules.error ? <div className="space-y-3">
-              <p className="font-medium text-navy">Chưa có đề thi đang áp dụng</p>
-              <p className="text-sm leading-6 text-muted">Người quản lý cần cấu hình đề thi và xuất bản đủ câu hỏi. Bạn không cần tự thiết lập quy tắc.</p>
-            </div> : <p className="text-sm text-muted">{rules.loading ? 'Đang tải danh sách bài thi…' : 'Chưa tải được danh sách bài thi. Vui lòng thử lại.'}</p>}
-          </div>
-        </Card>
-        <Card title="Lịch sử thi">
-          <div className="px-5 pb-5 space-y-3">
-            {history.value?.map((h) => (
-              <div
-                key={h.id}
-                className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3"
-              >
-                <span>
-                  Hạng {h.license} ·{" "}
-                  {new Date(h.startedAt).toLocaleString("vi-VN")} ·{" "}
-                  {h.submittedAt
-                    ? `${h.score}/${h.total} · ${
-                        h.passed ? "Đạt" : "Không đạt"
-                      }${h.criticalFailed ? " · Sai câu điểm liệt" : ""}`
-                    : "Chưa nộp"}
-                </span>
-                <Button
-                  disabled={task.busy}
-                  onClick={() => void task.run(() => open(h.id))}
+          <Card title="Chọn bài thi">
+            <div className="px-5 pb-5 space-y-5">
+              {selected ? (
+                <>
+                  <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
+                    <Field label="Bộ câu hỏi">
+                      <select
+                        aria-label="Bộ câu hỏi"
+                        className={inputCls}
+                        value={selected.set_id}
+                        disabled={task.busy || rules.loading}
+                        onChange={(e) =>
+                          setRuleId(
+                            rules.value?.find(
+                              (r) => r.set_id === e.target.value,
+                            )?.rule_id || "",
+                          )
+                        }
+                      >
+                        {Array.from(
+                          new Map(
+                            (rules.value || []).map((r) => [
+                              r.set_id,
+                              r.set_name,
+                            ]),
+                          ),
+                        ).map(([id, name]) => (
+                          <option key={id} value={id}>
+                            {name}
+                          </option>
+                        ))}
+                      </select>
+                    </Field>
+                    <Field label="Hạng thi">
+                      <select
+                        aria-label="Hạng thi"
+                        className={inputCls}
+                        value={selected.rule_id}
+                        disabled={task.busy || rules.loading}
+                        onChange={(e) => setRuleId(e.target.value)}
+                      >
+                        {rules.value
+                          ?.filter((r) => r.set_id === selected.set_id)
+                          .map((r) => (
+                            <option key={r.rule_id} value={r.rule_id}>
+                              Hạng {r.class_code}
+                            </option>
+                          ))}
+                      </select>
+                    </Field>
+                  </div>
+                  <dl className="grid grid-cols-3 gap-3 border-y border-line py-4 text-sm">
+                    <div>
+                      <dt className="text-xs text-muted">Số câu</dt>
+                      <dd className="mt-1 font-semibold text-navy">
+                        {selected.total_questions} câu
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs text-muted">Thời gian</dt>
+                      <dd className="mt-1 font-semibold text-navy">
+                        {selected.duration_minutes} phút
+                      </dd>
+                    </div>
+                    <div>
+                      <dt className="text-xs text-muted">Điểm đạt</dt>
+                      <dd className="mt-1 font-semibold text-navy">
+                        {selected.minimum_correct}/{selected.total_questions}
+                      </dd>
+                    </div>
+                  </dl>
+                  {selected.fail_on_critical && (
+                    <p className="text-sm text-muted">
+                      Không sai hoặc bỏ trống câu điểm liệt.
+                    </p>
+                  )}
+                  <Button
+                    variant="primary"
+                    className="w-full sm:w-auto"
+                    disabled={task.busy || rules.loading}
+                    onClick={() =>
+                      void task.run(async () => {
+                        accept(
+                          await api<Exam>(
+                            "/exams",
+                            send("POST", { ruleId: selected.rule_id }),
+                          ),
+                        );
+                        setCurrent(0);
+                        setFlags(new Set());
+                      })
+                    }
+                  >
+                    {task.busy ? "Đang tạo bài thi…" : "Bắt đầu thi"}
+                  </Button>
+                </>
+              ) : !rules.loading && !rules.error ? (
+                <div className="space-y-3">
+                  <p className="font-medium text-navy">
+                    Chưa có đề thi đang áp dụng
+                  </p>
+                  <p className="text-sm leading-6 text-muted">
+                    Người quản lý cần cấu hình đề thi và xuất bản đủ câu hỏi.
+                    Bạn không cần tự thiết lập quy tắc.
+                  </p>
+                </div>
+              ) : (
+                <p className="text-sm text-muted">
+                  {rules.loading
+                    ? "Đang tải danh sách bài thi…"
+                    : "Chưa tải được danh sách bài thi. Vui lòng thử lại."}
+                </p>
+              )}
+            </div>
+          </Card>
+          <Card title="Lịch sử thi">
+            <div className="px-5 pb-5 space-y-3">
+              {history.value?.map((h) => (
+                <div
+                  key={h.id}
+                  className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3"
                 >
-                  {h.submittedAt ? "Xem bài" : "Tiếp tục"}
-                </Button>
-              </div>
-            ))}
-            {history.value?.length === 0 && (
-              <p className="text-muted">Chưa có bài thi.</p>
-            )}
-          </div>
-        </Card>
+                  <span>
+                    Hạng {h.license} ·{" "}
+                    {new Date(h.startedAt).toLocaleString("vi-VN")} ·{" "}
+                    {h.submittedAt
+                      ? `${h.score}/${h.total} · ${
+                          h.passed ? "Đạt" : "Không đạt"
+                        }${h.criticalFailed ? " · Sai câu điểm liệt" : ""}`
+                      : "Chưa nộp"}
+                  </span>
+                  <Button
+                    disabled={task.busy}
+                    onClick={() => void task.run(() => open(h.id))}
+                  >
+                    {h.submittedAt ? "Xem bài" : "Tiếp tục"}
+                  </Button>
+                </div>
+              ))}
+              {history.value?.length === 0 && (
+                <p className="text-muted">Chưa có bài thi.</p>
+              )}
+            </div>
+          </Card>
         </div>
       </Page>
-    )
+    );
 
   if (exam.submittedAt) {
     const questions = exam.questions.filter(
       (q) => !wrongOnly || exam.answers[q.questionId] !== q.correctAnswer,
-    )
+    );
 
     return (
       <Page
@@ -313,11 +403,11 @@ export default function ExamPage() {
           ))}
         </div>
       </Page>
-    )
+    );
   }
 
   const q = exam.questions[current],
-    answered = Object.keys(exam.answers).length
+    answered = Object.keys(exam.answers).length;
 
   return (
     <Page
@@ -433,5 +523,5 @@ export default function ExamPage() {
         </p>
       </Modal>
     </Page>
-  )
+  );
 }

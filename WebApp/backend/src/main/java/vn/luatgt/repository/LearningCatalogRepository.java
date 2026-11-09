@@ -75,6 +75,44 @@ public class LearningCatalogRepository {
         if(!existing.isEmpty()) return id(existing.getFirst(),"set_id");
         UUID set=UUID.randomUUID(); db.update("INSERT INTO question_set VALUES (?,?,?,?)",binary(set),binary(release),"LEGACY","Ngân hàng hiện có"); return set;
     }
+    public List<ObjectNode> chapters(UUID set) {
+        var release=query("SELECT release_id FROM question_set WHERE set_id=?",binary(set)).stream().findFirst().orElseThrow(ApiErrors::missing);
+        UUID releaseId=id(release,"release_id");
+        var topics=query("SELECT t.topic_id,t.chapter,t.topic_name,(SELECT COUNT(*) FROM exam_rule_topic rt WHERE rt.topic_id=t.topic_id) AS rule_count FROM topic t WHERE t.release_id=? ORDER BY t.chapter",binary(releaseId));
+        var members=new HashMap<Integer,Set<String>>();
+        for(var q:query("SELECT t.chapter,qr.question_id FROM set_question sq JOIN topic t ON t.topic_id=sq.topic_id JOIN question_revision qr ON qr.revision_id=sq.revision_id WHERE sq.release_id=?",binary(releaseId)))members.computeIfAbsent(q.path("chapter").asInt(),k->new HashSet<>()).add(q.path("question_id").asText());
+        var sets=new HashSet<String>();for(var s:query("SELECT set_id FROM question_set WHERE release_id=?",binary(releaseId)))sets.add(s.path("set_id").asText());
+        for(var q:query("SELECT id,data FROM content WHERE kind='questions'")) {
+            try {
+                var data=json.readTree(q.path("data").asText());
+                if(sets.contains(data.path("questionSetId").asText()))members.computeIfAbsent(data.path("chapter").asInt(),k->new HashSet<>()).add(q.path("id").asText());
+            }catch(com.fasterxml.jackson.core.JsonProcessingException e){throw new IllegalStateException(e);}
+        }
+        for(var topic:topics)topic.put("question_count",members.getOrDefault(topic.path("chapter").asInt(),Set.of()).size());
+        return topics;
+    }
+    public Map<String,String> chapterNames() {
+        var names=new HashMap<String,String>();
+        for(var row:query("SELECT s.set_id,t.chapter,t.topic_name FROM question_set s JOIN topic t ON t.release_id=s.release_id"))names.put(row.path("set_id").asText()+":"+row.path("chapter").asInt(),row.path("topic_name").asText());
+        return names;
+    }
+    public void saveChapter(UUID set,UUID topic,int chapter,String name) {
+        UUID release=id(set(set),"release_id");
+        if(topic==null) {
+            if(!query("SELECT topic_id FROM topic WHERE release_id=? AND chapter=?",binary(release),chapter).isEmpty())throw ApiErrors.bad("Số chương đã tồn tại trong đợt ban hành");
+            db.update("INSERT INTO topic VALUES (?,?,?,?,?)",binary(UUID.randomUUID()),binary(release),"CH"+chapter,name,chapter);
+        } else {
+            var current=query("SELECT chapter FROM topic WHERE topic_id=? AND release_id=? FOR UPDATE",binary(topic),binary(release)).stream().findFirst().orElseThrow(ApiErrors::missing);
+            if(current.path("chapter").asInt()!=chapter)throw ApiErrors.bad("Không thể đổi số chương; chỉ chỉnh sửa tên chương");
+            db.update("UPDATE topic SET topic_name=? WHERE topic_id=?",name,binary(topic));
+        }
+    }
+    public void deleteChapter(UUID set,UUID topic) {
+        set(set);
+        var current=chapters(set).stream().filter(t->t.path("topic_id").asText().equals(topic.toString())).findFirst().orElseThrow(ApiErrors::missing);
+        if(current.path("question_count").asInt()>0||current.path("rule_count").asInt()>0)throw ApiErrors.bad("Chương đang có câu hỏi hoặc quy tắc sử dụng, không thể xóa");
+        db.update("DELETE FROM topic WHERE topic_id=?",binary(topic));
+    }
     public UUID publish(Content c,ObjectNode n) {
         UUID set=n.hasNonNull("questionSetId")?UUID.fromString(n.path("questionSetId").asText()):legacySet();
         var configured=set(set); UUID release=id(configured,"release_id");
@@ -105,11 +143,25 @@ public class LearningCatalogRepository {
         else db.update("UPDATE set_question SET revision_id=?,topic_id=?,source_no=?,is_critical=? WHERE set_question_id=?",binary(revision),binary(topic),number,n.path("critical").asBoolean(),binary(member));
         return member;
     }
+    public void deleteQuestion(UUID question) {
+        byte[] key=binary(question);
+        long usage=db.queryForObject("SELECT COUNT(*) FROM attempt_question a JOIN question_revision r ON r.revision_id=a.revision_id WHERE r.question_id=?",Long.class,key)
+            +db.queryForObject("SELECT COUNT(*) FROM study_attempt a JOIN question_revision r ON r.revision_id=a.revision_id WHERE r.question_id=?",Long.class,key)
+            +db.queryForObject("SELECT COUNT(*) FROM study_attempts WHERE question_id=?",Long.class,key)
+            +db.queryForObject("SELECT COUNT(*) FROM exams WHERE snapshot LIKE ?",Long.class,"%"+question+"%");
+        if(usage>0) throw ApiErrors.bad("Không thể xóa câu hỏi đã có lịch sử luyện tập hoặc thi. Hãy giữ bản nháp để ngừng sử dụng.");
+        db.update("DELETE FROM set_question WHERE revision_id IN (SELECT revision_id FROM question_revision WHERE question_id=?)",key);
+        db.update("DELETE FROM question_asset WHERE revision_id IN (SELECT revision_id FROM question_revision WHERE question_id=?)",key);
+        db.update("DELETE FROM answer_option WHERE revision_id IN (SELECT revision_id FROM question_revision WHERE question_id=?)",key);
+        db.update("DELETE FROM question_revision WHERE question_id=?",key);
+        db.update("DELETE FROM question WHERE question_id=?",key);
+    }
     public List<ObjectNode> questions(UUID set) {
-        var rows=query("SELECT sq.set_question_id,sq.set_id,sq.revision_id,sq.is_critical,t.chapter,qr.question_id,qr.question_text,qr.explanation,qr.external_id,qr.source_text FROM set_question sq JOIN question_revision qr ON qr.revision_id=sq.revision_id JOIN topic t ON t.topic_id=sq.topic_id JOIN content c ON c.id=qr.question_id WHERE sq.set_id=? AND c.published=TRUE ORDER BY sq.source_no",binary(set));
+        var rows=query("SELECT sq.set_question_id,sq.set_id,sq.revision_id,sq.is_critical,t.chapter,t.topic_name,qr.question_id,qr.question_text,qr.explanation,qr.external_id,qr.source_text FROM set_question sq JOIN question_revision qr ON qr.revision_id=sq.revision_id JOIN topic t ON t.topic_id=sq.topic_id JOIN content c ON c.id=qr.question_id WHERE sq.set_id=? AND c.published=TRUE ORDER BY sq.source_no",binary(set));
         for(var q:rows) enrich(q); return rows;
     }
     private void enrich(ObjectNode q) {
+        if(q.hasNonNull("topic_name"))q.put("chapterName",q.path("topic_name").asText());
         var options=query("SELECT option_id,option_position,option_text,is_correct FROM answer_option WHERE revision_id=? ORDER BY option_position",binary(id(q,"revision_id")));
         var labels=q.putArray("options"); var ids=q.putArray("optionIds");
         for(var option:options) { labels.add(option.path("option_text").asText()); ids.add(option.path("option_id").asText()); if(option.path("is_correct").asBoolean()) q.put("correctAnswer",option.path("option_position").asInt()); }
@@ -138,10 +190,11 @@ public class LearningCatalogRepository {
         String until=n.hasNonNull("validTo")?n.path("validTo").asText():null;
         if(db.queryForObject("SELECT COUNT(*) FROM exam_rule WHERE class_id=? AND set_id=? AND (valid_to IS NULL OR valid_to>?) AND (? IS NULL OR valid_from<?)",Long.class,binary(license),binary(set),n.path("validFrom").asText(),until,until)>0) throw ApiErrors.bad("Khoảng hiệu lực quy tắc bị chồng trong cùng bộ và hạng");
         UUID rule=UUID.randomUUID();db.update("INSERT INTO exam_rule VALUES (?,?,?,?,?,?,?,?,?,?)",binary(rule),binary(set),binary(license),n.path("validFrom").asText(),until,n.path("totalQuestions").asInt(),n.path("durationMinutes").asInt(),n.path("minimumCorrect").asInt(),n.path("criticalSlots").asInt(),n.path("failOnCritical").asBoolean());
-        for(int ch=1;ch<=6;ch++) {
+        for(int i=0;i<n.path("quotas").size();i++) {
+            var quota=n.path("quotas").get(i);int ch=quota.isObject()?quota.path("chapter").asInt():i+1;
             var topics=query("SELECT topic_id FROM topic WHERE release_id=? AND chapter=?",binary(release),ch); UUID topic=topics.isEmpty()?UUID.randomUUID():id(topics.getFirst(),"topic_id");
             if(topics.isEmpty()) db.update("INSERT INTO topic VALUES (?,?,?,?,?)",binary(topic),binary(release),"CH"+ch,"Chương "+ch,ch);
-            db.update("INSERT INTO exam_rule_topic VALUES (?,?,?)",binary(rule),binary(topic),n.path("quotas").get(ch-1).asInt());
+            db.update("INSERT INTO exam_rule_topic VALUES (?,?,?)",binary(rule),binary(topic),(quota.isObject()?quota.path("question_quota"):quota).asInt());
         }
         return rule(rule);
     }
@@ -154,10 +207,11 @@ public class LearningCatalogRepository {
         UUID release=id(set(set),"release_id");
         db.update("UPDATE exam_rule SET valid_from=?,valid_to=?,total_questions=?,duration_minutes=?,minimum_correct=?,critical_slots=?,fail_on_critical=? WHERE rule_id=?",start,until,n.path("totalQuestions").asInt(),n.path("durationMinutes").asInt(),n.path("minimumCorrect").asInt(),n.path("criticalSlots").asInt(),n.path("failOnCritical").asBoolean(),binary(rule));
         db.update("DELETE FROM exam_rule_topic WHERE rule_id=?",binary(rule));
-        for(int ch=1;ch<=6;ch++) {
+        for(int i=0;i<n.path("quotas").size();i++) {
+            var quota=n.path("quotas").get(i);int ch=quota.isObject()?quota.path("chapter").asInt():i+1;
             var topics=query("SELECT topic_id FROM topic WHERE release_id=? AND chapter=?",binary(release),ch); UUID topic=topics.isEmpty()?UUID.randomUUID():id(topics.getFirst(),"topic_id");
             if(topics.isEmpty()) db.update("INSERT INTO topic VALUES (?,?,?,?,?)",binary(topic),binary(release),"CH"+ch,"Chương "+ch,ch);
-            db.update("INSERT INTO exam_rule_topic VALUES (?,?,?)",binary(rule),binary(topic),n.path("quotas").get(ch-1).asInt());
+            db.update("INSERT INTO exam_rule_topic VALUES (?,?,?)",binary(rule),binary(topic),(quota.isObject()?quota.path("question_quota"):quota).asInt());
         }
         return rule(rule);
     }
@@ -177,7 +231,7 @@ public class LearningCatalogRepository {
     public boolean exists(UUID attempt) { return db.queryForObject("SELECT COUNT(*) FROM exam_attempt WHERE attempt_id=?",Long.class,binary(attempt))>0; }
     public ObjectNode owned(UUID attempt,UUID owner) { return query("SELECT * FROM exam_attempt WHERE attempt_id=? AND user_id=? FOR UPDATE",binary(attempt),binary(owner)).stream().findFirst().orElseThrow(ApiErrors::missing); }
     public List<ObjectNode> attemptQuestions(UUID attempt) {
-        var rows=query("SELECT aq.attempt_question_id,aq.revision_id,sq.is_critical,t.chapter,qr.question_id,qr.question_text,qr.explanation,qr.external_id,qr.source_text,o.option_position AS selected FROM attempt_question aq JOIN set_question sq ON sq.set_question_id=aq.set_question_id JOIN topic t ON t.topic_id=sq.topic_id JOIN question_revision qr ON qr.revision_id=aq.revision_id LEFT JOIN attempt_answer a ON a.attempt_question_id=aq.attempt_question_id LEFT JOIN answer_option o ON o.option_id=a.option_id WHERE aq.attempt_id=? ORDER BY aq.display_position",binary(attempt));
+        var rows=query("SELECT aq.attempt_question_id,aq.revision_id,sq.is_critical,t.chapter,t.topic_name,qr.question_id,qr.question_text,qr.explanation,qr.external_id,qr.source_text,o.option_position AS selected FROM attempt_question aq JOIN set_question sq ON sq.set_question_id=aq.set_question_id JOIN topic t ON t.topic_id=sq.topic_id JOIN question_revision qr ON qr.revision_id=aq.revision_id LEFT JOIN attempt_answer a ON a.attempt_question_id=aq.attempt_question_id LEFT JOIN answer_option o ON o.option_id=a.option_id WHERE aq.attempt_id=? ORDER BY aq.display_position",binary(attempt));
         for(var q:rows) enrich(q);return rows;
     }
     public void answer(ObjectNode q,int selected) {
@@ -189,4 +243,8 @@ public class LearningCatalogRepository {
     public ObjectNode examSummary() {return query("SELECT COUNT(*) AS total,COALESCE(SUM(CASE WHEN passed=TRUE THEN 1 ELSE 0 END),0) AS passed FROM exam_attempt").getFirst();}
     public void study(UUID owner,ObjectNode q,int selected) {db.update("INSERT INTO study_attempt VALUES (?,?,?,?,?,?,?)",binary(UUID.randomUUID()),binary(owner),binary(id(q,"set_question_id")),binary(UUID.fromString(q.path("optionIds").get(selected).asText())),binary(id(q,"revision_id")),selected==q.path("correctAnswer").asInt(),Timestamp.from(Instant.now()));}
     public List<ObjectNode> progress(UUID owner) {return query("SELECT t.chapter,s.correct,qr.question_id,sq.set_id FROM study_attempt s JOIN set_question sq ON sq.set_question_id=s.set_question_id JOIN topic t ON t.topic_id=sq.topic_id JOIN question_revision qr ON qr.revision_id=s.revision_id WHERE s.user_id=?",binary(owner));}
+    public int resetProgress(UUID owner,UUID set) {
+        int cleared=db.update("DELETE FROM study_attempt WHERE user_id=? AND set_question_id IN (SELECT set_question_id FROM set_question WHERE set_id=?)",binary(owner),binary(set));
+        return cleared+db.update("DELETE FROM study_attempts WHERE owner_id=? AND question_id IN (SELECT qr.question_id FROM set_question sq JOIN question_revision qr ON qr.revision_id=sq.revision_id WHERE sq.set_id=?)",binary(owner),binary(set));
+    }
 }

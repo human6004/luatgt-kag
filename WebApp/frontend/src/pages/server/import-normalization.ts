@@ -5,6 +5,12 @@ export function normalizeImport(kind: string, value: unknown): unknown {
   if (kind === 'units') row.externalId ??= row.unit_id ?? row.id
   else if (kind === 'documents') row.externalId ??= row.doc_id ?? row.id
   else row.externalId ??= row.sign_id ?? row.id ?? row.code ?? row.ma_bien
+  if (kind === 'signs') {
+    row.code ??= row.sign_code ?? row.ma_bien
+    row.name ??= row.ten
+    row.group ??= row.category ?? row.nhom
+    row.meaning ??= row.legal_description ?? row.mo_ta
+  }
   if (kind === 'units' && typeof row.order === 'string' && /^\d+$/.test(row.order)) row.order = Number(row.order)
   if (kind === 'units' && row.parent_id === '') delete row.parent_id
   if (kind === 'questions') {
