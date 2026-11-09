@@ -4,7 +4,7 @@ import { api, send } from '../api'
 import { useAuth } from '../auth'
 import { useAdmin } from '../admin/store'
 import { Badge, Button, Card, FilterTabs, Page, Td, Th, Toggle, inputCls, type Tone } from '../admin/ui'
-import { Notice, useData, useTask } from './server/shared'
+import { Notice, useData, useTask, saveBlob } from './server/shared'
 
 type UserRoleLabel = 'Người học' | 'Cảnh sát' | 'Quản trị viên'
 type UserRecord = { id: string; name: string; email: string; role: string; enabled: boolean }
@@ -207,10 +207,7 @@ export default function AdminUsers() {
       }),
     ]
     const csv = rows.map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n')
-    const a = document.createElement('a')
-    a.href = URL.createObjectURL(new Blob(['\uFEFF' + csv], { type: 'text/csv' }))
-    a.download = 'bao-cao-chat.csv'
-    a.click()
+    saveBlob(new Blob(['\uFEFF' + csv], { type: 'text/csv' }), 'bao-cao-chat.csv')
   }
 
   function displayUser(ownerId: string) {

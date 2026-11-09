@@ -2,10 +2,10 @@ import { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { normalizeImport } from "./import-normalization"
 import { api, send, type ContentRecord } from "../../api"
-import { Badge, Button, Card, FilterTabs, Modal, Th, Td } from "../../admin/ui"
+import { Badge, Button, Card, FilterTabs, Modal, Th, Td, inputCls } from "../../admin/ui"
 import { useAdmin } from "../../admin/store"
 import { csvSamples, parseCsv, tableObjects, type ImportKind } from "../../admin/import-data"
-import { useData, useTask, Notice, Asset, inputClass, download } from "./shared"
+import { useData, useTask, Notice, Asset, download, saveBlob } from "./shared"
 import type { QuestionSet } from "./QuestionBankSettings"
 
 export type ContentKind = "signs" | "documents" | "units"
@@ -260,7 +260,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
           updateUrl({ q: v || null }, true)
         }}
         placeholder="Tìm theo mã hoặc nội dung"
-        className={`${inputClass} mb-3`}
+        className={`${inputCls} mb-3`}
       />
       <FilterTabs
         label="Lọc trạng thái xuất bản"
@@ -374,7 +374,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                     rows={3}
                     value={String(form[key] || "")}
                     onChange={(e) => field(key, e.target.value)}
-                    className={`${inputClass} mt-2`}
+                    className={`${inputCls} mt-2`}
                   />
                 ) : (
                   <input
@@ -403,7 +403,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                             : e.target.value,
                       )
                     }
-                    className={`${inputClass} mt-2`}
+                    className={`${inputCls} mt-2`}
                   />
                 )}
               </label>
@@ -416,7 +416,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                       ? "Mã biển con (mỗi dòng một mã)"
                       : "Ghi chú (mỗi dòng một ghi chú)"}
                     <textarea
-                      className={inputClass}
+                      className={inputCls}
                       rows={3}
                       value={
                         Array.isArray(form[key])
@@ -708,7 +708,7 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
                 required
                 value={String(value)}
                 onChange={(e) => (setter as (s: string) => void)(e.target.value)}
-                className={`${inputClass} mt-2`}
+                className={`${inputCls} mt-2`}
               >
                 <option value="">Chọn văn bản</option>
                 {documents.map((d) => (
@@ -724,7 +724,7 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
             <select
               value={type}
               onChange={(e) => setType(e.target.value)}
-              className={`${inputClass} mt-2`}
+              className={`${inputCls} mt-2`}
             >
               <option value="REPLACES">Thay thế</option>
               <option value="AMENDS">Sửa đổi</option>
@@ -737,7 +737,7 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
               required
               value={date}
               onChange={(e) => setDate(e.target.value)}
-              className={`${inputClass} mt-2`}
+              className={`${inputCls} mt-2`}
             />
           </label>
           <label className="sm:col-span-2 text-sm">
@@ -747,7 +747,7 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
               maxLength={1000}
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              className={`${inputClass} mt-2`}
+              className={`${inputCls} mt-2`}
             />
           </label>
         </form>
@@ -794,14 +794,10 @@ export function ImportPanel({
   }, [kind])
 
   function downloadSample() {
-    const url = URL.createObjectURL(
+    saveBlob(
       new Blob(["\uFEFF" + csvSamples[kind]], { type: "text/csv;charset=utf-8" }),
+      `${kind}-template.csv`,
     )
-    const link = document.createElement("a")
-    link.href = url
-    link.download = `${kind}-template.csv`
-    link.click()
-    URL.revokeObjectURL(url)
   }
 
   return (
@@ -846,7 +842,7 @@ export function ImportPanel({
               Bộ câu hỏi nhận dữ liệu
               <select
                 aria-label="Bộ câu hỏi nhận dữ liệu"
-                className={`${inputClass} mt-1 max-w-md`}
+                className={`${inputCls} mt-1 max-w-md`}
                 value={selectedSet}
                 onChange={(e) => {
                   const nextSet = e.target.value

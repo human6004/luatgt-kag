@@ -6,7 +6,7 @@ import { Button, Card, Page, Td, Th, inputCls } from '../admin/ui'
 import { useInspection } from './server/KagManagement'
 import { benchmarkCategories, inspectionError, loadBenchmarkCategoryCounts, loadBenchmarkDatasets, loadSampleInspection, loadServing, loadBenchmarkRun, startBenchmarkRun, stopBenchmarkRun } from './server/kag-inspection'
 import type { BenchmarkJob, BenchmarkMode, SmokeRun } from './server/kag-inspection'
-import { Notice } from './server/shared'
+import { Notice, saveBlob } from './server/shared'
 
 const pct = (n: number) => (n * 100).toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'
 
@@ -344,12 +344,7 @@ export default function AdminBenchmark() {
     try {
       const response = await apiResponse(path)
       if (!response.ok) throw new Error(`Không tải được file (${response.status}).`)
-      const url = URL.createObjectURL(await response.blob())
-      const link = document.createElement('a')
-      link.href = url
-      link.download = filename
-      link.click()
-      URL.revokeObjectURL(url)
+      saveBlob(await response.blob(), filename)
     } catch (error) {
       notify(error instanceof Error ? error.message : 'Không tải được file.')
     } finally { setBusy(false) }

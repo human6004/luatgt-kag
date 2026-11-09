@@ -5,7 +5,8 @@ import { useAdmin } from '../admin/store'
 import { Badge, Button, Card, Field, Modal, Page, Td, Th, Toggle, inputCls } from '../admin/ui'
 import { ImportPanel } from './server/AdminPages'
 import QuestionBankSettings, { type QuestionSet } from './server/QuestionBankSettings'
-import { Asset, Notice, useData, useTask } from './server/shared'
+import { Asset, Notice, useData, useTask, saveBlob } from './server/shared'
+import { chapterNames as chapters } from './server/import-normalization'
 
 interface QuestionItem {
   id: string
@@ -20,7 +21,6 @@ interface QuestionItem {
   source: string
 }
 
-const chapters = ['Khái niệm và quy tắc', 'Văn hoá giao thông', 'Kỹ thuật lái xe', 'Cấu tạo sửa chữa', 'Biển báo đường bộ', 'Sa hình']
 const blank = (): QuestionItem => ({
   id: '',
   externalId: '',
@@ -202,11 +202,7 @@ export default function AdminQuestions() {
       [JSON.stringify((data.value || []).map((r) => ({ ...r.data, id: r.externalId, externalId: r.externalId })), null, 2)],
       { type: 'application/json' },
     )
-    const a = document.createElement('a')
-    a.href = URL.createObjectURL(blob)
-    a.download = 'ngan-hang-cau-hoi.json'
-    a.click()
-    URL.revokeObjectURL(a.href)
+    saveBlob(blob, 'ngan-hang-cau-hoi.json')
     notify('Đã xuất câu hỏi ra tệp JSON')
   }
 

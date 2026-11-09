@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { Page,Button,Modal } from '../../admin/ui'
-import { useData,Notice,inputClass } from './shared'
+import { Page,Button,Modal,inputCls } from '../../admin/ui'
+import { useData,Notice } from './shared'
 import { loadKagStatus, loadSampleInspection, runRetrieval, inspectionError, type KagCheck, type KagStatus, type Retrieval, type SampleInspection } from './kag-inspection'
 export function Infrastructure() {
   const data=useData<Record<string,string>>('/admin/infrastructure'), [kag,setKag]=useState<KagStatus>(), [statusError,setStatusError]=useState(''), [statusBusy,setStatusBusy]=useState(true)
@@ -51,8 +51,8 @@ export function Infrastructure() {
     <p className="text-sm mt-3">Tìm nguồn liên quan bằng model Embedding; có thể phát sinh phí. Kết quả nguồn chưa phải câu trả lời luật.</p>
     <Notice error={sampleError}/>
     <form className="mt-4 space-y-4" onSubmit={e=>{e.preventDefault();if(!pending.current)setConfirm(true)}}>
-      <label className="block text-sm">Nội dung truy xuất<textarea required maxLength={4000} rows={3} disabled={busy||confirm} value={message} onChange={e=>setMessage(e.target.value)} className={`${inputClass} mt-2`}/></label>
-      <div className="flex flex-wrap items-end gap-4"><label className="text-sm min-w-0">Số kết quả nguồn (1–10)<input required type="number" min={1} max={10} step={1} disabled={busy||confirm} value={topK} onChange={e=>setTopK(Number(e.target.value))} className={`${inputClass} mt-2`}/></label><label className="text-sm"><input type="checkbox" disabled={busy||confirm} checked={expand} onChange={e=>setExpand(e.target.checked)}/> Tìm thêm nội dung liên quan</label><Button type="submit" disabled={busy||confirm||!message.trim()||!Number.isInteger(topK)||topK<1||topK>10}>{busy?'Đang truy xuất…':'Chạy thử truy xuất'}</Button></div>
+      <label className="block text-sm">Nội dung truy xuất<textarea required maxLength={4000} rows={3} disabled={busy||confirm} value={message} onChange={e=>setMessage(e.target.value)} className={`${inputCls} mt-2`}/></label>
+      <div className="flex flex-wrap items-end gap-4"><label className="text-sm min-w-0">Số kết quả nguồn (1–10)<input required type="number" min={1} max={10} step={1} disabled={busy||confirm} value={topK} onChange={e=>setTopK(Number(e.target.value))} className={`${inputCls} mt-2`}/></label><label className="text-sm"><input type="checkbox" disabled={busy||confirm} checked={expand} onChange={e=>setExpand(e.target.checked)}/> Tìm thêm nội dung liên quan</label><Button type="submit" disabled={busy||confirm||!message.trim()||!Number.isInteger(topK)||topK<1||topK>10}>{busy?'Đang truy xuất…':'Chạy thử truy xuất'}</Button></div>
       <p className="text-sm text-muted">Giới hạn số kết quả tìm kiếm; bật tìm thêm để lấy nội dung liên quan trong đồ thị.</p>
     </form>
     <Modal open={confirm} title="Xác nhận thử truy xuất" onClose={()=>{if(!pending.current)setConfirm(false)}} footer={<><Button onClick={()=>setConfirm(false)}>Hủy</Button><Button disabled={busy} onClick={()=>void retrieve()}>Xác nhận truy xuất</Button></>}><p className="text-sm">Thao tác gọi model Embedding và có thể phát sinh phí. Tiếp tục truy xuất nội dung vừa nhập?</p></Modal>

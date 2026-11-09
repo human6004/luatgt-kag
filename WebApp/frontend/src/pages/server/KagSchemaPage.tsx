@@ -1,6 +1,6 @@
 import { Link, useSearchParams } from "react-router-dom"
-import { Page, Button, Th, Td } from "../../admin/ui"
-import { useData, Notice, inputClass } from "./shared"
+import { Page, Button, Th, Td, inputCls } from "../../admin/ui"
+import { useData, Notice, saveBlob } from "./shared"
 
 type Property = {
   logical_name: string
@@ -43,16 +43,12 @@ export default function KagSchemaPage() {
 
   function download() {
     if (!schema) return
-    const url = URL.createObjectURL(
+    saveBlob(
       new Blob([JSON.stringify(schema.contract, null, 2)], {
         type: "application/json",
       }),
+      "schema_contract.json",
     )
-    const link = document.createElement("a")
-    link.href = url
-    link.download = "schema_contract.json"
-    link.click()
-    URL.revokeObjectURL(url)
   }
 
   return (
@@ -95,7 +91,7 @@ export default function KagSchemaPage() {
               aria-label="Loại node"
               value={type}
               onChange={(e) => selectType(e.target.value)}
-              className={`${inputClass} mt-2 sm:max-w-sm`}
+              className={`${inputCls} mt-2 sm:max-w-sm`}
             >
               {schema.contract.node_types.map((t) => (
                 <option key={t}>{t}</option>
