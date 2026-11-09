@@ -148,26 +148,4 @@ public class LegalUnitService {
         try {return HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(value.getBytes(java.nio.charset.StandardCharsets.UTF_8)));}
         catch(java.security.NoSuchAlgorithmException e) {throw new IllegalStateException(e);}
     }
-    @Transactional(readOnly=true)
-    public JsonNode servingPublication() {
-        var result=content.mapper().createObjectNode().put("as_of",java.time.LocalDate.now(java.time.ZoneId.of("Asia/Saigon")).toString());
-        var docs=result.putArray("documents");
-        for(var d:documents.findByKindOrderByExternalId("documents")) {
-            var n=content.read(d);
-            var row=docs.addObject().put("doc_id",d.externalId).put("published",d.published).put("version",Long.toString(d.version))
-                .put("current_effective",ContentService.effective(n)).put("replaces_eligible",content.isEffective(d));
-            row.set("effective_from",n.path("ngay_hieu_luc").isMissingNode()?content.mapper().nullNode():n.path("ngay_hieu_luc"));
-            row.set("effective_to",n.path("ngay_het_hieu_luc").isMissingNode()?content.mapper().nullNode():n.path("ngay_het_hieu_luc"));
-        }
-        var rows=result.putArray("units");
-        for(var u:units.findAll().stream().sorted(Comparator.comparing(v -> v.unitId)).toList()) {
-            var n=read(u);
-            try {
-                String hash=HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(n.path("text").asText().getBytes(java.nio.charset.StandardCharsets.UTF_8)));
-                rows.addObject().put("doc_id",n.path("doc_id").asText()).put("unit_id",u.unitId).put("published",u.published)
-                    .put("version",Long.toString(u.version)).put("text_sha256",hash);
-            } catch(java.security.NoSuchAlgorithmException e) {throw new IllegalStateException(e);}
-        }
-        return result;
-    }
 }

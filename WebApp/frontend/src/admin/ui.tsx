@@ -147,25 +147,6 @@ export function Td({ children, className = '' }: { children?: React.ReactNode; c
   return <td className={`align-top px-4 py-3 text-[13.5px] leading-6 ${className}`}>{children}</td>
 }
 
-export function Progress({ value, tone = 'accent' }: { value: number; tone?: 'accent' | 'green' | 'red' }) {
-  const c = tone === 'green' ? 'bg-emerald-500' : tone === 'red' ? 'bg-red-400' : 'bg-accent'
-  return (
-    <div className="h-1.5 w-full rounded-full bg-line overflow-hidden">
-      <div className={`h-full ${c} transition-[width] duration-500`} style={{ width: `${value}%` }} />
-    </div>
-  )
-}
-
-export function Terminal({ lines, className = '' }: { lines: string[]; className?: string }) {
-  return (
-    <pre className={`rounded-xl bg-[#2a241d] text-[#f3e7c7] font-mono text-[11.5px] leading-relaxed p-4 overflow-auto whitespace-pre-wrap ${className}`}>
-      {lines.map((l, i) => (
-        <div key={i} className={l.startsWith('$') ? 'text-accent' : l.startsWith('✓') ? 'text-emerald-300' : l.startsWith('✗') ? 'text-red-300' : ''}>{l}</div>
-      ))}
-    </pre>
-  )
-}
-
 export function Toggle({ checked, onChange, label, disabled = false }: { checked: boolean; onChange: (v: boolean) => void; label?: string; disabled?: boolean }) {
   return (
     <button
