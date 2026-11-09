@@ -23,7 +23,7 @@ docker compose logs --tail 100 backend frontend kag-api kag-builder
 
 Kết quả chỉ ra service chưa chạy/lỗi. Chọn service liên quan để xem log; che secrets trước khi chia sẻ. `/v1/health` chỉ kiểm API còn phản hồi; ADMIN đọc readiness ở Hạ tầng.
 
-**Bước 2 — Dừng:** nếu Builder đang chạy, bấm **Dừng an toàn** và chờ **Đã dừng an toàn** trước. Kết quả chưa rõ thì giữ khóa và xử lý theo [runner](../docs/runner.md#resume-trạng-thái-và-lock).
+**Bước 2 — Dừng:** nếu Builder đang chạy, bấm **Dừng** và chờ **Đã dừng an toàn** trước. Kết quả chưa rõ thì giữ khóa và xử lý theo [runner](../docs/runner.md#resume-trạng-thái-và-lock).
 
 ```powershell
 docker compose stop -t 120
@@ -175,9 +175,9 @@ Giữ máy/backup cũ dừng ghi đến khi nghiệm thu bản phục hồi. N�
 
 Dành cho người vận hành đã chuẩn bị graph và nguồn, không phải bước bắt buộc để mở WebApp:
 
-Chat và Embedding dùng kết nối được lưu/kiểm/áp dụng riêng tại **Cài đặt hệ thống → Kết nối model**. Phạm vi hiện hỗ trợ OpenAI-compatible: POST `<Base URL>/chat/completions` cho nội dung chữ và POST `<Base URL>/embeddings` cho vector. Base URL có thể mang prefix như `/v1`; không nhận query, fragment hay credentials trong URL. Public HTTPS phải nằm trong danh sách host cho phép; proxy HTTP riêng phải đăng ký đúng Base URL theo [chính sách provider](#provider-cho-openspg). Không cần EvelProxy, binary đã vá hoặc chức năng chuyển tài khoản của một proxy cụ thể.
+Chat và Embedding dùng kết nối được lưu/kiểm/áp dụng riêng tại **Chatbot → Model & API key**. Phạm vi hiện hỗ trợ OpenAI-compatible: POST `<Base URL>/chat/completions` cho nội dung chữ và POST `<Base URL>/embeddings` cho vector. Base URL có thể mang prefix như `/v1`; không nhận query, fragment hay credentials trong URL. Public HTTPS phải nằm trong danh sách host cho phép; proxy HTTP riêng phải đăng ký đúng Base URL theo [chính sách provider](#provider-cho-openspg). Không cần EvelProxy, binary đã vá hoặc chức năng chuyển tài khoản của một proxy cụ thể.
 
-Với graph Builder đã xác minh, dùng [luồng trên UI](../docs/runner.md#chọn-graph-phục-vụ-truy-xuấtchat): lưu/kiểm model, mở **Đồ thị của tôi**, chọn project/phiên, thử truy xuất nếu muốn và **Dùng cho Chat**. Nhánh dataset đóng gói snapshot nguồn đã đọc/đối chiếu cùng graph, không cần publication MySQL. Lựa chọn lưu trong provider state; release bất biến nằm trong Builder state, API chỉ mount đọc. Worker giữ credentials Neo4j và chỉ cấp phép đọc cố định qua mạng private. Không cần chép graph, sửa `.env` hoặc đổi namespace mẫu mỗi lần chuyển project.
+Với graph Builder đã xác minh, dùng [luồng trên UI](../docs/runner.md#chọn-graph-phục-vụ-truy-xuấtchat): lưu/kiểm model, mở **Chatbot → Đồ thị**, chọn dòng graph, **Xem → Thử tìm kiếm** nếu muốn rồi **Dùng cho Chat**. Nhánh dataset đóng gói snapshot nguồn đã đọc/đối chiếu cùng graph, không cần publication MySQL. Lựa chọn lưu trong provider state; release bất biến nằm trong Builder state, API chỉ mount đọc. Worker giữ credentials Neo4j và chỉ cấp phép đọc cố định qua mạng private. Không cần chép graph, sửa `.env` hoặc đổi namespace mẫu mỗi lần chuyển project.
 
 Graph PRODUCTION được kiểm đầy đủ khi xem trước/xác nhận **Dùng cho Chat**. Chat và readiness kiểm nhanh database online, identity, index và artifact release; citation vẫn đọc lại và đối chiếu nguồn. Không quét toàn graph khi startup, mỗi câu Chat hoặc mỗi lần kiểm sẵn sàng; không yêu cầu database chuyển sang read-only.
 
@@ -225,15 +225,15 @@ Deployment cấp `KAG_BUILDER_OPENSPG_URL=http://openspg-server:8887`, `KAG_BUIL
 
 `KAG_OPENSPG_PUBLIC_URL`, `KAG_NEO4J_BROWSER_URL`, `KAG_NEO4J_PUBLIC_BOLT_URL` là URL cho trình duyệt, mặc định localhost và không chứa credentials. `KAG_BUILDER_SERVING_DATABASE` lấy từ `KAG_DATABASE`; không đổi binding này để cho phép ghi vào graph đang phục vụ.
 
-Corpus/schema được đóng gói trong image. **Kiểm tra và chuẩn bị** dùng volume `kag-builder-state` tại `/builder-state` (`KAG_BUILDER_STATE_DIR`), tách khỏi run history và source checkout. Giữ volume này khi cập nhật/backup; không mount workspace phát triển vào sản phẩm.
+Corpus/schema được đóng gói trong image. Chuẩn bị nguồn tự động khi mở **Dựng đồ thị mới**, dùng volume `kag-builder-state` tại `/builder-state` (`KAG_BUILDER_STATE_DIR`), tách khỏi run history và source checkout. Giữ volume này khi cập nhật/backup; không mount workspace phát triển vào sản phẩm.
 
 Config sản phẩm lưu tại `/builder-state/configuration.json`; mỗi revision giữ run root riêng dưới `/builder-runs`, khóa tại `/run/kag-locks`. `builder-input/runner.json` chỉ dành cho cấu hình Runner thủ công cũ khi chưa lưu cấu hình sản phẩm. Giữ cả Builder state, runs, locks và provider state khi backup/update. Sau restart, kiểm lại nguồn/sẵn sàng trước Resume; kết quả đã xác minh vẫn xem được khi cấu hình hiện tại thiếu hoặc đã đổi.
 
 ### Chia sẻ đồ thị
 
-Compose tạo `${KAG_STATE_DIR:-../luatgt-state}/graph-packages` bằng `create_host_path`, bind đọc/ghi tại `/graph-packages` **chỉ cho kag-builder**. Trên Linux host, bảo đảm UID/GID10001 của Worker được ghi thư mục này; Compose không tự đổi quyền host. Trong **Nâng cao → Chia sẻ đồ thị**, xuất ZIP từ run PASS thuộc project đang sở hữu rồi chép file sang cùng thư mục trên máy nhận. Gói dùng ZIP64, chứa vector/provenance và manifest nguồn/phạm vi/model/chiều; không chứa endpoint, credential hoặc định danh database/project máy xuất. Tên ZIP dùng chữ/số ASCII, dấu chấm, gạch ngang hoặc gạch dưới; giữ tên do ứng dụng xuất để chọn được gói.
+Compose tạo `${KAG_STATE_DIR:-../luatgt-state}/graph-packages` bằng `create_host_path`, bind đọc/ghi tại `/graph-packages` **chỉ cho kag-builder**. Trên Linux host, bảo đảm UID/GID10001 của Worker được ghi thư mục này; Compose không tự đổi quyền host. Trong **Chatbot → Đồ thị**, bấm **Xuất gói** từ run PASS thuộc project đang sở hữu rồi chép file sang cùng thư mục trên máy nhận. Gói dùng ZIP64, chứa vector/provenance và manifest nguồn/phạm vi/model/chiều; không chứa endpoint, credential hoặc định danh database/project máy xuất. Tên ZIP dùng chữ/số ASCII, dấu chấm, gạch ngang hoặc gạch dưới; giữ tên do ứng dụng xuất để chọn được gói.
 
-Máy nhận cần cùng corpus và Embedding provider/model/dimension. Thẻ Nhập hiện lý do nếu không khớp. Tại Bước ②, chọn gói và phạm vi phù hợp rồi lưu cấu hình; thao tác này chưa giải nén. **Kiểm tra và chuẩn bị** chạy nhập/chuyển đổi replay trong nền vào volume `kag-builder-state`, có polling như kiểm nguồn. Giới hạn giải nén tính theo counts/dimension trong manifest, trần 32 GiB và vẫn đếm byte khi stream; cần đủ dung lượng state cho vector, checkpoint và bản chuyển đổi tạm. Sau khi kiểm sẵn sàng, người vận hành tự Dựng vào project/database mới, trống. Replay không tạo provider client hoặc gọi Embedding; GraphLock, identity, PLAN/PROVENANCE/VECTORS, verify và Dùng cho Chat giữ nguyên. Không dump/load Neo4j và không tự chuyển Chat.
+Máy nhận cần cùng corpus và Embedding provider/model/dimension. Bấm **+ Nhập từ gói** tại **Chatbot → Đồ thị**, chọn **Đồ thị trống** và **Gói đồ thị**; modal hiện lý do nếu gói không khớp. Phạm vi lấy từ gói. **Xác nhận nhập** tự chuẩn bị cấu trúc, nhập/chuyển đổi replay vào volume `kag-builder-state`, kiểm sẵn sàng rồi dựng trên đích trống. Giới hạn giải nén tính theo counts/dimension trong manifest, trần 32 GiB và vẫn đếm byte khi stream; cần đủ dung lượng state cho vector, checkpoint và bản chuyển đổi tạm. Replay không tạo provider client hoặc gọi Embedding; GraphLock, identity, PLAN/PROVENANCE/VECTORS, verify và Dùng cho Chat giữ nguyên. Không dump/load Neo4j và không tự chuyển Chat.
 
 Mặc định thiếu đích/model nên Builder chưa sẵn sàng và báo lý do; không lấy target thử thay thế. Đích cần identity vật lý, schema và bốn vector indexes phù hợp. Chọn phạm vi, dừng/tiếp tục, bỏ phiên và dựng lại theo runner; không dùng graph serving làm đích Build.
 
@@ -245,7 +245,7 @@ Mặc định thiếu đích/model nên Builder chưa sẵn sàng và báo lý d
 
 #### 1. Lấy và đối chiếu đúng ID
 
-1. Đăng nhập ADMIN LuậtGT và tài khoản sở hữu project OpenSPG, dùng cùng hostname. Tại **Dựng đồ thị → Cấu hình → Nơi lưu**, chọn **Project OpenSPG**; đọc database ở **Đích chọn**, mở **Chi tiết project** để lấy ID và namespace.
+1. Đăng nhập ADMIN LuậtGT và tài khoản sở hữu project OpenSPG, dùng cùng hostname. Tại **Chatbot → Đồ thị**, bấm **Xem → Chi tiết kỹ thuật** ở đúng dòng graph để đối chiếu project ID, namespace, database và physical database ID. Với phiên chưa có dòng graph đã dựng, đối chiếu project tại Configuration trong OpenSPG và database bằng bước 3 dưới đây. Không bấm xóa để lấy ID.
 2. Mở **Configuration** của đúng project trong OpenSPG. Đối chiếu namespace, database và kết nối lưu graph. Với Compose mặc định, URI trong Docker là `neo4j://openspg-neo4j:7687`; [Neo4j Browser trên localhost](#truy-cập-quản-trị-openspg-và-neo4j) trỏ tới cùng service. Nếu deployment dùng nơi lưu khác, phải kết nối đúng nơi đó trước khi lấy ID.
 3. Trong Neo4j Browser, đăng nhập bằng tài khoản quản trị đã cấu hình. Chạy từng lệnh chỉ đọc sau:
 
@@ -271,12 +271,12 @@ KAG_BUILDER_CLEAR_TARGETS='[{"project_id":123,"database_id":"REPLACE_WITH_DATABA
 
 Giá trị là một mảng JSON; `project_id` là số nguyên dương, `database_id` là chuỗi. Dấu nháy đơn ngoài cùng thuộc cú pháp `.env`. Nếu đã cấp quyền cho đích khác, giữ các đối tượng hiện có và thêm đối tượng mới, ngăn bằng dấu phẩy trong cùng mảng; không thay cả danh sách bằng ví dụ này.
 
-Áp dụng theo [UPDATE](../docs/UPDATE.md): nếu Builder đang chạy, **Dừng an toàn** và chờ **Đã dừng an toàn** trước; sao lưu, giữ mapping storage và secrets, kiểm `docker compose config -q`, rồi cập nhật containers theo hướng dẫn. Worker `kag-builder` cần được tạo lại để nhận biến mới; chỉ tải lại trang hoặc `docker compose restart` không nạp lại `.env`. Không Resume tự động.
+Áp dụng theo [UPDATE](../docs/UPDATE.md): nếu Builder đang chạy, **Dừng** và chờ **Đã dừng an toàn** trước; sao lưu, giữ mapping storage và secrets, kiểm `docker compose config -q`, rồi cập nhật containers theo hướng dẫn. Worker `kag-builder` cần được tạo lại để nhận biến mới; chỉ tải lại trang hoặc `docker compose restart` không nạp lại `.env`. Không Resume tự động.
 
 #### 3. Xem trước và xác nhận trên UI
 
-1. Quay lại **Dựng đồ thị**, tải lại trạng thái và đăng nhập lại OpenSPG nếu cần. Kiểm cấu hình đã lưu trỏ đúng project/database. Nếu còn phiên **Đã dừng an toàn**, chỉ **Bỏ phiên** khi quyết định chấm dứt phiên đó; không bỏ phiên chỉ để lấy ID.
-2. Mở **Xóa dữ liệu để dựng lại → Xem trước xóa dữ liệu**. Đọc số node/quan hệ của toàn database; mở **Danh tính đích** và đối chiếu project ID, namespace, physical database với các giá trị đã cấp.
-3. Chỉ sau khi đồng ý tác động và có backup, bấm **Xóa dữ liệu đồ thị**, nhập đúng tên database rồi **Xóa dữ liệu trong roadlaw** tương ứng đích của bạn. Đợi kết quả đọc lại database rỗng; schema/index và lịch sử vẫn được giữ.
+1. Quay lại **Chatbot → Đồ thị**, dùng **Tải lại danh sách**, đăng nhập lại OpenSPG nếu cần và đối chiếu đúng đích. Nếu phiên đang chạy, bấm **Dừng**, chờ **Đã dừng an toàn**. Không chấm dứt phiên chỉ để lấy ID.
+2. Bấm **Xóa** ở đúng dòng graph, đọc hộp thoại **Xóa đồ thị**. Đối chiếu tên và số nội dung với đích/physical database đã cấp quyền; thông tin kỹ thuật lấy ở bước 1 phía trên, không còn màn preview riêng.
+3. Chỉ sau khi đồng ý tác động và có backup, bấm **Xác nhận xóa**. UI không yêu cầu gõ tên database; luồng xóa xử lý phiên đã dừng ở đích. Đợi kết quả đọc lại database rỗng; schema/index và lịch sử vẫn được giữ.
 
 Worker vẫn kiểm quyền sở hữu, identity, database dùng chung/serving và GraphLock. Dữ liệu hoặc cấu hình thay đổi sau preview cần xem trước lại. Nếu bị chặn hoặc chưa rõ kết quả, giữ nguyên khóa và xử lý nguyên nhân; không bỏ kiểm tra để ép xóa. Chi tiết lỗi một phần và dựng lại: [runner](../docs/runner.md#xóa-dữ-liệu-đồ-thị).

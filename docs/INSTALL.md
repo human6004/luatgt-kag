@@ -135,7 +135,7 @@ Cài mới chưa tự nạp dữ liệu nghiệp vụ hoặc graph. Nguồn lu�
 
 - **Học/thi:** nhập và xuất bản câu hỏi, ảnh, biển báo theo [USER-GUIDE](USER-GUIDE.md#adminpolice--nội-dung).
 - **Dựng graph:** theo [Builder](runner.md) để tạo Knowledge Base, chọn project và chuẩn bị cấu trúc dữ liệu/index trên UI.
-- **Hỏi luật bằng Chat:** xem **Dữ liệu nguồn**, dựng graph bằng Builder, lưu/kiểm model tại **Cài đặt hệ thống → Model & tìm kiếm**, rồi [chọn graph và xác nhận dùng cho Chat](runner.md#chọn-graph-phục-vụ-truy-xuấtchat). Nhánh dataset dùng nguồn đi cùng graph, không phải nhập lại MySQL. Máy mới cần tự cấu hình model/provider và project của mình; chưa cấu hình thì UI hướng dẫn, không dùng graph mẫu. Build xong chưa tự đổi graph phục vụ.
+- **Hỏi luật bằng Chat:** xem **Dữ liệu nguồn KAG**, lưu và kiểm Embedding tại **Chatbot → Model & API key** TRƯỚC khi Build. Build cần vector theo model đã chọn, mặc định cấu hình hiện tại 3072 chiều; dimension phải khớp index. Sau đó dựng graph bằng Builder, lưu/kiểm Chat và [chọn graph, xác nhận dùng cho Chat](runner.md#chọn-graph-phục-vụ-truy-xuấtchat). Nhánh dataset dùng nguồn đi cùng graph, không phải nhập lại MySQL. Máy mới tự cấu hình model/provider và project của mình; chưa cấu hình thì UI hướng dẫn, không dùng graph mẫu. Build xong chưa tự đổi graph phục vụ.
 - **Quản trị OpenSPG/Neo4j:** [URL và tài khoản](../docker/README.md#truy-cập-quản-trị-openspg-và-neo4j). Các tài khoản này độc lập với WebApp.
 
 Các thao tác kiểm model, lưu model/Knowledge Base trong OpenSPG và dựng graph có thể gọi dịch vụ model tính phí. Khởi động ứng dụng không yêu cầu tự chạy các thao tác này.

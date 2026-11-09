@@ -11,7 +11,7 @@ docker compose ps -a
 
 Nếu có thay đổi source riêng, bảo toàn và xử lý trước khi lấy bản mới; không reset hoặc tự stash. Ghi lại commit, image IDs, cấu hình và mapping storage theo [Sao lưu Docker](../docker/README.md#sao-lưu).
 
-Ngừng thao tác trên WebApp. Nếu Builder đang chạy, bấm **Dừng an toàn** và chờ **Đã dừng an toàn** trước khi dừng stack:
+Ngừng thao tác trên WebApp. Nếu Builder đang chạy, bấm **Dừng** và chờ **Đã dừng an toàn** trước khi dừng stack:
 
 ```powershell
 docker compose stop -t 120
@@ -66,7 +66,7 @@ Nếu có lỗi, đọc log service liên quan theo [Docker](../docker/README.md
 
 1. Mở WebApp ở cổng đang dùng, nhấn **Ctrl+F5** để tải assets mới.
 2. Đăng nhập tài khoản cũ; kiểm nội dung, ảnh/tệp, lịch sử chat/thi và cấu hình đã lưu.
-3. ADMIN kiểm **Hạ tầng & Retrieval** và **Dựng đồ thị**. Phiên đã dừng phải giữ tiến độ; muốn tiếp tục, kiểm lại nguồn/sẵn sàng rồi tự bấm tiếp tục theo [runner](runner.md#dừng-và-tiếp-tục).
+3. ADMIN kiểm **Kết nối & chẩn đoán** và **Chatbot → Đồ thị**. Phiên đã dừng phải giữ tiến độ; muốn tiếp tục, kiểm lại nguồn/sẵn sàng rồi tự bấm tiếp tục theo [runner](runner.md#dừng-và-tiếp-tục).
 4. Nếu Chat đã được cấu hình, kiểm readiness. Chỉ chủ động gửi câu hỏi thử khi chấp nhận phí provider; `healthy` chưa chứng minh Chat trả lời được.
 
 Thiếu model/target/release ở một installation mới không phải lý do tự tạo graph, bỏ kiểm tra hoặc đổi serving binding. Xem [cấu hình chatbot](../docker/README.md#cấu-hình-chatbot) và [hướng dẫn sử dụng](USER-GUIDE.md).

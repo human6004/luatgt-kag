@@ -39,7 +39,7 @@ python3.10 -m venv ../luatgt-offline-venv
 
 Tên hai thư mục ngoài repo tùy người nhận; không tái sử dụng state của graph đang chạy. `requirements-http-api.txt` bổ sung FastAPI, chỉ dùng `-c` để ràng buộc các pin còn lại, nên cần cài cả hai requirements.
 
-Lệnh cuối gọi cùng hàm **Kiểm tra và chuẩn bị** của Builder, không khởi động HTTP server, không dùng endpoint/credentials, không gọi Embedding và không ghi graph. Kết quả `VALID` kèm plan hash, số node/cạnh; `plans/<plan-hash>/` dưới thư mục state chứa `manifest.json`, `nodes.jsonl`, `edges.jsonl`, `plan.sha256` và dữ liệu kiểm offline. Loader đọc `downstream_use` từ xrefs, kiểm ID/parent, endpoint và schema; plan giữ hash nguồn để phát hiện thay đổi trong một run; kết quả này không chứng nhận toàn bộ nội dung pháp lý đã được rà nguồn.
+Lệnh cuối gọi cùng hàm chuẩn bị nguồn mà hộp thoại **Dựng đồ thị mới** chạy tự động, không khởi động HTTP server, không dùng endpoint/credentials, không gọi Embedding và không ghi graph. Kết quả `VALID` kèm plan hash, số node/cạnh; `plans/<plan-hash>/` dưới thư mục state chứa `manifest.json`, `nodes.jsonl`, `edges.jsonl`, `plan.sha256` và dữ liệu kiểm offline. Loader đọc `downstream_use` từ xrefs, kiểm ID/parent, endpoint và schema; plan giữ hash nguồn để phát hiện thay đổi trong một run; kết quả này không chứng nhận toàn bộ nội dung pháp lý đã được rà nguồn.
 
 Người nhận muốn dựng graph thật: cấu hình deployment và model/đích riêng theo [INSTALL](INSTALL.md), rồi theo [Runner](runner.md#dựng-đồ-thị-qua-5-bước). CLI `python -B -m kag run --config <runner.json> --run-id <id>` dùng cấu hình của người nhận theo [config](runner.md#config); đây là thao tác có thể gọi Embedding/ghi graph, không thuộc kiểm offline ở trên.
 
@@ -64,7 +64,7 @@ Quyền ghi kiểm riêng tại [runner](runner.md#config) và [backend identity
 
 Compose/Dockerfiles là nguồn chuẩn image pins; không duy trì danh sách digest thứ hai trong Markdown. KAG API/Builder/OpenSPG dùng cùng image source. Cấu hình runtime/serving: [Docker](../docker/README.md).
 
-Image sản phẩm còn chứa corpus và schema. Worker tạo kế hoạch nguồn qua **Kiểm tra và chuẩn bị**, lưu vào volume Builder state; không phụ thuộc kế hoạch/helper trong workspace phát triển. Python host và các lệnh phát triển bên trên không phải điều kiện để người dùng chạy Builder.
+Image sản phẩm còn chứa corpus và schema. Worker tạo kế hoạch nguồn khi mở **Dựng đồ thị mới**, lưu vào volume Builder state; không phụ thuộc kế hoạch/helper trong workspace phát triển. Python host và các lệnh phát triển bên trên không phải điều kiện để người dùng chạy Builder.
 
 ## Kiểm thử
 

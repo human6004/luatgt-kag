@@ -101,16 +101,16 @@ Trong **Chatbot → Đồ thị → Tùy chọn tìm kiếm**, chỉnh **Số k�
 
 ### Builder và xem graph
 
-Mở **Dữ liệu nguồn → Bộ dữ liệu** để xem văn bản, đơn vị pháp lý, biển báo và quan hệ đi kèm. Trang chỉ đọc, phân trang, không tạo kế hoạch hoặc yêu cầu duyệt lại nguồn. **Schema & quan hệ** hiển thị cấu trúc LuậtGT đóng gói.
+Mở **Dữ liệu nguồn KAG** để xem văn bản, đơn vị pháp lý, biển báo và quan hệ đi kèm. Trang chỉ đọc, phân trang, không tạo kế hoạch hoặc yêu cầu duyệt lại nguồn. **Schema** hiển thị cấu trúc LuậtGT đóng gói.
 
-Mở **Đồ thị của tôi → Dựng mới**, theo [hướng dẫn Builder](runner.md): tạo project → chuẩn bị nguồn/cấu trúc → chọn phạm vi/model → kiểm kỹ thuật → dựng → xem kết quả. Stop/Resume và bảo vệ dữ liệu giữ nguyên. Kết quả Builder có đường về đúng project/phiên.
+Mở **Chatbot → Đồ thị → + Dựng đồ thị mới**, theo [hướng dẫn Builder](runner.md): lưu/kiểm Embedding trước, tạo project/database trống trong OpenSPG, chọn **Đồ thị trống** và **Phạm vi** rồi **Xác nhận dựng**. Chuẩn bị nguồn/cấu trúc và kiểm sẵn sàng chạy tự động. **Dừng**/**Tiếp tục** giữ điều kiện quyền và bảo vệ dữ liệu.
 
 Muốn dùng một đồ thị đã dựng cho Chat:
 
-1. Chọn **Project đang xem** và **Phiên dựng**; đọc phạm vi một phần/toàn bộ, số liệu tại **Tổng quan**. Xem graph B không đổi Chat đang dùng A.
-2. Nếu muốn, mở **Thử truy xuất**, nhập câu hỏi và gửi. Thao tác chỉ tìm nguồn trong đúng project/phiên đang chọn, có thể tính phí Embedding; không tạo câu trả lời hoặc đổi active. Không bắt buộc thử hoặc chạy benchmark trước khi áp dụng.
-3. Mở **Dùng cho Chat → Dùng cho Chat**. Hệ thống tự kiểm graph, nguồn và model. Đọc đồ thị cũ/mới rồi bấm **Xác nhận dùng cho Chat**. Thiếu model thì **Chỉnh model**, lưu/kiểm kết nối rồi **Về đồ thị đang chọn**.
-4. Sau khi backend xác nhận **Đang dùng**, bấm **Mở trang Hỏi luật**. Mỗi câu hỏi dùng graph/model/nguồn của lựa chọn đang áp dụng; thiếu căn cứ thì không kết luận, lỗi dịch vụ thì báo chưa khả dụng.
+1. Trong **Chatbot → Đồ thị**, bấm **Xem** ở đúng dòng graph; đọc phạm vi và số liệu, đối chiếu lịch sử tại **Chi tiết kỹ thuật phiên**. Xem graph B không đổi Chat đang dùng A.
+2. Nếu muốn, mở **Thử tìm kiếm**, nhập câu hỏi rồi bấm **Thử truy xuất**. Thao tác chỉ tìm nguồn trong đúng graph, có thể tính phí Embedding; không tạo câu trả lời hoặc đổi active. Không bắt buộc thử hoặc chạy benchmark trước khi áp dụng.
+3. Đóng màn xem, bấm **Dùng cho Chat** ở đúng dòng graph. Trong **Dùng đồ thị cho Chat**, đọc đồ thị cũ/mới và điều kiện còn thiếu rồi bấm **Xác nhận dùng cho Chat**. Thiếu model thì quay về **Model & API key**, lưu/kiểm kết nối rồi chọn lại graph.
+4. Chờ **Đang dùng cho Chat** và hết thông báo chưa sẵn sàng, rồi mở `/chat`. Mỗi câu hỏi dùng graph/model/nguồn đang áp dụng; thiếu căn cứ thì không kết luận, lỗi dịch vụ thì báo chưa khả dụng.
 
 Nhánh dataset mới không phụ thuộc nhập/xuất bản lại corpus vào MySQL. Trích dẫn phải khớp snapshot của graph; nguồn thiếu/hỏng không được thay bằng nội dung model. Release legacy vẫn giữ chính sách nguồn WebApp cũ; xem trước và xác nhận lại một phiên Builder hợp lệ để dùng contract dataset mới. Việc nâng cấp phần mềm không tự chuyển graph hoặc viết lại release cũ. **Quản lý nội dung → Văn bản/Đơn vị pháp lý** giữ nghiệp vụ riêng.
 
@@ -120,12 +120,12 @@ Chuyển thất bại giữ graph cũ. Mất phản hồi thì **Tải lại** t
 
 Mở **Chatbot → Đồ thị**, chọn phiên đã dựng PASS thuộc project của bạn rồi **Xuất gói**. Chép ZIP từ thư mục hiển thị sang thư mục `graph-packages` của máy nhận; không upload/download bằng trình duyệt. Gói chỉ chứa vector và provenance cần dựng lại, không chứa database hoặc thông tin kết nối/bí mật của máy xuất.
 
-Ở thẻ **Nhập**, tải lại danh sách và đọc ✓/✗ cùng lý do. Gói phải cùng phiên bản dữ liệu nguồn, provider/model và số chiều với Embedding đã cấu hình. Chọn project/database **mới, trống**, chọn đúng phạm vi của gói rồi chọn **Dùng gói đã nhập** tại Bước ②. **Lưu cấu hình dựng** chỉ lưu lựa chọn; **Kiểm tra và chuẩn bị** mới nhập gói trong nền. Sau khi kiểm sẵn sàng, tự bấm **Dựng** như bình thường. Chế độ này tái sử dụng vector, không gọi API Embedding; các kiểm nguồn/provenance, khóa và bảo vệ graph đang phục vụ Chat giữ nguyên. Dựng xong chưa tự đổi graph dùng cho Chat.
+Bấm **+ Nhập từ gói** tại **Chatbot → Đồ thị**. Trong **Nhập từ gói**, dùng **Tải lại danh sách**, chọn **Đồ thị trống** và **Gói đồ thị**, đọc ✓/✗ cùng lý do. Gói phải cùng dữ liệu nguồn, provider/model và số chiều với Embedding đã lưu/kiểm; phạm vi lấy từ gói. Bấm **Xác nhận nhập** khi đã kiểm đích trống và phạm vi. UI tự chuẩn bị cấu trúc, nhập gói, kiểm sẵn sàng và dựng. Replay không gọi API Embedding; kiểm nguồn/provenance, khóa và bảo vệ dữ liệu giữ nguyên. Dựng xong chưa tự đổi graph dùng cho Chat.
 
 ### Kiểm kết nối và thử truy xuất
 
 1. Mở **Kết nối & chẩn đoán → Kiểm tra lại**. Kết nối API được chưa chứng minh khả năng trả lời luật.
-2. Thử graph đang chọn tại **Đồ thị của tôi → Thử truy xuất**. Công cụ thử graph đang phục vụ vẫn có trong phần nâng cao của trang chẩn đoán.
+2. Thử graph đang chọn tại **Chatbot → Đồ thị → Xem → Thử tìm kiếm**. Công cụ thử graph đang phục vụ vẫn có trong phần nâng cao của trang chẩn đoán.
 3. Đọc nguồn, điểm và quan hệ được trả về. Đây chưa phải kết luận luật và không đổi mặc định Chat.
 
 Ở **Benchmark**, khối **Artifact KAG · API thật** chỉ đọc số liệu đã đo; **Chưa đo** nghĩa là chưa có số liệu. Bộ đánh giá pháp lý chính thức chưa hoàn thành.

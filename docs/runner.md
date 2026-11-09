@@ -1,10 +1,10 @@
 # Dựng đồ thị bằng Builder
 
-Dành cho quản trị viên tự tạo nơi lưu graph, chọn dữ liệu và dựng đồ thị trên WebApp. Mở **Dựng đồ thị** tại `/admin/chatbot`.
+Dành cho quản trị viên tự tạo nơi lưu graph, chọn dữ liệu và dựng đồ thị trên WebApp. Mở **Chatbot → Đồ thị** tại `/admin/chatbot`.
 
 Builder dùng bộ dữ liệu nguồn (corpus) và cấu trúc dữ liệu (schema) đi kèm phiên bản ứng dụng; chưa hỗ trợ tải bộ nguồn tùy ý hoặc tự trích xuất tri thức từ văn bản trên UI.
 
-Build thành công chưa tự đưa graph vào Chat. Mở **Đồ thị của tôi**, chọn project/phiên, thử truy xuất nếu muốn rồi **Dùng cho Chat** và xác nhận. Chat cần model tương thích và snapshot nguồn đi cùng graph, không cần nhập lại corpus vào WebApp. Xem [chọn graph phục vụ](#chọn-graph-phục-vụ-truy-xuấtchat).
+Build thành công chưa tự đưa graph vào Chat. Mở **Chatbot → Đồ thị**, chọn dòng của graph, thử truy xuất nếu muốn rồi **Dùng cho Chat** và xác nhận. Chat cần model tương thích và snapshot nguồn đi cùng graph, không cần nhập lại corpus vào WebApp. Xem [chọn graph phục vụ](#chọn-graph-phục-vụ-truy-xuấtchat).
 
 ## Chuẩn bị
 
@@ -60,81 +60,39 @@ Sau khi lưu, mở **Configuration** của đúng thẻ project để đối chi
 
 ## Dựng đồ thị qua 5 bước
 
-### 1. Dữ liệu
+Năm bước dưới mô tả thao tác trong một hộp thoại, không phải năm tab riêng.
 
-1. Trên LuậtGT, mở **Dựng đồ thị → Dữ liệu**.
-2. Bấm **Kiểm tra và chuẩn bị**, đợi hoàn tất rồi đọc thống kê theo loại nội dung và quan hệ.
-3. Bấm **Đến cấu hình**.
+### 1. Chuẩn bị model và mở hộp thoại
 
-Các số này là nguồn dự kiến, chưa phải số đã ghi vào graph. Nguồn sai hoặc không đọc được thì xử lý lỗi được hiển thị; không sửa corpus để bỏ qua kiểm tra.
+Trong **Chatbot → Model & API key**, lưu và kiểm Embedding thành công trước khi Build. Builder dùng model đã kiểm; không cần áp dụng Embedding cho Chat trước. Kiểm kết nối và tạo vector có thể tính phí. Xem [hướng dẫn model](USER-GUIDE.md#cấu-hình-model).
 
-### 2. Cấu hình
+Trong **Đồ thị**, bấm **+ Dựng đồ thị mới**. Hộp thoại **Dựng đồ thị mới** tự chuẩn bị nguồn và tính phạm vi. Đợi thống kê nội dung/liên kết/vector; đó là số dự kiến, chưa phải số đã ghi vào graph. Nếu nguồn lỗi, xử lý nguyên nhân rồi dùng **Tải lại dữ liệu** khi nút xuất hiện; không sửa corpus để bỏ qua kiểm tra.
 
-#### Chọn nơi lưu và chuẩn bị cấu trúc
+### 2. Chọn đích trống
 
-1. Trong **Nơi lưu**, bấm **Tải lại danh sách** rồi chọn **Project OpenSPG**. Xem **Chi tiết project** để đối chiếu ID/namespace/database; project trùng tên vẫn được phân biệt bằng ID.
-2. Bấm **Xem thay đổi** để xem các loại/quan hệ sẽ xóa, giữ, thêm và tác động lên index.
-3. Nếu cần thay đổi, bấm **Chuẩn bị cấu trúc LuậtGT**, đọc hộp xác nhận rồi bấm **Xác nhận chuẩn bị**.
+Bấm **Tải lại danh sách**, chọn project đã tạo trong trường **Đồ thị trống**. Có thể dùng **Mở OpenSPG** để đối chiếu ID, namespace và database trong Configuration của đúng project trước khi chọn. Nếu project trùng tên, xác định đúng ID tại OpenSPG trước; không chọn chỉ dựa vào tên hiển thị.
 
-Danh sách chỉ gồm project bạn sở hữu trong phiên đăng nhập OpenSPG. Quyền ADMIN LuậtGT không thay quyền sở hữu project Private.
+Danh sách chỉ gồm project bạn sở hữu trong phiên đăng nhập OpenSPG. Quyền ADMIN LuậtGT không thay quyền sở hữu project Private. Project đang có dữ liệu, chưa đọc được dữ liệu hoặc đang phục vụ Chat không phải đích Build mới. Không dùng database chung với project khác hoặc dữ liệu ngoài phạm vi quản lý.
 
-Chuẩn bị cấu trúc có thể thay schema mặc định OpenSPG trên database rỗng và tạo/tạo lại index đã liệt kê. Đây là thay đổi cấu trúc, chưa dựng nội dung hoặc gọi Embedding. Có dữ liệu, loại tùy chỉnh hay phụ thuộc chưa rõ thì thao tác bị chặn; không xóa mọi loại ngoài LuậtGT.
+### 3. Chọn phạm vi
 
-Kết quả phân biệt **đủ cấu trúc để Build** với **đã loại bỏ schema mặc định**. Tên label cũ có thể còn trong sidebar Neo4j do metadata lịch sử; không cần xóa label tokens. Nếu lỗi một phần, đọc kết quả rồi **Xem thay đổi** lại trước khi xác nhận phần còn thiếu.
+Trong **Phạm vi**, chọn **Toàn bộ dữ liệu** hoặc **Một phần dữ liệu**. Với một phần, nhập số nguyên 1–100 ở **Tỷ lệ dữ liệu (%)**. Hệ thống tự tính lại thống kê; đợi kết quả trước khi xác nhận.
 
-#### Chọn phạm vi dữ liệu
+Tập một phần được chọn cố định, ưu tiên nội dung ngắn; văn bản nguồn, đơn vị cha, bản ghi cha của biến thể biển và hai đầu quan hệ đều nằm trong giới hạn. Phạm vi quá nhỏ để giữ đủ nguồn/các loại sẽ bị từ chối. Đây không phải mẫu ngẫu nhiên hoặc bảo đảm đại diện thống kê.
 
-Trong **Phạm vi dữ liệu → Dữ liệu sẽ dựng**, chọn rõ một trong hai cách:
+Batch và hạn mức request lấy từ cấu hình Builder đang lưu; hộp thoại hiện tại không có ô sửa hai giá trị này. Mặc định batch 64, hạn mức không giới hạn. Trước khi chấp nhận phí, nhờ người vận hành đối chiếu cấu hình nếu cần hạn mức riêng. Hạn mức đếm request từ ứng dụng gồm retry vectorizer, không phải giới hạn token/tốc độ và không bảo đảm số lần thử bên trong proxy/provider. Đổi phạm vi không tự bỏ hạn mức đã lưu.
 
-- **Toàn bộ dữ liệu:** dùng toàn bộ nguồn đã chuẩn bị.
-- **Một phần dữ liệu:** chọn **Số lượng nội dung** hoặc **Tỷ lệ nội dung (%)**, rồi nhập số nguyên. Số lượng từ 3 đến tổng nguồn; tỷ lệ từ 1–100%, làm tròn lên.
+### 4. Xác nhận và theo dõi
 
-Bấm **Xem trước phạm vi** và đọc thống kê trước khi lưu. Để trống ô số lượng/tỷ lệ không có nghĩa là toàn bộ; ô này bắt buộc khi chọn một phần. Phạm vi quá nhỏ để giữ đủ loại dữ liệu sẽ bị từ chối.
+Đọc lại đích trống, phạm vi và chi phí rồi bấm **Xác nhận dựng**. Ứng dụng tự kiểm database trống, chuẩn bị cấu trúc, lưu cấu hình, kiểm sẵn sàng rồi bắt đầu dựng. Chuẩn bị cấu trúc có thể thay schema mặc định OpenSPG và tạo/tạo lại index trên đích rỗng; bước cấu trúc không gọi Embedding. Dữ liệu đã tồn tại, loại tùy chỉnh hoặc phụ thuộc chưa rõ bị chặn; không xóa mọi loại ngoài LuậtGT để vượt lỗi. Nhãn cũ có thể còn trong sidebar Neo4j do metadata lịch sử, không cần xóa label tokens.
 
-Tập một phần được chọn cố định, ưu tiên nội dung ngắn; văn bản nguồn, đơn vị cha, bản ghi cha của biến thể biển và hai đầu quan hệ đều nằm trong giới hạn. Mức quá nhỏ không giữ đủ nguồn/các loại sẽ bị từ chối. Đây không phải mẫu ngẫu nhiên hoặc bảo đảm đại diện thống kê.
+Sau khi bắt đầu, hộp thoại đóng; theo dõi dòng graph và tiến trình dưới bảng. Trang tự cập nhật khoảng ba giây một lần. Số đã xử lý/tổng chỉ hiện khi có số liệu, không có dự đoán thời gian toàn phiên. Tải lại hoặc rời trang không dừng Worker. Lỗi một phần/mất phản hồi: dùng **Tải lại danh sách**, đọc **Chi tiết kỹ thuật**, chờ xác định kết quả trước khi thử lại; không gửi Build lặp hoặc xóa khóa.
 
-#### Chọn model và giới hạn
+### 5. Xem kết quả
 
-Trong **Dịch vụ tạo vector**, kiểm model, trạng thái key và kết quả kiểm kết nối. Nếu thiếu, mở **Cấu hình và kiểm kết nối Embedding**, làm theo [hướng dẫn model](USER-GUIDE.md#cấu-hình-model), rồi quay lại. Builder dùng Embedding đã lưu và kiểm thành công; không cần **Áp dụng Embedding** cho Chat.
+Khi graph đã dựng xuất hiện trong bảng, bấm **Xem**. Số liệu graph hiện tại tách khỏi lịch sử ở **Chi tiết kỹ thuật phiên**; **Nguồn của lần dựng** giữ snapshot nguồn của đúng phiên. Kết quả một phần chỉ xác minh phạm vi đã chọn, chưa chứng minh toàn corpus hoặc chất lượng trả lời luật.
 
-Trong **Cấu hình nâng cao**:
-
-| Trường | Ý nghĩa và mặc định |
-| --- | --- |
-| Kích thước batch | Số nội dung hoặc quan hệ xử lý mỗi batch; số nguyên 1–4096, mặc định **64** |
-| Hạn mức request Embedding | Tổng lần gửi request tạo vector cho cả phiên, gồm retry từ vectorizer; số nguyên 1–1.000.000 hoặc **Không giới hạn**; mặc định **Không giới hạn** |
-
-Hạn mức request không phải giới hạn token hay tốc độ model; cũng không quyết định tập dữ liệu được chọn. Nó đếm request từ ứng dụng, không bảo đảm số lần thử bên trong proxy/provider.
-
-Cuối cùng, bấm **Lưu cấu hình dựng**. Cấu hình được giữ sau tải lại trang, áp dụng cho phiên mới. Chưa gọi provider hay bắt đầu Build.
-
-Nếu nút Lưu chưa dùng được: kiểm project, model đã kiểm, số hợp lệ và **Xem trước phạm vi** còn khớp lựa chọn hiện tại. Khi phiên chưa kết thúc, cấu hình bị khóa để giữ khả năng tiếp tục đúng điểm lưu.
-
-### 3. Sẵn sàng
-
-Bấm **Kiểm tra sẵn sàng**. Hệ thống kiểm nguồn, model, quyền project, database, cấu trúc, index và khóa ghi.
-
-Nếu thiếu điều kiện, dùng nút dẫn về phần cần sửa rồi kiểm lại. Bước này không gọi provider, tạo project/index hoặc ghi graph. Đổi nguồn/model/đích/cấu hình liên quan cần kiểm lại.
-
-### 4. Đang dựng
-
-1. Bấm **Bắt đầu dựng**.
-2. Đọc hộp xác nhận: project/database, model, phạm vi và số lượng dự kiến, batch, hạn mức request.
-3. Khi chấp nhận phạm vi ghi và chi phí Embedding, bấm **Xác nhận bắt đầu**.
-
-Theo dõi bảng công đoạn tại bước này. Số đã xử lý và tổng chỉ hiện khi có số liệu; không có thời gian hoàn tất dự đoán cho toàn phiên. Trang tự cập nhật khoảng ba giây một lần.
-
-Tải lại/rời trang không dừng Worker. Mất phản hồi chưa chứng minh Build thất bại; chờ hoặc **Tải lại trạng thái**, không gửi Build lặp.
-
-### 5. Kết quả
-
-Khi hoàn tất, bấm **Xem kết quả đã xác minh**. Trang hiển thị số node, quan hệ và vector đã xác minh của đúng phiên và database, tách khỏi thống kê nguồn dự kiến.
-
-- **Về tiến trình phiên:** xem lại bảng công đoạn.
-- **Xem đồ thị:** mở kết quả phiên trên LuậtGT.
-- **Mở Neo4j · roadlaw:** mở Browser cho database của phiên, kể cả khi sau này chọn project khác.
-
-Nếu Browser hỏi kết nối, dùng `bolt://127.0.0.1:7687` và tài khoản Neo4j. Chọn đúng database trước khi đọc. Với ví dụ `roadlaw`, chạy từng lệnh:
+Có thể mở Neo4j từ màn xem graph. Nếu Browser hỏi kết nối, dùng địa chỉ Bolt và tài khoản Neo4j của deployment, mặc định `bolt://127.0.0.1:7687`. Chọn đúng database trước khi đọc; với ví dụ `roadlaw`, chạy từng lệnh:
 
 ```cypher
 :use roadlaw
@@ -142,71 +100,65 @@ MATCH (n) RETURN n LIMIT 25;
 MATCH (a)-[r]->(b) RETURN a,r,b LIMIT 25;
 ```
 
-Thay `roadlaw` bằng database hiển thị trong kết quả. **Knowledge Model là cấu trúc; graph sau Build là dữ liệu.** Kết quả một phần không chứng minh đã dựng toàn corpus.
+Thay `roadlaw` bằng database của graph. Knowledge Model là cấu trúc; graph sau Build là dữ liệu. Dựng xong chưa tự chọn graph cho Chat.
 
-Bạn có thể xem graph hiện tại hoặc [chọn graph phục vụ](#chọn-graph-phục-vụ-truy-xuấtchat). Kết quả một phần chỉ xác minh phạm vi đã chọn; chưa chứng minh toàn corpus hay chất lượng trả lời luật.
+## Nhập từ gói
+
+Tại **Chatbot → Đồ thị**, dùng **Xuất gói** trên dòng graph đã xác minh thuộc project của bạn. Chép ZIP từ thư mục được hiển thị sang thư mục `graph-packages` của máy nhận; không có upload/download ZIP qua trình duyệt.
+
+Trên máy nhận, lưu/kiểm Embedding phù hợp rồi bấm **+ Nhập từ gói**. Trong hộp thoại **Nhập từ gói**, chọn **Đồ thị trống** và **Gói đồ thị**; dùng **Tải lại danh sách** sau khi chép ZIP. Đọc dấu tương thích và lý do lỗi. Phạm vi lấy từ gói, không chọn lại tỷ lệ. Gói phải khớp corpus, provider/model/dimension; không dùng gói không rõ nguồn.
+
+Bấm **Xác nhận nhập** khi đã kiểm đích và phạm vi. Ứng dụng tự chuẩn bị cấu trúc, nhập/chuyển đổi replay, kiểm sẵn sàng và dựng vào đích trống. Nhập không gọi Embedding; khóa, identity, provenance/vector và xác minh vẫn bắt buộc. Không dump/load Neo4j hoặc tự chuyển Chat. Chi tiết dung lượng và quyền thư mục: [Docker](../docker/README.md#chia-sẻ-đồ-thị).
 
 ## Chọn graph phục vụ truy xuất/Chat
 
-1. Mở **Đồ thị của tôi → Project đang xem → Phiên dựng**. **Tổng quan** đọc số liệu hiện tại; kết quả phiên dựng là lịch sử riêng.
-2. **Thử truy xuất** là tùy chọn: nhập câu hỏi, chọn số kết quả và mở rộng quan hệ khi cần. Request dùng đúng graph đang xem, không chuyển graph Chat; có thể tính phí Embedding.
-3. Mở **Dùng cho Chat → Dùng cho Chat**. Kiểm nội bộ chạy tự động; hộp xác nhận nêu graph cũ/mới, phạm vi và model. Endpoint/model Embedding phải khớp phiên dựng, cùng số chiều chưa đủ.
-4. Thiếu model thì **Chỉnh model**, lưu/kiểm Chat và Embedding rồi **Về đồ thị đang chọn**. Nguồn thiếu/hỏng phải xử lý đúng snapshot/phiên, không nhập lại MySQL để vượt lỗi. Màn xem **Dữ liệu nguồn** không yêu cầu duyệt lại dataset.
-5. Bấm **Xác nhận dùng cho Chat** khi đủ điều kiện. Chỉ coi đã đổi sau khi backend xác nhận **Đang dùng**. Không bắt gửi câu thử hoặc chạy benchmark.
-6. **Mở Chat** và đối chiếu trích dẫn. Nội dung trích dẫn lưu cùng câu trả lời, giữ nguồn cũ sau khi đổi graph.
+1. Mở **Chatbot → Đồ thị**, bấm **Xem** ở đúng dòng graph. Xem graph khác không đổi graph phục vụ Chat.
+2. **Thử tìm kiếm** là tùy chọn: nhập **Câu hỏi thử**, chọn **Số kết quả nguồn** và **Tìm thêm nội dung liên quan** khi cần, rồi bấm **Thử truy xuất**. Request dùng graph đang xem, không chuyển Chat; có thể tính phí Embedding.
+3. Đóng màn xem, bấm **Dùng cho Chat** ở đúng dòng graph. Hộp thoại **Dùng đồ thị cho Chat** cho biết graph cũ/mới và điều kiện còn thiếu. Endpoint/model Embedding phải khớp phiên dựng; cùng số chiều chưa đủ.
+4. Thiếu model thì quay về **Model & API key**, lưu/kiểm Chat và Embedding rồi chọn lại graph. Nguồn thiếu/hỏng phải xử lý đúng snapshot/phiên, không nhập lại MySQL để vượt lỗi. **Dữ liệu nguồn KAG** không yêu cầu duyệt lại dataset.
+5. Bấm **Xác nhận dùng cho Chat** khi đủ điều kiện. Chuẩn bị/xác minh và đóng gói release (seal) chạy tự động nếu cần; không có nút seal riêng. Chờ graph được đánh dấu **Đang dùng cho Chat** và hết thông báo chưa sẵn sàng. Không bắt gửi câu thử hoặc chạy benchmark.
+6. Mở trang hỏi luật tại `/chat` và đối chiếu trích dẫn. Trích dẫn lưu cùng câu trả lời, giữ nguồn cũ sau khi đổi graph.
 
-Project đang xem, đích Builder và graph phục vụ độc lập. Chọn project để xem không tự đổi Chat. Kích hoạt giữ lựa chọn qua restart và bảo vệ database đang phục vụ khỏi Build/xóa qua Builder, kể cả project khác trỏ cùng database. Muốn quay lại graph cũ, chọn đúng project/phiên và kiểm lại bằng cùng quy trình; không tự khôi phục dữ liệu graph cũ.
+Project đang xem, đích Builder và graph phục vụ độc lập. Kích hoạt giữ lựa chọn qua restart; không chọn database đang phục vụ làm đích Build/xóa, kể cả qua project khác trỏ cùng database. Muốn quay lại graph cũ, chọn đúng graph và kiểm lại bằng cùng quy trình; không tự khôi phục dữ liệu graph cũ.
 
-Preview cũ, graph thay đổi, thiếu quyền hoặc model/index không khớp sẽ bị chặn. Kích hoạt thất bại giữ lựa chọn cũ; mất phản hồi thì **Tải lại** trước khi thử lại. Release mới giữ source snapshot của đúng graph. Release legacy vẫn giữ kiểm publication WebApp; cập nhật phần mềm không tự viết lại hoặc chuyển release. [Chi tiết publisher legacy](../docker/README.md#publisher-nâng-cao).
+Preview cũ, graph thay đổi, thiếu quyền hoặc model/index không khớp sẽ bị chặn. Kích hoạt thất bại giữ lựa chọn cũ; mất phản hồi thì **Tải lại danh sách** trước khi thử lại. Release mới giữ source snapshot của đúng graph. Release legacy vẫn giữ kiểm publication WebApp; cập nhật phần mềm không tự viết lại hoặc chuyển release. [Chi tiết publisher legacy](../docker/README.md#publisher-nâng-cao).
 
-## Dừng, bỏ phiên và dựng lại
+## Dừng và dựng lại
 
 ### Dừng và tiếp tục
 
-Bấm **Dừng an toàn**, chờ **Đã dừng an toàn**. Tiến độ và dữ liệu được giữ để **Tiếp tục dựng** sau. Đóng trang hoặc dừng theo dõi log không dừng Worker.
+Bấm **Dừng**, chờ **Đã dừng an toàn**. Tiến độ và dữ liệu được giữ để **Tiếp tục** sau. Đóng trang hoặc dừng theo dõi log không dừng Worker.
 
-Tiếp tục dùng cùng phiên, nguồn, đích, model, batch và hạn mức cũ; số request đã dùng không được đặt lại. Sau Worker restart, vào **Dữ liệu → Kiểm tra lại dữ liệu** rồi **Sẵn sàng → Kiểm tra sẵn sàng** trước khi tiếp tục. Không sửa cấu hình hoặc xóa khóa để ép tiếp tục.
+Tiếp tục dùng cùng phiên, nguồn, đích, model, batch và hạn mức cũ; số request đã dùng không được đặt lại. Sau Worker restart, dùng **Tải lại danh sách**, kiểm thông báo rồi bấm **Tiếp tục**; UI tự kiểm sẵn sàng trước khi Resume. Nếu nguồn cần chuẩn bị lại hoặc cấu hình không còn khớp, nhờ người vận hành xử lý. Không sửa cấu hình hoặc xóa khóa để ép tiếp tục.
 
-### Bỏ phiên
+### Chấm dứt phiên qua API quản trị
 
-Sau khi dừng an toàn và hệ thống cho phép, bấm **Bỏ phiên → Xác nhận bỏ phiên**. Phiên không thể tiếp tục nữa; graph, vector, điểm lưu và lịch sử vẫn được giữ. Bạn có thể cấu hình phiên mới, nhưng dữ liệu cũ vẫn phải tương thích với nguồn/model của phiên đó.
+UI hiện không có nút riêng cho thao tác `abandon`. API quản trị vẫn cho phép chấm dứt phiên đã dừng khi đủ quyền và revision hiện hành: phiên không thể tiếp tục, nhưng graph, vector, điểm lưu và lịch sử được giữ. Nhờ người vận hành nếu cần thao tác này; không dùng **Xóa** thay cho chấm dứt phiên mà giữ dữ liệu.
 
 ### Xóa dữ liệu đồ thị
 
-**Thao tác này xóa toàn bộ node và quan hệ trong database chuyên dụng được cấp quyền, không chỉ dữ liệu của một phiên. Không có hoàn tác nguyên tử.** Chỉ dùng khi đã sao lưu và muốn làm trống đúng database đó.
+**Thao tác này xóa toàn bộ node và quan hệ trong database chuyên dụng được cấp quyền, không chỉ dữ liệu của một phiên. Không có hoàn tác nguyên tử.** Chỉ dùng khi đã sao lưu và muốn làm trống đúng database đó. Không xóa database đang phục vụ Chat hoặc dùng chung; chuyển Chat sang graph khác trước.
 
-1. Nếu phiên đang dừng chờ tiếp tục, **Bỏ phiên** trước.
-2. Mở **Xóa dữ liệu để dựng lại → Xem trước xóa dữ liệu**.
-3. Đọc project, database, định danh vật lý và số dữ liệu sẽ xóa.
-4. Bấm **Xóa dữ liệu đồ thị**, nhập đúng tên database rồi bấm nút **Xóa dữ liệu trong roadlaw** tương ứng đích của bạn.
+1. Nếu Worker đang chạy, **Dừng** và chờ **Đã dừng an toàn**. Nhờ người vận hành đối chiếu quyền xóa đúng project/physical database theo [Docker](../docker/README.md#cấp-quyền-xóa-dữ-liệu-builder).
+2. Trong **Đồ thị**, bấm **Xóa** ở đúng dòng. Đọc hộp thoại **Xóa đồ thị** và số nội dung sẽ xóa; đối chiếu database/identity tại OpenSPG và Neo4j trước khi xác nhận.
+3. Chỉ sau khi đồng ý tác động, bấm **Xác nhận xóa**. UI không yêu cầu gõ tên database. Chờ kết quả đọc lại database rỗng; không coi request được nhận là đã hoàn tất.
 
-Project/database, credentials, schema/index, volumes và lịch sử được giữ. Điểm lưu của đích đã xóa không thể Resume; kết quả cũ chỉ còn là lịch sử. Chỉ hoàn tất sau khi đọc lại database rỗng và cấu trúc vẫn đúng.
+Project/database, credentials, schema/index, volumes và lịch sử được giữ. Điểm lưu của đích đã xóa không thể Resume; kết quả cũ chỉ còn là lịch sử. Luồng xóa xử lý phiên đã dừng ở đích; không cần nút chấm dứt riêng trên UI.
 
-Nút xóa mặc định bị chặn. Người vận hành phải [cấp quyền cho đích cụ thể](../docker/README.md#cấp-quyền-xóa-dữ-liệu-builder); database dùng chung, serving hoặc giao dịch chưa rõ kết quả vẫn bị từ chối. Nếu lỗi một phần, xem lại hiện trạng và preview phần còn lại. Nếu giao dịch mất phản hồi, giữ nguyên khóa và nhờ người vận hành xử lý; không xóa khóa hoặc gửi lại mù.
+Mặc định chưa có quyền xóa. Người vận hành phải cấp quyền cho đích cụ thể; quyền sở hữu, identity, database dùng chung/serving và GraphLock vẫn được kiểm. Nếu lỗi một phần, tải lại hiện trạng, đọc **Chi tiết kỹ thuật** rồi dùng **Xóa tiếp** khi phù hợp. Nếu giao dịch mất phản hồi, giữ nguyên khóa và nhờ người vận hành xử lý; không xóa khóa hoặc gửi lại mù.
 
 ### Dựng lại hoặc chuyển sang toàn bộ dữ liệu
 
-Khi phiên trước đã kết thúc:
-
-1. Về **Cấu hình**; sau xóa có nút **Về cấu hình phiên mới**. Kiểm/chuẩn bị lại cấu trúc nếu cần.
-2. Chọn phạm vi mới. Muốn dựng toàn corpus, chọn **Toàn bộ dữ liệu → Xem trước phạm vi**.
-3. Kiểm batch và hạn mức đang lưu. Chuyển sang toàn bộ **không tự bỏ hạn mức**; giữ số đã đặt hoặc chủ động chọn **Không giới hạn** khi chấp nhận chi phí.
-4. Lưu → kiểm sẵn sàng → bắt đầu dựng; đọc lại phạm vi, model, đích và hạn mức trong hộp xác nhận.
-
-Không bắt buộc xóa một lượt nhỏ đã hoàn tất để dựng tiếp cùng nguồn/model. Hệ thống phải đối chiếu dữ liệu/vector cũ và lịch sử xác minh; cùng số chiều chưa đủ. Thiếu lịch sử hoặc không tương thích thì dùng project rỗng, không tự xóa graph/index để vượt kiểm tra.
+Khi phiên trước đã kết thúc, bấm **+ Dựng đồ thị mới**, chọn project/database rỗng và phạm vi mới. Muốn toàn corpus, chọn **Toàn bộ dữ liệu** rồi đợi thống kê và **Xác nhận dựng**. UI hiện chỉ dựng mới vào đích trống; giữ graph cũ, ưu tiên tạo đích riêng thay vì xóa lượt nhỏ đã hoàn tất. Cùng số chiều chưa đủ để tái sử dụng vector: nguồn/model và provenance phải khớp; không tự xóa graph/index để vượt kiểm tra.
 
 ## Lỗi thường gặp
 
-| Hiện tượng | Cách xử lý |
-| --- | --- |
-| Không có project để chọn | Đăng nhập OpenSPG cùng hostname, kiểm project thuộc tài khoản rồi **Tải lại danh sách** |
-| Không lưu được cấu hình | Kiểm nguồn đã chuẩn bị, project hợp lệ, model đã kiểm, số nguyên hợp lệ và preview phạm vi mới nhất |
-| Cấu trúc có xung đột hoặc có dữ liệu | Đọc danh sách xung đột; dùng project riêng phù hợp hoặc nhờ quản trị lập migration, không xóa loại tùy chỉnh |
-| Model chưa kiểm hoặc endpoint bị chặn | Lưu/kiểm đúng Embedding và nhờ vận hành kiểm chính sách kết nối model |
-| Dữ liệu/vector cũ không khớp model | Dùng model gốc cùng lịch sử run hoặc chọn project rỗng |
-| Hết hạn mức request | Phiên cũ giữ hạn mức cũ; không thể tăng ngân sách bằng Resume |
-| Khóa đang được giữ hoặc kết quả ghi chưa rõ | Kiểm đúng phiên giữ khóa; giữ khóa và nhờ vận hành đối soát |
-| Mất kết nối, timeout | **Tải lại trạng thái**, đợi kết quả server trước khi thử thao tác khác |
+- Không có project để chọn: đăng nhập OpenSPG cùng hostname, kiểm project thuộc tài khoản rồi **Tải lại danh sách**.
+- Không xác nhận được: kiểm nguồn/phạm vi đã tính xong, đích trống, Embedding đã lưu/kiểm và phiên trước đã kết thúc.
+- Cấu trúc xung đột hoặc có dữ liệu: đọc lỗi; chọn project riêng phù hợp hoặc nhờ quản trị lập migration, không xóa loại tùy chỉnh.
+- Model chưa kiểm hoặc endpoint bị chặn: lưu/kiểm đúng Embedding và nhờ vận hành kiểm chính sách kết nối.
+- Hết hạn mức request: phiên cũ giữ hạn mức cũ; Resume không tăng ngân sách.
+- Khóa đang giữ, timeout hoặc kết quả ghi chưa rõ: **Tải lại danh sách**, giữ khóa và nhờ vận hành đối soát trước thao tác khác.
 
 ## Dành cho quản trị và phát triển
 
@@ -253,7 +205,7 @@ Replay kiểm model/dimension/provenance; không tự chuyển sang provider khi
 
 Worker dùng `builder-control-v3`; Java/frontend nhận v1/v2/v3. V1 chỉ có tiến độ stage hiện tại; v2 thêm tiến trình/kết quả gắn run/target; v3 thêm `ABANDONED`/`CLEARED`. Khi nâng từng phần, cập nhật clients tương thích v3 trước Worker v3.
 
-Build/Resume/Bỏ phiên dùng revision cấu hình; stale request bị từ chối. Poll chỉ đọc trạng thái; không gọi provider hoặc quét graph. Kết quả hoàn tất vẫn xem được sau restart, nhưng cần kiểm lại nguồn/sẵn sàng trước thao tác ghi mới.
+Build/Resume/`abandon` dùng revision cấu hình; stale request bị từ chối. Poll chỉ đọc trạng thái; không gọi provider hoặc quét graph. Kết quả hoàn tất vẫn xem được sau restart, nhưng cần kiểm lại nguồn/sẵn sàng trước thao tác ghi mới.
 
 Run giữ ledger SQLite (sổ tiến độ), checkpoint, artifacts và kết quả xác minh. Batch đã xác nhận không gửi lại. Batch ghi chưa rõ kết quả phải đọc lại; thiếu/khác/không chắc thì chặn, không resend mù. Resume giữ nguyên nguồn/schema/target/model/phạm vi/batch/hạn mức.
 

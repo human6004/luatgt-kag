@@ -60,7 +60,7 @@ Nguồn chuẩn: [app.py](../kag/http_api/app.py), [contract.py](../kag/http_api
 - UI gửi `POST /api/chat/stream?progress=true`; Java phát SSE `started` rồi `done`/`error` và giữ kết nối bằng heartbeat. Java gọi Python `POST /v1/query` nhận JSON đã kiểm căn cứ; không còn endpoint Python SSE.
 - `/v1/health` chỉ liveness. `/v1/operations/sample`, `/v1/pipeline/status`, `/v1/benchmark/datasets` phục vụ inspection, không chạy Builder/benchmark.
 
-Endpoint và secrets: [Docker](../docker/README.md#cấu-hình-chatbot). Control ADMIN, tiến trình và kết quả phiên: [runner](runner.md#dựng-đồ-thị-qua-5-bước). Builder v3 hỗ trợ Bỏ phiên/Xóa dữ liệu với quyền riêng; hai thao tác không tương đương và không tự kích hoạt Chat.
+Endpoint và secrets: [Docker](../docker/README.md#cấu-hình-chatbot). Control ADMIN, tiến trình và kết quả phiên: [runner](runner.md#dựng-đồ-thị-qua-5-bước). API Builder v3 hỗ trợ `abandon`/xóa dữ liệu với quyền riêng; hai thao tác không tương đương và không tự kích hoạt Chat.
 
 ## Evaluation Framework
 
