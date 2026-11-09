@@ -15,6 +15,7 @@ import time
 from types import MethodType, SimpleNamespace
 
 from kag.vector_contract import TARGETS, valid_vector as _valid_vector
+from kag.run_state import RunBlocked
 
 
 BACKOFF = (2, 5, 10)
@@ -100,7 +101,7 @@ class ResilientVectorizer:
     Optional SQLite checkpoint enables restart without repeating cached successes.
     """
     def __init__(self, batch_vectorizer, *, model_identity, dimension, checkpoint_path=None,
-                 sleep=time.sleep, embedding_fallback=None):
+                 sleep=time.sleep, embedding_fallback=None, stop_event=None, on_progress=None):
         if not isinstance(model_identity, str) or not model_identity:
             raise ValueError('explicit endpoint/model identity required')
         if type(dimension) is not int or dimension <= 0:
@@ -109,6 +110,10 @@ class ResilientVectorizer:
         self.model_identity = model_identity
         self.dimension = dimension
         self.sleep = sleep
+        self.stop_event = stop_event
+        self.on_progress = on_progress
+        self._retry_starts = {}
+        self._resuming = False
         self.fallback_config = {'enabled':False, 'max_chunk_chars':8000, 'overlap_chars':500,
             'min_chunk_chars':1000, 'max_split_depth':3, 'chunking_version':'boundary_offsets_v1'}
         if embedding_fallback is not None:
@@ -279,6 +284,7 @@ class ResilientVectorizer:
             logger.disabled = previous
 
     def _call(self, texts, jobs, timeout, phase):
+        self._check_stop()
         # KAG deduplicates original values, then maps whitespace to "none".
         # Distinct original whitespace values can therefore share request strings.
         groups = {}
@@ -338,22 +344,35 @@ class ResilientVectorizer:
                         continue
                     entry['attempts'][-1].update(info)
                     self._store(job, entry)
+            self._check_stop()
+            if info['http_status'] in (401, 402, 429):
+                raise RunBlocked('VECTORS_KEY') from None
+            if info['http_status'] == 503 or info.get('timeout') or info.get('connection'):
+                raise RunBlocked('VECTORS') from None
             raise _Failure(info) from None
+        finally:
+            if response_received and self.on_progress:
+                self.on_progress()
+
+    def _check_stop(self):
+        if self.stop_event is not None and self.stop_event.is_set():
+            raise RunBlocked('INTERRUPTED')
 
     def _recover(self, job):
         while True:
+            self._check_stop()
             entry = self._entry(job)
             if entry['status'] in ('SUCCESS', 'FAILED_EXHAUSTED'):
                 return
             attempts = entry['attempts']
             last = attempts[-1]
-            recovery = [a for a in attempts if a['phase'] == 'RECOVERY']
+            recovery = [a for a in attempts[self._retry_starts.get(job['key'], 0):] if a['phase'] == 'RECOVERY']
             info = last
             interrupted = info.get('error_class') == 'INTERRUPTED_REQUEST'
             large_timeout = job['source_chars'] > 100000 and (info.get('timeout', False) or
                 interrupted and any(a['timeout_seconds'] in (180,300) for a in recovery))
             retryable = (info.get('timeout') or info.get('connection') or
-                info.get('http_status') in (429,500,502,503,504) or
+                info.get('http_status') in (401,402,429,500,502,503,504) or
                 info.get('http_status') == 404 and info.get('code') == 'MODEL_NOT_FOUND' or
                 info.get('error_class') == 'INTERRUPTED_REQUEST')
             classification = None
@@ -376,17 +395,36 @@ class ResilientVectorizer:
             timeout = getattr(self.batch.vectorize_model, 'timeout', None) or 60
             if large_timeout:
                 timeout = 300 if any(a['timeout_seconds'] == 180 for a in recovery) else 180
-            if info.get('http_status') != 400:
-                self.sleep(BACKOFF[len(recovery)])
+            if info.get('http_status') not in (400,401,402,429,503) and not info.get('timeout') and not info.get('connection'):
+                self._check_stop()
+                if self.stop_event is not None and self.sleep is time.sleep:
+                    self.stop_event.wait(BACKOFF[len(recovery)])
+                    self._check_stop()
+                else:
+                    self.sleep(BACKOFF[len(recovery)])
             try:
                 self._call([job['text']], [job], timeout, 'RECOVERY')
             except _Failure:
                 pass
 
-    def run(self, nodes, *, previous_failures=()):
+    def _resume_job(self, job):
+        entry = self._entry(job)
+        if (self._resuming and job['key'] not in self._retry_starts
+                and entry['status'] in ('PENDING', 'FAILED_EXHAUSTED') and entry['attempts']):
+            last = entry['attempts'][-1]
+            if last.get('http_status') in (401,402,429,503) or last.get('timeout') or last.get('connection'):
+                # Each explicit resume gets one bounded window, including fallback chunks.
+                self._retry_starts[job['key']] = len(entry['attempts'])
+                entry.update(status='PENDING', classification=None)
+                self._store(job, entry)
+        return entry
+
+    def run(self, nodes, *, previous_failures=(), resume=False):
         self.revision += 1
         originals = copy.deepcopy(list(nodes))
         jobs = list(self._jobs(originals))
+        self._retry_starts = {}
+        self._resuming = resume
         by_key = {(j['node_type'],j['node_id'],j['property']): j for j in jobs}
         with self.db:
             for failure in previous_failures:
@@ -404,13 +442,15 @@ class ResilientVectorizer:
                     entry['attempts'] = [info | {'phase':'ORIGINAL', 'timeout_seconds':60}]
                     self._store(job, entry)
             for job in jobs:
+                entry = self._resume_job(job)
                 if job['text'] in (None, ''):
-                    entry = self._entry(job)
                     entry.update(status='SKIPPED_EMPTY', classification='PINNED_EMPTY_BEHAVIOR')
                     self._store(job, entry)
         before_requests, before_retries, before_http = self.requests, self.retries, self.http.copy()
         # Keep each graph small; provider-batch responses checkpoint before KAG's final patch.
         from kag.builder.model.sub_graph import Node, SubGraph
+        if self.on_progress:
+            self.on_progress()
         for offset in range(0, len(originals), 32):
             group = originals[offset:offset+32]
             self._process_group(group, Node, SubGraph)
@@ -445,7 +485,8 @@ class ResilientVectorizer:
                 self.dimension,start,end,sha],ensure_ascii=False,sort_keys=True,separators=(',',':'))
             job = source | {'key':key,'text':text,'source_sha256':sha,
                 'source_chars':len(text),'source_bytes':len(text.encode('utf-8'))}
-            value = self._entry(job)
+            with self.db:
+                value = self._resume_job(job)
             if value['status'] == 'SUCCESS':
                 cache_hits += 1
             elif value['status'] == 'PENDING':
@@ -493,6 +534,8 @@ class ResilientVectorizer:
             entry.update(classification='FALLBACK_INCOMPLETE')
         manifest['aggregation_result'] = 'PASS' if entry['status']=='SUCCESS' else 'FALLBACK_INCOMPLETE'
         with self.db: self._store(source,entry)
+        if self.on_progress:
+            self.on_progress()
 
     def _process_group(self, group, Node, SubGraph):
         active = list(self._jobs(group))

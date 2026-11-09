@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { api, media, send, tokenKey } from '../src/api.ts'
-import { normalizeImport } from '../src/pages/server/import-normalization.ts'
-import { publicationBatchBody } from '../src/pages/server/question-publication.ts'
+import { normalizeImport } from '../src/pages/shared/import-normalization.ts'
+import { publicationBatchBody } from '../src/pages/shared/question-publication.ts'
 
 const values = new Map([[tokenKey, 'test-token']])
 globalThis.sessionStorage = { getItem: key => values.get(key), removeItem: key => values.delete(key) }

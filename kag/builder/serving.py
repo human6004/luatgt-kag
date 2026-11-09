@@ -68,6 +68,31 @@ def protect_active(reader,physical):
     except Exception: raise RunBlocked('SCOPE') from None
 
 
+def deactivate(change,token):
+    """Unselect only the owned physical target; clearing takes its own lock later."""
+    from kag.builder.structure import target_state, clear_permissions, clear_runs
+    from kag.run_state import graph_lock_status
+    a._keys(change,('project_id','database_id'))
+    if type(change['project_id']) is not int or not 1<=change['project_id']<=2147483647:a._invalid()
+    a._identity(change['database_id'])
+    with target_state(change['project_id'],token,for_write=False) as state:
+        proof=state['proof'];target=state['target']
+        if proof.physical_database_id!=change['database_id']:raise ApiFailure('CONFIG_CONFLICT')
+        clear_permissions(state,detached=False)
+        clear_runs(proof.physical_database_id)
+        lock=GraphLock(os.environ.get('KAG_BUILDER_LOCK_ROOT','/run/kag-locks'),proof.physical_database_id,
+            dict(scope='PRODUCTION',project_id=target['project_id'],namespace=target['namespace'],database=target['database']),
+            backend_proof=proof,backend_session=state['identity'])
+        if graph_lock_status(lock.path)['state']!='FREE':raise RunBlocked('LOCK')
+        store=model_store();models=store._llm_config;selected=(models or {}).get('serving')
+        if selected and (selected['database_id']==proof.physical_database_id
+                or state['reader'].protected_database_identity(selected['database'])==proof.physical_database_id):
+            updated=deepcopy(models);updated['revision']+=1;updated['serving']=None
+            state['identity'].validate(proof)
+            store._persist_llm(updated)
+    return dict(project_id=change['project_id'],database_id=change['database_id'],status='INACTIVE')
+
+
 def chat_blockers(release):
     if a.dataset_sources(release):
         return [] if release.records else ['SOURCE_MISSING']
@@ -186,7 +211,8 @@ def prepare(change,token,*,activate=False):
     a._keys(change,('project_id','run_id',*(('preview_id',) if activate else ())))
     if type(change['project_id']) is not int or not 1<=change['project_id']<=2147483647: a._invalid()
     path,receipt=_run_directory(change['run_id'],change['project_id'])
-    with target_state(change['project_id'],token,for_write=False,check_structure=True) as state:
+    with target_state(change['project_id'],token,for_write=False,check_structure=True,
+            dimension=receipt['identity']['dimension']) as state:
         target=state['target'];proof=state['proof'];identity=receipt['identity']
         if (proof.physical_database_id!=identity['database_id'] or any(target[k]!=identity[k]
                 for k in ('project_id','project_name','database','namespace','endpoints'))): a._invalid()
@@ -210,10 +236,27 @@ def prepare(change,token,*,activate=False):
             source_hash='dataset-snapshot-v1'
             release_id='builder-'+a._sha(a.canonical_json([identity['run_id'],receipt['stages']['verify']['fingerprint'],source_hash]).encode())
             root=release_root(release_id)
-            proposal=a.publish_run(root.with_name('preview-'+release_id),path,state['reader'],release_id=release_id,
-                source_snapshot_id=source_id,source_mode='dataset-snapshot-v1',release_kind='PRODUCTION')
-            for key in ('release_root','operational_proof','status'):proposal.pop(key,None)
-            blockers=proposal['chat_blockers']
+            counts=state['reader']._query('structure_counts')[0]
+            verified=receipt['stages']['verify']
+            expected=dict(nodes=verified['nodes']['total'],edges=verified['edges']['total'],vectors=verified['vectors']['nonempty'])
+            if counts!={key:expected[key] for key in ('nodes','edges')}:raise ApiFailure('RELEASE_MISMATCH')
+            release=None
+            if root.exists():
+                release=a.load_release(root,release_id);a._unchanged(release);a._backend(state['reader'],release)
+                descriptor=release.descriptor
+                if (release.release_kind!='PRODUCTION' or descriptor['graph_fingerprint']!=verified['fingerprint']
+                        or any(descriptor[key]!=identity[key] for key in ('run_id','model_identity','dimension','database_id','database','namespace'))):a._invalid()
+                with closing(sqlite3.connect((root/'expected.sqlite3').as_uri()+'?mode=ro',uri=True)) as db:
+                    sealed=dict(nodes=db.execute('SELECT count(*) FROM expected_nodes').fetchone()[0],
+                        edges=db.execute('SELECT count(*) FROM expected_edges').fetchone()[0])
+                if counts!=sealed:a._invalid()
+            _,schema_identity=a.release_contract(identity['namespace'],production=True)
+            blockers=chat_blockers(release) if release else []
+            proposal=dict(release_id=release_id,schema_contract=schema_identity.__dict__,source_snapshot_id=source_id,
+                graph_fingerprint=verified['fingerprint'],database_id=proof.physical_database_id,
+                server_id=identity['backend_identity']['runtime_identity'][0],database=target['database'],namespace=target['namespace'],
+                counts=expected,model_identity=identity['model_identity'],dimension=identity['dimension'],run_id=path.name,
+                partial='selection' in identity['input_hashes'],source_mode='dataset-snapshot-v1',chat_blockers=blockers)
             chat=models['chat'];chat_test=models['tested']['chat']
             chat_ready=bool(chat and chat_test and chat_test['status']=='PASS')
             if chat_ready:provider_route(chat,'chat',policy)
@@ -224,17 +267,16 @@ def prepare(change,token,*,activate=False):
                 previous=previous,model_revision=revision,chat_ready=not blockers)
             preview_id=a._sha(a.canonical_json(dict(proposal,schema=report)).encode())
             proposal['preview_id']=preview_id
-            if not activate:return proposal
+            if not activate:return dict(proposal,preparation_required=release is None)
             if change['preview_id']!=preview_id:raise ApiFailure('CONFIG_CONFLICT')
             lock.assert_owned(proof.physical_database_id);state['identity'].validate(proof)
             if active_selection()!=previous or model_store()._llm_config['revision']!=revision:raise ApiFailure('CONFIG_CONFLICT')
             root.parent.mkdir(mode=0o700,parents=True,exist_ok=True)
-            if root.exists():
-                release=a.load_release(root,release_id);a._unchanged(release)
-                if release.descriptor['graph_fingerprint']!=proposal['graph_fingerprint']:a._invalid()
-            else:
+            if release is None:
                 a.publish_run(root,path,state['reader'],release_id=release_id,source_snapshot_id=source_id,
                     source_mode='dataset-snapshot-v1',release_kind='PRODUCTION',approve=True)
+                lock.assert_owned(proof.physical_database_id);state['identity'].validate(proof)
+                if active_selection()!=previous or model_store()._llm_config['revision']!=revision:raise ApiFailure('CONFIG_CONFLICT')
             selected=dict(release_id=release_id,project_id=target['project_id'],project_name=target['project_name'],
                 database=target['database'],database_id=proof.physical_database_id,namespace=target['namespace'],
                 run_id=path.name,preview_id=preview_id)

@@ -505,7 +505,7 @@ def _scan_graph(reader, db, contract, batch_size, nodes_only, dimension=3072):
             'edge_fingerprint': _fingerprint(db, 'observed_edges') if not nodes_only else None}
 
 
-def verify_graph(reader, *, db_path, contract, batch_size, nodes_only=False):
+def verify_graph(reader, *, db_path, contract, batch_size, nodes_only=False, recheck=True):
     _batch_size(batch_size)
     path = Path(db_path).resolve()
     if not path.is_file():
@@ -528,8 +528,8 @@ def verify_graph(reader, *, db_path, contract, batch_size, nodes_only=False):
             raise RunBlocked('INTEGRITY')
         first = _scan_graph(reader, db, contract, batch_size, nodes_only, dimension)
         indexes = _indexes(reader, contract, dimension)
-        second = _scan_graph(reader, db, contract, batch_size, nodes_only, dimension)
-        if first != second or indexes != _indexes(reader, contract, dimension):
+        second = _scan_graph(reader, db, contract, batch_size, nodes_only, dimension) if recheck else first
+        if first != second or recheck and indexes != _indexes(reader, contract, dimension):
             raise RunBlocked('INTEGRITY')
         result = dict(summary, **first, indexes=indexes, nodes_only=nodes_only)
         result['fingerprint'] = _digest(result)

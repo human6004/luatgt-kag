@@ -202,7 +202,7 @@ class TransportTests(unittest.TestCase):
                     with self.assertRaises(broker.BrokerFailure): broker._secret_file('KAG_BROKER_PASSWORD_FILE')
         with patch.dict(os.environ,{'KAG_BROKER_DATABASE':'production'},clear=True):
             with self.assertRaises(SystemExit) as caught: broker.main()
-        self.assertEqual(str(caught.exception),'Sample read broker unavailable.')
+        self.assertEqual(str(caught.exception),'Read broker unavailable.')
 
 
 class HTTPTests(unittest.TestCase):

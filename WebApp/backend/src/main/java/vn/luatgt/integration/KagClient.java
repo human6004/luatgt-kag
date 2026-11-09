@@ -10,7 +10,6 @@ import java.nio.charset.*;
 import java.nio.file.*;
 import java.time.*;
 import java.util.*;
-import java.util.function.BiConsumer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -38,6 +37,7 @@ public class KagClient {
     @Value("${app.kag-credentials-write-token-file:}") private String credentialsWriteTokenFile="";
     @Value("${app.kag-provider-test-token-file:}") private String providerTestTokenFile="";
     @Value("${app.kag-config-apply-token-file:}") private String configApplyTokenFile="";
+    @Value("${app.kag-benchmark-write-token-file:}") private String benchmarkWriteTokenFile="";
     private static final ZoneId LEGAL_ZONE=ZoneId.of("Asia/Saigon");
     private static final Set<String> REQUEST_FIELDS=Set.of("user_id","message","context_id","schema_contract");
     private static final Set<String> CITATION_FIELDS=Set.of("doc_id","unit_id","sign_id","evidence_id","field","start","end","quote");
@@ -95,6 +95,14 @@ public class KagClient {
     public JsonNode checkBuilderInputs() {return builderRequest("check-inputs",null);}
     public JsonNode builderConfiguration() {return builderRequest("configuration",null);}
     public JsonNode builderProjects() {return builderRequest("projects",null);}
+    public JsonNode builderPackages() {return builderRequest("packages",null);}
+    public JsonNode builderPackageExport(JsonNode change) {
+        if(change==null)return builderRequest("packages/export",null);
+        if(!fields(change).equals(Set.of("project_id","run_id"))||!bounded(change.path("project_id"),1,Integer.MAX_VALUE)||
+            !change.path("run_id").isTextual()||!change.path("run_id").asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}"))
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Chọn project và phiên đã xác minh để xuất gói");
+        return builderRequest("packages/export",change);
+    }
     public JsonNode graphProject(int projectId) {
         if(projectId<1)throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"ID project không hợp lệ");
         return builderRequest("graph/"+projectId,null);
@@ -105,8 +113,11 @@ public class KagClient {
     }
     public JsonNode serving(String action,JsonNode change,JsonNode publication) {
         try {
-            boolean read=action==null;
-            if(!read&&(!Set.of("preview","activate").contains(action)||
+            boolean read=action==null,deactivate="deactivate".equals(action);
+            if(deactivate&&(!fields(change).equals(Set.of("project_id","database_id"))||!bounded(change.path("project_id"),1,Integer.MAX_VALUE)||
+                !change.path("database_id").asText().matches("[A-Za-z0-9._:-]{1,128}")))
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Đích đồ thị không hợp lệ; tải lại danh sách");
+            if(!read&&!deactivate&&(!Set.of("preview","activate").contains(action)||
                 !fields(change).equals(action.equals("activate")?Set.of("project_id","run_id","preview_id"):Set.of("project_id","run_id"))||
                 !bounded(change.path("project_id"),1,Integer.MAX_VALUE)||!change.path("run_id").asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}")||
                 action.equals("activate")&&!change.path("preview_id").asText().matches("[0-9a-f]{64}")))
@@ -120,13 +131,18 @@ public class KagClient {
             String session=openSpgSession();if(session!=null)request.header("X-OpenSPG-Session",session);
             return request.header(HttpHeaders.AUTHORIZATION,"Bearer "+token).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
                 var body=inspectionBody(res,token);
+                if(!read&&!deactivate&&action.equals("activate")&&res.getStatusCode().value()==202) {
+                    validateServingOperation(body);
+                    if(!body.path("state").asText().equals("PREPARING")||!body.path("project_id").equals(change.path("project_id"))||!body.path("run_id").equals(change.path("run_id")))throw new IOException();
+                    return body;
+                }
                 if(res.getStatusCode().value()!=200) {
                     String code=errorCode(body);
                     String reason=switch(code) {
                         case "CONFIG_CONFLICT" -> "Bản xem trước đã cũ. Tải lại và xem trước lần nữa";
-                        case "CONFIG_BUSY" -> "Dịch vụ đang xử lý yêu cầu khác. Chờ rồi tải lại trạng thái";
+                        case "CONFIG_BUSY" -> deactivate?"Đồ thị đang dựng hoặc có thao tác khác. Dừng dựng trước rồi tải lại":"Dịch vụ đang xử lý yêu cầu khác. Chờ rồi tải lại trạng thái";
                         case "SCOPE_DENIED" -> "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project";
-                        case "RELEASE_MISMATCH" -> "Model Embedding hoặc số chiều không khớp phiên dựng. Chọn lại và kiểm tra model";
+                        case "RELEASE_MISMATCH" -> "Embedding đang chọn không khớp embedding đã dựng đồ thị (địa chỉ, model hoặc số chiều). Giữ nguyên địa chỉ và model, chỉ đổi API key; nếu đổi model thì phải dựng lại đồ thị";
                         case "SOURCE_VALIDATION_FAILED" -> "Nguồn graph chưa đầy đủ hoặc khác bản đã xác minh. Kiểm văn bản nguồn và phạm vi dựng trước khi xuất bản";
                         default -> "Chưa thể dùng đồ thị. Kiểm phiên đã xác minh, cấu trúc/chỉ mục và model đã kiểm tra ("+code+")";
                     };
@@ -135,12 +151,25 @@ public class KagClient {
                 if(read) {
                     if(!body.path("contract_version").asText().equals("builder-serving-v1")||!body.path("runs").isArray()||
                         !body.path("busy").isBoolean()||!body.path("runtime_ready").isBoolean()||!body.path("chat_blockers").isArray())throw new IOException();
+                    if(body.hasNonNull("operation"))validateServingOperation(body.path("operation"));
+                } else if(deactivate) {
+                    if(!fields(body).equals(Set.of("project_id","database_id","status"))||!body.path("status").asText().equals("INACTIVE")||
+                        !body.path("project_id").equals(change.path("project_id"))||!body.path("database_id").equals(change.path("database_id")))throw new IOException();
                 } else if(!body.path("preview_id").asText().matches("[0-9a-f]{64}")||!body.path("chat_blockers").isArray()||
                     !body.path("project_id").equals(change.path("project_id"))||action.equals("activate")&&!body.path("status").asText().equals("ACTIVE"))throw new IOException();
                 return body;
             });
         } catch(ResponseStatusException e) {throw e;}
         catch(Exception e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Chưa xác nhận được trạng thái đồ thị phục vụ; tải lại trước khi thao tác tiếp");}
+    }
+    private void validateServingOperation(JsonNode body) throws IOException {
+        String state=body.path("state").asText();
+        if(!fields(body).equals(Set.of("contract_version","state","project_id","run_id","code","result"))||
+            !body.path("contract_version").asText().equals("builder-serving-operation-v1")||!Set.of("NOT_RUN","PREPARING","COMPLETE","FAILED","INTERRUPTED").contains(state)||
+            (state.equals("NOT_RUN")?!body.path("project_id").isNull()||!body.path("run_id").isNull():!bounded(body.path("project_id"),1,Integer.MAX_VALUE)||!body.path("run_id").asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}"))||
+            (Set.of("FAILED","INTERRUPTED").contains(state)?!body.path("code").asText().matches("[A-Z_]{1,64}"):!body.path("code").isNull()))throw new IOException();
+        var result=body.path("result");
+        if(state.equals("COMPLETE")? !result.path("status").asText().equals("ACTIVE")||!result.path("project_id").equals(body.path("project_id"))||!result.path("run_id").equals(body.path("run_id"))||!result.path("preview_id").asText().matches("[0-9a-f]{64}"):!result.isNull())throw new IOException();
     }
     public JsonNode checkBuilderReadiness() {return builderRequest("preflight",null);}
     public JsonNode builderStructure(String action,JsonNode change) {
@@ -153,13 +182,14 @@ public class KagClient {
         return builderRequest("structure-"+action,change);
     }
     public JsonNode saveBuilderConfiguration(JsonNode change) {
-        var allowed=Set.of("revision","embedding_revision","batch_size","request_limit","node_limit","project_id","selection_preview_id");
+        var allowed=Set.of("revision","embedding_revision","batch_size","request_limit","node_limit","project_id","selection_preview_id","vector_package");
         if(!fields(change).containsAll(Set.of("revision","embedding_revision","batch_size","request_limit"))||!allowed.containsAll(fields(change))||
             !bounded(change.path("revision"),0,Integer.MAX_VALUE-1)||!bounded(change.path("embedding_revision"),1,Integer.MAX_VALUE)||
             !bounded(change.path("batch_size"),1,4096)||!change.path("request_limit").isNull()&&!bounded(change.path("request_limit"),1,1000000)||
             change.has("node_limit")&&!change.path("node_limit").isNull()&&!bounded(change.path("node_limit"),3,128)||
             change.has("selection_preview_id")&&!change.path("selection_preview_id").asText().matches("[0-9a-f]{64}")||
-            change.has("project_id")&&!bounded(change.path("project_id"),1,Integer.MAX_VALUE))
+            change.has("project_id")&&!bounded(change.path("project_id"),1,Integer.MAX_VALUE)||
+            change.has("vector_package")&&!change.path("vector_package").isNull()&&!packageReference(change.path("vector_package")))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Cấu hình Builder không hợp lệ");
         return builderRequest("save-configuration",change);
     }
@@ -177,9 +207,8 @@ public class KagClient {
     }
     public JsonNode builderClear(String action,JsonNode change) {
         if(action==null)return builderRequest("clear",null);
-        if(!Set.of("preview","apply").contains(action)||!fields(change).equals(action.equals("preview")?Set.of("revision"):Set.of("revision","preview_id","database"))||
-            !bounded(change.path("revision"),1,Integer.MAX_VALUE)||action.equals("apply")&&
-                (!change.path("preview_id").asText().matches("[0-9a-f]{64}")||!change.path("database").asText().matches("[a-z][a-z0-9.-]{0,62}")))
+        if(!action.equals("apply")||!fields(change).equals(Set.of("project_id","database_id"))||
+            !bounded(change.path("project_id"),1,Integer.MAX_VALUE)||!change.path("database_id").asText().matches("[A-Za-z0-9._:-]{1,128}"))
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Yêu cầu xóa dữ liệu không hợp lệ");
         return builderRequest("clear-"+action,change);
     }
@@ -206,27 +235,35 @@ public class KagClient {
             boolean graph=action!=null&&action.matches("graph/[1-9][0-9]{0,9}");
             boolean sources=action!=null&&action.startsWith("sources/");
             boolean dataset=action!=null&&action.startsWith("dataset/");
-            boolean read=graph||sources||dataset||action==null||Set.of("inputs","configuration","projects","structure","clear").contains(action);
+            boolean packages="packages".equals(action)||"packages/export".equals(action);
+            boolean export="packages/export".equals(action);
+            boolean read=graph||sources||dataset||packages&&payload==null||action==null||Set.of("inputs","configuration","projects","structure","clear").contains(action);
             boolean structure=action!=null&&action.startsWith("structure");
             boolean clear=action!=null&&action.startsWith("clear");
             boolean inputs="inputs".equals(action)||"check-inputs".equals(action);
             boolean configuration=Set.of("configuration","save-configuration","preflight").contains(action==null?"":action);
             String path=action==null?"status":inputs?"inputs":action.equals("save-configuration")?"configuration":structure||clear?action.replace('-', '/'):action;
-            var transport=graph||sources||structure||clear||Set.of("save-configuration","projects","selection","abandon").contains(action==null?"":action)?builderConfigurationClient:builderClient;
+            var transport=graph||sources||structure||clear||packages||Set.of("save-configuration","projects","selection","abandon").contains(action==null?"":action)?builderConfigurationClient:builderClient;
             RestClient.RequestHeadersSpec<?> request=read?transport.get().uri("/v1/builder/"+path):
                 transport.post().uri("/v1/builder/"+path).contentType(MediaType.APPLICATION_JSON).body(payload==null?Map.of():payload);
             if(revision!=null)request.header(HttpHeaders.IF_MATCH,revision);
-            if(graph||sources||structure||clear||Set.of("projects","save-configuration","preflight","build","resume","abandon").contains(action==null?"":action)) {
-                String session=openSpgSession();
+            String packageSession=export?openSpgSession():null;
+            if(graph||sources||structure||clear||export||Set.of("projects","save-configuration","preflight","build","resume","abandon").contains(action==null?"":action)) {
+                String session=export?packageSession:openSpgSession();
                 if(session!=null)request.header("X-OpenSPG-Session",session);
             }
             return request.header(HttpHeaders.AUTHORIZATION,"Bearer "+token).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
                 int code=res.getStatusCode().value();
-                if((graph||sources)&&(code==403||code==404))throw new ResponseStatusException(code==403?HttpStatus.FORBIDDEN:HttpStatus.NOT_FOUND,
+                if((graph||sources||export)&&(code==403||code==404))throw new ResponseStatusException(code==403?HttpStatus.FORBIDDEN:HttpStatus.NOT_FOUND,
                     code==403?"Đăng nhập lại OpenSPG và kiểm quyền sở hữu project":"Project không còn thuộc danh sách được phép xem; hãy tải lại");
                 if(code==409) {
-                    if("selection".equals(action)&&inspectionBody(res,token).path("detail").asText().equals("BUILDER_SELECTION_INVALID"))
-                        throw new ResponseStatusException(HttpStatus.CONFLICT,"Phạm vi quá nhỏ để giữ đủ loại, quan hệ và nguồn liên quan. Tăng giới hạn rồi xem trước lại");
+                    if("selection".equals(action)) {
+                        String selectionCode=inspectionBody(res,token).path("detail").asText();
+                        if(selectionCode.equals("BUILDER_SELECTION_INVALID"))
+                            throw new ResponseStatusException(HttpStatus.CONFLICT,"Phạm vi quá nhỏ để giữ đủ loại, quan hệ và nguồn liên quan. Tăng giới hạn rồi xem trước lại");
+                        if(selectionCode.equals("BUILDER_SELECTION_STALE"))
+                            throw new ResponseStatusException(HttpStatus.CONFLICT,"Phiên dựng trước chưa kết thúc");
+                    }
                     throw new ResponseStatusException(HttpStatus.CONFLICT,"Builder đang bận hoặc thao tác chưa an toàn; hãy tải lại trạng thái");
                 }
                 if(code==422)throw new ResponseStatusException(HttpStatus.BAD_REQUEST,"Yêu cầu Builder không hợp lệ");
@@ -234,8 +271,9 @@ public class KagClient {
                 JsonNode body;
                 try { body=inspectionBody(res,token,sources?32*1024*1024:245760); }
                 catch(IOException e) { if(sources&&"Response too large".equals(e.getMessage()))throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"Danh sách nguồn vượt giới hạn 32 MiB; chưa thể xem hoặc nhập qua màn này");throw e; }
-                if(dataset)validateDataset(body,action);else if(sources)validateBuilderSources(body,action);else if(graph)validateGraphProject(body,Integer.parseInt(action.substring(6)));else if(structure)validateBuilderStructure(body);else if(clear)validateBuilderClear(body);else if("selection".equals(action))validateBuilderSelection(body);else if("projects".equals(action))validateBuilderProjects(body);else if(inputs)validateBuilderInputs(body);else if(configuration)validateBuilderConfiguration(body);else validateBuilder(body);
-                if(!read&&!inputs&&!configuration&&!structure&&!clear&&!"selection".equals(action)&&!body.path("run_id").asText().equals(((Map<?,?>)payload).get("run_id")))throw new IOException();
+                if(packageSession!=null&&body.toString().contains(packageSession))throw new IOException();
+                if(packages)validateBuilderPackages(body,export);else if(dataset)validateDataset(body,action);else if(sources)validateBuilderSources(body,action);else if(graph)validateGraphProject(body,Integer.parseInt(action.substring(6)));else if(structure)validateBuilderStructure(body);else if(clear)validateBuilderClear(body);else if("selection".equals(action))validateBuilderSelection(body);else if("projects".equals(action))validateBuilderProjects(body);else if(inputs)validateBuilderInputs(body);else if(configuration)validateBuilderConfiguration(body);else validateBuilder(body);
+                if(!read&&!packages&&!inputs&&!configuration&&!structure&&!clear&&!"selection".equals(action)&&!body.path("run_id").asText().equals(((Map<?,?>)payload).get("run_id")))throw new IOException();
                 return body;
             });
         } catch(ResponseStatusException e) {throw e;}
@@ -372,7 +410,7 @@ public class KagClient {
             !bounded(target.path("project_id"),1,Integer.MAX_VALUE)||!target.path("project_name").isTextual()||target.path("project_name").asText().isBlank()||target.path("project_name").asText().length()>255||
             !target.path("namespace").asText().matches("[A-Za-z][A-Za-z0-9_]{0,63}")||!target.path("database").asText().matches("[a-z][a-z0-9.-]{0,62}")||
             !fields(counts).equals(Set.of("nodes","edges"))||!bounded(counts.path("nodes"),0,Integer.MAX_VALUE)||!bounded(counts.path("edges"),0,Integer.MAX_VALUE)||
-            body.path("preview_id").isNull())throw new IOException();
+            !body.path("preview_id").isNull()&&!body.path("preview_id").asText().matches("[0-9a-f]{64}"))throw new IOException();
     }
     private String openSpgSession() throws IOException {
         var context=org.springframework.web.context.request.RequestContextHolder.getRequestAttributes();
@@ -400,18 +438,72 @@ public class KagClient {
         if(body.path("state").asText().equals("AVAILABLE")==body.path("projects").isEmpty())throw new IOException();
         if(!body.path("state").asText().equals("AVAILABLE")&&!body.path("projects").isEmpty())throw new IOException();
     }
+    private static boolean packageName(JsonNode value) {
+        return value.isTextual()&&value.asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,119}\\.zip");
+    }
+    private static boolean packageReference(JsonNode value) {
+        return fields(value).equals(Set.of("name","sha256"))&&packageName(value.path("name"))&&
+            value.path("sha256").isTextual()&&value.path("sha256").asText().matches("[0-9a-f]{64}");
+    }
+    private static boolean packageSize(JsonNode value) {
+        return value.isIntegralNumber()&&value.canConvertToLong()&&value.asLong()>=0&&value.asLong()<=32L*1024*1024*1024;
+    }
+    private void validatePackageModel(JsonNode model) throws IOException {
+        if(!fields(model).equals(Set.of("provider","model","dimension"))||!model.path("provider").asText().equals("openai-compatible")||
+            !model.path("model").isTextual()||!model.path("model").asText().matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}")||
+            !bounded(model.path("dimension"),1,65536))throw new IOException();
+    }
+    private void validatePackageManifest(JsonNode manifest) throws IOException {
+        if(!fields(manifest).equals(Set.of("format_version","plan_sha256","selection","model_identity","nodes","edges","vectors","fingerprint","application_version"))||
+            !manifest.path("format_version").asText().equals("luatgt-vector-package-v1")||
+            !manifest.path("plan_sha256").isTextual()||!manifest.path("plan_sha256").asText().matches("[0-9a-f]{64}")||
+            !manifest.path("fingerprint").isTextual()||!manifest.path("fingerprint").asText().matches("[0-9a-f]{64}")||
+            !manifest.path("application_version").isTextual()||!manifest.path("application_version").asText().matches("[A-Za-z0-9][A-Za-z0-9._+-]{0,127}"))throw new IOException();
+        validatePackageModel(manifest.path("model_identity"));
+        for(String key:List.of("nodes","edges","vectors"))if(!bounded(manifest.path(key),0,Integer.MAX_VALUE))throw new IOException();
+        var selection=manifest.path("selection");
+        if(!selection.isNull()&&(!fields(selection).equals(Set.of("mode","value"))||!selection.path("mode").asText().equals("COUNT")||
+            !bounded(selection.path("value"),1,Integer.MAX_VALUE)||!selection.path("value").equals(manifest.path("nodes"))))throw new IOException();
+    }
+    private void validateBuilderPackages(JsonNode body,boolean export) throws IOException {
+        if(!text(body.path("directory"),1024,true)||body.path("directory").asText().chars().anyMatch(Character::isISOControl))throw new IOException();
+        if(export) {
+            String state=body.path("state").asText();
+            if(!fields(body).equals(Set.of("contract_version","state","name","size","code","directory"))||
+                !body.path("contract_version").asText().equals("builder-package-export-v1")||!Set.of("NOT_RUN","RUNNING","COMPLETE","FAILED").contains(state)||
+                (state.equals("COMPLETE")?!packageName(body.path("name"))||!packageSize(body.path("size")):!body.path("name").isNull()||!body.path("size").isNull())||
+                (state.equals("FAILED")?!body.path("code").isTextual()||!body.path("code").asText().matches("[A-Z_]{1,64}"):!body.path("code").isNull()))throw new IOException();
+            return;
+        }
+        if(!fields(body).equals(Set.of("contract_version","directory","current_model","packages"))||!body.path("contract_version").asText().equals("builder-packages-v1")||
+            !body.path("packages").isArray()||body.path("packages").size()>1024)throw new IOException();
+        var model=body.path("current_model");if(!model.isNull())validatePackageModel(model);
+        var names=new HashSet<String>();
+        for(var row:body.path("packages")) {
+            if(!fields(row).equals(Set.of("name","sha256","size","compatible","reason","manifest"))||!text(row.path("name"),255,true)||
+                row.path("name").asText().contains("/")||row.path("name").asText().contains("\\")||row.path("name").asText().chars().anyMatch(Character::isISOControl)||
+                !names.add(row.path("name").asText())||!row.path("size").isIntegralNumber()||!row.path("size").canConvertToLong()||
+                row.path("size").asLong()<0||row.path("size").asLong()>9007199254740991L||!row.path("compatible").isBoolean()||!text(row.path("reason"),512,false)||
+                !row.path("sha256").isNull()&&(!row.path("sha256").isTextual()||!row.path("sha256").asText().matches("[0-9a-f]{64}")))throw new IOException();
+            var manifest=row.path("manifest");if(!manifest.isNull())validatePackageManifest(manifest);
+            if(row.path("compatible").asBoolean()&&(!packageName(row.path("name"))||!packageSize(row.path("size"))||manifest.isNull()||row.path("sha256").isNull()||model.isNull()||!model.equals(manifest.path("model_identity"))))throw new IOException();
+        }
+    }
     private void validateBuilderConfiguration(JsonNode body) throws IOException {
-        boolean extended=body.path("contract_version").asText().equals("builder-configuration-v4");
+        boolean packages=body.path("contract_version").asText().equals("builder-configuration-v5");
+        boolean extended=packages||body.path("contract_version").asText().equals("builder-configuration-v4");
         boolean projects=extended||body.path("contract_version").asText().equals("builder-configuration-v3");
         boolean selected=projects||body.path("contract_version").asText().equals("builder-configuration-v2");
         var expected=new HashSet<>(Set.of("contract_version","revision","saved","error_code","target","embedding","batch_size","request_limit","readiness"));
         if(selected)expected.add("selection");
         if(projects)expected.add("links");
+        if(packages)expected.add("vector_package");
         if(!fields(body).equals(expected)||
-            !Set.of("builder-configuration-v1","builder-configuration-v2","builder-configuration-v3","builder-configuration-v4").contains(body.path("contract_version").asText())||!bounded(body.path("revision"),0,Integer.MAX_VALUE)||
+            !Set.of("builder-configuration-v1","builder-configuration-v2","builder-configuration-v3","builder-configuration-v4","builder-configuration-v5").contains(body.path("contract_version").asText())||!bounded(body.path("revision"),0,Integer.MAX_VALUE)||
             !body.path("saved").isBoolean()||body.path("saved").asBoolean()!=(body.path("revision").asInt()>0)||
             !bounded(body.path("batch_size"),1,4096)||!body.path("request_limit").isNull()&&!bounded(body.path("request_limit"),1,1000000)||
             !body.path("error_code").isNull()&&!body.path("error_code").asText().equals("CONFIG"))throw new IOException();
+        if(packages&&!body.path("vector_package").isNull()&&!packageReference(body.path("vector_package")))throw new IOException();
         if(selected) {
             var selection=body.path("selection");
             if(!fields(selection).equals(extended?Set.of("node_limit","nodes","edges","request","summary"):Set.of("node_limit","nodes","edges"))||
@@ -462,7 +554,7 @@ public class KagClient {
                 (row.path("state").asText().equals("READY")?!row.path("code").isNull():!row.path("code").asText().matches("[A-Z_]{1,32}")))throw new IOException();
             if(row.has("owner")) {
                 var owner=row.path("owner");
-                if(!row.path("name").asText().equals("lock")||!row.path("state").asText().equals("BLOCKED")||!row.path("code").asText().equals("LOCK")||
+                if(!row.path("name").asText().equals("lock")||!row.path("state").asText().equals("BLOCKED")||!Set.of("LOCK","UNCERTAIN_WRITE").contains(row.path("code").asText())||
                     !fields(owner).equals(Set.of("run_id","project_id"))||!owner.path("run_id").isTextual()||!owner.path("run_id").asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}")||
                     !bounded(owner.path("project_id"),1,Integer.MAX_VALUE))throw new IOException();
             }
@@ -485,7 +577,7 @@ public class KagClient {
                 !target.path("namespace").asText().matches("[A-Za-z][A-Za-z0-9_]{0,63}"))throw new IOException();
         } else if(!target.isNull()||!body.path("scope").isNull())throw new IOException();
         var inputs=body.path("inputs");var names=new HashSet<String>();
-        var expected=Set.of("c3_manifest","sample_manifest","vector_artifact","provenance","chunk_manifest","source_checkpoint","selection");
+        var expected=Set.of("c3_manifest","sample_manifest","vector_artifact","provenance","chunk_manifest","source_checkpoint","selection","graph_package");
         if(!inputs.isArray()||(configured?inputs.isEmpty()||inputs.size()>expected.size()||body.path("scope").asText().equals("FRESH_SAMPLE")&&inputs.size()!=6:!inputs.isEmpty()))throw new IOException();
         for(var input:inputs) {
             String name=input.path("name").asText();
@@ -541,7 +633,8 @@ public class KagClient {
         var expected=new HashSet<>(Set.of("contract_version","state","run_id","target","progress","error_code","actions","delete_reason","production_write"));
         if(detail)expected.addAll(Set.of("stages","timing","binding","result"));
         if(!fields(body).equals(expected)||!Set.of("builder-control-v1","builder-control-v2","builder-control-v3").contains(body.path("contract_version").asText())||!Set.of("IDLE","RUNNING","STOPPING","STOPPED","COMPLETE","BLOCKED","ABANDONED","CLEARED").contains(state)||!extended&&Set.of("ABANDONED","CLEARED").contains(state)||
-            !fields(actions).equals(extended?Set.of("build","stop","resume","delete","abandon"):Set.of("build","stop","resume","delete"))||!body.path("delete_reason").asText().equals("DELETE_NOT_AUTHORIZED")||!Set.of("BLOCKED","CONFIGURED").contains(body.path("production_write").asText()))throw new IOException();
+            !fields(actions).equals(extended?Set.of("build","stop","resume","delete","abandon"):Set.of("build","stop","resume","delete"))||
+            !body.path("delete_reason").isNull()&&!body.path("delete_reason").asText().matches("[A-Z_]{1,64}")||!Set.of("BLOCKED","CONFIGURED").contains(body.path("production_write").asText()))throw new IOException();
         for(String name:fields(actions)) {
             boolean allowed=switch(name){case "build"->Set.of("IDLE","COMPLETE","ABANDONED","CLEARED").contains(state);case "stop"->state.equals("RUNNING");case "resume","abandon"->state.equals("STOPPED");default->false;};
             if(!actions.path(name).isBoolean()||(detail&&Set.of("build","resume").contains(name)?actions.path(name).asBoolean()&&!allowed:actions.path(name).asBoolean()!=allowed))throw new IOException();
@@ -814,6 +907,184 @@ public class KagClient {
         } catch(IllegalArgumentException e) {return false;}
     }
     public JsonNode benchmarkDatasets() { return inspectView("/v1/benchmark/datasets",false); }
+    public ResponseEntity<JsonNode> benchmarkRun(String jobId,boolean stop,JsonNode change) {
+        boolean start=jobId==null,write=start||stop;
+        if(start?(stop||!fields(change).equals(Set.of("dataset_id","project_id","run_id","mode","limit"))||
+            !benchmarkDatasetId(change.path("dataset_id"))||!bounded(change.path("project_id"),1,Integer.MAX_VALUE)||
+            !change.path("run_id").isTextual()||!change.path("run_id").asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}")||
+            !Set.of("G1","G2","BOTH").contains(change.path("mode").asText())||!change.path("limit").isNull()&&!bounded(change.path("limit"),1,Integer.MAX_VALUE)):
+            (!jobId.matches("[0-9a-f]{32}")||change!=null))throw vn.luatgt.exception.ApiErrors.bad("Chọn bộ câu hỏi, project, phiên dựng, chế độ và giới hạn benchmark hợp lệ");
+        try {
+            String token=write?readToken(benchmarkWriteTokenFile):inspectionToken();
+            if(write)for(String file:List.of(tokenFile,inspectTokenFile,credentialsWriteTokenFile,providerTestTokenFile,configApplyTokenFile))
+                if(!file.isBlank()&&token.equals(readToken(file)))throw new IOException("Distinct benchmark scope required");
+            String path="/v1/benchmark/runs"+(start?"":"/"+jobId+(stop?"/stop":""));
+            RestClient.RequestHeadersSpec<?> request=start?servingClient.post().uri(path).contentType(MediaType.APPLICATION_JSON).body(change):
+                stop?servingClient.post().uri(path):inspectionClient.get().uri(path);
+            String session=openSpgSession();if(session!=null)request.header("X-OpenSPG-Session",session);
+            return request.header(HttpHeaders.AUTHORIZATION,"Bearer "+token).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
+                int status=res.getStatusCode().value();var body=inspectionBody(res,token,2*1024*1024);
+                if(session!=null&&body.toString().contains(session))throw new IOException("Session reflected");
+                if(status>=400&&status<=599) {
+                    String code=body.at("/error/code").asText();
+                    if(!code.matches("[A-Z][A-Z0-9_]{0,63}"))throw new IOException("Invalid benchmark error");
+                    String message=switch(code) {
+                        case "RELEASE_MISMATCH" -> "Model embedding không khớp đồ thị đã dựng; chọn lại cấu hình hoặc dựng lại đồ thị";
+                        case "CONFIG_BUSY" -> "Đang có thao tác trên đồ thị; chờ hoàn tất rồi thử lại";
+                        case "SCOPE_DENIED" -> "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project";
+                        default -> "Không thực hiện được benchmark ("+code+")";
+                    };
+                    body=json.valueToTree(Map.of("error",Map.of("code",code,"message",message)));
+                } else {
+                    if(status!=(start?202:200))throw new IOException("Invalid benchmark status");
+                    if(start) {
+                        if(!fields(body).equals(Set.of("run_id_job"))||!body.path("run_id_job").isTextual()||!body.path("run_id_job").asText().matches("[0-9a-f]{32}"))throw new IOException("Invalid benchmark admission");
+                    } else {validateBenchmarkJob(body);if(!body.path("run_id_job").asText().equals(jobId))throw new IOException("Benchmark job mismatch");}
+                }
+                return ResponseEntity.status(status).contentType(MediaType.APPLICATION_JSON).cacheControl(CacheControl.noStore()).body(body);
+            });
+        } catch(ResponseStatusException e) {throw e;}
+        catch(Exception e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Không xác nhận được phiên benchmark; tải lại trạng thái trước khi chạy tiếp");}
+    }
+    private static boolean benchmarkDatasetId(JsonNode value) {
+        if(!value.isTextual())return false;String id=value.asText();
+        return id.matches("[A-Za-z0-9_.-]{1,128}(/eval_questions\\.jsonl)?")&&!id.contains("..")&&id.endsWith(".jsonl");
+    }
+    private static final Set<String> BENCHMARK_CATEGORIES=Set.of("definition","obligation","sanction_numeric","effectiveness_metadata","inter_document","multi_hop","unanswerable","traffic_sign");
+    private void validateBenchmarkJob(JsonNode body) throws IOException {
+        String mode=body.path("mode").asText(),state=body.path("state").asText();
+        Set<String> modes=mode.equals("BOTH")?Set.of("G1","G2"):Set.of(mode);
+        if(!fields(body).equals(Set.of("run_id_job","dataset_id","project_id","run_id","state","mode","done","total","progress","started_at","finished_at","code","metrics","dataset_status","dataset_hash","frozen_at","category_counts","graph_fingerprint","provider_requests"))||
+            !body.path("run_id_job").isTextual()||!body.path("run_id_job").asText().matches("[0-9a-f]{32}")||!benchmarkDatasetId(body.path("dataset_id"))||
+            !bounded(body.path("project_id"),1,Integer.MAX_VALUE)||!body.path("run_id").isTextual()||!body.path("run_id").asText().matches("[A-Za-z0-9][A-Za-z0-9._-]{0,127}")||
+            !Set.of("G1","G2","BOTH").contains(mode)||!Set.of("RUNNING","COMPLETE","FAILED","STOPPED").contains(state)||
+            !bounded(body.path("total"),1,2000000)||!bounded(body.path("done"),0,body.path("total").asInt())||
+            !fields(body.path("progress")).equals(modes)||!fields(body.path("provider_requests")).equals(Set.of("embedding","chat"))||
+            !Set.of("PROVISIONAL","FROZEN").contains(body.path("dataset_status").asText())||
+            !body.path("dataset_hash").isTextual()||!body.path("dataset_hash").asText().matches("[0-9a-f]{64}")||
+            !body.path("graph_fingerprint").isTextual()||!body.path("graph_fingerprint").asText().matches("[0-9a-f]{64}")||
+            !body.path("code").isNull()&&(!body.path("code").isTextual()||!body.path("code").asText().matches("[A-Z][A-Z0-9_]{0,63}")))throw new IOException("Invalid benchmark job");
+        int total=body.path("total").asInt()/modes.size(),done=0;
+        for(String name:modes) {
+            var progress=body.path("progress").path(name);
+            if(!fields(progress).equals(Set.of("done","total"))||!bounded(progress.path("total"),total,total)||!bounded(progress.path("done"),0,total))throw new IOException("Invalid benchmark progress");
+            done+=progress.path("done").asInt();
+        }
+        if(total<1||total*modes.size()!=body.path("total").asInt()||done!=body.path("done").asInt()||state.equals("COMPLETE")&&done!=body.path("total").asInt())throw new IOException("Inconsistent benchmark progress");
+        for(var count:body.path("provider_requests"))if(!bounded(count,0,Integer.MAX_VALUE))throw new IOException("Invalid provider request count");
+        var categories=body.path("category_counts");int categoryTotal=0;
+        if(!categories.isObject()||!BENCHMARK_CATEGORIES.containsAll(fields(categories)))throw new IOException("Invalid benchmark categories");
+        for(var count:categories){if(!bounded(count,0,total))throw new IOException("Invalid benchmark category count");categoryTotal+=count.asInt();}
+        if(categoryTotal!=total)throw new IOException("Inconsistent benchmark category count");
+        var started=benchmarkTime(body.path("started_at"));
+        if(state.equals("RUNNING")?!body.path("finished_at").isNull():benchmarkTime(body.path("finished_at")).isBefore(started))throw new IOException("Invalid benchmark finish time");
+        if(!body.path("frozen_at").isNull())benchmarkTime(body.path("frozen_at"));
+        if(body.path("dataset_status").asText().equals("FROZEN")&&body.path("frozen_at").isNull())throw new IOException("Missing freeze time");
+        var metrics=body.path("metrics");
+        if(state.equals("RUNNING")&&!metrics.isNull())throw new IOException("Unexpected running benchmark metrics");
+        if(!metrics.isNull()) {
+            if(!metrics.isObject()||!modes.containsAll(fields(metrics)))throw new IOException("Invalid benchmark modes");
+            for(String name:fields(metrics))validateBenchmarkMetrics(metrics.path(name),name,total,body.path("progress").path(name).path("done").asInt(),body.path("dataset_status").asText());
+        }
+        if(state.equals("COMPLETE")&&(metrics.isNull()||!fields(metrics).equals(modes)))throw new IOException("Missing completed benchmark metrics");
+    }
+    private static Instant benchmarkTime(JsonNode value) throws IOException {
+        if(!text(value,64,true))throw new IOException("Invalid benchmark time");
+        try{return Instant.parse(value.asText());}catch(java.time.format.DateTimeParseException e){throw new IOException("Invalid benchmark time");}
+    }
+    private void validateBenchmarkMetrics(JsonNode metrics,String mode,int total,int done,String datasetStatus) throws IOException {
+        var expected=new HashSet<>(Set.of("schema_version","eval_version","protocol_hash","dataset_hash","dataset_version","dataset_status","official_benchmark","paper_eligible","mode","release_id","requested_count","completed_count","attempted_count","failed_count","ineligible_count","scored_count","failure_rate","overall","by_category","by_source","latency_ms","rank_semantics","top_k","ks"));
+        for(String field:List.of("macro","execution_outcomes"))if(metrics.has(field))expected.add(field);
+        int completed=metrics.path("completed_count").asInt(-1),attempted=metrics.path("attempted_count").asInt(-1),failed=metrics.path("failed_count").asInt(-1);
+        if(!fields(metrics).equals(expected)||!metrics.path("schema_version").asText().equals("1.0")||!metrics.path("eval_version").asText().equals("1.0")||
+            !metrics.path("protocol_hash").isTextual()||!metrics.path("protocol_hash").asText().matches("[0-9a-f]{64}")||
+            !metrics.path("dataset_hash").isTextual()||!metrics.path("dataset_hash").asText().matches("[0-9a-f]{64}")||
+            !text(metrics.path("dataset_version"),512,true)||!metrics.path("dataset_status").asText().equals(datasetStatus)||!metrics.path("mode").asText().equals(mode)||
+            !metrics.path("official_benchmark").isBoolean()||!metrics.path("paper_eligible").isBoolean()||metrics.path("paper_eligible").asBoolean()||
+            !metrics.path("release_id").isNull()&&!text(metrics.path("release_id"),200,true)||
+            !bounded(metrics.path("requested_count"),done,done)||!bounded(metrics.path("completed_count"),1,done)||completed!=done||
+            !bounded(metrics.path("attempted_count"),0,completed)||!bounded(metrics.path("failed_count"),0,attempted)||!bounded(metrics.path("scored_count"),0,attempted-failed)||
+            !bounded(metrics.path("ineligible_count"),0,completed)||attempted+metrics.path("ineligible_count").asInt()!=completed||
+            !metrics.path("rank_semantics").asText().equals("channel_projected_returned_top_k")||!bounded(metrics.path("top_k"),1,10)||
+            !metrics.path("ks").isArray()||metrics.path("ks").isEmpty()||metrics.path("ks").size()>10)throw new IOException("Invalid framework benchmark metrics");
+        int previous=0;for(var k:metrics.path("ks")){if(!bounded(k,previous+1,metrics.path("top_k").asInt()))throw new IOException("Invalid benchmark cutoff");previous=k.asInt();}
+        var rate=metrics.path("failure_rate");
+        if(!fields(rate).equals(Set.of("value","numerator","denominator","status"))||!bounded(rate.path("numerator"),failed,failed)||!bounded(rate.path("denominator"),attempted,attempted)||
+            !rate.path("status").asText().equals(attempted==0?"UNAVAILABLE":"OK")||
+            (attempted==0?!rate.path("value").isNull():!rate.path("value").isNumber()||!Double.isFinite(rate.path("value").asDouble())||Math.abs(rate.path("value").asDouble()-(double)failed/attempted)>1e-12))throw new IOException("Invalid benchmark failure rate");
+        var overall=metrics.path("overall");validateSmokeMetrics(overall,completed);
+        for(String name:fields(overall))if(!name.matches("[A-Za-z][A-Za-z0-9_@.:-]{0,127}"))throw new IOException("Invalid benchmark metric name");
+        if(!fields(metrics.path("by_category")).equals(BENCHMARK_CATEGORIES)||!metrics.path("by_source").isObject()||metrics.path("by_source").size()>1000000)throw new IOException("Invalid benchmark grouping");
+        for(String grouping:List.of("by_category","by_source")) {
+            var groups=metrics.path(grouping).fields();
+            while(groups.hasNext()) {
+                var entry=groups.next();var group=entry.getValue();
+                if(entry.getKey().length()>512||!fields(group).equals(fields(overall)))throw new IOException("Invalid benchmark group");
+                int count=0;
+                if(!group.isEmpty())for(var value:group.elements().next().path("status_counts")) {if(!bounded(value,0,completed))throw new IOException("Invalid benchmark group count");count+=value.asInt();}
+                if(count>completed)throw new IOException("Invalid benchmark group total");validateSmokeMetrics(group,count);
+            }
+        }
+        if(metrics.has("macro")) {
+            if(!fields(metrics.path("macro")).equals(fields(overall)))throw new IOException("Invalid benchmark macro");
+            for(String name:fields(overall)) {
+                var value=metrics.path("macro").path(name);int scored=0;
+                for(var group:metrics.path("by_category"))if(!group.path(name).path("value").isNull())scored++;
+                if(!fields(value).equals(Set.of("value","scored_category_count"))||!bounded(value.path("scored_category_count"),scored,scored)||
+                    (scored==0?!value.path("value").isNull():!value.path("value").isNumber()||!Double.isFinite(value.path("value").asDouble())||value.path("value").asDouble()<0))throw new IOException("Invalid benchmark macro metric");
+            }
+        }
+        if(metrics.has("execution_outcomes")) {
+            var outcomes=metrics.path("execution_outcomes");int count=0;
+            if(!fields(outcomes).equals(Set.of("answered","abstained","unanswered","error"))||!bounded(outcomes.path("error"),failed,failed))throw new IOException("Invalid benchmark outcomes");
+            for(var value:outcomes){if(!bounded(value,0,attempted))throw new IOException("Invalid benchmark outcome count");count+=value.asInt();}
+            if(count>attempted)throw new IOException("Inconsistent benchmark outcomes");
+        }
+        if(!fields(metrics.path("latency_ms")).equals(Set.of("successful","all_attempted")))throw new IOException("Invalid benchmark latency");
+        for(String name:List.of("successful","all_attempted")) {
+            var latency=metrics.path("latency_ms").path(name);
+            if(!fields(latency).equals(Set.of("count","min","mean","median","p95","max"))||!bounded(latency.path("count"),0,name.equals("successful")?attempted-failed:attempted))throw new IOException("Invalid benchmark latency count");
+            for(String field:List.of("min","mean","median","p95","max"))if(latency.path("count").asInt()==0?!latency.path(field).isNull():!latency.path(field).isNumber()||!Double.isFinite(latency.path(field).asDouble())||latency.path(field).asDouble()<0)throw new IOException("Invalid benchmark latency value");
+        }
+    }
+    public ResponseEntity<byte[]> benchmarkTemplate() {
+        return benchmarkTransfer("/v1/benchmark/template",null,null,"benchmark-template.json");
+    }
+    public ResponseEntity<byte[]> importBenchmark(String name,byte[] body) {
+        if(name==null||!name.matches("[A-Za-z0-9_.-]{1,64}")||name.contains("..")||name.equals("."))
+            throw vn.luatgt.exception.ApiErrors.bad("Tên bộ câu hỏi chỉ nhận 1–64 chữ, số, _, - và dấu chấm; không nhận ..");
+        if(body.length>8*1024*1024)throw new ResponseStatusException(HttpStatus.PAYLOAD_TOO_LARGE,"File vượt 8 MiB");
+        return benchmarkTransfer("/v1/benchmark/datasets",name,body,null);
+    }
+    public ResponseEntity<byte[]> exportBenchmark(String id) {
+        if(id==null||!id.matches("[A-Za-z0-9_.-]{1,128}(/eval_questions\\.jsonl)?")||id.contains("..")||id.equals("."))
+            throw vn.luatgt.exception.ApiErrors.bad("ID bộ câu hỏi không hợp lệ");
+        String filename=id.split("/")[0];
+        if(!id.contains("/")&&filename.endsWith(".jsonl"))filename=filename.substring(0,filename.length()-6);
+        return benchmarkTransfer("/v1/benchmark/datasets/"+id+"/export",null,null,filename+".json");
+    }
+    private ResponseEntity<byte[]> benchmarkTransfer(String path,String name,byte[] body,String filename) {
+        try {
+            boolean write=body!=null;
+            String token=write?readToken(benchmarkWriteTokenFile):inspectionToken();
+            if(write)for(String file:List.of(tokenFile,inspectTokenFile,credentialsWriteTokenFile,providerTestTokenFile,configApplyTokenFile))
+                if(!file.isBlank()&&token.equals(readToken(file)))throw new IOException("Distinct benchmark scope required");
+            RestClient.RequestHeadersSpec<?> request=write?
+                inspectionClient.post().uri(uri->uri.path(path).queryParam("name",name).build()).contentType(MediaType.APPLICATION_JSON).body(body):
+                inspectionClient.get().uri(path);
+            return request.header(HttpHeaders.AUTHORIZATION,"Bearer "+token).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
+                int status=res.getStatusCode().value();var media=res.getHeaders().getContentType();
+                if(media==null||!MediaType.APPLICATION_JSON.isCompatibleWith(media)||res.getHeaders().containsKey(HttpHeaders.CONTENT_ENCODING)||
+                    status!=(write?201:200)&&(status<400||status>599))throw new IOException("Invalid benchmark response");
+                byte[] raw=res.getBody().readNBytes(16*1024*1024+1);
+                if(raw.length>16*1024*1024)throw new IOException("Benchmark response too large");
+                var result=ResponseEntity.status(status).contentType(MediaType.APPLICATION_JSON).cacheControl(CacheControl.noStore());
+                if(!write&&status==200)result.header(HttpHeaders.CONTENT_DISPOSITION,ContentDisposition.attachment().filename(filename).build().toString());
+                return result.body(raw);
+            });
+        } catch(ResponseStatusException e) {throw e;}
+        catch(Exception e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Không đọc hoặc import được benchmark. Kiểm tra dịch vụ, scope và storage.");}
+    }
     public JsonNode sampleInspection() {
         try {
             headerIdentity(release);String token=inspectionToken();
@@ -983,6 +1254,8 @@ public class KagClient {
             if(run.isNull())continue;hasRun=true;
             var runFields=new HashSet<String>(Set.of("status","started_at","finished_at","requested_count","attempted_count","failed_count","ineligible_count","metrics","latency_ms"));
             if(run.has("configuration"))runFields.add("configuration");
+            if(run.has("by_category"))runFields.add("by_category");
+            if(run.has("macro"))runFields.add("macro");
             if(!available||!Set.of("PROVISIONAL","FROZEN").contains(smoke.path("review_status").asText())||!fields(run).equals(runFields)||
                 !run.path("status").asText().equals("COMPLETE")||!bounded(run.path("requested_count"),1,1000000)||!run.path("requested_count").equals(total)||
                 !bounded(run.path("attempted_count"),0,total.asInt())||!bounded(run.path("failed_count"),0,run.path("attempted_count").asInt())||
@@ -1006,14 +1279,28 @@ public class KagClient {
             }
             try {if(java.time.Instant.parse(run.path("finished_at").asText()).isBefore(java.time.Instant.parse(run.path("started_at").asText())))throw new IOException("Invalid smoke timestamps");}
             catch(java.time.format.DateTimeParseException invalid){throw new IOException("Invalid smoke timestamps");}
-            for(var metric:run.path("metrics")) {
-                if(!fields(metric).equals(Set.of("value","scored_count","status_counts","eligible_count","excluded_count","failed_count"))||
-                    !fields(metric.path("status_counts")).equals(Set.of("OK","NOT_APPLICABLE","UNAVAILABLE","UNKNOWN"))||
-                    (!metric.path("value").isNull()&&(!metric.path("value").isNumber()||!Double.isFinite(metric.path("value").asDouble())||metric.path("value").asDouble()<0)))throw new IOException("Invalid smoke metric");
-                for(String k:List.of("scored_count","eligible_count","excluded_count","failed_count"))if(!bounded(metric.path(k),0,total.asInt()))throw new IOException("Invalid smoke metric count");
-                int statusCount=0;for(var count:metric.path("status_counts")){if(!bounded(count,0,total.asInt()))throw new IOException("Invalid metric status");statusCount+=count.asInt();}
-                if(statusCount!=total.asInt()||metric.path("eligible_count").asInt()+metric.path("excluded_count").asInt()!=total.asInt()||
-                    metric.path("scored_count").asInt()!=metric.at("/status_counts/OK").asInt()||(metric.path("value").isNull()!=(metric.path("scored_count").asInt()==0)))throw new IOException("Inconsistent smoke metrics");
+            validateSmokeMetrics(run.path("metrics"),total.asInt());
+            var categories=Set.of("definition","obligation","sanction_numeric","effectiveness_metadata","inter_document","multi_hop","unanswerable","traffic_sign");
+            if(run.has("by_category")) {
+                var groups=run.path("by_category");var counts=dataset.at("/metadata/category_counts");
+                if(!groups.isObject()||!fields(groups).equals(categories)||!counts.isObject())throw new IOException("Invalid metric categories");
+                for(String category:categories) {
+                    var metrics=groups.path(category);var count=counts.path(category);
+                    if((!count.isMissingNode()&&!bounded(count,0,total.asInt()))||!fields(metrics).equals(fields(run.path("metrics"))))throw new IOException("Invalid category metrics");
+                    validateSmokeMetrics(metrics,count.asInt(0));
+                }
+            }
+            if(run.has("macro")) {
+                var macro=run.path("macro");
+                if(!run.has("by_category")||!macro.isObject()||!fields(macro).equals(fields(run.path("metrics"))))throw new IOException("Invalid macro metrics");
+                var entries=macro.fields();
+                while(entries.hasNext()) {
+                    var entry=entries.next();var metric=entry.getValue();var value=metric.path("value");var count=metric.path("scored_category_count");
+                    int availableCategories=0;for(var group:run.path("by_category"))if(!group.path(entry.getKey()).path("value").isNull())availableCategories++;
+                    if(!fields(metric).equals(Set.of("value","scored_category_count"))||!bounded(count,0,categories.size())||
+                        (!value.isNull()&&(!value.isNumber()||!Double.isFinite(value.asDouble())||value.asDouble()<0))||
+                        value.isNull()!=(count.asInt()==0)||count.asInt()!=availableCategories)throw new IOException("Invalid macro metric");
+                }
             }
             for(var latency:run.path("latency_ms")) {
                 if(!fields(latency).equals(Set.of("count","min","mean","median","p95","max"))||!bounded(latency.path("count"),0,total.asInt()))throw new IOException("Invalid smoke latency");
@@ -1021,6 +1308,22 @@ public class KagClient {
             }
         }
         if(available!=hasRun)throw new IOException("Missing smoke execution");
+    }
+    private void validateSmokeMetrics(JsonNode metrics,int total) throws IOException {
+        if(!metrics.isObject()||metrics.size()>128)throw new IOException("Invalid smoke metrics");
+        for(var metric:metrics) {
+            var fieldsOfMetric=new HashSet<>(Set.of("value","scored_count","status_counts","eligible_count","excluded_count","failed_count"));
+            if(metric.has("ci_low"))fieldsOfMetric.addAll(Set.of("ci_low","ci_high"));
+            if(!fields(metric).equals(fieldsOfMetric)||
+                (metric.has("ci_low")&&(!metric.path("ci_low").isNull()&&(!metric.path("ci_low").isNumber()||!Double.isFinite(metric.path("ci_low").asDouble())||metric.path("ci_low").asDouble()<0)||
+                                        !metric.path("ci_high").isNull()&&(!metric.path("ci_high").isNumber()||!Double.isFinite(metric.path("ci_high").asDouble())||metric.path("ci_high").asDouble()<0)))||
+                !fields(metric.path("status_counts")).equals(Set.of("OK","NOT_APPLICABLE","UNAVAILABLE","UNKNOWN"))||
+                (!metric.path("value").isNull()&&(!metric.path("value").isNumber()||!Double.isFinite(metric.path("value").asDouble())||metric.path("value").asDouble()<0)))throw new IOException("Invalid smoke metric");
+            for(String k:List.of("scored_count","eligible_count","excluded_count","failed_count"))if(!bounded(metric.path(k),0,total))throw new IOException("Invalid smoke metric count");
+            int statusCount=0;for(var count:metric.path("status_counts")){if(!bounded(count,0,total))throw new IOException("Invalid metric status");statusCount+=count.asInt();}
+            if(statusCount!=total||metric.path("eligible_count").asInt()+metric.path("excluded_count").asInt()!=total||
+                metric.path("scored_count").asInt()!=metric.at("/status_counts/OK").asInt()||(metric.path("value").isNull()!=(metric.path("scored_count").asInt()==0)))throw new IOException("Inconsistent smoke metrics");
+        }
     }
     private String inspectionToken() throws IOException {
         if(inspectTokenFile.isBlank()||!Path.of(inspectTokenFile).isAbsolute()) throw new IOException("Inspection credentials unavailable");
@@ -1113,7 +1416,7 @@ public class KagClient {
         byte[] bytes=response.getBody().readNBytes(limit+1); if(bytes.length>limit) throw new IOException("Response too large");
         var body=parse(StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(bytes)).toString(),token);
         if(body==null||!body.isObject()) throw new IOException("Invalid response");
-        for(String file:List.of(tokenFile,inspectTokenFile,credentialsWriteTokenFile,providerTestTokenFile,configApplyTokenFile)) {
+        for(String file:List.of(tokenFile,inspectTokenFile,credentialsWriteTokenFile,providerTestTokenFile,configApplyTokenFile,benchmarkWriteTokenFile)) {
             String other=null; try {other=readToken(file);} catch(IOException ignored) {}
             if(other!=null&&body.toString().contains(other)) throw new IOException("Credentials reflected");
         }
@@ -1198,7 +1501,7 @@ public class KagClient {
                         case "QUERY_TIMEOUT" -> "Chưa đọc xong kết quả trong thời gian cho phép. Đợi lượt xử lý kết thúc rồi thử lại";
                         case "CONFIG_BUSY","CONCURRENCY_LIMIT" -> "Đồ thị đang được xử lý. Chờ rồi thử lại";
                         case "SCOPE_DENIED" -> "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project";
-                        case "RELEASE_MISMATCH" -> "Embedding đã lưu không khớp phiên dựng. Chỉnh model phù hợp rồi thử lại";
+                        case "RELEASE_MISMATCH" -> "Embedding đang chọn khác embedding đã dựng đồ thị. Giữ nguyên địa chỉ kết nối và tên model thì chỉ cần đổi API key; đổi địa chỉ hoặc model thì phải dựng lại đồ thị";
                         default -> "Chưa thể thử đồ thị. Kiểm kết nối, phiên dựng và model đã lưu";
                     };
                     throw new ResponseStatusException(HttpStatus.CONFLICT,message+" ("+code+")");
@@ -1242,33 +1545,6 @@ public class KagClient {
                 localId,diagnostic.get("remote_id"),diagnostic.get("stage"),diagnostic.get("status"),e.getClass().getSimpleName(),Long.toString((System.nanoTime()-started)/1_000_000));
             throw unavailable();
         }
-    }
-    public void stream(Object request,BiConsumer<String,JsonNode> consumer) {
-        try {
-            var admitted=admit(request);
-            breaker.executeRunnable(() -> post("/v1/query/stream",admitted).accept(MediaType.TEXT_EVENT_STREAM).exchange((req,res) -> {
-                if(!res.getStatusCode().is2xxSuccessful()) { consumer.accept("done",abstained(res,admitted)); return null; }
-                verifyHeaders(res.getHeaders(),admitted,MediaType.TEXT_EVENT_STREAM);
-                try(var reader=new BufferedReader(new InputStreamReader(new LimitedInput(res.getBody()),StandardCharsets.UTF_8.newDecoder()))) {
-                    String event="message",line; var payload=new StringBuilder(); boolean done=false;
-                    while((line=reader.readLine())!=null) {
-                        if(line.isEmpty()) {
-                            if(payload.isEmpty()) continue;
-                            if(!event.equals("delta")&&!event.equals("done")) throw new IOException("Unknown KAG event");
-                            var result=parse(payload.toString(),admitted.token());
-                            if(event.equals("done")) validateResult(result,admitted);
-                            else if(!fields(result).equals(Set.of("text"))||!text(result.path("text"),4000,false)) throw new IOException("Invalid delta");
-                            currentDate(admitted.date()); consumer.accept(event,result); payload.setLength(0);
-                            if(event.equals("done")) { done=true; break; }
-                            event="message";
-                        } else if(line.startsWith("event:")) event=line.substring(6).trim();
-                        else if(line.startsWith("data:")) { if(!payload.isEmpty()) payload.append('\n'); payload.append(line.substring(5).trim()); }
-                    }
-                    if(!done) throw new IOException("Incomplete KAG stream");
-                }
-                return null;
-            }));
-        } catch(Exception e) { throw unavailable(); }
     }
     private record Pins(String release,String snapshot,JsonNode schema,boolean production,boolean dataset,String descriptor) {
         String sourceHeader() { return dataset?"X-KAG-Source-Snapshot-ID":"X-WebApp-Snapshot-ID"; }
@@ -1327,9 +1603,6 @@ public class KagClient {
         for(var pin:Map.of("X-KAG-Release-ID",admitted.pins().release(),admitted.pins().sourceHeader(),admitted.pins().snapshot(),"X-KAG-As-Of",admitted.date().toString()).entrySet())
             if(headers.containsKey(pin.getKey())) echo(headers,pin.getKey(),pin.getValue());
         currentDate(admitted.date()); return json.createObjectNode().put("state","KAG_ABSTAINED");
-    }
-    private Admitted admit(Object request) throws IOException {
-        return admit(request,null);
     }
     private Admitted admit(Object request,Map<String,Object> diagnostic) throws IOException {
         currentDate(LocalDate.now(clock));
@@ -1450,11 +1723,4 @@ public class KagClient {
         }
     }
     private static ResponseStatusException unavailable() { return new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Dịch vụ KAG chưa khả dụng"); }
-    private static class LimitedInput extends FilterInputStream {
-        int total;
-        LimitedInput(InputStream input) { super(input); }
-        private void count(int n) throws IOException { if(n>0 && (total+=n)>256*1024) throw new IOException("Stream too large"); }
-        @Override public int read() throws IOException { int n=super.read(); count(n<0?0:1); return n; }
-        @Override public int read(byte[] b,int off,int len) throws IOException { int n=super.read(b,off,len); count(n); return n; }
-    }
 }

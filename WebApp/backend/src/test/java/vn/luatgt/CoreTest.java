@@ -53,7 +53,10 @@ class CoreTest {
     String admin;
     @Test void chatStreamDeclaresEventStreamContentType() throws Exception {
         String user=register();
-        var result=mvc.perform(post("/api/chat/stream").header("Authorization","Bearer "+user)
+        mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON)
+            .content("{\"message\":\"Nguồn thử?\"}")).andExpect(status().isMethodNotAllowed());
+        verifyNoInteractions(kag);
+        var result=mvc.perform(post("/api/chat/stream?progress=true").header("Authorization","Bearer "+user)
             .contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Nguồn thử?\"}"))
             .andExpect(request().asyncStarted()).andReturn();
         mvc.perform(asyncDispatch(result)).andExpect(status().isOk())
@@ -98,6 +101,17 @@ class CoreTest {
         return body(mvc.perform(post("/api/auth/register").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("email",UUID.randomUUID()+"@test.vn","password","TEST-only-user-password","name","Học viên")))).andExpect(status().isOk()).andExpect(jsonPath("$.user.role").value("USER")).andReturn()).path("accessToken").asText();
     }
     JsonNode body(MvcResult result) throws Exception { return json.readTree(result.getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8)); }
+    JsonNode progressResponse(org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder request,String event) throws Exception {
+        var pending=mvc.perform(request).andExpect(request().asyncStarted()).andReturn();
+        var result=mvc.perform(asyncDispatch(pending)).andExpect(status().isOk())
+            .andExpect(content().contentTypeCompatibleWith(MediaType.TEXT_EVENT_STREAM)).andReturn();
+        return terminal(result.getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8),event);
+    }
+    JsonNode terminal(String stream,String event) throws Exception {
+        assertTrue(stream.startsWith("event: started\n")); assertFalse(stream.contains("event: delta\n"));
+        String marker="event: "+event+"\ndata: "; int start=stream.indexOf(marker); assertTrue(start>=0,stream);
+        return json.readTree(stream.substring(start+marker.length()).split("\n\n",2)[0]);
+    }
     @Test void authCannotEscalateAndLogoutRevokesToken() throws Exception {
         for(String role:List.of("ADMIN","POLICE")) mvc.perform(post("/api/auth/register").contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("email","attacker@test.vn","name","User","password","TEST-only-user-password","role",role)))).andExpect(status().isBadRequest());
         String user=register();
@@ -474,58 +488,52 @@ class CoreTest {
     }
     @Test void unavailableKagNeverFabricatesAnAnswer() throws Exception {
         when(kag.query(any(),any(UUID.class))).thenThrow(new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Dịch vụ KAG chưa khả dụng")); String user=register();
-        mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Mức phạt là gì?\"}")).andExpect(status().isServiceUnavailable());
+        assertEquals("UNAVAILABLE",progressResponse(post("/api/chat/stream?progress=true").header("Authorization","Bearer "+user)
+            .contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Mức phạt là gì?\"}"),"error").path("state").asText());
         mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andExpect(status().isOk()).andExpect(jsonPath("$[0].state").value("UNAVAILABLE")).andExpect(jsonPath("$[0].answer").value(""));
     }
     @Test void unsupportedChatContextRejectedBeforeHistoryAndKag() throws Exception {
         String user=register();
-        for(String path:List.of("/api/chat","/api/chat/stream?progress=true")) {
-            mvc.perform(post(path).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON)
+            mvc.perform(post("/api/chat/stream?progress=true").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON)
                 .content("{\"message\":\"Căn cứ?\",\"contextId\":\"unsupported-session\"}"))
                 .andExpect(status().isBadRequest());
-        }
         verifyNoInteractions(kag);
         mvc.perform(get("/api/chat").header("Authorization","Bearer "+user))
             .andExpect(status().isOk()).andExpect(jsonPath("$").isEmpty());
     }
-    @Test @Transactional void verifiedNativeAbstentionPersistsRestSseAndHistoryWithoutReclassifyingLegacyRows() throws Exception {
+    @Test @Transactional void verifiedNativeAbstentionPersistsProgressAndHistoryWithoutReclassifyingLegacyRows() throws Exception {
         String user=register(); UUID owner=UUID.fromString(body(mvc.perform(get("/api/auth/me").header("Authorization","Bearer "+user)).andReturn()).path("id").asText());
         var legacy=new ChatMessage(); legacy.ownerId=owner; legacy.question="Không đủ căn cứ trong lần gọi lịch sử"; legacy.state="UNAVAILABLE"; chats.saveAndFlush(legacy);
         var wire=streamWire();
         try(var fixture=wire.new Fixture()) {
-            fixture.status=503; fixture.body=KagClientTest.nativeAbstention(); fixture.identityHeaders=false; var actual=wire.client(fixture);
-            when(kag.query(any(),any(UUID.class))).thenAnswer(call->actual.query(call.getArgument(0),call.getArgument(1))); bridge(wire,fixture);
-            var rest=body(mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Graph thiếu căn cứ?\"}"))
-                .andExpect(status().isOk()).andExpect(jsonPath("$.state").value("KAG_ABSTAINED")).andExpect(jsonPath("$.answer").value("")).andExpect(jsonPath("$.citations").isEmpty()).andReturn());
-            var output=new ByteArrayOutputStream(); chat.stream(owner,new ChatRequest("Câu hỏi ngoài phạm vi chưa được phân loại","")).writeTo(output);
+            fixture.status=503; fixture.body=KagClientTest.nativeAbstention(); fixture.identityHeaders=false;
+            bridge(wire,fixture);
+            var output=new ByteArrayOutputStream(); chat.progress(owner,new ChatRequest("Câu hỏi ngoài phạm vi chưa được phân loại","")).writeTo(output);
             String stream=output.toString(java.nio.charset.StandardCharsets.UTF_8);
-            assertTrue(stream.startsWith("event: done\n")); assertFalse(stream.contains("event: error")); assertFalse(stream.contains("event: delta"));
-            var done=json.readTree(stream.split("data: ",2)[1].strip());
+            assertFalse(stream.contains("event: error"));
+            var done=terminal(stream,"done");
             assertEquals("KAG_ABSTAINED",done.path("state").asText()); assertEquals("",done.path("answer").asText()); assertTrue(done.path("citations").isEmpty());
             var rows=body(mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn());
-            assertEquals(3,rows.size()); int abstained=0;
+            assertEquals(2,rows.size()); int abstained=0;
             for(var row:rows) {
                 if(row.path("id").asText().equals(legacy.id.toString())) assertEquals("UNAVAILABLE",row.path("state").asText());
                 else {assertEquals("KAG_ABSTAINED",row.path("state").asText());assertEquals("",row.path("answer").asText());assertTrue(row.path("citations").isEmpty());abstained++;}
             }
-            assertEquals(2,abstained); assertEquals(2,fixture.calls.get());
-            assertEquals("KAG_ABSTAINED",chats.findById(UUID.fromString(rest.path("id").asText())).orElseThrow().state);
+            assertEquals(1,abstained); assertEquals(1,fixture.calls.get());
+            assertEquals("KAG_ABSTAINED",chats.findById(UUID.fromString(done.path("id").asText())).orElseThrow().state);
         }
     }
     @ParameterizedTest @ValueSource(ints={401,403,422,503})
     @Transactional void realH1ErrorsNeverPersistAnsweredChatOrEmitDone(int status) throws Exception {
         var owner=streamOwner(); var wire=streamWire();
         try(var fixture=wire.new Fixture()) {
-            fixture.status=status; fixture.body=KagClientTest.h1Failure(status); var actual=wire.client(fixture);
-            when(kag.query(any(),any(UUID.class))).thenAnswer(call->actual.query(call.getArgument(0),call.getArgument(1)));
-            doAnswer(call->{ actual.stream(call.getArgument(0),call.getArgument(1)); return null; }).when(kag).stream(any(),any());
-            var error=assertThrows(ResponseStatusException.class,()->chat.ask(owner,new ChatRequest("Offline H1 integration","")));
-            assertEquals(503,error.getStatusCode().value());
-            var output=new ByteArrayOutputStream(); chat.stream(owner,new ChatRequest("Offline H1 stream","")).writeTo(output);
+            fixture.status=status; fixture.body=KagClientTest.h1Failure(status);
+            bridge(wire,fixture);
+            var output=new ByteArrayOutputStream(); chat.progress(owner,new ChatRequest("Offline H1 progress","")).writeTo(output);
             String body=output.toString(java.nio.charset.StandardCharsets.UTF_8);
-            assertTrue(body.startsWith("event: error\n")); assertFalse(body.contains("event: delta")); assertFalse(body.contains("event: done"));
+            assertEquals("UNAVAILABLE",terminal(body,"error").path("state").asText()); assertFalse(body.contains("event: done"));
             assertFalse(body.contains(KagClientTest.TOKEN)); assertFalse(body.contains(wire.secret.toString()));
-            var stored=chats.findTop50ByOwnerIdOrderByCreatedAtDesc(owner); assertEquals(2,stored.size());
+            var stored=chats.findTop50ByOwnerIdOrderByCreatedAtDesc(owner); assertEquals(1,stored.size());
             for(var row:stored) { assertEquals("UNAVAILABLE",row.state); assertNull(row.answer); assertEquals("[]",row.citations); }
         }
     }
@@ -540,12 +548,12 @@ class CoreTest {
             assertEquals(Set.of("user_id","message","context_id","schema_contract"),request.keySet());
             throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Dịch vụ KAG chưa khả dụng");
         });
-        mvc.perform(post("/api/chat").contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Căn cứ?\"}")).andExpect(status().isUnauthorized());
-        mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON)
+        mvc.perform(post("/api/chat/stream?progress=true").contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Căn cứ?\"}")).andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/chat/stream?progress=true").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON)
             .content("{\"message\":\"Căn cứ?\",\"user_id\":\"00000000-0000-4000-8000-000000000001\"}")).andExpect(status().isBadRequest());
         verifyNoInteractions(kag);
-        mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).header("X-User-ID",UUID.randomUUID().toString())
-            .header("X-KAG-Token","forged-browser-token").contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Căn cứ?\"}")).andExpect(status().isServiceUnavailable());
+        assertEquals("UNAVAILABLE",progressResponse(post("/api/chat/stream?progress=true").header("Authorization","Bearer "+user).header("X-User-ID",UUID.randomUUID().toString())
+            .header("X-KAG-Token","forged-browser-token").contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Căn cứ?\"}"),"error").path("state").asText());
         verify(kag,times(1)).query(any(),any(UUID.class));
     }
     @Test void nativeAbstentionAndMixedInvalidCitationsCannotBecomeAnswers() throws Exception {
@@ -553,7 +561,8 @@ class CoreTest {
         for(String response:List.of("{\"answer\":\"Không đủ căn cứ\",\"citations\":[]}",
             "{\"answer\":\"Nội dung thử\",\"citations\":[{\"doc_id\":\"missing\",\"unit_id\":\"missing::1\",\"quote\":\"Nguồn\"},{\"sign_id\":\"P.1\"}]}")) {
             when(kag.query(any(),any(UUID.class))).thenReturn(json.readTree(response));
-            mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Căn cứ?\"}")).andExpect(status().isBadGateway());
+            assertEquals("UNAVAILABLE",progressResponse(post("/api/chat/stream?progress=true").header("Authorization","Bearer "+user)
+                .contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Căn cứ?\"}"),"error").path("state").asText());
         }
         var items=body(mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andReturn());
         assertEquals(2,items.size()); for(var item:items) { assertEquals("UNAVAILABLE",item.path("state").asText()); assertEquals("",item.path("answer").asText()); }
@@ -568,8 +577,9 @@ class CoreTest {
             var citation=answer.putArray("citations").addObject().put("doc_id",docId).putNull("unit_id").put("sign_id","sign-1").put("quote",quote);
             citation.putObject("source").put("contract_version","graph-source-v1").put("release_id","release-"+graph).put("text",quote);
             when(kag.query(any(),any(UUID.class))).thenReturn(answer);
-            var saved=body(mvc.perform(post("/api/chat").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON)
-                .content("{\"message\":\"Căn cứ graph "+graph+"?\"}")).andExpect(status().isOk()).andExpect(jsonPath("$.state").value("ANSWERED")).andReturn());
+            var saved=progressResponse(post("/api/chat/stream?progress=true").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON)
+                .content("{\"message\":\"Căn cứ graph "+graph+"?\"}"),"done");
+            assertEquals("ANSWERED",saved.path("state").asText());
             expected.put(saved.path("id").asText(),answer.path("citations"));
         }
         assertTrue(contents.findByKindAndExternalId("documents",docId).isEmpty());
@@ -614,23 +624,20 @@ class CoreTest {
     }
     void bridge(KagClientTest wire,KagClientTest.Fixture fixture) {
         var actual=wire.client(fixture);
-        doAnswer(call->{ actual.stream(call.getArgument(0),call.getArgument(1)); return null; }).when(kag).stream(any(),any());
+        when(kag.query(any(),any(UUID.class))).thenAnswer(call->actual.query(call.getArgument(0),call.getArgument(1)));
     }
-    @Test @Transactional void realDoneOnlyAndLegacyStreamPersistBeforeDownstreamDone() throws Exception {
-        for(boolean legacy:new boolean[]{false,true}) {
+    @Test @Transactional void realQueryPersistsBeforeDownstreamDone() throws Exception {
             var source=streamSource(); var owner=streamOwner(); var wire=streamWire();
             try(var fixture=wire.new Fixture()) {
                 fixture.body=source.answer().toString();
-                if(!legacy) fixture.raw=("event: done\ndata: "+fixture.body+"\n\n").getBytes(java.nio.charset.StandardCharsets.UTF_8);
                 bridge(wire,fixture); var output=new ByteArrayOutputStream();
-                chat.stream(owner,new ChatRequest("Căn cứ P5?","")).writeTo(output);
+                chat.progress(owner,new ChatRequest("Căn cứ P5?","")).writeTo(output);
                 String text=output.toString(java.nio.charset.StandardCharsets.UTF_8);
-                assertTrue(text.contains("event: done\n")); assertEquals(legacy,text.contains("event: delta\n")); assertFalse(text.contains("event: error\n"));
+                assertEquals("ANSWERED",terminal(text,"done").path("state").asText()); assertFalse(text.contains("event: error\n"));
                 var stored=chats.findTop50ByOwnerIdOrderByCreatedAtDesc(owner).getFirst();
                 assertEquals("ANSWERED",stored.state); assertEquals(source.answer().path("answer").asText(),stored.answer);
                 assertEquals(source.answer().path("citations"),json.readTree(stored.citations));
             }
-        }
     }
     @ParameterizedTest @ValueSource(strings={"document-unpublished","unit-unpublished","wrong-document","quote-changed","expired-document","mixed-invalid"})
     @Transactional void rejectedLegalEvidenceNeverPersistsAnswerOrEmitsDownstreamDone(String mode) throws Exception {
@@ -644,26 +651,25 @@ class CoreTest {
             default -> { var invalid=source.answer().path("citations").get(0).deepCopy(); ((ObjectNode)invalid).put("doc_id","missing"); ((ArrayNode)source.answer().path("citations")).add(invalid); }
         }
         try(var fixture=wire.new Fixture()) {
-            fixture.raw=("event: done\ndata: "+source.answer()+"\n\n").getBytes(java.nio.charset.StandardCharsets.UTF_8);
-            bridge(wire,fixture); var output=new ByteArrayOutputStream(); chat.stream(owner,new ChatRequest("Căn cứ P5?","")).writeTo(output);
+            fixture.body=source.answer().toString();
+            bridge(wire,fixture); var output=new ByteArrayOutputStream(); chat.progress(owner,new ChatRequest("Căn cứ P5?","")).writeTo(output);
             String text=output.toString(java.nio.charset.StandardCharsets.UTF_8);
             assertFalse(text.contains("event: done\n")); assertTrue(text.contains("event: error\n"));
             var stored=chats.findTop50ByOwnerIdOrderByCreatedAtDesc(owner).getFirst();
             assertEquals("UNAVAILABLE",stored.state); assertTrue(stored.answer==null||stored.answer.isEmpty()); assertEquals(json.createArrayNode(),json.readTree(stored.citations));
         }
     }
-    @ParameterizedTest @ValueSource(strings={"missing-done","missing-blank","partial-error","invalid-done"})
+    @ParameterizedTest @ValueSource(strings={"empty","truncated-json","malformed-utf8","invalid-answer"})
     @Transactional void incompleteTransportLeavesUnavailableWithoutPartialAnswer(String mode) throws Exception {
         var source=streamSource(); var owner=streamOwner(); var wire=streamWire();
         try(var fixture=wire.new Fixture()) {
-            String delta="event: delta\ndata: {\"text\":\"partial\"}\n\n";
             fixture.raw=(switch(mode) {
-                case "missing-done" -> delta;
-                case "missing-blank" -> "event: done\ndata: "+source.answer()+"\n";
-                case "partial-error" -> delta+"event: error\ndata: {\"message\":\"failed\"}\n\n";
-                default -> "event: done\ndata: {\"answer\":\"fabricated\",\"citations\":[]}\n\n";
+                case "empty" -> "";
+                case "truncated-json" -> source.answer().toString().substring(0,source.answer().toString().length()-1);
+                default -> "{\"answer\":\"fabricated\",\"citations\":[]}";
             }).getBytes(java.nio.charset.StandardCharsets.UTF_8);
-            bridge(wire,fixture); var output=new ByteArrayOutputStream(); chat.stream(owner,new ChatRequest("Căn cứ P5?","")).writeTo(output);
+            if(mode.equals("malformed-utf8")) fixture.raw=new byte[]{(byte)0xc3,0x28};
+            bridge(wire,fixture); var output=new ByteArrayOutputStream(); chat.progress(owner,new ChatRequest("Căn cứ P5?","")).writeTo(output);
             String text=output.toString(java.nio.charset.StandardCharsets.UTF_8);
             assertFalse(text.contains("event: done\n")); assertTrue(text.contains("event: error\n"));
             var stored=chats.findTop50ByOwnerIdOrderByCreatedAtDesc(owner).getFirst();
@@ -674,19 +680,19 @@ class CoreTest {
         var source=streamSource(); var owner=streamOwner(); var wire=streamWire();
         TestTransaction.flagForCommit(); TestTransaction.end();
         try(var fixture=wire.new Fixture()) {
-            fixture.raw=("event: done\ndata: "+source.answer()+"\n\n").getBytes(java.nio.charset.StandardCharsets.UTF_8); bridge(wire,fixture);
+            fixture.body=source.answer().toString(); bridge(wire,fixture);
             var output=new OutputStream() {
-                int writes;
                 @Override public void write(int value) throws IOException { throw new IOException("Synthetic downstream disconnect"); }
                 @Override public void write(byte[] bytes,int offset,int length) throws IOException {
+                    if(!new String(bytes,offset,length,java.nio.charset.StandardCharsets.UTF_8).startsWith("event: done\n")) return;
                     var stored=chats.findTop50ByOwnerIdOrderByCreatedAtDesc(owner).getFirst();
-                    if(writes++==0) assertEquals("ANSWERED",stored.state);
+                    assertEquals("ANSWERED",stored.state);
                     assertEquals(source.answer().path("answer").asText(),stored.answer);
                     assertEquals(source.answer().path("citations").toString(),stored.citations);
                     throw new IOException("Synthetic downstream disconnect");
                 }
             };
-            assertThrows(UncheckedIOException.class,()->chat.stream(owner,new ChatRequest("Căn cứ P5?","")).writeTo(output));
+            assertThrows(UncheckedIOException.class,()->chat.progress(owner,new ChatRequest("Căn cứ P5?","")).writeTo(output));
             var stored=chats.findTop50ByOwnerIdOrderByCreatedAtDesc(owner).getFirst();
             assertEquals(source.answer().path("answer").asText(),stored.answer);
             assertEquals(source.answer().path("citations"),json.readTree(stored.citations));

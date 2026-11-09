@@ -75,8 +75,8 @@ type RuleForm = {
 
 const emptyRule = (): RuleForm => ({ setId: "", license: "", validFrom: "", validTo: "", totalQuestions: "", durationMinutes: "", minimumCorrect: "", criticalSlots: "", failOnCritical: true, quotas: Array.from({length:6},(_,i)=>({chapter:i+1,value:""})) })
 
-export default function QuestionBankSettings() {
-  const [tab,setTab]=useState('sets')
+export default function QuestionBankSettings({ embedded = false }: { embedded?: boolean } = {}) {
+  const [tab, setTab] = useState('sets')
   const sets = useData<QuestionSet[]>("/admin/questions/sets"),
     rules = useData<ExamRule[]>("/admin/questions/rules"),
     task = useTask()
@@ -140,11 +140,8 @@ export default function QuestionBankSettings() {
   const allocationComplete = [...rule.quotas.map(q=>q.value), rule.criticalSlots, rule.totalQuestions].every(value => value !== '')
   const allocationMismatch = allocationComplete && allocation !== Number(rule.totalQuestions)
 
-  return (
-    <Page
-      title="Quản lý ngân hàng câu hỏi"
-      subtitle="Quản lý bộ nhận dữ liệu và cấu hình đề thi theo từng hạng giấy phép lái xe."
-    >
+  const content = (
+    <>
       <div className="space-y-6">
         <FilterTabs label="Quản lý ngân hàng câu hỏi" value={tab} onChange={value=>{task.clearError();setTab(value)}} items={[{value:'sets',label:'Bộ câu hỏi'},{value:'chapters',label:'Chương'},{value:'rules',label:'Quy tắc đề thi'}]}/>
         {tab==='chapters'&&<><Notice {...sets} retry={sets.reload}/><ChapterSettings sets={sets.value||[]}/></>}
@@ -705,6 +702,17 @@ export default function QuestionBankSettings() {
         <Notice error={task.error} />
         <p className="text-sm text-muted">Bạn sắp xóa “{pendingDelete?.label}”. Chỉ mục chưa được dùng mới có thể xóa; câu hỏi hoặc bài thi đã lưu sẽ được giữ nguyên.</p>
       </Modal>
+    </>
+  )
+
+  if (embedded) return content
+
+  return (
+    <Page
+      title="Bộ câu hỏi và quy tắc đề thi"
+      subtitle="Quản lý bộ nhận dữ liệu và cấu hình đề thi theo từng hạng giấy phép lái xe."
+    >
+      {content}
     </Page>
   )
 }

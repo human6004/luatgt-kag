@@ -1,0 +1,480 @@
+[
+ {
+  "schema_version": "1.0",
+  "dataset_version": "mau-2026-11-08",
+  "dataset_status": "PROVISIONAL",
+  "qid": "MAU-DEF-001",
+  "question": "Đường ưu tiên là đường như thế nào? Đi trên đường ưu tiên thì xe từ hướng khác có phải nhường mình không?",
+  "category": "definition",
+  "expected_abstain": false,
+  "as_of": "2026-11-08",
+  "gold_doc_ids": [
+   "36_2024_QH15"
+  ],
+  "gold_unit_ids": [
+   "36_2024_QH15::D2::K4"
+  ],
+  "gold_sign_ids": [],
+  "answer_reference": {
+   "expected_answer": "Khoản 4 Điều 2 Luật TTATGTĐB 2024: \"Đường ưu tiên là đường mà trên đó phương tiện tham gia giao thông đường bộ được các phương tiện tham gia giao thông đường bộ đến từ hướng khác nhường đường khi qua nơi đường giao nhau, được cắm biển báo hiệu đường ưu tiên.\"",
+   "accepted_facts": [],
+   "markers": [
+    "nhường đường",
+    "biển báo hiệu đường ưu tiên"
+   ]
+  },
+  "citation_gold": [
+   {
+    "doc_id": "36_2024_QH15",
+    "unit_id": "36_2024_QH15::D2::K4",
+    "sign_id": null,
+    "required": true,
+    "field": "text",
+    "start": 3,
+    "end": 227,
+    "quote": "Đường ưu tiên là đường mà trên đó phương tiện tham gia giao thông đường \nbộ được các phương tiện tham gia giao thông đường bộ đến từ hướng khác nhường \nđường khi qua nơi đường giao nhau, được cắm biển báo hiệu đường ưu tiên."
+   },
+   {
+    "doc_id": "55_VBHN_VPQH",
+    "unit_id": "55_VBHN_VPQH::D2::K4",
+    "sign_id": null,
+    "required": false,
+    "field": "text",
+    "start": 3,
+    "end": 227,
+    "quote": "Đường ưu tiên là đường mà trên đó phương tiện tham gia giao thông đường \nbộ được các phương tiện tham gia giao thông đường bộ đến từ hướng khác nhường \nđường khi qua nơi đường giao nhau, được cắm biển báo hiệu đường ưu tiên."
+   }
+  ],
+  "legacy_references": [],
+  "source_group": null,
+  "notes": "Luật 36/2024/QH15 còn hiệu lực (documents.jsonl). 118/2025/QH15 Điều 7 không sửa Điều 2. 55/VBHN-VPQH là bản hợp nhất, chỉ chấp nhận (required=false). | provenance: units.jsonl L14200 (36_2024_QH15::D2::K4, text[3:227]); units.jsonl L32393 (55_VBHN_VPQH::D2::K4, text[3:227])",
+  "tags": []
+ },
+ {
+  "schema_version": "1.0",
+  "dataset_version": "mau-2026-11-08",
+  "dataset_status": "PROVISIONAL",
+  "qid": "MAU-OBL-001",
+  "question": "Lái ô tô ra đường thì tôi bắt buộc phải mang theo những giấy tờ gì?",
+  "category": "obligation",
+  "expected_abstain": false,
+  "as_of": "2026-11-08",
+  "gold_doc_ids": [
+   "36_2024_QH15"
+  ],
+  "gold_unit_ids": [
+   "36_2024_QH15::D56::K1"
+  ],
+  "gold_sign_ids": [],
+  "answer_reference": {
+   "expected_answer": "Khoản 1 Điều 56 Luật TTATGTĐB 2024: người lái xe phải mang theo Chứng nhận đăng ký xe (hoặc bản sao có chứng thực kèm giấy xác nhận của tổ chức tín dụng nếu xe đang thế chấp); Giấy phép lái xe phù hợp với loại xe đang điều khiển; Chứng nhận kiểm định an toàn kỹ thuật và bảo vệ môi trường; Chứng nhận bảo hiểm bắt buộc trách nhiệm dân sự của chủ xe cơ giới. Khoản 3: nếu đã tích hợp vào tài khoản định danh điện tử thì có thể xuất trình qua tài khoản đó.",
+   "accepted_facts": [],
+   "markers": [
+    "đăng ký xe",
+    "giấy phép lái xe",
+    "kiểm định",
+    "bảo hiểm"
+   ]
+  },
+  "citation_gold": [
+   {
+    "doc_id": "36_2024_QH15",
+    "unit_id": "36_2024_QH15::D56::K1",
+    "sign_id": null,
+    "required": true,
+    "field": "text",
+    "start": 270,
+    "end": 861,
+    "quote": "Khi tham gia giao thông đường bộ, người lái xe \nphải mang theo các giấy tờ sau đây: \na) Chứng nhận đăng ký xe hoặc bản sao Chứng nhận đăng ký xe có chứng thực \nkèm bản gốc giấy tờ xác nhận của tổ chức tín dụng, chi nhánh ngân hàng nước \nngoài còn hiệu lực trong trường hợp xe đang được thế chấp tại tổ chức tín dụng, \nchi nhánh ngân hàng nước ngoài; \nb) Giấy phép lái xe phù hợp với loại xe đang điều khiển; \nc) Chứng nhận kiểm định an toàn kỹ thuật và bảo vệ môi trường đối với xe cơ \ngiới theo quy định của pháp luật; \nd) Chứng nhận bảo hiểm bắt buộc trách nhiệm dân sự của chủ xe cơ giới."
+   },
+   {
+    "doc_id": "36_2024_QH15",
+    "unit_id": "36_2024_QH15::D56::K3",
+    "sign_id": null,
+    "required": false,
+    "field": "text",
+    "start": 3,
+    "end": 199,
+    "quote": "Trường hợp giấy tờ quy định tại khoản 1 và khoản 2 Điều này đã được tích \nhợp vào tài khoản định danh điện tử thì việc xuất trình, kiểm tra có thể thực hiện \nthông qua tài khoản định danh điện tử."
+   }
+  ],
+  "legacy_references": [],
+  "source_group": null,
+  "notes": "118/2025/QH15 Điều 7 không sửa Điều 56. Khoản 3 (xuất trình qua định danh điện tử) là ý phụ, required=false. | provenance: units.jsonl L14792 (36_2024_QH15::D56::K1, text[270:861]); units.jsonl L14803 (36_2024_QH15::D56::K3, text[3:199])",
+  "tags": []
+ },
+ {
+  "schema_version": "1.0",
+  "dataset_version": "mau-2026-11-08",
+  "dataset_status": "PROVISIONAL",
+  "qid": "MAU-SAN-001",
+  "question": "Chạy xe máy mà không đội mũ bảo hiểm thì bị phạt bao nhiêu tiền?",
+  "category": "sanction_numeric",
+  "expected_abstain": false,
+  "as_of": "2026-11-08",
+  "gold_doc_ids": [
+   "168_2024_ND_CP"
+  ],
+  "gold_unit_ids": [
+   "168_2024_ND_CP::D7::K2",
+   "168_2024_ND_CP::D7::K2::Ph"
+  ],
+  "gold_sign_ids": [],
+  "answer_reference": {
+   "expected_answer": "Điểm h khoản 2 Điều 7 NĐ 168/2024/NĐ-CP: \"Phạt tiền từ 400.000 đồng đến 600.000 đồng\" đối với người điều khiển xe mô tô, xe gắn máy \"Không đội “mũ bảo hiểm cho người đi mô tô, xe máy” hoặc đội ... không cài quai đúng quy cách\".",
+   "accepted_facts": [],
+   "markers": [
+    "400.000",
+    "600.000"
+   ]
+  },
+  "citation_gold": [
+   {
+    "doc_id": "168_2024_ND_CP",
+    "unit_id": "168_2024_ND_CP::D7::K2",
+    "sign_id": null,
+    "required": true,
+    "field": "text",
+    "start": 3,
+    "end": 45,
+    "quote": "Phạt tiền từ 400.000 đồng đến 600.000 đồng"
+   },
+   {
+    "doc_id": "168_2024_ND_CP",
+    "unit_id": "168_2024_ND_CP::D7::K2::Ph",
+    "sign_id": null,
+    "required": true,
+    "field": "text",
+    "start": 3,
+    "end": 187,
+    "quote": "Không đội “mũ bảo hiểm cho người đi mô tô, xe máy” hoặc đội “mũ bảo \nhiểm cho người đi mô tô, xe máy” không cài quai đúng quy cách khi điều khiển xe \ntham gia giao thông trên đường bộ;"
+   }
+  ],
+  "legacy_references": [],
+  "source_group": null,
+  "notes": "Khoản 13 Điều 7 (trừ điểm) không liệt kê khoản 2 nên hành vi này không bị trừ điểm GPLX; penalties.jsonl ghi tru_diem_gplx=null. NĐ 238/2026/NĐ-CP (hiệu lực 15/08/2026) không sửa điểm h khoản 2 Điều 7 (đã đọc Điều 19 của 238). | provenance: units.jsonl L8141 (168_2024_ND_CP::D7::K2, text[3:45]); units.jsonl L8149 (168_2024_ND_CP::D7::K2::Ph, text[3:187])",
+  "tags": []
+ },
+ {
+  "schema_version": "1.0",
+  "dataset_version": "mau-2026-11-08",
+  "dataset_status": "PROVISIONAL",
+  "qid": "MAU-EFF-001",
+  "question": "Luật Giao thông đường bộ năm 2008 bây giờ còn áp dụng không? Hết hiệu lực từ ngày nào?",
+  "category": "effectiveness_metadata",
+  "expected_abstain": false,
+  "as_of": "2026-11-08",
+  "gold_doc_ids": [
+   "36_2024_QH15",
+   "35_2024_QH15",
+   "23_2008_QH12"
+  ],
+  "gold_unit_ids": [
+   "36_2024_QH15::D88::K1",
+   "36_2024_QH15::D88::K3",
+   "35_2024_QH15::D85::K1",
+   "35_2024_QH15::D85::K3"
+  ],
+  "gold_sign_ids": [],
+  "answer_reference": {
+   "expected_answer": "Không còn hiệu lực. Khoản 3 Điều 88 Luật 36/2024/QH15 (và khoản 3 Điều 85 Luật 35/2024/QH15): Luật GTĐB số 23/2008/QH12 \"hết hiệu lực kể từ ngày Luật này có hiệu lực thi hành\", tức từ 01/01/2025 (khoản 1 Điều 88), trừ các trường hợp chuyển tiếp tại Điều 89 Luật 36 / Điều 86 Luật 35.",
+   "accepted_facts": [],
+   "markers": [
+    "hết hiệu lực",
+    "2025"
+   ]
+  },
+  "citation_gold": [
+   {
+    "doc_id": "36_2024_QH15",
+    "unit_id": "36_2024_QH15::D88::K1",
+    "sign_id": null,
+    "required": true,
+    "field": "text",
+    "start": 3,
+    "end": 61,
+    "quote": "Luật này có hiệu lực thi hành từ ngày 01 tháng 01 năm 2025"
+   },
+   {
+    "doc_id": "36_2024_QH15",
+    "unit_id": "36_2024_QH15::D88::K3",
+    "sign_id": null,
+    "required": true,
+    "field": "text",
+    "start": 3,
+    "end": 261,
+    "quote": "Luật Giao thông đường bộ số 23/2008/QH12 đã được sửa đổi, bổ sung một \nsố điều theo Luật số 35/2018/QH14 và Luật số 44/2019/QH14 hết hiệu lực kể từ \nngày Luật này có hiệu lực thi hành, trừ trường hợp quy định tại các khoản 1, 2, 5 \nvà 6 Điều 89 của Luật này."
+   },
+   {
+    "doc_id": "35_2024_QH15",
+    "unit_id": "35_2024_QH15::D85::K1",
+    "sign_id": null,
+    "required": false,
+    "field": "text",
+    "start": 3,
+    "end": 61,
+    "quote": "Luật này có hiệu lực thi hành từ ngày 01 tháng 01 năm 2025"
+   },
+   {
+    "doc_id": "35_2024_QH15",
+    "unit_id": "35_2024_QH15::D85::K3",
+    "sign_id": null,
+    "required": false,
+    "field": "text",
+    "start": 3,
+    "end": 235,
+    "quote": "Luật Giao thông đường bộ số 23/2008/QH12 đã được sửa đổi, bổ sung một số\nđiều theo Luật số 35/2018/QH14 và Luật số 44/2019/QH14 hết hiệu lực kể từ ngày\nLuật này có hiệu lực thi hành, trừ trường hợp quy định tại Điều 86 của Luật này."
+   },
+   {
+    "doc_id": "23_2008_QH12",
+    "unit_id": null,
+    "sign_id": null,
+    "required": false,
+    "field": null,
+    "start": null,
+    "end": null,
+    "quote": null
+   }
+  ],
+  "legacy_references": [],
+  "source_group": null,
+  "notes": "Văn bản lịch sử: 23_2008_QH12 tier=Superseded, current_status=REPLACED, ngay_het_hieu_luc=2025-01-01 trong documents.jsonl. Citation doc-level 23_2008_QH12 chỉ chấp nhận (required=false). | provenance: units.jsonl L15131 (36_2024_QH15::D88::K1, text[3:61]); units.jsonl L15133 (36_2024_QH15::D88::K3, text[3:261]); units.jsonl L12661 (35_2024_QH15::D85::K1, text[3:61]); units.jsonl L12663 (35_2024_QH15::D85::K3, text[3:235]); documents.jsonl L19 (23_2008_QH12)",
+  "tags": []
+ },
+ {
+  "schema_version": "1.0",
+  "dataset_version": "mau-2026-11-08",
+  "dataset_status": "PROVISIONAL",
+  "qid": "MAU-INT-001",
+  "question": "Tôi chở con 6 tuổi, cao khoảng 1m15 bằng ô tô gia đình nhưng không cho cháu ngồi ghế an toàn dành cho trẻ em. Như vậy có vi phạm không, bị xử lý thế nào?",
+  "category": "inter_document",
+  "expected_abstain": false,
+  "as_of": "2026-11-08",
+  "gold_doc_ids": [
+   "118_2025_QH15",
+   "238_2026_ND_CP",
+   "36_2024_QH15"
+  ],
+  "gold_unit_ids": [
+   "118_2025_QH15::D7::K3",
+   "238_2026_ND_CP::D2::K1"
+  ],
+  "gold_sign_ids": [],
+  "answer_reference": {
+   "expected_answer": "Có vi phạm. Khoản 3 Điều 10 Luật TTATGTĐB (sửa đổi bởi khoản 3 Điều 7 Luật 118/2025/QH15): khi chở trẻ em dưới 10 tuổi và chiều cao dưới 1,35 mét trên xe ô tô, \"người lái xe phải sử dụng, hướng dẫn sử dụng thiết bị an toàn phù hợp cho trẻ em, trừ xe ô tô kinh doanh vận tải hành khách\". Mức xử lý: khoản 1a Điều 6 NĐ 168/2024 (bổ sung bởi khoản 1 Điều 2 NĐ 238/2026/NĐ-CP) \"Phạt cảnh cáo\" người điều khiển xe ô tô không sử dụng thiết bị an toàn phù hợp cho trẻ em.",
+   "accepted_facts": [],
+   "markers": [
+    "thiết bị an toàn",
+    "cảnh cáo"
+   ]
+  },
+  "citation_gold": [
+   {
+    "doc_id": "118_2025_QH15",
+    "unit_id": "118_2025_QH15::D7::K3",
+    "sign_id": null,
+    "required": true,
+    "field": "text",
+    "start": 56,
+    "end": 337,
+    "quote": "Khi chở trẻ em dưới 10 tuổi và chiều cao dưới 1,35 mét trên xe ô tô,\nngười lái xe không được cho trẻ em ngồi cùng hàng ghế, trừ xe ô tô chỉ có một\nhàng ghế; người lái xe phải sử dụng, hướng dẫn sử dụng thiết bị an toàn phù hợp\ncho trẻ em, trừ xe ô tô kinh doanh vận tải hành khách."
+   },
+   {
+    "doc_id": "238_2026_ND_CP",
+    "unit_id": "238_2026_ND_CP::D2::K1",
+    "sign_id": null,
+    "required": true,
+    "field": "text",
+    "start": 48,
+    "end": 287,
+    "quote": "1a. Phạt cảnh cáo đối với người điều khiển xe ô tô thực hiện hành vi chở trẻ em dưới 10 tuổi và chiều cao dưới 1,35 mét trên xe mà không sử dụng thiết bị an toàn phù hợp cho trẻ em theo quy định (trừ xe ô tô kinh doanh vận tải hành khách)."
+   },
+   {
+    "doc_id": "55_VBHN_VPQH",
+    "unit_id": "55_VBHN_VPQH::D10::K3",
+    "sign_id": null,
+    "required": false,
+    "field": "text",
+    "start": 3,
+    "end": 287,
+    "quote": "Khi chở trẻ em dưới 10 tuổi và chiều cao dưới 1,35 mét trên xe ô tô, người \nlái xe không được cho trẻ em ngồi cùng hàng ghế, trừ xe ô tô chỉ có một hàng ghế; \nngười lái xe phải sử dụng, hướng dẫn sử dụng thiết bị an toàn phù hợp cho trẻ em, \ntrừ xe ô tô kinh doanh vận tải hành khách."
+   },
+   {
+    "doc_id": "36_2024_QH15",
+    "unit_id": "36_2024_QH15::D10::K3",
+    "sign_id": null,
+    "required": false,
+    "field": "text",
+    "start": 3,
+    "end": 252,
+    "quote": "Khi chở trẻ em dưới 10 tuổi và chiều cao dưới 1,35 mét trên xe ô tô không \nđược cho trẻ em ngồi cùng hàng ghế với người lái xe, trừ loại xe ô tô chỉ có một \nhàng ghế; người lái xe phải sử dụng, hướng dẫn sử dụng thiết bị an toàn phù hợp \ncho trẻ em."
+   },
+   {
+    "doc_id": "238_2026_ND_CP",
+    "unit_id": "238_2026_ND_CP::D20::K1",
+    "sign_id": null,
+    "required": false,
+    "field": "text",
+    "start": 3,
+    "end": 65,
+    "quote": "Nghị định này có hiệu lực thi hành từ ngày 15 tháng 8 năm 2026"
+   }
+  ],
+  "legacy_references": [],
+  "source_group": null,
+  "notes": "Cần 2 văn bản khác nhau: nghĩa vụ ở Luật (36/2024 sửa bởi 118/2025, hiệu lực khoản 3 Điều 10 từ 01/07/2026 theo điểm a khoản 20 Điều 7 Luật 118) và chế tài ở NĐ 238/2026 (hiệu lực 15/08/2026). Đáp án phụ thuộc as_of: trước 15/08/2026 hành vi thuộc điểm m khoản 3 Điều 6 NĐ 168 bản gốc. 36_2024_QH15::D10::K3 là bản gốc (trước sửa đổi), chỉ chấp nhận. | provenance: units.jsonl L2124 (118_2025_QH15::D7::K3, text[56:337]); units.jsonl L10014 (238_2026_ND_CP::D2::K1, text[48:287]); units.jsonl L57114 (55_VBHN_VPQH::D10::K3, text[3:287]); units.jsonl L14294 (36_2024_QH15::D10::K3, text[3:252]); units.jsonl L10203 (238_2026_ND_CP::D20::K1, text[3:65])",
+  "tags": []
+ },
+ {
+  "schema_version": "1.0",
+  "dataset_version": "mau-2026-11-08",
+  "dataset_status": "PROVISIONAL",
+  "qid": "MAU-MH-001",
+  "question": "Lái ô tô vượt đèn đỏ mà gây tai nạn thì bị phạt bao nhiêu tiền và bị trừ mấy điểm bằng lái?",
+  "category": "multi_hop",
+  "expected_abstain": false,
+  "as_of": "2026-11-08",
+  "gold_doc_ids": [
+   "168_2024_ND_CP"
+  ],
+  "gold_unit_ids": [
+   "168_2024_ND_CP::D6::K9::Pb",
+   "168_2024_ND_CP::D6::K10",
+   "168_2024_ND_CP::D6::K10::Pb",
+   "168_2024_ND_CP::D6::K16::Pd"
+  ],
+  "gold_sign_ids": [],
+  "answer_reference": {
+   "expected_answer": "Vượt đèn đỏ là \"Không chấp hành hiệu lệnh của đèn tín hiệu giao thông\" (điểm b khoản 9 Điều 6 NĐ 168/2024). Vi phạm điểm b khoản 9 \"mà gây tai nạn giao thông\" thuộc điểm b khoản 10: \"Phạt tiền từ 20.000.000 đồng đến 22.000.000 đồng\". Điểm d khoản 16: hành vi tại \"khoản 10\" \"bị trừ điểm giấy phép lái xe 10 điểm\".",
+   "accepted_facts": [],
+   "markers": [
+    "20.000.000",
+    "22.000.000",
+    "10 điểm"
+   ]
+  },
+  "citation_gold": [
+   {
+    "doc_id": "168_2024_ND_CP",
+    "unit_id": "168_2024_ND_CP::D6::K9::Pb",
+    "sign_id": null,
+    "required": true,
+    "field": "text",
+    "start": 3,
+    "end": 57,
+    "quote": "Không chấp hành hiệu lệnh của đèn tín hiệu giao thông;"
+   },
+   {
+    "doc_id": "168_2024_ND_CP",
+    "unit_id": "168_2024_ND_CP::D6::K10",
+    "sign_id": null,
+    "required": true,
+    "field": "text",
+    "start": 4,
+    "end": 52,
+    "quote": "Phạt tiền từ 20.000.000 đồng đến 22.000.000 đồng"
+   },
+   {
+    "doc_id": "168_2024_ND_CP",
+    "unit_id": "168_2024_ND_CP::D6::K10::Pb",
+    "sign_id": null,
+    "required": true,
+    "field": "text",
+    "start": 3,
+    "end": 374,
+    "quote": "Vi phạm quy định tại một trong các điểm, khoản sau của Điều này mà gây tai \nnạn giao thông: điểm a, điểm b, điểm c, điểm d, điểm đ khoản 1; điểm c khoản 2; \n\n \nđiểm b, điểm g, điểm h, điểm n, điểm o, điểm p, khoản 3; điểm a, điểm c, điểm d \nkhoản 4; điểm c, điểm d, điểm e, điểm h, điểm n, điểm o, điểm q khoản 5; điểm b \nkhoản 7; điểm b, điểm c, điểm d khoản 9 Điều này."
+   },
+   {
+    "doc_id": "168_2024_ND_CP",
+    "unit_id": "168_2024_ND_CP::D6::K16::Pd",
+    "sign_id": null,
+    "required": true,
+    "field": "text",
+    "start": 3,
+    "end": 123,
+    "quote": "Thực hiện hành vi quy định tại điểm a khoản 9, khoản 10, điểm đ khoản 11 \nĐiều này bị trừ điểm giấy phép lái xe 10 điểm."
+   }
+  ],
+  "legacy_references": [],
+  "source_group": null,
+  "notes": "Chuỗi dẫn chiếu trong corpus (xrefs.jsonl, SAFE_EDGE): hop1 D6::K10::Pb -> D6::K9::Pb (xrefs L16721); hop2 D6::K16::Pd -> D6::K10 (xrefs L12623). Khoản 15 (tước GPLX) không liệt kê khoản 10. NĐ 238/2026 không sửa khoản 9, 10, 16 Điều 6. | provenance: units.jsonl L8105 (168_2024_ND_CP::D6::K9::Pb, text[3:57]); units.jsonl L8108 (168_2024_ND_CP::D6::K10, text[4:52]); units.jsonl L8110 (168_2024_ND_CP::D6::K10::Pb, text[3:374]); units.jsonl L8128 (168_2024_ND_CP::D6::K16::Pd, text[3:123])",
+  "tags": []
+ },
+ {
+  "schema_version": "1.0",
+  "dataset_version": "mau-2026-11-08",
+  "dataset_status": "PROVISIONAL",
+  "qid": "MAU-UNA-001",
+  "question": "Đi đổi bằng lái xe sang mẫu mới thì phải đóng lệ phí bao nhiêu tiền?",
+  "category": "unanswerable",
+  "expected_abstain": true,
+  "as_of": "2026-11-08",
+  "gold_doc_ids": [],
+  "gold_unit_ids": [],
+  "gold_sign_ids": [],
+  "answer_reference": {
+   "expected_answer": "Phải từ chối nêu con số: corpus chỉ quy định người đề nghị \"phải hoàn thành nghĩa vụ nộp lệ phí đổi giấy phép lái xe theo quy định\", không có văn bản nào nêu mức lệ phí.",
+   "accepted_facts": [],
+   "markers": []
+  },
+  "citation_gold": [],
+  "legacy_references": [],
+  "source_group": null,
+  "notes": "Mức lệ phí do văn bản về phí, lệ phí (Bộ Tài chính) quy định; văn bản đó không có trong 91 văn bản của documents.jsonl. Đã grep toàn bộ units.jsonl và documents/*.md: không có mức tiền lệ phí cấp/đổi GPLX (chỉ có nghĩa vụ nộp, vd 108_2026_TT_BCA::D21::K3::Pa). | provenance: none (abstain)",
+  "tags": []
+ },
+ {
+  "schema_version": "1.0",
+  "dataset_version": "mau-2026-11-08",
+  "dataset_status": "PROVISIONAL",
+  "qid": "MAU-SIGN-001",
+  "question": "Gặp biển \"Cấm đi ngược chiều\" (biển tròn nền đỏ, giữa có vạch ngang trắng) thì những xe nào bị cấm đi vào? Người đi bộ có được đi không?",
+  "category": "traffic_sign",
+  "expected_abstain": false,
+  "as_of": "2026-11-08",
+  "gold_doc_ids": [
+   "51_2024_TT_BGTVT"
+  ],
+  "gold_unit_ids": [
+   "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::PLB"
+  ],
+  "gold_sign_ids": [
+   "QCVN 41:2024/BGTVT::P.102"
+  ],
+  "answer_reference": {
+   "expected_answer": "Biển P.102 QCVN 41:2024/BGTVT: \"Để báo đường cấm các loại xe (cơ giới và thô sơ) đi vào theo chiều đặt biển, trừ các xe được ưu tiên theo quy định, đặt biển số P.102 \"Cấm đi ngược chiều\". Người đi bộ được phép đi trên vỉa hè hoặc lề đường.\"",
+   "accepted_facts": [],
+   "markers": [
+    "P.102",
+    "cơ giới và thô sơ",
+    "người đi bộ"
+   ]
+  },
+  "citation_gold": [
+   {
+    "doc_id": "51_2024_TT_BGTVT",
+    "unit_id": null,
+    "sign_id": "QCVN 41:2024/BGTVT::P.102",
+    "required": true,
+    "field": "moTa",
+    "start": 3,
+    "end": 210,
+    "quote": "Để báo đường cấm các loại xe (cơ giới và thô sơ) đi vào theo chiều đặt biển, trừ các xe được ưu tiên theo quy định, đặt biển số P.102 \"Cấm đi ngược chiều\". Người đi bộ được phép đi trên vỉa hè hoặc lề đường."
+   },
+   {
+    "doc_id": "51_2024_TT_BGTVT",
+    "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::PLB",
+    "sign_id": null,
+    "required": true,
+    "field": "text",
+    "start": 1297,
+    "end": 1506,
+    "quote": "Để báo đường cấm các loại xe (cơ giới và thô sơ) đi vào theo chiều đặt biển, \ntrừ các xe được ưu tiên theo quy định, đặt biển số P.102 \"Cấm đi ngược chiều\". \nNgười đi bộ được phép đi trên vỉa hè hoặc lề đường."
+   }
+  ],
+  "legacy_references": [],
+  "source_group": null,
+  "notes": "QCVN 41:2024 (51/2024/TT-BGTVT) còn hiệu lực; QCVN 41:2019 (54_2019_TT_BGTVT) hết hiệu lực 01/01/2025. signs_app.json ghi unit_id của P.102 là ...::D84 (Điều 84 \"Tổ chức thực hiện\") — không chứa mô tả biển, nên gold unit dùng ...::PLB (Phụ lục B) nơi có nguyên văn; citation biển không ràng buộc unit_id. verification_status=review_required. | provenance: signs.jsonl L180 (QCVN 41:2024/BGTVT::P.102, mo_ta[3:210]); units.jsonl L23935 (51_2024_TT_BGTVT::QCVN41_2024_BGTVT::PLB, text[1297:1506])",
+  "tags": []
+ }
+]

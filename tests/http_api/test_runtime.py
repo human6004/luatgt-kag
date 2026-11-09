@@ -260,6 +260,8 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         from contextlib import ExitStack
         stack=ExitStack()
         for name,value in (('_require_operational_proof',proof),('_new_reader',reader),
+                           ('CHAT_CONFIG_PATH',self.root/'admin-config.json'),
+                           ('LLM_CONFIG_PATH',self.root/'llm-credentials.json'),
                            ('_new_embedding',embedding),('_new_llm',llm),('_today',lambda:AS_OF)):
             if sdk and name in ('_new_embedding','_new_llm'):
                 continue

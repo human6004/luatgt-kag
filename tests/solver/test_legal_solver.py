@@ -117,6 +117,14 @@ class PromptTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             module.validate_subquery(basic, 'Tổ chức bị phạt xe mô tô thế nào?', ())
 
+    def test_ungrounded_added_anchor_is_recoverable_not_fatal(self):
+        module = self.module()
+        plan = module.LegalPlanningPrompt(language='vi')
+        original = 'Xe mô tô bị phạt thế nào?'
+        unsafe = 'Xe mô tô bị phạt theo Điều 13 Nghị định 330/2026/NĐ-CP thế nào?'
+        with self.assertRaises(module.UnsafeSubqueryError):
+            plan.parse_response(action(unsafe), query=original, context=[])
+
     def test_planning_schema_strict_in_optimized_python(self):
         plan = self.module().LegalPlanningPrompt(language='vi')
         invalid = [[], {}, {'output': action('q'), 'gold': 'x'},
@@ -741,6 +749,16 @@ class PipelineTests(unittest.TestCase):
         llm = FakeLLM(script or [action(self.narrow), action(self.narrow, 'Deduce'), select_first, action(executor='Finish')])
         return module, module.build_pipeline(retriever, llm), llm
 
+    def test_planner_added_anchor_falls_back_to_original_question(self):
+        module = self.module()
+        original = 'Xe mô tô bị phạt thế nào?'
+        unsafe = 'Xe mô tô bị phạt theo Điều 13 Nghị định 330/2026/NĐ-CP thế nào?'
+        client = module._ThreadedPlannerClient(FakeLLM([action(unsafe)]))
+        prompt = module.PromptABC.from_config({'type': 'viet_legal_planning', 'language': 'vi'})
+        tasks = client.invoke(dict(query=original, context=[], executors=[]), prompt)
+        self.assertEqual(tasks[0].executor, 'Retriever')
+        self.assertEqual(tasks[0].arguments, {'query': original})
+
     def test_real_upstream_composition_and_trace(self):
         module, pipeline, llm = self.pipeline()
         from kag.solver.pipeline.kag_iterative_pipeline import KAGIterativePipeline
@@ -829,7 +847,7 @@ class PipelineTests(unittest.TestCase):
                                              action(good, 'Deduce'), select_first, action(executor='Finish')], retriever)
         result = module.answer(original, pipeline=pipeline, as_of=date(2026, 10, 6))
         self.assertFalse(result.abstained)
-        self.assertEqual(seen, [good])
+        self.assertEqual(seen, [original, good])
         self.assertNotEqual(good, original)
         self.assertEqual(len(llm.prompts), 4)
 

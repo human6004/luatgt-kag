@@ -32,7 +32,7 @@ Kiểm có `.env.example`, `docker-compose.yml` và `vendor/KAG`. **Mọi lệnh
 
 ## 3. Tạo cấu hình và secrets
 
-Đoạn lệnh sau tạo `.env` từ template nếu chưa có, sinh 9 mật khẩu/khóa độc lập và 7 token nội bộ. Mỗi giá trị mới gồm 32 byte ngẫu nhiên, lưu thành 64 ký tự hexadecimal; file đã tồn tại được giữ nguyên.
+Đoạn lệnh sau tạo `.env` từ template nếu chưa có, sinh 9 mật khẩu/khóa độc lập và 8 token nội bộ. Mỗi giá trị mới gồm 32 byte ngẫu nhiên, lưu thành 64 ký tự hexadecimal; file đã tồn tại được giữ nguyên.
 
 Nếu được cấp `.env` cho lần cài mới, đặt file đó tại root trước khi chạy. Không dùng đoạn này để thay bộ secrets của máy đã có database.
 
@@ -49,7 +49,8 @@ $state = if ([IO.Path]::IsPathRooted($statePath)) { [IO.Path]::GetFullPath($stat
 $tokenNames = @('query', 'inspect', 'builder', 'egress')
 $tokenFiles = @($tokenNames | ForEach-Object { Join-Path $state "$_.token" })
 foreach ($entry in @(@('KAG_CREDENTIALS_WRITE_SECRET_FILE', 'credentials-write'),
-                     @('KAG_PROVIDER_TEST_SECRET_FILE', 'provider-test'), @('KAG_CONFIG_APPLY_SECRET_FILE', 'config-apply'))) {
+                     @('KAG_PROVIDER_TEST_SECRET_FILE', 'provider-test'), @('KAG_CONFIG_APPLY_SECRET_FILE', 'config-apply'),
+                     @('KAG_BENCHMARK_WRITE_SECRET_FILE', 'benchmark-write'))) {
     $setting = [regex]::Match($content, "(?m)^$($entry[0])=([^\r\n]+)")
     $path = if ($setting.Success) { $setting.Groups[1].Value.Trim().Trim([char]34, [char]39) } else { "../luatgt-state/$($entry[1]).token" }
     $tokenFiles += if ([IO.Path]::IsPathRooted($path)) { [IO.Path]::GetFullPath($path) } else { [IO.Path]::GetFullPath((Join-Path $PWD.Path $path)) }
@@ -93,9 +94,10 @@ Write-Host 'Đã chuẩn bị .env và token; giữ nguyên các file đã có. 
 Kết quả mặc định:
 
 - `.env`: mật khẩu và biến triển khai; xem `ADMIN_EMAIL`/`ADMIN_PASSWORD` để đăng nhập.
-- `.secrets/`: bảy file `query.token`, `inspect.token`, `builder.token`, `egress.token`, `credentials-write.token`, `provider-test.token`, `config-apply.token`.
+- `../luatgt-state/`: bốn file `query.token`, `inspect.token`, `builder.token`, `egress.token` theo `KAG_STATE_DIR`.
+- `.secrets/`: bốn file `credentials-write.token`, `provider-test.token`, `config-apply.token`, `benchmark-write.token` theo các biến `KAG_*_SECRET_FILE`.
 
-Đường dẫn thực tế lấy từ `KAG_STATE_DIR` và ba biến `KAG_*_SECRET_FILE` trong `.env`. Dùng đường dẫn tương đối với root repository hoặc tuyệt đối, dùng dấu `/` trên Windows. Nếu đổi thư mục secrets cho cài mới, sửa cả bốn biến trước khi chạy đoạn lệnh; không dùng cú pháp tham chiếu biến trong các đường dẫn của đoạn PowerShell này. Cài đặt cũ giữ nguyên đường dẫn và fallback `../luatgt-state`, không tự chuyển file. Không commit `.env`, token hoặc backup; giới hạn quyền đọc cho người vận hành và Docker Desktop. Giữ chúng khi cập nhật.
+Đường dẫn thực tế lấy từ `KAG_STATE_DIR` và bốn biến `KAG_*_SECRET_FILE` trong `.env`. Dùng đường dẫn tương đối với root repository hoặc tuyệt đối, dùng dấu `/` trên Windows. Nếu đổi thư mục secrets cho cài mới, sửa cả năm biến trước khi chạy đoạn lệnh; không dùng cú pháp tham chiếu biến trong các đường dẫn của đoạn PowerShell này. Cài đặt cũ giữ nguyên đường dẫn và fallback `../luatgt-state`, không tự chuyển file. Không commit `.env`, token hoặc backup; giới hạn quyền đọc cho người vận hành và Docker Desktop. Giữ chúng khi cập nhật.
 
 Có thể mở cấu hình tại máy riêng:
 
@@ -103,7 +105,7 @@ Có thể mở cấu hình tại máy riêng:
 notepad .env
 ```
 
-Đổi email Admin trước lần khởi động đầu nếu muốn. Mặc định project là `luatgt`, state là `./.secrets`. Không đổi mật khẩu trong `.env` để đặt lại tài khoản/database đã tồn tại.
+Đổi email Admin trước lần khởi động đầu nếu muốn. Mặc định project là `luatgt`, state là `../luatgt-state`. Không đổi mật khẩu trong `.env` để đặt lại tài khoản/database đã tồn tại.
 
 Nếu máy đang có installation khác, đặt `COMPOSE_PROJECT_NAME` mới và các cổng chưa dùng trong `.env` **trước khi khởi động**; tên project riêng không tự tách cổng host. Xem [cổng và mạng](../docker/README.md#cổng-và-mạng). Không đặt các biến storage về volumes của installation kia.
 
@@ -133,7 +135,7 @@ Cài mới chưa tự nạp dữ liệu nghiệp vụ hoặc graph. Nguồn lu�
 
 - **Học/thi:** nhập và xuất bản câu hỏi, ảnh, biển báo theo [USER-GUIDE](USER-GUIDE.md#adminpolice--nội-dung).
 - **Dựng graph:** theo [Builder](runner.md) để tạo Knowledge Base, chọn project và chuẩn bị cấu trúc dữ liệu/index trên UI.
-- **Hỏi luật bằng Chat:** xem **Dữ liệu nguồn**, dựng graph bằng Builder, lưu/kiểm model tại **Cài đặt hệ thống → Model & tìm kiếm**, rồi [chọn graph và xác nhận dùng cho Chat](runner.md#chọn-graph-phục-vụ-truy-xuấtchat). Nhánh dataset dùng nguồn đi cùng graph, không phải nhập lại MySQL. Máy mới cần tự cấu hình model/provider và project của mình; chưa cấu hình thì UI hướng dẫn, không dùng graph mẫu. Build xong chưa tự đổi graph phục vụ.
+- **Hỏi luật bằng Chat:** xem **Dữ liệu nguồn KAG**, lưu và kiểm Embedding tại **Chatbot → Model & API key** TRƯỚC khi Build. Build cần vector theo model đã chọn, mặc định cấu hình hiện tại 3072 chiều; dimension phải khớp index. Sau đó dựng graph bằng Builder, lưu/kiểm Chat và [chọn graph, xác nhận dùng cho Chat](runner.md#chọn-graph-phục-vụ-truy-xuấtchat). Nhánh dataset dùng nguồn đi cùng graph, không phải nhập lại MySQL. Máy mới tự cấu hình model/provider và project của mình; chưa cấu hình thì UI hướng dẫn, không dùng graph mẫu. Build xong chưa tự đổi graph phục vụ.
 - **Quản trị OpenSPG/Neo4j:** [URL và tài khoản](../docker/README.md#truy-cập-quản-trị-openspg-và-neo4j). Các tài khoản này độc lập với WebApp.
 
 Các thao tác kiểm model, lưu model/Knowledge Base trong OpenSPG và dựng graph có thể gọi dịch vụ model tính phí. Khởi động ứng dụng không yêu cầu tự chạy các thao tác này.

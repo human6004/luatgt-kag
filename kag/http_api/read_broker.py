@@ -40,7 +40,7 @@ _READONLY = {
 class BrokerFailure(Exception):
     def __init__(self,status=400):
         self.status = status
-        super().__init__('Sample read denied.')
+        super().__init__('Read denied.')
 
 
 class _OversizedResponse(BrokerFailure, GraphResponseTooLarge):
@@ -266,7 +266,7 @@ def _constant(value):
 
 
 class _Handler(BaseHTTPRequestHandler):
-    server_version,sys_version = 'SampleReadBroker',''
+    server_version,sys_version = 'ReadBroker',''
     def log_message(self,*args): pass
     def send_error(self,code,message=None,explain=None): self._reply(code,{'error':'DENIED'})
     def _reply(self,status,value):
@@ -337,7 +337,7 @@ def main():
             os.environ['KAG_BROKER_DATABASE_ID'],os.environ['KAG_BROKER_SERVER_ID'])
         with BrokerHTTPServer((host,port),policy) as server: server.serve_forever()
     except KeyboardInterrupt: pass
-    except Exception: raise SystemExit('Sample read broker unavailable.') from None
+    except Exception: raise SystemExit('Read broker unavailable.') from None
 
 
 if __name__ == '__main__': main()

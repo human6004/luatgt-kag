@@ -9,6 +9,8 @@ from datetime import datetime, timedelta
 from ipaddress import ip_address
 import os
 import math
+import re
+import tempfile
 from pathlib import Path
 import time
 from uuid import uuid4
@@ -55,7 +57,7 @@ class ApiSettings:
             return tuple(result)
         return cls(ServiceSecrets(tokens('KAG_HTTP_QUERY_'), tokens('KAG_HTTP_INSPECT_'),
                                   tokens('KAG_HTTP_CREDENTIALS_WRITE_'), tokens('KAG_HTTP_PROVIDER_TEST_'),
-                                  tokens('KAG_HTTP_CONFIG_APPLY_')))
+                                  tokens('KAG_HTTP_CONFIG_APPLY_'), tokens('KAG_HTTP_BENCHMARK_WRITE_')))
 
 
 def _failure(request: Request, code: str, *, status=None, extra=None):
@@ -66,7 +68,7 @@ def _failure(request: Request, code: str, *, status=None, extra=None):
     if extra:
         body.update(extra)
     response_status = failure.status if status is None else status
-    if request.method == 'POST' and request.scope['path'] in ('/v1/query', '/v1/query/stream'):
+    if request.method == 'POST' and request.scope['path'] == '/v1/query':
         print('KAG_QUERY_FAILURE '+json.dumps({
             'request_id': request.state.request_id, 'code': failure.code, 'status': response_status,
             'elapsed_ms': round(max(0, time.monotonic()-getattr(request.state, 'request_started', time.monotonic()))*1000, 3)
@@ -270,9 +272,14 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
         restore_serving(application)
         application.state.runtime_settings = application.state.runtime_supervisor.restore_llm_runtime(
             application.state.runtime_settings, application.state.serving_release, application.state.provider_test_policy)
+        if settings.secrets.query_tokens or settings.secrets.inspect_tokens:observe_serving()
         try:
             yield
         finally:
+            if application.state.serving_task is not None:
+                application.state.serving_task.cancel()
+                try:await application.state.serving_task
+                except asyncio.CancelledError:pass
             await application.state.runtime_supervisor.close()
 
     app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None, debug=False)
@@ -282,6 +289,8 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
     app.state.runtime_settings = None
     app.state.evaluation_root = None
     app.state.provider_test_policy = None
+    app.state.serving_task = None
+    app.state.serving_pending = False
     from .inspection import configuration_view
     app.state.config_snapshot = configuration_view({}, {})
     app.state.solver_defaults = None
@@ -292,7 +301,9 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
         from kag.builder.serving import release_root
         supervisor=application.state.runtime_supervisor
         selected=(supervisor._llm_config or {}).get('serving')
-        if selected is None:return
+        if selected is None:
+            application.state.serving_release=None;application.state.runtime_settings=None
+            return
         try:
             release=artifacts.load_release(release_root(selected['release_id']),selected['release_id'])
             application.state.serving_release=release
@@ -303,27 +314,33 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
         except Exception:
             application.state.serving_release=None;application.state.runtime_settings=None
 
-    def worker_request(path,request,body=None):
+    def worker_request(path,request,body=None,*,benchmark=False,stop=False):
         import json
         from urllib.request import Request as Outgoing,build_opener,ProxyHandler
         from urllib.error import HTTPError
         from kag.verify import _NoRedirect
         values=request.headers.getlist('x-openspg-session')
-        token=(settings.secrets.config_apply_tokens if body is not None and path!='/trial' else settings.secrets.inspect_tokens)
+        token=(settings.secrets.benchmark_write_tokens if benchmark and (body is not None or stop) else
+               settings.secrets.config_apply_tokens if not benchmark and body is not None and path!='/trial' else settings.secrets.inspect_tokens)
         if not token:raise ApiFailure('SCOPE_DENIED')
-        outgoing=Outgoing('http://openspg-server:8010/v1/serving'+path,
+        outgoing=Outgoing('http://openspg-server:8010/v1/'+('benchmark/runs' if benchmark else 'serving')+path,
             data=artifacts.canonical_json(body).encode() if body is not None else None,
+            method='POST' if stop else None,
             headers={'Authorization':'Bearer '+token[0],'Content-Type':'application/json',
                 'X-OpenSPG-Session':values[0] if len(values)==1 else ''})
         try:
             with build_opener(ProxyHandler({}),_NoRedirect()).open(outgoing,timeout=120) as response:
-                raw=response.read(245761)
-            if len(raw)>245760:raise ApiFailure('RESULT_LIMIT_EXCEEDED')
+                raw=response.read((2*1024*1024 if benchmark else 245760)+1)
+            if len(raw)>(2*1024*1024 if benchmark else 245760):raise ApiFailure('RESULT_LIMIT_EXCEEDED')
             return artifacts._json(raw)
         except HTTPError as error:
-            try:code=artifacts._json(error.read(65537)).get('error',{}).get('code')
+            try:
+                failure=artifacts._json(error.read(65537))
+                code=failure.get('error',{}).get('code') or failure.get('detail')
+                if code=='LOCK':code='CONFIG_BUSY'
             except Exception:code=None
-            raise ApiFailure(code if code in ('CONFIG_BUSY','CONFIG_CONFLICT','SCOPE_DENIED','RELEASE_MISMATCH','NOT_READY') else 'NOT_READY') from None
+            raise ApiFailure(code if code in ('CONFIG_BUSY','CONFIG_CONFLICT','SCOPE_DENIED','RELEASE_MISMATCH','NOT_READY',
+                'INVALID_REQUEST','REQUEST_TOO_LARGE','RESULT_LIMIT_EXCEEDED') else 'NOT_READY') from None
 
     def sample_guard(request, release, runtime_settings):
         if (time.monotonic() >= request.state.request_deadline
@@ -405,17 +422,47 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
     if not (settings.secrets.query_tokens or settings.secrets.inspect_tokens):
         return app
 
+    def reload_serving():
+        supervisor=app.state.runtime_supervisor
+        supervisor.load_llm_config(settings.secrets);restore_serving(app)
+        app.state.runtime_settings=supervisor.restore_llm_runtime(app.state.runtime_settings,
+            app.state.serving_release,app.state.provider_test_policy)
+        if getattr(supervisor,'_serving_uncertain',False):supervisor.closed=False
+        supervisor._serving_action=False;supervisor._serving_uncertain=False
+
+    async def watch_serving():
+        from .runtime import LLM_CONFIG_PATH
+        from kag.builder.serving import model_store
+        supervisor=app.state.runtime_supervisor
+        while True:
+            try:
+                if not app.state.serving_pending and LLM_CONFIG_PATH.exists():
+                    saved=(await asyncio.to_thread(model_store))._llm_config
+                    if app.state.serving_pending:continue
+                    status=Path(os.environ.get('KAG_BUILDER_STATE_DIR','/builder-state'))/'serving.json'
+                    operation=artifacts._json(status.read_bytes()) if status.exists() else {}
+                    preparing=operation.get('state')=='PREPARING'
+                    if saved!=supervisor._llm_config or not preparing and (getattr(supervisor,'_serving_uncertain',False) or supervisor._serving_action):
+                        reload_serving()
+                    if preparing:supervisor._serving_action=True
+            except asyncio.CancelledError:raise
+            except Exception:
+                supervisor._serving_uncertain=True;supervisor.closed=True
+            await asyncio.sleep(1)
+
+    def observe_serving():
+        if app.state.serving_task is None or app.state.serving_task.done():
+            app.state.serving_task=asyncio.create_task(watch_serving())
+
     @app.get('/v1/serving')
     async def serving_catalog(request: Request):
         authorize(request_principal(request),'inspect',None)
         if request.query_params:raise ApiFailure('INVALID_REQUEST')
         supervisor=app.state.runtime_supervisor
         value=await asyncio.to_thread(worker_request,'',request)
-        if getattr(supervisor,'_serving_uncertain',False) and not value['busy']:
-            supervisor.load_llm_config(settings.secrets);restore_serving(app)
-            app.state.runtime_settings=supervisor.restore_llm_runtime(app.state.runtime_settings,
-                app.state.serving_release,app.state.provider_test_policy)
-            supervisor.closed=False;supervisor._serving_action=False;supervisor._serving_uncertain=False
+        if not value['busy']:
+            if not app.state.serving_pending and (getattr(supervisor,'_serving_uncertain',False) or value['active']!=(supervisor._llm_config or {}).get('serving')):
+                reload_serving()
         release=app.state.serving_release
         from kag.builder.serving import chat_blockers
         blockers=chat_blockers(release) if type(release) is artifacts.ServingRelease and release.release_kind=='PRODUCTION' else ['GRAPH_REQUIRED']
@@ -428,27 +475,34 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
     @app.post('/v1/serving/{action}')
     async def serving_action(action: str,request: Request):
         authorize(request_principal(request),'config-apply',None)
-        if action not in ('preview','activate') or request.query_params:raise ApiFailure('INVALID_REQUEST')
+        if action not in ('preview','activate','deactivate') or request.query_params:raise ApiFailure('INVALID_REQUEST')
         body=artifacts._json(await bounded_body(request,limit=32*1024*1024))
         supervisor=app.state.runtime_supervisor
-        if supervisor.busy or supervisor._provider_test_task or supervisor._serving_action:raise ApiFailure('CONFIG_BUSY')
+        if (action!='deactivate' and supervisor.busy) or supervisor._provider_test_task or supervisor._serving_action:raise ApiFailure('CONFIG_BUSY')
         supervisor._serving_action=True
+        app.state.serving_pending=True
+        observe_serving()
         async def operation():
+            accepted=False
             try:
-                return await asyncio.to_thread(worker_request,'/'+action,request,body)
+                value=await asyncio.to_thread(worker_request,'/'+action,request,body)
+                if action=='activate' and value.get('contract_version')=='builder-serving-operation-v1':
+                    if value.get('state')!='PREPARING':raise ApiFailure('NOT_READY')
+                    accepted=True
+                    return JSONResponse(value,status_code=202)
+                return value
             except ApiFailure:raise
-            except Exception:
+            except (Exception,asyncio.CancelledError):
                 supervisor._serving_uncertain=True;supervisor.closed=True
                 raise ApiFailure('BACKEND_UNAVAILABLE') from None
             finally:
-                if not getattr(supervisor,'_serving_uncertain',False):
-                    supervisor.load_llm_config(settings.secrets);restore_serving(app)
-                    app.state.runtime_settings=supervisor.restore_llm_runtime(app.state.runtime_settings,
-                        app.state.serving_release,app.state.provider_test_policy)
-                    supervisor._serving_action=False
-        try:return await supervisor.supervise(operation,time.monotonic()+180)
+                app.state.serving_pending=False
+                if not accepted and not getattr(supervisor,'_serving_uncertain',False):reload_serving()
+        try:return await operation() if action=='deactivate' else await supervisor.supervise(operation,time.monotonic()+180)
         except Exception:
-            if not supervisor.busy and not getattr(supervisor,'_serving_uncertain',False):supervisor._serving_action=False
+            if not supervisor.busy:
+                app.state.serving_pending=False
+                if not getattr(supervisor,'_serving_uncertain',False):supervisor._serving_action=False
             raise
 
     @app.post('/v1/serving/trial/{project_id}/{run_id}')
@@ -589,6 +643,165 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
         from .inspection import dataset_catalog
         return await asyncio.to_thread(dataset_catalog, app.state.evaluation_root)
 
+    @app.post('/v1/benchmark/runs')
+    async def start_benchmark(request: Request):
+        authorize(request_principal(request),'benchmark-write',None)
+        if request.query_params:
+            raise ApiFailure('INVALID_REQUEST')
+        raw=await bounded_body(request)
+        try:
+            body=artifacts._json(raw)
+        except (artifacts.ArtifactFailure,ValueError,UnicodeError):
+            raise ApiFailure('INVALID_JSON') from None
+        contract._object(body,('dataset_id','project_id','run_id','mode','limit'))
+        value=await asyncio.to_thread(worker_request,'',request,body,benchmark=True)
+        return JSONResponse(value,status_code=202,headers={'Cache-Control':'no-store'})
+
+    @app.get('/v1/benchmark/runs/{job_id}')
+    async def benchmark_status(job_id: str,request: Request):
+        authorize(request_principal(request),'inspect',None)
+        if request.query_params or not re.fullmatch('[0-9a-f]{32}',job_id) or request.headers.get('transfer-encoding') or request.headers.get('content-length','0')!='0':
+            raise ApiFailure('INVALID_REQUEST')
+        return await asyncio.to_thread(worker_request,'/'+job_id,request,benchmark=True)
+
+    @app.post('/v1/benchmark/runs/{job_id}/stop')
+    async def stop_benchmark(job_id: str,request: Request):
+        authorize(request_principal(request),'benchmark-write',None)
+        if request.query_params or not re.fullmatch('[0-9a-f]{32}',job_id) or request.headers.get('transfer-encoding') or request.headers.get('content-length','0')!='0':
+            raise ApiFailure('INVALID_REQUEST')
+        return await asyncio.to_thread(worker_request,'/'+job_id+'/stop',request,benchmark=True,stop=True)
+
+    def benchmark_root():
+        root = app.state.evaluation_root
+        if root is None:
+            raise ApiFailure('NOT_READY')
+        root = Path(root)
+        if not root.is_absolute() or root.is_symlink() or not root.is_dir():
+            raise ApiFailure('NOT_READY')
+        return root
+
+    template_cache = []
+
+    @app.get('/v1/benchmark/template')
+    async def benchmark_template(request: Request):
+        authorize(request_principal(request), 'inspect', None)
+        if request.query_params:
+            raise ApiFailure('INVALID_REQUEST')
+        if not template_cache:
+            from kag.evaluation.dataset import dataset_from_records, strict_json
+            from kag.evaluation.models import ValidationError
+            try:
+                raw = (Path(__file__).with_name('benchmark_template.json')).read_bytes()
+                records = [record.to_dict() for record in dataset_from_records(strict_json(raw.decode('utf-8'))).records]
+            except (OSError, ValueError, UnicodeError, ValidationError, RecursionError):
+                raise ApiFailure('NOT_READY') from None
+            template_cache.append(records)
+        return JSONResponse(template_cache[0], headers={'Content-Disposition':'attachment; filename="benchmark-template.json"'})
+
+    benchmark_write_lock = asyncio.Lock()
+
+    @app.post('/v1/benchmark/datasets')
+    async def import_benchmark(request: Request):
+        authorize(request_principal(request), 'benchmark-write', None)
+        root = benchmark_root()
+        names = request.query_params.getlist('name')
+        if (set(request.query_params) != {'name'} or len(names) != 1
+                or not re.fullmatch(r'[A-Za-z0-9_.-]{1,64}', names[0]) or '..' in names[0] or names[0] == '.'):
+            raise ApiFailure('INVALID_REQUEST')
+        from kag.evaluation.dataset import strict_json, dataset_from_records
+        from kag.evaluation.models import ValidationError
+        try:
+            values = strict_json((await bounded_body(request, limit=8*1024*1024)).decode('utf-8'))
+        except (ValueError, UnicodeError, ValidationError, RecursionError):
+            raise ApiFailure('INVALID_JSON') from None
+        if type(values) is not list:
+            return JSONResponse([dict(index=0, field='', code='ARRAY_REQUIRED', message='Cần một JSON array.')], status_code=422)
+        if len(values) > 512:
+            raise ApiFailure('REQUEST_TOO_LARGE')
+        try:
+            validated = dataset_from_records(values)
+        except ValidationError as failure:
+            issues = [dict(index=issue.line-1, field=issue.field, code=issue.code,
+                message=f'{issue.code}: {issue.field}') for issue in failure.issues]
+            return Response(json.dumps(issues, ensure_ascii=True), media_type='application/json', status_code=422)
+        raw = validated.canonical_bytes
+        from .inspection import LIMIT_BYTES
+        if len(raw) > LIMIT_BYTES:
+            raise ApiFailure('REQUEST_TOO_LARGE')
+        target = root/names[0]
+
+        def store():
+            try:
+                target.mkdir()
+            except FileExistsError:
+                return 409
+            temporary = None
+            try:
+                from .inspection import _files
+                if len(_files(root)) >= 20:
+                    target.rmdir()
+                    return 413
+                with tempfile.NamedTemporaryFile(dir=target, delete=False) as stream:
+                    temporary = Path(stream.name)
+                    stream.write(raw)
+                    stream.flush()
+                    os.fsync(stream.fileno())
+                os.replace(temporary, target/'eval_questions.jsonl')
+            except (OSError, OverflowError):
+                if temporary is not None:
+                    temporary.unlink(missing_ok=True)
+                target.rmdir()
+                raise
+            return 201
+
+        try:
+            async with benchmark_write_lock:
+                status = await asyncio.to_thread(store)
+        except OverflowError:
+            raise ApiFailure('REQUEST_TOO_LARGE') from None
+        except OSError:
+            raise ApiFailure('NOT_READY') from None
+        if status == 409:
+            return JSONResponse({'message':'Tên bộ câu hỏi đã tồn tại.'}, status_code=409)
+        if status == 413:
+            raise ApiFailure('REQUEST_TOO_LARGE')
+        from collections import Counter
+        return JSONResponse(dict(id=f'{names[0]}/eval_questions.jsonl', record_count=len(validated.records),
+            category_counts=dict(Counter(record.category for record in validated.records))), status_code=201)
+
+    @app.get('/v1/benchmark/datasets/{dataset_id:path}/export')
+    async def export_benchmark(dataset_id: str, request: Request):
+        authorize(request_principal(request), 'inspect', None)
+        if request.query_params:
+            raise ApiFailure('INVALID_REQUEST')
+        root = benchmark_root()
+        parts = dataset_id.split('/')
+        if (len(parts) > 2 or any(not re.fullmatch(r'[A-Za-z0-9_.-]{1,128}', part)
+                or '..' in part or part == '.' for part in parts)
+                or len(parts) == 2 and parts[1] != 'eval_questions.jsonl'):
+            raise ApiFailure('INVALID_REQUEST')
+        path = root.joinpath(*parts)
+        if path.is_dir():
+            path = path/'eval_questions.jsonl'
+        if (any(root.joinpath(*path.relative_to(root).parts[:i]).is_symlink()
+                for i in range(1, len(path.relative_to(root).parts)+1)) or not path.is_file()):
+            return JSONResponse({'message':'Không tìm thấy bộ câu hỏi.'}, status_code=404)
+        from kag.evaluation.dataset import strict_json
+
+        def read_records():
+            with path.open('rb') as stream:
+                raw = stream.read(16*1024*1024+1)
+            if len(raw) > 16*1024*1024:
+                raise ApiFailure('RESULT_LIMIT_EXCEEDED')
+            return [strict_json(line) for line in raw.decode('utf-8').splitlines() if line.strip()]
+
+        try:
+            records = await asyncio.to_thread(read_records)
+        except (OSError, ValueError, UnicodeError, RecursionError):
+            raise ApiFailure('NOT_READY') from None
+        filename = parts[0].removesuffix('.jsonl') if len(parts) == 1 and parts[0].endswith('.jsonl') else parts[0]
+        return JSONResponse(records, headers={'Content-Disposition':f'attachment; filename="{filename}.json"'})
+
     @app.get('/v1/graph/release')
     async def graph_release(request: Request):
         principal = request_principal(request)
@@ -620,7 +833,7 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
             if len(raw)>245760:raise ApiFailure('RESULT_LIMIT_EXCEEDED')
             return Response(raw,media_type='application/json',headers={'X-KAG-Release-ID':release.release_id})
 
-    async def verified_query(request: Request, *, stream=False):
+    async def verified_query(request: Request):
         from . import runtime as core
         release, settings = app.state.serving_release, app.state.runtime_settings
         supervisor = getattr(app.state,'runtime_supervisor',None)
@@ -693,10 +906,6 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                     if exc.code == 'V1_RESULT_UNREPRESENTABLE':
                         raise ApiFailure('RESULT_LIMIT_EXCEEDED') from None
                     raise
-                if stream:
-                    raw = b'event: done\ndata: '+raw+b'\n\n'
-                    if len(raw) > 245760:
-                        raise ApiFailure('RESULT_LIMIT_EXCEEDED')
                 if sources() != verified:
                     raise ApiFailure('SOURCE_VALIDATION_FAILED')
                 request.state.authority_guard = identity
@@ -726,9 +935,6 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
             if time.monotonic() >= request.state.request_deadline:
                 raise ApiFailure('QUERY_TIMEOUT')
             request.state.query_verified, request.state.query_as_of = True, as_of
-            if stream:
-                headers['X-Accel-Buffering'] = 'no'
-                return Response(raw,media_type='text/event-stream',headers=headers)
             return Response(raw,media_type='application/json',headers=headers)
         except core.RuntimeFailure as exc:
             raise ApiFailure(exc.code) from None
@@ -786,10 +992,6 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                     operation.cancel()
                 watcher.cancel()
                 await asyncio.gather(operation,watcher,return_exceptions=True)
-
-        @app.post('/v1/query/stream')
-        async def query_stream(request: Request):
-            return await verified_query(request,stream=True)
 
         @app.post('/v1/retrieve')
         async def retrieve(request: Request):

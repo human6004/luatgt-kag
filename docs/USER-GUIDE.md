@@ -52,7 +52,7 @@ Danh sách lấy từ nội dung đã xuất bản. Danh sách rỗng không kh�
 
 ### Nhập, kiểm duyệt và xuất bản
 
-1. Mở **Văn bản & tri thức KAG**, **Đơn vị pháp lý**, **Ngân hàng câu hỏi** hoặc **Biển báo**; thêm/sửa bản nháp, giữ đúng mã nguồn và cây văn bản/đơn vị. Tệp văn bản nhận PDF; ảnh nhận PNG/JPEG.
+1. Mở **Nội dung luật**, **Đơn vị pháp lý**, **Ngân hàng câu hỏi** hoặc **Biển báo**; thêm/sửa bản nháp, giữ đúng mã nguồn và cây văn bản/đơn vị. Tệp văn bản nhận PDF; ảnh nhận PNG/JPEG.
 2. Đối chiếu nguồn, nội dung, ngày áp dụng; với câu hỏi, kiểm thêm đáp án, điểm liệt và ảnh. Lưu xác nhận kiểm duyệt.
 3. Chọn **Duyệt/Xuất bản** hoặc **Duyệt và xuất bản các câu đã chọn**. Chỉ xuất bản bản ghi đã kiểm; dùng nút ngừng xuất bản khi cần gỡ khỏi phạm vi người dùng thấy.
 
@@ -60,9 +60,9 @@ Xuất bản trên WebApp không tự cập nhật graph KAG. Nguồn chatbot ph
 
 ### Nhập nhiều bản ghi
 
-1. Với câu hỏi, vào **Ngân hàng câu hỏi → Bộ câu hỏi và quy tắc đề thi** để tạo bộ riêng cho 250 và 600 câu. Ngày ban hành/hiệu lực chưa xác minh có thể để trống. Mở **Nhập dữ liệu hàng loạt**, chọn loại dữ liệu và bộ đích trước khi chọn JSON/CSV/XLSX; xem trước dòng hợp lệ/lỗi và chọn có cập nhật mã đã tồn tại hay không. Hai bộ có thể cùng mã nguồn `Q001` mà không ghi đè nhau.
-2. Với đơn vị pháp lý, chọn loại **Đơn vị pháp lý** trong **Nhập dữ liệu hàng loạt**. Nhập văn bản nguồn trước; `doc_id` phải khớp văn bản đã có và đơn vị cha phải thuộc cùng văn bản. Xem trước dữ liệu trước khi xác nhận.
-3. Chọn **Xác nhận nhập … dòng hợp lệ**. Kết quả báo số thêm/cập nhật/bỏ qua; bản ghi được lưu ở dạng nháp và cần kiểm duyệt trước khi xuất bản.
+1. Với câu hỏi, vào **Ngân hàng câu hỏi → Bộ câu hỏi và quy tắc đề thi** để tạo bộ riêng cho 250 và 600 câu. Ngày ban hành/hiệu lực chưa xác minh có thể để trống. Mở **Nhập hàng loạt**, chọn loại dữ liệu và bộ đích trước khi chọn JSON/CSV/XLSX; xem trước dòng hợp lệ/lỗi và chọn có cập nhật mã đã tồn tại hay không. Hai bộ có thể cùng mã nguồn `Q001` mà không ghi đè nhau.
+2. Với đơn vị pháp lý, chọn loại **Đơn vị pháp lý** trong **Nhập hàng loạt**. Nhập văn bản nguồn trước; `doc_id` phải khớp văn bản đã có và đơn vị cha phải thuộc cùng văn bản. Xem trước dữ liệu trước khi xác nhận.
+3. Chọn **Xác nhận nhập bản nháp**. Kết quả báo số thêm/cập nhật/bỏ qua; bản ghi được lưu ở dạng nháp và cần kiểm duyệt trước khi xuất bản.
 4. Với câu hỏi/biển báo, ghép ZIP ảnh PNG/JPEG theo mã sau khi nhập bản ghi rồi kiểm ảnh chưa ghép được. Câu hỏi ghép ảnh vào bộ đã chọn; biển báo ghép ảnh trong màn nhập. Đáp án JSON bắt đầu từ 0; CSV/XLSX dùng 1–4. Ngân hàng nháp đi kèm: [250 câu](../WebApp/docs/250/) và [600 câu](../WebApp/docs/600/); mỗi bộ 250/600 có `questions-draft.json` và `question-images.zip`.
 5. Nhập quy tắc đề theo hạng, bộ và thời kỳ trong **Ngân hàng câu hỏi**. Sáu quota là số câu thường từng chương; cộng số câu điểm liệt phải bằng tổng câu. Không tự lấy quy tắc hạng B áp dụng cho A/A1. Muốn đổi thời kỳ, kết thúc hiệu lực quy tắc cũ vào ngày tương lai và tạo quy tắc mới từ ngày đó; điểm bài cũ không bị chấm lại.
 
@@ -70,19 +70,19 @@ Câu/đáp án đã có lượt luyện hoặc thi được giữ nguyên theo p
 
 ### Xử lý phản hồi chat
 
-**Bước 1:** tại **Phản hồi chat**, chỉ đọc những lượt hỏi được người dùng báo **Câu trả lời sai**, **Thiếu căn cứ** hoặc **Thông tin lỗi thời**; ghi chú và đánh dấu đã xử lý. Chat chưa được báo cáo và phản hồi **Hữu ích** không hiển thị cho ADMIN/POLICE. Lịch sử riêng vẫn được giữ cho chính người dùng. Thao tác không tự hỏi lại hoặc sửa graph.
+**Bước 1:** tại **Nhật ký chat**, chỉ đọc những lượt hỏi được người dùng báo **Câu trả lời sai**, **Thiếu căn cứ** hoặc **Thông tin lỗi thời**; ghi chú và đánh dấu đã xử lý. Chat chưa được báo cáo và phản hồi **Hữu ích** không hiển thị cho ADMIN/POLICE. Lịch sử riêng vẫn được giữ cho chính người dùng. Thao tác không tự hỏi lại hoặc sửa graph.
 
 ## ADMIN — Tài khoản
 
 Mở **Người dùng**, tìm tài khoản rồi đổi vai trò **Người học/Cảnh sát** hoặc bật/khóa trạng thái. Thay đổi được lưu ở backend; đổi quyền thu hồi phiên cũ, người đó cần đăng nhập lại.
 
-Tài khoản ADMIN dùng cơ chế khởi tạo riêng, không đổi vai trò/khóa tại đây. **Mời người dùng**, **Đặt lại MK** và **Xoá** có nhãn Demo, chưa thực hiện lên tài khoản server.
+Để ngừng sử dụng tài khoản, tắt **Kích hoạt**; hệ thống thu hồi phiên hiện có và giữ dữ liệu. Tài khoản ADMIN dùng cơ chế khởi tạo riêng, không đổi vai trò/khóa tại đây.
 
 ## ADMIN — KAG và hạ tầng
 
 ### Cấu hình model
 
-Mở **Cài đặt hệ thống → Model & tìm kiếm → Kết nối model**. Chat và Embedding có cấu hình độc lập; giao diện phân biệt đã lưu, kết quả kiểm kết nối và bản đang dùng:
+Mở **Chatbot → Model & API key**. Chat và Embedding có cấu hình độc lập; giao diện phân biệt đã lưu, kết quả kiểm kết nối và bản đang dùng:
 
 1. Chọn **Provider / API type**, điền **Base URL**, **Tên model** và **API key**. Hiện hỗ trợ OpenAI-compatible; provider/proxy do Base URL quyết định, không bắt buộc EvelProxy.
 2. Bấm **Lưu Chat** hoặc **Lưu Embedding**. Sau lần đầu, để trống API key để giữ key đã lưu; nhập key mới để thay. Lưu không gọi model hoặc tự áp dụng vào Chat.
@@ -97,45 +97,43 @@ Lưu lỗi thì đọc thông báo và giữ bản đang soạn; chỉ coi là �
 
 ### Mặc định truy xuất cho Chat
 
-Trong **Model & tìm kiếm → Tùy chọn tìm kiếm**, chỉnh **Số kết quả nguồn** từ 1–10 và **Tìm thêm nội dung liên quan**. **Lưu** giữ cấu hình, **Áp dụng** dùng cho các lượt Chat tiếp theo, **Khôi phục** dùng bản trước. Bản chỉ lưu chưa tự có hiệu lực; khởi động lại vẫn giữ bản đang áp dụng.
+Trong **Chatbot → Đồ thị → Tùy chọn tìm kiếm**, chỉnh **Số kết quả nguồn** từ 1–10 và **Tìm thêm nội dung liên quan**. **Lưu** giữ cấu hình, **Áp dụng** dùng cho các lượt Chat tiếp theo, **Khôi phục** dùng bản trước. Bản chỉ lưu chưa tự có hiệu lực; khởi động lại vẫn giữ bản đang áp dụng.
 
 ### Builder và xem graph
 
-Mở **Dữ liệu nguồn → Bộ dữ liệu** để xem văn bản, đơn vị pháp lý, biển báo và quan hệ đi kèm. Trang chỉ đọc, phân trang, không tạo kế hoạch hoặc yêu cầu duyệt lại nguồn. **Schema & quan hệ** hiển thị cấu trúc LuậtGT đóng gói.
+Mở **Dữ liệu nguồn KAG** để xem văn bản, đơn vị pháp lý, biển báo và quan hệ đi kèm. Trang chỉ đọc, phân trang, không tạo kế hoạch hoặc yêu cầu duyệt lại nguồn. **Schema** hiển thị cấu trúc LuậtGT đóng gói.
 
-Mở **Đồ thị của tôi → Dựng mới**, theo [hướng dẫn Builder](runner.md): tạo project → chuẩn bị nguồn/cấu trúc → chọn phạm vi/model → kiểm kỹ thuật → dựng → xem kết quả. Stop/Resume và bảo vệ dữ liệu giữ nguyên. Kết quả Builder có đường về đúng project/phiên.
+Mở **Chatbot → Đồ thị → + Dựng đồ thị mới**, theo [hướng dẫn Builder](runner.md): lưu/kiểm Embedding trước, tạo project/database trống trong OpenSPG, chọn **Đồ thị trống** và **Phạm vi** rồi **Xác nhận dựng**. Chuẩn bị nguồn/cấu trúc và kiểm sẵn sàng chạy tự động. **Dừng**/**Tiếp tục** giữ điều kiện quyền và bảo vệ dữ liệu.
 
 Muốn dùng một đồ thị đã dựng cho Chat:
 
-1. Chọn **Project đang xem** và **Phiên dựng**; đọc phạm vi một phần/toàn bộ, số liệu tại **Tổng quan**. Xem graph B không đổi Chat đang dùng A.
-2. Nếu muốn, mở **Thử truy xuất**, nhập câu hỏi và gửi. Thao tác chỉ tìm nguồn trong đúng project/phiên đang chọn, có thể tính phí Embedding; không tạo câu trả lời hoặc đổi active. Không bắt buộc thử hoặc chạy benchmark trước khi áp dụng.
-3. Mở **Dùng cho Chat → Dùng cho Chat**. Hệ thống tự kiểm graph, nguồn và model. Đọc đồ thị cũ/mới rồi bấm **Xác nhận dùng cho Chat**. Thiếu model thì **Chỉnh model**, lưu/kiểm kết nối rồi **Về đồ thị đang chọn**.
-4. Sau khi backend xác nhận **Đang dùng**, bấm **Mở Chat**. Mỗi câu hỏi dùng graph/model/nguồn của lựa chọn đang áp dụng; thiếu căn cứ thì không kết luận, lỗi dịch vụ thì báo chưa khả dụng.
+1. Trong **Chatbot → Đồ thị**, bấm **Xem** ở đúng dòng graph; đọc phạm vi và số liệu, đối chiếu lịch sử tại **Chi tiết kỹ thuật phiên**. Xem graph B không đổi Chat đang dùng A.
+2. Nếu muốn, mở **Thử tìm kiếm**, nhập câu hỏi rồi bấm **Thử truy xuất**. Thao tác chỉ tìm nguồn trong đúng graph, có thể tính phí Embedding; không tạo câu trả lời hoặc đổi active. Không bắt buộc thử hoặc chạy benchmark trước khi áp dụng.
+3. Đóng màn xem, bấm **Dùng cho Chat** ở đúng dòng graph. Trong **Dùng đồ thị cho Chat**, đọc đồ thị cũ/mới và điều kiện còn thiếu rồi bấm **Xác nhận dùng cho Chat**. Thiếu model thì quay về **Model & API key**, lưu/kiểm kết nối rồi chọn lại graph.
+4. Chờ **Đang dùng cho Chat** và hết thông báo chưa sẵn sàng, rồi mở `/chat`. Mỗi câu hỏi dùng graph/model/nguồn đang áp dụng; thiếu căn cứ thì không kết luận, lỗi dịch vụ thì báo chưa khả dụng.
 
 Nhánh dataset mới không phụ thuộc nhập/xuất bản lại corpus vào MySQL. Trích dẫn phải khớp snapshot của graph; nguồn thiếu/hỏng không được thay bằng nội dung model. Release legacy vẫn giữ chính sách nguồn WebApp cũ; xem trước và xác nhận lại một phiên Builder hợp lệ để dùng contract dataset mới. Việc nâng cấp phần mềm không tự chuyển graph hoặc viết lại release cũ. **Quản lý nội dung → Văn bản/Đơn vị pháp lý** giữ nghiệp vụ riêng.
 
 Chuyển thất bại giữ graph cũ. Mất phản hồi thì **Tải lại** trạng thái trước khi thử lại. Chi tiết runtime, revision, fingerprint và JSON nằm trong **Chi tiết kỹ thuật**. Xem [hướng dẫn chọn graph](runner.md#chọn-graph-phục-vụ-truy-xuấtchat).
 
+### Chia sẻ đồ thị
+
+Mở **Chatbot → Đồ thị**, chọn phiên đã dựng PASS thuộc project của bạn rồi **Xuất gói**. Chép ZIP từ thư mục hiển thị sang thư mục `graph-packages` của máy nhận; không upload/download bằng trình duyệt. Gói chỉ chứa vector và provenance cần dựng lại, không chứa database hoặc thông tin kết nối/bí mật của máy xuất.
+
+Bấm **+ Nhập từ gói** tại **Chatbot → Đồ thị**. Trong **Nhập từ gói**, dùng **Tải lại danh sách**, chọn **Đồ thị trống** và **Gói đồ thị**, đọc ✓/✗ cùng lý do. Gói phải cùng dữ liệu nguồn, provider/model và số chiều với Embedding đã lưu/kiểm; phạm vi lấy từ gói. Bấm **Xác nhận nhập** khi đã kiểm đích trống và phạm vi. UI tự chuẩn bị cấu trúc, nhập gói, kiểm sẵn sàng và dựng. Replay không gọi API Embedding; kiểm nguồn/provenance, khóa và bảo vệ dữ liệu giữ nguyên. Dựng xong chưa tự đổi graph dùng cho Chat.
+
 ### Kiểm kết nối và thử truy xuất
 
-1. Mở **Cài đặt hệ thống → Kết nối & chẩn đoán → Kiểm tra lại**. Kết nối API được chưa chứng minh khả năng trả lời luật.
-2. Thử graph đang chọn tại **Đồ thị của tôi → Thử truy xuất**. Công cụ thử graph đang phục vụ vẫn có trong phần nâng cao của trang chẩn đoán.
+1. Mở **Kết nối & chẩn đoán → Kiểm tra lại**. Kết nối API được chưa chứng minh khả năng trả lời luật.
+2. Thử graph đang chọn tại **Chatbot → Đồ thị → Xem → Thử tìm kiếm**. Công cụ thử graph đang phục vụ vẫn có trong phần nâng cao của trang chẩn đoán.
 3. Đọc nguồn, điểm và quan hệ được trả về. Đây chưa phải kết luận luật và không đổi mặc định Chat.
 
 Ở **Benchmark**, khối **Artifact KAG · API thật** chỉ đọc số liệu đã đo; **Chưa đo** nghĩa là chưa có số liệu. Bộ đánh giá pháp lý chính thức chưa hoàn thành.
 
-## Phần Demo
+## Chức năng đang phát triển
 
-Các khối/nút ghi **Demo** dùng dữ liệu hoặc thao tác mô phỏng, không xác nhận backend thành công; nội dung luật mẫu chưa được xác minh:
+Hiện không còn nút chỉ hiện thông báo chức năng đang phát triển. Để gỡ câu hỏi khỏi phạm vi người dùng thấy, chọn **Hủy xuất bản**; bài thi và lịch sử cũ vẫn được giữ.
 
-- Chat: đính kèm ảnh, sinh câu luyện tập; học: `+10 câu`, gợi ý thông minh.
-- Thi dùng quy tắc và dữ liệu server cho các hạng đã cấu hình; không còn sinh đề hoặc điểm demo trên trình duyệt.
-- Nội dung: dán URL, trích xuất/reindex/archive/delete; sinh hoặc xóa câu hỏi là thao tác mô phỏng. Nhập metadata, tải tệp và xuất bản bản ghi thật vẫn dùng API backend.
-- Người dùng: vai trò và trạng thái dùng API thật; mời, đặt lại mật khẩu và xóa là Demo.
-- Graph: namespace khác SAMPLE thật, Cypher, export/restore/checksum.
-- Docker: form/YAML, Build/Pack/ZIP là Demo; không chạy Docker Engine. Trạng thái dịch vụ trên cùng trang đọc từ API thật.
-- Pipeline: catalog CLI, chạy toàn bộ, log/lịch sử mẫu; Benchmark: Run/Smoke và cột HybridRAG/NativeRAG.
-
-Không nhầm các phần này với form model tại **Cấu hình** hoặc Builder: hai luồng đó dùng API thật và có thể phát sinh thay đổi/phí theo thao tác xác nhận.
+Nhập, kiểm duyệt, xuất bản, thi theo cấu hình server, cấu hình model và Builder dùng API backend; các thao tác được xác nhận có thể thay đổi dữ liệu hoặc phát sinh phí.
 
 Cài mới cần dữ liệu được duyệt và [graph/provider đã chuẩn bị](../docker/README.md#cấu-hình-chatbot); container healthy không đủ để dùng chatbot.

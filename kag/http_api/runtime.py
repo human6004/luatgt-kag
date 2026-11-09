@@ -43,7 +43,16 @@ def _request_seconds():
     return seconds-TRANSPORT_SECONDS
 
 
+def _benchmark_transport_seconds():
+    message = 'KAG_BENCHMARK_TRANSPORT_SECONDS must be a number from 5 to 600'
+    try: seconds=float(os.environ.get('KAG_BENCHMARK_TRANSPORT_SECONDS','60'))
+    except ValueError: raise ValueError(message) from None
+    if not 5<=seconds<=600:raise ValueError(message)
+    return seconds
+
+
 REQUEST_SECONDS = _request_seconds()
+BENCHMARK_TRANSPORT_SECONDS = _benchmark_transport_seconds()
 CHAT_CONFIG_PATH = Path('/provider-state/admin-config.json')
 LLM_CONFIG_PATH = Path('/provider-state/llm-credentials.json')
 _CURRENT = ContextVar('kag_admitted_runtime', default=None)
@@ -158,10 +167,18 @@ async def _await_budget(awaitable, budget):
 
 class _CancellableTransport(httpx.BaseTransport):
     """Keep the pinned sync SDK; cancel its actual HTTP I/O through HTTPX async transport."""
-    def __init__(self, budget, *, response_limit=None):
+    def __init__(self, budget=None, *, response_limit=None, stop_event=None):
         self.budget, self.response_limit = budget, response_limit
+        self.stop_event = stop_event
 
     def handle_request(self, request):
+        budget = self.budget
+        if budget is None:
+            seconds = max((value for value in request.extensions.get('timeout', {}).values()
+                           if isinstance(value, (int,float))), default=60)
+            budget = _Budget(time.monotonic() + seconds)
+            if self.stop_event is not None:
+                budget.stopped = self.stop_event
         async def exchange():
             async with httpx.AsyncHTTPTransport(retries=0) as transport:
                 outgoing = httpx.Request(request.method, request.url, headers=request.headers,
@@ -177,7 +194,13 @@ class _CancellableTransport(httpx.BaseTransport):
                         stream=httpx.ByteStream(bytes(body)), extensions=response.extensions)
                 finally:
                     await response.aclose()
-        return asyncio.run(_await_budget(exchange(), self.budget))
+        loop = asyncio.new_event_loop()
+        try:
+            return loop.run_until_complete(_await_budget(exchange(), budget))
+        finally:
+            # Closing HTTP must not wait for an uncancellable OS DNS lookup in the executor.
+            loop.run_until_complete(loop.shutdown_asyncgens())
+            loop.close()
 
 
 class _DeadlineTransport(httpx.BaseTransport):
@@ -338,7 +361,7 @@ def _require_operational_proof(settings, release, *, capability='query'):
     if capability == 'retrieve-vector':
         return load_sample_proof(release,settings.sample_proof_sha256,settings.reader_username)
     if settings.query_proof_sha256:
-        from .sample_query import load_proof
+        from .query_policy import load_proof
         from .provider_budget import BudgetError
         try:
             return load_proof(settings,release,capability=capability)
@@ -523,15 +546,15 @@ def _embedding_response_metadata(response):
         embedding_type=type(value).__name__,dimension=dimension)),flush=True)
 
 
-def _new_embedding(settings, runtime):
+def _new_embedding(settings, runtime, *, timeout=TRANSPORT_SECONDS):
     from kag.common.vectorize_model.openai_model import OpenAIVectorizeModel
     model = _sdk_instance(OpenAIVectorizeModel,runtime,model=settings.embedding_model,
         api_key=settings.embedding_key,base_url=settings.embedding_url,
-        vector_dimensions=settings.dimension,timeout=TRANSPORT_SECONDS)
+        vector_dimensions=settings.dimension,timeout=timeout)
     if settings.production:
         _configure_production_model(settings,model,'embedding',runtime)
     if settings.query_proof_sha256:
-        from .sample_query import configure_model
+        from .query_policy import configure_model
         configure_model(settings,model,'embedding',component='kag.'+getattr(runtime,'capability','query'),request_id=getattr(runtime,'request_id',None))
         _guard_sdk(model,runtime.budget)
         model.client._client.event_hooks['response'].append(_embedding_response_metadata)
@@ -554,14 +577,14 @@ def _new_embedding(settings, runtime):
     return embed
 
 
-def _new_llm(settings, runtime):
+def _new_llm(settings, runtime, *, timeout=TRANSPORT_SECONDS):
     from kag.common.llm.openai_client import OpenAIClient
     model = _sdk_instance(OpenAIClient,runtime,name='kag-'+uuid4().hex,model=settings.chat_model,
-        api_key=settings.chat_key,base_url=settings.chat_url,enable_check=False,timeout=TRANSPORT_SECONDS)
+        api_key=settings.chat_key,base_url=settings.chat_url,enable_check=False,timeout=timeout)
     if settings.production:
         _configure_production_model(settings,model,'chat',runtime)
     if settings.query_proof_sha256:
-        from .sample_query import configure_model, provider_budget, response_model_matches
+        from .query_policy import configure_model, provider_budget, response_model_matches
         configure_model(settings,model,'chat',component='kag.query',request_id=runtime.request_id)
         _guard_sdk(model,runtime.budget)
         responses=[]
@@ -622,7 +645,7 @@ def make_runtime(settings: ApiSettings, release: ServingRelease, deadline: float
     _unchanged(release)
     from kag.retriever.retriever import Retriever
     if settings.query_proof_sha256:
-        from .sample_query import load_proof,cached_vector
+        from .query_policy import load_proof,cached_vector
         _,cache,_=load_proof(settings,release,capability=runtime.capability)
         fallback=None
         def embed(question):
@@ -876,7 +899,7 @@ class RuntimeSupervisor:
         if set(state) == legacy:
             state = dict(state, role_revisions={role: state['revision'] if state[role] else None for role in ('chat','embedding')},
                          tested=dict(chat=None, embedding=None), active=dict(chat=None, embedding=None), blocked=dict(chat=None, embedding=None))
-        if 'serving' in state:
+        if state.get('serving') is not None:
             from kag.builder.serving import validate_selection
             validate_selection(state['serving'])
         for role in ('chat', 'embedding'):
@@ -943,7 +966,7 @@ class RuntimeSupervisor:
     def load_llm_config(self, secrets, *, read_only=False):
         self._llm_config, self._llm_error = None, None
         self._llm_secrets = (*secrets.query_tokens, *secrets.inspect_tokens, *secrets.credentials_write_tokens,
-                            *secrets.provider_test_tokens, *secrets.config_apply_tokens)
+                            *secrets.provider_test_tokens, *secrets.config_apply_tokens, *secrets.benchmark_write_tokens)
         self._llm_write_allowed = bool(secrets.credentials_write_tokens)
         self._llm_test_allowed, self._llm_apply_allowed = bool(secrets.provider_test_tokens), bool(secrets.config_apply_tokens)
         self._llm_bound, self._llm_runtime_error = {}, None
@@ -1118,7 +1141,7 @@ class RuntimeSupervisor:
     def apply_llm_config(self, role, revision, settings, release, policy):
         from .provider_budget import BudgetError, provider_route
         self._llm_revision(role, revision)
-        if self.busy or self.closed or self.draining or self._provider_test_task:
+        if self.busy or self.closed or self.draining or self._provider_test_task or self._serving_action:
             raise ApiFailure('CONFIG_BUSY')
         updated = deepcopy(self._llm_config)
         tested = updated['tested'][role]
@@ -1210,7 +1233,7 @@ class RuntimeSupervisor:
                 if settings.production:
                     await asyncio.to_thread(_backend,reader,release)
                 else:
-                    from .sample_query import verify_gateway
+                    from .query_policy import verify_gateway
                     await asyncio.to_thread(verify_sample_backend,release,settings.sample_proof_sha256,None,reader)
                     await asyncio.to_thread(verify_gateway,settings,proof[0])
                 _unchanged(release)
@@ -1305,7 +1328,7 @@ class RuntimeSupervisor:
                     runtime.budget.remaining()
                     if settings.query_proof_sha256:
                         verify_sample_backend(release,settings.sample_proof_sha256,None,runtime.reader)
-                        from .sample_query import load_proof,verify_gateway
+                        from .query_policy import load_proof,verify_gateway
                         proof,_,_=load_proof(settings,release)
                         verify_gateway(settings,proof)
                     _backend(runtime.reader,release)

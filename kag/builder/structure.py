@@ -1,11 +1,13 @@
 """Prepare LuậtGT through the pinned SDK; replace only proven, unused native defaults."""
-from contextlib import contextmanager
+from contextlib import contextmanager, closing
 import copy
 import hashlib
 import json
 import os
 from pathlib import Path
 import re
+import sqlite3
+from datetime import datetime, timezone
 import time
 
 from kag.backend_identity import BackendIdentitySession, NativeBackendTransport, _store, bound_sdk_requests
@@ -13,7 +15,7 @@ from kag.builder.codec import canonical_json
 from kag.builder.production_scope import target_contract, _spec_hash
 from kag.builder.projects import selected_target
 from urllib.parse import urlsplit
-from kag.run_state import GraphLock, RunBlocked
+from kag.run_state import GraphLock, RunBlocked, graph_lock_status
 from kag.verify import Neo4jReadClient, _valid_index, _indexes
 from kag.vector_contract import TARGETS
 
@@ -24,6 +26,15 @@ DEFAULT_TYPES = dict(Chunk='文本块', ArtificialObject='人造物体', Astrono
     Building='建筑', Creature='生物', Concept='概念', Date='日期', GeographicLocation='地理位置',
     Keyword='关键词', Medicine='药物', NaturalScience='自然科学', Organization='组织机构',
     Person='人物', Transport='运输', Works='作品', Event='事件', Others='其他', SemanticConcept='语义概念')
+
+
+def _acquire_lock(lock):
+    try:
+        lock.acquire()
+    except RunBlocked as error:
+        if error.code == 'LOCK' and graph_lock_status(lock.path)['state'] == 'RETAINED':
+            raise RunBlocked('UNCERTAIN_WRITE') from None
+        raise
 
 
 def _default_type(actual, namespace):
@@ -102,7 +113,7 @@ def schema_changes(current, desired):
 
 
 @contextmanager
-def target_state(project_id, token, *, for_write=True, check_structure=False):
+def target_state(project_id, token, *, for_write=True, check_structure=False, dimension=None):
     from kag.bootstrap import initialize
     initialize()
     from knext.project.client import ProjectClient
@@ -118,7 +129,7 @@ def target_state(project_id, token, *, for_write=True, check_structure=False):
     try:
         proof = identity.prove()
         if not for_write and not check_structure:
-            yield dict(target=target,reader=reader,identity=identity,proof=proof)
+            yield dict(target=target,reader=reader,identity=identity,proof=proof,token=token)
             return
         if for_write:
             serving_database = os.environ.get('KAG_BUILDER_SERVING_DATABASE','neo4j')
@@ -132,20 +143,24 @@ def target_state(project_id, token, *, for_write=True, check_structure=False):
         record = projects.get(id=project_id)
         config = record.config if not isinstance(record, dict) else record['config']
         config = json.loads(config) if isinstance(config,str) else config
-        dimension = _dimension(config.get('vectorizer',{}).get('vector_dimensions'))
+        native_dimension = _dimension(config.get('vectorizer',{}).get('vector_dimensions'))
+        dimension = native_dimension if dimension is None else _dimension(dimension)
         client = SchemaClient(target['endpoints']['openspg'], project_id); bound_sdk_requests(client)
         session = SchemaSession(client._rest_client, project_id)
         script = (Path(__file__).resolve().parents[1]/'schema/VietRoadTraffic.schema').read_text(encoding='utf-8')
         script = script.replace('namespace VietRoadTraffic','namespace '+target['namespace'],1)
         desired = SPGSchemaMarkLang('',with_server=False,script_data_str=script).types
-        yield dict(target=target, reader=reader, identity=identity, proof=proof, session=session,
-            desired=desired, dimension=dimension, store=_store(record)[0])
+        yield dict(target=target, reader=reader, identity=identity, proof=proof, session=session, token=token,
+            desired=desired, dimension=dimension, native_dimension=native_dimension, store=_store(record)[0])
     finally:
         identity.close()
 
 
 def inspect(state):
     target, reader, dimension = state['target'], state['reader'], state['dimension']
+    native_dimension = state.get('native_dimension',dimension)
+    counts=reader._query('structure_counts')[0]
+    if any(type(counts.get(k)) is not int or counts[k]<0 for k in ('nodes','edges')):raise RunBlocked('INTEGRITY')
     current = state['session'].spg_types
     desired = state['desired']; namespace = target['namespace']
     changes, updates, conflicts = schema_changes(current,desired)
@@ -174,6 +189,10 @@ def inspect(state):
             label=target['namespace']+'.'+local
             candidates=[r for r in rows if r.get('type')=='VECTOR' and r.get('labelsOrTypes')==[label] and r.get('properties')==[field]]
             status='KEEP' if candidates and all(_valid_index(r,dimension) for r in candidates) else 'BLOCKED' if candidates else 'ADD'
+            if status=='BLOCKED' and not any(counts.values()) and all(
+                    r['name'] in (_native_index_name(label,field),'luatgt_'+label.replace('.','_')+field)
+                    and _valid_index(r,r.get('options',{}).get('indexConfig',{}).get('vector.dimensions')) for r in candidates):
+                status='REBUILD'
             indexes.append(dict(label=label,property=field,action=status))
     default_labels={namespace+'.'+local for local in DEFAULT_TYPES}
     native_defaults={(_native_index_name(label,field),label,field) for label in default_labels
@@ -183,7 +202,7 @@ def inspect(state):
         labels, fields=row.get('labelsOrTypes') or [],row.get('properties') or []
         if set(labels)&default_labels:
             if (row.get('type')=='VECTOR' and len(labels)==len(fields)==1
-                    and (row['name'],labels[0],fields[0]) in native_defaults and _valid_index(row,dimension)):
+                    and (row['name'],labels[0],fields[0]) in native_defaults and _valid_index(row,native_dimension)):
                 obsolete.append(row)
             elif not (row.get('type')=='FULLTEXT' and row['name']=='_default_text_index'
                     and set(labels)<=default_labels|set(desired) and set(fields)<={'name','content','semanticType'}):
@@ -212,6 +231,8 @@ def inspect(state):
         labels,fields=row.get('labelsOrTypes') or [],row.get('properties') or []
         action='KEEP'
         if row in obsolete:action='REMOVE'
+        elif any(r['action']=='REBUILD' and labels==[r['label']] and fields==[r['property']] for r in indexes):
+            action='REBUILD'
         elif updates and row.get('type')=='VECTOR' and len(labels)==len(fields)==1 and (row['name'],labels[0],fields[0]) in native_vectors:
             action='REBUILD'
         elif updates and row.get('type')=='FULLTEXT' and row['name']=='_default_text_index' and set(labels)<=default_labels|set(desired) and set(fields)<={'name','content','semanticType'}:
@@ -238,8 +259,6 @@ def inspect(state):
     for row in indexes:
         if row['action']=='KEEP' and any(r['action']=='REBUILD' and r['labels']==[row['label']] and r['properties']==[row['property']] for r in index_changes):
             row['action']='REBUILD'
-    counts=reader._query('structure_counts')[0]
-    if any(type(counts.get(k)) is not int or counts[k]<0 for k in ('nodes','edges')):raise RunBlocked('INTEGRITY')
     # Native schema sync rebuilds indexes. It is restricted to an empty physical database.
     reason = ('SCHEMA_CUSTOM' if conflicts else 'SCHEMA_DATA' if (updates or obsolete) and any(counts.values())
         else 'INDEX' if any(r['action']=='BLOCKED' for r in indexes)
@@ -260,20 +279,20 @@ def inspect(state):
     return snapshot, updates
 
 
-def preview(project_id, token):
-    with target_state(project_id,token) as state:
+def preview(project_id, token, *, dimension=None):
+    with target_state(project_id,token,dimension=dimension) as state:
         return inspect(state)[0]
 
 
-def apply(project_id, token, expected, lock_root):
+def apply(project_id, token, expected, lock_root, *, dimension=None):
     from neo4j import GraphDatabase, Query
     from kag.runner import validate_target_schema
-    with target_state(project_id,token) as state:
+    with target_state(project_id,token,dimension=dimension) as state:
         proof=state['proof']
         lock=GraphLock(lock_root,proof.physical_database_id,
             dict(scope='PRODUCTION',project_id=project_id,namespace=state['target']['namespace'],database=state['target']['database']),
             backend_proof=proof,backend_session=state['identity'])
-        lock.acquire()
+        _acquire_lock(lock)
         uncertain=False
         try:
             from kag.builder.serving import protect_active
@@ -303,12 +322,32 @@ def apply(project_id, token, expected, lock_root):
                     actual=[r for r in current_rows if r['name']==row['name']]
                     if not actual:continue
                     if (len(actual)!=1 or actual[0]['labelsOrTypes']!=row['labels'] or actual[0]['properties']!=row['properties']
-                            or not _valid_index(actual[0],state['dimension'])):raise RunBlocked('STRUCTURE_STALE')
+                            or not _valid_index(actual[0],state.get('native_dimension',state['dimension']))):raise RunBlocked('STRUCTURE_STALE')
                     name=row['name'].replace('`','``')
                     with driver.session(database=state['target']['database']) as session:
                         session.run(Query(f'DROP INDEX `{name}` IF EXISTS',timeout=60)).consume()
                 for row in before['indexes']:
                     existing=[r for r in fresh if r.get('type')=='VECTOR' and r.get('labelsOrTypes')==[row['label']] and r.get('properties')==[row['property']]]
+                    for actual in existing:
+                        # Native sync may still be populating; final readback below requires ONLINE.
+                        online=dict(actual,state='ONLINE')
+                        if actual['state'] in ('ONLINE','POPULATING') and _valid_index(online,state['dimension']):continue
+                        if (actual['state'] not in ('ONLINE','POPULATING')
+                                or actual['name'] not in (_native_index_name(row['label'],row['property']),
+                                'luatgt_'+row['label'].replace('.','_')+row['property'])
+                                or not _valid_index(online,actual.get('options',{}).get('indexConfig',{}).get('vector.dimensions'))):
+                            raise RunBlocked('INDEX')
+                        lock.assert_owned(proof.physical_database_id);state['identity'].validate(proof)
+                        if selected_target(project_id,token)!=state['target']:raise RunBlocked('STRUCTURE_STALE')
+                        if any(state['reader']._query('structure_counts')[0].values()):raise RunBlocked('SCHEMA_DATA')
+                        name=actual['name'].replace('`','``')
+                        uncertain=True
+                        with driver.session(database=state['target']['database']) as session:
+                            session.run(Query(f'DROP INDEX `{name}` IF EXISTS',timeout=60)).consume()
+                            query=(f'CREATE VECTOR INDEX `{name}` FOR (n:`{row["label"]}`) ON (n.`{row["property"]}`) '
+                                'OPTIONS {indexConfig: {`vector.dimensions`: $dimension, `vector.similarity_function`: "cosine"}}')
+                            session.run(Query(query,timeout=60),dimension=state['dimension']).consume()
+                        uncertain=False
                     if existing:continue
                     lock.assert_owned(proof.physical_database_id);state['identity'].validate(proof)
                     name='luatgt_'+row['label'].replace('.','_')+row['property']
@@ -327,7 +366,9 @@ def apply(project_id, token, expected, lock_root):
                         if (not actual or actual['type']!=planned['type'] or actual['state']!='ONLINE'
                                 or set(actual['labelsOrTypes'])!=set(planned['labels'])
                                 or set(actual['properties'])!=set(planned['properties'])
-                                or actual['type']=='VECTOR' and not _valid_index(actual,state['dimension'])):
+                                or actual['type']=='VECTOR' and not _valid_index(actual,
+                                    state['dimension'] if any(planned['labels']==[r['label']] and planned['properties']==[r['property']] for r in before['indexes'])
+                                    else state.get('native_dimension',state['dimension']))):
                             raise RunBlocked('INDEX')
                     break
                 except RunBlocked:
@@ -342,44 +383,25 @@ def apply(project_id, token, expected, lock_root):
             state['identity'].validate(proof)
         finally:
             # A lost native sync response can leave remote index work in flight, as with Runner writes.
-            if not uncertain:lock.release()
-    return preview(project_id,token)
+            if uncertain:lock.retain()
+            else:lock.release()
+    return preview(project_id,token,dimension=dimension)
 
 
-def clear_permissions(state):
-    """Deployment grants destruction independently from OWNER and schema preparation."""
+def clear_permissions(state, *, detached=True):
+    """Require a dedicated owned target, currently detached from Chat."""
     from kag.backend_identity import _field
-    from kag.builder.projects import _project_client
+    from kag.builder.projects import _native_request
     target=state['target'];physical=state['proof'].physical_database_id
     from kag.builder.serving import protect_active
-    try:protect_active(state['reader'],physical)
-    except RunBlocked:raise RunBlocked('CLEAR_SERVING') from None
-    try:
-        grants=json.loads(os.environ.get('KAG_BUILDER_CLEAR_TARGETS','[]'))
-        if (type(grants) is not list or len(grants)>256 or any(type(row) is not dict
-                or set(row)!={'project_id','database_id'} or type(row['project_id']) is not int
-                or not 1<=row['project_id']<=2147483647 or not isinstance(row['database_id'],str)
-                or not re.fullmatch(r'[A-Za-z0-9._:-]{1,128}',row['database_id']) for row in grants)
-                or dict(project_id=target['project_id'],database_id=physical) not in grants):
-            raise ValueError
-    except (ValueError,TypeError):raise RunBlocked('CLEAR_DENIED') from None
+    if detached:
+        try:protect_active(state['reader'],physical)
+        except RunBlocked:raise RunBlocked('CLEAR_SERVING') from None
     reader=state['reader']
-    if reader.protected_database_identity(os.environ.get('KAG_BUILDER_SERVING_DATABASE','neo4j'))==physical:
-        raise RunBlocked('CLEAR_SERVING')
-    # The query runtime selects only this operator-configured immutable release.
-    release_id=os.environ.get('KAG_HTTP_RELEASE_ID')
-    if release_id:
-        try:
-            from kag.http_api.artifacts import load_release
-            release=load_release(Path(os.environ['KAG_HTTP_RELEASE_ROOT']),release_id)
-            if (release.descriptor['database_id']==physical
-                    or reader.protected_database_identity(release.descriptor['database'])==physical):
-                raise RunBlocked('CLEAR_SERVING')
-        except RunBlocked:raise
-        except Exception:raise RunBlocked('CLEAR_SERVING') from None
     endpoint=urlsplit(target['endpoints']['neo4j_uri'])
-    records=_project_client(target['endpoints']['openspg'])._rest_client.project_get()
+    records=_native_request(target['endpoints']['openspg'],'/public/v1/project',state['token'])
     try:
+        if type(records) is not list:raise RunBlocked('CLEAR_SHARED')
         for record in records:
             if str(_field(record,'id'))==str(target['project_id']):continue
             store,address=_store(record);other=urlsplit(address)
@@ -390,14 +412,33 @@ def clear_permissions(state):
     except RunBlocked:raise
     except Exception:raise RunBlocked('CLEAR_SHARED') from None
     state['identity'].validate(state['proof'])
-    return grants
+
+
+def clear_runs(physical,*,mark=False):
+    root=Path(os.environ.get('KAG_BUILDER_RUN_ROOT','/builder-runs')).resolve()
+    for ledger in [*root.glob('*/ledger.sqlite3'),*root.glob('revision-*/*/ledger.sqlite3')]:
+        if ledger.is_symlink() or not ledger.resolve().is_relative_to(root):raise RunBlocked('INTEGRITY')
+        with closing(sqlite3.connect(ledger if mark else ledger.as_uri()+'?mode=ro',uri=not mark,timeout=2)) as db:
+            db.execute('BEGIN IMMEDIATE' if mark else 'BEGIN')
+            meta=dict(db.execute("SELECT key,value FROM run_meta WHERE key IN ('identity','status','disposition')"))
+            identity=json.loads(meta['identity'])
+            if identity.get('database_id')!=physical:continue
+            status=json.loads(meta['status']);disposition=json.loads(meta['disposition']) if 'disposition' in meta else None
+            if (db.execute("SELECT 1 FROM run_batches WHERE state='INTENT' AND stage IN ('write-nodes','write-edges') LIMIT 1").fetchone()
+                    or not (disposition and disposition['state'] in ('ABANDONED','CLEARED')
+                        or status['state']=='PASS' and status['stage']=='release'
+                        or status['state']=='ERROR' and status.get('error_code')=='INTERRUPTED')):raise RunBlocked('LOCK')
+            if mark:
+                db.execute('INSERT OR REPLACE INTO run_meta VALUES (?,?)',('disposition',json.dumps(dict(
+                    state='CLEARED',run_id=identity['run_id'],config_hash=identity['config_hash'],updated_at=datetime.now(timezone.utc).isoformat()))))
+                db.commit()
 
 
 def clear_snapshot(state):
     from neo4j import GraphDatabase, Query, READ_ACCESS
     from knext.schema.client import SchemaSession
     state['session']=SchemaSession(state['session']._rest_client,state['target']['project_id'])
-    grants=clear_permissions(state)
+    clear_permissions(state)
     digest=hashlib.sha256();counts=dict(nodes=0,edges=0)
     store=state['store'];target=state['target']
     with GraphDatabase.driver(target['endpoints']['neo4j_uri'],auth=(store['user'],store['password']),
@@ -417,34 +458,25 @@ def clear_snapshot(state):
     report=dict(target={k:target[k] for k in ('project_id','project_name','namespace','database')},
         database_id=state['proof'].physical_database_id,counts=counts,batch_size=500)
     return dict(report=report,structure_signature=structure_signature,
-        signature=_spec_hash(dict(report=report,structure=structure_signature,data=digest.hexdigest(),grants=grants)))
+        signature=_spec_hash(dict(report=report,structure=structure_signature,data=digest.hexdigest())))
 
 
-def preview_clear(project_id,token,lock_root):
-    with target_state(project_id,token) as state:
-        proof=state['proof']
-        lock=GraphLock(lock_root,proof.physical_database_id,
-            dict(scope='PRODUCTION',project_id=project_id,namespace=state['target']['namespace'],database=state['target']['database']),
-            backend_proof=proof,backend_session=state['identity'])
-        lock.acquire()
-        try:return clear_snapshot(state)
-        finally:lock.release()
-
-
-def apply_clear(project_id,token,expected,lock_root,*,started,progress):
-    """Empty only an explicitly dedicated database; retain all schema and run files."""
+def apply_clear(project_id,token,expected,lock_root,*,progress):
+    """Empty a dedicated database after unselecting Chat; retain schema and history."""
     from neo4j import GraphDatabase,Query
-    with target_state(project_id,token) as state:
+    with target_state(project_id,token,for_write=False,check_structure=True) as state:
         proof=state['proof'];target=state['target']
         lock=GraphLock(lock_root,proof.physical_database_id,
             dict(scope='PRODUCTION',project_id=project_id,namespace=target['namespace'],database=target['database']),
             backend_proof=proof,backend_session=state['identity'])
-        lock.acquire();uncertain=False
+        _acquire_lock(lock);uncertain=False
         try:
+            from kag.builder.serving import protect_active
+            protect_active(state['reader'],proof.physical_database_id)
+            if proof.physical_database_id!=expected:raise RunBlocked('CLEAR_STALE')
             before=clear_snapshot(state)
-            if before['signature']!=expected:raise RunBlocked('CLEAR_STALE')
-            if selected_target(project_id,token)!=target:raise RunBlocked('CLEAR_STALE')
-            started(proof.physical_database_id)
+            if selected_target(project_id,token,for_write=False)!=target:raise RunBlocked('CLEAR_STALE')
+            clear_runs(proof.physical_database_id)
             store=state['store'];deleted=dict(nodes=0,edges=0)
             with GraphDatabase.driver(target['endpoints']['neo4j_uri'],auth=(store['user'],store['password']),
                     connection_timeout=10,connection_acquisition_timeout=10,max_transaction_retry_time=0) as driver:
@@ -453,7 +485,7 @@ def apply_clear(project_id,token,expected,lock_root,*,started,progress):
                             ('nodes','MATCH (n) WITH n LIMIT $batch DETACH DELETE n RETURN count(*) AS deleted')]:
                         while True:
                             clear_permissions(state)
-                            if selected_target(project_id,token)!=target:raise RunBlocked('CLEAR_STALE')
+                            if selected_target(project_id,token,for_write=False)!=target:raise RunBlocked('CLEAR_STALE')
                             lock.assert_owned(proof.physical_database_id)
                             uncertain=True
                             row=session.run(Query(query,timeout=60),batch=before['report']['batch_size']).single(strict=True)
@@ -465,9 +497,11 @@ def apply_clear(project_id,token,expected,lock_root,*,started,progress):
             after=clear_snapshot(state)
             if any(after['report']['counts'].values()) or before['structure_signature']!=after['structure_signature']:
                 raise RunBlocked('CLEAR_STALE')
+            clear_runs(proof.physical_database_id,mark=True)
             return after
         except Exception:
             if uncertain:raise RunBlocked('CLEAR_UNCERTAIN') from None
             raise
         finally:
-            if not uncertain:lock.release()
+            if uncertain:lock.retain()
+            else:lock.release()

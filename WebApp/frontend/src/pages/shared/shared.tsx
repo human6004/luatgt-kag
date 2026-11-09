@@ -2,9 +2,7 @@ import { useEffect, useState } from "react"
 
 import { api, media } from "../../api"
 
-import { Button, inputCls } from "../../admin/ui"
-
-export const inputClass = inputCls
+import { Button } from "../../admin/ui"
 
 export function useData<T>(path: string) {
   const [value, setValue] = useState<T>(),
@@ -133,6 +131,15 @@ export function Asset({
       )}
     </>
   )
+}
+
+export function saveBlob(blob: Blob, filename: string) {
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement("a")
+  a.href = url
+  a.download = filename
+  a.click()
+  setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
 
 export async function download(id: string) {

@@ -18,10 +18,10 @@ from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
 from kag.builder.production_scope import (ProductionSettings, _input_version, _spec_hash,
-    validate_c3_manifest, selection_limit, selection_summary, select_bounded_sources)
+    validate_source_manifest, selection_limit, selection_summary, select_bounded_sources)
 from kag.http_api.contract import ApiFailure
 from kag.http_api.security import ServiceSecrets, authenticate, bounded_body
-from kag.run_state import MESSAGES, STAGES, RunBlocked, GraphLock, _shared_lock_root, atomic_json, validate_run_directory
+from kag.run_state import MESSAGES, STAGES, RunBlocked, GraphLock, graph_lock_status, _shared_lock_root, atomic_json, validate_run_directory
 from kag.runner import _clients, _config, _files, _provider, preflight as runner_preflight, run
 from kag.builder.projects import read_projects, selected_target, ProjectCatalogError
 
@@ -83,7 +83,7 @@ def read_dataset(root,group,offset,limit):
 def check_source_inputs(value):
     config = _config(value)
     contract = json.loads((Path(__file__).resolve().parents[1]/'schema/schema_contract.json').read_bytes())
-    data = validate_c3_manifest(contract, config['paths']['c3_manifest'])
+    data = validate_source_manifest(contract, config['paths']['c3_manifest'])
     try:
         _files(dict(config,input_sha256={'c3_manifest':config['input_sha256']['c3_manifest']}))
         result = dict(state='VALID',error_code=None,plan_sha256=data['manifest']['plan_sha256'],
@@ -100,10 +100,47 @@ def check_source_inputs(value):
         data['index'].close()
 
 
+def source_cache(state_dir, manifest_path=None, expected=()):
+    """Read preview metadata only; Runner still validates source content before writing."""
+    from kag.builder.inputs import SOURCE_FILES
+    root=Path(__file__).resolve().parents[2];state=Path(state_dir);cache=state/'source.json'
+    try:
+        saved=json.loads(cache.read_bytes()) if cache.exists() and manifest_path is None else None
+        if saved and not re.fullmatch('[0-9a-f]{64}',saved['plan_sha256']):return None
+        candidates=([Path(manifest_path)] if manifest_path is not None else
+            [state/'plans'/saved['plan_sha256']/'manifest.json'] if saved else
+            sorted((state/'plans').glob('*/manifest.json'),key=lambda p:p.stat().st_mtime_ns,reverse=True))
+        for path in candidates:
+            manifest=json.loads(path.read_bytes())
+            if not re.fullmatch('[0-9a-f]{64}',path.parent.name) or manifest['plan_sha256']!=path.parent.name:continue
+            names={row['name'] for row in manifest['input_manifest']}
+            required={name for _,name in SOURCE_FILES}|{p.relative_to(root).as_posix() for p in (root/'data/processed/documents').glob('*.md')}
+            if not required<=names:continue
+            sources=[root/name for name in names]+[root/'kag/schema'/name for name in ('VietRoadTraffic.schema','schema_contract.json')]
+            if any(not p.resolve().is_relative_to(root) for p in sources):continue
+            paths=sorted(set(sources+[path.parent/name for name in ('manifest.json','nodes.jsonl','edges.jsonl','plan.sha256')]))
+            checks=tuple((p,_input_version(p)) for p in paths)
+            directory=root/'data/processed/documents'
+            if directory.exists():checks=(*checks,(directory,_input_version(directory)))
+            if any(dict(checks).get(p)!=version for p,version in expected):return None
+            files=[[str(p),v[3],v[4]] for p,v in checks if p!=directory]
+            if saved and saved['files']!=files:return None
+            # Older plans have no stat cache; reuse only previews whose inputs predate the plan.
+            if manifest_path is None and not saved and any(p.stat().st_mtime_ns>path.stat().st_mtime_ns for p in sources):continue
+            summary=selection_summary(dict(manifest=manifest,edge_hashes=range(sum(manifest['edge_unique_counts'].values()))))
+            if not saved:atomic_json(cache,dict(plan_sha256=manifest['plan_sha256'],files=files),mode=0o600)
+            return (dict(state='VALID',error_code=None,plan_sha256=manifest['plan_sha256'],
+                nodes=summary['nodes'],edges=summary['edges'],summary=summary),checks)
+    except (OSError,ValueError,KeyError,TypeError):pass
+    return None
+
+
 def prepare_source_inputs(state_dir):
     """Prepare only the corpus shipped with this release; publish a complete content-addressed plan."""
     from kag.builder.graph_plan import build_graph_plan, plan_hash, write_dry_run
     from kag.builder.inputs import load_inputs
+    cached=source_cache(state_dir)
+    if cached:return cached
     root = Path(__file__).resolve().parents[2]
     state = Path(state_dir)
     if not state.is_absolute() or state.resolve().is_relative_to(root):
@@ -119,17 +156,18 @@ def prepare_source_inputs(state_dir):
         with tempfile.TemporaryDirectory(prefix='prepare-', dir=state) as temporary:
             output = Path(temporary) / 'plan'
             write_dry_run(plan, output)
-            data = validate_c3_manifest(contract, output / 'manifest.json')
+            data = validate_source_manifest(contract, output / 'manifest.json')
             data['index'].close()
             # Rename publishes all files together; existing plans and runs remain immutable.
             output.rename(destination)
-    data = validate_c3_manifest(contract, destination / 'manifest.json')
+    data = validate_source_manifest(contract, destination / 'manifest.json')
     try:
         checks = data['file_versions']
         if any(_input_version(path) != version for path, version in checks):
             raise ValueError('Source changed during preparation')
-        return (dict(state='VALID', error_code=None, plan_sha256=data['manifest']['plan_sha256'],
-                     nodes=len(data['nodes']), edges=len(data['edges']),summary=selection_summary(data)), checks)
+        cached=source_cache(state_dir,destination/'manifest.json',checks)
+        if not cached:raise ValueError('Source changed during preparation')
+        return cached
     finally:
         data['index'].close()
 
@@ -172,7 +210,7 @@ def _builder_target():
         raise RunBlocked('CONFIG') from None
 
 
-def _builder_config(state_dir, target, model, revision, batch_size, request_limit, node_limit=None, scope_preview=None, *, plan_sha256):
+def _builder_config(state_dir, target, model, revision, batch_size, request_limit, node_limit=None, scope_preview=None, *, plan_sha256, vector_package=None):
     config = json.loads((Path(__file__).resolve().parents[1]/'config/runner.example.json').read_bytes())
     if not isinstance(plan_sha256,str) or not re.fullmatch('[0-9a-f]{64}',plan_sha256):raise RunBlocked('PLAN')
     manifest = Path(state_dir)/'plans'/plan_sha256/'manifest.json'
@@ -194,7 +232,7 @@ def _builder_config(state_dir, target, model, revision, batch_size, request_limi
     elif node_limit is not None:
         from kag.builder.production_scope import select_bounded_sources
         contract = json.loads((Path(__file__).resolve().parents[1]/'schema/schema_contract.json').read_bytes())
-        data = validate_c3_manifest(contract, manifest)
+        data = validate_source_manifest(contract, manifest)
         try:
             config['selection'] = select_bounded_sources(data, node_limit)
             if target['namespace'] != contract['namespace']:
@@ -204,6 +242,16 @@ def _builder_config(state_dir, target, model, revision, batch_size, request_limi
                     target['namespace']+'.'+key[3].rsplit('.',1)[-1],key[4]] for key in config['selection']['edge_tuples']]
         finally:
             data['index'].close()
+    if vector_package is not None:
+        from kag.builder import packages
+        if (type(vector_package) is not dict or set(vector_package) != {'name','sha256'}
+                or not isinstance(vector_package['sha256'],str) or not packages.HASH.fullmatch(vector_package['sha256'])):
+            raise RunBlocked('CONFIG')
+        path = packages.package_path(vector_package['name'])
+        packages.compatible(packages.read_manifest(path),model,plan_sha256)
+        config.update(vector_policy='replay-existing',embedding_model=None,vector_package=copy.deepcopy(vector_package))
+        config['paths']['graph_package'] = str(path)
+        config['input_sha256']['graph_package'] = vector_package['sha256']
     return _config(config)
 
 
@@ -224,7 +272,9 @@ def _builder_runner(model):
     """Bind a saved secret to one run without writing it into Runner config or environment."""
     from kag.http_api.provider_budget import (AsyncGatewayTransport, GATEWAY, GatewayTransport, provider_route)
     resources = []
+    stop_event = None
     def vectorizer(config, verified):
+        from kag.http_api.runtime import _CancellableTransport
         policy = _builder_policy()
         route = provider_route(model['config'], 'embedding', policy)
         batch = _provider(config, verified, api_key=model['config']['api_key'])
@@ -233,11 +283,14 @@ def _builder_runner(model):
             sdk = getattr(batch.vectorize_model,name)
             sdk.max_retries = 0
             sdk._client.follow_redirects = False
-            sdk._client._transport = wrapper(sdk._client._transport,GATEWAY,policy['token'],
+            transport = _CancellableTransport(stop_event=stop_event) if name=='client' else sdk._client._transport
+            sdk._client._transport = wrapper(transport,GATEWAY,policy['token'],
                 model['config']['base_url'].rstrip('/')+'/embeddings',route)
             sdk._client._mounts = {}
         return batch
     def execute(config, **kwargs):
+        nonlocal stop_event
+        stop_event = kwargs.get('stop_event')
         try:
             return run(config,vectorizer_factory=vectorizer,**kwargs)
         finally:
@@ -286,11 +339,12 @@ class BuilderControl:
             records = [(self._record(path.name), path.name) for path in root.iterdir()]
             if records:
                 self.run_id = max(records, key=lambda row: row[0][0]['updated_at'])[1]
-                self.failed = any(uncertain or not (
+                self.failed = any(not (
                     status['state'] in ('ABANDONED','CLEARED')
                     or
                     status['state'] == 'PASS' and status['stage'] == 'release'
-                    or status['state'] == 'ERROR' and status['error_code'] == 'INTERRUPTED')
+                    or status['state'] == 'ERROR' and (status['error_code'] == 'INTERRUPTED'
+                        or status['stage'] == 'vectorize' and status['error_code'] in ('VECTORS','VECTORS_KEY')))
                     for (status, uncertain, _), _ in records)
 
     def _directory(self, run_id):
@@ -324,16 +378,21 @@ class BuilderControl:
                 raise ValueError
             if any(datetime.fromisoformat(status[key].replace('Z','+00:00')).tzinfo is None for key in ('started_at','updated_at')):
                 raise ValueError
+            if not (self.thread is not None and self.thread.is_alive()):
+                if status['state']=='RUNNING':
+                    status=dict(status,state='ERROR',error_code='INTERRUPTED')
+                elif status['state']=='BLOCKED' and status['stage']=='vectorize' and status['error_code'] in ('VECTORS','VECTORS_KEY'):
+                    status=dict(status,state='ERROR')
             rows = []
             for name in STAGES:
                 done = total = None
                 code = None
                 if name==status['stage'] and status['error_code']:
-                    state = 'STOPPED' if status['error_code']=='INTERRUPTED' else 'BLOCKED'
+                    state = 'STOPPED' if status['error_code']=='INTERRUPTED' or name=='vectorize' and status['error_code'] in ('VECTORS','VECTORS_KEY') else 'BLOCKED'
                     done,total,code = status['done'],status['total'],status['error_code']
                 elif name in stages:
                     state = 'COMPLETE'
-                    done = total = (stages[name]['count'] if name in ('vectorize','write-nodes','write-edges')
+                    done = total = (stages[name]['nonempty'] if name=='vectorize' else stages[name]['count'] if name in ('write-nodes','write-edges')
                         else stages[name]['nodes']['total'] if name=='verify-nodes'
                         else exported if name=='export-artifact' else 1)
                 elif name==status['stage']:
@@ -373,7 +432,10 @@ class BuilderControl:
                         or disposition['config_hash']!=identity['config_hash']
                         or datetime.fromisoformat(disposition['updated_at']).tzinfo is None):raise ValueError
                 status=dict(status,state=disposition['state'])
-            return status, pending or lock.exists() or lock.is_symlink(), detail
+            lock_state = graph_lock_status(lock)['state']
+            uncertain = ('UNCERTAIN_WRITE' if pending or lock_state == 'RETAINED'
+                         else 'LOCK' if lock_state == 'HELD' else None)
+            return status, uncertain, detail
         except (OSError, sqlite3.Error, ValueError, KeyError, TypeError):
             raise RunBlocked('INTEGRITY') from None
 
@@ -398,18 +460,18 @@ class BuilderControl:
                         durable, uncertain, detail = self._record(self.run_id)
                         progress = {key: durable[key] for key in ('stage', 'done', 'total')}
                         code = durable['error_code']
-                        if self.failed:
+                        if uncertain:
+                            raise RunBlocked(uncertain)
+                        if self.failed and not (durable['state']=='ERROR' and code in ('INTERRUPTED','VECTORS','VECTORS_KEY')):
                             raise RunBlocked(code or 'INTEGRITY')
                         if self.result is not None and durable == self.previous_status:
                             raise RunBlocked('SCOPE' if self.result == 2 else 'RUNTIME')
-                        if uncertain:
-                            raise RunBlocked(code or 'LOCK')
-                        if self.result == 2:
-                            state, code = 'BLOCKED', code or 'SCOPE'
-                        elif durable['state'] in ('ABANDONED','CLEARED'):
+                        if durable['state'] in ('ABANDONED','CLEARED'):
                             state = durable['state']
-                        elif durable['state'] == 'ERROR' and code == 'INTERRUPTED':
+                        elif durable['state'] == 'ERROR' and code in ('INTERRUPTED','VECTORS','VECTORS_KEY'):
                             state = 'STOPPED'
+                        elif self.result == 2:
+                            state, code = 'BLOCKED', code or 'SCOPE'
                         elif durable['state'] == 'PASS' and durable['stage'] == 'release':
                             state = 'COMPLETE'
                         else:
@@ -423,7 +485,7 @@ class BuilderControl:
                 progress=progress, error_code=code,
                 actions=dict(build=state in ('IDLE', 'COMPLETE', 'ABANDONED','CLEARED'), stop=state == 'RUNNING',
                              resume=state == 'STOPPED', abandon=state == 'STOPPED', delete=False),
-                delete_reason='DELETE_NOT_AUTHORIZED',
+                delete_reason=None,
                 production_write='CONFIGURED' if self.config['scope']=='PRODUCTION' else 'BLOCKED',**detail)
 
     def start(self, run_id, *, resume=False):
@@ -482,7 +544,9 @@ class BuilderControl:
                     meta=dict(db.execute("SELECT key,value FROM run_meta WHERE key IN ('identity','status','disposition')"))
                     durable=json.loads(meta['status'])
                     if (json.loads(meta['identity'])['config_hash']!=_spec_hash(self.config)
-                            or durable['state']!='ERROR' or durable['error_code']!='INTERRUPTED'
+                            or not (durable['state']=='RUNNING'
+                                or durable['state']=='ERROR' and durable['error_code']=='INTERRUPTED'
+                                or durable['state']=='BLOCKED' and durable['stage']=='vectorize' and durable['error_code'] in ('VECTORS','VECTORS_KEY'))
                             or db.execute("SELECT 1 FROM run_batches WHERE state='INTENT' AND stage IN ('write-nodes','write-edges') LIMIT 1").fetchone()):
                         raise HTTPException(409,'BUILDER_ABANDON_BLOCKED')
                     lock.assert_owned(state['proof'].physical_database_id);state['identity'].validate(state['proof'])
@@ -537,6 +601,7 @@ def create_app(*, control=None, token=None, state_dir=None):
     checked_files=()
     checked_config=None
     source_task=None
+    package_export=dict(contract_version='builder-package-export-v1',state='NOT_RUN',name=None,size=None,code=None)
     readiness = dict(state='NOT_RUN',checks=[],checked_at=None)
     ready_binding = None
     scope_preview = None
@@ -589,31 +654,17 @@ def create_app(*, control=None, token=None, state_dir=None):
 
     def store_clear(value):
         nonlocal setup,clear_result
-        updated=dict(setup,clear=value)
-        atomic_json(setup_path,updated,mode=0o600)
-        setup=updated;clear_result=value
-
-    def clear_runs(physical,*,mark=False):
-        root=Path(os.environ.get('KAG_BUILDER_RUN_ROOT','/builder-runs')).resolve()
-        for ledger in [*root.glob('*/ledger.sqlite3'),*root.glob('revision-*/*/ledger.sqlite3')]:
-            if ledger.is_symlink() or not ledger.resolve().is_relative_to(root):raise RunBlocked('INTEGRITY')
-            with closing(sqlite3.connect(ledger if mark else ledger.as_uri()+'?mode=ro',uri=not mark,timeout=2)) as db:
-                db.execute('BEGIN IMMEDIATE' if mark else 'BEGIN')
-                meta=dict(db.execute("SELECT key,value FROM run_meta WHERE key IN ('identity','status','disposition')"))
-                identity=json.loads(meta['identity'])
-                if identity.get('database_id')!=physical:continue
-                status=json.loads(meta['status']);disposition=json.loads(meta['disposition']) if 'disposition' in meta else None
-                if (db.execute("SELECT 1 FROM run_batches WHERE state='INTENT' AND stage IN ('write-nodes','write-edges') LIMIT 1").fetchone()
-                        or not (disposition and disposition['state'] in ('ABANDONED','CLEARED')
-                            or status['state']=='PASS' and status['stage']=='release')):raise RunBlocked('LOCK')
-                if mark:
-                    db.execute('INSERT OR REPLACE INTO run_meta VALUES (?,?)',('disposition',json.dumps(dict(
-                        state='CLEARED',run_id=identity['run_id'],config_hash=identity['config_hash'],updated_at=datetime.now(timezone.utc).isoformat()))))
-                    db.commit()
+        if setup:
+            updated=dict(setup,clear=value)
+            atomic_json(setup_path,updated,mode=0o600)
+            setup=updated
+        clear_result=value
 
     def binding(session=None):
         model = _builder_model(secrets)
-        if not setup or model['revision'] != setup['embedding_revision']:
+        if (not setup or (configuration['vector_policy']=='provider'
+                and model['config']['base_url'].rstrip('/')+'|'+model['config']['model']!=configuration['model_identity'])
+                or configuration['vector_policy']!='provider' and model['revision']!=setup['embedding_revision']):
             raise RunBlocked('CONFIG')
         if session is not None:
             target = selected_target(configuration['project_id'],session)
@@ -627,7 +678,8 @@ def create_app(*, control=None, token=None, state_dir=None):
             raise RunBlocked('CONFIG')
         if not checked_files or any(_input_version(path)!=version for path,version in checked_files):
             raise RunBlocked('INTEGRITY')
-        return (_spec_hash(configuration), model['revision'], model['test'], _builder_policy(),
+        return (_spec_hash(configuration), model['revision'], model['test'],
+                _builder_policy() if configuration['vector_policy']=='provider' else None,
                 source_result['state'], source_result['plan_sha256'])
 
     def configuration_view():
@@ -652,10 +704,11 @@ def create_app(*, control=None, token=None, state_dir=None):
                 readiness = dict(state='NOT_RUN',checks=[],checked_at=None)
                 ready_binding = None
         selection = configuration.get('selection') if setup else None
-        return dict(contract_version='builder-configuration-v4',revision=setup['revision'] if setup else 0,
+        return dict(contract_version='builder-configuration-v5',revision=setup['revision'] if setup else 0,
             saved=setup is not None,error_code=setup_error,target=target,embedding=embedding,
             batch_size=configuration['batch_size'] if setup else 64,
             request_limit=configuration.get('request_limit') if setup else None,readiness=copy.deepcopy(readiness),
+            vector_package=configuration.get('vector_package') if setup else None,
             links=browser_links(),selection=dict(node_limit=selection['node_limit'] if selection else None,
                 nodes=selection['summary']['nodes'] if selection and 'summary' in selection else len(selection['node_keys']) if selection else source_result['nodes'],
                 edges=selection['summary']['edges'] if selection and 'summary' in selection else len(selection['edge_tuples']) if selection else source_result['edges'],
@@ -665,12 +718,15 @@ def create_app(*, control=None, token=None, state_dir=None):
     @asynccontextmanager
     async def lifespan(app):
         yield
+        await app.state.benchmark_runner.close()
         if source_task is not None:
             await source_task
         if control is not None:
             await asyncio.to_thread(control.close)
 
     app = FastAPI(lifespan=lifespan, docs_url=None, redoc_url=None, openapi_url=None)
+    from kag.http_api.benchmark_runner import install_worker_routes
+    install_worker_routes(app)
 
     @app.exception_handler(ApiFailure)
     async def denied(request, error):
@@ -702,29 +758,71 @@ def create_app(*, control=None, token=None, state_dir=None):
         if request.query_params:raise ApiFailure('INVALID_REQUEST')
 
     serving_busy=False
+    serving_path=Path(state_dir)/'serving.json' if state_dir else None
+    serving_result=dict(contract_version='builder-serving-operation-v1',state='NOT_RUN',project_id=None,run_id=None,code=None,result=None)
+    if serving_path and serving_path.exists():
+        try:
+            saved=json.loads(serving_path.read_bytes())
+            if (type(saved) is not dict or set(saved)!=set(serving_result)
+                    or saved['contract_version']!=serving_result['contract_version']
+                    or saved['state'] not in ('NOT_RUN','PREPARING','COMPLETE','FAILED','INTERRUPTED')):raise ValueError
+            serving_result=saved
+            if serving_result['state']=='PREPARING':
+                serving_result=dict(serving_result,state='INTERRUPTED',code='NOT_READY')
+                atomic_json(serving_path,serving_result)
+        except (OSError,ValueError,TypeError):serving_result.update(state='FAILED',code='INTEGRITY')
+
+    def store_serving(value):
+        nonlocal serving_result
+        if serving_path:atomic_json(serving_path,value)
+        serving_result=value
 
     @app.get('/v1/serving')
     async def serving_catalog(request: Request):
         serving_auth(request)
         from kag.builder.serving import runs,active_selection
         try:
+            rows=await asyncio.to_thread(runs,session_token(request))
+            operation=serving_result if any(row['project_id']==serving_result['project_id'] for row in rows) else None
             return dict(contract_version='builder-serving-v1',active=await asyncio.to_thread(active_selection),busy=serving_busy,
-                runs=await asyncio.to_thread(runs,session_token(request)))
+                runs=rows,operation=copy.deepcopy(operation))
         except (ProjectCatalogError,RunBlocked) as error:
             raise HTTPException(409,error.code) from None
 
     @app.post('/v1/serving/{action}')
     async def serving_action(action: str,request: Request):
-        nonlocal serving_busy
-        if action not in ('preview','activate','read','trial'):raise ApiFailure('INVALID_REQUEST')
-        serving_auth(request,write=action in ('preview','activate'))
-        from kag.builder.serving import prepare,fixed_read,trial
+        nonlocal serving_busy,source_task
+        if action not in ('preview','activate','deactivate','read','trial'):raise ApiFailure('INVALID_REQUEST')
+        serving_auth(request,write=action in ('preview','activate','deactivate'))
+        from kag.builder.serving import prepare,fixed_read,trial,deactivate
+        if action=='deactivate' and control is not None and control.status()['state'] in ('RUNNING','STOPPING'):
+            raise HTTPException(409,'LOCK')
         if action!='read' and serving_busy:raise ApiFailure('CONFIG_BUSY')
         if action!='read':serving_busy=True
         try:
             body=json.loads(await bounded_body(request,limit=32*1024*1024 if action!='read' else 256*1024))
+            if action=='activate':
+                if (type(body) is not dict or set(body)!={'project_id','run_id','preview_id'}
+                        or type(body['project_id']) is not int or not 1<=body['project_id']<=2147483647
+                        or not isinstance(body['run_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,127}',body['run_id'])
+                        or not isinstance(body['preview_id'],str) or not re.fullmatch('[0-9a-f]{64}',body['preview_id'])):raise ApiFailure('INVALID_REQUEST')
+                if not structure_idle():raise ApiFailure('CONFIG_BUSY')
+                token=session_token(request)
+                store_serving(dict(serving_result,state='PREPARING',project_id=body['project_id'],run_id=body['run_id'],code=None,result=None))
+                async def activate():
+                    nonlocal serving_busy
+                    try:
+                        result=await asyncio.to_thread(prepare,body,token,activate=True)
+                        store_serving(dict(serving_result,state='COMPLETE',result=result))
+                    except Exception as error:
+                        code=error.code if isinstance(error,(ApiFailure,ProjectCatalogError,RunBlocked)) else 'NOT_READY'
+                        store_serving(dict(serving_result,state='FAILED',code=code))
+                    finally:serving_busy=False
+                source_task=asyncio.create_task(activate())
+                return JSONResponse(copy.deepcopy(serving_result),status_code=202)
             value=(await asyncio.to_thread(trial,body,session_token(request)) if action=='trial' else
                 await asyncio.to_thread(fixed_read,body) if action=='read' else
+                await asyncio.to_thread(deactivate,body,session_token(request)) if action=='deactivate' else
                 await asyncio.to_thread(prepare,body,session_token(request),activate=action=='activate'))
             return value
         except (ProjectCatalogError,RunBlocked) as error:
@@ -732,7 +830,7 @@ def create_app(*, control=None, token=None, state_dir=None):
         except ApiFailure:raise
         except Exception:raise ApiFailure('NOT_READY') from None
         finally:
-            if action!='read':serving_busy=False
+            if action!='read' and not (action=='activate' and serving_result['state']=='PREPARING'):serving_busy=False
 
     @app.get('/v1/builder/projects')
     async def projects(request: Request):
@@ -770,58 +868,62 @@ def create_app(*, control=None, token=None, state_dir=None):
         authenticate_request(request)
         return copy.deepcopy(clear_result)
 
-    @app.post('/v1/builder/clear/{operation}',status_code=202)
-    async def clear_operation(operation: str,request: Request):
-        nonlocal source_task,readiness,ready_binding
+    @app.post('/v1/builder/clear/apply',status_code=202)
+    async def clear_operation(request: Request):
+        nonlocal source_task,readiness,ready_binding,serving_busy
         authenticate_request(request)
         try:
             body=json.loads(await bounded_body(request))
-            if (operation not in ('preview','apply') or type(body) is not dict
-                    or set(body)!=({'revision'} if operation=='preview' else {'revision','preview_id','database'})
-                    or type(body['revision']) is not int or not setup or body['revision']!=setup['revision']
-                    or operation=='apply' and (body['database']!=configuration['database']
-                        or not isinstance(body['preview_id'],str) or not re.fullmatch('[0-9a-f]{64}',body['preview_id']))):raise ValueError
+            if (type(body) is not dict or set(body)!={'project_id','database_id'}
+                    or type(body['project_id']) is not int or not 1<=body['project_id']<=2147483647
+                    or not isinstance(body['database_id'],str) or not re.fullmatch(r'[A-Za-z0-9._:-]{1,128}',body['database_id'])):raise ValueError
         except (ValueError,TypeError):raise ApiFailure('INVALID_REQUEST') from None
-        if not structure_idle():raise HTTPException(409,'BUILDER_CLEAR_BUSY')
+        current=control.status() if control is not None else None
+        if (not state_dir or source_task is not None and not source_task.done() or serving_busy
+                or current is not None and current['state'] in ('RUNNING','STOPPING')
+                    and current['target']['project_id']!=body['project_id']
+                or clear_result['state'] in ('PARTIAL','INTERRUPTED') and clear_result['report']
+                    and clear_result['report']['database_id']!=body['database_id']):
+            raise HTTPException(409,'LOCK')
         from kag.builder import structure
-        token=session_token(request);revision=setup['revision'];config_hash=_spec_hash(configuration)
-        def envelope(snapshot,state,code=None,deleted=None):
-            return dict(contract_version='builder-clear-v1',state=state,revision=revision,
-                preview_id=_spec_hash(dict(revision=revision,config=config_hash,signature=snapshot['signature'])) if snapshot else None,
-                report=copy.deepcopy(snapshot['report']) if snapshot else None,deleted=deleted or dict(nodes=0,edges=0),
-                checked_at=datetime.now(timezone.utc).isoformat(),code=code)
-        def snapshot():
-            result=structure.preview_clear(configuration['project_id'],token,configuration['paths']['lock_root'])
-            clear_runs(result['report']['database_id'])
-            if setup['revision']!=revision or _spec_hash(configuration)!=config_hash:raise RunBlocked('CLEAR_STALE')
-            return result
-        if operation=='preview':
-            source_task=asyncio.current_task()
-            try:store_clear(envelope(await asyncio.to_thread(snapshot),'PREVIEW'))
-            except Exception as error:
-                store_clear(envelope(None,'BLOCKED',error.code if isinstance(error,(RunBlocked,ProjectCatalogError)) else 'RUNTIME'))
-            finally:source_task=None
-            return copy.deepcopy(clear_result)
-        previous=copy.deepcopy(clear_result)
-        if (previous['state']=='COMPLETE' and previous['revision']==revision and previous['preview_id']==body['preview_id']):
-            return previous
-        if (previous['state']!='PREVIEW' or previous['revision']!=revision or previous['preview_id']!=body['preview_id']):
-            raise HTTPException(409,'BUILDER_CLEAR_STALE')
+        token=session_token(request)
+        try:
+            with structure.target_state(body['project_id'],token,for_write=False) as state:
+                if state['proof'].physical_database_id!=body['database_id']:raise RunBlocked('CLEAR_STALE')
+                counts=state['reader']._query('structure_counts')[0]
+                report=dict(target={k:state['target'][k] for k in ('project_id','project_name','namespace','database')},
+                    database_id=body['database_id'],counts=counts,batch_size=500)
+        except (ProjectCatalogError,RunBlocked) as error:raise HTTPException(409,error.code) from None
         readiness,ready_binding=dict(state='NOT_RUN',checks=[],checked_at=None),None
-        store_clear(dict(previous,state='APPLYING',code=None))
+        store_clear(dict(contract_version='builder-clear-v1',state='APPLYING',revision=setup['revision'] if setup else 0,
+            preview_id=None,report=report,deleted=dict(nodes=0,edges=0),checked_at=datetime.now(timezone.utc).isoformat(),code=None))
+        serving_busy=True
         async def clear():
+            nonlocal serving_busy
             try:
-                fresh=await asyncio.to_thread(snapshot)
-                if envelope(fresh,'PREVIEW')['preview_id']!=body['preview_id']:raise RunBlocked('CLEAR_STALE')
+                if current is not None and current.get('target') and current['target']['project_id']==body['project_id']:
+                    if current['state'] in ('RUNNING','STOPPING'):await asyncio.to_thread(control.close)
+                    if control.status()['state']=='STOPPED':
+                        def abandon():
+                            with structure.target_state(body['project_id'],token,for_write=False) as state:
+                                return control.abandon(current['run_id'],state)
+                        await asyncio.to_thread(abandon)
+                from kag.builder.serving import deactivate
+                await asyncio.to_thread(deactivate,body,token)
                 def progress(counts):store_clear(dict(clear_result,deleted=counts,checked_at=datetime.now(timezone.utc).isoformat()))
-                result=await asyncio.to_thread(structure.apply_clear,configuration['project_id'],token,fresh['signature'],
-                    configuration['paths']['lock_root'],started=lambda physical:clear_runs(physical,mark=True),progress=progress)
-                store_clear(dict(clear_result,state='COMPLETE',code=None,checked_at=datetime.now(timezone.utc).isoformat()))
+                after=await asyncio.to_thread(structure.apply_clear,body['project_id'],token,body['database_id'],
+                    os.environ.get('KAG_BUILDER_LOCK_ROOT','/run/kag-locks'),
+                    progress=progress)
+                if any(after['report']['counts'].values()):raise RunBlocked('CLEAR_STALE')
+                store_clear(dict(clear_result,state='COMPLETE',report=after['report'],code=None,checked_at=datetime.now(timezone.utc).isoformat()))
             except Exception as error:
-                code=error.code if isinstance(error,(RunBlocked,ProjectCatalogError)) else 'RUNTIME'
+                code=error.code if isinstance(error,(RunBlocked,ProjectCatalogError)) else error.detail if isinstance(error,HTTPException) else 'RUNTIME'
                 store_clear(dict(clear_result,state='PARTIAL',code=code,checked_at=datetime.now(timezone.utc).isoformat()))
+            finally:
+                serving_busy=False
         source_task=asyncio.create_task(clear())
         return copy.deepcopy(clear_result)
+
 
     @app.post('/v1/builder/structure/{operation}',status_code=202)
     async def structure_operation(operation: str,request: Request):
@@ -840,6 +942,12 @@ def create_app(*, control=None, token=None, state_dir=None):
         from kag.builder import structure
         token=session_token(request)
         model=structure_model()
+        try:
+            tested=_builder_model(secrets)['test']
+            if not tested or tested['status']!='PASS':raise ValueError
+            dimension=structure._dimension(tested['dimension'])
+        except (OSError,ValueError,KeyError,TypeError,RunBlocked):
+            raise HTTPException(409,'BUILDER_EMBEDDING_NOT_READY') from None
         def envelope(report,state,code=None):
             report=copy.deepcopy(report)
             signature=report.pop('signature',None) if report else None
@@ -847,13 +955,13 @@ def create_app(*, control=None, token=None, state_dir=None):
                 preview_id=_spec_hash(dict(signature=signature,model=model,revision=body['revision'])),
                 checked_at=datetime.now(timezone.utc).isoformat(),can_apply=state=='PREVIEW' and report['code'] is None
                     and bool(any(r['action']!='KEEP' for r in report['changes'])
-                        or any(r['action']=='ADD' for r in report['indexes'])
+                        or any(r['action'] in ('ADD','REBUILD') for r in report['indexes'])
                         or any(r['action']=='REMOVE' for r in report.get('index_changes',[]))),
                 report=report,code=code)
         if operation=='preview':
             source_task=asyncio.current_task()
             try:
-                report=await asyncio.to_thread(structure.preview,body['project_id'],token)
+                report=await asyncio.to_thread(structure.preview,body['project_id'],token,dimension=dimension)
                 if body['revision']!=(setup['revision'] if setup else 0) or model!=structure_model():
                     raise RunBlocked('STRUCTURE_STALE')
                 # Hash includes the live schema/index/physical target and current saved model.
@@ -872,17 +980,17 @@ def create_app(*, control=None, token=None, state_dir=None):
         store_structure(dict(previous,state='APPLYING',can_apply=False,code=None))
         async def prepare_structure():
             try:
-                fresh=await asyncio.to_thread(structure.preview,body['project_id'],token)
+                fresh=await asyncio.to_thread(structure.preview,body['project_id'],token,dimension=dimension)
                 if envelope(copy.deepcopy(fresh),'PREVIEW')['preview_id']!=body['preview_id']:raise RunBlocked('STRUCTURE_STALE')
                 report=await asyncio.to_thread(structure.apply,body['project_id'],token,fresh['signature'],
-                    os.environ.get('KAG_BUILDER_LOCK_ROOT','/run/kag-locks'))
+                    os.environ.get('KAG_BUILDER_LOCK_ROOT','/run/kag-locks'),dimension=dimension)
                 if (report['code'] or any(r['action']!='KEEP' for r in report['changes'])
                         or any(r['action']!='KEEP' for r in report['indexes'])
                         or any(r['action']=='REMOVE' for r in report.get('index_changes',[]))):raise RunBlocked('SCHEMA')
                 store_structure(envelope(report,'COMPLETE'))
             except Exception as error:
                 code=error.code if isinstance(error,(RunBlocked,ProjectCatalogError)) else 'RUNTIME'
-                try:report=await asyncio.to_thread(structure.preview,body['project_id'],token)
+                try:report=await asyncio.to_thread(structure.preview,body['project_id'],token,dimension=dimension)
                 except Exception:report=None
                 store_structure(envelope(report,'PARTIAL',code))
         source_task=asyncio.create_task(prepare_structure())
@@ -890,7 +998,7 @@ def create_app(*, control=None, token=None, state_dir=None):
 
     @app.get('/v1/builder/inputs')
     async def inputs(request: Request):
-        nonlocal source_result,checked_files
+        nonlocal source_result,checked_files,checked_config
         authenticate_request(request)
         result=await asyncio.to_thread(inspect_inputs, configuration)
         if state_dir:
@@ -907,8 +1015,13 @@ def create_app(*, control=None, token=None, state_dir=None):
                         raise ValueError
                 except (OSError,ValueError):
                     if source_result is cached_result:
-                        source_result=dict(state='INVALID',error_code='INTEGRITY',plan_sha256=None,nodes=None,edges=None)
+                        source_result=inspect_inputs(None)['source_validation']
                         checked_files=()
+        if state_dir and source_result['state']=='NOT_RUN':
+            cached=await asyncio.to_thread(source_cache,state_dir)
+            if cached:
+                source_result,checked_files=cached
+                checked_config=_spec_hash(configuration)
         result['source_validation']=dict(source_result,summary=source_result.get('summary')) if state_dir else {k:v for k,v in source_result.items() if k!='summary'}
         if source_result['state']=='VALID':
             for row in result['inputs']:
@@ -919,6 +1032,33 @@ def create_app(*, control=None, token=None, state_dir=None):
     async def dataset(group: str,offset: int,limit: int,request: Request):
         authenticate_request(request)
         return await asyncio.to_thread(read_dataset,Path(__file__).resolve().parents[2],group,offset,limit)
+
+    async def prepare_package_inputs(snapshot,validated,versions):
+        nonlocal setup,configuration,control,checked_config
+        from kag.builder import packages
+        try:model = _builder_model(secrets)
+        except (OSError,ValueError,KeyError,TypeError):raise packages.PackageError('PACKAGE_MODEL') from None
+        if model['revision'] != setup['embedding_revision']:raise packages.PackageError('PACKAGE_MODEL')
+        destination = Path(state_dir)/'package-imports'/snapshot['vector_package']['sha256']/_spec_hash(
+            [snapshot['namespace'],snapshot['model_identity']])
+        paths = await asyncio.to_thread(packages.prepare_package,snapshot['paths']['graph_package'],destination,
+            model=model,plan_sha256=validated['plan_sha256'],namespace=snapshot['namespace'],
+            expected_sha256=snapshot['vector_package']['sha256'])
+        prepared = copy.deepcopy(snapshot)
+        prepared['paths'].update(paths)
+        for name,path in paths.items():prepared['input_sha256'][name] = await asyncio.to_thread(packages.checksum,path)
+        prepared = _config(prepared)
+        if (checked_config != _spec_hash(configuration) or model['revision'] != _builder_model(secrets)['revision']
+                or any(_input_version(path)!=version for path,version in versions)):
+            raise RunBlocked('INTEGRITY')
+        next_control = await asyncio.to_thread(BuilderControl,prepared)
+        updated = dict(setup,runner=prepared)
+        atomic_json(setup_path,updated,mode=0o600)
+        setup,configuration,control = updated,prepared,next_control
+        checked_config = _spec_hash(prepared)
+        versions = (*versions,*[(Path(path),_input_version(path)) for name,path in prepared['paths'].items()
+            if path and name not in ('run_root','lock_root','c3_manifest','selection')])
+        return versions
 
     @app.post('/v1/builder/inputs',status_code=202)
     async def check_inputs(request: Request):
@@ -941,14 +1081,31 @@ def create_app(*, control=None, token=None, state_dir=None):
         snapshot = copy.deepcopy(configuration)
         source_result=dict(state='CHECKING',error_code=None,plan_sha256=None,nodes=None,edges=None)
         async def check():
-            nonlocal source_result,checked_files
+            nonlocal source_result,checked_files,checked_config,configuration,setup,control,readiness,ready_binding
+            from kag.builder import packages
+            validated,versions = None,()
             try:
                 validated, versions = await asyncio.to_thread(
                     prepare_source_inputs if state_dir and not stopped else check_source_inputs,
                     state_dir if state_dir and not stopped else snapshot)
                 if checked_config != _spec_hash(configuration):
                     raise ValueError('Configuration changed during validation')
+                if state_dir and snapshot and snapshot.get('vector_package'):
+                    versions=await prepare_package_inputs(snapshot,validated,versions)
                 source_result, checked_files = validated, versions
+            except packages.PackageError as error:
+                stable = False
+                try:stable = validated is not None and all(_input_version(path)==version for path,version in versions)
+                except OSError:pass
+                if stable:
+                    source_result,checked_files = validated,versions
+                    readiness = dict(state='BLOCKED',checked_at=datetime.now(timezone.utc).isoformat(),checks=[
+                        dict(name='source',state='READY',code=None),dict(name='embedding',state='BLOCKED',code=error.code),
+                        dict(name='target',state='NOT_CHECKED',code='WAIT_EMBEDDING'),dict(name='lock',state='NOT_CHECKED',code='WAIT_TARGET')])
+                    ready_binding = None
+                else:
+                    source_result=dict(state='INVALID',error_code='INTEGRITY',plan_sha256=None,nodes=None,edges=None)
+                    checked_files=()
             except ValueError:
                 source_result=dict(state='INVALID',error_code='INTEGRITY',plan_sha256=None,nodes=None,edges=None)
             except Exception:
@@ -969,34 +1126,41 @@ def create_app(*, control=None, token=None, state_dir=None):
                     or type(body['revision']) is not int):raise ValueError
             limit=selection_limit(source_result['nodes'],body['mode'],body['value'])
         except (ValueError,TypeError):raise ApiFailure('INVALID_REQUEST') from None
-        if (not structure_idle() or source_result['state']!='VALID'
+        if (source_task is not None and not source_task.done()
+                or control is not None and control.status()['state'] in ('RUNNING','STOPPING')
+                or source_result['state']!='VALID'
                 or body['revision']!=(setup['revision'] if setup else 0)):
             raise HTTPException(409,'BUILDER_SELECTION_STALE')
         source_task=asyncio.current_task()
         before=tuple(checked_files)
         try:
             def select():
-                contract=json.loads((Path(__file__).resolve().parents[1]/'schema/schema_contract.json').read_bytes())
                 manifest=Path(state_dir)/'plans'/source_result['plan_sha256']/'manifest.json'
-                data=validate_c3_manifest(contract,manifest)
-                try:
-                    selected=select_bounded_sources(data,limit,extended=True) if limit is not None else None
-                    summary=selection_summary(data,selected)
-                    path=None;digest=None
-                    if selected is not None:
-                        directory=manifest.parent/'selections';directory.mkdir(exist_ok=True)
-                        path=directory/(_spec_hash(selected)+'.json')
-                        if not path.exists():atomic_json(path,selected,mode=0o600)
-                        if json.loads(path.read_bytes())!=json.loads(json.dumps(selected)):raise RunBlocked('INTEGRITY')
-                        digest=hashlib.sha256(path.read_bytes()).hexdigest()
-                    return dict(selection=dict(node_limit=limit,request={k:body[k] for k in ('mode','value')},summary=summary),
-                        path=str(path) if path else None,sha256=digest)
-                finally:data['index'].close()
+                data=dict(manifest=json.loads(manifest.read_bytes()),edge_hashes=range(source_result['edges']))
+                selected=None;path=None;digest=None
+                if limit is not None:
+                    directory=manifest.parent/'selections';directory.mkdir(exist_ok=True)
+                    for candidate in directory.glob('*.json'):
+                        value=json.loads(candidate.read_bytes())
+                        if value.get('node_limit')==limit:
+                            selected=value;path=candidate;break
+                    if selected is None:
+                        nodes=[json.loads(line) for line in (manifest.parent/'nodes.jsonl').read_bytes().splitlines() if line.strip()]
+                        edges=[tuple(json.loads(line)['tuple']) for line in (manifest.parent/'edges.jsonl').read_bytes().splitlines() if line.strip()]
+                        data.update(nodes=nodes,node_hashes={(n['type'],n['id']):None for n in nodes},edge_hashes=dict.fromkeys(edges))
+                        selected=select_bounded_sources(data,limit,extended=True)
+                        path=directory/(_spec_hash(selected)+'.json');atomic_json(path,selected,mode=0o600)
+                    digest=hashlib.sha256(path.read_bytes()).hexdigest()
+                summary=selection_summary(data,selected)
+                return dict(selection=dict(node_limit=limit,request={k:body[k] for k in ('mode','value')},summary=summary),
+                    path=str(path) if path else None,sha256=digest)
             preview=await asyncio.to_thread(select)
             if (not before or any(_input_version(path)!=version for path,version in before)
                     or body['revision']!=(setup['revision'] if setup else 0)):
                 raise HTTPException(409,'BUILDER_SELECTION_STALE')
-            preview.update(revision=body['revision'],files=before)
+            files=before
+            if preview['path']:files=(*files,(Path(preview['path']),_input_version(preview['path'])))
+            preview.update(revision=body['revision'],files=files)
             preview['preview_id']=_spec_hash({k:v for k,v in preview.items() if k!='files'})
             scope_preview=preview
             return dict(contract_version='builder-selection-v1',revision=body['revision'],preview_id=preview['preview_id'],
@@ -1012,12 +1176,60 @@ def create_app(*, control=None, token=None, state_dir=None):
             return dict(contract_version='builder-control-v3', state='BLOCKED', run_id=None,
                 target=None, progress=None, error_code=failure,
                 actions=dict(build=False, stop=False, resume=False, abandon=False,delete=False),
-                delete_reason='DELETE_NOT_AUTHORIZED', production_write='BLOCKED',
+                delete_reason=None, production_write='BLOCKED',
                 stages=[],timing=None,binding=None,result=None)
         result = await asyncio.to_thread(control.status)
         if state_dir and (not setup or configuration_view()['readiness']['state']!='READY'):
-            result['actions'].update(build=False,resume=False)
+            result['actions'].update(build=False,resume=bool(setup) and result['actions']['resume'])
         return result
+
+    @app.get('/v1/builder/packages')
+    async def graph_packages(request: Request):
+        authenticate_request(request)
+        from kag.builder import packages
+        try:model = _builder_model(secrets)
+        except (OSError,ValueError,KeyError,TypeError):model = None
+        plan = source_result['plan_sha256'] if source_result['state']=='VALID' else None
+        return await asyncio.to_thread(packages.catalog,model,plan)
+
+    @app.get('/v1/builder/packages/export')
+    async def graph_export_status(request: Request):
+        authenticate_request(request)
+        from kag.builder.packages import host_directory
+        return dict(package_export,directory=host_directory())
+
+    @app.post('/v1/builder/packages/export',status_code=202)
+    async def graph_export(request: Request):
+        nonlocal source_task,package_export
+        authenticate_request(request)
+        from kag.builder import packages,serving
+        try:
+            change = json.loads(await bounded_body(request))
+            if (type(change) is not dict or set(change) != {'project_id','run_id'}
+                    or type(change['project_id']) is not int or not 1<=change['project_id']<=2147483647
+                    or not isinstance(change['run_id'],str) or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,127}',change['run_id'])):
+                raise ValueError
+        except (ValueError,TypeError):raise ApiFailure('INVALID_REQUEST') from None
+        if not structure_idle():raise HTTPException(409,'SOURCE_CHECK_BLOCKED')
+        session = session_token(request)
+        owned = await asyncio.to_thread(serving.runs,session)
+        if not any(row['run_id']==change['run_id'] and row['project_id']==change['project_id'] for row in owned):
+            raise ApiFailure('SCOPE_DENIED')
+        if not structure_idle():raise HTTPException(409,'SOURCE_CHECK_BLOCKED')
+        package_export=dict(package_export,state='RUNNING',name=None,size=None,code=None)
+        async def export():
+            nonlocal package_export
+            try:
+                path,receipt = await asyncio.to_thread(serving._run_directory,change['run_id'],change['project_id'])
+                result = await asyncio.to_thread(packages.export_package,path,receipt,_builder_model(secrets),packages.directory(),
+                    application_version=os.environ.get('KAG_APPLICATION_VERSION','0.1.0'))
+                package_export=dict(package_export,state='COMPLETE',code=None,**result)
+            except packages.PackageError as error:
+                package_export=dict(package_export,state='FAILED',name=None,size=None,code=error.code)
+            except Exception:
+                package_export=dict(package_export,state='FAILED',name=None,size=None,code='PACKAGE_UNAVAILABLE')
+        source_task = asyncio.create_task(export())
+        return await graph_export_status(request)
 
     @app.get('/v1/builder/configuration')
     async def get_configuration(request: Request):
@@ -1026,13 +1238,13 @@ def create_app(*, control=None, token=None, state_dir=None):
 
     @app.post('/v1/builder/configuration',status_code=202)
     async def save_configuration(request: Request):
-        nonlocal setup, setup_error, configuration, control, checked_config, checked_files, readiness, ready_binding, failure
+        nonlocal setup, setup_error, configuration, control, checked_config, checked_files, readiness, ready_binding, failure,source_result
         authenticate_request(request)
         try:
             body = json.loads(await bounded_body(request))
             if (not state_dir or type(body) is not dict
                     or not {'revision','embedding_revision','batch_size','request_limit'} <= set(body)
-                    or set(body)-{'revision','embedding_revision','batch_size','request_limit','node_limit','project_id','selection_preview_id'}
+                    or set(body)-{'revision','embedding_revision','batch_size','request_limit','node_limit','project_id','selection_preview_id','vector_package'}
                     or any(type(body[name]) is not int for name in ('revision','embedding_revision','batch_size'))
                     or not 1<=body['batch_size']<=4096
                     or body['request_limit'] is not None and (type(body['request_limit']) is not int or not 1<=body['request_limit']<=1000000)
@@ -1061,7 +1273,8 @@ def create_app(*, control=None, token=None, state_dir=None):
             target = await asyncio.to_thread(selected_target,project_id,session_token(request))
             next_revision = body['revision']+1
             config = await asyncio.to_thread(_builder_config,state_dir,target,model,next_revision,
-                body['batch_size'],body['request_limit'],body.get('node_limit'),chosen,plan_sha256=source_result['plan_sha256'])
+                body['batch_size'],body['request_limit'],body.get('node_limit'),chosen,plan_sha256=source_result['plan_sha256'],
+                vector_package=body.get('vector_package'))
             if (body['revision']!=(setup['revision'] if setup else 0)
                     or source_task is not None and not source_task.done()
                     or source_result['state']!='VALID'
@@ -1083,6 +1296,9 @@ def create_app(*, control=None, token=None, state_dir=None):
         setup, configuration, control = updated, config, next_control
         setup_error, failure = None, None
         checked_config = _spec_hash(configuration)
+        if config.get('vector_package'):
+            source_result=inspect_inputs(None)['source_validation']
+            checked_files=()
         if config['paths'].get('selection'):
             path=Path(config['paths']['selection'])
             checked_files=(*checked_files,(path,_input_version(path)))
@@ -1119,7 +1335,7 @@ def create_app(*, control=None, token=None, state_dir=None):
                 model = _builder_model(secrets)
                 from kag.http_api.provider_budget import provider_route
                 try:
-                    provider_route(model['config'],'embedding',_builder_policy())
+                    if snapshot['vector_policy']=='provider':provider_route(model['config'],'embedding',_builder_policy())
                     valid = bool(model['test'] and model['test']['status']=='PASS' and model['test']['dimension']==snapshot['vector_dimensions'])
                 except Exception:
                     valid = False
@@ -1131,7 +1347,8 @@ def create_app(*, control=None, token=None, state_dir=None):
                     _indexes(reader,verified['contract'],snapshot['vector_dimensions'])
                     record('target',True,None)
                     lock = Path(snapshot['paths']['lock_root'])/(hashlib.sha256(verified['database_id'].encode()).hexdigest()+'.lock')
-                    if not record('lock',not lock.exists() and not lock.is_symlink(),'LOCK'):
+                    lock_state = graph_lock_status(lock)['state']
+                    if not record('lock',lock_state == 'FREE','UNCERTAIN_WRITE' if lock_state == 'RETAINED' else 'LOCK'):
                         try:
                             if lock.is_symlink():raise ValueError
                             with lock.open('rb') as stream:metadata = json.loads(stream.read(8193))
@@ -1156,8 +1373,19 @@ def create_app(*, control=None, token=None, state_dir=None):
                     checks.append(dict(name=name,state='NOT_CHECKED',code=waiting))
             return checks, before
         async def check():
-            nonlocal readiness, ready_binding
-            checks, checked_binding = await asyncio.to_thread(inspect)
+            nonlocal readiness, ready_binding,source_result,checked_files
+            try:
+                if snapshot.get('vector_package'):
+                    validated,versions=await asyncio.to_thread(prepare_source_inputs,state_dir)
+                    checked_files=await prepare_package_inputs(snapshot,validated,versions)
+                    source_result=validated
+                    snapshot.clear();snapshot.update(copy.deepcopy(configuration))
+                checks, checked_binding = await asyncio.to_thread(inspect)
+            except Exception as error:
+                readiness=dict(state='BLOCKED',checked_at=datetime.now(timezone.utc).isoformat(),checks=[
+                    dict(name='source',state='BLOCKED',code=getattr(error,'code','INTEGRITY'))])
+                ready_binding=None
+                return
             ready = all(row['state']=='READY' for row in checks)
             try:
                 if ready and await asyncio.to_thread(binding,session_token(request))!=checked_binding:raise ValueError
@@ -1173,8 +1401,6 @@ def create_app(*, control=None, token=None, state_dir=None):
     @app.post('/v1/builder/{action}', status_code=202)
     async def action(action: str, request: Request):
         authenticate_request(request)
-        if action == 'delete':
-            raise HTTPException(409, 'DELETE_NOT_AUTHORIZED')
         if action not in ('build', 'stop', 'resume','abandon'):
             raise HTTPException(404, 'UNKNOWN_ACTION')
         if action != 'stop' and source_task is not None and not source_task.done():
@@ -1208,8 +1434,8 @@ def create_app(*, control=None, token=None, state_dir=None):
                 try:
                     if await asyncio.to_thread(binding,session_token(request))!=ready_binding:raise ValueError
                     model = _builder_model(secrets)
-                    if model['revision']!=setup['embedding_revision']:raise ValueError
-                    control.runner = _builder_runner(model)
+                    if model['revision']!=ready_binding[1]:raise ValueError
+                    control.runner = _builder_runner(model) if configuration['vector_policy']=='provider' else run
                 except (OSError,ValueError,KeyError,TypeError):
                     raise HTTPException(409,'BUILDER_CONFIGURATION_CHANGED') from None
             control.start(body['run_id'], resume=action == 'resume')

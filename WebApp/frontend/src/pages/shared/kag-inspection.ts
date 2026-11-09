@@ -2,59 +2,24 @@ import { api, send, ApiError } from '../../api.ts'
 
 export type ServingSelection = { release_id: string; project_id: number; project_name: string; database: string; database_id: string; namespace: string; run_id: string; preview_id: string }
 export type ServingRun = { run_id: string; project_id: number; project_name: string; database: string; namespace: string; nodes: number; edges: number; vectors: number; dimension: number; model_identity: string; partial: boolean }
-export type ServingCatalog = { contract_version: 'builder-serving-v1'; active: ServingSelection | null; busy: boolean; runs: ServingRun[]; runtime_ready: boolean; chat_blockers: string[] }
-export type ServingPreview = { release_id: string; project_id: number; project_name: string; database: string; database_id: string; namespace: string; run_id: string; preview_id: string; counts: { nodes: number; edges: number; vectors: number }; dimension: number; partial: boolean; embedding: { base_url: string; model: string }; chat: { base_url: string; model: string } | null; previous: ServingSelection | null; chat_ready: boolean; chat_blockers: string[]; status?: 'ACTIVE' }
-export type GraphSource = { source_id: string; record_id: string | null; status: 'MISSING' | 'UNPUBLISHED' | 'CONTENT_MISMATCH' | 'NOT_EFFECTIVE' | 'PUBLISHED'; release_published: boolean; import_data: Record<string, unknown> }
-export type SourceSummary = { total: number; missing: number; unpublished: number; mismatch: number; ineffective: number; release_missing: number }
-export type GraphSources = { contract_version: 'builder-sources-v1'; import_limits: { rows: number; bytes: number }; target: { project_id: number; project_name: string; database: string; namespace: string }; run_id: string; partial: boolean; release: { release_id: string } | null; documents: GraphSource[]; units: GraphSource[]; summary: { documents: SourceSummary; units: SourceSummary } }
-export function sourceImportBatch(value: Pick<GraphSources, 'documents' | 'units' | 'import_limits'>, kind: 'documents' | 'units') {
-  const missing = new Map(value[kind].filter(row => row.status === 'MISSING').map(row => [row.source_id, row]))
-  const output: Record<string, unknown>[] = [], visiting = new Set<string>()
-  const encoder = new TextEncoder(), { rows: rowLimit, bytes: limit } = value.import_limits
-  const displayLimit = `${(limit / (limit >= 1024 * 1024 ? 1024 * 1024 : 1024)).toLocaleString('vi-VN', { maximumFractionDigits: 2 })} ${limit >= 1024 * 1024 ? 'MiB' : 'KiB'}`
-  const envelopeBytes = encoder.encode(JSON.stringify({ rows: [], updateExisting: false })).byteLength
-  let bytes = envelopeBytes, full = false
-  function add(id: string) {
-    const row = missing.get(id)
-    if (!row || full || output.length >= rowLimit) return
-    if (visiting.has(id)) throw new ApiError('Nguồn có vòng lặp đơn vị cha; kiểm tra lại phiên', 502)
-    visiting.add(id)
-    if (kind === 'units' && typeof row.import_data.parent_id === 'string') add(row.import_data.parent_id)
-    visiting.delete(id)
-    if (full || output.length >= rowLimit) return
-    const rowBytes = encoder.encode(JSON.stringify(row.import_data)).byteLength
-    if (envelopeBytes + rowBytes > limit) throw new ApiError(`Nguồn ${id} vượt giới hạn JSON ${displayLimit} cho một bản ghi; kiểm tra nguồn trước khi nhập`, 413)
-    const addition = rowBytes + (output.length ? 1 : 0)
-    if (bytes + addition > limit) { full = true; return }
-    bytes += addition; output.push(row.import_data); missing.delete(id)
-  }
-  for (const row of value[kind]) { add(row.source_id); if (full || output.length >= rowLimit) break }
-  return output
-}
-export async function loadGraphSources(projectId: number, runId: string, signal?: AbortSignal): Promise<GraphSources> {
-  if (!Number.isInteger(projectId) || projectId < 1 || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(runId)) throw new ApiError('Chọn project và phiên đã xác minh', 400)
-  const value = await api<GraphSources>(`/admin/kag/sources/${projectId}/${encodeURIComponent(runId)}`, { signal, cache: 'no-store' })
-  if (value.contract_version !== 'builder-sources-v1' || value.target?.project_id !== projectId || value.run_id !== runId || typeof value.partial !== 'boolean' ||
-    !Number.isSafeInteger(value.import_limits?.rows) || value.import_limits.rows < 1 || !Number.isSafeInteger(value.import_limits?.bytes) || value.import_limits.bytes < 1 ||
-    !['documents', 'units'].every(group => {
-      const rows = value[group as 'documents' | 'units'], counts = value.summary?.[group as 'documents' | 'units']
-      return Array.isArray(rows) && new Set(rows.map(row => row.source_id)).size === rows.length && rows.every(row => typeof row.source_id === 'string' && !!row.source_id && ['MISSING', 'UNPUBLISHED', 'CONTENT_MISMATCH', 'NOT_EFFECTIVE', 'PUBLISHED'].includes(row.status) &&
-        typeof row.release_published === 'boolean' && !!row.import_data && row.import_data.reviewed === false && row.import_data[group === 'documents' ? 'doc_id' : 'unit_id'] === row.source_id) && counts &&
-        ['total', 'missing', 'unpublished', 'mismatch', 'ineffective', 'release_missing'].every(key => Number.isInteger(counts[key as keyof SourceSummary]) && counts[key as keyof SourceSummary] >= 0) && counts.total === rows.length &&
-        counts.missing === rows.filter(row => row.status === 'MISSING').length && counts.unpublished === rows.filter(row => row.status === 'UNPUBLISHED').length &&
-        counts.mismatch === rows.filter(row => row.status === 'CONTENT_MISMATCH').length && counts.ineffective === rows.filter(row => row.status === 'NOT_EFFECTIVE').length &&
-        counts.release_missing === rows.filter(row => !row.release_published).length
-    })) throw new ApiError('Danh sách nguồn không khớp project/phiên; kiểm tra lại', 502)
+export type ServingOperation = { contract_version: 'builder-serving-operation-v1'; state: 'NOT_RUN' | 'PREPARING' | 'COMPLETE' | 'FAILED' | 'INTERRUPTED'; project_id: number | null; run_id: string | null; code: string | null; result: ServingPreview | null }
+export type ServingCatalog = { contract_version: 'builder-serving-v1'; active: ServingSelection | null; busy: boolean; runs: ServingRun[]; runtime_ready: boolean; chat_blockers: string[]; operation?: ServingOperation | null }
+export type ServingPreview = { release_id: string; project_id: number; project_name: string; database: string; database_id: string; namespace: string; run_id: string; preview_id: string; counts: { nodes: number; edges: number; vectors: number }; dimension: number; partial: boolean; embedding: { base_url: string; model: string }; chat: { base_url: string; model: string } | null; previous: ServingSelection | null; chat_ready: boolean; chat_blockers: string[]; preparation_required?: boolean; status?: 'ACTIVE' }
+function validateServingOperation(value: ServingOperation): ServingOperation {
+  if (!shape(value,['contract_version','state','project_id','run_id','code','result']) || value.contract_version !== 'builder-serving-operation-v1' || !['NOT_RUN','PREPARING','COMPLETE','FAILED','INTERRUPTED'].includes(value.state) ||
+    (value.state === 'NOT_RUN' ? value.project_id !== null || value.run_id !== null : !Number.isInteger(value.project_id) || value.project_id! < 1 || typeof value.run_id !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value.run_id)) ||
+    (['FAILED','INTERRUPTED'].includes(value.state) ? typeof value.code !== 'string' || !/^[A-Z_]{1,64}$/.test(value.code) : value.code !== null) ||
+    (value.state === 'COMPLETE' ? value.result?.status !== 'ACTIVE' || value.result.project_id !== value.project_id || value.result.run_id !== value.run_id || !/^[0-9a-f]{64}$/.test(value.result.preview_id) : value.result !== null)) throw new ApiError('Trạng thái chuẩn bị đồ thị không hợp lệ',502)
   return value
 }
 export const servingReasons: Record<string, string> = {
   GRAPH_REQUIRED: 'Chọn một đồ thị rồi bấm Dùng cho Chat.',
   SOURCE_MISSING: 'Bản nguồn của đồ thị chưa đầy đủ. Chọn lại phiên dựng và kiểm tra nguồn đi kèm.',
   SOURCE_NOT_PUBLISHED: 'Nguồn còn là bản nháp. Kiểm duyệt và xuất bản văn bản, đơn vị pháp lý tương ứng.',
-  SOURCE_TEXT_MISMATCH: 'Nội dung hoặc ngày hiệu lực trong WebApp khác nguồn dựng graph. Kiểm và nhập lại đúng nguồn.',
+  SOURCE_TEXT_MISMATCH: 'Nội dung hoặc ngày hiệu lực khác nguồn dựng đồ thị. Kiểm tra và nhập lại đúng nguồn.',
   SOURCE_NOT_EFFECTIVE: 'Nguồn chưa có hiệu lực, đã hết hiệu lực hoặc đã bị thay thế; chưa đủ điều kiện Chat.',
-  CHAT_MODEL_REQUIRED: 'Chưa có Chat model đã kiểm tra. Lưu và kiểm tra Chat trong Cấu hình, rồi xem trước lại.',
-  CHAT_MODEL_NOT_APPLIED: 'Chat đã kiểm tra nhưng chưa áp dụng cho đồ thị phục vụ. Chọn phiên, xem trước và xác nhận kích hoạt để dùng.',
+  CHAT_MODEL_REQUIRED: 'Chưa có model Chat đã kiểm tra. Lưu và kiểm tra tại Model & API key rồi thử lại.',
+  CHAT_MODEL_NOT_APPLIED: 'Model Chat chưa áp dụng cho đồ thị này. Bấm Dùng cho Chat rồi xác nhận để dùng.',
 }
 export async function loadServing(signal?: AbortSignal): Promise<ServingCatalog> {
   const value = await api<ServingCatalog>('/admin/kag/serving', { signal, cache: 'no-store' })
@@ -62,10 +27,85 @@ export async function loadServing(signal?: AbortSignal): Promise<ServingCatalog>
     typeof value.busy !== 'boolean' || typeof value.runtime_ready !== 'boolean' || value.runs.some(row => !Number.isInteger(row.project_id) ||
       typeof row.run_id !== 'string' || !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(row.namespace) ||
       [row.nodes, row.edges, row.vectors, row.dimension].some(n => !Number.isInteger(n) || n < 0))) throw new ApiError('Trạng thái đồ thị phục vụ không hợp lệ', 502)
+  if (value.operation != null) validateServingOperation(value.operation)
   return value
 }
-export async function changeServing(action: 'preview' | 'activate', project_id: number, run_id: string, preview_id?: string): Promise<ServingPreview> {
-  const value = await api<ServingPreview>(`/admin/kag/serving/${action}`, send('POST', { project_id, run_id, ...(action === 'activate' ? { preview_id } : {}) }))
+export type PackageModel = { provider: string; model: string; dimension: number }
+export type VectorPackageManifest = { format_version: 'luatgt-vector-package-v1'; plan_sha256: string; selection: Record<string, unknown> | null; model_identity: PackageModel; nodes: number; edges: number; vectors: number; fingerprint: string; application_version: string }
+export type VectorPackageReference = { name: string; sha256: string }
+export type BuilderPackages = { contract_version: 'builder-packages-v1'; directory: string; current_model: PackageModel | null; packages: { name: string; sha256: string | null; size: number; compatible: boolean; reason: string; manifest: VectorPackageManifest | null }[] }
+export type BuilderPackageExport = { contract_version: 'builder-package-export-v1'; state: 'NOT_RUN' | 'RUNNING' | 'COMPLETE' | 'FAILED'; name: string | null; size: number | null; code: string | null; directory: string }
+const packageName = (value: unknown): value is string => typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,119}\.zip$/.test(value)
+const listedPackageName = (value: unknown): value is string => typeof value === 'string' && value.length > 0 && value.length <= 255 && !/[\/\\\x00-\x1f\x7f]/.test(value)
+export function packageReason(code: string) {
+  const reasons: Record<string, string> = {
+    PACKAGE_READY: 'Tương thích để nhập', COMPATIBLE: 'Tương thích để nhập',
+    PACKAGE_NAME: 'Đổi tên ZIP: chỉ dùng chữ/số ASCII, dấu chấm, gạch ngang hoặc gạch dưới; tối đa 124 ký tự.',
+    PACKAGE_PLAN: 'Gói dùng phiên bản dữ liệu khác. Cài đúng dữ liệu nguồn rồi tải lại.',
+    PACKAGE_MODEL: 'Model của gói không khớp cấu hình hiện tại. Lưu và kiểm tra đúng Embedding rồi tải lại.', MODEL_MISMATCH: 'Model của gói không khớp cấu hình hiện tại.',
+    PACKAGE_SOURCE: 'Chưa đọc được dữ liệu nguồn. Tải lại trước khi chọn gói.',
+    PACKAGE_SELECTION: 'Phạm vi dữ liệu không khớp gói. Chọn lại gói hoặc kiểm tra dữ liệu nguồn.',
+    PACKAGE_CHANGED: 'Tệp ZIP đã thay đổi. Tải lại danh sách rồi chọn lại.',
+    PACKAGE_PATH: 'Thư mục hoặc tệp ZIP không hợp lệ; không dùng liên kết tượng trưng.',
+    PACKAGE_SIZE: 'ZIP vượt giới hạn kích thước hoặc số lượng đã khai báo.',
+    PACKAGE_MANIFEST: 'Thông tin mô tả gói không hợp lệ.',
+    PACKAGE_FILES: 'ZIP chứa tệp thiếu, thừa hoặc đường dẫn không hợp lệ.',
+    PACKAGE_INVALID: 'ZIP hoặc dữ liệu vector không hợp lệ.',
+    PACKAGE_INTEGRITY: 'Nội dung gói không khớp dữ liệu nguồn đã chốt.',
+    PACKAGE_PROVENANCE: 'Thiếu hoặc sai thông tin nguồn của vector.',
+    PACKAGE_VECTORS: 'Vector thiếu, sai kích thước hoặc không hợp lệ.',
+    PACKAGE_UNAVAILABLE: 'Không đọc được ZIP. Kiểm tra quyền đọc và chép lại tệp.',
+  }
+  return reasons[code] ?? 'Chưa thể dùng gói. Kiểm tra cấu hình rồi tải lại.'
+}
+const packageModel = (value: PackageModel) => shape(value, ['provider', 'model', 'dimension']) && typeof value.provider === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(value.provider) &&
+  typeof value.model === 'string' && /^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(value.model) && count(value.dimension, 65536) && value.dimension > 0
+const packageReference = (value: VectorPackageReference) => shape(value, ['name', 'sha256']) && packageName(value.name) && hash(value.sha256)
+const packageDirectory = (value: unknown) => typeof value === 'string' && value.length > 0 && value.length <= 4096 && !/[\x00-\x1f\x7f]/.test(value)
+export async function loadBuilderPackages(signal?: AbortSignal): Promise<BuilderPackages> {
+  const value = await api<BuilderPackages>('/admin/kag/builder/packages', { signal, cache: 'no-store' })
+  const invalid = () => { throw new ApiError('Danh sách gói vector không hợp lệ', 502) }
+  if (!shape(value, ['contract_version', 'directory', 'current_model', 'packages']) || value.contract_version !== 'builder-packages-v1' || !packageDirectory(value.directory) ||
+    value.current_model !== null && !packageModel(value.current_model) || !Array.isArray(value.packages) || value.packages.length > 10000) invalid()
+  const names = new Set<string>()
+  for (const row of value.packages) {
+    if (!shape(row, ['name', 'sha256', 'size', 'compatible', 'reason', 'manifest']) || !listedPackageName(row.name) || names.has(row.name) ||
+      row.sha256 !== null && !hash(row.sha256) || !count(row.size, Number.MAX_SAFE_INTEGER) || typeof row.compatible !== 'boolean' ||
+      typeof row.reason !== 'string' || row.reason.length > 1024 || row.compatible && (!packageName(row.name) || row.size > 32 * 1024 ** 3 || !row.sha256 || !row.manifest || !value.current_model)) invalid()
+    const m = row.manifest
+    if (m !== null && (!shape(m, ['format_version', 'plan_sha256', 'selection', 'model_identity', 'nodes', 'edges', 'vectors', 'fingerprint', 'application_version']) ||
+      m.format_version !== 'luatgt-vector-package-v1' || !hash(m.plan_sha256) || !hash(m.fingerprint) || !packageModel(m.model_identity) ||
+      m.selection !== null && (typeof m.selection !== 'object' || Array.isArray(m.selection)) || [m.nodes, m.edges, m.vectors].some(n => !count(n, Number.MAX_SAFE_INTEGER)) ||
+      typeof m.application_version !== 'string' || !m.application_version || m.application_version.length > 255)) invalid()
+    if (row.compatible && m && ['provider', 'model', 'dimension'].some(key => m.model_identity[key as keyof PackageModel] !== value.current_model![key as keyof PackageModel])) invalid()
+    names.add(row.name)
+  }
+  return value
+}
+function validatePackageExport(value: BuilderPackageExport) {
+  if (!shape(value, ['contract_version', 'state', 'name', 'size', 'code', 'directory']) || value.contract_version !== 'builder-package-export-v1' ||
+    !['NOT_RUN', 'RUNNING', 'COMPLETE', 'FAILED'].includes(value.state) || !packageDirectory(value.directory) || value.name !== null && !packageName(value.name) ||
+    value.size !== null && !count(value.size, Number.MAX_SAFE_INTEGER) || value.code !== null && (typeof value.code !== 'string' || !/^[A-Z0-9_]{1,64}$/.test(value.code)) ||
+    value.state === 'COMPLETE' && (value.name === null || value.size === null || value.size > 32 * 1024 ** 3 || value.code !== null)) throw new ApiError('Trạng thái xuất gói không hợp lệ', 502)
+  return value
+}
+export async function loadBuilderPackageExport(signal?: AbortSignal): Promise<BuilderPackageExport> {
+  return validatePackageExport(await api<BuilderPackageExport>('/admin/kag/builder/packages/export', { signal, cache: 'no-store' }))
+}
+export async function exportBuilderPackage(project_id: number, run_id: string): Promise<BuilderPackageExport> {
+  if (!count(project_id, 2147483647) || project_id < 1 || typeof run_id !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(run_id)) throw new ApiError('Project hoặc phiên xuất không hợp lệ', 400)
+  return validatePackageExport(await api<BuilderPackageExport>('/admin/kag/builder/packages/export', send('POST', { project_id, run_id })))
+}
+export function changeServing(action: 'preview', project_id: number, run_id: string): Promise<ServingPreview>
+export function changeServing(action: 'activate', project_id: number, run_id: string, preview_id: string): Promise<ServingPreview | ServingOperation>
+export async function changeServing(action: 'preview' | 'activate', project_id: number, run_id: string, preview_id?: string): Promise<ServingPreview | ServingOperation> {
+  const raw = await api<ServingPreview | ServingOperation>(`/admin/kag/serving/${action}`, send('POST', { project_id, run_id, ...(action === 'activate' ? { preview_id } : {}) }))
+  if ('contract_version' in raw && raw.contract_version === 'builder-serving-operation-v1') {
+    const operation=validateServingOperation(raw)
+    if (action !== 'activate' || operation.project_id !== project_id || operation.run_id !== run_id || operation.state !== 'PREPARING') throw new ApiError('Thao tác không thuộc đồ thị đang chọn',502)
+    return operation
+  }
+  const value=raw as ServingPreview
   if (value.project_id !== project_id || value.run_id !== run_id || !/^[0-9a-f]{64}$/.test(value.preview_id) ||
     !Array.isArray(value.chat_blockers) || action === 'activate' && value.status !== 'ACTIVE') throw new ApiError('Chưa xác nhận được kết quả; tải lại trạng thái trước khi thao tác tiếp', 502)
   return value
@@ -211,7 +251,7 @@ export async function loadKagConfiguration(signal?: AbortSignal): Promise<KagCon
 export type BuilderState = 'IDLE' | 'RUNNING' | 'STOPPING' | 'STOPPED' | 'COMPLETE' | 'BLOCKED' | 'ABANDONED' | 'CLEARED'
 export const builderStages = ['preflight', 'plan', 'vectorize', 'export-artifact', 'write-nodes', 'verify-nodes', 'write-edges', 'verify', 'release'] as const
 export type BuilderStage = typeof builderStages[number]
-export type BuilderStatus = { state: BuilderState; run_id: string | null; target: { project_id: number; database: string; namespace: string } | null; progress: { stage: string; done: number; total: number } | null; error_code: string | null; actions: { build: boolean; stop: boolean; resume: boolean; abandon?: boolean; delete: false }; delete_reason: 'DELETE_NOT_AUTHORIZED'; production_write: 'BLOCKED' | 'CONFIGURED' } & (
+export type BuilderStatus = { state: BuilderState; run_id: string | null; target: { project_id: number; database: string; namespace: string } | null; progress: { stage: string; done: number; total: number } | null; error_code: string | null; actions: { build: boolean; stop: boolean; resume: boolean; abandon?: boolean; delete: false }; delete_reason: string | null; production_write: 'BLOCKED' | 'CONFIGURED' } & (
   { contract_version: 'builder-control-v1' } | {
     contract_version: 'builder-control-v2' | 'builder-control-v3'
     stages: { name: BuilderStage; state: 'PENDING' | 'RUNNING' | 'COMPLETE' | 'STOPPED' | 'BLOCKED'; done: number | null; total: number | null; error_code: string | null }[]
@@ -225,7 +265,7 @@ export function builderStateLabel(state: BuilderState) {
 function validateBuilder(value: BuilderStatus): BuilderStatus {
   const extended = value?.contract_version === 'builder-control-v3', detail = extended || value?.contract_version === 'builder-control-v2'
   if (!shape(value, ['contract_version', 'state', 'run_id', 'target', 'progress', 'error_code', 'actions', 'delete_reason', 'production_write', ...(detail ? ['stages', 'timing', 'binding', 'result'] : [])]) ||
-    !['builder-control-v1', 'builder-control-v2', 'builder-control-v3'].includes(value.contract_version) || !['IDLE', 'RUNNING', 'STOPPING', 'STOPPED', 'COMPLETE', 'BLOCKED', ...(extended ? ['ABANDONED','CLEARED'] : [])].includes(value.state) || !['BLOCKED', 'CONFIGURED'].includes(value.production_write) || value.delete_reason !== 'DELETE_NOT_AUTHORIZED' ||
+    !['builder-control-v1', 'builder-control-v2', 'builder-control-v3'].includes(value.contract_version) || !['IDLE', 'RUNNING', 'STOPPING', 'STOPPED', 'COMPLETE', 'BLOCKED', ...(extended ? ['ABANDONED','CLEARED'] : [])].includes(value.state) || !['BLOCKED', 'CONFIGURED'].includes(value.production_write) || value.delete_reason !== null && (typeof value.delete_reason !== 'string' || !/^[A-Z_]{1,64}$/.test(value.delete_reason)) ||
     !value.actions || Object.keys(value.actions).sort().join() !== ['build', 'stop', 'resume', 'delete', ...(extended ? ['abandon'] : [])].sort().join() ||
     typeof value.actions.build !== 'boolean' || typeof value.actions.resume !== 'boolean' ||
     (detail ? value.actions.build && !['IDLE', 'COMPLETE', ...(extended ? ['ABANDONED','CLEARED'] : [])].includes(value.state) || value.actions.resume && value.state !== 'STOPPED' : value.actions.build !== ['IDLE', 'COMPLETE'].includes(value.state) || value.actions.resume !== (value.state === 'STOPPED')) ||
@@ -273,7 +313,8 @@ export async function loadBuilderStatus(signal?: AbortSignal): Promise<BuilderSt
   return validateBuilder(await api<BuilderStatus>('/admin/kag/builder/status', { signal, cache: 'no-store' }))
 }
 export type BuilderConfiguration = {
-  contract_version: 'builder-configuration-v1' | 'builder-configuration-v2' | 'builder-configuration-v3' | 'builder-configuration-v4'; revision: number; saved: boolean; error_code: 'CONFIG' | null
+  contract_version: 'builder-configuration-v1' | 'builder-configuration-v2' | 'builder-configuration-v3' | 'builder-configuration-v4' | 'builder-configuration-v5'; revision: number; saved: boolean; error_code: 'CONFIG' | null
+  vector_package?: VectorPackageReference | null
   target: { project_id: number; project_name: string; database: string; namespace: string } | null
   embedding: { provider: 'openai-compatible'; base_url: string; model: string; revision: number; key_configured: boolean; tested: boolean; dimension: number | null } | null
   batch_size: number; request_limit: number | null
@@ -281,7 +322,7 @@ export type BuilderConfiguration = {
   links?: { openspg: string; neo4j: string; bolt: string } | null
   readiness: { state: 'NOT_RUN' | 'CHECKING' | 'READY' | 'BLOCKED'; checks: { name: 'source' | 'embedding' | 'target' | 'lock'; state: 'READY' | 'BLOCKED' | 'NOT_CHECKED'; code: string | null; owner?: { run_id: string; project_id: number } }[]; checked_at: string | null }
 }
-export type BuilderConfigurationChange = Pick<BuilderConfiguration, 'revision' | 'batch_size' | 'request_limit'> & { embedding_revision: number; node_limit?: number | null; project_id?: number; selection_preview_id?: string }
+export type BuilderConfigurationChange = Pick<BuilderConfiguration, 'revision' | 'batch_size' | 'request_limit' | 'vector_package'> & { embedding_revision: number; node_limit?: number | null; project_id?: number; selection_preview_id?: string }
 export type SelectionRequest = { mode: 'ALL' | 'COUNT' | 'PERCENT'; value: number | null }
 export type SelectionSummary = { nodes: number; edges: number; node_counts: Record<string, number>; edge_counts: Record<string, number>; excluded_edges: number }
 export type BuilderSelection = { contract_version: 'builder-selection-v1'; revision: number; preview_id: string; node_limit: number | null; request: SelectionRequest; summary: SelectionSummary }
@@ -298,8 +339,8 @@ function validSelectionSummary(summary: SelectionSummary) {
         Object.values(counts).reduce((a, b) => a + b, 0) === summary[name === 'node_counts' ? 'nodes' : 'edges']
     })
 }
-export async function previewBuilderSelection(revision: number, request: SelectionRequest): Promise<BuilderSelection> {
-  const value = await api<BuilderSelection>('/admin/kag/builder/selection', send('POST', { revision, ...request }))
+export async function previewBuilderSelection(revision: number, request: SelectionRequest, signal?: AbortSignal): Promise<BuilderSelection> {
+  const value = await api<BuilderSelection>('/admin/kag/builder/selection', { ...send('POST', { revision, ...request }), signal })
   if (!shape(value, ['contract_version', 'revision', 'preview_id', 'node_limit', 'request', 'summary']) || value.contract_version !== 'builder-selection-v1' || value.revision !== revision || !hash(value.preview_id) ||
     !validSelectionRequest(value.request) || !validSelectionSummary(value.summary) || value.request.mode !== request.mode || value.request.value !== request.value ||
     (value.request.mode === 'ALL' ? value.node_limit !== null : !count(value.node_limit) || value.node_limit! < 3 || value.node_limit !== value.summary.nodes)) throw new ApiError('Bản xem trước phạm vi không hợp lệ', 502)
@@ -366,22 +407,23 @@ function validateBuilderClear(value: BuilderClear) {
     !shape(report.target, ['project_id','project_name','namespace','database']) || !count(report.target.project_id) || report.target.project_id < 1 ||
     typeof report.target.project_name !== 'string' || !report.target.project_name.trim() || report.target.project_name.length > 255 ||
     !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(report.target.namespace) || !/^[a-z][a-z0-9.-]{0,62}$/.test(report.target.database) ||
-    !shape(report.counts, ['nodes','edges']) || !count(report.counts.nodes) || !count(report.counts.edges) || value.preview_id === null) invalid()
+    !shape(report.counts, ['nodes','edges']) || !count(report.counts.nodes) || !count(report.counts.edges)) invalid()
   return value
 }
 export async function loadBuilderClear(signal?: AbortSignal): Promise<BuilderClear> {
   return validateBuilderClear(await api<BuilderClear>('/admin/kag/builder/clear', { signal, cache: 'no-store' }))
 }
-export async function clearBuilderData(action: 'preview' | 'apply', revision: number, preview_id?: string, database?: string): Promise<BuilderClear> {
-  return validateBuilderClear(await api<BuilderClear>('/admin/kag/builder/clear/'+action, send('POST', { revision, ...(action === 'apply' ? { preview_id, database } : {}) })))
+export async function clearBuilderData(project_id: number, database_id: string): Promise<BuilderClear> {
+  if (!count(project_id,2147483647) || project_id < 1 || !/^[A-Za-z0-9._:-]{1,128}$/.test(database_id)) throw new ApiError('Đích đồ thị không hợp lệ. Tải lại danh sách.',400)
+  return validateBuilderClear(await api<BuilderClear>('/admin/kag/builder/clear/apply', send('POST', { project_id, database_id })))
 }
 function validateBuilderConfiguration(value: BuilderConfiguration): BuilderConfiguration {
   const invalid = () => { throw new ApiError('Cấu hình Builder không hợp lệ', 502) }
-  const extended = value.contract_version === 'builder-configuration-v4', projects = extended || value.contract_version === 'builder-configuration-v3', selected = projects || value.contract_version === 'builder-configuration-v2'
-  if (!shape(value, ['contract_version', 'revision', 'saved', 'error_code', 'target', 'embedding', 'batch_size', 'request_limit', 'readiness', ...(selected ? ['selection'] : []), ...(projects ? ['links'] : [])]) ||
-    !['builder-configuration-v1', 'builder-configuration-v2', 'builder-configuration-v3', 'builder-configuration-v4'].includes(value.contract_version) || !count(value.revision) || value.revision > 2147483647 || typeof value.saved !== 'boolean' || value.saved !== (value.revision > 0) ||
+  const packaged = value.contract_version === 'builder-configuration-v5', extended = packaged || value.contract_version === 'builder-configuration-v4', projects = extended || value.contract_version === 'builder-configuration-v3', selected = projects || value.contract_version === 'builder-configuration-v2'
+  if (!shape(value, ['contract_version', 'revision', 'saved', 'error_code', 'target', 'embedding', 'batch_size', 'request_limit', 'readiness', ...(selected ? ['selection'] : []), ...(projects ? ['links'] : []), ...(packaged ? ['vector_package'] : [])]) ||
+    !['builder-configuration-v1', 'builder-configuration-v2', 'builder-configuration-v3', 'builder-configuration-v4', 'builder-configuration-v5'].includes(value.contract_version) || !count(value.revision) || value.revision > 2147483647 || typeof value.saved !== 'boolean' || value.saved !== (value.revision > 0) ||
     ![null, 'CONFIG'].includes(value.error_code) || !count(value.batch_size) || value.batch_size < 1 || value.batch_size > 4096 ||
-    value.request_limit !== null && (!count(value.request_limit) || value.request_limit < 1 || value.request_limit > 1000000)) invalid()
+    value.request_limit !== null && (!count(value.request_limit) || value.request_limit < 1 || value.request_limit > 1000000) || packaged && value.vector_package !== null && !packageReference(value.vector_package!)) invalid()
   if (selected) {
     const selection = value.selection
     if (!shape(selection, ['node_limit', 'nodes', 'edges', ...(extended ? ['request', 'summary'] : [])]) || selection!.node_limit !== null && (!count(selection!.node_limit) || selection!.node_limit! < 3 || selection!.node_limit! > (extended ? 2147483647 : 128)) ||
@@ -418,7 +460,7 @@ function validateBuilderConfiguration(value: BuilderConfiguration): BuilderConfi
     if (!shape(row, row.owner === undefined ? ['name', 'state', 'code'] : ['name', 'state', 'code', 'owner']) || !['source', 'embedding', 'target', 'lock'].includes(row.name) || names.has(row.name) ||
       !['READY', 'BLOCKED', 'NOT_CHECKED'].includes(row.state) || row.state === 'NOT_CHECKED' && !['WAIT_SOURCE', 'WAIT_EMBEDDING', 'WAIT_TARGET'].includes(row.code ?? '') ||
       (row.state === 'READY' ? row.code !== null : typeof row.code !== 'string' || !/^[A-Z_]{1,32}$/.test(row.code))) invalid()
-    if (row.owner !== undefined && (row.name !== 'lock' || row.state !== 'BLOCKED' || row.code !== 'LOCK' ||
+    if (row.owner !== undefined && (row.name !== 'lock' || row.state !== 'BLOCKED' || !['LOCK', 'UNCERTAIN_WRITE'].includes(row.code ?? '') ||
       !shape(row.owner, ['run_id', 'project_id']) || typeof row.owner.run_id !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(row.owner.run_id) ||
       !count(row.owner.project_id) || row.owner.project_id < 1 || row.owner.project_id > 2147483647)) invalid()
     names.add(row.name)
@@ -435,13 +477,95 @@ export async function saveBuilderConfiguration(change: BuilderConfigurationChang
 export async function checkBuilderReadiness(): Promise<BuilderConfiguration> {
   return validateBuilderConfiguration(await api<BuilderConfiguration>('/admin/kag/builder/preflight', { method: 'POST' }))
 }
+export function selectionVectorCount(summary: SelectionSummary): number {
+  return Object.entries(summary.node_counts).reduce((total, [name, count]) =>
+    total + count * (name.split('.').pop() === 'TrafficSign' ? 2 : ['LegalDocument', 'LegalUnit'].includes(name.split('.').pop()!) ? 1 : 0), 0)
+}
+export function builderIssue(code: string | null) {
+  if (code?.startsWith('PACKAGE_')) return packageReason(code)
+  const messages: Record<string, string> = {
+    CONFIG: 'Cấu hình dựng đã đổi hoặc chưa đủ. Kiểm tra Model & API key rồi tải lại.',
+    INDEX: 'Cấu trúc tìm kiếm chưa phù hợp với số chiều model đã lưu. Tải lại và kiểm tra đồ thị đích.',
+    SCHEMA: 'Đồ thị chưa có cấu trúc phù hợp. Chọn đồ thị trống khác để dựng.',
+    SCHEMA_CUSTOM: 'Đích có cấu trúc tùy chỉnh nên chưa thể chuẩn bị tự động. Chọn đồ thị trống khác.',
+    SCHEMA_DATA: 'Đồ thị đã có dữ liệu. Chọn đồ thị trống khác để tiếp tục.',
+    SCHEMA_REINDEX: 'Cấu trúc hiện tại cần quản trị kiểm tra. Chọn đồ thị trống khác.',
+    STRUCTURE_STALE: 'Thông tin đích đã đổi. Tải lại rồi xác nhận lại.',
+    STRUCTURE_INTERRUPTED: 'Chuẩn bị cấu trúc bị gián đoạn. Tải lại trạng thái trước khi thử tiếp.',
+    CLEAR_SHARED: 'Nơi lưu đồ thị đang được dùng chung. Chọn đồ thị khác hoặc nhờ quản trị xử lý.',
+    CLEAR_SERVING: 'Đồ thị vừa được dùng lại cho Chat. Tải lại rồi xác nhận xóa lại.',
+    CLEAR_STALE: 'Đích hoặc quyền xóa đã đổi. Tải lại rồi xác nhận lại.',
+    CLEAR_UNCERTAIN: 'Chưa xác định xóa đã kết thúc. Nhờ quản trị kiểm tra trước khi thử lại.',
+    TARGET_MODEL: 'Dữ liệu tìm kiếm không khớp model đã lưu. Chọn đồ thị trống hoặc dùng đúng model đã dựng đồ thị.',
+    FORBIDDEN: 'Đăng nhập lại OpenSPG, kiểm quyền sở hữu đồ thị rồi tải lại danh sách.',
+    NOT_FOUND: 'Đồ thị không còn thuộc tài khoản này. Tải lại danh sách và chọn lại.',
+    CONNECTION_NOT_CONFIGURED: 'Nơi lưu đồ thị chưa khớp cấu hình hệ thống. Nhờ quản trị kiểm tra kết nối.',
+    SERVING_PROTECTED: 'Đồ thị đang dùng cho Chat. Chọn đồ thị trống khác để dựng.',
+    LOCK: 'Đồ thị đang dựng hoặc có thao tác khác. Dừng dựng trước rồi tải lại.',
+    UNCERTAIN_WRITE: 'Lần dựng trước bị gián đoạn, chưa xác định đã ghi xong. Nhờ quản trị kiểm tra trước khi tiếp tục.',
+    LOCK_MOUNT: 'Dịch vụ dựng chưa được cài đặt đầy đủ. Nhờ quản trị kiểm tra rồi thử lại.',
+    INTEGRITY: 'Dữ liệu nguồn hoặc điểm lưu đã thay đổi. Kiểm tra đúng phiên bản dữ liệu rồi tải lại.',
+    PLAN: 'Dữ liệu nguồn hoặc phạm vi không khớp gói đã chọn. Chọn đúng gói rồi tải lại.',
+    PROVENANCE: 'Thông tin nguồn của dữ liệu tìm kiếm không khớp. Kiểm tra gói và model trước khi thử lại.',
+    VECTORS: 'Dịch vụ embedding đang lỗi. Bấm Tiếp tục khi dịch vụ hoạt động lại.',
+    VECTORS_KEY: 'API hết hạn mức hoặc từ chối key. Đổi key cùng URL và model, rồi bấm Tiếp tục.',
+    PROVIDER_BUDGET: 'Đã chạm giới hạn gọi dịch vụ của lần dựng. Tiếp tục không làm mới hạn mức; kiểm tra chi phí trước khi dựng lại.',
+    INTERRUPTED: 'Tiến độ đã được lưu. Bấm Tiếp tục để kiểm tra và tiếp tục lần dựng này.',
+    RUNTIME: 'Dịch vụ dựng gặp lỗi. Tải lại trạng thái hoặc nhờ quản trị kiểm tra.',
+    SCOPE: 'Đích lưu hoặc quyền ghi chưa hợp lệ. Nhờ quản trị kiểm tra kết nối và quyền sở hữu.',
+  }
+  return code ? messages[code] ?? 'Điều kiện dựng chưa đạt. Kiểm tra cấu hình và chi tiết kỹ thuật trước khi thử lại.' : ''
+}
+export async function startBuilderGraph(options: {
+  projectId: number; selection: BuilderSelection; vectorPackage?: VectorPackageReference
+}, onProgress: (step: string) => void): Promise<BuilderStatus> {
+  onProgress('Kiểm tra đồ thị trống')
+  const graph = await loadGraphProject(options.projectId)
+  if (graph.counts.nodes || graph.counts.edges) throw new ApiError('Đồ thị còn dữ liệu. Chọn đồ thị trống khác.', 409)
+  let config = await loadBuilderConfiguration()
+  if (config.revision !== options.selection.revision || !config.embedding?.tested) throw new ApiError('Cấu hình đã đổi. Tải lại rồi xác nhận lại.', 409)
+  onProgress('Chuẩn bị cấu trúc')
+  let structure = await prepareBuilderStructure('preview', options.projectId, config.revision)
+  if (!structure.report || structure.code || structure.report.code || structure.report.counts.nodes || structure.report.counts.edges) {
+    throw new ApiError('Chưa chuẩn bị được cấu trúc. Xem chi tiết rồi chọn đồ thị trống phù hợp.', 409)
+  }
+  if (structure.can_apply) {
+    structure = await prepareBuilderStructure('apply', options.projectId, config.revision, structure.preview_id!)
+    while (structure.state === 'APPLYING') {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      structure = await loadBuilderStructure()
+    }
+    if (structure.state !== 'COMPLETE' || structure.report?.target.project_id !== options.projectId) throw new ApiError('Chuẩn bị cấu trúc chưa hoàn tất. Tải lại trạng thái trước khi thử tiếp.', 409)
+  } else if (!structure.report.build_ready) throw new ApiError('Cấu trúc chưa sẵn sàng. Mở chi tiết để kiểm tra.', 409)
+  onProgress('Lưu phạm vi và cấu hình')
+  config = await saveBuilderConfiguration({ revision: config.revision, embedding_revision: config.embedding!.revision,
+    project_id: options.projectId, batch_size: config.batch_size, request_limit: config.request_limit,
+    selection_preview_id: options.selection.preview_id, vector_package: options.vectorPackage ?? null })
+  const savedRevision = config.revision
+  onProgress(options.vectorPackage ? 'Chuẩn bị gói và kiểm tra sẵn sàng' : 'Kiểm tra sẵn sàng')
+  config = await checkBuilderReadiness()
+  while (config.readiness.state === 'CHECKING') {
+    await new Promise(resolve => setTimeout(resolve, 1500))
+    config = await loadBuilderConfiguration()
+  }
+  if (config.readiness.state !== 'READY') {
+    const reasons = config.readiness.checks.filter(row => row.state === 'BLOCKED')
+      .map(row => `${builderIssue(row.code)} (${row.code})`)
+    throw new ApiError(reasons.join(' ') || 'Đồ thị chưa sẵn sàng. Tải lại trạng thái trước khi thử tiếp.', 409)
+  }
+  if (config.target?.project_id !== options.projectId || config.revision !== savedRevision) throw new ApiError('Cấu hình đã đổi. Tải lại trước khi thử tiếp.', 409)
+  onProgress('Bắt đầu dựng đồ thị')
+  return runBuilderAction('build', `build-${crypto.randomUUID()}`, config.revision)
+}
 export type BuilderProjects = {
   contract_version: 'builder-projects-v1'
   state: 'AVAILABLE' | 'EMPTY' | 'FORBIDDEN' | 'NOT_CONFIGURED' | 'UNAVAILABLE'
   projects: { project_id: number; project_name: string; namespace: string; database: string | null; state: 'AVAILABLE' | 'CONNECTION_NOT_CONFIGURED' | 'SERVING_PROTECTED' }[]
 }
 export async function loadBuilderProjects(signal?: AbortSignal): Promise<BuilderProjects> {
-  const value = await api<BuilderProjects>('/admin/kag/builder/projects', { signal, cache: 'no-store' })
+  return validateBuilderProjects(await api<BuilderProjects>('/admin/kag/builder/projects', { signal, cache: 'no-store' }))
+}
+function validateBuilderProjects(value: BuilderProjects): BuilderProjects {
   const invalid = () => { throw new ApiError('Danh sách project không hợp lệ', 502) }
   if (!shape(value, ['contract_version', 'state', 'projects']) || value.contract_version !== 'builder-projects-v1' ||
     !['AVAILABLE', 'EMPTY', 'FORBIDDEN', 'NOT_CONFIGURED', 'UNAVAILABLE'].includes(value.state) || !Array.isArray(value.projects) || value.projects.length > 10000) invalid()
@@ -498,6 +622,7 @@ export const builderInputLabels = {
   chunk_manifest: 'Manifest phân đoạn',
   source_checkpoint: 'Checkpoint nguồn',
   selection: 'Phạm vi nguồn đã chốt',
+  graph_package: 'Gói vector đã chọn',
 }
 export type BuilderInputs = {
   contract_version: 'builder-inputs-v1' | 'builder-inputs-v2' | 'builder-inputs-v3'
@@ -550,6 +675,7 @@ export function inspectionError(error: unknown) {
   if (status === 504 || error instanceof Error && /\bQUERY_TIMEOUT\b/.test(error.message)) return 'Chưa kiểm tra xong. Hãy thử lại; chưa có kết luận về đồ thị hoặc model.'
   if (status === 502 && error instanceof ApiError && error.message === 'Danh sách nguồn vượt giới hạn 32 MiB; chưa thể xem hoặc nhập qua màn này') return error.message
   if (status === 409 && error instanceof ApiError && error.message === 'Đăng nhập lại OpenSPG và kiểm quyền sở hữu project') return error.message
+  if (status === 409 && error instanceof ApiError && ['BUILDER_SELECTION_STALE', 'Phiên dựng trước chưa kết thúc'].includes(error.message)) return 'Phiên dựng trước chưa kết thúc'
   return status === 401 ? 'Phiên đã hết hạn. Vui lòng đăng nhập lại.' : status === 403 ? 'Chỉ ADMIN được sử dụng chức năng này.' : status === 422 || status === 400 ? 'Yêu cầu truy xuất không hợp lệ.' : status === 0 ? 'Không kết nối được backend. Hãy thử lại.' : status === 503 ? 'Truy xuất KAG chưa khả dụng hoặc thiếu cấu hình dịch vụ.' : 'Phản hồi KAG chưa đủ bằng chứng hoặc không hợp lệ.'
 }
 export async function loadKagStatus(signal?: AbortSignal): Promise<KagStatus> {
@@ -594,6 +720,14 @@ export async function runGraphRetrieval(projectId: number, runId: string, messag
   return value
 }
 export type DatasetPage = { contract_version: 'builder-dataset-v1'; dataset: string; group: string; source: string; offset: number; limit: number; total: number; items: Record<string, unknown>[] }
+export type GraphSources = { contract_version: 'builder-sources-v1'; target: { project_id: number }; run_id: string; documents: { source_id: string; import_data: Record<string, unknown> }[]; units: { source_id: string; import_data: Record<string, unknown> }[] }
+export async function loadGraphSources(projectId: number, runId: string, signal?: AbortSignal): Promise<GraphSources> {
+  if (!Number.isSafeInteger(projectId) || projectId < 1 || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(runId)) throw new ApiError('Chọn đồ thị hợp lệ', 422)
+  const value = await api<GraphSources>(`/admin/kag/sources/${projectId}/${encodeURIComponent(runId)}`, { signal, cache: 'no-store' })
+  if (value?.contract_version !== 'builder-sources-v1' || value.target?.project_id !== projectId || value.run_id !== runId ||
+    [value.documents, value.units].some(rows => !Array.isArray(rows) || rows.some(row => !row || typeof row.source_id !== 'string' || !row.import_data || typeof row.import_data !== 'object' || Array.isArray(row.import_data)))) throw new ApiError('Nguồn không thuộc lần dựng đang xem', 502)
+  return value
+}
 export async function loadDataset(group: string, offset = 0, signal?: AbortSignal): Promise<DatasetPage> {
   if (!['documents','units','signs','penalties','relations','xrefs'].includes(group) || !Number.isSafeInteger(offset) || offset < 0) throw new ApiError('Loại nguồn hoặc trang không hợp lệ',400)
   const value=await api<DatasetPage>(`/admin/kag/dataset/${group}?offset=${offset}&limit=25`,{signal,cache:'no-store'})
@@ -616,6 +750,99 @@ export async function loadBenchmarkDatasets(signal?: AbortSignal): Promise<Bench
   const value = await api<BenchmarkDatasets>('/admin/kag/benchmark/datasets', { signal })
   return validateBenchmark(value)
 }
+export async function loadBenchmarkCategoryCounts(datasetId: string, signal?: AbortSignal): Promise<Record<string, number>> {
+  if (!benchmarkDatasetId(datasetId)) throw new ApiError('Mã bộ câu hỏi không hợp lệ', 422)
+  const records = await api<unknown>(`/admin/kag/benchmark/datasets/${datasetId.split('/').map(encodeURIComponent).join('/')}/export`, { signal })
+  if (!Array.isArray(records)) throw new ApiError('Phân bố bộ câu hỏi không hợp lệ', 502)
+  const counts: Record<string, number> = Object.fromEntries(benchmarkCategories.map(category => [category, 0]))
+  for (const record of records) {
+    if (!record || typeof record !== 'object' || !benchmarkCategories.includes(record.category)) throw new ApiError('Phân bố bộ câu hỏi không hợp lệ', 502)
+    counts[record.category]++
+  }
+  return counts
+}
+export type BenchmarkMode = 'G1' | 'G2' | 'BOTH'
+export type BenchmarkRequest = { dataset_id: string; project_id: number; run_id: string; mode: BenchmarkMode; limit: number | null }
+export type BenchmarkMetrics = Omit<SmokeRun, 'configuration' | 'status' | 'started_at' | 'finished_at' | 'metrics'> & {
+  schema_version: '1.0'; eval_version: '1.0'; protocol_hash: string; dataset_hash: string; dataset_version: string;
+  dataset_status: 'PROVISIONAL' | 'FROZEN'; official_benchmark: boolean; paper_eligible: false; mode: 'G1' | 'G2'; release_id: string | null;
+  completed_count: number; scored_count: number; overall: Record<string, SmokeMetric>; by_category: Record<string, Record<string, SmokeMetric>>;
+  by_source: Record<string, Record<string, SmokeMetric>>; failure_rate: { value: number | null; numerator: number; denominator: number; status: 'OK' | 'UNAVAILABLE' };
+  rank_semantics: 'channel_projected_returned_top_k'; top_k: number; ks: number[]; execution_outcomes?: Record<'answered' | 'abstained' | 'unanswered' | 'error', number>
+}
+export type BenchmarkJob = Omit<BenchmarkRequest, 'limit'> & {
+  run_id_job: string; state: 'RUNNING' | 'COMPLETE' | 'FAILED' | 'STOPPED'; done: number; total: number;
+  progress: Partial<Record<'G1' | 'G2', { done: number; total: number }>>; started_at: string; finished_at: string | null; code: string | null;
+  metrics: Partial<Record<'G1' | 'G2', BenchmarkMetrics>> | null; dataset_status: 'PROVISIONAL' | 'FROZEN'; dataset_hash: string; frozen_at: string | null;
+  category_counts: Record<string, number>; graph_fingerprint: string; provider_requests: { embedding: number; chat: number }
+}
+const benchmarkDatasetId = (v: unknown) => typeof v === 'string' && /^[A-Za-z0-9_.-]{1,128}(?:\/eval_questions\.jsonl)?$/.test(v) && !v.includes('..') && v !== '.'
+const benchmarkJobId = (v: unknown) => typeof v === 'string' && /^[0-9a-f]{32}$/.test(v)
+function validateBenchmarkJob(value: BenchmarkJob, jobId: string): BenchmarkJob {
+  const invalid = () => { throw new ApiError('Trạng thái benchmark không hợp lệ', 502) }
+  const stamp = (v: unknown) => typeof v === 'string' && v.length <= 64 && Number.isFinite(Date.parse(v))
+  if (!shape(value, ['run_id_job','dataset_id','project_id','run_id','state','mode','done','total','progress','started_at','finished_at','code','metrics','dataset_status','dataset_hash','frozen_at','category_counts','graph_fingerprint','provider_requests']) ||
+    value.run_id_job !== jobId || !benchmarkJobId(value.run_id_job) || !benchmarkDatasetId(value.dataset_id) || !count(value.project_id,2147483647) || value.project_id < 1 ||
+    typeof value.run_id !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value.run_id) || !['G1','G2','BOTH'].includes(value.mode) ||
+    !['RUNNING','COMPLETE','FAILED','STOPPED'].includes(value.state) || !count(value.total,2000000) || value.total < 1 || !count(value.done,value.total) ||
+    !['PROVISIONAL','FROZEN'].includes(value.dataset_status) || !hash(value.dataset_hash) || !hash(value.graph_fingerprint) || !stamp(value.started_at) ||
+    (value.state === 'RUNNING' ? value.finished_at !== null : !stamp(value.finished_at) || Date.parse(value.finished_at!) < Date.parse(value.started_at)) ||
+    value.frozen_at !== null && !stamp(value.frozen_at) || value.dataset_status === 'FROZEN' && value.frozen_at === null ||
+    value.code !== null && (typeof value.code !== 'string' || !/^[A-Z][A-Z0-9_]{0,63}$/.test(value.code)) || value.state === 'FAILED' && value.code === null ||
+    !shape(value.provider_requests,['embedding','chat']) || !Object.values(value.provider_requests).every(v => count(v,2147483647))) invalid()
+  const modes = value.mode === 'BOTH' ? ['G1','G2'] as const : [value.mode] as ('G1' | 'G2')[]
+  const n = value.total / modes.length
+  if (!count(n) || n < 1 || !shape(value.progress,[...modes]) || Object.values(value.progress).some(p => !shape(p,['done','total']) || p.total !== n || !count(p.done,n)) ||
+    Object.values(value.progress).reduce((sum,p) => sum+p.done,0) !== value.done || value.state === 'COMPLETE' && value.done !== value.total ||
+    value.mode === 'BOTH' && value.progress.G2!.done > 0 && value.progress.G1!.done !== n ||
+    !value.category_counts || Array.isArray(value.category_counts) || Object.keys(value.category_counts).some(c => !benchmarkCategories.includes(c)) ||
+    !Object.values(value.category_counts).every(v => count(v,n)) || Object.values(value.category_counts).reduce((a,b) => a+b,0) !== n ||
+    value.state === 'RUNNING' && value.metrics !== null) invalid()
+  if (value.metrics !== null) {
+    if (typeof value.metrics !== 'object' || Array.isArray(value.metrics) || Object.keys(value.metrics).some(m => !modes.includes(m as 'G1' | 'G2'))) invalid()
+    for (const [mode, m] of Object.entries(value.metrics)) {
+      const done = value.progress[mode as 'G1' | 'G2']!.done
+      if (!shape(m,['schema_version','eval_version','protocol_hash','dataset_hash','dataset_version','dataset_status','official_benchmark','paper_eligible','mode','release_id','requested_count','completed_count','attempted_count','failed_count','ineligible_count','scored_count','failure_rate','overall','by_category','by_source','latency_ms','rank_semantics','top_k','ks',...('macro' in m ? ['macro'] : []),...('execution_outcomes' in m ? ['execution_outcomes'] : [])]) ||
+        m.schema_version !== '1.0' || m.eval_version !== '1.0' || !hash(m.protocol_hash) || !hash(m.dataset_hash) || typeof m.dataset_version !== 'string' || !m.dataset_version.trim() || m.dataset_version.length > 512 ||
+        m.dataset_status !== value.dataset_status || typeof m.official_benchmark !== 'boolean' || m.paper_eligible !== false || m.mode !== mode || m.release_id !== null && (typeof m.release_id !== 'string' || !m.release_id || m.release_id.length > 200) ||
+        m.requested_count !== done || m.completed_count !== done || !count(m.scored_count,m.attempted_count-m.failed_count) || m.rank_semantics !== 'channel_projected_returned_top_k' ||
+        !count(m.top_k,10) || m.top_k < 1 || !Array.isArray(m.ks) || !m.ks.length || m.ks.some((k,i) => !count(k,m.top_k) || k < 1 || i > 0 && k <= m.ks[i-1]) ||
+        !m.overall || Object.keys(m.overall).some(name => !/^[A-Za-z][A-Za-z0-9_@.:-]{0,127}$/.test(name)) || !shape(m.by_category,benchmarkCategories) ||
+        !m.by_source || typeof m.by_source !== 'object' || Array.isArray(m.by_source) || Object.keys(m.by_source).length > 1000000) invalid()
+      const groupCounts = Object.fromEntries(Object.entries(m.by_category).map(([c,metrics]) => [c,Object.values(Object.values(metrics)[0]?.status_counts ?? {}).reduce((a,b) => a+b,0)]))
+      const projected: SmokeRun = { status:'COMPLETE',started_at:value.started_at,finished_at:value.finished_at!,requested_count:done,attempted_count:m.attempted_count,failed_count:m.failed_count,ineligible_count:m.ineligible_count,metrics:m.overall,by_category:m.by_category,latency_ms:m.latency_ms,...(m.macro ? {macro:m.macro} : {}) }
+      validateSmoke({state:'AVAILABLE',review_status:value.dataset_status,g1_eligible_count:0,graph_fingerprint:value.graph_fingerprint,official_benchmark:false,runs:{G1:projected,G2:null}},done,value.graph_fingerprint,groupCounts)
+      for (const [source,metrics] of Object.entries(m.by_source)) {
+        const count = Object.values(Object.values(metrics)[0]?.status_counts ?? {}).reduce((a,b) => a+b,0)
+        if (source.length > 512 || !shape(metrics,Object.keys(m.overall)) || count > done) invalid()
+        validateSmokeMetrics(metrics,count)
+      }
+      const rate=m.failure_rate
+      if (!shape(rate,['value','numerator','denominator','status']) || rate.numerator !== m.failed_count || rate.denominator !== m.attempted_count ||
+        rate.status !== (m.attempted_count ? 'OK' : 'UNAVAILABLE') || (m.attempted_count ? typeof rate.value !== 'number' || !Number.isFinite(rate.value) || Math.abs(rate.value-m.failed_count/m.attempted_count) > 1e-12 : rate.value !== null)) invalid()
+      if (m.execution_outcomes && (!shape(m.execution_outcomes,['answered','abstained','unanswered','error']) || m.execution_outcomes.error !== m.failed_count ||
+        !Object.values(m.execution_outcomes).every(v => count(v,m.attempted_count)) || Object.values(m.execution_outcomes).reduce((a,b) => a+b,0) > m.attempted_count)) invalid()
+    }
+  }
+  if (value.state === 'COMPLETE' && !shape(value.metrics,[...modes])) invalid()
+  return value
+}
+export async function startBenchmarkRun(request: BenchmarkRequest): Promise<{ run_id_job: string }> {
+  if (!shape(request,['dataset_id','project_id','run_id','mode','limit']) || !benchmarkDatasetId(request.dataset_id) || !count(request.project_id,2147483647) || request.project_id < 1 ||
+    typeof request.run_id !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(request.run_id) || !['G1','G2','BOTH'].includes(request.mode) ||
+    request.limit !== null && (!count(request.limit) || request.limit < 1)) throw new ApiError('Chọn bộ câu hỏi, đồ thị, mode và số câu hợp lệ',422)
+  const value = await api<{run_id_job:string}>('/admin/kag/benchmark/runs',send('POST',request))
+  if (!shape(value,['run_id_job']) || !benchmarkJobId(value.run_id_job)) throw new ApiError('Mã lượt benchmark không hợp lệ',502)
+  return value
+}
+export async function loadBenchmarkRun(jobId: string, signal?: AbortSignal): Promise<BenchmarkJob> {
+  if (!benchmarkJobId(jobId)) throw new ApiError('Mã lượt benchmark không hợp lệ',422)
+  return validateBenchmarkJob(await api<BenchmarkJob>(`/admin/kag/benchmark/runs/${jobId}`,{signal,cache:'no-store'}),jobId)
+}
+export async function stopBenchmarkRun(jobId: string): Promise<BenchmarkJob> {
+  if (!benchmarkJobId(jobId)) throw new ApiError('Mã lượt benchmark không hợp lệ',422)
+  return validateBenchmarkJob(await api<BenchmarkJob>(`/admin/kag/benchmark/runs/${jobId}/stop`,send('POST')),jobId)
+}
 function validateBenchmark(value: BenchmarkDatasets, sample = false): BenchmarkDatasets {
   if (!value || Object.keys(value).sort().join() !== ['contract_version', 'state', 'datasets', 'execution_allowed', 'execution_blockers', 'metrics'].sort().join() || value.contract_version !== 'h1-inspect-v1.0' || value.execution_allowed !== false || value.metrics !== null || !Array.isArray(value.execution_blockers) || value.execution_blockers.join() !== 'OPERATIONAL_PROOF_REQUIRED,BENCHMARK_EXECUTION_NOT_AUTHORIZED' || !['AVAILABLE', 'NOT_CONFIGURED', 'UNAVAILABLE', 'LIMIT_EXCEEDED'].includes(value.state) || !Array.isArray(value.datasets) || value.datasets.length > 20 || (value.state !== 'AVAILABLE' && value.datasets.length)) throw new ApiError('Invalid benchmark proof', 502)
   const seen = new Set<string>()
@@ -632,7 +859,8 @@ function validateBenchmark(value: BenchmarkDatasets, sample = false): BenchmarkD
 export type SampleNode = { entity_type: string; entity_id: string; properties: Record<string, unknown>; sources: { evidence_id: string; field: string; source_sha256: string }[] }
 export type SampleEdge = { from: [string, string]; predicate: string; to: [string, string]; properties: Record<string, unknown> }
 type BenchmarkConfig = { protocol_version: '1.0'; eval_version: '1.0'; metric_policy_version: '1.0' | '1.1'; ks: number[]; top_k: number; expand: false; rank_semantics: 'channel_projected_returned_top_k'; identity_catalog_hash: string | null; release_id: string | null; judge_config: null | { name: string; version: string; model: string; prompt_version: string; temperature: number; seed: number | null; calibrated: boolean } }
-type SmokeRun = { configuration?: BenchmarkConfig; status: 'COMPLETE'; started_at: string; finished_at: string; requested_count: number; attempted_count: number; failed_count: number; ineligible_count: number; metrics: Record<string, { value: number | null; scored_count: number; eligible_count: number; excluded_count: number; failed_count: number; status_counts: Record<'OK' | 'NOT_APPLICABLE' | 'UNAVAILABLE' | 'UNKNOWN', number> }>; latency_ms: Record<'successful' | 'all_attempted', { count: number; min: number | null; mean: number | null; median: number | null; p95: number | null; max: number | null }> }
+type SmokeMetric = { value: number | null; scored_count: number; eligible_count: number; excluded_count: number; failed_count: number; status_counts: Record<'OK' | 'NOT_APPLICABLE' | 'UNAVAILABLE' | 'UNKNOWN', number>; ci_low?: number | null; ci_high?: number | null }
+export type SmokeRun = { configuration?: BenchmarkConfig; status: 'COMPLETE'; started_at: string; finished_at: string; requested_count: number; attempted_count: number; failed_count: number; ineligible_count: number; metrics: Record<string, SmokeMetric>; by_category?: Record<string, Record<string, SmokeMetric>>; macro?: Record<string, { value: number | null; scored_category_count: number }>; latency_ms: Record<'successful' | 'all_attempted', { count: number; min: number | null; mean: number | null; median: number | null; p95: number | null; max: number | null }> }
 type Smoke = { state: 'NOT_RUN' | 'AVAILABLE' | 'INVALID_RECEIPT'; review_status: 'PROVISIONAL' | 'FROZEN' | 'NOT_ATTESTED'; g1_eligible_count: number; graph_fingerprint: string; official_benchmark: boolean; runs: Record<'G1' | 'G2', SmokeRun | null> }
 type Coverage = BenchmarkDatasets['datasets'][number] & { metadata?: { dataset_version: string | null; category_counts: Record<string, number>; generation_method: string | null }; eligible_count: number; ineligible_count: number; invalid_count: number | null; gold_count: number | null; missing_gold: Record<'document' | 'unit' | 'sign', string[]>; eligibility_scope: 'G1_RETRIEVAL_GOLD_COVERAGE'; smoke?: Smoke }
 export type SampleInspection = {
@@ -646,22 +874,42 @@ export type SampleInspection = {
 const hash = (v: unknown) => typeof v === 'string' && /^[0-9a-f]{64}$/.test(v)
 const count = (v: unknown, max = 1000000): v is number => typeof v === 'number' && Number.isSafeInteger(v) && v >= 0 && v <= max
 const shape = (v: unknown, keys: string[]) => !!v && typeof v === 'object' && Object.keys(v).sort().join() === keys.sort().join()
-function validateSmoke(smoke: Smoke, total: number | null, fingerprint: string) {
+export const benchmarkCategories = ['definition','obligation','sanction_numeric','effectiveness_metadata','inter_document','multi_hop','unanswerable','traffic_sign']
+function validateSmokeMetrics(metrics: Record<string, SmokeMetric>, n: number) {
+    const invalid = () => { throw new ApiError('Invalid smoke proof', 502) }
+    if (!metrics || typeof metrics !== 'object' || Array.isArray(metrics) || Object.keys(metrics).length > 128) invalid()
+    for (const metric of Object.values(metrics)) {
+      if (!shape(metric,['value','scored_count','status_counts','eligible_count','excluded_count','failed_count',...('ci_low' in metric ? ['ci_low','ci_high'] : [])]) || [metric.ci_low,metric.ci_high].some(v => v !== undefined && v !== null && (typeof v !== 'number' || !Number.isFinite(v) || v < 0)) || !shape(metric.status_counts,['OK','NOT_APPLICABLE','UNAVAILABLE','UNKNOWN']) || (metric.value !== null && (!Number.isFinite(metric.value) || metric.value < 0)) || ![metric.scored_count,metric.eligible_count,metric.excluded_count,metric.failed_count,...Object.values(metric.status_counts)].every(v => count(v,n)) || Object.values(metric.status_counts).reduce((a,b) => a+b,0) !== n || metric.eligible_count + metric.excluded_count !== n || metric.scored_count !== metric.status_counts.OK || (metric.value === null) !== (metric.scored_count === 0)) invalid()
+    }
+}
+function validateSmoke(smoke: Smoke, total: number | null, fingerprint: string, categoryCounts?: Record<string, number>) {
   const invalid = () => { throw new ApiError('Invalid smoke proof', 502) }
   if (!shape(smoke,['state','review_status','g1_eligible_count','graph_fingerprint','official_benchmark','runs']) || !['NOT_RUN','AVAILABLE','INVALID_RECEIPT'].includes(smoke.state) || !['PROVISIONAL','FROZEN','NOT_ATTESTED'].includes(smoke.review_status) || !count(smoke.g1_eligible_count,total ?? 0) || smoke.graph_fingerprint !== fingerprint || typeof smoke.official_benchmark !== 'boolean' || !shape(smoke.runs,['G1','G2'])) invalid()
   let hasRun = false
   for (const run of Object.values(smoke.runs)) {
     if (run === null) continue
     hasRun = true
-    if (smoke.state !== 'AVAILABLE' || !['PROVISIONAL','FROZEN'].includes(smoke.review_status) || !shape(run,['status','started_at','finished_at','requested_count','attempted_count','failed_count','ineligible_count','metrics','latency_ms', ...('configuration' in run ? ['configuration'] : [])]) || run.status !== 'COMPLETE' || !count(run.requested_count) || run.requested_count < 1 || run.requested_count !== total || !count(run.attempted_count,total) || !count(run.failed_count,run.attempted_count) || !count(run.ineligible_count,total) || run.attempted_count + run.ineligible_count !== total || !Number.isFinite(Date.parse(run.started_at)) || !Number.isFinite(Date.parse(run.finished_at)) || Date.parse(run.finished_at) < Date.parse(run.started_at) || !run.metrics || Array.isArray(run.metrics) || Object.keys(run.metrics).length > 128 || !shape(run.latency_ms,['successful','all_attempted'])) invalid()
+    if (smoke.state !== 'AVAILABLE' || !['PROVISIONAL','FROZEN'].includes(smoke.review_status) || !shape(run,['status','started_at','finished_at','requested_count','attempted_count','failed_count','ineligible_count','metrics','latency_ms', ...('configuration' in run ? ['configuration'] : []), ...('by_category' in run ? ['by_category'] : []), ...('macro' in run ? ['macro'] : [])]) || run.status !== 'COMPLETE' || !count(run.requested_count) || run.requested_count < 1 || run.requested_count !== total || !count(run.attempted_count,total) || !count(run.failed_count,run.attempted_count) || !count(run.ineligible_count,total) || run.attempted_count + run.ineligible_count !== total || !Number.isFinite(Date.parse(run.started_at)) || !Number.isFinite(Date.parse(run.finished_at)) || Date.parse(run.finished_at) < Date.parse(run.started_at) || !run.metrics || Array.isArray(run.metrics) || Object.keys(run.metrics).length > 128 || !shape(run.latency_ms,['successful','all_attempted'])) invalid()
     if ('configuration' in run) {
       const c = run.configuration!
       if (!shape(c,['protocol_version','eval_version','metric_policy_version','ks','top_k','expand','rank_semantics','identity_catalog_hash','release_id','judge_config']) || c.protocol_version !== '1.0' || c.eval_version !== '1.0' || !['1.0','1.1'].includes(c.metric_policy_version) || !count(c.top_k,10) || c.top_k < 1 || !Array.isArray(c.ks) || !c.ks.length || c.ks.some((k,i) => !count(k,c.top_k) || k < 1 || i > 0 && k <= c.ks[i-1]) || c.expand !== false || c.rank_semantics !== 'channel_projected_returned_top_k' || c.identity_catalog_hash !== null && !hash(c.identity_catalog_hash) || c.release_id !== null && (typeof c.release_id !== 'string' || !c.release_id)) invalid()
       const j = c.judge_config
       if (j !== null && (!shape(j,['name','version','model','prompt_version','temperature','seed','calibrated']) || typeof j.name !== 'string' || !j.name.trim() || ![j.version,j.model,j.prompt_version].every(v=>typeof v==='string') || typeof j.temperature !== 'number' || !Number.isFinite(j.temperature) || typeof j.calibrated !== 'boolean' || j.seed !== null && !Number.isSafeInteger(j.seed))) invalid()
     }
-    for (const metric of Object.values(run.metrics)) {
-      if (!shape(metric,['value','scored_count','status_counts','eligible_count','excluded_count','failed_count']) || !shape(metric.status_counts,['OK','NOT_APPLICABLE','UNAVAILABLE','UNKNOWN']) || (metric.value !== null && (!Number.isFinite(metric.value) || metric.value < 0)) || ![metric.scored_count,metric.eligible_count,metric.excluded_count,metric.failed_count,...Object.values(metric.status_counts)].every(v => count(v,total ?? 0)) || Object.values(metric.status_counts).reduce((a,b) => a+b,0) !== total || metric.eligible_count + metric.excluded_count !== total || metric.scored_count !== metric.status_counts.OK || (metric.value === null) !== (metric.scored_count === 0)) invalid()
+    validateSmokeMetrics(run.metrics,total ?? 0)
+    if ('by_category' in run) {
+      if (!shape(run.by_category,benchmarkCategories) || !categoryCounts) invalid()
+      for (const [category, metrics] of Object.entries(run.by_category!)) {
+        const n = categoryCounts![category] ?? 0
+        if (!count(n,total ?? 0) || !shape(metrics,Object.keys(run.metrics))) invalid()
+        validateSmokeMetrics(metrics,n)
+      }
+    }
+    if ('macro' in run) {
+      if (!run.by_category || !shape(run.macro,Object.keys(run.metrics))) invalid()
+      for (const [name, metric] of Object.entries(run.macro!)) {
+        if (!shape(metric,['value','scored_category_count']) || !count(metric.scored_category_count,benchmarkCategories.length) || (metric.value !== null && (typeof metric.value !== 'number' || !Number.isFinite(metric.value) || metric.value < 0)) || (metric.value === null) !== (metric.scored_category_count === 0) || metric.scored_category_count !== Object.values(run.by_category!).filter(group=>group[name].value !== null).length) invalid()
+      }
     }
     for (const latency of Object.values(run.latency_ms)) {
       if (!shape(latency,['count','min','mean','median','p95','max']) || !count(latency.count,total ?? 0) || [latency.min,latency.mean,latency.median,latency.p95,latency.max].some(v => latency.count === 0 ? v !== null : v === null || !Number.isFinite(v) || v < 0)) invalid()
@@ -689,13 +937,13 @@ export async function loadSampleInspection(signal?: AbortSignal): Promise<Sample
   validateBenchmark(value.datasets,true)
   for (const row of value.datasets.datasets) {
     if ('metadata' in row) {
-      const m = row.metadata!, categories = ['definition','obligation','sanction_numeric','effectiveness_metadata','inter_document','multi_hop','unanswerable','traffic_sign']
+      const m = row.metadata!, categories = benchmarkCategories
       if (!shape(m,['dataset_version','category_counts','generation_method']) || m.dataset_version !== null && (typeof m.dataset_version !== 'string' || !m.dataset_version.trim() || m.dataset_version.length > 512) || !m.category_counts || Array.isArray(m.category_counts) || typeof m.category_counts !== 'object' || Object.entries(m.category_counts).some(([cat,n]) => !categories.includes(cat) || !count(n) || n < 1) || m.generation_method !== null && m.generation_method !== 'legacy-b2-evidence-first-adapted') invalid()
       const total = Object.values(m.category_counts).reduce((a,b) => a+b,0)
       if (row.record_count !== null && (total !== row.record_count - (row.invalid_count ?? 0) || (m.dataset_version === null) !== (total === 0))) invalid()
     }
     if (row.smoke) {
-      validateSmoke(row.smoke,row.record_count,value.graph_fingerprint)
+      validateSmoke(row.smoke,row.record_count,value.graph_fingerprint,row.metadata?.category_counts)
       if (row.smoke.official_benchmark !== row.official_benchmark || row.smoke.review_status !== 'NOT_ATTESTED' && row.smoke.review_status !== row.dataset_status) invalid()
       for (const run of Object.values(row.smoke.runs)) if (run?.configuration?.release_id !== undefined && run.configuration.release_id !== null && run.configuration.release_id !== value.release_id) invalid()
     }

@@ -96,13 +96,20 @@ class KagSchemaTest {
         var record=records.findByUnitId(id).orElseThrow();
         UUID owner=accounts.findByEmail("admin@test.vn").orElseThrow().id;
         var response=json.createObjectNode().put("answer","Theo căn cứ nguồn."); var citation=response.putArray("citations").addObject().put("doc_id",doc.externalId).put("unit_id",id).put("quote","Nội dung trích dẫn.");
-        when(kag.query(any())).thenAnswer(invocation->{ Map<?,?> request=invocation.getArgument(0); assertEquals(schema.identity(),request.get("schema_contract")); return response; });
+        when(kag.query(any(),any(UUID.class))).thenAnswer(invocation->{ Map<?,?> request=invocation.getArgument(0); assertEquals(schema.identity(),request.get("schema_contract")); return response; });
         var question=new ChatRequest("Căn cứ nào?",null);
-        assertThrows(ResponseStatusException.class,()->chat.ask(owner,question));
-        units.publish(record.id,new PublicationRequest(record.version,true)); assertEquals("ANSWERED",chat.ask(owner,question).get("state"));
-        citation.put("quote","Đoạn không có trong nguồn"); assertThrows(ResponseStatusException.class,()->chat.ask(owner,question));
-        citation.put("quote","Nội dung trích dẫn.").put("doc_id",document(true).externalId); assertThrows(ResponseStatusException.class,()->chat.ask(owner,question));
-        citation.put("doc_id",doc.externalId).put("unit_id","unknown"); assertThrows(ResponseStatusException.class,()->chat.ask(owner,question));
+        assertProgressState(owner,question,"UNAVAILABLE");
+        units.publish(record.id,new PublicationRequest(record.version,true)); assertProgressState(owner,question,"ANSWERED");
+        citation.put("quote","Đoạn không có trong nguồn"); assertProgressState(owner,question,"UNAVAILABLE");
+        citation.put("quote","Nội dung trích dẫn.").put("doc_id",document(true).externalId); assertProgressState(owner,question,"UNAVAILABLE");
+        citation.put("doc_id",doc.externalId).put("unit_id","unknown"); assertProgressState(owner,question,"UNAVAILABLE");
+    }
+    void assertProgressState(UUID owner,ChatRequest question,String state) throws Exception {
+        var output=new java.io.ByteArrayOutputStream(); chat.progress(owner,question).writeTo(output);
+        String stream=output.toString(java.nio.charset.StandardCharsets.UTF_8);
+        String event=state.equals("ANSWERED")?"done":"error";
+        String marker="event: "+event+"\ndata: "; int start=stream.indexOf(marker); assertTrue(start>=0,stream);
+        assertEquals(state,json.readTree(stream.substring(start+marker.length()).split("\n\n",2)[0]).path("state").asText());
     }
     @Test void signsUseDisplayNameAndPublishedSourceLinks() throws Exception {
         var doc=document(true); String id=doc.externalId+"::qcvn"; units.confirm(new ImportRequest(List.of(unit(doc,id,null)),false));

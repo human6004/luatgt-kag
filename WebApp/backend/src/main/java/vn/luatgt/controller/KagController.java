@@ -17,7 +17,8 @@ public class KagController {
     @PostMapping("/admin/kag/serving/{action:preview|activate}") org.springframework.http.ResponseEntity<JsonNode> servingAction(
             @PathVariable String action,@RequestBody JsonNode change,@RequestParam Map<String,String> parameters) {
         if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Kích hoạt đồ thị không nhận tham số tùy ý");
-        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.servingAction(action,change));
+        var result=infrastructure.servingAction(action,change);
+        return org.springframework.http.ResponseEntity.status(result.path("contract_version").asText().equals("builder-serving-operation-v1")?202:200).cacheControl(org.springframework.http.CacheControl.noStore()).body(result);
     }
     @GetMapping("/admin/kag/config") org.springframework.http.ResponseEntity<JsonNode> configuration(
             @RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
@@ -72,6 +73,23 @@ public class KagController {
             throw vn.luatgt.exception.ApiErrors.bad("Cấu hình Builder không nhận tham số tùy ý");
         return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderConfiguration());
     }
+    @GetMapping("/admin/kag/builder/packages")
+    org.springframework.http.ResponseEntity<JsonNode> builderPackages(@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)
+            throw vn.luatgt.exception.ApiErrors.bad("Danh sách gói không nhận đường dẫn hoặc tham số tùy ý");
+        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderPackages());
+    }
+    @GetMapping("/admin/kag/builder/packages/export")
+    org.springframework.http.ResponseEntity<JsonNode> builderPackageExport(@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)
+            throw vn.luatgt.exception.ApiErrors.bad("Trạng thái xuất gói không nhận đường dẫn hoặc tham số tùy ý");
+        return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderPackageExport(null));
+    }
+    @PostMapping("/admin/kag/builder/packages/export")
+    org.springframework.http.ResponseEntity<JsonNode> exportBuilderPackage(@RequestBody JsonNode change,@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Xuất gói chỉ nhận project và phiên đã xác minh");
+        return org.springframework.http.ResponseEntity.accepted().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderPackageExport(change));
+    }
     @GetMapping("/admin/kag/graph/{projectId}")
     org.springframework.http.ResponseEntity<JsonNode> graphProject(@PathVariable int projectId,
             @RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
@@ -110,7 +128,7 @@ public class KagController {
         if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Trạng thái xóa không nhận tham số");
         return org.springframework.http.ResponseEntity.ok().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderClear(null,null));
     }
-    @PostMapping("/admin/kag/builder/clear/{action:preview|apply}")
+    @PostMapping("/admin/kag/builder/clear/{action:apply}")
     org.springframework.http.ResponseEntity<JsonNode> builderClearAction(@PathVariable String action,@RequestBody JsonNode change,@RequestParam Map<String,String> parameters) {
         if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Xóa dữ liệu không nhận tham số tùy ý");
         return org.springframework.http.ResponseEntity.accepted().cacheControl(org.springframework.http.CacheControl.noStore()).body(infrastructure.builderClear(action,change));
@@ -146,6 +164,38 @@ public class KagController {
     @PostMapping("/admin/kag/builder/abandon") @ResponseStatus(org.springframework.http.HttpStatus.ACCEPTED)
     JsonNode abandon(@Valid @RequestBody BuilderRunRequest request,@RequestHeader(value="If-Match",required=false) String revision) { return infrastructure.builderAction("abandon",request.runId(),revision); }
     @GetMapping("/admin/kag/benchmark/datasets") JsonNode datasets() { return infrastructure.benchmarkDatasets(); }
+    @PostMapping("/admin/kag/benchmark/runs")
+    org.springframework.http.ResponseEntity<JsonNode> startBenchmark(@RequestBody JsonNode change,@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Chạy benchmark không nhận tham số tùy ý");
+        return infrastructure.benchmarkRun(null,false,change);
+    }
+    @GetMapping("/admin/kag/benchmark/runs/{jobId}")
+    org.springframework.http.ResponseEntity<JsonNode> benchmarkRun(@PathVariable String jobId,@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)
+            throw vn.luatgt.exception.ApiErrors.bad("Trạng thái benchmark chỉ nhận ID phiên chạy");
+        return infrastructure.benchmarkRun(jobId,false,null);
+    }
+    @PostMapping("/admin/kag/benchmark/runs/{jobId}/stop")
+    org.springframework.http.ResponseEntity<JsonNode> stopBenchmark(@PathVariable String jobId,@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(!parameters.isEmpty()||request.getContentLengthLong()>0||request.getHeader("Transfer-Encoding")!=null)
+            throw vn.luatgt.exception.ApiErrors.bad("Dừng benchmark chỉ nhận ID phiên chạy");
+        return infrastructure.benchmarkRun(jobId,true,null);
+    }
+    @GetMapping("/admin/kag/benchmark/template")
+    org.springframework.http.ResponseEntity<byte[]> benchmarkTemplate(@RequestParam Map<String,String> parameters) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("File mẫu không nhận tham số");
+        return infrastructure.benchmarkTemplate();
+    }
+    @PostMapping(value="/admin/kag/benchmark/datasets",consumes="application/json")
+    org.springframework.http.ResponseEntity<byte[]> importBenchmark(@RequestParam String name,@RequestParam Map<String,String> parameters,@RequestBody byte[] body) {
+        if(!parameters.keySet().equals(Set.of("name")))throw vn.luatgt.exception.ApiErrors.bad("Import chỉ nhận tên bộ câu hỏi");
+        return infrastructure.importBenchmark(name,body);
+    }
+    @GetMapping({"/admin/kag/benchmark/datasets/{id}/export","/admin/kag/benchmark/datasets/{id}/eval_questions.jsonl/export"})
+    org.springframework.http.ResponseEntity<byte[]> exportBenchmark(@PathVariable String id,@RequestParam Map<String,String> parameters,jakarta.servlet.http.HttpServletRequest request) {
+        if(!parameters.isEmpty())throw vn.luatgt.exception.ApiErrors.bad("Export chỉ nhận ID bộ câu hỏi");
+        return infrastructure.exportBenchmark(id+(request.getRequestURI().endsWith("/"+id+"/eval_questions.jsonl/export")?"/eval_questions.jsonl":""));
+    }
     @PostMapping("/admin/kag/retrieve") JsonNode retrieve(@Valid @RequestBody KagRetrieveRequest request) { return infrastructure.retrieve(request); }
     @PostMapping("/admin/kag/graph/{projectId}/{runId}/retrieve")
     org.springframework.http.ResponseEntity<JsonNode> trialGraph(@PathVariable int projectId,@PathVariable String runId,

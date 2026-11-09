@@ -6,7 +6,7 @@ from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlsplit
 from urllib.request import Request, HTTPRedirectHandler, ProxyHandler, build_opener
 
-from kag.backend_identity import _field, _store, bound_sdk_requests
+from kag.backend_identity import _field, _store
 
 
 class ProjectCatalogError(ValueError):
@@ -20,9 +20,9 @@ class _NoRedirect(HTTPRedirectHandler):
         return None
 
 
-def _native_get(endpoint, path, token):
+def _native_request(endpoint, path, token):
     request = Request(endpoint.rstrip('/') + path,
-        headers={'Cookie': 'OPEN_SPG_TOKEN=' + token, 'Accept': 'application/json'})
+        headers={'Cookie': 'OPEN_SPG_TOKEN=' + token, 'Accept': 'application/json', 'Content-Type':'application/json'})
     try:
         with build_opener(ProxyHandler({}), _NoRedirect()).open(request, timeout=10) as response:
             raw = response.read(1048577)
@@ -40,7 +40,7 @@ def owned_project_ids(endpoint, token, *, page_size=100):
         raise ProjectCatalogError('FORBIDDEN')
     identities, total, page = set(), None, 1
     while True:
-        value = _native_get(endpoint, '/v1/projects/list?' + urlencode(
+        value = _native_request(endpoint, '/v1/projects/list?' + urlencode(
             dict(isOwner='true', pageNo=page, pageSize=page_size)), token)
         if not isinstance(value, dict) or value.get('success') is not True:
             raise ProjectCatalogError('FORBIDDEN')
@@ -104,15 +104,6 @@ def project_metadata(records, owned_ids, neo4j_uri, serving_database):
     return sorted(rows, key=lambda row: row['project_id'])
 
 
-def _project_client(endpoint):
-    from kag.bootstrap import initialize
-    initialize()
-    from knext.project.client import ProjectClient
-    client = ProjectClient(host_addr=endpoint)
-    bound_sdk_requests(client)
-    return client
-
-
 def deployment_endpoints():
     from kag.builder.production_scope import _endpoint
     try:
@@ -131,7 +122,9 @@ def read_projects(token):
     try:
         endpoints, _ = deployment_endpoints()
         owned = owned_project_ids(endpoints['openspg'], token)
-        records = _project_client(endpoints['openspg'])._rest_client.project_get() if owned else []
+        records = _native_request(endpoints['openspg'], '/public/v1/project', token) if owned else []
+        if type(records) is not list:
+            raise ProjectCatalogError('UNAVAILABLE')
         projects = project_metadata(records, owned, endpoints['neo4j_uri'],
             os.environ.get('KAG_BUILDER_SERVING_DATABASE', 'neo4j'))
         from kag.builder.serving import active_selection

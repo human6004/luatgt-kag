@@ -8,7 +8,7 @@
 - **ADMIN/POLICE:** nhập, kiểm duyệt, xuất bản nội dung và xử lý phản hồi chat.
 - **ADMIN:** quản lý tài khoản/model; chọn project OpenSPG, chuẩn bị cấu trúc, dựng và xem kết quả graph; kiểm hạ tầng và dữ liệu đánh giá.
 
-Một số phần giao diện còn ghi **Demo**, chỉ mô phỏng. Xem phạm vi từng chức năng trong [USER-GUIDE](docs/USER-GUIDE.md#phần-demo).
+Xem thao tác và giới hạn từng chức năng trong [USER-GUIDE](docs/USER-GUIDE.md).
 
 ## Bắt đầu
 
@@ -19,7 +19,7 @@ Một số phần giao diện còn ghi **Demo**, chỉ mô phỏng. Xem phạm v
 
 Docker chạy **một project `luatgt`, 12 services, một `.env` chung**. Không cần cài Python/Java/Node trên máy người dùng.
 
-Chưa cần KAG: xem [lifecycle WebApp riêng và FE dev với BE Docker](WebApp/README.MD#webapp-khi-chưa-chạy-kag).
+Chưa cần KAG: xem [lifecycle WebApp riêng và FE dev với BE Docker](WebApp/README.md#webapp-khi-chưa-chạy-kag).
 
 **Cài mới không tự nạp nội dung, dựng graph hoặc cấu hình model.** Học/thi cần dữ liệu đã xuất bản. Builder cần project riêng và Embedding đã lưu/kiểm. Sau Build, [chọn graph phục vụ](docs/runner.md#chọn-graph-phục-vụ-truy-xuấtchat), kiểm nguồn/model rồi xác nhận kích hoạt để dùng truy xuất/Chat. Container `healthy` chưa chứng minh chatbot trả lời được.
 
@@ -29,9 +29,9 @@ React/TypeScript; Spring Boot/Java; Python và OpenSPG KAG. MySQL lưu nghiệp 
 
 ## Tài liệu bảo trì
 
-- [Docker](docker/README.md), [WebApp](WebApp/README.MD), [frontend](WebApp/frontend/README.md), [backend](WebApp/backend/README.md).
+- [Docker](docker/README.md), [WebApp](WebApp/README.md), [frontend](WebApp/frontend/README.md), [backend](WebApp/backend/README.md).
 - [Kiến trúc](docs/architecture.md), [runtime](docs/runtime.md), [runner](docs/runner.md), [backend identity](docs/backend-identity.md).
-- [Mô hình miền](docs/domain_model.md), [schema](docs/schema.md), [retrieval](docs/retrieval-demo.md).
+- [Mô hình miền](docs/domain_model.md), [schema](docs/schema.md), [retrieval](docs/retrieval.md).
 - [Dữ liệu](data/README.md), [datasheet](data/DATASHEET.md), [điều kiện sử dụng](data/LICENSE.md).
 - [Benchmark](benchmark/README.md), [tests](tests/README.md): phục vụ phát triển, không phải bước khởi động.
 
@@ -39,4 +39,4 @@ React/TypeScript; Spring Boot/Java; Python và OpenSPG KAG. MySQL lưu nghiệp 
 
 Không thay thế văn bản chính thức hoặc tư vấn pháp lý. Nội dung trích tự động cần kiểm duyệt; trích dẫn khớp nguồn không tự xác nhận hiệu lực. Không tìm được kết quả không có nghĩa không có quy định.
 
-Một số màn còn Demo; trang tra cứu mức phạt riêng chưa được nối vào UI. Kết quả Builder một phần không chứng minh full graph hoặc chất lượng Chat. Benchmark pháp lý chính thức chưa hoàn thành.
+Trang tra cứu mức phạt riêng chưa được nối vào UI. Kết quả Builder một phần không chứng minh full graph hoặc chất lượng Chat. Benchmark pháp lý chính thức chưa hoàn thành.

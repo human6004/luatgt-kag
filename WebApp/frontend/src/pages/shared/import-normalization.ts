@@ -1,4 +1,4 @@
-const chapterNames = ['Khái niệm và quy tắc', 'Văn hóa giao thông', 'Kỹ thuật lái xe', 'Cấu tạo và sửa chữa', 'Biển báo', 'Sa hình']
+export const chapterNames = ['Khái niệm và quy tắc', 'Văn hóa giao thông', 'Kỹ thuật lái xe', 'Cấu tạo và sửa chữa', 'Biển báo', 'Sa hình']
 export function normalizeImport(kind: string, value: unknown): unknown {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return value
   const row = { ...value } as Record<string, unknown>

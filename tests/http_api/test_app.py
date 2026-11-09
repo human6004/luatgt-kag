@@ -213,10 +213,10 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
             return value
         self.app = create_app(ApiSettings(native.SECRETS),runtime_factory=factory,
                               enable_sample_routes=self.enable_sample_routes)
-        # Only tests install synthetic authorities; normal app has none.
+        await self.stack.enter_async_context(self.app.router.lifespan_context(self.app))
+        # Startup clears an absent serving selection; install synthetic authority afterward.
         self.app.state.serving_release = self.release
         self.app.state.runtime_settings = self.fixture.settings()
-        await self.stack.enter_async_context(self.app.router.lifespan_context(self.app))
         self.client = await self.stack.enter_async_context(httpx.AsyncClient(
             transport=httpx.ASGITransport(app=self.app),base_url='http://asgi.invalid'))
         self.supervisor = self.app.state.runtime_supervisor
@@ -707,15 +707,21 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
         paths = self.app.openapi()['paths']
         self.assertEqual(set(paths),{'/v1/health','/v1/graph/release','/v1/query',
                                     '/v1/pipeline/status','/v1/benchmark/datasets',
+                                    '/v1/benchmark/template','/v1/benchmark/datasets/{dataset_id}/export',
+                                    '/v1/benchmark/runs','/v1/benchmark/runs/{job_id}','/v1/benchmark/runs/{job_id}/stop',
                                     '/v1/config','/v1/config/retrieval','/v1/config/models',
                                     '/v1/config/models/{role}/{action}',
                                     '/v1/config/retrieval/{action}',
                                     '/v1/serving','/v1/serving/{action}', '/v1/serving/trial/{project_id}/{run_id}'})
         self.assertEqual(set(paths['/v1/query']),{'post'})
-        for path in ('/v1/pipeline/status','/v1/benchmark/datasets'):
+        for path in ('/v1/pipeline/status',):
             self.assertEqual(set(paths[path]),{'get'})
             self.assertEqual((await self.client.post(path)).status_code,405)
         for path, methods in {
+                '/v1/benchmark/datasets': {'get','post'}, '/v1/benchmark/template': {'get'},
+                '/v1/benchmark/datasets/{dataset_id}/export': {'get'},
+                '/v1/benchmark/runs': {'post'}, '/v1/benchmark/runs/{job_id}': {'get'},
+                '/v1/benchmark/runs/{job_id}/stop': {'post'},
                 '/v1/config': {'get'}, '/v1/config/retrieval': {'get'},
                 '/v1/config/models': {'get','post'},
                 '/v1/config/models/{role}/{action}': {'post'},
@@ -730,6 +736,8 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
         protected += [('post','/v1/config/retrieval/'+action) for action in ('save','apply','restore')]
         protected += [('post','/v1/serving/'+action) for action in ('preview','activate')]
         protected += [('post','/v1/serving/trial/17/run-B')]
+        protected += [('post','/v1/benchmark/runs'),('get','/v1/benchmark/runs/'+'a'*32),
+                      ('post','/v1/benchmark/runs/'+'a'*32+'/stop')]
         for method, path in protected:
             with self.subTest(method=method,path=path):
                 self.error(await self.client.request(method,path),401,'AUTH_REQUIRED')
@@ -953,8 +961,6 @@ class RetrieveHTTPTests(unittest.IsolatedAsyncioTestCase):
             return result
         options = {'enable_sample_routes':True} if 'enable_sample_routes' in inspect.signature(create_app).parameters else {}
         self.app = create_app(ApiSettings(native.SECRETS),runtime_factory=factory,**options)
-        self.app.state.serving_release = self.release
-        self.app.state.runtime_settings = self.fixture.retrieve_settings()
         from kag.vector_contract import TARGETS
         def search(kind,prop,vector,k):
             self.assertEqual((len(vector),k),(3072,10))
@@ -965,6 +971,8 @@ class RetrieveHTTPTests(unittest.IsolatedAsyncioTestCase):
         self.stack.enter_context(patch.object(self.reader,'expand',return_value=[
             {k:v for k,v in self.reader.relation.items() if k!='properties'}]))
         await self.stack.enter_async_context(self.app.router.lifespan_context(self.app))
+        self.app.state.serving_release = self.release
+        self.app.state.runtime_settings = self.fixture.retrieve_settings()
         self.client = await self.stack.enter_async_context(httpx.AsyncClient(
             transport=httpx.ASGITransport(app=self.app),base_url='http://asgi.invalid'))
         self.supervisor = self.app.state.runtime_supervisor
@@ -1022,7 +1030,7 @@ class RetrieveHTTPTests(unittest.IsolatedAsyncioTestCase):
     async def test_trusted_switch_registers_step7_sample_routes(self):
         self.assertIn('enable_sample_routes',inspect.signature(create_app).parameters)
         self.assertIn('/v1/retrieve',{r.path for r in self.app.routes})
-        self.assertIn('/v1/query/stream',{r.path for r in self.app.routes})
+        self.assertNotIn('/v1/query/stream',{r.path for r in self.app.routes})
         for value in (None,0,1,'true',[],{}):
             with self.subTest(value=value),self.assertRaises(contract.ApiFailure) as caught:
                 create_app(ApiSettings(native.SECRETS),enable_sample_routes=value)
@@ -1339,149 +1347,6 @@ class RetrieveHTTPTests(unittest.IsolatedAsyncioTestCase):
         response=await self.client.get('/v1/health?mode=ready&capability=retrieve',headers=self.headers())
         self.assertEqual(response.status_code,503)
         self.assertEqual(response.json()['checks']['runtime'],'blocked')
-
-
-class TerminalSSETests(unittest.IsolatedAsyncioTestCase):
-    """P4 real public native answer/finalizer, synthetic I/O and raw ASGI delivery."""
-    enable_sample_routes = True
-    asyncSetUp = AppTests.asyncSetUp
-    asyncTearDown = AppTests.asyncTearDown
-    headers = AppTests.headers
-    body = AppTests.body
-    error = AppTests.error
-    citation = AppTests.citation
-    result = AppTests.result
-    after_core = AppTests.after_core
-    reload = AppTests.reload
-    units = AppTests.units
-    blocked_core = AppTests.blocked_core
-
-    async def post(self, **kwargs):
-        kwargs.setdefault('path','/v1/query/stream')
-        return await AppTests.post(self, **kwargs)
-
-    async def raw_asgi(self, send=None, disconnect=None):
-        return await AppTests.raw_asgi(self,send,disconnect,path='/v1/query/stream')
-
-    async def test_exact_done_frame_matches_rest_bytes_citations_order_and_headers(self):
-        rest = await self.post(path='/v1/query')
-        self.reader.closed = False
-        stream = await self.post()
-        self.assertEqual(stream.status_code,200,stream.text)
-        self.assertEqual(stream.content,b'event: done\ndata: '+rest.content+b'\n\n')
-        self.assertEqual(stream.headers['content-type'],'text/event-stream; charset=utf-8')
-        self.assertEqual(stream.headers['cache-control'],'no-store')
-        self.assertEqual(stream.headers['x-accel-buffering'],'no')
-        for header in ('x-kag-release-id','x-webapp-snapshot-id','x-kag-as-of'):
-            self.assertEqual(stream.headers[header],rest.headers[header])
-        self.assertEqual(str(UUID(stream.headers['x-request-id'])),stream.headers['x-request-id'])
-        self.assertEqual(stream.content.count(b'event: '),1)
-        self.assertTrue(self.reader.closed and self.made[-1].closed)
-        self.assertFalse(self.supervisor.busy)
-
-    async def test_whole_frame_exact_cap_and_one_byte_over_preserves_rest(self):
-        citations = self.units('界'*10000,8)
-        base = AnswerResult('A',citations,False)
-        with self.result(base):
-            rest = await self.post(path='/v1/query')
-        self.assertEqual(rest.status_code,200,rest.text)
-        for size in (245739,245740,245741,245760):
-            answer='A'*(1+size-len(rest.content))
-            self.assertLessEqual(len(answer),10000)
-            with self.subTest(raw_json_bytes=size),self.result(AnswerResult(answer,citations,False)):
-                self.reader.closed=False
-                plain=await self.post(path='/v1/query')
-                self.assertEqual((plain.status_code,len(plain.content)),(200,size))
-                self.reader.closed=False
-                stream=await self.post()
-                if size<=245740:
-                    self.assertEqual(stream.status_code,200,stream.text)
-                    self.assertEqual(stream.content,b'event: done\ndata: '+plain.content+b'\n\n')
-                    self.assertLessEqual(len(stream.content),245760)
-                else:
-                    self.error(stream,502,'RESULT_LIMIT_EXCEEDED')
-                    self.assertEqual(stream.headers['content-type'],'application/json')
-
-    async def test_slow_core_source_projection_serialization_emit_nothing_until_verified(self):
-        for stage in ('core','source','projection','serialization'):
-            entered,finish=threading.Event(),threading.Event()
-            sent=[]
-            if stage=='core':
-                blocked=self.blocked_core(entered,finish)
-            else:
-                owner,name=(artifacts,'verify_native_sources') if stage=='source' else (
-                    (contract,'project_v1') if stage=='projection' else (contract,'encode_v1'))
-                original=getattr(owner,name)
-                def call(*args,original=original,**kwargs):
-                    entered.set()
-                    if not finish.wait(10): raise AssertionError('Synthetic stage must be released')
-                    return original(*args,**kwargs)
-                blocked=patch.object(owner,name,call)
-            with self.subTest(stage=stage),blocked:
-                self.reader.closed=False
-                task=asyncio.create_task(self.raw_asgi(_capture_messages(sent)))
-                try:
-                    while not entered.is_set() and not task.done(): await asyncio.sleep(.001)
-                    self.assertTrue(entered.is_set())
-                    self.assertEqual(sent,[])
-                    finish.set()
-                    await task
-                    self.assertEqual(sent[0]['status'],200)
-                    self.assertEqual(sum(m['type']=='http.response.body' for m in sent),1)
-                    self.assertTrue(sent[-1]['body'].endswith(b'\n\n'))
-                finally:
-                    finish.set()
-                    await asyncio.gather(task,return_exceptions=True)
-
-    async def test_partial_frame_delivery_failure_never_adds_error_or_late_done(self):
-        delivered=[]
-        async def send(message):
-            if message['type']=='http.response.body':
-                delivered.append(message['body'][:19])
-                raise OSError('synthetic partial transport failure')
-        messages=await self.raw_asgi(send)
-        self.assertEqual(messages[0]['status'],200)
-        self.assertEqual(delivered,[b'event: done\ndata: {'])
-        self.assertFalse(any(m['type']=='http.response.body' for m in messages))
-        self.assertNotIn(b'\n\n',b''.join(delivered))
-
-    async def test_invalid_serialization_stays_json_before_success_headers(self):
-        with patch.object(contract,'encode_v1',side_effect=contract.ApiFailure('INVALID_NATIVE_RESULT')):
-            messages=await self.raw_asgi()
-        self.assertEqual(messages[0]['status'],502)
-        self.assertEqual(dict(messages[0]['headers'])[b'content-type'],b'application/json')
-        self.assertNotIn(b'event:',messages[-1]['body'])
-
-    test_abstention_never_success = AppTests.test_real_native_abstention_never_becomes_success
-    test_missing_bearer_before_factory = AppTests.test_missing_bearer_before_factory
-    test_wrong_scope_before_factory = AppTests.test_wrong_scope_before_factory
-    test_delegation_denied_before_factory = AppTests.test_delegation_denied_before_factory
-    async def test_options_rejected_before_factory(self):
-        self.error(await self.post(path='/v1/query/stream?model=foreign'),422,'INVALID_REQUEST')
-        self.assertEqual(self.made,[])
-
-    test_uuid_fields_rejected_before_factory = AppTests.test_unknown_uuid_and_type_fields_rejected
-    test_schema_mismatch_before_factory = AppTests.test_schema_mismatch_before_factory
-    test_invalid_citations_source_quote_spans = AppTests.test_invalid_citation_source_ids_quote_and_spans
-    test_source_drift_after_native_core = AppTests.test_changed_source_after_actual_core_fails_final_proof
-    test_frozen_source_catalog_drift = AppTests.test_source_catalog_tamper_after_core_fails
-    test_schema_drift_after_native_core = AppTests.test_selected_schema_changed_after_core_conflict
-    test_publication_drift_after_native_core = AppTests.test_publication_tamper_after_core_fails
-    test_provider_error_sanitized = AppTests.test_provider_error_sanitized
-    test_expired_citation_before_projection = AppTests.test_effectivity_rejected_before_projection
-    test_midnight_after_core = AppTests.test_midnight_after_core_aborts_without_success
-    test_midnight_during_serialization = AppTests.test_midnight_during_serialization_aborts
-    test_final_readback_timeout_owns_worker = AppTests.test_timeout_during_final_readback_holds_reader_and_no_success
-    test_cleanup_release_drift = AppTests.test_selected_release_changed_during_cleanup_rejected
-    test_cleanup_publication_drift = AppTests.test_publication_changed_during_cleanup_rejected
-    test_cleanup_failure_blocks_admission = AppTests.test_http_cleanup_failure_blocks_later_admission
-    test_disconnect_owns_worker_until_drain = AppTests.test_actual_asgi_disconnect_holds_worker_clients_and_slot
-    test_handler_cancel_owns_worker_until_drain = AppTests.test_http_handler_cancel_keeps_owned_worker_until_drain
-    test_postheader_midnight_cancels_body = AppTests.test_pending_body_send_crosses_midnight_never_completes_success
-    test_postheader_proof_drift_blocks_body = AppTests.test_authority_changes_after_headers_prevent_complete_body
-    test_pending_body_proof_drift_cancels_delivery = AppTests.test_pending_body_send_publication_change_never_completes
-    test_pending_body_deadline_cancels_delivery = AppTests.test_pending_body_send_deadline_never_completes
-    test_postheader_send_failure_no_replacement = AppTests.test_post_start_send_exception_has_no_complete_or_error_body
 
 
 def _capture_messages(messages):

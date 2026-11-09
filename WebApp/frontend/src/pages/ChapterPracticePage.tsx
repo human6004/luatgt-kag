@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { api, send, type ContentRecord } from '../api'
 import { Button, NavLinkButton } from '../admin/ui'
-import { Asset, Notice, useData, useTask } from './server/shared'
+import { Asset, Notice, useData, useTask } from './shared/shared'
 
 type PracticeAnswer = { selected: number; correct: boolean; correctAnswer: number; critical: boolean; explanation: string }
 

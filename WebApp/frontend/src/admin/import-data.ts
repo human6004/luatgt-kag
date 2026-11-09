@@ -1,3 +1,12 @@
+export type ImportKind = 'signs' | 'questions' | 'documents' | 'units'
+
+export const csvSamples: Record<ImportKind, string> = {
+  signs: 'code,name,group,meaning,source\nP.DEMO,Biển mẫu,Cấm,Nội dung cần kiểm duyệt,Nguồn cần bổ sung\n',
+  questions: 'id,chapter,question,option1,option2,answer,critical,explanation,source\nDEMO-1,Khái niệm và quy tắc,Câu hỏi mẫu,Phương án 1,Phương án 2,1,false,Giải thích mẫu,Nguồn cần bổ sung\n',
+  documents: 'id,name,type,effective\nDOC-DEMO,Văn bản mẫu,Nghị định,2025-01-01\n',
+  units: 'externalId,doc_id,parent_id,unit_type,so_hieu,text,order\nUNIT-DEMO,DOC-DEMO,,article,Điều 1,Nội dung mẫu,1\n',
+}
+
 export function parseCsv(text: string): string[][] {
   const rows: string[][] = [];
   let row: string[] = [],

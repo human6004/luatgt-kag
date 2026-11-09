@@ -543,7 +543,8 @@ def publish_run(root, run_directory, reader, *, release_id, source_snapshot_id, 
     expected = _read(run_directory,'expected.sqlite3')
     provenance = _read(run_directory,'provenance.jsonl')
     _verify_sample_provenance(run_directory,model_identity=identity['model_identity'])
-    verified = verify_graph(reader,db_path=run_directory/'expected.sqlite3',contract=contract,batch_size=32)
+    # Production publication is serialized by its caller's physical GraphLock.
+    verified = verify_graph(reader,db_path=run_directory/'expected.sqlite3',contract=contract,batch_size=32,recheck=not production)
     counts = {'nodes':verified['nodes']['total'],'edges':verified['edges']['total'],
               'vectors':verified['vectors']['nonempty']}
     if (verified != stages['verify'] or verified['fingerprint'] != stages['release']['fingerprint']
@@ -562,6 +563,10 @@ def publish_run(root, run_directory, reader, *, release_id, source_snapshot_id, 
                      edge[side]['properties']['id']] for side in ('from','to')]
             relations.append({'from':ends[0],'predicate':edge['predicate'],'to':ends[1],
                 'properties':decode_properties(edge['properties'],contract['relation_properties'][edge['predicate']])})
+    contexts = {}
+    for relation in relations:
+        for key in dict.fromkeys((tuple(relation['from']),tuple(relation['to']))):
+            contexts.setdefault(key,[]).append(relation)
     records = []
     for batch in reader.iter_nodes(contract['namespace'],32):
         for node in batch:
@@ -579,7 +584,7 @@ def publish_run(root, run_directory, reader, *, release_id, source_snapshot_id, 
                         unit_id=properties['id'] if kind=='LegalUnit' else properties.get('unit_id'),
                         sign_id=properties['id'] if kind=='TrafficSign' else None,
                         field=logical,physical_field=field,source_text=text,source_sha256=_sha(text.encode()),
-                        metadata=properties,graph_context=[r for r in relations if key in (r['from'],r['to'])]))
+                        metadata=properties,graph_context=contexts.get(tuple(key),[])))
     catalog = dict(schema='h1-source-catalog-1.0',**binding,records=records)
     partial='selection' in identity.get('input_hashes',{})
     descriptor_kind=dict(binding,release_kind=release_kind,partial=partial)
@@ -630,10 +635,9 @@ def publish_run(root, run_directory, reader, *, release_id, source_snapshot_id, 
             sealed_at=datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')))
         release = load_release(staging,release_id)
         _backend(reader,release)
-        if production:
-            if verify_graph(reader,db_path=staging/'expected.sqlite3',contract=contract,batch_size=32)!=verified: _invalid()
-        else: _verify_sample_graph(release,dict(counts=counts),reader)
-        _readback(reader,release.records,contract)
+        if not production:
+            _verify_sample_graph(release,dict(counts=counts),reader)
+            _readback(reader,release.records,contract)
         if (not production and reader.readonly_state()!=readonly) or reader.database_metadata()!=metadata:
             _invalid()
         staging.rename(root)

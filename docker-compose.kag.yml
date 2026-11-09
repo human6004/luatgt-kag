@@ -162,6 +162,7 @@ services:
       KAG_HTTP_CREDENTIALS_WRITE_SECRET_FILE: /run/secrets/credentials_write_token
       KAG_HTTP_PROVIDER_TEST_SECRET_FILE: /run/secrets/provider_test_token
       KAG_HTTP_CONFIG_APPLY_SECRET_FILE: /run/secrets/config_apply_token
+      KAG_HTTP_BENCHMARK_WRITE_SECRET_FILE: /run/secrets/benchmark_write_token
       KAG_HTTP_PROVIDER_TEST_ENABLED: ${KAG_PROVIDER_ENABLED:-0}
       KAG_HTTP_PROVIDER_TEST_GATEWAY_TOKEN_FILE: ${KAG_PROVIDER_ENABLED:+/run/secrets/egress_token}
       KAG_HTTP_PROVIDER_ALLOWED_HOSTS_FILE: /run/provider-hosts.lst
@@ -174,8 +175,8 @@ services:
       KAG_HTTP_RELEASE_ID: ${KAG_RELEASE_ID:-}
       KAG_HTTP_SAMPLE_PROOF_SHA256: ${KAG_SAMPLE_PROOF_SHA256:-}
       KAG_HTTP_SAMPLE_PROOF_SHA256_FILE: ${KAG_BROKER_URL:+/run/api-credentials/sample-proof.sha256}
-      # Optional read-only datasets under the existing external release mount.
-      KAG_HTTP_EVALUATION_ROOT: ${KAG_EVALUATION_ENABLED:+/release/evaluation}
+      KAG_HTTP_EVALUATION_ROOT: /benchmark-data
+      KAG_BENCHMARK_TRANSPORT_SECONDS: ${KAG_BENCHMARK_TRANSPORT_SECONDS:-60}
       KAG_HTTP_READER_USERNAME: ${KAG_READER_USERNAME:-}
       KAG_HTTP_READER_PASSWORD_FILE: ${KAG_READER_USERNAME:+/run/api-credentials/reader.password}
       KAG_HTTP_BROKER_URL: ${KAG_BROKER_URL:-}
@@ -194,7 +195,7 @@ services:
       KAG_PRODUCTION_WRITE: BLOCKED
       KAG_PROVIDER_EGRESS: DENY
       KAG_DEBUG_DUMP_CONFIG: "0"
-    secrets: [query_token, inspect_token, egress_token, credentials_write_token, provider_test_token, config_apply_token]
+    secrets: [query_token, inspect_token, egress_token, credentials_write_token, provider_test_token, config_apply_token, benchmark_write_token]
     volumes:
       - type: bind
         source: ${KAG_PROVIDER_HOSTS_FILE:-./docker/kag-ingress/provider-hosts.lst}
@@ -214,6 +215,9 @@ services:
       - type: volume
         source: kag-provider-state
         target: /provider-state
+      - type: volume
+        source: kag-benchmark-data
+        target: /benchmark-data
       - type: volume
         source: kag-builder-state
         target: /builder-state
@@ -243,7 +247,7 @@ services:
     cpus: 1.0
     pids_limit: 128
     init: true
-    stop_grace_period: 120s
+    stop_grace_period: 240s
     entrypoint: [python, -B, -m, kag.builder.control]
     environment:
       KAG_GRAPH_LOCK_VOLUME: ${KAG_GRAPH_LOCK_VOLUME:-${COMPOSE_PROJECT_NAME:-luatgt}_kag-builder-graph-locks}
@@ -251,9 +255,14 @@ services:
       KAG_QUERY_TIMEOUT_SECONDS: ${KAG_QUERY_TIMEOUT_SECONDS:-180}
       KAG_BUILDER_STATE_DIR: /builder-state
       KAG_BUILDER_RUN_ROOT: /builder-runs
+      KAG_GRAPH_PACKAGES_DIR: /graph-packages
+      KAG_GRAPH_PACKAGES_HOST_DIR: ${KAG_STATE_DIR:-../luatgt-state}/graph-packages
       KAG_BUILDER_TOKEN_FILE: /run/secrets/builder_token
       KAG_HTTP_INSPECT_SECRET_FILE: /run/secrets/inspect_token
       KAG_HTTP_CONFIG_APPLY_SECRET_FILE: /run/secrets/config_apply_token
+      KAG_HTTP_BENCHMARK_WRITE_SECRET_FILE: /run/secrets/benchmark_write_token
+      KAG_HTTP_EVALUATION_ROOT: /benchmark-data
+      KAG_BENCHMARK_TRANSPORT_SECONDS: ${KAG_BENCHMARK_TRANSPORT_SECONDS:-60}
       KAG_BUILDER_PROJECT_ID: ${KAG_BUILDER_PROJECT_ID:-}
       KAG_BUILDER_PROJECT_NAME: ${KAG_BUILDER_PROJECT_NAME:-}
       KAG_BUILDER_DATABASE: ${KAG_BUILDER_DATABASE:-}
@@ -261,7 +270,6 @@ services:
       KAG_BUILDER_NEO4J_HTTP: ${KAG_BUILDER_NEO4J_HTTP:-http://openspg-neo4j:7474}
       KAG_BUILDER_NEO4J_URI: ${KAG_BUILDER_NEO4J_URI:-bolt://openspg-neo4j:7687}
       KAG_BUILDER_SERVING_DATABASE: ${KAG_DATABASE:-neo4j}
-      KAG_BUILDER_CLEAR_TARGETS: ${KAG_BUILDER_CLEAR_TARGETS:-[]}
       KAG_HTTP_RELEASE_ID: ${KAG_RELEASE_ID:-}
       KAG_HTTP_RELEASE_ROOT: ${KAG_RELEASE_ID:+/release}
       KAG_OPENSPG_PUBLIC_URL: ${KAG_OPENSPG_PUBLIC_URL:-http://127.0.0.1:8887/}
@@ -279,6 +287,9 @@ services:
       # Runner config, target identity and GraphLock enforce Worker write admission.
       KAG_DEBUG_DUMP_CONFIG: "0"
     volumes:
+      - type: volume
+        source: kag-benchmark-data
+        target: /benchmark-data
       - type: volume
         source: kag-builder-state
         target: /builder-state
@@ -300,6 +311,10 @@ services:
         target: /builder-input
         read_only: true
         bind: {create_host_path: true}
+      - type: bind
+        source: ${KAG_STATE_DIR:-../luatgt-state}/graph-packages
+        target: /graph-packages
+        bind: {create_host_path: true}
       - type: volume
         source: kag-builder-runs
         target: /builder-runs
@@ -307,7 +322,7 @@ services:
         source: kag-builder-graph-locks
         target: /run/kag-locks
     tmpfs: ["/tmp:rw,noexec,nosuid,size=512m,mode=1777"]
-    secrets: [builder_token, egress_token, inspect_token, config_apply_token]
+    secrets: [builder_token, egress_token, inspect_token, config_apply_token, benchmark_write_token]
     network_mode: service:openspg-server
     depends_on:
       openspg-server: {condition: service_started, restart: true}
@@ -377,6 +392,7 @@ networks:
   ingress:
     internal: false
 volumes:
+  kag-benchmark-data:
   kag-builder-state:
   kag-builder-graph-locks:
     name: ${KAG_GRAPH_LOCK_VOLUME:-${COMPOSE_PROJECT_NAME:-luatgt}_kag-builder-graph-locks}
@@ -395,6 +411,7 @@ volumes:
     name: ${KAG_STORAGE_PROJECT:-${COMPOSE_PROJECT_NAME:-luatgt}}_openspg-minio-data
     external: ${KAG_STORAGE_EXTERNAL:-false}
 secrets:
+  benchmark_write_token: {file: "${KAG_BENCHMARK_WRITE_SECRET_FILE:-../luatgt-state/benchmark-write.token}"}
   provider_test_token: {file: "${KAG_PROVIDER_TEST_SECRET_FILE:-../luatgt-state/provider-test.token}"}
   config_apply_token: {file: "${KAG_CONFIG_APPLY_SECRET_FILE:-../luatgt-state/config-apply.token}"}
   credentials_write_token: {file: "${KAG_CREDENTIALS_WRITE_SECRET_FILE:-../luatgt-state/credentials-write.token}"}

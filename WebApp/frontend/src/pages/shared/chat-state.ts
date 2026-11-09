@@ -106,7 +106,7 @@ export function createChat() {
     current = operation
     let reader: ReadableStreamDefaultReader<Uint8Array> | undefined
     try {
-      const response = await apiResponse('/chat/stream?progress=true', { ...send('POST', { message }), signal: operation.controller.signal })
+      const response = await apiResponse('/chat/stream', { ...send('POST', { message }), signal: operation.controller.signal })
       if (!response.ok) throw new ApiError('Chat unavailable', response.status)
       if (!response.headers.get('Content-Type')?.toLowerCase().startsWith('text/event-stream') || !response.body) throw new ApiError('Invalid chat response', 502)
       reader = response.body.getReader()

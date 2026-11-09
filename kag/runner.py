@@ -19,7 +19,7 @@ from kag.run_state import (ROOT, STAGES, RunBlocked, RunState, GraphLock, atomic
 
 
 FIELDS = {'scope', 'runtime_location', 'endpoints', 'database', 'project_id', 'project_name', 'namespace',
-    'vector_dimensions', 'confirmation', 'paths', 'input_sha256', 'batch_size', 'heartbeat_seconds',
+    'vector_dimensions', 'confirmation', 'paths', 'input_sha256', 'batch_size', 'heartbeat_seconds', 'vector_package',
     'write_mode', 'vector_policy', 'model_identity', 'embedding_model', 'fallback_config', 'credential_env', 'request_limit', 'selection'}
 PATH_FIELDS = {'c3_manifest', 'sample_manifest', 'vector_artifact', 'provenance', 'chunk_manifest',
                'source_checkpoint', 'run_root', 'lock_root'}
@@ -80,6 +80,7 @@ def _config(value):
             raise RunBlocked('CONFIG')
         if config['scope'] != 'PRODUCTION' and (config['namespace'] != 'VietRoadTraffic' or config['vector_dimensions'] != 3072):
             raise RunBlocked('SCOPE')
+        # Legacy replay contract only; PRODUCTION uses the configured target.
         if (config['scope'] == 'C4_3A_MANIFEST_SAMPLE' and
                 (config['project_id'] != 2 or config['project_name'] != 'VietRoadTrafficC43A10Pct'
                  or config['write_mode'] != 'NO_OP' or config['vector_policy'] != 'replay-existing')):
@@ -106,8 +107,20 @@ def _config(value):
             graph_location = 'host'
         c3._endpoint(config['endpoints']['neo4j_http'], ('http', 'https'), graph_location)
         c3._endpoint(config['endpoints']['neo4j_uri'], ('bolt', 'neo4j', 'bolt+s', 'neo4j+s'), graph_location)
-        if (set(config['paths']) not in (PATH_FIELDS, PATH_FIELDS | {'selection'})
+        if (set(config['paths']) not in (PATH_FIELDS, PATH_FIELDS | {'selection'}, PATH_FIELDS | {'graph_package'}, PATH_FIELDS | {'selection','graph_package'})
                 or not isinstance(config['input_sha256'], dict)):
+            raise RunBlocked('CONFIG')
+        package = config.get('vector_package')
+        if package is not None:
+            from kag.builder.packages import NAME, HASH
+            if (type(package) is not dict or set(package) != {'name','sha256'}
+                    or not isinstance(package['name'],str) or not NAME.fullmatch(package['name'])
+                    or not isinstance(package['sha256'],str) or not HASH.fullmatch(package['sha256'])
+                    or config['scope'] != 'PRODUCTION' or config['vector_policy'] != 'replay-existing'
+                    or Path(config['paths'].get('graph_package','')).name != package['name']
+                    or config['input_sha256'].get('graph_package') != package['sha256']):
+                raise RunBlocked('CONFIG')
+        elif 'graph_package' in config['paths']:
             raise RunBlocked('CONFIG')
         selection = config.get('selection')
         if selection is not None and 'request' in selection:
@@ -120,6 +133,8 @@ def _config(value):
         elif 'selection' in config['paths']:
             raise RunBlocked('CONFIG')
         for name, path in config['paths'].items():
+            if package and path is None and name in ('vector_artifact','provenance','chunk_manifest','source_checkpoint'):
+                continue
             if name in ('run_root', 'lock_root', 'c3_manifest') or config['vector_policy'] == 'replay-existing':
                 if name == 'sample_manifest' and config['scope'] == 'PRODUCTION' and path is None:
                     continue
@@ -303,6 +318,9 @@ def _check_target_layout(config, contract, reader, database_id):
 
 def preflight(config, *, project_client, reader, backend_transport=None):
     config = _config(config)
+    if config['vector_policy']=='replay-existing' and any(not config['paths'][name] for name in
+            ('vector_artifact','provenance','chunk_manifest','source_checkpoint')):
+        raise RunBlocked('VECTORS')
     mount = _paths(config)
     source_index = None
     backend_session = None
@@ -359,7 +377,7 @@ def preflight(config, *, project_client, reader, backend_transport=None):
             node_hashes, edge_hashes = proof.node_hashes, proof.edge_hashes
             checksums.extend(proof.file_checksums)
         else:
-            data = c3.validate_c3_manifest(contract, config['paths']['c3_manifest'])
+            data = c3.validate_source_manifest(contract, config['paths']['c3_manifest'])
             source_index = data['index']
             source_identity = {key:data['manifest'][key] for key in c3.IDENTITY_FIELDS}
             manifest = json.loads(Path(config['paths']['sample_manifest']).read_bytes())
@@ -658,11 +676,28 @@ def _stop(stop, stage, ordinal):
         raise _Interrupted()
 
 
-def _vectorize(config, state, verified, replay_path, factory, stop):
+def _vectorize(config, state, verified, replay_path, factory, stop, *, resume=False):
     from kag.builder.resilient_vectorizer import ResilientVectorizer, IncompleteVectorization
-    total = len(verified['node_hashes'])
-    if not state.completed_stage('vectorize'):
-        state.update('vectorize', 'RUNNING', _confirmed_progress(state, 'vectorize'), total)
+    from kag.vector_contract import TARGETS
+    total = sum(bool(node['properties'].get(prop))
+                for batch in iter_source_batches(state.run_dir / 'ledger.sqlite3', 'nodes', config['batch_size'])
+                for node in batch for prop, _ in TARGETS[node['type'].rsplit('.', 1)[-1]])
+    confirmed_batches = _batch_rows(state, 'vectorize')
+    confirmed_nodes = sum(result['count'] for _, result in confirmed_batches)
+    confirmed_vectors = sum(result['nonempty'] for _, result in confirmed_batches)
+    legacy_progress = (state.status['stage']=='vectorize'
+        and state.status['total']==len(verified['node_hashes']) and state.status['done']==confirmed_nodes
+        and confirmed_nodes!=confirmed_vectors)
+    def update_progress(done):
+        nonlocal legacy_progress
+        if legacy_progress:
+            # Old checkpoints count confirmed nodes; rebase to verified receipts/cache once.
+            state.status = dict(state.status, done=done, total=total)
+            legacy_progress = False
+        state.update('vectorize', 'RUNNING', done, total)
+    if not state.completed_stage('vectorize') and not legacy_progress:
+        done = state.status['done'] if state.status['stage']=='vectorize' else 0
+        update_progress(done)
     engine = None
     budget_exhausted = False
     try:
@@ -676,7 +711,8 @@ def _vectorize(config, state, verified, replay_path, factory, stop):
             if engine is None:
                 batch = None if replay_path else (factory or _provider)(config, verified)
                 engine = ResilientVectorizer(batch, model_identity=config['model_identity'], dimension=config['vector_dimensions'],
-                    checkpoint_path=state._owned_file('vectors.sqlite3'), embedding_fallback=config['fallback_config'])
+                    checkpoint_path=state._owned_file('vectors.sqlite3'), embedding_fallback=config['fallback_config'],
+                    stop_event=stop if isinstance(stop,threading.Event) else None)
                 adapter_call = engine._adapter_call
                 def counted_call(texts, timeout):
                     nonlocal budget_exhausted
@@ -689,13 +725,21 @@ def _vectorize(config, state, verified, replay_path, factory, stop):
                     state.record_attempt('vectorize', str(ordinal), 'embedding_calls')
                     return adapter_call(texts, timeout)
                 engine._adapter_call = counted_call
+            confirmed = sum(result['nonempty'] for _, result in _batch_rows(state, 'vectorize'))
+            def progress():
+                successful = sum(engine._entry(job)['status']=='SUCCESS' for job in engine._jobs(originals))
+                update_progress(confirmed + successful)
+            engine.on_progress = progress
             jobs = None
             if replay_path:
                 cached, jobs = _cached_batch(config, replay_path, originals)
                 engine.import_successes(originals, cached, artifact_model_identity=config['model_identity'],
                                         artifact_dimension=config['vector_dimensions'], artifact_jobs=jobs)
             try:
-                result = engine.run(originals); result.require_complete()
+                result = engine.run(originals, resume=resume); result.require_complete()
+            except RunBlocked as error:
+                if error.code == 'INTERRUPTED':raise _Interrupted() from None
+                raise
             except IncompleteVectorization:
                 raise RunBlocked('PROVIDER_BUDGET' if budget_exhausted else 'VECTORS') from None
             output = _publish_jsonl(state._owned_file(f'vectors-{ordinal}.jsonl'), result.iter_nodes())
@@ -706,14 +750,16 @@ def _vectorize(config, state, verified, replay_path, factory, stop):
             state.confirm_batch('vectorize', str(ordinal), dict(count=len(originals), nodes=output, jobs=sidecar,
                 embedding_calls=attempts.get('embedding_calls', 0), candidates=len(records),
                 nonempty=result.counts['successful'], skipped_empty=result.counts['skipped_empty'], provenance=dict(methods)))
-            state.update('vectorize', 'RUNNING', _confirmed_progress(state, 'vectorize'), total)
+            progress()
             _stop(stop, 'vectorize', ordinal)
         methods, counts = Counter(), Counter()
         for _, result in _batch_rows(state, 'vectorize'):
             methods.update(result['provenance'])
             counts.update({k: result[k] for k in ('count', 'embedding_calls', 'candidates', 'nonempty', 'skipped_empty')})
         receipt = dict(counts, provenance=dict(methods), dimension=config['vector_dimensions'])
-        if not state.completed_stage('vectorize'): state.finish_stage('vectorize', receipt)
+        if not state.completed_stage('vectorize'):
+            update_progress(counts['nonempty'])
+            state.finish_stage('vectorize', receipt)
         elif state.completed_stage('vectorize') != receipt: raise RunBlocked('INTEGRITY')
     finally:
         if engine is not None: engine.close()
@@ -841,7 +887,7 @@ def _execute_source(config, directory, run_id, resume, stop, verify_only):
         state.start_heartbeat(config['heartbeat_seconds'])
         _stop(stop, 'preflight', -1)
         contract = json.loads((ROOT / 'kag/schema/schema_contract.json').read_bytes())
-        data = c3.validate_c3_manifest(contract, config['paths']['c3_manifest'],
+        data = c3.validate_source_manifest(contract, config['paths']['c3_manifest'],
                                       db_path=state._owned_file('source-validation.sqlite3'))
         if source_identity != {key:data['manifest'][key] for key in c3.IDENTITY_FIELDS}:
             raise RunBlocked('INTEGRITY')
@@ -952,7 +998,7 @@ def _execute(config, run_id, resume, project_client, reader, vectorizer_factory,
             for result in output.values(): _check_output(state, result)
         else:
             replay = _replay_index(config, state, verified) if config['vector_policy'] == 'replay-existing' else None
-            _vectorize(config, state, verified, replay, vectorizer_factory, stop)
+            _vectorize(config, state, verified, replay, vectorizer_factory, stop, resume=resume)
             output = _export(config, state, stop)
         expected_path = state._owned_file('expected.sqlite3')
         expected = index_expected(expected_path, _jsonl(_check_output(state, output['nodes'])),
@@ -1033,7 +1079,9 @@ def _execute(config, run_id, resume, project_client, reader, vectorizer_factory,
                 release_lock = False
             state.close()
         try:
-            if lock is not None and lock.acquired and release_lock: lock.release()
+            if lock is not None and lock.acquired:
+                if release_lock: lock.release()
+                else: lock.retain()
         finally:
             if verified is not None:
                 verified['backend_session'].close()

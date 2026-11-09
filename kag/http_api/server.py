@@ -101,7 +101,8 @@ def create_app():
                     'KAG_HTTP_QUERY_PREVIOUS_SECRET_FILE','KAG_HTTP_INSPECT_PREVIOUS_SECRET_FILE',
                     'KAG_HTTP_CREDENTIALS_WRITE_SECRET_FILE','KAG_HTTP_CREDENTIALS_WRITE_PREVIOUS_SECRET_FILE',
                     'KAG_HTTP_PROVIDER_TEST_SECRET_FILE','KAG_HTTP_PROVIDER_TEST_PREVIOUS_SECRET_FILE',
-                    'KAG_HTTP_CONFIG_APPLY_SECRET_FILE','KAG_HTTP_CONFIG_APPLY_PREVIOUS_SECRET_FILE'):
+                    'KAG_HTTP_CONFIG_APPLY_SECRET_FILE','KAG_HTTP_CONFIG_APPLY_PREVIOUS_SECRET_FILE',
+                    'KAG_HTTP_BENCHMARK_WRITE_SECRET_FILE','KAG_HTTP_BENCHMARK_WRITE_PREVIOUS_SECRET_FILE'):
             if key in os.environ and not Path(os.environ[key]).is_absolute():
                 raise ConfigurationError()
         settings = ApiSettings.from_env()
@@ -151,7 +152,7 @@ def create_app():
         from .inspection import configuration_view
         app.state.config_snapshot = configuration_view(os.environ, provider_keys,
             (*settings.secrets.query_tokens, *settings.secrets.inspect_tokens, *settings.secrets.credentials_write_tokens,
-             *settings.secrets.provider_test_tokens, *settings.secrets.config_apply_tokens,
+             *settings.secrets.provider_test_tokens, *settings.secrets.config_apply_tokens, *settings.secrets.benchmark_write_tokens,
              *provider_keys.values(), reader_password, broker_token, gateway_token))
         if release_id:
             if not Path(root).is_absolute():
@@ -162,7 +163,7 @@ def create_app():
             if source_id != release.descriptor['source_snapshot_id'] or webapp_id != release.descriptor['webapp_snapshot_id']:
                 raise ConfigurationError()
             app.state.serving_release = release
-            from .sample_query import development_policy
+            from .query_policy import development_policy
             development = development_policy(release,query_pin) if query_pin and query_pin!='0'*64 else None
             app.state.runtime_settings = RuntimeSettings(secrets=settings.secrets,release_id=release_id,
                 source_snapshot_id=source_id,webapp_snapshot_id=webapp_id,

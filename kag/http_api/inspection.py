@@ -297,7 +297,10 @@ def _smoke_results(path,dataset,release,view):
             runs[mode]={'status':manifest['status'],'started_at':manifest['started_at'],'finished_at':manifest['finished_at'],
                         'requested_count':metrics['requested_count'],'attempted_count':metrics['attempted_count'],
                         'failed_count':metrics['failed_count'],'ineligible_count':metrics['ineligible_count'],
-                        'metrics':metrics['overall'],'latency_ms':metrics['latency_ms']}
+                        'metrics':metrics['overall'],'latency_ms':metrics['latency_ms'],
+                        'by_category':metrics['by_category']}
+            if 'macro' in metrics:
+                runs[mode]['macro']=metrics['macro']
             runs[mode]['configuration']=protocol.to_dict()
         if not any(runs.values()):raise ValueError
         view.update(state='AVAILABLE',runs=runs)
@@ -349,7 +352,7 @@ def sample_graph_view(release, reader, proof):
 
 
 def provider_view(settings):
-    from .sample_query import provider_budget
+    from .query_policy import provider_budget
     from .provider_budget import receipt_view
     result={'state':'NOT_CONFIGURED','attempts':None,'receipt_window':None,
         'configured_chat_model':settings.chat_model,'configured_embedding_model':settings.embedding_model,

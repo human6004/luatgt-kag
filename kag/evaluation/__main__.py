@@ -54,7 +54,8 @@ def main(argv=None):
     generated.add_argument('path',type=Path)
     generated.add_argument('--catalog',type=Path,required=True)
     generated.add_argument('--generation-manifest',type=Path,required=True)
-    legacy=sub.add_parser('import-legacy')
+    legacy=sub.add_parser('import-legacy', help='Convert legacy question/category/answerable/gold_evidence JSON arrays to a provisional dataset',
+                         description='Import legacy JSON arrays with explicit citation mapping; Vietnamese cau_hoi JSONL requires manual conversion first.')
     legacy.add_argument('path',type=Path)
     legacy.add_argument('--output-dir',type=Path,required=True)
     legacy.add_argument('--dataset-version',required=True)

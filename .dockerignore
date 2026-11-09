@@ -10,8 +10,4 @@
 kag/kag_config.yaml
 **/*.log
 tests/
-workspace/
-artifacts/*
-!artifacts/inputs/
-artifacts/inputs/*
 logs/

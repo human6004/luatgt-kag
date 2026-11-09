@@ -1,9 +1,21 @@
 """Owned run directories and pre-execution snapshots; incomplete writes fail closed."""
 from pathlib import Path
 import math
+import random
 import statistics
 from .dataset import canonical_line, canonical_protocol_bytes, dataset_from_records, sha256, utc_now
 from .models import CATEGORIES, EvaluationProtocol, RunContext, ValidatedDataset, fail
+
+
+def bootstrap_ci(values, samples=1000, seed=42, confidence=.95):
+    """Percentile bootstrap CI of the mean; None when fewer than two values."""
+    n = len(values)
+    if n < 2:
+        return None,None
+    rng = random.Random(seed)
+    means = sorted(statistics.mean(rng.choices(values,k=n)) for _ in range(samples))
+    tail = (1-confidence)/2*(samples-1)
+    return means[round(tail)],means[round((1-(1-confidence)/2)*(samples-1))]
 
 
 def validate_inputs(dataset, protocol):
@@ -80,7 +92,7 @@ def mark_run_error(context, code):
 
 def summarize(run):
     names = sorted({name for row in run.rows for name in row.metrics})
-    def aggregate(rows):
+    def aggregate(rows, ci=False):
         result = {}
         for name in names:
             def eligible(row):
@@ -88,10 +100,12 @@ def summarize(run):
             values = [row.metrics[name] for row in rows if name in row.metrics]
             available = [m.value for m in values if m.status == 'OK' and m.value is not None]
             counts = {status:sum(m.status == status for m in values) for status in ('OK','NOT_APPLICABLE','UNAVAILABLE','UNKNOWN')}
+            low,high = bootstrap_ci(available) if ci else (None,None)
             result[name] = dict(value=statistics.mean(available) if available else None,scored_count=len(available),
                                 status_counts=counts,eligible_count=sum(eligible(row) for row in rows),
                                 excluded_count=sum(not eligible(row) for row in rows),
-                                failed_count=sum(row.status == 'ERROR' and eligible(row) for row in rows))
+                                failed_count=sum(row.status == 'ERROR' and eligible(row) for row in rows),
+                                ci_low=low,ci_high=high)
         return result
     def latency(rows):
         values = sorted(row.latency_ms for row in rows if row.latency_ms is not None)
@@ -104,7 +118,7 @@ def summarize(run):
                 failed_count=failed,ineligible_count=sum(row.status == 'INELIGIBLE' for row in run.rows),
                 scored_count=sum(row.status == 'SUCCESS' and any(v.status == 'OK' for v in row.metrics.values()) for row in run.rows),
                 failure_rate=dict(value=failed/len(attempted) if attempted else None,numerator=failed,denominator=len(attempted),status='OK' if attempted else 'UNAVAILABLE'),
-                overall=aggregate(run.rows),by_category={cat:aggregate([row for row in run.rows if row.category == cat]) for cat in CATEGORIES},
+                overall=aggregate(run.rows,ci=True),by_category={cat:aggregate([row for row in run.rows if row.category == cat]) for cat in CATEGORIES},
                 by_source={source:aggregate([row for row in run.rows if (row.source_group or '') == source]) for source in sorted({row.source_group or '' for row in run.rows})},
                 latency_ms=dict(successful=latency(success),all_attempted=latency(attempted)))
     if getattr(getattr(run.context,'protocol',None),'metric_policy_version',None) == '1.1':

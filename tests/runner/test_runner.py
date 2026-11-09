@@ -157,7 +157,7 @@ class RunnerPreflightTests(unittest.TestCase):
         return self.api().preflight(config or self.config, project_client=self.projects, reader=reader or Database())
 
     def test_common_c3_validator_has_no_production_authority(self):
-        helper = getattr(scope, 'validate_c3_manifest', None)
+        helper = getattr(scope, 'validate_source_manifest', None)
         self.assertTrue(callable(helper), 'shared data-only C3 validator missing')
         verified = helper(CONTRACT, self.root / 'manifest.json')
         self.assertEqual(list(verified['nodes']), self.originals)
@@ -177,7 +177,7 @@ class RunnerPreflightTests(unittest.TestCase):
                 raise AssertionError('whole corpus read_bytes is forbidden')
             return original(path)
         with patch.object(Path, 'read_bytes', no_whole_jsonl):
-            data = scope.validate_c3_manifest(CONTRACT, self.root / 'manifest.json',
+            data = scope.validate_source_manifest(CONTRACT, self.root / 'manifest.json',
                                               db_path=self.root / 'validation.sqlite3')
         for kind in ('nodes', 'edges'):
             self.assertNotIsInstance(data[kind], (list, tuple))
@@ -198,7 +198,7 @@ class RunnerPreflightTests(unittest.TestCase):
             self.assertEqual(graph_plan.plan_hash(plan), old_hash)
 
     def test_disk_hash_proof_is_read_only_after_validation(self):
-        data = scope.validate_c3_manifest(CONTRACT, self.root / 'manifest.json')
+        data = scope.validate_source_manifest(CONTRACT, self.root / 'manifest.json')
         with self.assertRaises(sqlite3.OperationalError):
             data['index'].db.execute("UPDATE c3_sources SET source_hash=?", ('0'*64,))
 
@@ -230,7 +230,7 @@ class RunnerPreflightTests(unittest.TestCase):
             (self.root / 'manifest.json').write_text(canonical_json(manifest), encoding='utf-8')
             (self.root / 'plan.sha256').write_text(self.pins['plan_sha256']+'\n', encoding='ascii')
             with self.subTest(kind=kind), self.assertRaises(ValueError):
-                scope.validate_c3_manifest(CONTRACT, self.root / 'manifest.json')
+                scope.validate_source_manifest(CONTRACT, self.root / 'manifest.json')
 
     def test_sample_preflight_binds_real_sdk_scope_and_persisted_source_batches(self):
         api = self.api()

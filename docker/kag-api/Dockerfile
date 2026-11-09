@@ -27,9 +27,9 @@ RUN git init -q vendor/KAG \
 # Operators may use a different UID; this immutable path still gets full source validation.
 USER 0
 RUN git config --system --add safe.directory /workspace/vendor/KAG
-RUN mkdir -p /run/kag-locks /builder-runs /provider-state /builder-state \
+RUN mkdir -p /run/kag-locks /builder-runs /provider-state /builder-state /benchmark-data \
     && chmod 1777 /run/kag-locks /builder-runs \
-    && chown 10001:10001 /provider-state /builder-state && chmod 700 /provider-state /builder-state
+    && chown 10001:10001 /provider-state /builder-state /benchmark-data && chmod 700 /provider-state /builder-state /benchmark-data
 USER 10001:10001
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 KAG_DEBUG_DUMP_CONFIG=0 \
     MPLCONFIGDIR=/tmp/matplotlib HOME=/tmp \

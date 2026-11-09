@@ -41,6 +41,8 @@ public class InfrastructureService {
     public JsonNode checkBuilderInputs() { return kag.checkBuilderInputs(); }
     public JsonNode builderConfiguration() { return kag.builderConfiguration(); }
     public JsonNode builderProjects() { return kag.builderProjects(); }
+    public JsonNode builderPackages() { return kag.builderPackages(); }
+    public JsonNode builderPackageExport(JsonNode change) { return kag.builderPackageExport(change); }
     public JsonNode graphProject(int projectId) { return kag.graphProject(projectId); }
     public JsonNode graphSources(int projectId,String runId) {return legalUnits.sourceComparison(kag.builderSources(projectId,runId));}
     @org.springframework.beans.factory.annotation.Autowired private LegalUnitService legalUnits;
@@ -54,6 +56,10 @@ public class InfrastructureService {
     public JsonNode builderAction(String action,String runId) { return kag.builderAction(action,runId); }
     public JsonNode builderAction(String action,String runId,String revision) { return kag.builderAction(action,runId,revision); }
     public JsonNode benchmarkDatasets() { return kag.benchmarkDatasets(); }
+    public org.springframework.http.ResponseEntity<JsonNode> benchmarkRun(String jobId,boolean stop,JsonNode change) {return kag.benchmarkRun(jobId,stop,change);}
+    public org.springframework.http.ResponseEntity<byte[]> benchmarkTemplate() {return kag.benchmarkTemplate();}
+    public org.springframework.http.ResponseEntity<byte[]> importBenchmark(String name,byte[] body) {return kag.importBenchmark(name,body);}
+    public org.springframework.http.ResponseEntity<byte[]> exportBenchmark(String id) {return kag.exportBenchmark(id);}
     public JsonNode sampleInspection() { return kag.sampleInspection(); }
     public JsonNode retrieve(KagRetrieveRequest request) { return kag.retrieve(request.message(),request.top_k(),request.expand()); }
     public JsonNode trialGraph(int projectId,String runId,KagRetrieveRequest request) {return kag.trialGraph(projectId,runId,request);}

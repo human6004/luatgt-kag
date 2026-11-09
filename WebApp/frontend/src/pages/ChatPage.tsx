@@ -1,16 +1,10 @@
-import { useLocation } from "react-router-dom";
-import { api, send as request } from "../api";
-import { Notice, useTask } from "./server/shared";
-import { createChat, chatView, loadCitationSource } from "./server/chat-state";
-import LogoMark from "../components/LogoMark";
-import { NavLinkButton } from "../admin/ui";
-import {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from "react";
+import { useLocation, useSearchParams } from 'react-router-dom'
+import { api, send as request } from '../api'
+import { NavLinkButton } from '../admin/ui'
+import { Notice, useTask } from './shared/shared'
+import { createChat, chatView, loadCitationSource } from './shared/chat-state'
+import LogoMark from '../components/LogoMark'
+import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 
 interface LegalReference {
   title: string;
@@ -73,47 +67,34 @@ function Icon({ d, className = "w-4 h-4" }: { d: string; className?: string }) {
 }
 
 const ic = {
-  plus: "M12 5v14M5 12h14",
-  search: "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4",
-  panel: "M4 5h16v14H4zM9 5v14",
-  book: "M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4zM5 16a4 4 0 0 1 4-4h10",
-  send: "M12 19V5M6 11l6-6 6 6",
-  dots: "M5 12h.01M12 12h.01M19 12h.01",
-  pin: "M9 4h6l-1 6 4 3H6l4-3zM12 13v7",
-  copy: "M9 9h10v10H9zM5 15V5h10",
-  up: "M7 10v10M7 10l4-6a2 2 0 0 1 3 2l-1 4h5a2 2 0 0 1 2 2l-2 6a2 2 0 0 1-2 2H7",
-  retry: "M4 12a8 8 0 1 0 3-6.2M4 4v4h4",
-  clip: "M20 12l-8 8a5 5 0 0 1-7-7l8-8a3 3 0 0 1 5 5l-8 8a1 1 0 0 1-2-2l7-7",
-  close: "M6 6l12 12M18 6 6 18",
-};
+  plus: 'M12 5v14M5 12h14',
+  search: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4',
+  panel: 'M4 5h16v14H4zM9 5v14',
+  book: 'M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4zM5 16a4 4 0 0 1 4-4h10',
+  send: 'M12 19V5M6 11l6-6 6 6',
+  dots: 'M5 12h.01M12 12h.01M19 12h.01',
+  copy: 'M9 9h10v10H9zM5 15V5h10',
+  up: 'M7 10v10M7 10l4-6a2 2 0 0 1 3 2l-1 4h5a2 2 0 0 1 2 2l-2 6a2 2 0 0 1-2 2H7',
+  retry: 'M4 12a8 8 0 1 0 3-6.2M4 4v4h4',
+  close: 'M6 6l12 12M18 6 6 18',
+}
 
 function RichAnswer({ text }: { text: string }) {
   return (
     <div className="text-navy leading-[1.7]">
-      <p className="font-sans text-[16px] whitespace-pre-wrap break-words mb-5">
-        {text}
-      </p>
+      <p className="font-sans text-[16px] whitespace-pre-wrap break-words mb-5">{text}</p>
       <div className="font-sans grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">
-        {["Phạt tiền", "Trừ điểm GPLX", "Hình thức bổ sung"].map((label, i) => (
+        {['Phạt tiền', 'Trừ điểm GPLX', 'Hình thức bổ sung'].map((label, i) => (
           <div
             key={label}
-            className={`relative overflow-hidden rounded-xl border px-4 py-3.5 ${i === 0 ? "border-accent/50 bg-selected" : "border-line bg-surface"}`}
+            className={`relative overflow-hidden rounded-xl border px-4 py-3.5 ${
+              i === 0 ? 'border-accent/50 bg-selected' : 'border-line bg-surface'
+            }`}
           >
-            {i === 0 && (
-              <span
-                className="absolute inset-y-0 left-0 w-[3px] bg-accent"
-                aria-hidden
-              />
-            )}
-            <p className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-muted mb-1.5">
-              {label}
-            </p>
-            <p className="text-[17px] font-semibold tracking-tight leading-tight">
-              Chưa có dữ liệu cấu trúc
-            </p>
-            <p className="mt-0.5 text-[11.5px] text-muted">
-              Đọc câu trả lời và căn cứ; không suy đoán giá trị.
-            </p>
+            {i === 0 && <span className="absolute inset-y-0 left-0 w-[3px] bg-accent" aria-hidden />}
+            <p className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-muted mb-1.5">{label}</p>
+            <p className="text-[17px] font-semibold tracking-tight leading-tight">Chưa có dữ liệu cấu trúc</p>
+            <p className="mt-0.5 text-[11.5px] text-muted">Đọc câu trả lời và căn cứ; không suy đoán giá trị.</p>
           </div>
         ))}
       </div>
@@ -121,110 +102,132 @@ function RichAnswer({ text }: { text: string }) {
         Hiệu lực và ngoại lệ: xem căn cứ được backend trả về.
       </p>
     </div>
-  );
+  )
 }
 
 export default function ChatPage() {
-  const [chat] = useState(createChat);
-  const data = useSyncExternalStore(chat.subscribe, chat.getSnapshot),
-    task = useTask();
-  const location = useLocation();
-  const [pinned, setPinned] = useState<Set<string>>(new Set());
-  const [notice, setNotice] = useState("");
-  const [source, setSource] =
-    useState<Awaited<ReturnType<typeof loadCitationSource>>>();
-  const [sourceError, setSourceError] = useState(""),
-    [sourceBusy, setSourceBusy] = useState(false);
-  const sourceRequest = useRef(0);
+  const [chat] = useState(createChat)
+  const data = useSyncExternalStore(chat.subscribe, chat.getSnapshot)
+  const task = useTask()
+  const location = useLocation()
+  const [params, setParams] = useSearchParams()
+
+  const activeId = params.get('c')
+  const urlQ = params.get('q') ?? ''
+  const rawCite = params.get('cite')
+  const citeIndex = rawCite !== null && /^\d+$/.test(rawCite) ? Number(rawCite) : null
+
+  const [pinned, setPinned] = useState<Set<string>>(new Set())
+  const [notice, setNotice] = useState('')
+  const [source, setSource] = useState<Awaited<ReturnType<typeof loadCitationSource>>>()
+  const [sourceError, setSourceError] = useState('')
+  const [sourceBusy, setSourceBusy] = useState(false)
+  const sourceRequest = useRef(0)
+  const lastSubmittedId = useRef<string | undefined>(undefined)
+
+  const [input, setInput] = useState('')
+  const [query, setQuery] = useState(urlQ)
+  const [showList, setShowList] = useState(() => window.innerWidth >= 768)
+
+  useEffect(() => {
+    setQuery(urlQ)
+  }, [urlQ])
+
+  function updateUrl(patch: Record<string, string | null>, replace = false) {
+    setParams(
+      (prev) => {
+        const next = new URLSearchParams(prev)
+        for (const [k, v] of Object.entries(patch)) {
+          if (v === null || v === '') next.delete(k)
+          else next.set(k, v)
+        }
+        return next
+      },
+      { replace },
+    )
+  }
+
   const sessions: Session[] = data.rows.map((row) => {
-    const view = chatView(row);
+    const view = chatView(row)
     return {
       id: row.id,
       title: row.question,
-      group: "Hôm nay",
+      group: 'Hôm nay',
       pinned: pinned.has(row.id),
       messages: [
-        { role: "user", text: row.question },
+        { role: 'user', text: row.question },
         {
-          role: "bot",
+          role: 'bot',
           text: view.answer,
           status: view.status,
           rich: !!view.answer,
           citations: view.citations.map((c) => ({
             title: c.doc_id,
-            clause: c.unit_id ?? c.sign_id ?? "",
-            label: `${c.doc_id}${c.unit_id || c.sign_id ? ` · ${c.unit_id ?? c.sign_id}` : ""}`,
+            clause: c.unit_id ?? c.sign_id ?? '',
+            label: `${c.doc_id}${c.unit_id || c.sign_id ? ` · ${c.unit_id ?? c.sign_id}` : ''}`,
             raw: c,
           })),
         },
       ],
-    };
-  });
-  // Backend stores one question per record and exposes no session date/grouping.
-  useEffect(() => {
-    void chat.load();
-    return () => chat.dispose();
-  }, [chat]);
-  useEffect(() => {
-    if (data.currentId) setActiveId(data.currentId);
-  }, [data.currentId]);
-  useEffect(() => {
-    const q = location.state?.initialQuery;
-    if (typeof q === "string") setInput(q);
-  }, [location.state]);
-  const [activeId, setActiveId] = useState<string | null>(null);
-  const [input, setInput] = useState("");
-  const [query, setQuery] = useState("");
-  const [showList, setShowList] = useState(() => window.innerWidth >= 768);
-  const [selectedCitation, setSelectedCitation] = useState<{
-    sessionId: string;
-    messageIndex: number;
-    referenceIndex: number;
-  } | null>(null);
-  const thinking = data.busy;
-  const blocked = data.busy || data.loading || task.busy;
-  const endRef = useRef<HTMLDivElement>(null);
-  const taRef = useRef<HTMLTextAreaElement>(null);
-  const citationTriggerRef = useRef<HTMLButtonElement | null>(null);
-  const citationCloseRef = useRef<HTMLButtonElement>(null);
+    }
+  })
 
-  const active = sessions.find((s) => s.id === activeId) ?? null;
-  const messages = active?.messages ?? [];
-  const selectedReference =
-    selectedCitation?.sessionId === activeId
-      ? messages[selectedCitation.messageIndex]?.citations?.[
-          selectedCitation.referenceIndex
-        ]
-      : undefined;
+  useEffect(() => {
+    void chat.load()
+    return () => chat.dispose()
+  }, [chat])
+
+  useEffect(() => {
+    if (data.currentId && data.currentId !== lastSubmittedId.current) {
+      lastSubmittedId.current = data.currentId
+      updateUrl({ c: data.currentId, cite: null })
+    }
+  }, [data.currentId])
+
+  useEffect(() => {
+    const q = location.state?.initialQuery
+    if (typeof q === 'string') setInput(q)
+  }, [location.state])
+
+  const thinking = data.busy
+  const blocked = data.busy || data.loading || task.busy
+  const endRef = useRef<HTMLDivElement>(null)
+  const taRef = useRef<HTMLTextAreaElement>(null)
+  const citationTriggerRef = useRef<HTMLButtonElement | null>(null)
+  const citationCloseRef = useRef<HTMLButtonElement>(null)
+
+  const active = sessions.find((s) => s.id === activeId) ?? null
+  const messages = active?.messages ?? []
+  const selectedReference = citeIndex !== null ? messages[1]?.citations?.[citeIndex] : undefined
 
   const filtered = useMemo(
-    () =>
-      sessions.filter((s) =>
-        s.title.toLowerCase().includes(query.toLowerCase()),
-      ),
+    () => sessions.filter((s) => s.title.toLowerCase().includes(query.toLowerCase())),
     [sessions, query],
-  );
+  )
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length, thinking]);
 
   useEffect(() => {
-    setSelectedCitation(null);
-  }, [activeId]);
+    sourceRequest.current++
+    setSource(undefined)
+    setSourceError('')
+    setSourceBusy(false)
+  }, [activeId, citeIndex])
 
   useEffect(() => {
-    if (!selectedCitation) return;
-    citationCloseRef.current?.focus();
+    if (!selectedReference) return
+    citationCloseRef.current?.focus()
     function handleEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setSelectedCitation(null);
-        citationTriggerRef.current?.focus();
+      if (event.key === 'Escape') {
+        updateUrl({ cite: null })
+        citationTriggerRef.current?.focus()
       }
     }
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
-  }, [selectedCitation]);
+    document.addEventListener('keydown', handleEscape)
+    return () => document.removeEventListener('keydown', handleEscape)
+  }, [selectedReference])
 
   useEffect(() => {
     const ta = taRef.current;
@@ -234,66 +237,65 @@ export default function ChatPage() {
   }, [input]);
 
   function newChat() {
-    setActiveId(null);
-    setInput("");
+    updateUrl({ c: null, cite: null })
+    setInput('')
   }
 
   async function send(text = input) {
-    if (blocked || !text.trim()) return;
+    if (blocked || !text.trim()) return
     if (await chat.submit(text)) {
-      setActiveId(chat.getSnapshot().rows[0]?.id ?? null);
-      setInput("");
-      if (window.innerWidth < 768) setShowList(false);
+      const nextId = chat.getSnapshot().rows[0]?.id ?? null
+      lastSubmittedId.current = nextId ?? undefined
+      updateUrl({ c: nextId, cite: null })
+      setInput('')
+      if (window.innerWidth < 768) setShowList(false)
     }
   }
+
   async function readSource() {
-    if (!selectedReference) return;
-    const id = ++sourceRequest.current;
-    setSourceBusy(true);
-    setSourceError("");
-    setSource(undefined);
+    if (!selectedReference) return
+    const id = ++sourceRequest.current
+    setSourceBusy(true)
+    setSourceError('')
+    setSource(undefined)
     try {
-      const result = await loadCitationSource(selectedReference.raw);
-      if (id === sourceRequest.current) setSource(result);
+      const result = await loadCitationSource(selectedReference.raw)
+      if (id === sourceRequest.current) setSource(result)
     } catch {
-      if (id === sourceRequest.current)
-        setSourceError(
-          "Chi tiết nguồn chưa khả dụng hoặc không khớp trích đoạn. Trích dẫn backend được giữ nguyên.",
-        );
+      if (id === sourceRequest.current) {
+        setSourceError('Chi tiết nguồn chưa khả dụng hoặc không khớp trích đoạn. Trích dẫn backend được giữ nguyên.')
+      }
     } finally {
-      if (id === sourceRequest.current) setSourceBusy(false);
+      if (id === sourceRequest.current) setSourceBusy(false)
     }
   }
+
   function messageAction(action: string, text: string) {
-    if (action === "Sao chép") {
+    if (action === 'Sao chép') {
       void navigator.clipboard
         .writeText(text)
-        .then(() => setNotice("Đã sao chép"))
-        .catch(() => setNotice("Không sao chép được"));
-      return;
+        .then(() => setNotice('Đã sao chép'))
+        .catch(() => setNotice('Không sao chép được'))
+      return
     }
-    if (action === "Tạo lại") {
-      const q = active?.messages[0]?.text;
-      if (q) setInput(q);
-      setNotice("Câu hỏi đã đưa vào ô nhập. Gửi để tạo lượt hỏi mới.");
-      return;
+    if (action === 'Tạo lại') {
+      const q = active?.messages[0]?.text
+      if (q) setInput(q)
+      setNotice('Câu hỏi đã đưa vào ô nhập. Gửi để tạo lượt hỏi mới.')
+      return
     }
-    if (active)
+    if (active) {
       void task.run(async () => {
-        await api(
-          `/chat/${active.id}/feedback`,
-          request("POST", {
-            feedback: action === "Hữu ích" ? "HELPFUL" : action,
-            note: "",
-          }),
-        );
-        setNotice("Đã lưu phản hồi");
-      });
+        await api(`/chat/${active.id}/feedback`, request('POST', { feedback: action === 'Hữu ích' ? 'HELPFUL' : action, note: '' }))
+        setNotice('Đã lưu phản hồi')
+      })
+    }
   }
+
   function handleKey(e: React.KeyboardEvent) {
-    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
-      e.preventDefault();
-      send();
+    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
+      e.preventDefault()
+      void send()
     }
   }
 
@@ -313,30 +315,19 @@ export default function ChatPage() {
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKey}
       />
-      <div className="flex flex-wrap items-center justify-between gap-2 px-3 pb-3">
-        <div className="flex items-center gap-1">
-          <button
-            onClick={() =>
-              setNotice(
-                "Demo: đính kèm ảnh chưa có API. Dùng thư viện biển báo để tra cứu.",
-              )
-            }
-            className="p-2 rounded-lg text-muted hover:bg-selected"
-            title="Đính kèm ảnh biển báo · Demo"
-          >
-            <Icon d={ic.clip} />
-          </button>
-        </div>
+      <div className="flex flex-wrap items-center justify-end gap-2 px-3 pb-3">
         {thinking && (
           <button
+            type="button"
             onClick={() => void chat.cancel()}
             disabled={data.stopping}
             className="border border-line rounded-lg px-3 py-2 text-xs disabled:opacity-50"
           >
-            {data.stopping ? "Đang dừng…" : "Dừng"}
+            {data.stopping ? 'Đang dừng…' : 'Dừng'}
           </button>
         )}
         <button
+          type="button"
           onClick={() => void send()}
           disabled={!input.trim() || blocked}
           className="w-9 h-9 grid place-items-center rounded-full bg-navy text-bg transition hover:bg-navy-light disabled:bg-line disabled:text-muted disabled:cursor-not-allowed shadow-xs"
@@ -398,7 +389,11 @@ export default function ChatPage() {
               <input
                 aria-label="Tìm cuộc trò chuyện"
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => {
+                  const v = e.target.value
+                  setQuery(v)
+                  updateUrl({ q: v || null }, true)
+                }}
                 placeholder="Tìm cuộc trò chuyện"
                 className="flex-1 bg-transparent text-[13px] outline-none text-navy placeholder-muted"
               />
@@ -416,14 +411,14 @@ export default function ChatPage() {
                       s={s}
                       active={s.id === activeId}
                       onClick={() => {
-                        setActiveId(s.id);
-                        if (window.innerWidth < 768) setShowList(false);
+                        updateUrl({ c: s.id, cite: null })
+                        if (window.innerWidth < 768) setShowList(false)
                       }}
                       onPin={() =>
                         setPinned((p) => {
-                          const n = new Set(p);
-                          n.has(s.id) ? n.delete(s.id) : n.add(s.id);
-                          return n;
+                          const n = new Set(p)
+                          n.has(s.id) ? n.delete(s.id) : n.add(s.id)
+                          return n
                         })
                       }
                     />
@@ -441,14 +436,14 @@ export default function ChatPage() {
                       s={s}
                       active={s.id === activeId}
                       onClick={() => {
-                        setActiveId(s.id);
-                        if (window.innerWidth < 768) setShowList(false);
+                        updateUrl({ c: s.id, cite: null })
+                        if (window.innerWidth < 768) setShowList(false)
                       }}
                       onPin={() =>
                         setPinned((p) => {
-                          const n = new Set(p);
-                          n.has(s.id) ? n.delete(s.id) : n.add(s.id);
-                          return n;
+                          const n = new Set(p)
+                          n.has(s.id) ? n.delete(s.id) : n.add(s.id)
+                          return n
                         })
                       }
                     />
@@ -481,9 +476,7 @@ export default function ChatPage() {
                 <Icon d={ic.panel} />
               </button>
             )}
-            <h1 className="font-sans font-semibold text-[15px] text-navy truncate">
-              {active?.title ?? "Cuộc trò chuyện mới"}
-            </h1>
+            <h1 className="font-sans font-semibold text-[15px] text-navy truncate">{active?.title ?? 'Cuộc trò chuyện mới'}</h1>
           </div>
         </header>
 
@@ -512,7 +505,8 @@ export default function ChatPage() {
                 {starters.map((s) => (
                   <button
                     key={s.label}
-                    onClick={() => send(s.q)}
+                    type="button"
+                    onClick={() => void send(s.q)}
                     className="px-3 py-1.5 rounded-lg border border-line text-[13px] text-text-secondary hover:bg-selected transition-colors"
                   >
                     {s.label}
@@ -525,11 +519,7 @@ export default function ChatPage() {
           <>
             <div className="flex-1 overflow-y-auto">
               <div className="mx-auto w-full max-w-2xl px-4 py-8 space-y-10">
-                {messages.length === 0 && (
-                  <p className="text-center text-sm text-muted py-12">
-                    Cuộc trò chuyện này chưa có tin nhắn.
-                  </p>
-                )}
+                {messages.length === 0 && <p className="text-center text-sm text-muted py-12">Cuộc trò chuyện này chưa có tin nhắn.</p>}
                 {messages.map((m, i) =>
                   m.role === "user" ? (
                     <div key={i} className="flex justify-end">
@@ -554,35 +544,19 @@ export default function ChatPage() {
                       {m.rich ? (
                         <RichAnswer text={m.text} />
                       ) : (
-                        <p className="font-sans text-[16px] leading-[1.7] text-navy whitespace-pre-wrap break-words">
-                          {m.text}
-                        </p>
+                        <p className="font-sans text-[16px] leading-[1.7] text-navy whitespace-pre-wrap break-words">{m.text}</p>
                       )}
                       {m.citations && m.citations.length > 0 && (
                         <div className="mt-3 flex flex-wrap gap-2">
                           {m.citations.map((citation, referenceIndex) => {
-                            const isSelected =
-                              selectedCitation?.sessionId === activeId &&
-                              selectedCitation.messageIndex === i &&
-                              selectedCitation.referenceIndex ===
-                                referenceIndex;
+                            const isSelected = citeIndex === referenceIndex
                             return (
                               <button
-                                key={`${citation.title}-${citation.clause}`}
+                                key={`${citation.title}-${citation.clause}-${referenceIndex}`}
                                 type="button"
                                 onClick={(event) => {
-                                  if (!active) return;
-                                  citationTriggerRef.current =
-                                    event.currentTarget;
-                                  sourceRequest.current++;
-                                  setSource(undefined);
-                                  setSourceError("");
-                                  setSourceBusy(false);
-                                  setSelectedCitation({
-                                    sessionId: active.id,
-                                    messageIndex: i,
-                                    referenceIndex,
-                                  });
+                                  citationTriggerRef.current = event.currentTarget
+                                  updateUrl({ cite: String(referenceIndex) })
                                 }}
                                 aria-controls={
                                   isSelected
@@ -590,7 +564,9 @@ export default function ChatPage() {
                                     : undefined
                                 }
                                 aria-expanded={isSelected}
-                                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-medium text-left text-xs text-accent-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${isSelected ? "border-accent bg-selected" : "border-line bg-surface hover:border-accent/60 hover:bg-selected"}`}
+                                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-medium text-left text-xs text-accent-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${
+                                  isSelected ? 'border-accent bg-selected' : 'border-line bg-surface hover:border-accent/60 hover:bg-selected'
+                                }`}
                               >
                                 <Icon
                                   d={ic.book}
@@ -616,6 +592,7 @@ export default function ChatPage() {
                           },
                         ].map((a) => (
                           <button
+                            type="button"
                             disabled={blocked}
                             onClick={() => messageAction(a.t, m.text)}
                             key={a.t}
@@ -626,11 +603,7 @@ export default function ChatPage() {
                             <Icon d={a.d} className="w-3.5 h-3.5" />
                           </button>
                         ))}
-                        <NavLinkButton
-                          to="/on-thi"
-                          size="sm"
-                          className="ml-auto rounded-lg"
-                        >
+                        <NavLinkButton to="/on-thi" size="sm" className="ml-auto rounded-lg">
                           Ôn tập theo chương
                         </NavLinkButton>
                       </div>
@@ -673,9 +646,8 @@ export default function ChatPage() {
               ref={citationCloseRef}
               type="button"
               onClick={() => {
-                sourceRequest.current++;
-                setSelectedCitation(null);
-                citationTriggerRef.current?.focus();
+                updateUrl({ cite: null })
+                citationTriggerRef.current?.focus()
               }}
               aria-label="Đóng nguồn trích dẫn"
               className="p-2 rounded-lg text-muted hover:bg-selected hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
@@ -689,16 +661,11 @@ export default function ChatPage() {
                 <Icon d={ic.book} className="w-3.5 h-3.5" />
                 Căn cứ pháp lý
               </div>
-              <h2 className="text-[15px] font-semibold leading-relaxed text-navy mb-3">
-                {selectedReference.title}
-              </h2>
-              <p className="text-xs text-muted leading-relaxed">
-                {selectedReference.clause}
-              </p>
-              <blockquote className="mt-3 text-sm whitespace-pre-wrap break-words">
-                {selectedReference.raw.quote}
-              </blockquote>
+              <h2 className="text-[15px] font-semibold leading-relaxed text-navy mb-3">{selectedReference.title}</h2>
+              <p className="text-xs text-muted leading-relaxed">{selectedReference.clause}</p>
+              <blockquote className="mt-3 text-sm whitespace-pre-wrap break-words">{selectedReference.raw.quote}</blockquote>
               <button
+                type="button"
                 disabled={sourceBusy}
                 onClick={() => void readSource()}
                 className="mt-3 border border-line rounded-lg px-3 py-2 text-xs"
@@ -712,9 +679,7 @@ export default function ChatPage() {
                     {source.title} · {source.number} · {source.unitType}
                   </summary>
                   <p className="whitespace-pre-wrap mt-2">{source.text}</p>
-                  <p>
-                    Trích đoạn khớp nguồn; không xác nhận hiệu lực hiện hành.
-                  </p>
+                  <p>Trích đoạn khớp nguồn; không xác nhận hiệu lực hiện hành.</p>
                 </details>
               )}
             </div>
@@ -764,9 +729,10 @@ function SessionItem({
     >
       <span className="flex-1 truncate">{s.title}</span>
       <button
+        type="button"
         onClick={(e) => {
-          e.stopPropagation();
-          onPin();
+          e.stopPropagation()
+          onPin()
         }}
         className="opacity-0 group-hover:opacity-100 p-0.5 rounded text-muted hover:text-navy"
         aria-label="Ghim trong phiên giao diện"

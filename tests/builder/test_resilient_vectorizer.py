@@ -121,10 +121,12 @@ class ResilientVectorizerTest(unittest.TestCase):
     def test_timeout_recovers_single_job(self):
         provider = FakeModel([TimeoutError(), None])
         with pinned_boundary(provider) as batch:
-            result = self.make(batch).run([node()])
+            engine = self.make(batch)
+            with self.assertRaises(self.code.RunBlocked): engine.run([node()])
+            result = engine.run([node()], resume=True)
         self.assertTrue(result.complete)
-        self.assertEqual(self.delays, [2])
-        self.assertEqual(result.provider_requests, 2)
+        self.assertEqual(self.delays, [])
+        self.assertEqual(engine.requests, 2)
 
     def test_503_recovers(self): self.check_transient(503)
     def test_429_recovers(self): self.check_transient(429)
@@ -132,20 +134,28 @@ class ResilientVectorizerTest(unittest.TestCase):
 
     def check_transient(self, status, code=None):
         with pinned_boundary(FakeModel([ProviderError(status, code), None])) as batch:
-            result = self.make(batch).run([node()])
+            engine = self.make(batch)
+            if status in (503,429):
+                with self.assertRaises(self.code.RunBlocked): engine.run([node()])
+                result = engine.run([node()], resume=True)
+            else:
+                result = engine.run([node()])
         self.assertTrue(result.complete)
         self.assertEqual(result.retry_requests, 1)
-        self.assertEqual(self.delays, [2])
+        self.assertEqual(self.delays, [] if status in (503,429) else [2])
 
     def test_transient_exhaustion_is_bounded_and_unresolved(self):
         with pinned_boundary(FakeModel([ProviderError(503)] * 5)) as batch:
-            result = self.make(batch).run([node()])
-        self.assertFalse(result.complete)
-        self.assertEqual(result.provider_requests, 4)
-        self.assertEqual(self.delays, [2, 5, 10])
-        self.assertEqual(result.counts['failed_exhausted'], 1)
-        self.assertEqual(result.jobs[0]['attempt_count'], 4)
-        self.assertNotIn('SECRET', json.dumps(result.jobs))
+            engine = self.make(batch)
+            with self.assertRaises(self.code.RunBlocked) as caught:
+                engine.run([node()])
+        self.assertEqual(caught.exception.code, 'VECTORS')
+        self.assertEqual(engine.requests, 1)
+        self.assertEqual(self.delays, [])
+        job = engine._entry(next(engine._jobs([node()])))
+        self.assertEqual(job['status'], 'PENDING')
+        self.assertEqual(len(job['attempts']), 1)
+        self.assertNotIn('SECRET', json.dumps(job))
 
     def test_batch_400_isolates_and_single_success(self):
         provider = FakeModel([ProviderError(400), None, None])
@@ -170,15 +180,17 @@ class ResilientVectorizerTest(unittest.TestCase):
         self.assertTrue(result.complete)
         self.assertEqual(provider.calls[0][1], 180)
 
-    def test_large_timeout_uses_300_final_and_stops(self):
+    def test_large_timeout_stops_before_another_recovery(self):
         n = node(text='đ' * 100001)
         provider = FakeModel([TimeoutError()] * 4)
         with pinned_boundary(provider) as batch:
-            result = self.make(batch).run([n], previous_failures=self.previous(n))
-        self.assertFalse(result.complete)
-        self.assertEqual([timeout for _,timeout in provider.calls], [180, 300])
-        self.assertEqual(result.jobs[0]['classification'], 'PERSISTENT_LARGE_INPUT_TIMEOUT')
-        self.assertEqual(result.jobs[0]['source_bytes'], 200002)
+            engine = self.make(batch)
+            with self.assertRaises(self.code.RunBlocked):
+                engine.run([n], previous_failures=self.previous(n))
+        self.assertEqual([timeout for _,timeout in provider.calls], [180])
+        job = engine._entry(next(engine._jobs([n])))
+        self.assertEqual(job['status'], 'PENDING')
+        self.assertEqual(job['source_bytes'], 200002)
 
     def test_cached_success_is_never_resent_after_restart(self):
         provider = FakeModel()
@@ -212,7 +224,9 @@ class ResilientVectorizerTest(unittest.TestCase):
         provider = FakeModel([None, ProviderError(503), None])
         originals = [node('A','A'), node('B','B'), node('C','C')]
         with pinned_boundary(provider) as batch:
-            result = self.make(batch).run(originals)
+            engine = self.make(batch)
+            with self.assertRaises(self.code.RunBlocked): engine.run(originals)
+            result = engine.run(originals, resume=True)
         self.assertTrue(result.complete)
         self.assertEqual([values for values,_ in provider.calls], [['A','B'], ['C'], ['C']])
 
@@ -332,9 +346,11 @@ class ResilientVectorizerTest(unittest.TestCase):
                     return types.SimpleNamespace(data=[types.SimpleNamespace(embedding=[1.0,2.0,3.0]) for _ in kwargs['input']])
             model.client=Client();batch.vectorize_model=model
             with self.assertNoLogs('pinned_openai_for_recovery',level='ERROR'):
-                result=self.make(batch).run([node()])
+                engine=self.make(batch)
+                with self.assertRaises(self.code.RunBlocked):engine.run([node()])
+                result=engine.run([node()],resume=True)
         self.assertTrue(result.complete)
-        self.assertEqual(result.provider_requests,2)
+        self.assertEqual(engine.requests,2)
         self.assertNotIn('SECRET',json.dumps(result.jobs))
         self.assertEqual(model.client.options['max_retries'],0)
 
@@ -445,9 +461,11 @@ class LongTextFallbackTest(ResilientVectorizerTest):
     def test_failed_chunk_retries_without_resending_successful_sibling(self):
         original=node(text='abcdefghijklmnop');provider=FakeModel([None,ProviderError(503),None,None])
         with pinned_boundary(provider) as batch:
-            rv=self.fallback(batch);self.exhaust(rv,original);result=rv.run([original])
+            rv=self.fallback(batch);self.exhaust(rv,original)
+            with self.assertRaises(self.code.RunBlocked):rv.run([original])
+            result=rv.run([original],resume=True)
         self.assertTrue(result.complete)
-        self.assertEqual(result.provider_requests,4)
+        self.assertEqual(rv.requests,4)
         self.assertEqual(result.retry_requests,1)
         self.assertEqual([x for x,_ in provider.calls],[['abcdefgh'],['ghijklmn'],['ghijklmn'],['mnop']])
 
