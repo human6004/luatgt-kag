@@ -4,8 +4,6 @@
 @theme {
   --color-navy: #352d24;
   --color-navy-light: #504334;
-  --color-amber: #d8b84e;
-  --color-amber-hover: #caa537;
   --color-accent: #d8b84e;
   --color-accent-hover: #caa537;
   --color-accent-strong: #80651a;
@@ -15,12 +13,10 @@
   --color-selected: #fff2c9;
   --color-line: #f3e7c7;
   --color-progress: #e7c96b;
-  --color-green: #10b981;
   --color-text: #352d24;
   --color-text-secondary: #6e6255;
   --color-muted: #6e6255;
   --font-sans: 'Be Vietnam Pro', system-ui, sans-serif;
-  --font-serif: var(--font-sans);
 }
 
 body {
