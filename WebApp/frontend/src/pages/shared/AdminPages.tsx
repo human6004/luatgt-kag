@@ -2,7 +2,7 @@ import { useEffect, useState } from "react"
 import { Link, useSearchParams } from "react-router-dom"
 import { normalizeImport } from "./import-normalization"
 import { api, send, type ContentRecord } from "../../api"
-import { Badge, Button, Card, FilterTabs, Modal, Th, Td, inputCls } from "../../admin/ui"
+import { Button, Card, FilterTabs, Modal, Th, Td, inputCls } from "../../admin/ui"
 import { useAdmin } from "../../admin/store"
 import { csvSamples, parseCsv, tableObjects, type ImportKind } from "../../admin/import-data"
 import { useData, useTask, Notice, Asset, download, saveBlob } from "./shared"
@@ -95,7 +95,6 @@ function sourceGraphContext(parameters: URLSearchParams) {
 export function ContentManager({ kind }: { kind: ContentKind }) {
   const resource = kind === "units" ? "/admin/units" : "/admin/content"
   const [parameters, setParameters] = useSearchParams()
-  const { notify } = useAdmin()
   const graphContext = sourceGraphContext(parameters)
 
   const urlQuery = parameters.get("q") ?? parameters.get("source_id") ?? ""
