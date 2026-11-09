@@ -47,7 +47,7 @@ class KagClientTest {
         final HttpServer server; final AtomicInteger calls=new AtomicInteger();
         final Map<String,List<String>> headers=new TreeMap<>(String.CASE_INSENSITIVE_ORDER); JsonNode received;
         int status=200,delay; String media="application/json",omit,wrong,duplicate;
-        String body=answer().toString(),delta="Nội dung thử",encoding; byte[] raw; boolean incomplete,closeBeforeHeaders,identityHeaders=true;
+        String body=answer().toString(),encoding; byte[] raw; boolean closeBeforeHeaders,identityHeaders=true;
         String requestId="00000000-0000-4000-8000-000000000002",cacheControl="no-store";
         final AtomicReference<Runnable> onRequest=new AtomicReference<>(()->{});
         Fixture() throws Exception {
@@ -67,10 +67,9 @@ class KagClientTest {
                 }
                 if(requestId!=null) exchange.getResponseHeaders().set("X-Request-ID",requestId);
                 if(cacheControl!=null) exchange.getResponseHeaders().set("Cache-Control",cacheControl);
-                boolean streaming=status==200&&exchange.getRequestURI().getPath().endsWith("/stream");
-                exchange.getResponseHeaders().set("Content-Type",streaming&&media.equals("application/json")?"text/event-stream":media);
+                exchange.getResponseHeaders().set("Content-Type",media);
                 if(encoding!=null) exchange.getResponseHeaders().set("Content-Encoding",encoding);
-                byte[] bytes=raw!=null?raw:(streaming?"event: delta\ndata: "+json.createObjectNode().put("text",delta)+"\n\n"+(incomplete?"":"event: done\ndata: "+body+"\n\n"):body).getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                byte[] bytes=raw!=null?raw:body.getBytes(java.nio.charset.StandardCharsets.UTF_8);
                 try { exchange.sendResponseHeaders(status,bytes.length); try(var out=exchange.getResponseBody()) { out.write(bytes); } }
                 catch(java.io.IOException expectedDisconnect) { exchange.close(); }
             });
@@ -532,12 +531,10 @@ class KagClientTest {
         assertEquals(503,error.getStatusCode().value()); assertEquals("Dịch vụ KAG chưa khả dụng",error.getReason());
         assertNull(error.getCause()); assertFalse(error.toString().contains(TOKEN)); assertFalse(error.toString().contains(secret.toString()));
     }
-    @Test void transportReadsRestAndSseAndRejectsIncompleteStream() throws Exception {
+    @Test void transportReadsQueryResponse() throws Exception {
         try(var f=new Fixture()) {
             var client=client(f); assertEquals(answer(),client.query(request()));
-            var events=new ArrayList<String>(); client.stream(request(),(event,data)->events.add(event));
-            assertEquals(List.of("delta","done"),events); f.incomplete=true;
-            unavailable(()->client.stream(request(),(event,data)->{}));
+            assertEquals(1,f.calls.get());
         }
     }
     @Test void serviceBearerAndPinsUseOnlyServerConfiguration() throws Exception {
@@ -566,9 +563,7 @@ class KagClientTest {
         try(var f=new Fixture()) {
             var client=client(f); assertEquals(answer(),client.query(request()));
             assertEquals(List.of("Bearer "+TOKEN),f.headers.get("Authorization"));
-            var events=new ArrayList<String>(); client.stream(request(),(event,data)->events.add(event));
-            assertEquals(List.of("delta","done"),events);
-            assertEquals(List.of("Bearer "+TOKEN),f.headers.get("Authorization"));
+            assertEquals(1,f.calls.get());
         }
     }
     @ParameterizedTest @ValueSource(strings={"", "\n", "\r\n"})
@@ -619,11 +614,10 @@ class KagClientTest {
         try(var f=new Fixture()) { unavailable(()->client(f).query(request)); assertEquals(0,f.calls.get()); }
     }
     @ParameterizedTest @ValueSource(strings={"X-KAG-Release-ID","X-WebApp-Snapshot-ID","X-KAG-As-Of"})
-    void missingWrongDuplicateEchoRejectedBeforeBodyOrConsumer(String header) throws Exception {
+    void missingWrongDuplicateEchoRejectedBeforeBody(String header) throws Exception {
         for(String mode:List.of("missing","wrong","duplicate")) try(var f=new Fixture()) {
             if(mode.equals("missing")) f.omit=header; else if(mode.equals("wrong")) f.wrong=header; else f.duplicate=header;
-            var client=client(f); unavailable(()->client.query(request())); var events=new AtomicInteger();
-            unavailable(()->client.stream(request(),(event,data)->events.incrementAndGet())); assertEquals(0,events.get());
+            var client=client(f); unavailable(()->client.query(request())); assertEquals(1,f.calls.get());
         }
     }
     @Test void dateRolloverRejectsOldEchoEvenAfterSuccessfulHttp() throws Exception {
@@ -673,14 +667,12 @@ class KagClientTest {
     static String nativeAbstention() {
         return "{\"request_id\":\"00000000-0000-4000-8000-000000000002\",\"error\":{\"code\":\"KAG_ABSTAINED\",\"message\":\"Chưa đủ bằng chứng để trả lời.\",\"retryable\":false},\"native_state\":\"abstained\"}";
     }
-    @Test void verifiedNativeAbstentionIsTerminalRestAndSseOutcomeWithoutRetryOrCircuitFailure() throws Exception {
+    @Test void verifiedNativeAbstentionIsTerminalQueryOutcomeWithoutRetryOrCircuitFailure() throws Exception {
         try(var f=new Fixture()) {
             f.status=503; f.body=nativeAbstention(); f.identityHeaders=false; var client=client(f);
             var expected=json.readTree("{\"state\":\"KAG_ABSTAINED\"}");
             for(int i=0;i<5;i++) assertEquals(expected,client.query(request()));
-            var events=new ArrayList<String>(); var payloads=new ArrayList<JsonNode>();
-            client.stream(request(),(event,data)->{events.add(event);payloads.add(data);});
-            assertEquals(List.of("done"),events); assertEquals(List.of(expected),payloads); assertEquals(6,f.calls.get());
+            assertEquals(5,f.calls.get());
         }
     }
     @ParameterizedTest @ValueSource(strings={"http200","http403","code","state","missing-state","extra","answer","retry","message","id","id-echo","missing-id-echo","cache","media","encoding","utf8","duplicate","trailing","empty","token","wrong-release","wrong-snapshot","wrong-date","duplicate-release"})
@@ -713,19 +705,16 @@ class KagClientTest {
             }
             f.body=switch(mode) {case "duplicate"->"{\"native_state\":\"abstained\","+body.toString().substring(1);case "trailing"->body+" {}";case "empty"->"";default->body.toString();};
             var client=client(f); unavailable(()->client.query(request()));
-            var events=new ArrayList<String>(); unavailable(()->client.stream(request(),(event,data)->events.add(event)));
-            assertTrue(events.isEmpty()); assertEquals(2,f.calls.get());
+            assertEquals(1,f.calls.get());
         }
     }
     @ParameterizedTest @ValueSource(ints={401,403,422,503})
-    void h1ErrorsRemainSanitizedAndNeverEmitStreamSuccess(int status,CapturedOutput output) throws Exception {
+    void h1ErrorsRemainSanitizedAndUnavailable(int status,CapturedOutput output) throws Exception {
         String bearer=status==401||status==403?"u".repeat(43):TOKEN;
         Files.writeString(secret,bearer);
         try(var f=new Fixture()) {
             f.status=status; f.body=h1Failure(status); var client=client(f);
-            unavailable(()->client.query(request())); var events=new ArrayList<String>();
-            unavailable(()->client.stream(request(),(event,data)->events.add(event)));
-            assertTrue(events.isEmpty()); assertEquals(2,f.calls.get());
+            unavailable(()->client.query(request())); assertEquals(1,f.calls.get());
             assertEquals(List.of("Bearer "+bearer),f.headers.get("Authorization"));
             assertFalse(output.getAll().contains(bearer));
             assertFalse(output.getAll().contains(TOKEN)); assertFalse(output.getAll().contains(secret.toString()));
@@ -741,26 +730,22 @@ class KagClientTest {
                 else assertEquals("alive",json.readTree(response.body()).path("status").asText());
             }
             f.status=503; f.body=h1Failure(503); var client=client(f); unavailable(()->client.query(request()));
-            var events=new ArrayList<String>(); unavailable(()->client.stream(request(),(event,data)->events.add(event))); assertTrue(events.isEmpty());
             var unconfigured=client(f,Map.of("app.kag-release-id","","app.kag-webapp-snapshot-id",""),null);
-            unavailable(()->unconfigured.query(request())); assertEquals(2,f.calls.get());
+            unavailable(()->unconfigured.query(request())); assertEquals(1,f.calls.get());
         }
     }
-    @Test void refusedConnectionNeverEmitsStreamEvents() throws Exception {
+    @Test void refusedConnectionRemainsUnavailable() throws Exception {
         try(var f=new Fixture()) {
             var client=client(f); f.server.stop(0); unavailable(()->client.query(request()));
-            var events=new ArrayList<String>(); unavailable(()->client.stream(request(),(event,data)->events.add(event))); assertTrue(events.isEmpty());
         }
     }
     @Test void circuitBreakerAndNoUnsafePostRetryRemain() throws Exception {
         try(var f=new Fixture()) { f.status=503; var client=client(f); for(int i=0;i<4;i++) unavailable(()->client.query(request())); assertEquals(3,f.calls.get()); }
         try(var f=new Fixture()) { f.closeBeforeHeaders=true; unavailable(()->client(f).query(request())); assertEquals(1,f.calls.get()); }
     }
-    @ParameterizedTest @ValueSource(booleans={false,true})
-    void configuredReadTimeoutIs30Seconds(boolean streaming) throws Exception {
-        try(var f=new Fixture()) { f.delay=31000; long start=System.nanoTime(); var client=client(f); client.queryTimeout(30); var events=new ArrayList<String>();
-            unavailable(()->{ if(streaming) client.stream(request(),(event,data)->events.add(event)); else client.query(request()); });
-            assertTrue(events.isEmpty());
+    @Test void configuredReadTimeoutIs30Seconds() throws Exception {
+        try(var f=new Fixture()) { f.delay=31000; long start=System.nanoTime(); var client=client(f); client.queryTimeout(30);
+            unavailable(()->client.query(request()));
             long seconds=Duration.ofNanos(System.nanoTime()-start).toSeconds(); assertTrue(seconds>=29&&seconds<36); assertEquals(1,f.calls.get()); }
     }
     @Test void sampleQueryTimeoutIsBoundedWithoutChangingDefault() throws Exception {
@@ -772,14 +757,10 @@ class KagClientTest {
             assertNotNull(client.query(request()));
         }
     }
-    @Test void reflectedServiceTokenNeverReachesRestOrStreamConsumer() throws Exception {
+    @Test void reflectedServiceTokenNeverReachesQueryConsumer() throws Exception {
         try(var f=new Fixture()) {
             f.body=((com.fasterxml.jackson.databind.node.ObjectNode)answer()).put("answer",TOKEN).toString();
             unavailable(()->client(f).query(request()));
-        }
-        try(var f=new Fixture()) {
-            f.delta=TOKEN; var events=new AtomicInteger();
-            unavailable(()->client(f).stream(request(),(event,data)->events.incrementAndGet())); assertEquals(0,events.get());
         }
     }
     @Test void strictWireRejectsMalformedUtf8CompressionAndDuplicateValidFields() throws Exception {
@@ -792,110 +773,14 @@ class KagClientTest {
             unavailable(()->client(f).query(request()));
         }
     }
-    @Test void doneOnlyPreservesEveryCitationAndExactRestPayload() throws Exception {
+    @Test void queryPreservesEveryCitationAndExactPayload() throws Exception {
         try(var f=new Fixture()) {
             var expected=(com.fasterxml.jackson.databind.node.ObjectNode)answer();
             var citations=(com.fasterxml.jackson.databind.node.ArrayNode)expected.path("citations");
             var second=(com.fasterxml.jackson.databind.node.ObjectNode)citations.get(0).deepCopy();
             second.put("unit_id","test::2").put("evidence_id","b".repeat(64));
             citations.add(second); f.body=expected.toString();
-            f.raw=("event: done\ndata: "+f.body+"\n\n").getBytes(java.nio.charset.StandardCharsets.UTF_8);
-            f.media="text/event-stream; charset=utf-8";
-            var events=new ArrayList<String>(); var payloads=new ArrayList<JsonNode>();
-            client(f).stream(request(),(event,data)->{ events.add(event); payloads.add(data); });
-            assertEquals(List.of("done"),events); assertEquals(List.of(expected),payloads);
-            f.raw=null; f.media="application/json";
             assertEquals(expected,client(f).query(request()));
-        }
-    }
-    @Test void legacyDeltaDoneRemainsExactAndOrdered() throws Exception {
-        try(var f=new Fixture()) {
-            var events=new ArrayList<String>(); var payloads=new ArrayList<JsonNode>();
-            client(f).stream(request(),(event,data)->{ events.add(event); payloads.add(data); });
-            assertEquals(List.of("delta","done"),events);
-            assertEquals(json.createObjectNode().put("text",f.delta),payloads.getFirst());
-            assertEquals(answer(),payloads.getLast());
-        }
-    }
-    @ParameterizedTest @ValueSource(strings={"missing","truncated-json","no-blank","one-newline","unknown-error","partial-error","duplicate-json","malformed-utf8","empty-citations"})
-    void malformedOrIncompleteSseNeverDeliversDone(String mode) throws Exception {
-        try(var f=new Fixture()) {
-            String done="event: done\ndata: "+f.body;
-            String delta="event: delta\ndata: {\"text\":\"partial\"}\n\n";
-            f.raw=switch(mode) {
-                case "missing" -> delta.getBytes(java.nio.charset.StandardCharsets.UTF_8);
-                case "truncated-json" -> (done.substring(0,done.length()-1)+"\n\n").getBytes(java.nio.charset.StandardCharsets.UTF_8);
-                case "no-blank" -> done.getBytes(java.nio.charset.StandardCharsets.UTF_8);
-                case "one-newline" -> (done+"\n").getBytes(java.nio.charset.StandardCharsets.UTF_8);
-                case "unknown-error" -> "event: error\ndata: {\"message\":\"unavailable\"}\n\n".getBytes(java.nio.charset.StandardCharsets.UTF_8);
-                case "partial-error" -> (delta+"event: error\ndata: {\"message\":").getBytes(java.nio.charset.StandardCharsets.UTF_8);
-                case "duplicate-json" -> ("event: done\ndata: {\"answer\":\"x\","+f.body.substring(1)+"\n\n").getBytes(java.nio.charset.StandardCharsets.UTF_8);
-                case "empty-citations" -> "event: done\ndata: {\"answer\":\"x\",\"citations\":[]}\n\n".getBytes(java.nio.charset.StandardCharsets.UTF_8);
-                default -> new byte[]{(byte)0xc3,0x28};
-            };
-            var events=new ArrayList<String>(); unavailable(()->client(f).stream(request(),(event,data)->events.add(event)));
-            assertFalse(events.contains("done"));
-            assertEquals(mode.equals("missing")||mode.equals("partial-error")?List.of("delta"):List.of(),events);
-        }
-    }
-    @Test void streamByteCeilingRejectsWholeOversizedDoneWithoutConsumer() throws Exception {
-        for(int size:new int[]{245760,256*1024,256*1024+1}) try(var f=new Fixture()) {
-            String frame="event: done\ndata: "+f.body;
-            int padding=size-frame.getBytes(java.nio.charset.StandardCharsets.UTF_8).length-2;
-            f.raw=(frame+" ".repeat(padding)+"\n\n").getBytes(java.nio.charset.StandardCharsets.UTF_8);
-            assertEquals(size,f.raw.length);
-            var events=new ArrayList<String>();
-            if(size<=256*1024) {
-                client(f).stream(request(),(event,data)->{ events.add(event); assertEquals(answer(),data); });
-                assertEquals(List.of("done"),events);
-            } else {
-                unavailable(()->client(f).stream(request(),(event,data)->events.add(event)));
-                assertTrue(events.isEmpty());
-            }
-        }
-    }
-    @ParameterizedTest @ValueSource(strings={"json-media","text-media","wrong-charset","gzip","missing-release","wrong-snapshot","duplicate-date"})
-    void invalidSseMediaOrIdentityFailsBeforeAnyEvent(String mode) throws Exception {
-        try(var f=new Fixture()) {
-            f.raw=("event: done\ndata: "+f.body+"\n\n").getBytes(java.nio.charset.StandardCharsets.UTF_8);
-            switch(mode) {
-                case "json-media" -> f.media="application/json; charset=utf-8";
-                case "text-media" -> f.media="text/plain";
-                case "wrong-charset" -> f.media="text/event-stream; charset=iso-8859-1";
-                case "gzip" -> f.encoding="gzip";
-                case "missing-release" -> f.omit="X-KAG-Release-ID";
-                case "wrong-snapshot" -> f.wrong="X-WebApp-Snapshot-ID";
-                default -> f.duplicate="X-KAG-As-Of";
-            }
-            var events=new ArrayList<String>(); unavailable(()->client(f).stream(request(),(event,data)->events.add(event)));
-            assertTrue(events.isEmpty());
-        }
-    }
-    @ParameterizedTest @ValueSource(ints={409,502,503,504})
-    void preheaderSseFailuresNeverConsumeFabricatedDone(int status) throws Exception {
-        try(var f=new Fixture()) {
-            f.status=status; f.raw=("event: done\ndata: "+f.body+"\n\n").getBytes(java.nio.charset.StandardCharsets.UTF_8);
-            var events=new ArrayList<String>(); unavailable(()->client(f).stream(request(),(event,data)->events.add(event)));
-            assertTrue(events.isEmpty()); assertEquals(1,f.calls.get());
-        }
-    }
-    @ParameterizedTest @ValueSource(strings={"exact","one-over","astral-exact","astral-one-over"})
-    void legacyDeltaUtf16LimitRejectsBeforeConsumer(String mode) throws Exception {
-        try(var f=new Fixture()) {
-            f.delta=switch(mode) {
-                case "exact" -> "x".repeat(4000);
-                case "one-over" -> "x".repeat(4001);
-                case "astral-exact" -> "🚦".repeat(2000);
-                default -> "🚦".repeat(2000)+"x";
-            };
-            var events=new ArrayList<String>();
-            if(mode.endsWith("one-over")) {
-                unavailable(()->client(f).stream(request(),(event,data)->events.add(event)));
-                assertTrue(events.isEmpty());
-            } else {
-                client(f).stream(request(),(event,data)->events.add(event));
-                assertEquals(List.of("delta","done"),events);
-            }
         }
     }
 }

@@ -56,30 +56,6 @@ public class ChatService {
         return Map.of("id",c.id,"question",c.question,"answer",c.answer==null?"":c.answer,"citations",parse(c.citations),"state",c.state,"createdAt",c.createdAt);
     }
     private JsonNode parse(String value) { try { return data.mapper().readTree(value); } catch(Exception e) { throw new IllegalStateException(e); } }
-    public Map<String,Object> ask(UUID owner,ChatRequest input) {
-        var chat=start(owner,input);
-        try { complete(chat,kag.query(request(owner,input),chat.id)); return view(chat); }
-        catch(RuntimeException e) { chat.state="UNAVAILABLE"; chats.save(chat); throw e; }
-    }
-    public StreamingResponseBody stream(UUID owner,ChatRequest input) {
-        if(!streams.tryAcquire()) throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,"Đang có nhiều truy vấn, vui lòng thử lại");
-        ChatMessage chat;
-        try { chat=start(owner,input); } catch(RuntimeException e) { streams.release(); throw e; }
-        return output -> {
-            try {
-                kag.stream(request(owner,input),(event,payload) -> {
-                    if(event.equals("done")) { complete(chat,payload); emit(output,"done",view(chat)); }
-                    else {
-                        if(!payload.path("text").isTextual()||payload.path("text").asText().length()>4000) throw ApiErrors.bad("Delta không hợp lệ");
-                        emit(output,"delta",Map.of("text",payload.path("text").asText()));
-                    }
-                });
-            } catch(RuntimeException e) {
-                chat.state="UNAVAILABLE"; chats.save(chat);
-                emit(output,"error",Map.of("message","Dịch vụ KAG chưa khả dụng hoặc câu trả lời chưa đủ căn cứ","id",chat.id));
-            } finally { streams.release(); }
-        };
-    }
     public StreamingResponseBody progress(UUID owner,ChatRequest input) {
         if(!streams.tryAcquire()) throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,"Đang có nhiều truy vấn, vui lòng thử lại");
         Pending job;

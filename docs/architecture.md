@@ -57,7 +57,7 @@ Nguồn chuẩn: [app.py](../kag/http_api/app.py), [contract.py](../kag/http_api
 - Native Solver hỗ trợ document/unit/sign; success HTTP v1 chỉ hỗ trợ **`LegalUnit.text` nguyên trường**, đủ publication. Không cắt nguồn/đổi ID để ép vừa contract; kết quả không biểu diễn được trả `V1_RESULT_UNREPRESENTABLE`.
 - `answer` ≤20.000 UTF-16 units; 1–20 citations gồm `doc_id,unit_id,sign_id,evidence_id,field,start,end,quote`. `sign_id=null`, `field=text`, `start=0`, `end` tính Unicode code points.
 - Abstention hợp lệ: HTTP 503 `KAG_ABSTAINED`, `native_state=abstained`; Java kiểm cấu trúc/headers/request identity rồi lưu `KAG_ABSTAINED`. Lỗi khác lưu `UNAVAILABLE`.
-- Python SSE phát terminal `done` sau validation; Java tương thích `delta/done`. UI hiện dùng REST.
+- UI gửi `POST /api/chat/stream?progress=true`; Java phát SSE `started` rồi `done`/`error` và giữ kết nối bằng heartbeat. Java gọi Python `POST /v1/query` nhận JSON đã kiểm căn cứ; không còn endpoint Python SSE.
 - `/v1/health` chỉ liveness. `/v1/operations/sample`, `/v1/pipeline/status`, `/v1/benchmark/datasets` phục vụ inspection, không chạy Builder/benchmark.
 
 Endpoint và secrets: [Docker](../docker/README.md#cấu-hình-chatbot). Control ADMIN, tiến trình và kết quả phiên: [runner](runner.md#dựng-đồ-thị-qua-5-bước). Builder v3 hỗ trợ Bỏ phiên/Xóa dữ liệu với quyền riêng; hai thao tác không tương đương và không tự kích hoạt Chat.

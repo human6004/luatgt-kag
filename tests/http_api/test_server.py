@@ -29,7 +29,8 @@ class ConfigurationTests(unittest.TestCase):
     def test_factory_registers_existing_h1_routes_without_serving_authority(self):
         app = server.create_app()
         self.assertTrue({'/v1/health','/v1/graph/release','/v1/query',
-                         '/v1/query/stream','/v1/retrieve'} <= {r.path for r in app.routes})
+                         '/v1/retrieve'} <= {r.path for r in app.routes})
+        self.assertNotIn('/v1/query/stream',{r.path for r in app.routes})
         self.assertIsNone(app.state.serving_release)
         self.assertIsNone(app.state.runtime_settings)
         self.assertIsNone(app.openapi_url)
@@ -291,15 +292,15 @@ class PackagedASGITests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(result.status_code,503)
         self.assertEqual(result.json()['error']['code'],'RELEASE_UNAVAILABLE')
 
-    async def test_query_and_sse_preserve_fail_closed_response(self):
+    async def test_query_preserves_fail_closed_response_and_removed_stream_is_not_found(self):
         payload={'user_id':'00000000-0000-4000-8000-000000000001','message':'q','context_id':'',
             'schema_contract':{'namespace':'VietRoadTraffic','schema_sha256':'a'*64,'contract_sha256':'b'*64}}
-        for path in ('/v1/query','/v1/query/stream'):
-            with self.subTest(path=path):
-                result = await self.client.post(path,headers={'authorization':'Bearer '+'q'*64},json=payload)
-                self.assertEqual(result.status_code,503)
-                self.assertEqual(result.json()['error']['code'],'RELEASE_UNAVAILABLE')
-                self.assertEqual(result.headers['cache-control'],'no-store')
+        result = await self.client.post('/v1/query',headers={'authorization':'Bearer '+'q'*64},json=payload)
+        self.assertEqual(result.status_code,503)
+        self.assertEqual(result.json()['error']['code'],'RELEASE_UNAVAILABLE')
+        self.assertEqual(result.headers['cache-control'],'no-store')
+        result = await self.client.post('/v1/query/stream',headers={'authorization':'Bearer '+'q'*64},json=payload)
+        self.assertEqual(result.status_code,404)
 
 
 if __name__ == '__main__':

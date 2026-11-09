@@ -68,7 +68,7 @@ def _failure(request: Request, code: str, *, status=None, extra=None):
     if extra:
         body.update(extra)
     response_status = failure.status if status is None else status
-    if request.method == 'POST' and request.scope['path'] in ('/v1/query', '/v1/query/stream'):
+    if request.method == 'POST' and request.scope['path'] == '/v1/query':
         print('KAG_QUERY_FAILURE '+json.dumps({
             'request_id': request.state.request_id, 'code': failure.code, 'status': response_status,
             'elapsed_ms': round(max(0, time.monotonic()-getattr(request.state, 'request_started', time.monotonic()))*1000, 3)
@@ -833,7 +833,7 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
             if len(raw)>245760:raise ApiFailure('RESULT_LIMIT_EXCEEDED')
             return Response(raw,media_type='application/json',headers={'X-KAG-Release-ID':release.release_id})
 
-    async def verified_query(request: Request, *, stream=False):
+    async def verified_query(request: Request):
         from . import runtime as core
         release, settings = app.state.serving_release, app.state.runtime_settings
         supervisor = getattr(app.state,'runtime_supervisor',None)
@@ -906,10 +906,6 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                     if exc.code == 'V1_RESULT_UNREPRESENTABLE':
                         raise ApiFailure('RESULT_LIMIT_EXCEEDED') from None
                     raise
-                if stream:
-                    raw = b'event: done\ndata: '+raw+b'\n\n'
-                    if len(raw) > 245760:
-                        raise ApiFailure('RESULT_LIMIT_EXCEEDED')
                 if sources() != verified:
                     raise ApiFailure('SOURCE_VALIDATION_FAILED')
                 request.state.authority_guard = identity
@@ -939,9 +935,6 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
             if time.monotonic() >= request.state.request_deadline:
                 raise ApiFailure('QUERY_TIMEOUT')
             request.state.query_verified, request.state.query_as_of = True, as_of
-            if stream:
-                headers['X-Accel-Buffering'] = 'no'
-                return Response(raw,media_type='text/event-stream',headers=headers)
             return Response(raw,media_type='application/json',headers=headers)
         except core.RuntimeFailure as exc:
             raise ApiFailure(exc.code) from None
@@ -999,10 +992,6 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                     operation.cancel()
                 watcher.cancel()
                 await asyncio.gather(operation,watcher,return_exceptions=True)
-
-        @app.post('/v1/query/stream')
-        async def query_stream(request: Request):
-            return await verified_query(request,stream=True)
 
         @app.post('/v1/retrieve')
         async def retrieve(request: Request):

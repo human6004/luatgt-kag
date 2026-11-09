@@ -10,7 +10,6 @@ import java.nio.charset.*;
 import java.nio.file.*;
 import java.time.*;
 import java.util.*;
-import java.util.function.BiConsumer;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -1547,33 +1546,6 @@ public class KagClient {
             throw unavailable();
         }
     }
-    public void stream(Object request,BiConsumer<String,JsonNode> consumer) {
-        try {
-            var admitted=admit(request);
-            breaker.executeRunnable(() -> post("/v1/query/stream",admitted).accept(MediaType.TEXT_EVENT_STREAM).exchange((req,res) -> {
-                if(!res.getStatusCode().is2xxSuccessful()) { consumer.accept("done",abstained(res,admitted)); return null; }
-                verifyHeaders(res.getHeaders(),admitted,MediaType.TEXT_EVENT_STREAM);
-                try(var reader=new BufferedReader(new InputStreamReader(new LimitedInput(res.getBody()),StandardCharsets.UTF_8.newDecoder()))) {
-                    String event="message",line; var payload=new StringBuilder(); boolean done=false;
-                    while((line=reader.readLine())!=null) {
-                        if(line.isEmpty()) {
-                            if(payload.isEmpty()) continue;
-                            if(!event.equals("delta")&&!event.equals("done")) throw new IOException("Unknown KAG event");
-                            var result=parse(payload.toString(),admitted.token());
-                            if(event.equals("done")) validateResult(result,admitted);
-                            else if(!fields(result).equals(Set.of("text"))||!text(result.path("text"),4000,false)) throw new IOException("Invalid delta");
-                            currentDate(admitted.date()); consumer.accept(event,result); payload.setLength(0);
-                            if(event.equals("done")) { done=true; break; }
-                            event="message";
-                        } else if(line.startsWith("event:")) event=line.substring(6).trim();
-                        else if(line.startsWith("data:")) { if(!payload.isEmpty()) payload.append('\n'); payload.append(line.substring(5).trim()); }
-                    }
-                    if(!done) throw new IOException("Incomplete KAG stream");
-                }
-                return null;
-            }));
-        } catch(Exception e) { throw unavailable(); }
-    }
     private record Pins(String release,String snapshot,JsonNode schema,boolean production,boolean dataset,String descriptor) {
         String sourceHeader() { return dataset?"X-KAG-Source-Snapshot-ID":"X-WebApp-Snapshot-ID"; }
     }
@@ -1631,9 +1603,6 @@ public class KagClient {
         for(var pin:Map.of("X-KAG-Release-ID",admitted.pins().release(),admitted.pins().sourceHeader(),admitted.pins().snapshot(),"X-KAG-As-Of",admitted.date().toString()).entrySet())
             if(headers.containsKey(pin.getKey())) echo(headers,pin.getKey(),pin.getValue());
         currentDate(admitted.date()); return json.createObjectNode().put("state","KAG_ABSTAINED");
-    }
-    private Admitted admit(Object request) throws IOException {
-        return admit(request,null);
     }
     private Admitted admit(Object request,Map<String,Object> diagnostic) throws IOException {
         currentDate(LocalDate.now(clock));
@@ -1754,11 +1723,4 @@ public class KagClient {
         }
     }
     private static ResponseStatusException unavailable() { return new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Dịch vụ KAG chưa khả dụng"); }
-    private static class LimitedInput extends FilterInputStream {
-        int total;
-        LimitedInput(InputStream input) { super(input); }
-        private void count(int n) throws IOException { if(n>0 && (total+=n)>256*1024) throw new IOException("Stream too large"); }
-        @Override public int read() throws IOException { int n=super.read(); count(n<0?0:1); return n; }
-        @Override public int read(byte[] b,int off,int len) throws IOException { int n=super.read(b,off,len); count(n); return n; }
-    }
 }
