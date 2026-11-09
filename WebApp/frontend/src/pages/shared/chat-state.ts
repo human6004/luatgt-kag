@@ -27,6 +27,15 @@ export function chatView(row: ChatRecord) {
   return { status: 'Đã trả lời', answer: row.answer, citations: row.citations }
 }
 
+export function citationAnswerPrefix(answer: string, citations: Pick<Citation, 'quote'>[]) {
+  if (!citations.length) return undefined
+  // KAG appends the verified quotes in citation order, separated by blank lines.
+  const quotedBody = citations.map(citation => citation.quote).join('\n\n')
+  if (!answer.endsWith(quotedBody)) return undefined
+  const prefix = answer.slice(0, answer.length - quotedBody.length)
+  return !prefix || prefix.endsWith('\n') ? prefix : undefined
+}
+
 export async function loadCitationSource(citation: Citation) {
   if (citation.source) {
     if (!snapshotMatches(citation)) throw new ApiError('Source snapshot mismatch', 502)

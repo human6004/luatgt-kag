@@ -2,9 +2,9 @@ import { useLocation, useSearchParams } from 'react-router-dom'
 import { api, send as request } from '../api'
 import { NavLinkButton } from '../admin/ui'
 import { Notice, useTask } from './shared/shared'
-import { createChat, chatView, loadCitationSource } from './shared/chat-state'
+import { citationAnswerPrefix, createChat, chatView, loadCitationSource } from './shared/chat-state'
 import LogoMark from '../components/LogoMark'
-import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from 'react'
 
 interface LegalReference {
   title: string;
@@ -79,7 +79,7 @@ const ic = {
   close: 'M6 6l12 12M18 6 6 18',
 }
 
-function RichAnswer({ text }: { text: string }) {
+function RichAnswer({ text }: { text: ReactNode }) {
   return (
     <div className="text-navy leading-[1.7]">
       <p className="font-sans text-[16px] whitespace-pre-wrap break-words mb-5">{text}</p>
@@ -119,10 +119,6 @@ export default function ChatPage() {
 
   const [pinned, setPinned] = useState<Set<string>>(new Set())
   const [notice, setNotice] = useState('')
-  const [source, setSource] = useState<Awaited<ReturnType<typeof loadCitationSource>>>()
-  const [sourceError, setSourceError] = useState('')
-  const [sourceBusy, setSourceBusy] = useState(false)
-  const sourceRequest = useRef(0)
   const lastSubmittedId = useRef<string | undefined>(undefined)
 
   const [input, setInput] = useState('')
@@ -162,7 +158,8 @@ export default function ChatPage() {
           status: view.status,
           rich: !!view.answer,
           citations: view.citations.map((c) => ({
-            title: c.doc_id,
+            title: typeof c.source?.document_metadata.title === 'string' && c.source.document_metadata.title.trim()
+              ? c.source.document_metadata.title : c.doc_id,
             clause: c.unit_id ?? c.sign_id ?? '',
             label: `${c.doc_id}${c.unit_id || c.sign_id ? ` · ${c.unit_id ?? c.sign_id}` : ''}`,
             raw: c,
@@ -199,6 +196,7 @@ export default function ChatPage() {
   const active = sessions.find((s) => s.id === activeId) ?? null
   const messages = active?.messages ?? []
   const selectedReference = citeIndex !== null ? messages[1]?.citations?.[citeIndex] : undefined
+  const selectedCitation = selectedReference?.raw
 
   const filtered = useMemo(
     () => sessions.filter((s) => s.title.toLowerCase().includes(query.toLowerCase())),
@@ -210,14 +208,7 @@ export default function ChatPage() {
   }, [messages.length, thinking]);
 
   useEffect(() => {
-    sourceRequest.current++
-    setSource(undefined)
-    setSourceError('')
-    setSourceBusy(false)
-  }, [activeId, citeIndex])
-
-  useEffect(() => {
-    if (!selectedReference) return
+    if (!selectedCitation) return
     citationCloseRef.current?.focus()
     function handleEscape(event: KeyboardEvent) {
       if (event.key === 'Escape') {
@@ -227,7 +218,7 @@ export default function ChatPage() {
     }
     document.addEventListener('keydown', handleEscape)
     return () => document.removeEventListener('keydown', handleEscape)
-  }, [selectedReference])
+  }, [selectedCitation, activeId, citeIndex])
 
   useEffect(() => {
     const ta = taRef.current;
@@ -252,22 +243,38 @@ export default function ChatPage() {
     }
   }
 
-  async function readSource() {
-    if (!selectedReference) return
-    const id = ++sourceRequest.current
-    setSourceBusy(true)
-    setSourceError('')
-    setSource(undefined)
-    try {
-      const result = await loadCitationSource(selectedReference.raw)
-      if (id === sourceRequest.current) setSource(result)
-    } catch {
-      if (id === sourceRequest.current) {
-        setSourceError('Chi tiết nguồn chưa khả dụng hoặc không khớp trích đoạn. Trích dẫn backend được giữ nguyên.')
-      }
-    } finally {
-      if (id === sourceRequest.current) setSourceBusy(false)
-    }
+  function openCitation(index: number, trigger: HTMLButtonElement) {
+    citationTriggerRef.current = trigger
+    if (index === citeIndex) citationCloseRef.current?.focus()
+    else updateUrl({ cite: String(index) })
+  }
+
+  function answerText(message: Message) {
+    const citations = message.citations ?? []
+    const prefix = citationAnswerPrefix(message.text, citations.map(citation => citation.raw))
+    if (prefix === undefined) return message.text
+    return <>
+      {prefix}
+      {citations.map((citation, index) => (
+        <Fragment key={index}>
+          {index > 0 && '\n\n'}
+          {citation.raw.quote}
+          <button
+            type="button"
+            onClick={(event) => openCitation(index, event.currentTarget)}
+            aria-label={`Trích dẫn ${index + 1} – ${citation.label}`}
+            aria-expanded={citeIndex === index}
+            aria-controls={citeIndex === index ? 'legal-citation-panel' : undefined}
+            title={`${citation.title}\n${citation.raw.quote.slice(0, 180)}${citation.raw.quote.length > 180 ? '…' : ''}`}
+            className={`mx-1 inline-block rounded px-1.5 py-0.5 align-super text-xs font-semibold leading-none hover:bg-accent hover:text-navy focus-visible:outline-2 focus-visible:outline-accent-strong ${
+              citeIndex === index ? 'bg-accent text-navy' : 'bg-selected text-accent-strong'
+            }`}
+          >
+            {index + 1}
+          </button>
+        </Fragment>
+      ))}
+    </>
   }
 
   function messageAction(action: string, text: string) {
@@ -535,14 +542,14 @@ export default function ChatPage() {
                         </span>
                         Trợ lý LuậtGT
                         <span className="font-normal text-muted">
-                          · trích từ {m.citations?.length ?? 0} văn bản
+                          · {m.citations?.length ?? 0} trích dẫn
                         </span>
                       </div>
                       <p role="status" className="text-xs text-muted">
                         {m.status}
                       </p>
                       {m.rich ? (
-                        <RichAnswer text={m.text} />
+                        <RichAnswer text={answerText(m)} />
                       ) : (
                         <p className="font-sans text-[16px] leading-[1.7] text-navy whitespace-pre-wrap break-words">{m.text}</p>
                       )}
@@ -554,10 +561,7 @@ export default function ChatPage() {
                               <button
                                 key={`${citation.title}-${citation.clause}-${referenceIndex}`}
                                 type="button"
-                                onClick={(event) => {
-                                  citationTriggerRef.current = event.currentTarget
-                                  updateUrl({ cite: String(referenceIndex) })
-                                }}
+                                onClick={(event) => openCitation(referenceIndex, event.currentTarget)}
                                 aria-controls={
                                   isSelected
                                     ? "legal-citation-panel"
@@ -568,10 +572,7 @@ export default function ChatPage() {
                                   isSelected ? 'border-accent bg-selected' : 'border-line bg-surface hover:border-accent/60 hover:bg-selected'
                                 }`}
                               >
-                                <Icon
-                                  d={ic.book}
-                                  className="w-3.5 h-3.5 shrink-0"
-                                />
+                                <span className="shrink-0 font-semibold">[{referenceIndex + 1}]</span>
                                 <span>{citation.label}</span>
                               </button>
                             );
@@ -655,39 +656,76 @@ export default function ChatPage() {
               <Icon d={ic.close} />
             </button>
           </div>
-          <div className="p-4 overflow-y-auto" aria-live="polite">
-            <div className="rounded-xl border border-line bg-surface p-4 shadow-2xs">
-              <div className="flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-muted mb-3">
-                <Icon d={ic.book} className="w-3.5 h-3.5" />
-                Căn cứ pháp lý
-              </div>
-              <h2 className="text-[15px] font-semibold leading-relaxed text-navy mb-3">{selectedReference.title}</h2>
-              <p className="text-xs text-muted leading-relaxed">{selectedReference.clause}</p>
-              <blockquote className="mt-3 text-sm whitespace-pre-wrap break-words">{selectedReference.raw.quote}</blockquote>
-              <button
-                type="button"
-                disabled={sourceBusy}
-                onClick={() => void readSource()}
-                className="mt-3 border border-line rounded-lg px-3 py-2 text-xs"
-              >
-                Đối chiếu chi tiết nguồn
-              </button>
-              <Notice error={sourceError} />
-              {source && (
-                <details open className="mt-3 text-xs">
-                  <summary>
-                    {source.title} · {source.number} · {source.unitType}
-                  </summary>
-                  <p className="whitespace-pre-wrap mt-2">{source.text}</p>
-                  <p>Trích đoạn khớp nguồn; không xác nhận hiệu lực hiện hành.</p>
-                </details>
-              )}
-            </div>
-          </div>
+          <CitationSource key={`${activeId}:${citeIndex}`} reference={selectedReference} />
         </aside>
       )}
     </div>
   );
+}
+
+function CitationSource({ reference }: { reference: LegalReference }) {
+  const { raw: citation } = reference
+  const [attempt, setAttempt] = useState(0)
+  const [result, setResult] = useState<{
+    citation: typeof citation
+    source?: Awaited<ReturnType<typeof loadCitationSource>>
+  }>()
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const markRef = useRef<HTMLElement>(null)
+  const loaded = result?.citation === citation ? result : undefined
+  const source = loaded?.source
+
+  useEffect(() => {
+    let cancelled = false
+    loadCitationSource(citation).then(
+      (source) => { if (!cancelled) setResult({ citation, source }) },
+      () => { if (!cancelled) setResult({ citation }) },
+    )
+    return () => { cancelled = true }
+  }, [citation, attempt])
+
+  useEffect(() => {
+    const container = scrollRef.current
+    const mark = markRef.current
+    if (!source || !container || !mark) return
+    container.scrollTo({
+      top: container.scrollTop + mark.getBoundingClientRect().top - container.getBoundingClientRect().top - container.clientHeight / 3,
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+    })
+  }, [source])
+
+  const text = source?.text ?? citation.quote
+  const start = source ? text.indexOf(citation.quote) : -1
+  return (
+    <div ref={scrollRef} className="p-4 overflow-y-auto" aria-live="polite">
+      <div className="rounded-xl border border-line bg-surface p-4 shadow-2xs">
+        <div className="mb-3 flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-muted">
+          <Icon d={ic.book} className="w-3.5 h-3.5" />
+          Căn cứ pháp lý
+        </div>
+        <h2 className="mb-3 break-words text-[15px] font-semibold leading-relaxed text-navy">{source?.title ?? reference.title}</h2>
+        <p className="break-words text-xs leading-relaxed text-muted">
+          {[source?.number, source?.unitType, reference.clause].filter(Boolean).join(' · ')}
+        </p>
+        <blockquote className="mt-3 whitespace-pre-wrap break-words text-sm leading-relaxed">
+          {start < 0 ? text : <>
+            {text.slice(0, start)}
+            <mark ref={markRef} className="rounded-sm bg-amber-200 text-navy [box-decoration-break:clone]">{citation.quote}</mark>
+            {text.slice(start + citation.quote.length)}
+          </>}
+        </blockquote>
+        {source && <p className="mt-3 text-xs text-muted">Trích đoạn khớp nguồn; không xác nhận hiệu lực hiện hành.</p>}
+        <Notice
+          loading={!loaded}
+          error={loaded && !source ? 'Chi tiết nguồn chưa khả dụng hoặc không khớp trích đoạn. Đang hiển thị trích đoạn đã lưu.' : undefined}
+          retry={() => {
+            setResult(undefined)
+            setAttempt(attempt + 1)
+          }}
+        />
+      </div>
+    </div>
+  )
 }
 
 function Section({

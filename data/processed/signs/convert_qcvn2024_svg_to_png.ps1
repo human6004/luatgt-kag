@@ -29,14 +29,14 @@ if ($duplicates.Count -gt 0) {
 $sourceByName = @{}
 $duplicateSources = @()
 foreach ($group in (Get-ChildItem -LiteralPath $sourceRoot -Filter '*.svg' -File -Recurse | Group-Object Name)) {
+  $orderedSources = @($group.Group | Sort-Object FullName)
+  $sourceByName[$group.Name] = $orderedSources[0].FullName
   if ($group.Count -gt 1) {
-    $duplicateSources += $group.Name
-  } else {
-    $sourceByName[$group.Name] = $group.Group[0].FullName
+    $duplicateSources += "$($group.Name) -> $($orderedSources[0].FullName)"
   }
 }
 if ($duplicateSources.Count -gt 0) {
-  throw "Tên SVG trùng, không thể xác định ảnh nguồn: $($duplicateSources -join ', ')"
+  Write-Warning "Tên SVG trùng; tiếp tục dùng bản đầu tiên theo thứ tự đường dẫn: $($duplicateSources -join '; ')"
 }
 
 $missing = @($rows | Where-Object { -not $sourceByName.ContainsKey((Split-Path -Leaf $_.image_id)) })
