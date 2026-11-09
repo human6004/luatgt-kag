@@ -94,7 +94,8 @@ Write-Host 'Đã chuẩn bị .env và token; giữ nguyên các file đã có. 
 Kết quả mặc định:
 
 - `.env`: mật khẩu và biến triển khai; xem `ADMIN_EMAIL`/`ADMIN_PASSWORD` để đăng nhập.
-- `.secrets/`: tám file `query.token`, `inspect.token`, `builder.token`, `egress.token`, `credentials-write.token`, `provider-test.token`, `config-apply.token`, `benchmark-write.token`.
+- `../luatgt-state/`: bốn file `query.token`, `inspect.token`, `builder.token`, `egress.token` theo `KAG_STATE_DIR`.
+- `.secrets/`: bốn file `credentials-write.token`, `provider-test.token`, `config-apply.token`, `benchmark-write.token` theo các biến `KAG_*_SECRET_FILE`.
 
 Đường dẫn thực tế lấy từ `KAG_STATE_DIR` và bốn biến `KAG_*_SECRET_FILE` trong `.env`. Dùng đường dẫn tương đối với root repository hoặc tuyệt đối, dùng dấu `/` trên Windows. Nếu đổi thư mục secrets cho cài mới, sửa cả năm biến trước khi chạy đoạn lệnh; không dùng cú pháp tham chiếu biến trong các đường dẫn của đoạn PowerShell này. Cài đặt cũ giữ nguyên đường dẫn và fallback `../luatgt-state`, không tự chuyển file. Không commit `.env`, token hoặc backup; giới hạn quyền đọc cho người vận hành và Docker Desktop. Giữ chúng khi cập nhật.
 
@@ -104,7 +105,7 @@ Có thể mở cấu hình tại máy riêng:
 notepad .env
 ```
 
-Đổi email Admin trước lần khởi động đầu nếu muốn. Mặc định project là `luatgt`, state là `./.secrets`. Không đổi mật khẩu trong `.env` để đặt lại tài khoản/database đã tồn tại.
+Đổi email Admin trước lần khởi động đầu nếu muốn. Mặc định project là `luatgt`, state là `../luatgt-state`. Không đổi mật khẩu trong `.env` để đặt lại tài khoản/database đã tồn tại.
 
 Nếu máy đang có installation khác, đặt `COMPOSE_PROJECT_NAME` mới và các cổng chưa dùng trong `.env` **trước khi khởi động**; tên project riêng không tự tách cổng host. Xem [cổng và mạng](../docker/README.md#cổng-và-mạng). Không đặt các biến storage về volumes của installation kia.
 

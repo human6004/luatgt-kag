@@ -89,7 +89,7 @@ Giữ các biến mapping khi cập nhật:
 - `KAG_NEO4J_STORAGE_REVISION`: hậu tố volume Neo4j data.
 - `KAG_GRAPH_LOCK_VOLUME`: volume khóa chung cho mọi writer cùng physical database, không đổi để né khóa.
 
-`.env.example` đặt `KAG_STATE_DIR=./.secrets` và ba đường token riêng cùng thư mục: state nằm trong repo local, được loại khỏi Git và Docker build context. Giữ bảy token và các thư mục `release`, `api-credentials`, `broker-credentials`, `builder-input`, `graph-packages`. Cài đặt cũ vẫn dùng đường dẫn trong `.env`; khi không đặt biến này, Compose dùng `../luatgt-state` để giữ tương thích. Runs/locks/provider counters nằm trong named volumes. Windows dùng dấu `/` trong đường dẫn `.env`.
+`.env.example` đặt `KAG_STATE_DIR=../luatgt-state`, khớp mặc định Compose; bốn biến `KAG_*_SECRET_FILE` vẫn trỏ tới token trong `./.secrets`. Giữ đủ tám token ở cả hai vị trí và các thư mục `release`, `api-credentials`, `broker-credentials`, `builder-input`, `graph-packages` trong state. Cài đặt cũ giữ đường dẫn trong `.env`, không tự chuyển file. Runs/locks/provider counters nằm trong named volumes. Windows dùng dấu `/` trong đường dẫn `.env`.
 
 Ba token lưu/kiểm/áp dụng model lấy từ các biến `KAG_*_SECRET_FILE` riêng theo [INSTALL](../docs/INSTALL.md#3-tạo-cấu-hình-và-secrets). Key lưu qua UI ở file riêng quyền `0600` trong provider state; không trả key qua API và không mã hóa tại chỗ. Bảo vệ cả volume và mọi bản sao.
 
@@ -121,7 +121,7 @@ docker compose images
 
 Kết quả là mapping theo containers hiện có. Với bind mounts, xem **Inspect → Mounts → Source** của container trong Docker Desktop để xác định thư mục host.
 
-Tạo thư mục backup mới **ngoài repo**, đủ dung lượng. Dùng File Explorer sao chép `.env`, hai Compose files, toàn bộ `KAG_STATE_DIR` và mọi bind source tùy chỉnh. Lưu mapping vừa đọc cùng phiên bản source (`git rev-parse HEAD`) và images đang dùng. Không lưu output đầy đủ `compose config` chứa secrets.
+Tạo thư mục backup mới **ngoài repo**, đủ dung lượng. Dùng File Explorer sao chép `.env`, hai Compose files, toàn bộ `KAG_STATE_DIR`, bốn file được trỏ bởi `KAG_*_SECRET_FILE` (mặc định trong `.secrets`) và mọi bind source tùy chỉnh. Lưu mapping vừa đọc cùng phiên bản source (`git rev-parse HEAD`) và images đang dùng. Không lưu output đầy đủ `compose config` chứa secrets.
 
 ### Bước 3 — Export từng volume
 
@@ -164,7 +164,7 @@ Làm đủ mapping, kiểm từng exit code rồi cấu hình deployment đích 
 Đây là phục hồi dữ liệu đã có, khác [cài mới](../docs/INSTALL.md): **không sinh lại secrets, không Build/Resume để thay dữ liệu đã sao lưu**.
 
 1. Hoàn tất sao lưu khi mọi nơi ghi đã dừng. Trên máy đích lấy đúng commit/submodule của backup; chuẩn bị Docker và đủ dung lượng. Build lại images từ source hoặc chuyển images đã lưu đúng phiên bản. Chưa chạy ứng dụng.
-2. Chép `.env` và tất cả bind sources trong mapping sang nơi được bảo vệ trên máy đích. Giữ nguyên nội dung token/credentials, release/source snapshot; sửa `KAG_STATE_DIR`, ba biến `KAG_*_SECRET_FILE` và các bind tùy chỉnh cho vị trí mới. Đường tương đối tính từ root repo mới. Không chép đè secrets của installation khác.
+2. Chép `.env`, bốn file được trỏ bởi `KAG_*_SECRET_FILE` và tất cả bind sources trong mapping sang nơi được bảo vệ trên máy đích. Giữ nguyên nội dung token/credentials, release/source snapshot; sửa `KAG_STATE_DIR`, bốn biến `KAG_*_SECRET_FILE` và các bind tùy chỉnh cho vị trí mới. Đường tương đối tính từ root repo mới. Không chép đè secrets của installation khác.
 3. Import mọi named volume trong mapping (mặc định 11) vào **volumes trống riêng**, ghi mapping tên cũ → tên mới. Giữ namespace cũ nếu máy đích chưa có installation đó. Nếu cần namespace mới, đối chiếu `COMPOSE_PROJECT_NAME` cho bốn volumes KAG, `WEBAPP_STORAGE_PROJECT`/`KAG_STORAGE_PROJECT` cho bảy volumes WebApp/OpenSPG, cùng `KAG_NEO4J_STORAGE_REVISION` và `KAG_GRAPH_LOCK_VOLUME`. Đặt `WEBAPP_STORAGE_EXTERNAL=true` và `KAG_STORAGE_EXTERNAL=true` để Compose báo thiếu bảy volumes storage đã import. Bốn volumes KAG vẫn do Compose quản lý: kiểm chúng đã tồn tại đúng tên, không chỉ kiểm hai biến external. Giữ volume khóa cùng các writer của cùng physical database.
 4. Sửa cổng và URL trình duyệt cho host đích; kết nối giữa services vẫn dùng DNS Docker. Endpoint provider ngoài Docker cần hợp lệ trên mạng mới. Đối chiếu mounts/tên volumes trước khi chạy `docker compose config -q`, rồi `docker compose up -d --build`. Không chạy hai database cùng volume hoặc phục hồi đè bản đang phục vụ.
 5. Đăng nhập bằng tài khoản cũ; kiểm nội dung/tệp, lịch sử/citation, model đã lưu, project và phiên Builder. Startup không tự Resume. Graph phục vụ chỉ được sẵn sàng khi identity/schema/index/nguồn/model còn khớp; di chuyển đường dẫn không cho phép bỏ kiểm identity. Nếu storage mới làm thay identity vật lý hoặc cấu hình project không còn khớp, giữ hệ thống chưa phục vụ, đối soát trước; không sửa release/receipt hoặc chọn graph khác để vượt lỗi.

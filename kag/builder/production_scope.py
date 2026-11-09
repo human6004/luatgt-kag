@@ -21,6 +21,7 @@ from kag.vector_contract import TARGETS, valid_vector as _valid_vector
 IDENTITY_FIELDS = ('nodes_jsonl_sha256', 'edges_jsonl_sha256', 'plan_sha256',
                    'schema_sha256', 'contract_sha256')
 ROOT = Path(__file__).resolve().parents[2]
+# Fixed identity of the legacy C4_3A replay contract; not a production project default.
 SAMPLE_PROJECT_ID = 2
 _PRODUCTION_PROOF = object()
 

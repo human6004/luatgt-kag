@@ -45,6 +45,7 @@ class _ContractContext:
 
 _SMOKE_PROJECT_PROOF = object()
 _MANIFEST_PROJECT_PROOF = object()
+# Preserve the target identity stored by legacy C4_3A replay runs.
 _C43A_POLICY = {
     'project_id': SAMPLE_PROJECT_ID, 'project_name': 'VietRoadTrafficC43A10Pct',
     'namespace': 'VietRoadTraffic', 'partition': 5,

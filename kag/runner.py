@@ -80,6 +80,7 @@ def _config(value):
             raise RunBlocked('CONFIG')
         if config['scope'] != 'PRODUCTION' and (config['namespace'] != 'VietRoadTraffic' or config['vector_dimensions'] != 3072):
             raise RunBlocked('SCOPE')
+        # Legacy replay contract only; PRODUCTION uses the configured target.
         if (config['scope'] == 'C4_3A_MANIFEST_SAMPLE' and
                 (config['project_id'] != 2 or config['project_name'] != 'VietRoadTrafficC43A10Pct'
                  or config['write_mode'] != 'NO_OP' or config['vector_policy'] != 'replay-existing')):
