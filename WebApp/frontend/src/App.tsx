@@ -34,19 +34,6 @@ function RedirectWithParams({ to, defaults = {}, mapKey = {} }: { to: string; de
   return <Navigate to={qs ? `${to}?${qs}` : to} replace />
 }
 
-function GraphRedirect() {
-  const { search } = useLocation()
-  const params = new URLSearchParams(search)
-  const runId = params.get('run_id')
-  const projectId = params.get('project_id')
-  if (runId && !projectId) {
-    return <Navigate to={`/admin/chatbot?step=2&verify_run=${encodeURIComponent(runId)}`} replace />
-  }
-  const next = new URLSearchParams({ step: '3' })
-  params.forEach((value, key) => next.set(key, value))
-  return <Navigate to={`/admin/chatbot?${next.toString()}`} replace />
-}
-
 function ImportsRedirect({ defaultType }: { defaultType: 'signs' | 'questions' }) {
   const { search } = useLocation()
   const params = new URLSearchParams(search)
@@ -96,14 +83,9 @@ export default function App() {
                 <Route path="/admin/infrastructure" element={<Infrastructure />} />
                 <Route path="/admin/sources" element={<Sources />} />
                 <Route path="/admin/schema" element={<KagSchemaPage />} />
-                <Route path="/admin/graph-share" element={<RedirectWithParams to="/admin/chatbot" />} />
-                <Route path="/admin/docker" element={<RedirectWithParams to="/admin/chatbot" />} />
                 <Route path="/admin/benchmark" element={<Benchmark />} />
 
                 {/* Legacy route redirects (preserving query string) */}
-                <Route path="/admin/config" element={<RedirectWithParams to="/admin/chatbot" defaults={{ step: '1' }} />} />
-                <Route path="/admin/pipeline" element={<RedirectWithParams to="/admin/chatbot" defaults={{ step: '2' }} />} />
-                <Route path="/admin/graph" element={<GraphRedirect />} />
                 <Route path="/admin/knowledge" element={<RedirectWithParams to="/admin/content" defaults={{ tab: 'documents' }} />} />
                 <Route path="/admin/documents" element={<RedirectWithParams to="/admin/content" defaults={{ tab: 'documents' }} mapKey={{ source_id: 'q' }} />} />
                 <Route path="/admin/units" element={<RedirectWithParams to="/admin/content" defaults={{ tab: 'units' }} mapKey={{ source_id: 'q' }} />} />
@@ -111,7 +93,6 @@ export default function App() {
                 <Route path="/admin/question-bank-settings" element={<RedirectWithParams to="/admin/questions" defaults={{ tab: 'sets' }} />} />
                 <Route path="/admin/imports" element={<ImportsRedirect defaultType="signs" />} />
                 <Route path="/admin/content-imports" element={<ImportsRedirect defaultType="questions" />} />
-                <Route path="/admin/chatlogs" element={<RedirectWithParams to="/admin/users" defaults={{ tab: 'logs' }} />} />
               </Route>
             </Route>
             <Route path="*" element={<SessionHome />} />

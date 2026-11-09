@@ -14,7 +14,7 @@ const policePages = [
   "/admin/content", "/admin/questions", "/admin/users",
   // Legacy paths allowed through RequireRole so Route redirects carry police to the new paths:
   "/admin/knowledge", "/admin/documents", "/admin/units", "/admin/signs",
-  "/admin/imports", "/admin/content-imports", "/admin/chatlogs", "/admin/question-bank-settings",
+  "/admin/imports", "/admin/content-imports", "/admin/question-bank-settings",
 ]
 export const canAccessAdminPage = (role: Role, pathname: string) =>
   role === "admin" || role === "police" && (pathname === "/admin" || policePages.includes(pathname.replace(/\/+$/, "")))
