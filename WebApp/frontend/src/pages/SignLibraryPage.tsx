@@ -202,7 +202,6 @@ export default function SignLibraryPage() {
               </div>
 
               <div className="mt-4 pt-3 border-t border-selected flex flex-wrap items-center justify-between gap-2 text-[11px] leading-5 text-muted">
-                <span>Liên kết xử phạt: chưa có API</span>
                 <span className="text-accent-strong font-semibold group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-0.5">
                   Xem chi tiết &rarr;
                 </span>
@@ -295,7 +294,6 @@ export default function SignLibraryPage() {
                     </svg>
                     Lỗi vi phạm liên quan & Mức phạt (NĐ 168/2024)
                   </h4>
-                  <span className="text-[11px] text-muted">Chưa có API liên kết</span>
                 </div>
 
                 {selectedSign.relatedViolations.length === 0 ? (

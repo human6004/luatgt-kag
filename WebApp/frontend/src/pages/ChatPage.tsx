@@ -1,7 +1,6 @@
 import { useLocation, useSearchParams } from 'react-router-dom'
 import { api, send as request } from '../api'
-import { useAdmin } from '../admin/store'
-import { Badge, NavLinkButton } from '../admin/ui'
+import { NavLinkButton } from '../admin/ui'
 import { Notice, useTask } from './server/shared'
 import { createChat, chatView, loadCitationSource } from './server/chat-state'
 import LogoMark from '../components/LogoMark'
@@ -57,7 +56,6 @@ const ic = {
   copy: 'M9 9h10v10H9zM5 15V5h10',
   up: 'M7 10v10M7 10l4-6a2 2 0 0 1 3 2l-1 4h5a2 2 0 0 1 2 2l-2 6a2 2 0 0 1-2 2H7',
   retry: 'M4 12a8 8 0 1 0 3-6.2M4 4v4h4',
-  clip: 'M20 12l-8 8a5 5 0 0 1-7-7l8-8a3 3 0 0 1 5 5l-8 8a1 1 0 0 1-2-2l7-7',
   close: 'M6 6l12 12M18 6 6 18',
 }
 
@@ -91,7 +89,6 @@ export default function ChatPage() {
   const [chat] = useState(createChat)
   const data = useSyncExternalStore(chat.subscribe, chat.getSnapshot)
   const task = useTask()
-  const { notify } = useAdmin()
   const location = useLocation()
   const [params, setParams] = useSearchParams()
 
@@ -296,18 +293,7 @@ export default function ChatPage() {
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKey}
       />
-      <div className="flex flex-wrap items-center justify-between gap-2 px-3 pb-3">
-        <div className="flex items-center gap-1.5">
-          <button
-            type="button"
-            onClick={() => notify('Chức năng đang phát triển')}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-muted hover:bg-selected"
-            aria-label="Đính kèm ảnh biển báo"
-          >
-            <Icon d={ic.clip} />
-            <Badge tone="gray">Đang phát triển</Badge>
-          </button>
-        </div>
+      <div className="flex flex-wrap items-center justify-end gap-2 px-3 pb-3">
         {thinking && (
           <button
             type="button"

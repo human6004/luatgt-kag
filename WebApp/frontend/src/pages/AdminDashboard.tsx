@@ -180,10 +180,6 @@ export default function AdminDashboard() {
                 </span>
               </Row>
               <Notice {...kag} retry={kag.reload} /><Notice {...serving} retry={serving.reload} />
-              <Button variant="outline" className="w-full py-2.5 justify-between" onClick={() => notify('Chức năng đang phát triển')}>
-                <span>Chạy bộ kiểm thử</span>
-                <Badge tone="gray">Đang phát triển</Badge>
-              </Button>
             </div>
           </Card>
 

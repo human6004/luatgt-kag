@@ -227,13 +227,9 @@ export default function AdminUsers() {
           : 'Theo dõi báo cáo phản hồi của người dùng và chuyển câu chưa trả lời được sang bổ sung tri thức.'
       }
       actions={
-        tab === 'users' ? (
-          <Button variant="primary" onClick={() => notify('Chức năng đang phát triển')}>
-            + Mời người dùng <Badge tone="gray">Đang phát triển</Badge>
-          </Button>
-        ) : (
+        tab === 'logs' ? (
           <Button onClick={exportCsv}>Xuất CSV</Button>
-        )
+        ) : undefined
       }
     >
       {!isPolice && (
@@ -358,12 +354,6 @@ export default function AdminUsers() {
                         <span className="inline-flex flex-wrap justify-end gap-1.5">
                           <Button size="sm" variant="outline" onClick={() => jumpToUserLogs(u.id)}>
                             Nhật ký ({logsData.value ? chatCount : '…'}) →
-                          </Button>
-                          <Button size="sm" variant="ghost" onClick={() => notify('Chức năng đang phát triển')}>
-                            Đặt lại MK <Badge tone="gray">Đang phát triển</Badge>
-                          </Button>
-                          <Button size="sm" variant="danger" onClick={() => notify('Chức năng đang phát triển')}>
-                            Xoá <Badge tone="gray">Đang phát triển</Badge>
                           </Button>
                         </span>
                       </Td>
@@ -513,9 +503,6 @@ export default function AdminUsers() {
                       </Button>
                     )}
                     <Button onClick={() => nav('/admin/content?tab=documents')}>Bổ sung văn bản</Button>
-                    <Button variant="ghost" onClick={() => notify('Chức năng đang phát triển')}>
-                      Chạy lại <Badge tone="gray">Đang phát triển</Badge>
-                    </Button>
                   </div>
                 </div>
               ) : (

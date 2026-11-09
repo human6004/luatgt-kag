@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { useAdmin } from '../admin/store'
-import { Badge, Button, Page } from '../admin/ui'
+import { Button, Page } from '../admin/ui'
 import { ContentManager, ImportPanel, type ContentKind } from './server/AdminPages'
 
 const tabs: readonly [ContentKind, string][] = [
@@ -12,7 +11,6 @@ const tabs: readonly [ContentKind, string][] = [
 
 export default function AdminContent() {
   const [params, setParams] = useSearchParams()
-  const { notify } = useAdmin()
   const [refreshKey, setRefreshKey] = useState(0)
 
   const rawTab = params.get('tab')
@@ -46,11 +44,6 @@ export default function AdminContent() {
       subtitle="Quản lý văn bản pháp luật, điều khoản và biển báo; nhập hàng loạt và kiểm duyệt xuất bản tại một nơi."
       actions={
         <>
-          {tab === 'documents' && (
-            <Button onClick={() => notify('Chức năng đang phát triển')}>
-              Dán đường dẫn <Badge tone="gray">Đang phát triển</Badge>
-            </Button>
-          )}
           <Button
             variant={showImport ? 'dark' : 'outline'}
             onClick={() => updateParams({ tab, import: showImport ? null : '1' })}

@@ -225,9 +225,6 @@ export default function AdminQuestions() {
               {showImport ? 'Đóng nhập hàng loạt' : 'Nhập CSV/JSON & ZIP ảnh'}
             </Button>
             <Button onClick={exportJson}>Xuất JSON</Button>
-            <Button onClick={() => notify('Chức năng đang phát triển')}>
-              ✻ Sinh câu hỏi từ KAG <Badge tone="gray">Đang phát triển</Badge>
-            </Button>
             <Button variant="primary" onClick={() => openEdit(blank())}>
               + Thêm câu hỏi
             </Button>
@@ -371,9 +368,6 @@ export default function AdminQuestions() {
                         </Button>
                         <Button size="sm" variant="ghost" onClick={() => openEdit(x)}>
                           Sửa
-                        </Button>
-                        <Button size="sm" variant="danger" onClick={() => notify('Chức năng đang phát triển')}>
-                          Xoá <Badge tone="gray">Đang phát triển</Badge>
                         </Button>
                       </span>
                     </Td>

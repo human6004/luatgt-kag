@@ -76,7 +76,7 @@ Câu/đáp án đã có lượt luyện hoặc thi được giữ nguyên theo p
 
 Mở **Người dùng**, tìm tài khoản rồi đổi vai trò **Người học/Cảnh sát** hoặc bật/khóa trạng thái. Thay đổi được lưu ở backend; đổi quyền thu hồi phiên cũ, người đó cần đăng nhập lại.
 
-Tài khoản ADMIN dùng cơ chế khởi tạo riêng, không đổi vai trò/khóa tại đây. **Mời người dùng**, **Đặt lại MK** và **Xoá** đang phát triển; bấm chỉ hiện thông báo **Chức năng đang phát triển**, chưa thay đổi tài khoản server.
+Để ngừng sử dụng tài khoản, tắt **Kích hoạt**; hệ thống thu hồi phiên hiện có và giữ dữ liệu. Tài khoản ADMIN dùng cơ chế khởi tạo riêng, không đổi vai trò/khóa tại đây.
 
 ## ADMIN — KAG và hạ tầng
 
@@ -132,13 +132,7 @@ Mở **Chatbot → Đồ thị**, chọn phiên đã dựng PASS thuộc project
 
 ## Chức năng đang phát triển
 
-Các nút có nhãn **Đang phát triển** chỉ hiện thông báo **Chức năng đang phát triển**, chưa thực hiện thao tác:
-
-- Chat: đính kèm ảnh.
-- Nội dung: **Dán đường dẫn**, **Lưu trữ**, **Xoá**, **Trích xuất tự động**; khối **Pipeline xử lý tự động** đang phát triển.
-- Câu hỏi: **Sinh câu hỏi từ KAG**, **Xoá**.
-- Người dùng và nhật ký chat: **Mời người dùng**, **Đặt lại MK**, **Xoá**, **Chạy lại**.
-- Tổng quan: **Chạy bộ kiểm thử**. Benchmark: **Chạy smoke**; khối Smoke đang phát triển.
+Hiện không còn nút chỉ hiện thông báo chức năng đang phát triển. Để gỡ câu hỏi khỏi phạm vi người dùng thấy, chọn **Hủy xuất bản**; bài thi và lịch sử cũ vẫn được giữ.
 
 Nhập, kiểm duyệt, xuất bản, thi theo cấu hình server, cấu hình model và Builder dùng API backend; các thao tác được xác nhận có thể thay đổi dữ liệu hoặc phát sinh phí.
 

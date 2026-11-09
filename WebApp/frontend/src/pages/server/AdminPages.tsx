@@ -297,16 +297,6 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                   <Button size="sm" onClick={() => openEdit(r)}>
                     Chỉnh sửa
                   </Button>
-                  {kind === "documents" && (
-                    <>
-                      <Button size="sm" variant="ghost" onClick={() => notify("Chức năng đang phát triển")}>
-                        Lưu trữ <Badge tone="gray">Đang phát triển</Badge>
-                      </Button>
-                      <Button size="sm" variant="danger" onClick={() => notify("Chức năng đang phát triển")}>
-                        Xoá <Badge tone="gray">Đang phát triển</Badge>
-                      </Button>
-                    </>
-                  )}
                 </span>
               </Td>
             </tr>
@@ -580,23 +570,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
         </Modal>
       )}
       {kind === "documents" && (
-        <>
-          <Card
-            title="Pipeline xử lý tự động"
-            right={<Badge tone="gray">Đang phát triển</Badge>}
-            className="mt-8"
-          >
-            <div className="px-5 pb-5 flex flex-wrap items-center justify-between gap-3">
-              <p className="text-xs text-muted">
-                Tự động tách Điều / Khoản / Điểm và trích xuất thực thể từ tệp PDF hoặc DOCX tải lên.
-              </p>
-              <Button size="sm" onClick={() => notify("Chức năng đang phát triển")}>
-                Trích xuất tự động <Badge tone="gray">Đang phát triển</Badge>
-              </Button>
-            </div>
-          </Card>
-          <Relations documents={data.value || []} />
-        </>
+        <Relations documents={data.value || []} />
       )}
     </div>
   )

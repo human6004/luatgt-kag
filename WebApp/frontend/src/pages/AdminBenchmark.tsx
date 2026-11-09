@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useAdmin } from '../admin/store'
 import { apiResponse } from '../api'
-import { Badge, Button, Card, Page, Td, Th, inputCls } from '../admin/ui'
+import { Button, Card, Page, Td, Th, inputCls } from '../admin/ui'
 import { useInspection } from './server/KagManagement'
 import { benchmarkCategories, inspectionError, loadBenchmarkCategoryCounts, loadBenchmarkDatasets, loadSampleInspection, loadServing, loadBenchmarkRun, startBenchmarkRun, stopBenchmarkRun } from './server/kag-inspection'
 import type { BenchmarkJob, BenchmarkMode, SmokeRun } from './server/kag-inspection'
@@ -681,20 +681,6 @@ export default function AdminBenchmark() {
         </div>
       </div>
 
-      <Card
-        className="mt-6"
-        title="Smoke test kiểm tra nhanh"
-        right={
-          <Button size="sm" variant="primary" onClick={() => notify('Chức năng đang phát triển')}>
-            ▶ Chạy smoke <Badge tone="gray">Đang phát triển</Badge>
-          </Button>
-        }
-      >
-        <div className="px-5 pb-5 flex flex-wrap items-center justify-between gap-2 text-xs text-muted">
-          <span>Chạy nhanh bộ câu hỏi đối chứng trên đồ thị đang phục vụ.</span>
-          <Badge tone="gray">Đang phát triển</Badge>
-        </div>
-      </Card>
     </Page>
   )
 }

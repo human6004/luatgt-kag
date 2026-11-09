@@ -8,7 +8,7 @@
 - **ADMIN/POLICE:** nhập, kiểm duyệt, xuất bản nội dung và xử lý phản hồi chat.
 - **ADMIN:** quản lý tài khoản/model; chọn project OpenSPG, chuẩn bị cấu trúc, dựng và xem kết quả graph; kiểm hạ tầng và dữ liệu đánh giá.
 
-Một số nút còn ghi **Đang phát triển**. Xem phạm vi từng chức năng trong [USER-GUIDE](docs/USER-GUIDE.md#chức-năng-đang-phát-triển).
+Xem thao tác và giới hạn từng chức năng trong [USER-GUIDE](docs/USER-GUIDE.md).
 
 ## Bắt đầu
 
