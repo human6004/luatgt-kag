@@ -361,7 +361,7 @@ def _require_operational_proof(settings, release, *, capability='query'):
     if capability == 'retrieve-vector':
         return load_sample_proof(release,settings.sample_proof_sha256,settings.reader_username)
     if settings.query_proof_sha256:
-        from .sample_query import load_proof
+        from .query_policy import load_proof
         from .provider_budget import BudgetError
         try:
             return load_proof(settings,release,capability=capability)
@@ -554,7 +554,7 @@ def _new_embedding(settings, runtime, *, timeout=TRANSPORT_SECONDS):
     if settings.production:
         _configure_production_model(settings,model,'embedding',runtime)
     if settings.query_proof_sha256:
-        from .sample_query import configure_model
+        from .query_policy import configure_model
         configure_model(settings,model,'embedding',component='kag.'+getattr(runtime,'capability','query'),request_id=getattr(runtime,'request_id',None))
         _guard_sdk(model,runtime.budget)
         model.client._client.event_hooks['response'].append(_embedding_response_metadata)
@@ -584,7 +584,7 @@ def _new_llm(settings, runtime, *, timeout=TRANSPORT_SECONDS):
     if settings.production:
         _configure_production_model(settings,model,'chat',runtime)
     if settings.query_proof_sha256:
-        from .sample_query import configure_model, provider_budget, response_model_matches
+        from .query_policy import configure_model, provider_budget, response_model_matches
         configure_model(settings,model,'chat',component='kag.query',request_id=runtime.request_id)
         _guard_sdk(model,runtime.budget)
         responses=[]
@@ -645,7 +645,7 @@ def make_runtime(settings: ApiSettings, release: ServingRelease, deadline: float
     _unchanged(release)
     from kag.retriever.retriever import Retriever
     if settings.query_proof_sha256:
-        from .sample_query import load_proof,cached_vector
+        from .query_policy import load_proof,cached_vector
         _,cache,_=load_proof(settings,release,capability=runtime.capability)
         fallback=None
         def embed(question):
@@ -1233,7 +1233,7 @@ class RuntimeSupervisor:
                 if settings.production:
                     await asyncio.to_thread(_backend,reader,release)
                 else:
-                    from .sample_query import verify_gateway
+                    from .query_policy import verify_gateway
                     await asyncio.to_thread(verify_sample_backend,release,settings.sample_proof_sha256,None,reader)
                     await asyncio.to_thread(verify_gateway,settings,proof[0])
                 _unchanged(release)
@@ -1328,7 +1328,7 @@ class RuntimeSupervisor:
                     runtime.budget.remaining()
                     if settings.query_proof_sha256:
                         verify_sample_backend(release,settings.sample_proof_sha256,None,runtime.reader)
-                        from .sample_query import load_proof,verify_gateway
+                        from .query_policy import load_proof,verify_gateway
                         proof,_,_=load_proof(settings,release)
                         verify_gateway(settings,proof)
                     _backend(runtime.reader,release)

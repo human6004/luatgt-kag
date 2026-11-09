@@ -163,7 +163,7 @@ def create_app():
             if source_id != release.descriptor['source_snapshot_id'] or webapp_id != release.descriptor['webapp_snapshot_id']:
                 raise ConfigurationError()
             app.state.serving_release = release
-            from .sample_query import development_policy
+            from .query_policy import development_policy
             development = development_policy(release,query_pin) if query_pin and query_pin!='0'*64 else None
             app.state.runtime_settings = RuntimeSettings(secrets=settings.secrets,release_id=release_id,
                 source_snapshot_id=source_id,webapp_snapshot_id=webapp_id,

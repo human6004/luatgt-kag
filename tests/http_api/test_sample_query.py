@@ -13,7 +13,7 @@ import httpx
 
 class SampleQueryTests(unittest.TestCase):
     def setUp(self):
-        self.module = importlib.import_module('kag.http_api.sample_query')
+        self.module = importlib.import_module('kag.http_api.query_policy')
         self.temp = TemporaryDirectory()
         self.addCleanup(self.temp.cleanup)
         self.path = Path(self.temp.name)/'attempts.json'

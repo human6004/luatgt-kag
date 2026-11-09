@@ -352,7 +352,7 @@ def sample_graph_view(release, reader, proof):
 
 
 def provider_view(settings):
-    from .sample_query import provider_budget
+    from .query_policy import provider_budget
     from .provider_budget import receipt_view
     result={'state':'NOT_CONFIGURED','attempts':None,'receipt_window':None,
         'configured_chat_model':settings.chat_model,'configured_embedding_model':settings.embedding_model,
