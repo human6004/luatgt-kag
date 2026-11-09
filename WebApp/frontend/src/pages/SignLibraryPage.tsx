@@ -25,6 +25,12 @@ export interface SignItem {
   source?: Record<string, unknown>
 }
 
+function isChildOf(sign: SignItem, parent: SignItem) {
+  if (sign.id === parent.id || sign.source?.qcvn !== parent.source?.qcvn) return false
+  const codes = parent.source?.children_codes
+  return sign.source?.parent_code === parent.code || (Array.isArray(codes) && codes.includes(sign.code))
+}
+
 export default function SignLibraryPage() {
   const [params, setParams] = useSearchParams()
   const data = useData<ContentRecord[]>('/signs')
@@ -57,6 +63,7 @@ export default function SignLibraryPage() {
   const activeCategory: SignCategory = params.get('cat') ?? 'all'
   const signParam = params.get('sign') ?? ''
   const selectedSign = signParam ? signs.find((s) => s.code === signParam || s.id === signParam) ?? null : null
+  const selectedChildren = selectedSign ? signs.filter((sign) => isChildOf(sign, selectedSign)) : []
 
   useEffect(() => {
     setSearchQuery(urlQ)
@@ -77,14 +84,17 @@ export default function SignLibraryPage() {
   }
 
   const filteredSigns = useMemo(() => {
+    const query = searchQuery.toLowerCase().trim()
+    const matchingParents = query ? signs.filter((sign) => sign.code.toLowerCase() === query) : []
     return signs.filter((sign) => {
       if (activeCategory !== 'all' && sign.category !== activeCategory) {
         return false
       }
-      if (!searchQuery.trim()) return true
-      const query = searchQuery.toLowerCase().trim()
+      if (!query) return true
       const searchTarget = (sign.code + ' ' + sign.name + ' ' + sign.shortDesc + ' ' + sign.meaning).toLowerCase()
       return searchTarget.includes(query)
+        || String(sign.source?.parent_code ?? '').toLowerCase() === query
+        || matchingParents.some((parent) => isChildOf(sign, parent))
     })
   }, [searchQuery, activeCategory, signs])
 
@@ -174,7 +184,7 @@ export default function SignLibraryPage() {
           {filteredSigns.map((sign) => (
             <div
               key={sign.id}
-              onClick={() => updateUrl({ sign: sign.code || sign.id })}
+              onClick={() => updateUrl({ sign: sign.id })}
               className="min-w-0 break-words bg-surface rounded-2xl border border-line hover:border-accent p-5 cursor-pointer shadow-2xs hover:shadow-md transition-all group flex flex-col justify-between"
             >
               <div>
@@ -182,7 +192,7 @@ export default function SignLibraryPage() {
                   {sign.hasImage ? (
                     <Asset id={sign.id} alt={sign.name} className="h-full w-full object-contain" />
                   ) : (
-                    <p className="text-center text-xs text-muted">Chưa có ảnh nguồn</p>
+                    <p className="text-center text-xs text-muted">{sign.source?.record_type === 'family' ? 'Nhóm biển' : 'Chưa có ảnh nguồn'}</p>
                   )}
                 </div>
 
@@ -242,7 +252,7 @@ export default function SignLibraryPage() {
                   {selectedSign.hasImage ? (
                     <Asset id={selectedSign.id} alt={selectedSign.name} className="h-full w-full object-contain" />
                   ) : (
-                    <p className="text-center text-xs text-muted">Chưa có ảnh nguồn</p>
+                    <p className="text-center text-xs text-muted">{selectedSign.source?.record_type === 'family' ? 'Nhóm biển' : 'Chưa có ảnh nguồn'}</p>
                   )}
                 </div>
                 <div className="space-y-2">
@@ -251,6 +261,20 @@ export default function SignLibraryPage() {
                 </div>
               </div>
 
+              {selectedChildren.length > 0 && (
+                <section className="rounded-xl border border-line bg-surface p-4">
+                  <h4 className="text-sm font-semibold text-navy">Biển con liên quan</h4>
+                  <ul className="mt-2 space-y-2">
+                    {selectedChildren.map((child) => (
+                      <li key={child.id}>
+                        <button type="button" className="text-left text-sm text-accent-strong underline underline-offset-2" onClick={() => updateUrl({ sign: child.id })}>
+                          {child.code} · {child.name}
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
               <dl className="text-xs space-y-2">
                 {[
                   'qcvn',

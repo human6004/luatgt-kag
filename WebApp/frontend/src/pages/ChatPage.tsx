@@ -3,7 +3,7 @@ import { api, send as request } from '../api'
 import { Notice, useTask } from './shared/shared'
 import { citationAnswerPrefix, createChat, chatView, loadCitationSource } from './shared/chat-state'
 import LogoMark from '../components/LogoMark'
-import { Fragment, useEffect, useMemo, useRef, useState, useSyncExternalStore, type ReactNode } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
 
 interface LegalReference {
   title: string;
@@ -17,7 +17,6 @@ interface Message {
   role: "user" | "bot";
   text: string;
   status?: string;
-  rich?: boolean;
   citations?: LegalReference[];
 }
 
@@ -28,19 +27,6 @@ interface Session {
   pinned?: boolean;
   messages: Message[];
 }
-
-const starters = [
-  {
-    label: "Tra mức phạt",
-    q: "Xe máy không đội mũ bảo hiểm bị phạt bao nhiêu?",
-  },
-  {
-    label: "Nồng độ cồn",
-    q: "Ô tô vi phạm nồng độ cồn mức 1 bị xử lý thế nào?",
-  },
-  { label: "Biển báo", q: "Biển P.102 nghĩa là gì?" },
-  { label: "Ôn thi", q: "Giải thích quy tắc nhường đường tại nơi giao nhau" },
-];
 
 const groups: Session["group"][] = [
   "Hôm nay",
@@ -77,32 +63,6 @@ const ic = {
   up: 'M7 10v10M7 10l4-6a2 2 0 0 1 3 2l-1 4h5a2 2 0 0 1 2 2l-2 6a2 2 0 0 1-2 2H7',
   retry: 'M4 12a8 8 0 1 0 3-6.2M4 4v4h4',
   close: 'M6 6l12 12M18 6 6 18',
-}
-
-function RichAnswer({ text }: { text: ReactNode }) {
-  return (
-    <div className="text-navy leading-[1.7]">
-      <p className="font-sans text-[16px] whitespace-pre-wrap break-words mb-5">{text}</p>
-      <div className="font-sans grid grid-cols-1 sm:grid-cols-3 gap-2 mb-5">
-        {['Phạt tiền', 'Trừ điểm GPLX', 'Hình thức bổ sung'].map((label, i) => (
-          <div
-            key={label}
-            className={`relative overflow-hidden rounded-xl border px-4 py-3.5 ${
-              i === 0 ? 'border-accent/50 bg-selected' : 'border-line bg-surface'
-            }`}
-          >
-            {i === 0 && <span className="absolute inset-y-0 left-0 w-[3px] bg-accent" aria-hidden />}
-            <p className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-muted mb-1.5">{label}</p>
-            <p className="text-[17px] font-semibold tracking-tight leading-tight">Chưa có dữ liệu cấu trúc</p>
-            <p className="mt-0.5 text-[11.5px] text-muted">Đọc câu trả lời và căn cứ; không suy đoán giá trị.</p>
-          </div>
-        ))}
-      </div>
-      <p className="mb-4 text-[15px] text-text-secondary border-l-2 border-line pl-4">
-        Hiệu lực và ngoại lệ: xem căn cứ được backend trả về.
-      </p>
-    </div>
-  )
 }
 
 export default function ChatPage() {
@@ -161,7 +121,6 @@ export default function ChatPage() {
           role: 'bot',
           text: view.answer,
           status: view.status,
-          rich: row.state === 'ANSWERED' && !!view.answer,
           citations: view.citations.map((c) => ({
             title: typeof c.source?.document_metadata.title === 'string' && c.source.document_metadata.title.trim()
               ? c.source.document_metadata.title : c.doc_id,
@@ -517,18 +476,6 @@ export default function ChatPage() {
                 Tra cứu luật giao thông
               </h2>
               {composer}
-              <div className="mt-4 flex flex-wrap justify-center gap-2">
-                {starters.map((s) => (
-                  <button
-                    key={s.label}
-                    type="button"
-                    onClick={() => void send(s.q)}
-                    className="px-3 py-1.5 rounded-lg border border-line text-[13px] text-text-secondary hover:bg-selected transition-colors"
-                  >
-                    {s.label}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
         ) : (
@@ -557,11 +504,7 @@ export default function ChatPage() {
                       <p role="status" className="text-xs text-muted">
                         {m.status}
                       </p>
-                      {m.rich ? (
-                        <RichAnswer text={answerText(m)} />
-                      ) : (
-                        <p className="font-sans text-[16px] leading-[1.7] text-navy whitespace-pre-wrap break-words">{m.text}</p>
-                      )}
+                      <p className="font-sans text-[16px] leading-[1.7] text-navy whitespace-pre-wrap break-words">{answerText(m)}</p>
                       {m.citations && m.citations.length > 0 && (
                         <div className="mt-3 flex flex-wrap gap-2">
                           {m.citations.map((citation, referenceIndex) => {

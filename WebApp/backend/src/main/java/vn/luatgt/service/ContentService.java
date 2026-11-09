@@ -133,7 +133,11 @@ public class ContentService {
                 for(var item:n.path(field))if(!item.isTextual()||item.asText().isBlank())throw ApiErrors.bad(field+": cần mảng chuỗi không trống");
             }
             if(n.hasNonNull("image_required")&&!n.path("image_required").isBoolean())throw ApiErrors.bad("image_required: cần boolean hoặc null");
-            if(publish && (!n.path("reviewed").asBoolean(false)||(!n.hasNonNull("imageKey")&&signImages.find(n)==null))) throw ApiErrors.bad("Biển báo cần ảnh và reviewed=true trước khi xuất bản");
+            if(publish&&!n.path("reviewed").asBoolean(false))
+                throw ApiErrors.bad("Cần xác nhận đã đối chiếu nội dung biển báo trước khi xuất bản.");
+            if(publish&&!"family".equals(n.path("record_type").asText())
+                &&n.path("image_required").asBoolean(true)&&!hasSignImage(n))
+                throw ApiErrors.bad("Biển báo này yêu cầu ảnh. Hãy tải ảnh lên hoặc bổ sung SVG nguồn đúng mã biển.");
             if(publish) signs.validateRelations(n);
             if(publish&&hasSignSource(n)) {
                 var doc=contents.findByKindAndExternalId("documents",n.path("doc_id").asText());
@@ -286,9 +290,12 @@ public class ContentService {
     private ObjectNode publicationData(Content c,ObjectNode data) {
         var validated=validate(c.kind,data,true);
         if(!c.kind.equals("signs")) return data;
-        validated.put("image_status","verified");
+        if(hasSignImage(validated)) validated.put("image_status","verified");
         validated.put("verification_status","verified");
         return validated;
+    }
+    private boolean hasSignImage(JsonNode sign) {
+        return sign.hasNonNull("imageKey")||signImages.find(sign)!=null;
     }
     private JsonNode scoped(String kind,JsonNode row,UUID set) {
         if(set==null)return row;
