@@ -41,7 +41,7 @@ beforeEach(() => {
 function wire(handler) {
   globalThis.fetch = async (url, options) => {
     requests.push({ url, ...options })
-    assert.equal(url, options.method === 'POST' ? '/api/chat/stream?progress=true' : '/api/chat')
+    assert.equal(url, options.method === 'POST' ? '/api/chat/stream' : '/api/chat')
     assert.equal(options.headers.get('Authorization'), 'Bearer webapp-jwt-fixture')
     const response = await handler(options.method || 'GET')
     if (options.method !== 'POST' || !response.ok) return response
@@ -186,7 +186,7 @@ test('explicit stop is confirmed by the server and survives history reload', asy
   globalThis.fetch = async (url, options) => {
     requests.push({ url, ...options })
     if (url === `/api/chat/${answered.id}/stop`) return response(stopped)
-    assert.equal(url, '/api/chat/stream?progress=true')
+    assert.equal(url, '/api/chat/stream')
     const body = new ReadableStream({ start(controller) {
       controller.enqueue(new TextEncoder().encode(`event: started\ndata: ${JSON.stringify({ ...unavailable, state: 'PROCESSING' })}\n\n`))
       options.signal.addEventListener('abort', () => controller.error(new Error('aborted')), { once: true })
