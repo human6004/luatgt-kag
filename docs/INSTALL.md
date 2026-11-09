@@ -32,7 +32,7 @@ Kiểm có `.env.example`, `docker-compose.yml` và `vendor/KAG`. **Mọi lệnh
 
 ## 3. Tạo cấu hình và secrets
 
-Đoạn lệnh sau tạo `.env` từ template nếu chưa có, sinh 9 mật khẩu/khóa độc lập và 7 token nội bộ. Mỗi giá trị mới gồm 32 byte ngẫu nhiên, lưu thành 64 ký tự hexadecimal; file đã tồn tại được giữ nguyên.
+Đoạn lệnh sau tạo `.env` từ template nếu chưa có, sinh 9 mật khẩu/khóa độc lập và 8 token nội bộ. Mỗi giá trị mới gồm 32 byte ngẫu nhiên, lưu thành 64 ký tự hexadecimal; file đã tồn tại được giữ nguyên.
 
 Nếu được cấp `.env` cho lần cài mới, đặt file đó tại root trước khi chạy. Không dùng đoạn này để thay bộ secrets của máy đã có database.
 

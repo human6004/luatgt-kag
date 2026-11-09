@@ -18,7 +18,7 @@ HTTP SAMPLE cần nguồn/proof/ngân sách theo [Docker](../docker/README.md#c�
 
 ## Vector và evidence
 
-[`vector_contract.py`](../kag/vector_contract.py) giữ bốn targets: LegalUnit.text, LegalDocument.title, TrafficSign.ten/moTa. Mỗi target cần đúng một ONLINE index, **3072 chiều/cosine**; query vector hữu hạn, khác zero, score `[0,1]`.
+[`vector_contract.py`](../kag/vector_contract.py) giữ bốn targets: LegalUnit.text, LegalDocument.title, TrafficSign.ten/moTa. Mỗi target cần đúng một ONLINE index dùng cosine. Số chiều do model Embedding đã cấu hình quyết định và phải khớp index; mặc định của cấu hình hiện tại là 3072. Hàm `valid_vector(vector, dimension)` trong `vector_contract.py` nhận dimension làm tham số, không cố định 3072. Query vector hữu hạn, khác zero, score `[0,1]`.
 
 Hydrate theo fully-qualified type + ID, decode outer layer một lần; giữ nguyên ID/Unicode/suffix/text. Evidence gồm source_texts, IDs, score, vector_sources, graph_context. Dedup type + ID, giữ score cao nhất mỗi field; chọn tối đa top_k seeds chung, xếp score giảm rồi type/ID. ANN có thể đổi candidates theo index/runtime.
 

@@ -79,13 +79,13 @@ UI tạo Knowledge Base chỉ cần **Embedding**. [Runner](../docs/runner.md#th
 
 ## Storage và secrets
 
-Mặc định có **11 named volumes**: 3 WebApp (MySQL/Redis/MinIO), 4 OpenSPG (MySQL/Neo4j data/logs/MinIO), 4 KAG (runs/locks/provider state/Builder state). Không trỏ stack thử tới storage đang phục vụ.
+Mặc định có **12 named volumes**: 3 WebApp (MySQL/Redis/MinIO), 4 OpenSPG (MySQL/Neo4j data/logs/MinIO), 5 KAG (`kag-benchmark-data`, `kag-builder-state`, `kag-builder-graph-locks`, `kag-builder-runs`, `kag-provider-state`). Không trỏ stack thử tới storage đang phục vụ.
 
 Giữ các biến mapping khi cập nhật:
 
 - `WEBAPP_STORAGE_PROJECT`: namespace ba volumes WebApp; `KAG_STORAGE_PROJECT`: namespace bốn volumes OpenSPG. Khi bỏ trống, dùng `COMPOSE_PROJECT_NAME`.
-- Bốn volumes KAG (Builder state/runs/locks và provider state) theo `COMPOSE_PROJECT_NAME`; riêng locks có thể dùng `KAG_GRAPH_LOCK_VOLUME`. Đổi hai biến storage không đổi bốn volumes này.
-- `WEBAPP_STORAGE_EXTERNAL`, `KAG_STORAGE_EXTERNAL`: `true` yêu cầu tương ứng ba volumes WebApp/bốn volumes OpenSPG hiện hữu. Không áp dụng cho bốn volumes KAG; cần đối chiếu đủ mapping trước startup để không tạo nhầm state rỗng.
+- Năm volumes KAG (Builder state/runs/locks, benchmark data và provider state) theo `COMPOSE_PROJECT_NAME`; riêng locks có thể dùng `KAG_GRAPH_LOCK_VOLUME`. Đổi hai biến storage không đổi năm volumes này.
+- `WEBAPP_STORAGE_EXTERNAL`, `KAG_STORAGE_EXTERNAL`: `true` yêu cầu tương ứng ba volumes WebApp/bốn volumes OpenSPG hiện hữu. Không áp dụng cho năm volumes KAG; cần đối chiếu đủ mapping trước startup để không tạo nhầm state rỗng.
 - `KAG_NEO4J_STORAGE_REVISION`: hậu tố volume Neo4j data.
 - `KAG_GRAPH_LOCK_VOLUME`: volume khóa chung cho mọi writer cùng physical database, không đổi để né khóa.
 
@@ -165,7 +165,7 @@ Làm đủ mapping, kiểm từng exit code rồi cấu hình deployment đích 
 
 1. Hoàn tất sao lưu khi mọi nơi ghi đã dừng. Trên máy đích lấy đúng commit/submodule của backup; chuẩn bị Docker và đủ dung lượng. Build lại images từ source hoặc chuyển images đã lưu đúng phiên bản. Chưa chạy ứng dụng.
 2. Chép `.env`, bốn file được trỏ bởi `KAG_*_SECRET_FILE` và tất cả bind sources trong mapping sang nơi được bảo vệ trên máy đích. Giữ nguyên nội dung token/credentials, release/source snapshot; sửa `KAG_STATE_DIR`, bốn biến `KAG_*_SECRET_FILE` và các bind tùy chỉnh cho vị trí mới. Đường tương đối tính từ root repo mới. Không chép đè secrets của installation khác.
-3. Import mọi named volume trong mapping (mặc định 11) vào **volumes trống riêng**, ghi mapping tên cũ → tên mới. Giữ namespace cũ nếu máy đích chưa có installation đó. Nếu cần namespace mới, đối chiếu `COMPOSE_PROJECT_NAME` cho bốn volumes KAG, `WEBAPP_STORAGE_PROJECT`/`KAG_STORAGE_PROJECT` cho bảy volumes WebApp/OpenSPG, cùng `KAG_NEO4J_STORAGE_REVISION` và `KAG_GRAPH_LOCK_VOLUME`. Đặt `WEBAPP_STORAGE_EXTERNAL=true` và `KAG_STORAGE_EXTERNAL=true` để Compose báo thiếu bảy volumes storage đã import. Bốn volumes KAG vẫn do Compose quản lý: kiểm chúng đã tồn tại đúng tên, không chỉ kiểm hai biến external. Giữ volume khóa cùng các writer của cùng physical database.
+3. Import mọi named volume trong mapping (mặc định 12) vào **volumes trống riêng**, ghi mapping tên cũ → tên mới. Giữ namespace cũ nếu máy đích chưa có installation đó. Nếu cần namespace mới, đối chiếu `COMPOSE_PROJECT_NAME` cho năm volumes KAG, `WEBAPP_STORAGE_PROJECT`/`KAG_STORAGE_PROJECT` cho bảy volumes WebApp/OpenSPG, cùng `KAG_NEO4J_STORAGE_REVISION` và `KAG_GRAPH_LOCK_VOLUME`. Đặt `WEBAPP_STORAGE_EXTERNAL=true` và `KAG_STORAGE_EXTERNAL=true` để Compose báo thiếu bảy volumes storage đã import. Năm volumes KAG vẫn do Compose quản lý: kiểm chúng đã tồn tại đúng tên, không chỉ kiểm hai biến external. Giữ volume khóa cùng các writer của cùng physical database.
 4. Sửa cổng và URL trình duyệt cho host đích; kết nối giữa services vẫn dùng DNS Docker. Endpoint provider ngoài Docker cần hợp lệ trên mạng mới. Đối chiếu mounts/tên volumes trước khi chạy `docker compose config -q`, rồi `docker compose up -d --build`. Không chạy hai database cùng volume hoặc phục hồi đè bản đang phục vụ.
 5. Đăng nhập bằng tài khoản cũ; kiểm nội dung/tệp, lịch sử/citation, model đã lưu, project và phiên Builder. Startup không tự Resume. Graph phục vụ chỉ được sẵn sàng khi identity/schema/index/nguồn/model còn khớp; di chuyển đường dẫn không cho phép bỏ kiểm identity. Nếu storage mới làm thay identity vật lý hoặc cấu hình project không còn khớp, giữ hệ thống chưa phục vụ, đối soát trước; không sửa release/receipt hoặc chọn graph khác để vượt lỗi.
 
