@@ -53,7 +53,7 @@ Mở [FE dev](http://127.0.0.1:5174); `/api` được proxy tới backend ở `1
 
 ## Dữ liệu và nghiệp vụ
 
-[`docs/imports/`](docs/imports/) giữ ngân hàng câu hỏi nháp/ZIP ảnh/metadata nguồn. Nhập không tự xuất bản; kiểm đáp án, điểm liệt, ảnh và nguồn trước khi duyệt. Nội dung xuất bản WebApp không tự đồng bộ graph KAG.
+[`docs/250/`](docs/250/) và [`docs/600/`](docs/600/) giữ ngân hàng câu hỏi nháp (`questions-draft.json`), ZIP ảnh và metadata nguồn (`question-audit.json`, trường `archives`). Nhập không tự xuất bản; kiểm đáp án, điểm liệt, ảnh và nguồn trước khi duyệt. Nội dung xuất bản WebApp không tự đồng bộ graph KAG.
 
 Thi thật hạng B dùng server và đáp án đã duyệt; các giới hạn học/thi, chatbot và Builder nằm trong USER-GUIDE.
 
@@ -61,13 +61,13 @@ Thi thật hạng B dùng server và đáp án đã duyệt; các giới hạn h
 
 Lựa chọn thay cho nhập UI, sau khi stack đã chạy. Từ root repository:
 
-**Bước 1:** chạy công cụ có sẵn để nhập nháp và ghép ảnh, bỏ qua mã đã tồn tại:
+**Bước 1:** chọn bộ bằng tham số bắt buộc `-Set 250` hoặc `-Set 600`; công cụ nhập nháp và ghép ảnh từ ZIP trong thư mục tương ứng, bỏ qua mã đã tồn tại:
 
 ```powershell
-./WebApp/scripts/import-question-bank.ps1 -EnvFile .env
+./WebApp/scripts/import-question-bank.ps1 -Set 250
 ```
 
-Kết quả: số thêm/bỏ qua và ảnh ghép. Cổng khác mặc định truyền `-BaseUrl` đúng API; dùng credentials ADMIN hiện tại.
+Đổi thành `-Set 600` để nhập bộ 600 câu. Kết quả: số thêm/bỏ qua và ảnh ghép. Có thể truyền `-EnvFile` nếu `.env` ở vị trí khác; cổng khác mặc định truyền `-BaseUrl` đúng API, dùng credentials ADMIN hiện tại. Script ghi câu hỏi và ảnh vào backend đích; chỉ chạy khi đã chọn đúng môi trường cần nhập.
 
 **Bước 2:** mở Ngân hàng câu hỏi, kiểm nguồn/đáp án/điểm liệt/ảnh rồi xuất bản câu thật đủ điều kiện.
 
