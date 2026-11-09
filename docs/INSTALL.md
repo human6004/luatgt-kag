@@ -15,7 +15,8 @@ docker version
 docker compose version
 ```
 
-Cần thấy cả Docker Client/Server. Compose từ **2.20.3** để hỗ trợ `include`. Runtime KAG đã pin cho **Linux/amd64**; hướng dẫn này dành cho Windows x64 chạy Linux containers. Không cần Python, Java hoặc Node trên host. Build cần mạng để tải source/images/dependencies; dự án chưa công bố cấu hình RAM/disk tối thiểu đã đo.
+Cần thấy cả Docker Client/Server. Compose từ **2.20.3** để hỗ trợ `include`. Runtime KAG đã pin cho **Linux/amd64**; hướng dẫn này dành cho Windows x64 chạy Linux containers. Không cần Python, Java hoặc Node trên host. Build cần mạng để tải source/images/dependencies.
+Stack dùng khoảng 3,2 GB RAM khi phục vụ và khoảng 4 GB khi build graph; tổng mem_limit của mọi service là 6,8 GB. Máy 12 GB RAM chạy WSL2 mặc định (Docker nhận khoảng 50%, tức ~6 GB) là đủ.
 
 ## 2. Lấy source
 
