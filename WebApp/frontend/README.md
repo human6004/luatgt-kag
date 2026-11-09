@@ -15,7 +15,7 @@ Kết quả: dependencies đúng lockfile.
 
 **Bước 2 — Dev server:**
 
-Lệnh `npm run dev`, backend Docker, cổng/proxy và cách dừng/chạy lại được hướng dẫn tại [lifecycle WebApp riêng](../README.MD#webapp-khi-chưa-chạy-kag).
+Lệnh `pnpm dev`, backend Docker, cổng/proxy và cách dừng/chạy lại được hướng dẫn tại [lifecycle WebApp riêng](../README.MD#webapp-khi-chưa-chạy-kag).
 
 **Bước 3 — Kiểm thay đổi:** chọn kiểm tra phù hợp, trong cùng thư mục:
 
@@ -31,9 +31,9 @@ Kết quả kiểm hợp đồng frontend, kiểu và bundle; không xác nhận
 
 - [App.tsx](src/App.tsx): routes/phân vai; [pages/](src/pages/): trang đang dùng; [pages/server/](src/pages/server/): nội dung, KAG và state/API dùng chung.
 - [api.ts](src/api.ts), [auth.tsx](src/auth.tsx): API/JWT; JWT ở sessionStorage, vai trò từ `/auth/me`, server kiểm quyền. Logout/401 xóa phiên và bài thi đang chọn.
-- [admin/](src/admin/): UI/state Demo; [pages/design/](src/pages/design/) và [imports/](src/imports/README.md): thiết kế tham chiếu.
+- [admin/](src/admin/): UI primitive, store và parser nhập dữ liệu dùng chung cho các trang.
 - [tests/](tests/): auth/import/API/chat/inspection. API lỗi phải hiện lỗi, không thay bằng dữ liệu mẫu.
 
-Nhập dùng preview/confirm backend, giữ nháp; JSON đáp án từ 0, CSV/XLSX 1–4. Chat UI dùng REST, backend còn hỗ trợ SSE. Browser không điều khiển Docker/Python.
+Nhập dùng preview/confirm backend, giữ nháp; JSON đáp án từ 0, CSV/XLSX 1–4. Chat UI dùng SSE `/chat/stream?progress=true` ([chat-state.ts](src/pages/server/chat-state.ts)); backend gọi KAG `/v1/query`. Browser không điều khiển Docker/Python.
 
-Phạm vi thật/Demo và các giới hạn chức năng chỉ duy trì tại [USER-GUIDE](../../docs/USER-GUIDE.md). Hợp đồng KAG: [kiến trúc](../../docs/architecture.md#hợp-đồng-http-và-chính-sách-tương-thích).
+Phạm vi và các giới hạn chức năng chỉ duy trì tại [USER-GUIDE](../../docs/USER-GUIDE.md). Hợp đồng KAG: [kiến trúc](../../docs/architecture.md#hợp-đồng-http-và-chính-sách-tương-thích).

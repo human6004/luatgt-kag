@@ -8,7 +8,7 @@
 - **ADMIN/POLICE:** nhập, kiểm duyệt, xuất bản nội dung và xử lý phản hồi chat.
 - **ADMIN:** quản lý tài khoản/model; chọn project OpenSPG, chuẩn bị cấu trúc, dựng và xem kết quả graph; kiểm hạ tầng và dữ liệu đánh giá.
 
-Một số phần giao diện còn ghi **Demo**, chỉ mô phỏng. Xem phạm vi từng chức năng trong [USER-GUIDE](docs/USER-GUIDE.md#phần-demo).
+Một số nút còn ghi **Đang phát triển**. Xem phạm vi từng chức năng trong [USER-GUIDE](docs/USER-GUIDE.md#chức-năng-đang-phát-triển).
 
 ## Bắt đầu
 
@@ -39,4 +39,4 @@ React/TypeScript; Spring Boot/Java; Python và OpenSPG KAG. MySQL lưu nghiệp 
 
 Không thay thế văn bản chính thức hoặc tư vấn pháp lý. Nội dung trích tự động cần kiểm duyệt; trích dẫn khớp nguồn không tự xác nhận hiệu lực. Không tìm được kết quả không có nghĩa không có quy định.
 
-Một số màn còn Demo; trang tra cứu mức phạt riêng chưa được nối vào UI. Kết quả Builder một phần không chứng minh full graph hoặc chất lượng Chat. Benchmark pháp lý chính thức chưa hoàn thành.
+Trang tra cứu mức phạt riêng chưa được nối vào UI. Kết quả Builder một phần không chứng minh full graph hoặc chất lượng Chat. Benchmark pháp lý chính thức chưa hoàn thành.

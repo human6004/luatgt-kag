@@ -1,6 +1,6 @@
 # Dựng đồ thị bằng Builder
 
-Dành cho quản trị viên tự tạo nơi lưu graph, chọn dữ liệu và dựng đồ thị trên WebApp. Mở **Dựng đồ thị** tại `/admin/pipeline`.
+Dành cho quản trị viên tự tạo nơi lưu graph, chọn dữ liệu và dựng đồ thị trên WebApp. Mở **Dựng đồ thị** tại `/admin/chatbot`.
 
 Builder dùng bộ dữ liệu nguồn (corpus) và cấu trúc dữ liệu (schema) đi kèm phiên bản ứng dụng; chưa hỗ trợ tải bộ nguồn tùy ý hoặc tự trích xuất tri thức từ văn bản trên UI.
 

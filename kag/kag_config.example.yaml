@@ -56,8 +56,6 @@ project:
 # Structured-first: deterministic mapping -> graph plan -> vectors -> native
 # Integer writer -> OpenSPG. Keep name=id; do not use SchemaFreeExtractor/OpenIE.
 # Graph structure: kag/builder/graph_plan.py; writer: kag/builder/writer_adapter.py.
-# Builder pipeline wiring is finalized in C4.3; no runner is configured here.
-# C4.3 sẽ wire structured-first chain thật.
 # Không bật block này trước khi chain/scanner hợp lệ.
 # Synchronous intent: 2 record slots x 2 per-chain workers, about 4 component tasks.
 # kag_builder_pipeline:
@@ -100,7 +98,6 @@ search_api: &search_api
 graph_api: &graph_api
   type: openspg_graph_api
 
-# Solver/retrieval wiring is finalized in phases E/F.
 # Final KAG components can reuse *openie_llm, *chat_llm, *vectorize_model,
 # *search_api and *graph_api. No retriever/planner/executor/generator is wired.
 #------------solver configuration end----------------#

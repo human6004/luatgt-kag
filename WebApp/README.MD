@@ -3,7 +3,7 @@
 React cung cấp giao diện USER/ADMIN; Spring Boot quản lý nghiệp vụ, dùng MySQL, Redis, MinIO và gọi KAG Python.
 
 - [INSTALL](../docs/INSTALL.md): cài và đăng nhập.
-- [USER-GUIDE](../docs/USER-GUIDE.md): thao tác, dữ liệu thật và Demo.
+- [USER-GUIDE](../docs/USER-GUIDE.md): thao tác và giới hạn chức năng.
 - [UPDATE](../docs/UPDATE.md), [Docker](../docker/README.md): vận hành và giữ dữ liệu.
 - [Frontend](frontend/README.md), [backend](backend/README.md), [rule.md](rule.md): phát triển và quy tắc dự án.
 
@@ -40,16 +40,16 @@ docker compose up -d --no-deps backend frontend
 
 Đổi tên service trong lệnh log để xem MySQL/Redis/MinIO. `Ctrl+C` chỉ thoát theo dõi log. Không dùng `down -v` hoặc prune để dừng ứng dụng.
 
-**FE bằng `npm run dev`, BE bằng Docker:**
+**FE bằng `pnpm dev`, BE bằng Docker:**
 
 Chạy dependencies như trên, thay lệnh chạy FE/BE bằng `docker compose up -d --no-deps backend`. Nếu FE Docker đang chạy, dừng bằng `docker compose stop frontend`. Cài Node/dependencies theo [Frontend — Bước 1](frontend/README.md#phát-triển-và-kiểm-thử), rồi từ root repository:
 
 ```powershell
 Set-Location WebApp/frontend
-npm run dev -- --port 5174
+pnpm dev -- --port 5174
 ```
 
-Mở [FE dev](http://127.0.0.1:5174); `/api` được proxy tới backend ở `127.0.0.1:8080`. Nếu đổi `BACKEND_PORT`, chỉnh đích proxy trong [vite.config.ts](frontend/vite.config.ts) cho khớp. Sửa FE được Vite cập nhật khi dev server đang chạy; sửa BE thì build và chạy lại riêng `backend` như trên. `Ctrl+C` dừng FE dev; khởi động lại bằng cùng lệnh npm. Quay về root repository trước khi dùng các lệnh Docker dừng/chạy lại.
+Mở [FE dev](http://127.0.0.1:5174); `/api` được proxy tới backend ở `127.0.0.1:8080`. Nếu đổi `BACKEND_PORT`, chỉnh đích proxy trong [vite.config.ts](frontend/vite.config.ts) cho khớp. Sửa FE được Vite cập nhật khi dev server đang chạy; sửa BE thì build và chạy lại riêng `backend` như trên. `Ctrl+C` dừng FE dev; khởi động lại bằng cùng lệnh pnpm. Quay về root repository trước khi dùng các lệnh Docker dừng/chạy lại.
 
 ## Dữ liệu và nghiệp vụ
 

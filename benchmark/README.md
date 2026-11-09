@@ -1,6 +1,6 @@
 # Đánh giá KAG
 
-Implementation: [`kag/evaluation/`](../kag/evaluation/). Inputs/output thực chạy nằm ngoài repo; `datasets/`, `runners/`, `results/` chỉ dự trữ, chưa có runner riêng. Đánh giá không phải bước startup.
+Implementation: [`kag/evaluation/`](../kag/evaluation/). Inputs/output thực chạy nằm ngoài repo. Đánh giá không phải bước startup.
 
 ## Dataset
 
