@@ -10,6 +10,7 @@ import { Notice, saveBlob } from './shared/shared'
 
 const pct = (n: number) => (n * 100).toLocaleString('vi-VN', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + '%'
 const modeLabels: Record<string, string> = { G1: 'Truy xuất', G2: 'Trả lời', BOTH: 'Truy xuất và trả lời' }
+const modeLabel = (mode: string) => modeLabels[mode] ?? mode
 
 // Units follow the producers in kag/evaluation/metrics.py; unavailable-only diagnostics stay raw.
 const metricKinds: Record<string, 'ratio' | 'count'> = {
@@ -265,7 +266,7 @@ export default function AdminBenchmark() {
     metricGroups.at(-1)!.metrics.push(metric)
   }
   const runEntries: [string, Run][] = Object.entries(runs || {}).flatMap(([mode, run]) => run ? [[mode, run] as [string, Run]] : [])
-  const suffix = (mode: string) => runEntries.length > 1 ? ` · ${modeLabels[mode]}` : ''
+  const suffix = (mode: string) => runEntries.length > 1 ? ` · ${modeLabel(mode)}` : ''
   // A metric only shows when some run emitted it, so a G1-only run hides every G2 row outright.
   function buildRows(specs: RowSpec[]): MetricRow[] {
     return specs.flatMap(({ name, label }) => {
@@ -426,8 +427,8 @@ export default function AdminBenchmark() {
             <p className="break-all">{currentJob.state} · {currentJob.dataset_id} · {currentJob.project_id}/{currentJob.run_id}</p>
             {Object.entries(currentJob.progress).map(([m, p]) => <div key={m}>
               <div className="grid grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2">
-                <span>{modeLabels[m]}</span>
-                <div role="progressbar" aria-label={`Tiến độ ${modeLabels[m]}`} aria-valuemin={0} aria-valuemax={p.total} aria-valuenow={p.done} aria-valuetext={`${p.done}/${p.total} câu`} className="h-2 rounded-r bg-line/50">
+                <span>{modeLabel(m)}</span>
+                <div role="progressbar" aria-label={`Tiến độ ${modeLabel(m)}`} aria-valuemin={0} aria-valuemax={p.total} aria-valuenow={p.done} aria-valuetext={`${p.done}/${p.total} câu`} className="h-2 rounded-r bg-line/50">
                   <div className={`h-full rounded-r ${currentJob.state === 'FAILED' ? 'bg-red-600' : 'bg-accent-strong'}`} style={{ width: `${Math.min(100, Math.max(0, p.total ? p.done / p.total * 100 : 0))}%` }} />
                 </div>
                 <span className="tabular-nums">{p.done}/{p.total} câu</span>
@@ -554,16 +555,16 @@ export default function AdminBenchmark() {
                   return (
                     <section key={group.key} className="border-t border-line">
                       <button type="button" className="w-full px-3 py-3 text-left text-sm font-semibold text-navy hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong"
-                        aria-label={`${modeLabels[group.mode]} · ${group.channel || 'Chung'}`} aria-expanded={open}
+                        aria-label={`${modeLabel(group.mode)} · ${group.channel || 'Chung'}`} aria-expanded={open}
                         onClick={() => setToggledChannels((prev) => {
                           const next = new Set(prev)
                           if (next.has(group.key)) next.delete(group.key)
                           else next.add(group.key)
                           return next
                         })}>
-                        {open ? '▼' : '▶'} {modeLabels[group.mode]} · {group.channel || 'Chung'}
+                        {open ? '▼' : '▶'} {modeLabel(group.mode)} · {group.channel || 'Chung'}
                       </button>
-                      {open && <table className="w-full table-fixed" aria-label={`${modeLabels[group.mode]} · ${group.channel || 'Chung'}`}>
+                      {open && <table className="w-full table-fixed" aria-label={`${modeLabel(group.mode)} · ${group.channel || 'Chung'}`}>
                         <thead className="border-y border-line">
                           <tr>
                             <Th className="hidden sm:table-cell sm:w-[12%] !px-2">Chế độ</Th>
@@ -577,7 +578,7 @@ export default function AdminBenchmark() {
                         <tbody>
                           {group.metrics.map((m) => (
                             <tr key={m.key} className="border-b border-line/60 last:border-0">
-                              <Td className="hidden sm:table-cell !px-2">{modeLabels[m.mode]}</Td>
+                              <Td className="hidden sm:table-cell !px-2">{modeLabel(m.mode)}</Td>
                               <Td className="hidden sm:table-cell !px-2">{m.channel || 'Chung'}</Td>
                               <Td className="!px-2 text-navy [overflow-wrap:anywhere]">
                                 <span title={m.name}>{m.label}</span>
@@ -609,7 +610,7 @@ export default function AdminBenchmark() {
                 <p>Dataset hash: {selectedJob.dataset_hash} · {selectedJob.dataset_status} · frozen_at: {selectedJob.frozen_at ?? '—'}</p>
                 <p>Provider requests · embedding: {selectedJob.provider_requests.embedding} · chat: {selectedJob.provider_requests.chat}</p>
                 {Object.entries(selectedJob.metrics ?? {}).map(([m, metrics]) => <div key={m} className="space-y-1">
-                  <p>{modeLabels[m]} · Đã xử lý: {metrics.requested_count} · Không đủ điều kiện: {metrics.ineligible_count} · Lỗi: {metrics.failed_count}</p>
+                  <p>{modeLabel(m)} · Đã xử lý: {metrics.requested_count} · Không đủ điều kiện: {metrics.ineligible_count} · Lỗi: {metrics.failed_count}</p>
                   <p>Latency mean: <MetricBar value={metrics.latency_ms.all_attempted.mean} kind="latency" /></p>
                   <p>Failure rate: <MetricBar value={metrics.failure_rate.value} kind="ratio" /></p>
                 </div>)}
@@ -637,7 +638,7 @@ export default function AdminBenchmark() {
                   {Object.entries(row.smoke?.runs || {}).map(([mode, run]) => (
                     <details key={mode}>
                       <summary className="cursor-pointer underline">
-                        {modeLabels[mode]}: {run?.status ?? 'NOT_RUN'}
+                        {modeLabel(mode)}: {run?.status ?? 'NOT_RUN'}
                       </summary>
                       {run ? (
                         <div className="mt-1 space-y-1">
