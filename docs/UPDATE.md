@@ -48,10 +48,10 @@ Lệnh này kiểm cấu hình Compose, không kiểm tính tương thích của
 
 ## 4. Cập nhật ứng dụng
 
-Nếu bản mới đổi schema KAG, hash guard sẽ từ chối release cũ; Chat ngừng trả lời cho tới khi có graph/release mới.
-Hoàn tất backup ở trên, giữ image và release cũ để rollback; không ghi đè graph cũ.
-Trên phiên bản mới, dùng project/database **rỗng**: **Chuẩn bị cấu trúc** → build → seal → **Dùng cho Chat**, rồi mới chuyển Chat sang graph mới.
-Thực hiện theo [hướng dẫn runner](runner.md); không bỏ hoặc nới hash guard.
+Nếu bản mới đổi schema KAG, hash guard sẽ từ chối release cũ. Thực hiện theo thứ tự dưới; Chat ngừng trả lời trong suốt bước khởi động phiên bản mới và dựng/chuyển graph, cho tới khi graph/release mới sẵn sàng.
+
+1. Hoàn tất backup ở mục 1, giữ image và release cũ để rollback; không ghi đè hoặc xóa graph/release cũ. Nếu đổi storage/database image, chỉ tiếp tục khi phương án chuyển đổi đã được duyệt.
+2. Khởi động phiên bản mới trước khi thao tác trên UI:
 
 ```powershell
 docker compose up -d --build
@@ -59,6 +59,10 @@ docker compose ps -a
 ```
 
 Compose build lại images ứng dụng và cập nhật containers cần thiết, dùng lại storage hiện có. Không cần tự chọn từng service. Đợi đủ 12 services chạy; các service có healthcheck cần chuyển sang `healthy`.
+
+3. Nếu schema KAG đổi, trên UI phiên bản mới: lưu/kiểm Embedding, tạo project/database **rỗng, riêng** trong OpenSPG rồi mở **Chatbot → Đồ thị → + Dựng đồ thị mới**. Chọn **Đồ thị trống**, phạm vi và **Xác nhận dựng**; ứng dụng tự chuẩn bị cấu trúc trước Build. Sau khi dựng/xác minh xong, chọn **Dùng cho Chat → Xác nhận dùng cho Chat**; hệ thống xác minh, đóng gói release (seal) nếu cần rồi mới kích hoạt graph. Không có nút seal riêng. Chờ **Đang dùng cho Chat** và hết thông báo chưa sẵn sàng trước khi kết thúc bảo trì. Nếu schema không đổi, chuyển sang mục 5 để kiểm chức năng đã cấu hình.
+
+Trong suốt bước 2–3, Chat chưa phục vụ; giữ graph/release/image cũ để quay lại khi còn tương thích. Thực hiện theo [hướng dẫn runner](runner.md); không bỏ hoặc nới hash guard. Không chuẩn bị schema mới trên database chứa graph cũ.
 
 Nếu có lỗi, đọc log service liên quan theo [Docker](../docker/README.md#vận-hành); không xóa volume hoặc đổi credentials để thử lại. Builder không tự Resume sau cập nhật.
 
