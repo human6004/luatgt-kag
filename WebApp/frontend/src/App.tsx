@@ -93,6 +93,7 @@ export default function App() {
                 <Route path="/admin/question-bank-settings" element={<RedirectWithParams to="/admin/questions" defaults={{ tab: 'sets' }} />} />
                 <Route path="/admin/imports" element={<ImportsRedirect defaultType="signs" />} />
                 <Route path="/admin/content-imports" element={<ImportsRedirect defaultType="questions" />} />
+                <Route path="/admin/chatlogs" element={<RedirectWithParams to="/admin/users" defaults={{ tab: 'logs' }} />} />
               </Route>
             </Route>
             <Route path="*" element={<SessionHome />} />
