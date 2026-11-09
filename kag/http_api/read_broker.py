@@ -337,7 +337,7 @@ def main():
             os.environ['KAG_BROKER_DATABASE_ID'],os.environ['KAG_BROKER_SERVER_ID'])
         with BrokerHTTPServer((host,port),policy) as server: server.serve_forever()
     except KeyboardInterrupt: pass
-    except Exception: raise SystemExit('Sample read broker unavailable.') from None
+    except Exception: raise SystemExit('Read broker unavailable.') from None
 
 
 if __name__ == '__main__': main()
