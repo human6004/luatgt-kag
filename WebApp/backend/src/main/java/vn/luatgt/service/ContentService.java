@@ -35,15 +35,11 @@ public class ContentService {
         var n=read(c);
         if(!effective(n)) return false;
         if(c.kind.equals("signs")) {
-            if(!hasSignSource(n)) return true;
             var doc=contents.findByKindAndExternalId("documents",n.path("doc_id").asText());
             var unit=units.findByUnitId(n.path("unit_id").asText());
             return doc.isPresent()&&doc.get().published&&isEffective(doc.get())&&unit.isPresent()&&unit.get().published&&unit.get().documentId.equals(doc.get().id);
         }
         return !c.kind.equals("documents")||relations.findAll().stream().noneMatch(r -> r.predecessor.equals(c.id)&&r.type.equals("REPLACES")&&!r.effectiveDate.isAfter(LocalDate.now())&&contents.findById(r.successor).map(next -> next.published&&effective(read(next))).orElse(false));
-    }
-    private static boolean hasSignSource(JsonNode sign) {
-        return !sign.path("doc_id").asText("").isBlank()&&!sign.path("unit_id").asText("").isBlank();
     }
     public static void kind(String kind) { if(!Set.of("questions","signs","documents").contains(kind)) throw ApiErrors.bad("Loại dữ liệu không hợp lệ"); }
     public ObjectNode read(Content c) { try { var n=(ObjectNode)json.readTree(c.data);return c.kind.equals("signs")?signs.read(c,n):n; } catch(Exception e) { throw new IllegalStateException(e); } }
@@ -139,7 +135,7 @@ public class ContentService {
                 &&n.path("image_required").asBoolean(true)&&!hasSignImage(n))
                 throw ApiErrors.bad("Biển báo này yêu cầu ảnh. Hãy tải ảnh lên hoặc bổ sung SVG nguồn đúng mã biển.");
             if(publish) signs.validateRelations(n);
-            if(publish&&hasSignSource(n)) {
+            if(publish) {
                 var doc=contents.findByKindAndExternalId("documents",n.path("doc_id").asText());
                 var unit=units.findByUnitId(n.path("unit_id").asText());
                 if(doc.isEmpty()||!doc.get().published||unit.isEmpty()||!unit.get().published||!unit.get().documentId.equals(doc.get().id)) throw ApiErrors.bad("Biển báo cần unit và văn bản nguồn tương ứng đã xuất bản");
