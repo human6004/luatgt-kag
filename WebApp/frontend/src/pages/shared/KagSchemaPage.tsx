@@ -1,54 +1,58 @@
-import { Link, useSearchParams } from "react-router-dom"
-import { Page, Button, Th, Td, inputCls } from "../../admin/ui"
-import { useData, Notice, saveBlob } from "./shared"
+import { Link, useSearchParams } from "react-router-dom";
+import { Page, Button, Th, Td, inputCls } from "../../admin/ui";
+import { useData, Notice, saveBlob } from "./shared";
 
 type Property = {
-  logical_name: string
-  schema_name: string
-  contract_type: string
-  required: boolean
-  inherited_from?: string
-}
+  logical_name: string;
+  schema_name: string;
+  contract_type: string;
+  required: boolean;
+  inherited_from?: string;
+};
 
 export type SchemaResponse = {
-  identity: { namespace: string; schema_sha256: string; contract_sha256: string }
+  identity: {
+    namespace: string;
+    schema_sha256: string;
+    contract_sha256: string;
+  };
   contract: {
-    node_types: string[]
-    node_properties: Record<string, Property[]>
-    relations: Record<string, { from_type: string; to_type: string }>
-    unit_type_values: string[]
-    runtime_contract: Record<string, unknown>
-  }
-}
+    node_types: string[];
+    node_properties: Record<string, Property[]>;
+    relations: Record<string, { from_type: string; to_type: string }>;
+    unit_type_values: string[];
+    runtime_contract: Record<string, unknown>;
+  };
+};
 
 export default function KagSchemaPage() {
-  const [params, setParams] = useSearchParams()
-  const data = useData<SchemaResponse>("/admin/kag/schema")
-  const schema = data.value
+  const [params, setParams] = useSearchParams();
+  const data = useData<SchemaResponse>("/admin/kag/schema");
+  const schema = data.value;
 
-  const rawType = params.get("type") ?? "LegalDocument"
+  const rawType = params.get("type") ?? "LegalDocument";
   const type =
     schema && !schema.contract.node_types.includes(rawType)
-      ? schema.contract.node_types[0] ?? "LegalDocument"
-      : rawType
+      ? (schema.contract.node_types[0] ?? "LegalDocument")
+      : rawType;
 
   function selectType(nextType: string) {
     setParams((prev) => {
-      const next = new URLSearchParams(prev)
-      if (nextType === "LegalDocument") next.delete("type")
-      else next.set("type", nextType)
-      return next
-    })
+      const next = new URLSearchParams(prev);
+      if (nextType === "LegalDocument") next.delete("type");
+      else next.set("type", nextType);
+      return next;
+    });
   }
 
   function download() {
-    if (!schema) return
+    if (!schema) return;
     saveBlob(
       new Blob([JSON.stringify(schema.contract, null, 2)], {
         type: "application/json",
       }),
       "schema_contract.json",
-    )
+    );
   }
 
   return (
@@ -61,7 +65,9 @@ export default function KagSchemaPage() {
       {schema && (
         <>
           <details>
-            <summary className="underline cursor-pointer text-sm">Chi tiết kỹ thuật</summary>
+            <summary className="underline cursor-pointer text-sm">
+              Chi tiết kỹ thuật
+            </summary>
             <dl className="grid sm:grid-cols-3 gap-5 py-6 border-b border-line">
               {[
                 ["Namespace", schema.identity.namespace],
@@ -70,20 +76,26 @@ export default function KagSchemaPage() {
               ].map(([label, value]) => (
                 <div key={label}>
                   <dt className="text-sm text-muted">{label}</dt>
-                  <dd className="text-sm font-semibold mt-1 break-all">{value}</dd>
+                  <dd className="text-sm font-semibold mt-1 break-all">
+                    {value}
+                  </dd>
                 </div>
               ))}
             </dl>
           </details>
           <div className="flex flex-wrap gap-4 items-center my-6">
-            <Link to="/admin/sources" className="text-sm underline underline-offset-4">
+            <Link
+              to="/admin/sources"
+              className="text-sm underline underline-offset-4"
+            >
               Về dữ liệu nguồn
             </Link>
             <Button onClick={download}>Tải contract</Button>
           </div>
           <p className="text-sm">
-            Dùng doc_id, unit_id và sign_id nguyên trạng làm ID nguồn. UUID trong WebApp chỉ dùng cho quản trị bản ghi.
-            Chat từ dataset đối chiếu trích dẫn với bản nguồn của đồ thị đang áp dụng.
+            Dùng doc_id, unit_id và sign_id nguyên trạng làm ID nguồn. UUID
+            trong WebApp chỉ dùng cho quản trị bản ghi. Chat từ dataset đối
+            chiếu trích dẫn với bản nguồn của đồ thị đang áp dụng.
           </p>
           <label className="block text-sm mt-6">
             Loại node
@@ -144,12 +156,17 @@ export default function KagSchemaPage() {
               </tbody>
             </table>
           </div>
-          <p className="text-sm mt-6">Loại đơn vị pháp lý: {schema.contract.unit_type_values.join(", ")}.</p>
+          <p className="text-sm mt-6">
+            Loại đơn vị pháp lý: {schema.contract.unit_type_values.join(", ")}.
+          </p>
           <p className="text-sm mt-3 text-muted">
-            Ingestion theo contract runtime: kiểm tra ràng buộc và codec, ghi node trước cạnh và gộp provenance trước khi ghi.
+            Ingestion theo contract runtime: kiểm tra ràng buộc và codec, ghi
+            node trước cạnh và gộp provenance trước khi ghi.
           </p>
           <details className="mt-4 text-sm">
-            <summary className="cursor-pointer">Contract runtime cho core KAG</summary>
+            <summary className="cursor-pointer">
+              Contract runtime cho core KAG
+            </summary>
             <pre className="overflow-x-auto mt-3 p-3 bg-sidebar">
               {JSON.stringify(schema.contract.runtime_contract, null, 2)}
             </pre>
@@ -157,5 +174,5 @@ export default function KagSchemaPage() {
         </>
       )}
     </Page>
-  )
+  );
 }

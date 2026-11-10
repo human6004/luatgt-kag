@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react"
-import { useSearchParams } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import { api, send } from "../api";
 
@@ -13,9 +13,9 @@ import {
   inputCls,
 } from "../admin/ui";
 
-import { Asset, Notice, useData, useTask } from "./shared/shared"
+import { Asset, Notice, useData, useTask } from "./shared/shared";
 
-import type { ExamRule } from "./shared/QuestionBankSettings"
+import type { ExamRule } from "./shared/QuestionBankSettings";
 
 type Question = {
   questionId: string;
@@ -57,12 +57,12 @@ type History = {
 };
 
 export default function ExamPage() {
-  const [params, setParams] = useSearchParams()
+  const [params, setParams] = useSearchParams();
   const rules = useData<ExamRule[]>("/exam-rules"),
     history = useData<History[]>("/exams"),
     task = useTask();
 
-  const ruleParam = params.get("rule") || params.get("cls") || ""
+  const ruleParam = params.get("rule") || params.get("cls") || "";
   const [exam, setExam] = useState<Exam | null>(null),
     [current, setCurrent] = useState(0),
     [left, setLeft] = useState(0);
@@ -76,16 +76,16 @@ export default function ExamPage() {
       (r) =>
         r.rule_id === ruleParam ||
         r.class_code.toLowerCase() === ruleParam.toLowerCase(),
-    ) ?? rules.value?.[0]
+    ) ?? rules.value?.[0];
 
   function setRuleId(id: string) {
     setParams((prev) => {
-      const next = new URLSearchParams(prev)
-      next.delete("cls")
-      if (!id) next.delete("rule")
-      else next.set("rule", id)
-      return next
-    })
+      const next = new URLSearchParams(prev);
+      next.delete("cls");
+      if (!id) next.delete("rule");
+      else next.set("rule", id);
+      return next;
+    });
   }
 
   function accept(value: Exam) {
@@ -217,14 +217,18 @@ export default function ExamPage() {
                         disabled={task.busy || rules.loading}
                         onChange={(e) =>
                           setRuleId(
-                            rules.value?.find((r) => r.set_id === e.target.value)
-                              ?.rule_id || "",
+                            rules.value?.find(
+                              (r) => r.set_id === e.target.value,
+                            )?.rule_id || "",
                           )
                         }
                       >
                         {Array.from(
                           new Map(
-                            (rules.value || []).map((r) => [r.set_id, r.set_name]),
+                            (rules.value || []).map((r) => [
+                              r.set_id,
+                              r.set_name,
+                            ]),
                           ),
                         ).map(([id, name]) => (
                           <option key={id} value={id}>
@@ -287,9 +291,9 @@ export default function ExamPage() {
                             "/exams",
                             send("POST", { ruleId: selected.rule_id }),
                           ),
-                        )
-                        setCurrent(0)
-                        setFlags(new Set())
+                        );
+                        setCurrent(0);
+                        setFlags(new Set());
                       })
                     }
                   >
@@ -302,8 +306,8 @@ export default function ExamPage() {
                     Chưa có đề thi đang áp dụng
                   </p>
                   <p className="text-sm leading-6 text-muted">
-                    Người quản lý cần cấu hình đề thi và xuất bản đủ câu hỏi. Bạn
-                    không cần tự thiết lập quy tắc.
+                    Người quản lý cần cấu hình đề thi và xuất bản đủ câu hỏi.
+                    Bạn không cần tự thiết lập quy tắc.
                   </p>
                 </div>
               ) : (

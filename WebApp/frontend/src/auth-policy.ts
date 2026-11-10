@@ -1,7 +1,12 @@
-export type Role = "user" | "police" | "admin"
-export type ServerRole = "USER" | "POLICE" | "ADMIN"
-export type Session = { email: string; name: string; role: Role }
-export const homeFor = (role: Role) => role === "admin" ? "/admin/dashboard" : role === "police" ? "/admin/content" : "/chat"
+export type Role = "user" | "police" | "admin";
+export type ServerRole = "USER" | "POLICE" | "ADMIN";
+export type Session = { email: string; name: string; role: Role };
+export const homeFor = (role: Role) =>
+  role === "admin"
+    ? "/admin/dashboard"
+    : role === "police"
+      ? "/admin/content"
+      : "/chat";
 
 export function roleFor(value: unknown): Role {
   if (value === "ADMIN") return "admin";
@@ -11,11 +16,19 @@ export function roleFor(value: unknown): Role {
 }
 
 const policePages = [
-  "/admin/content", "/admin/questions", "/admin/users",
+  "/admin/content",
+  "/admin/questions",
+  "/admin/users",
   // Legacy paths allowed through RequireRole so Route redirects carry police to the new paths:
-  "/admin/knowledge", "/admin/documents", "/admin/units", "/admin/signs",
-  "/admin/imports", "/admin/content-imports", "/admin/chatlogs", "/admin/question-bank-settings",
-]
+  "/admin/knowledge",
+  "/admin/documents",
+  "/admin/units",
+  "/admin/signs",
+  "/admin/imports",
+  "/admin/content-imports",
+  "/admin/chatlogs",
+  "/admin/question-bank-settings",
+];
 export const canAccessAdminPage = (role: Role, pathname: string) =>
   role === "admin" ||
   (role === "police" &&

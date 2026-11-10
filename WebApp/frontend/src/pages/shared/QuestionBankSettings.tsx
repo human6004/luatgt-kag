@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
-import { api, send } from "../../api"
+import { api, send } from "../../api";
 
 import {
   Button,
@@ -13,106 +13,121 @@ import {
   Td,
   Th,
   inputCls,
-} from "../../admin/ui"
+} from "../../admin/ui";
 
-import { Notice, useData, useTask } from "./shared"
-import ChapterSettings from "./ChapterSettings"
+import { Notice, useData, useTask } from "./shared";
+import ChapterSettings from "./ChapterSettings";
 
 export type QuestionSet = {
-  set_id: string
+  set_id: string;
 
-  set_code: string
+  set_code: string;
 
-  set_name: string
+  set_name: string;
 
-  release_code: string
+  release_code: string;
 
-  question_count: number
+  question_count: number;
 
-  rule_count: number
-}
+  rule_count: number;
+};
 
-export type QuestionBankTab = "sets" | "chapters" | "rules"
+export type QuestionBankTab = "sets" | "chapters" | "rules";
 
 export type ExamRule = {
-  rule_id: string
+  rule_id: string;
 
-  set_id: string
+  set_id: string;
 
-  set_name: string
+  set_name: string;
 
-  class_code: string
+  class_code: string;
 
-  total_questions: number
+  total_questions: number;
 
-  duration_minutes: number
+  duration_minutes: number;
 
-  minimum_correct: number
+  minimum_correct: number;
 
-  valid_from: string
+  valid_from: string;
 
-  valid_to: string | null
+  valid_to: string | null;
 
-  critical_slots: number
+  critical_slots: number;
 
-  fail_on_critical: boolean
+  fail_on_critical: boolean;
 
-  attempt_count: number
+  attempt_count: number;
 
-  quotas: { chapter: number; question_quota: number }[]
-}
+  quotas: { chapter: number; question_quota: number }[];
+};
 
 type RuleForm = {
-  setId: string
-  license: string
-  validFrom: string
-  validTo: string
-  totalQuestions: string
-  durationMinutes: string
-  minimumCorrect: string
-  criticalSlots: string
-  failOnCritical: boolean
-  quotas: {chapter: number; value: string}[]
-}
+  setId: string;
+  license: string;
+  validFrom: string;
+  validTo: string;
+  totalQuestions: string;
+  durationMinutes: string;
+  minimumCorrect: string;
+  criticalSlots: string;
+  failOnCritical: boolean;
+  quotas: { chapter: number; value: string }[];
+};
 
-const emptyRule = (): RuleForm => ({ setId: "", license: "", validFrom: "", validTo: "", totalQuestions: "", durationMinutes: "", minimumCorrect: "", criticalSlots: "", failOnCritical: true, quotas: Array.from({length:6},(_,i)=>({chapter:i+1,value:""})) })
+const emptyRule = (): RuleForm => ({
+  setId: "",
+  license: "",
+  validFrom: "",
+  validTo: "",
+  totalQuestions: "",
+  durationMinutes: "",
+  minimumCorrect: "",
+  criticalSlots: "",
+  failOnCritical: true,
+  quotas: Array.from({ length: 6 }, (_, i) => ({ chapter: i + 1, value: "" })),
+});
 
 export default function QuestionBankSettings({
   embedded = false,
   tab: selectedTab,
   onTabChange,
 }: {
-  embedded?: boolean
-  tab?: QuestionBankTab
-  onTabChange?: (tab: QuestionBankTab) => void
+  embedded?: boolean;
+  tab?: QuestionBankTab;
+  onTabChange?: (tab: QuestionBankTab) => void;
 } = {}) {
-  const [localTab, setLocalTab] = useState<QuestionBankTab>('sets')
+  const [localTab, setLocalTab] = useState<QuestionBankTab>("sets");
   const sets = useData<QuestionSet[]>("/admin/questions/sets"),
     rules = useData<ExamRule[]>("/admin/questions/rules"),
-    task = useTask()
-  const tab = selectedTab ?? localTab
+    task = useTask();
+  const tab = selectedTab ?? localTab;
 
   useEffect(() => {
-    if (embedded) task.clearError()
-  }, [embedded, selectedTab])
+    if (embedded) task.clearError();
+  }, [embedded, selectedTab]);
 
   function changeTab(nextTab: QuestionBankTab) {
-    task.clearError()
-    if (onTabChange) onTabChange(nextTab)
-    else setLocalTab(nextTab)
+    task.clearError();
+    if (onTabChange) onTabChange(nextTab);
+    else setLocalTab(nextTab);
   }
 
-  const [dialog, setDialog] = useState<"set" | "rule" | null>(null)
+  const [dialog, setDialog] = useState<"set" | "rule" | null>(null);
 
-  const [editingSet, setEditingSet] = useState<QuestionSet | null>(null)
+  const [editingSet, setEditingSet] = useState<QuestionSet | null>(null);
 
-  const [editingRule, setEditingRule] = useState<ExamRule | null>(null)
+  const [editingRule, setEditingRule] = useState<ExamRule | null>(null);
 
-  const [pendingDelete, setPendingDelete] = useState<{ kind: "set" | "rule"; id: string; label: string } | null>(null)
+  const [pendingDelete, setPendingDelete] = useState<{
+    kind: "set" | "rule";
+    id: string;
+    label: string;
+  } | null>(null);
 
-  const [endingRule, setEndingRule] = useState<ExamRule | null>(null)
+  const [endingRule, setEndingRule] = useState<ExamRule | null>(null);
 
-  const [endDate, setEndDate] = useState("")
+  const [endDate, setEndDate] = useState("");
 
   const [set, setSet] = useState({
     releaseCode: "",
@@ -130,7 +145,7 @@ export default function QuestionBankSettings({
     effectiveTo: "",
 
     sourceUrl: "",
-  })
+  });
 
   const [rule, setRule] = useState<RuleForm>({
     setId: "",
@@ -151,15 +166,35 @@ export default function QuestionBankSettings({
 
     failOnCritical: true,
 
-    quotas: Array.from({length:6},(_,i)=>({chapter:i+1,value:""})),
-  })
+    quotas: Array.from({ length: 6 }, (_, i) => ({
+      chapter: i + 1,
+      value: "",
+    })),
+  });
 
-  const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date())
-  const nextDay = (date: string) => new Date(Date.parse(`${date}T00:00:00Z`) + 86400000).toISOString().slice(0, 10)
-  const earliestEnd = endingRule ? nextDay(today > endingRule.valid_from ? today : endingRule.valid_from) : ''
-  const allocation = rule.quotas.reduce((sum, value) => sum + Number(value.value || 0), 0) + Number(rule.criticalSlots || 0)
-  const allocationComplete = [...rule.quotas.map(q=>q.value), rule.criticalSlots, rule.totalQuestions].every(value => value !== '')
-  const allocationMismatch = allocationComplete && allocation !== Number(rule.totalQuestions)
+  const today = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Ho_Chi_Minh",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+  const nextDay = (date: string) =>
+    new Date(Date.parse(`${date}T00:00:00Z`) + 86400000)
+      .toISOString()
+      .slice(0, 10);
+  const earliestEnd = endingRule
+    ? nextDay(today > endingRule.valid_from ? today : endingRule.valid_from)
+    : "";
+  const allocation =
+    rule.quotas.reduce((sum, value) => sum + Number(value.value || 0), 0) +
+    Number(rule.criticalSlots || 0);
+  const allocationComplete = [
+    ...rule.quotas.map((q) => q.value),
+    rule.criticalSlots,
+    rule.totalQuestions,
+  ].every((value) => value !== "");
+  const allocationMismatch =
+    allocationComplete && allocation !== Number(rule.totalQuestions);
 
   const content = (
     <>
@@ -170,22 +205,59 @@ export default function QuestionBankSettings({
             value={tab}
             onChange={changeTab}
             items={[
-              { value: 'sets', label: 'Bộ câu hỏi' },
-              { value: 'chapters', label: 'Chương' },
-              { value: 'rules', label: 'Quy tắc đề thi' },
+              { value: "sets", label: "Bộ câu hỏi" },
+              { value: "chapters", label: "Chương" },
+              { value: "rules", label: "Quy tắc đề thi" },
             ]}
           />
         )}
-        {tab==='chapters'&&<><Notice {...sets} retry={sets.reload}/><ChapterSettings sets={sets.value||[]}/></>}
-        <Notice error={!dialog && !endingRule && !pendingDelete ? task.error : undefined} />
-        {tab==='sets'&&<section aria-labelledby="created-sets-heading" className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 id="created-sets-heading" className="text-lg font-semibold text-navy">Bộ đã tạo</h2>
-            <Button variant="primary" disabled={task.busy} onClick={() => { task.clearError(); setEditingSet(null); setSet({ releaseCode: "", releaseTitle: "", setCode: "", setName: "", issuedOn: "", effectiveFrom: "", effectiveTo: "", sourceUrl: "" }); setDialog("set") }}>Thêm bộ câu hỏi</Button>
-          </div>
-          <Notice {...sets} retry={sets.reload}/>
-          {sets.value && <Card className="overflow-hidden"><div className="overflow-x-auto">
-<table className="w-full min-w-[480px]">
+        {tab === "chapters" && (
+          <>
+            <Notice {...sets} retry={sets.reload} />
+            <ChapterSettings sets={sets.value || []} />
+          </>
+        )}
+        <Notice
+          error={
+            !dialog && !endingRule && !pendingDelete ? task.error : undefined
+          }
+        />
+        {tab === "sets" && (
+          <section aria-labelledby="created-sets-heading" className="space-y-4">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2
+                id="created-sets-heading"
+                className="text-lg font-semibold text-navy"
+              >
+                Bộ đã tạo
+              </h2>
+              <Button
+                variant="primary"
+                disabled={task.busy}
+                onClick={() => {
+                  task.clearError();
+                  setEditingSet(null);
+                  setSet({
+                    releaseCode: "",
+                    releaseTitle: "",
+                    setCode: "",
+                    setName: "",
+                    issuedOn: "",
+                    effectiveFrom: "",
+                    effectiveTo: "",
+                    sourceUrl: "",
+                  });
+                  setDialog("set");
+                }}
+              >
+                Thêm bộ câu hỏi
+              </Button>
+            </div>
+            <Notice {...sets} retry={sets.reload} />
+            {sets.value && (
+              <Card className="overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[480px]">
                     <thead className="bg-sidebar">
                       <tr>
                         <Th>Mã đợt ban hành</Th>
@@ -202,13 +274,61 @@ export default function QuestionBankSettings({
                           <Td>{s.set_name}</Td>
                           <Td className="text-right">
                             <div className="flex flex-wrap items-center justify-end gap-2">
-                              <EditIconButton label="Chỉnh sửa bộ câu hỏi" disabled={task.busy} onClick={() => {
-                                task.clearError()
-                                setEditingSet(s)
-                                setSet({ releaseCode: s.release_code, releaseTitle: "", setCode: s.set_code, setName: s.set_name, issuedOn: "", effectiveFrom: "", effectiveTo: "", sourceUrl: "" })
-                                setDialog("set")
-                              }} />
-                              <Button size="sm" variant="danger" aria-label="Xóa bộ câu hỏi" disabled={task.busy || s.question_count > 0 || s.rule_count > 0} title={s.question_count > 0 || s.rule_count > 0 ? `Đã có ${s.question_count} câu hỏi · ${s.rule_count} quy tắc; không thể xóa.` : "Xóa bộ câu hỏi"} onClick={() => { task.clearError(); setPendingDelete({ kind: "set", id: s.set_id, label: `${s.release_code} / ${s.set_code}` }) }}><svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg></Button>
+                              <EditIconButton
+                                label="Chỉnh sửa bộ câu hỏi"
+                                disabled={task.busy}
+                                onClick={() => {
+                                  task.clearError();
+                                  setEditingSet(s);
+                                  setSet({
+                                    releaseCode: s.release_code,
+                                    releaseTitle: "",
+                                    setCode: s.set_code,
+                                    setName: s.set_name,
+                                    issuedOn: "",
+                                    effectiveFrom: "",
+                                    effectiveTo: "",
+                                    sourceUrl: "",
+                                  });
+                                  setDialog("set");
+                                }}
+                              />
+                              <Button
+                                size="sm"
+                                variant="danger"
+                                aria-label="Xóa bộ câu hỏi"
+                                disabled={
+                                  task.busy ||
+                                  s.question_count > 0 ||
+                                  s.rule_count > 0
+                                }
+                                title={
+                                  s.question_count > 0 || s.rule_count > 0
+                                    ? `Đã có ${s.question_count} câu hỏi · ${s.rule_count} quy tắc; không thể xóa.`
+                                    : "Xóa bộ câu hỏi"
+                                }
+                                onClick={() => {
+                                  task.clearError();
+                                  setPendingDelete({
+                                    kind: "set",
+                                    id: s.set_id,
+                                    label: `${s.release_code} / ${s.set_code}`,
+                                  });
+                                }}
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className="h-5 w-5"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="1.8"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
+                                </svg>
+                              </Button>
                             </div>
                           </Td>
                         </tr>
@@ -226,17 +346,46 @@ export default function QuestionBankSettings({
                       )}
                     </tbody>
                   </table>
-          </div></Card>}
-        </section>}
-        {tab==='rules'&&<section aria-labelledby="created-rules-heading" className="space-y-4">
-          <div className="flex flex-wrap items-center justify-between gap-3">
-            <h2 id="created-rules-heading" className="text-lg font-semibold text-navy">Quy tắc đã tạo</h2>
-            <Button variant="primary" disabled={task.busy || sets.loading || !sets.value?.length} onClick={() => { task.clearError(); setEditingRule(null); setRule(emptyRule()); setDialog("rule") }}>Thêm quy tắc đề thi</Button>
-          </div>
-          <p className="text-xs leading-6 text-muted">Giữ quy tắc cũ để chấm bài thi đã lưu. Khi thay đổi, thêm quy tắc cho thời kỳ mới; khoảng hiệu lực trong cùng bộ và hạng không được chồng nhau.</p>
-          <Notice {...rules} retry={rules.reload}/>
-          {rules.value && <Card className="overflow-hidden"><div className="overflow-x-auto">
-<table className="w-full min-w-[800px]">
+                </div>
+              </Card>
+            )}
+          </section>
+        )}
+        {tab === "rules" && (
+          <section
+            aria-labelledby="created-rules-heading"
+            className="space-y-4"
+          >
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2
+                id="created-rules-heading"
+                className="text-lg font-semibold text-navy"
+              >
+                Quy tắc đã tạo
+              </h2>
+              <Button
+                variant="primary"
+                disabled={task.busy || sets.loading || !sets.value?.length}
+                onClick={() => {
+                  task.clearError();
+                  setEditingRule(null);
+                  setRule(emptyRule());
+                  setDialog("rule");
+                }}
+              >
+                Thêm quy tắc đề thi
+              </Button>
+            </div>
+            <p className="text-xs leading-6 text-muted">
+              Giữ quy tắc cũ để chấm bài thi đã lưu. Khi thay đổi, thêm quy tắc
+              cho thời kỳ mới; khoảng hiệu lực trong cùng bộ và hạng không được
+              chồng nhau.
+            </p>
+            <Notice {...rules} retry={rules.reload} />
+            {rules.value && (
+              <Card className="overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[800px]">
                     <thead className="bg-sidebar">
                       <tr>
                         <Th>Bộ / Hạng</Th>
@@ -282,31 +431,94 @@ export default function QuestionBankSettings({
                           </Td>
                           <Td className="text-right">
                             <div className="flex flex-wrap items-center justify-end gap-2">
-                              <EditIconButton label="Chỉnh sửa quy tắc" disabled={task.busy || r.attempt_count > 0} title={r.attempt_count > 0 ? "Đã có bài thi nên khóa sửa để giữ lịch sử" : "Chỉnh sửa quy tắc"} onClick={() => {
-                                task.clearError()
-                                setEditingRule(r)
-                                setRule({
-                                  setId: r.set_id,
-                                  license: r.class_code,
-                                  validFrom: r.valid_from,
-                                  validTo: r.valid_to || "",
-                                  totalQuestions: String(r.total_questions),
-                                  durationMinutes: String(r.duration_minutes),
-                                  minimumCorrect: String(r.minimum_correct),
-                                  criticalSlots: String(r.critical_slots),
-                                  failOnCritical: r.fail_on_critical,
-                                  quotas: r.quotas.map(q=>({chapter:q.chapter,value:String(q.question_quota)})),
-                                })
-                                setDialog("rule")
-                              }} />
-                              <Button size="sm" disabled={task.busy || (!!r.valid_to && r.valid_to < nextDay(today > r.valid_from ? today : r.valid_from))} onClick={() => {
-                                task.clearError()
-                                setEndDate("")
-                                setEndingRule(r)
-                              }}>Kết thúc hiệu lực</Button>
-                              <Button size="sm" variant="danger" aria-label="Xóa quy tắc" disabled={task.busy || r.attempt_count > 0} title={r.attempt_count > 0 ? "Đã có bài thi nên không thể xóa" : "Xóa quy tắc"} onClick={() => { task.clearError(); setPendingDelete({ kind: "rule", id: r.rule_id, label: `${r.set_name} · Hạng ${r.class_code}` }) }}><svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg></Button>
+                              <EditIconButton
+                                label="Chỉnh sửa quy tắc"
+                                disabled={task.busy || r.attempt_count > 0}
+                                title={
+                                  r.attempt_count > 0
+                                    ? "Đã có bài thi nên khóa sửa để giữ lịch sử"
+                                    : "Chỉnh sửa quy tắc"
+                                }
+                                onClick={() => {
+                                  task.clearError();
+                                  setEditingRule(r);
+                                  setRule({
+                                    setId: r.set_id,
+                                    license: r.class_code,
+                                    validFrom: r.valid_from,
+                                    validTo: r.valid_to || "",
+                                    totalQuestions: String(r.total_questions),
+                                    durationMinutes: String(r.duration_minutes),
+                                    minimumCorrect: String(r.minimum_correct),
+                                    criticalSlots: String(r.critical_slots),
+                                    failOnCritical: r.fail_on_critical,
+                                    quotas: r.quotas.map((q) => ({
+                                      chapter: q.chapter,
+                                      value: String(q.question_quota),
+                                    })),
+                                  });
+                                  setDialog("rule");
+                                }}
+                              />
+                              <Button
+                                size="sm"
+                                disabled={
+                                  task.busy ||
+                                  (!!r.valid_to &&
+                                    r.valid_to <
+                                      nextDay(
+                                        today > r.valid_from
+                                          ? today
+                                          : r.valid_from,
+                                      ))
+                                }
+                                onClick={() => {
+                                  task.clearError();
+                                  setEndDate("");
+                                  setEndingRule(r);
+                                }}
+                              >
+                                Kết thúc hiệu lực
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="danger"
+                                aria-label="Xóa quy tắc"
+                                disabled={task.busy || r.attempt_count > 0}
+                                title={
+                                  r.attempt_count > 0
+                                    ? "Đã có bài thi nên không thể xóa"
+                                    : "Xóa quy tắc"
+                                }
+                                onClick={() => {
+                                  task.clearError();
+                                  setPendingDelete({
+                                    kind: "rule",
+                                    id: r.rule_id,
+                                    label: `${r.set_name} · Hạng ${r.class_code}`,
+                                  });
+                                }}
+                              >
+                                <svg
+                                  aria-hidden="true"
+                                  className="h-5 w-5"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="1.8"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                >
+                                  <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
+                                </svg>
+                              </Button>
                             </div>
-                            {r.attempt_count > 0 && <p className="mt-1 text-xs text-muted">Đã có {r.attempt_count} bài thi; khóa sửa/xóa để giữ lịch sử.</p>}
+                            {r.attempt_count > 0 && (
+                              <p className="mt-1 text-xs text-muted">
+                                Đã có {r.attempt_count} bài thi; khóa sửa/xóa để
+                                giữ lịch sử.
+                              </p>
+                            )}
                           </Td>
                         </tr>
                       ))}
@@ -323,18 +535,30 @@ export default function QuestionBankSettings({
                       )}
                     </tbody>
                   </table>
-          </div></Card>}
-        </section>}
+                </div>
+              </Card>
+            )}
+          </section>
+        )}
       </div>
       <Modal
         open={dialog === "set"}
         title={editingSet ? "Chỉnh sửa bộ câu hỏi" : "Thêm bộ câu hỏi"}
         onClose={() => {
-          if (!task.busy) { setDialog(null); setEditingSet(null) }
+          if (!task.busy) {
+            setDialog(null);
+            setEditingSet(null);
+          }
         }}
         footer={
           <>
-            <Button disabled={task.busy} onClick={() => { setDialog(null); setEditingSet(null) }}>
+            <Button
+              disabled={task.busy}
+              onClick={() => {
+                setDialog(null);
+                setEditingSet(null);
+              }}
+            >
               Hủy
             </Button>
             <Button
@@ -353,41 +577,72 @@ export default function QuestionBankSettings({
           Tạo bộ riêng cho 250 và 600 câu trước khi nhập dữ liệu. Các trường có
           dấu * là bắt buộc.
         </p>
-        {editingSet && <p className="mb-4 text-xs text-muted">Mã đợt ban hành dùng chung cho các bộ cùng đợt.</p>}
+        {editingSet && (
+          <p className="mb-4 text-xs text-muted">
+            Mã đợt ban hành dùng chung cho các bộ cùng đợt.
+          </p>
+        )}
         <form
           id="create-question-set"
           onSubmit={(e) => {
-            e.preventDefault()
+            e.preventDefault();
 
             void task.run(async () => {
-              const body = editingSet ? { releaseCode: set.releaseCode, setCode: set.setCode, setName: set.setName } : Object.fromEntries(Object.entries(set).filter(([, v]) => v !== ""))
-              await api(editingSet ? `/admin/questions/sets/${editingSet.set_id}` : "/admin/questions/sets", send(editingSet ? "PUT" : "POST", body))
+              const body = editingSet
+                ? {
+                    releaseCode: set.releaseCode,
+                    setCode: set.setCode,
+                    setName: set.setName,
+                  }
+                : Object.fromEntries(
+                    Object.entries(set).filter(([, v]) => v !== ""),
+                  );
+              await api(
+                editingSet
+                  ? `/admin/questions/sets/${editingSet.set_id}`
+                  : "/admin/questions/sets",
+                send(editingSet ? "PUT" : "POST", body),
+              );
 
-              sets.reload()
-              setSet(current => ({ ...current, releaseCode: '', releaseTitle: '', setCode: '', setName: '', issuedOn: '', effectiveFrom: '', effectiveTo: '', sourceUrl: '' }))
-              setEditingSet(null)
-              setDialog(null)
-            })
+              sets.reload();
+              setSet((current) => ({
+                ...current,
+                releaseCode: "",
+                releaseTitle: "",
+                setCode: "",
+                setName: "",
+                issuedOn: "",
+                effectiveFrom: "",
+                effectiveTo: "",
+                sourceUrl: "",
+              }));
+              setEditingSet(null);
+              setDialog(null);
+            });
           }}
         >
           <fieldset disabled={task.busy} className="min-w-0 space-y-5">
             <div className="grid gap-4 sm:grid-cols-2">
-              {Object.entries(editingSet ? {
-                releaseCode: "Mã đợt ban hành",
-                setCode: "Mã bộ",
-                setName: "Tên bộ",
-              } : {
-                releaseCode: "Mã đợt ban hành",
-                releaseTitle: "Tên đợt ban hành",
-                setCode: "Mã bộ",
-                setName: "Tên bộ",
-              }).map(([key, label]) => (
+              {Object.entries(
+                editingSet
+                  ? {
+                      releaseCode: "Mã đợt ban hành",
+                      setCode: "Mã bộ",
+                      setName: "Tên bộ",
+                    }
+                  : {
+                      releaseCode: "Mã đợt ban hành",
+                      releaseTitle: "Tên đợt ban hành",
+                      setCode: "Mã bộ",
+                      setName: "Tên bộ",
+                    },
+              ).map(([key, label]) => (
                 <Field key={key} label={label} required>
                   <input
                     required
                     className={inputCls}
                     aria-label={label}
-                    value={set[(key as keyof typeof set)]}
+                    value={set[key as keyof typeof set]}
                     onChange={(e) =>
                       setSet((s) => ({ ...s, [key]: e.target.value }))
                     }
@@ -395,45 +650,47 @@ export default function QuestionBankSettings({
                 </Field>
               ))}
             </div>
-            {!editingSet && <fieldset className="min-w-0 border-t border-line pt-4">
-              <legend className="pr-3 text-sm font-medium text-navy">
-                Nguồn và hiệu lực
-              </legend>
-              <div className="grid gap-4 sm:grid-cols-2">
-                {Object.entries({
-                  issuedOn: "Ngày ban hành",
-                  effectiveFrom: "Ngày hiệu lực",
-                  effectiveTo: "Ngày hết hiệu lực",
-                }).map(([key, label]) => (
-                  <Field key={key} label={label} hint="Không bắt buộc">
-                    <input
-                      type="date"
-                      className={inputCls}
-                      aria-label={label}
-                      value={set[(key as keyof typeof set)]}
-                      onChange={(e) =>
-                        setSet((s) => ({ ...s, [key]: e.target.value }))
-                      }
-                    />
-                  </Field>
-                ))}
-                <div className="sm:col-span-2">
-                  <Field
-                    label="Nguồn bộ câu hỏi"
-                    hint="Đường dẫn hoặc thông tin nguồn đã đối chiếu."
-                  >
-                    <input
-                      className={inputCls}
-                      aria-label="Nguồn bộ câu hỏi"
-                      value={set.sourceUrl}
-                      onChange={(e) =>
-                        setSet((s) => ({ ...s, sourceUrl: e.target.value }))
-                      }
-                    />
-                  </Field>
+            {!editingSet && (
+              <fieldset className="min-w-0 border-t border-line pt-4">
+                <legend className="pr-3 text-sm font-medium text-navy">
+                  Nguồn và hiệu lực
+                </legend>
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {Object.entries({
+                    issuedOn: "Ngày ban hành",
+                    effectiveFrom: "Ngày hiệu lực",
+                    effectiveTo: "Ngày hết hiệu lực",
+                  }).map(([key, label]) => (
+                    <Field key={key} label={label} hint="Không bắt buộc">
+                      <input
+                        type="date"
+                        className={inputCls}
+                        aria-label={label}
+                        value={set[key as keyof typeof set]}
+                        onChange={(e) =>
+                          setSet((s) => ({ ...s, [key]: e.target.value }))
+                        }
+                      />
+                    </Field>
+                  ))}
+                  <div className="sm:col-span-2">
+                    <Field
+                      label="Nguồn bộ câu hỏi"
+                      hint="Đường dẫn hoặc thông tin nguồn đã đối chiếu."
+                    >
+                      <input
+                        className={inputCls}
+                        aria-label="Nguồn bộ câu hỏi"
+                        value={set.sourceUrl}
+                        onChange={(e) =>
+                          setSet((s) => ({ ...s, sourceUrl: e.target.value }))
+                        }
+                      />
+                    </Field>
+                  </div>
                 </div>
-              </div>
-            </fieldset>}
+              </fieldset>
+            )}
           </fieldset>
         </form>
       </Modal>
@@ -441,18 +698,32 @@ export default function QuestionBankSettings({
         open={dialog === "rule"}
         title={editingRule ? "Chỉnh sửa quy tắc đề thi" : "Thêm quy tắc đề thi"}
         onClose={() => {
-          if (!task.busy) { setDialog(null); setEditingRule(null) }
+          if (!task.busy) {
+            setDialog(null);
+            setEditingRule(null);
+          }
         }}
         footer={
           <>
-            <Button disabled={task.busy} onClick={() => { setDialog(null); setEditingRule(null) }}>
+            <Button
+              disabled={task.busy}
+              onClick={() => {
+                setDialog(null);
+                setEditingRule(null);
+              }}
+            >
               Hủy
             </Button>
             <Button
               type="submit"
               form="create-exam-rule"
               variant="primary"
-              disabled={task.busy || sets.loading || !sets.value?.length || allocationMismatch}
+              disabled={
+                task.busy ||
+                sets.loading ||
+                !sets.value?.length ||
+                allocationMismatch
+              }
             >
               {editingRule ? "Lưu thay đổi" : "Thêm quy tắc đề"}
             </Button>
@@ -461,33 +732,44 @@ export default function QuestionBankSettings({
       >
         <Notice error={task.error} />
         <p className="mb-5 text-sm text-muted">
-          {editingRule ? "Chỉ sửa quy tắc chưa có bài thi. Bộ và hạng áp dụng được giữ nguyên." : "Nhập cấu hình theo nguồn đã kiểm duyệt. Chỉ tiêu chương tính câu thường; câu điểm liệt tính riêng."} Các trường có dấu * là bắt buộc.
+          {editingRule
+            ? "Chỉ sửa quy tắc chưa có bài thi. Bộ và hạng áp dụng được giữ nguyên."
+            : "Nhập cấu hình theo nguồn đã kiểm duyệt. Chỉ tiêu chương tính câu thường; câu điểm liệt tính riêng."}{" "}
+          Các trường có dấu * là bắt buộc.
         </p>
         <form
           id="create-exam-rule"
           onSubmit={(e) => {
-            e.preventDefault()
-            if (allocationMismatch) return
+            e.preventDefault();
+            if (allocationMismatch) return;
 
             void task.run(async () => {
               const body = {
-                  ...rule,
-                  validTo: rule.validTo || null,
+                ...rule,
+                validTo: rule.validTo || null,
 
-                  totalQuestions: Number(rule.totalQuestions),
-                  durationMinutes: Number(rule.durationMinutes),
+                totalQuestions: Number(rule.totalQuestions),
+                durationMinutes: Number(rule.durationMinutes),
 
-                  minimumCorrect: Number(rule.minimumCorrect),
-                  criticalSlots: Number(rule.criticalSlots),
-                  quotas: rule.quotas.map(q=>({chapter:q.chapter,question_quota:Number(q.value)})),
-              }
-              await api(editingRule ? `/admin/questions/rules/${editingRule.rule_id}` : "/admin/questions/rules", send(editingRule ? "PUT" : "POST", body))
+                minimumCorrect: Number(rule.minimumCorrect),
+                criticalSlots: Number(rule.criticalSlots),
+                quotas: rule.quotas.map((q) => ({
+                  chapter: q.chapter,
+                  question_quota: Number(q.value),
+                })),
+              };
+              await api(
+                editingRule
+                  ? `/admin/questions/rules/${editingRule.rule_id}`
+                  : "/admin/questions/rules",
+                send(editingRule ? "PUT" : "POST", body),
+              );
 
-              rules.reload()
-              setRule(emptyRule())
-              setEditingRule(null)
-              setDialog(null)
-            })
+              rules.reload();
+              setRule(emptyRule());
+              setEditingRule(null);
+              setDialog(null);
+            });
           }}
         >
           <fieldset
@@ -573,11 +855,17 @@ export default function QuestionBankSettings({
                       required
                       type="number"
                       min={key === "criticalSlots" ? 0 : 1}
-                      max={key === "durationMinutes" ? 240 : key === "minimumCorrect" || key === "criticalSlots" ? Number(rule.totalQuestions) || 200 : 200}
+                      max={
+                        key === "durationMinutes"
+                          ? 240
+                          : key === "minimumCorrect" || key === "criticalSlots"
+                            ? Number(rule.totalQuestions) || 200
+                            : 200
+                      }
                       step="1"
                       className={inputCls}
                       aria-label={label}
-                      value={rule[(key as "totalQuestions")]}
+                      value={rule[key as "totalQuestions"]}
                       onChange={(e) =>
                         setRule((r) => ({ ...r, [key]: e.target.value }))
                       }
@@ -591,18 +879,46 @@ export default function QuestionBankSettings({
                 Phân bổ câu thường theo chương
               </legend>
               <div className="mb-3 flex justify-end">
-                <button type="button" aria-label="Thêm chương" title="Thêm chương" disabled={task.busy||rule.quotas.length>=32767}
+                <button
+                  type="button"
+                  aria-label="Thêm chương"
+                  title="Thêm chương"
+                  disabled={task.busy || rule.quotas.length >= 32767}
                   className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-navy hover:bg-selected disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-accent-strong"
-                  onClick={()=>setRule(r=>{
-                    const used=new Set(r.quotas.map(q=>q.chapter));let chapter=1;while(used.has(chapter))chapter++;
-                    return {...r,quotas:[...r.quotas,{chapter,value:""}].sort((a,b)=>a.chapter-b.chapter)};
-                  })}>
-                  <svg aria-hidden="true" className="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                  onClick={() =>
+                    setRule((r) => {
+                      const used = new Set(r.quotas.map((q) => q.chapter));
+                      let chapter = 1;
+                      while (used.has(chapter)) chapter++;
+                      return {
+                        ...r,
+                        quotas: [...r.quotas, { chapter, value: "" }].sort(
+                          (a, b) => a.chapter - b.chapter,
+                        ),
+                      };
+                    })
+                  }
+                >
+                  <svg
+                    aria-hidden="true"
+                    className="h-5 w-5"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  >
+                    <path d="M12 5v14M5 12h14" />
+                  </svg>
                 </button>
               </div>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                 {rule.quotas.map((quota, i) => (
-                  <Field key={quota.chapter} label={`Chương ${quota.chapter}`} required>
+                  <Field
+                    key={quota.chapter}
+                    label={`Chương ${quota.chapter}`}
+                    required
+                  >
                     <input
                       required
                       type="number"
@@ -616,23 +932,51 @@ export default function QuestionBankSettings({
                         setRule((r) => ({
                           ...r,
                           quotas: r.quotas.map((v, j) =>
-                            j === i ? {...v,value:e.target.value} : v,
+                            j === i ? { ...v, value: e.target.value } : v,
                           ),
                         }))
                       }
                     />
-                    <button type="button" aria-label={`Xóa phân bổ chương ${quota.chapter}`} title={`Xóa phân bổ chương ${quota.chapter}`} disabled={task.busy}
+                    <button
+                      type="button"
+                      aria-label={`Xóa phân bổ chương ${quota.chapter}`}
+                      title={`Xóa phân bổ chương ${quota.chapter}`}
+                      disabled={task.busy}
                       className="mt-1 inline-flex h-8 w-8 items-center justify-center rounded-lg text-red-700 hover:bg-red-50 disabled:opacity-40 focus-visible:outline-2 focus-visible:outline-accent-strong"
-                      onClick={()=>setRule(r=>({...r,quotas:r.quotas.filter(q=>q.chapter!==quota.chapter)}))}>
-                      <svg aria-hidden="true" className="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg>
+                      onClick={() =>
+                        setRule((r) => ({
+                          ...r,
+                          quotas: r.quotas.filter(
+                            (q) => q.chapter !== quota.chapter,
+                          ),
+                        }))
+                      }
+                    >
+                      <svg
+                        aria-hidden="true"
+                        className="h-4 w-4"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
+                      </svg>
                     </button>
                   </Field>
                 ))}
               </div>
             </fieldset>
-            <p role="status" className={`text-sm ${allocationMismatch ? 'text-red-700' : 'text-muted'}`}>
-              Tổng phân bổ: {allocation} / {rule.totalQuestions || '—'} câu (gồm câu điểm liệt).
-              {allocationMismatch && ' Tổng phân bổ phải bằng tổng số câu của đề.'}
+            <p
+              role="status"
+              className={`text-sm ${allocationMismatch ? "text-red-700" : "text-muted"}`}
+            >
+              Tổng phân bổ: {allocation} / {rule.totalQuestions || "—"} câu (gồm
+              câu điểm liệt).
+              {allocationMismatch &&
+                " Tổng phân bổ phải bằng tổng số câu của đề."}
             </p>
             <label className="flex items-center gap-2 text-sm">
               <input
@@ -652,7 +996,7 @@ export default function QuestionBankSettings({
         open={!!endingRule}
         title="Kết thúc hiệu lực quy tắc"
         onClose={() => {
-          if (!task.busy) setEndingRule(null)
+          if (!task.busy) setEndingRule(null);
         }}
         footer={
           <>
@@ -675,18 +1019,18 @@ export default function QuestionBankSettings({
             id="end-exam-rule"
             className="space-y-4"
             onSubmit={(e) => {
-              e.preventDefault()
+              e.preventDefault();
 
               void task.run(async () => {
                 await api(
                   `/admin/questions/rules/${endingRule.rule_id}/end`,
                   send("POST", { validTo: endDate }),
-                )
+                );
 
-                rules.reload()
+                rules.reload();
 
-                setEndingRule(null)
-              })
+                setEndingRule(null);
+              });
             }}
           >
             <p className="text-sm text-muted">
@@ -714,30 +1058,52 @@ export default function QuestionBankSettings({
       </Modal>
       <Modal
         open={!!pendingDelete}
-        title={pendingDelete?.kind === "set" ? "Xóa bộ câu hỏi" : "Xóa quy tắc đề thi"}
-        onClose={() => { if (!task.busy) setPendingDelete(null) }}
+        title={
+          pendingDelete?.kind === "set"
+            ? "Xóa bộ câu hỏi"
+            : "Xóa quy tắc đề thi"
+        }
+        onClose={() => {
+          if (!task.busy) setPendingDelete(null);
+        }}
         footer={
           <>
-            <Button disabled={task.busy} onClick={() => setPendingDelete(null)}>Hủy</Button>
-            <Button variant="danger" disabled={task.busy} onClick={() => {
-              if (!pendingDelete) return
-              void task.run(async () => {
-                await api(pendingDelete.kind === "set" ? `/admin/questions/sets/${pendingDelete.id}` : `/admin/questions/rules/${pendingDelete.id}`, send("DELETE"))
-                if (pendingDelete.kind === "set") sets.reload()
-                else rules.reload()
-                setPendingDelete(null)
-              })
-            }}>Xóa</Button>
+            <Button disabled={task.busy} onClick={() => setPendingDelete(null)}>
+              Hủy
+            </Button>
+            <Button
+              variant="danger"
+              disabled={task.busy}
+              onClick={() => {
+                if (!pendingDelete) return;
+                void task.run(async () => {
+                  await api(
+                    pendingDelete.kind === "set"
+                      ? `/admin/questions/sets/${pendingDelete.id}`
+                      : `/admin/questions/rules/${pendingDelete.id}`,
+                    send("DELETE"),
+                  );
+                  if (pendingDelete.kind === "set") sets.reload();
+                  else rules.reload();
+                  setPendingDelete(null);
+                });
+              }}
+            >
+              Xóa
+            </Button>
           </>
         }
       >
         <Notice error={task.error} />
-        <p className="text-sm text-muted">Bạn sắp xóa “{pendingDelete?.label}”. Chỉ mục chưa được dùng mới có thể xóa; câu hỏi hoặc bài thi đã lưu sẽ được giữ nguyên.</p>
+        <p className="text-sm text-muted">
+          Bạn sắp xóa “{pendingDelete?.label}”. Chỉ mục chưa được dùng mới có
+          thể xóa; câu hỏi hoặc bài thi đã lưu sẽ được giữ nguyên.
+        </p>
       </Modal>
     </>
-  )
+  );
 
-  if (embedded) return content
+  if (embedded) return content;
 
   return (
     <Page
@@ -746,5 +1112,5 @@ export default function QuestionBankSettings({
     >
       {content}
     </Page>
-  )
+  );
 }

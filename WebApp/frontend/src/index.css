@@ -1,5 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap');
-@import 'tailwindcss';
+@import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
 
 @theme {
   --color-navy: #352d24;
@@ -16,7 +16,7 @@
   --color-text: #352d24;
   --color-text-secondary: #6e6255;
   --color-muted: #6e6255;
-  --font-sans: 'Be Vietnam Pro', system-ui, sans-serif;
+  --font-sans: "Be Vietnam Pro", system-ui, sans-serif;
 }
 
 body {

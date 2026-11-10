@@ -9,11 +9,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "DP.127a",
-      "DP.127b",
-      "DP.127c"
-    ],
+    "children_codes": ["DP.127a", "DP.127b", "DP.127c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -186,11 +182,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.405a",
-      "I.405b",
-      "I.405c"
-    ],
+    "children_codes": ["I.405a", "I.405b", "I.405c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -285,11 +277,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.407a",
-      "I.407b",
-      "I.407c"
-    ],
+    "children_codes": ["I.407a", "I.407b", "I.407c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -365,9 +353,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.408a"
-    ],
+    "children_codes": ["I.408a"],
     "description_scope": "specific",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": true,
@@ -445,11 +431,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.413a",
-      "I.413b",
-      "I.413c"
-    ],
+    "children_codes": ["I.413a", "I.413b", "I.413c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -531,12 +513,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.414a",
-      "I.414b",
-      "I.414c",
-      "I.414d"
-    ],
+    "children_codes": ["I.414a", "I.414b", "I.414c", "I.414d"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -669,11 +646,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.417a",
-      "I.417b",
-      "I.417c"
-    ],
+    "children_codes": ["I.417a", "I.417b", "I.417c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -768,10 +741,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.419a",
-      "I.419b"
-    ],
+    "children_codes": ["I.419a", "I.419b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -832,10 +802,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.422a",
-      "I.422b"
-    ],
+    "children_codes": ["I.422a", "I.422b"],
     "description_scope": "specific",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -897,11 +864,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.423a",
-      "I.423b",
-      "I.423c"
-    ],
+    "children_codes": ["I.423a", "I.423b", "I.423c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -977,12 +940,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.424a",
-      "I.424b",
-      "I.424c",
-      "I.424d"
-    ],
+    "children_codes": ["I.424a", "I.424b", "I.424c", "I.424d"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -1159,11 +1117,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.428a",
-      "I.428b",
-      "I.428c"
-    ],
+    "children_codes": ["I.428a", "I.428b", "I.428c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -1320,13 +1274,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.433a",
-      "I.433b",
-      "I.433c",
-      "I.433d",
-      "I.433e"
-    ],
+    "children_codes": ["I.433a", "I.433b", "I.433c", "I.433d", "I.433e"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -1580,11 +1528,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.441a",
-      "I.441b",
-      "I.441c"
-    ],
+    "children_codes": ["I.441a", "I.441b", "I.441c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -2181,12 +2125,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.447a",
-      "I.447b",
-      "I.447c",
-      "I.447d"
-    ],
+    "children_codes": ["I.447a", "I.447b", "I.447c", "I.447d"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -2291,12 +2230,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "I.448-1",
-      "I.448-2",
-      "I.448-3",
-      "I.448-4"
-    ],
+    "children_codes": ["I.448-1", "I.448-2", "I.448-3", "I.448-4"],
     "description_scope": "specific",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": true,
@@ -2425,10 +2359,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "IE.450a",
-      "IE.450b"
-    ],
+    "children_codes": ["IE.450a", "IE.450b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D47",
     "image_required": false,
@@ -2487,10 +2418,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "IE.451a",
-      "IE.451b"
-    ],
+    "children_codes": ["IE.451a", "IE.451b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D47",
     "image_required": false,
@@ -2568,11 +2496,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "IE.453a",
-      "IE.453b",
-      "IE.453c"
-    ],
+    "children_codes": ["IE.453a", "IE.453b", "IE.453c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D47",
     "image_required": false,
@@ -2688,11 +2612,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "IE.456a",
-      "IE.456b",
-      "IE.456c"
-    ],
+    "children_codes": ["IE.456a", "IE.456b", "IE.456c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D47",
     "image_required": false,
@@ -2770,10 +2690,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "IE.457a",
-      "IE.457b"
-    ],
+    "children_codes": ["IE.457a", "IE.457b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D47",
     "image_required": false,
@@ -2853,10 +2770,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "IE.459a",
-      "IE.459b"
-    ],
+    "children_codes": ["IE.459a", "IE.459b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D47",
     "image_required": false,
@@ -2915,11 +2829,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "IE.460a",
-      "IE.460b",
-      "IE.460c"
-    ],
+    "children_codes": ["IE.460a", "IE.460b", "IE.460c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D47",
     "image_required": false,
@@ -3003,12 +2913,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "IE.461a",
-      "IE.461b",
-      "IE.461c",
-      "IE.461d"
-    ],
+    "children_codes": ["IE.461a", "IE.461b", "IE.461c", "IE.461d"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D47",
     "image_required": false,
@@ -3133,11 +3038,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "IE.463a",
-      "IE.463b",
-      "IE.463c"
-    ],
+    "children_codes": ["IE.463a", "IE.463b", "IE.463c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D47",
     "image_required": false,
@@ -3215,10 +3116,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "IE.464a",
-      "IE.464b"
-    ],
+    "children_codes": ["IE.464a", "IE.464b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D47",
     "image_required": false,
@@ -3319,10 +3217,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "IE.467a",
-      "IE.467b"
-    ],
+    "children_codes": ["IE.467a", "IE.467b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D47",
     "image_required": false,
@@ -3381,11 +3276,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "IE.468a",
-      "IE.468b",
-      "IE.468c"
-    ],
+    "children_codes": ["IE.468a", "IE.468b", "IE.468c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D47",
     "image_required": false,
@@ -3541,10 +3432,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "IE.472a",
-      "IE.472b"
-    ],
+    "children_codes": ["IE.472a", "IE.472b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D47",
     "image_required": false,
@@ -3683,11 +3571,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "P.103a",
-      "P.103b",
-      "P.103c"
-    ],
+    "children_codes": ["P.103a", "P.103b", "P.103c"],
     "description_scope": "unverified",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -3804,11 +3688,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "P.106a",
-      "P.106b",
-      "P.106c"
-    ],
+    "children_codes": ["P.106a", "P.106b", "P.106c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -3884,10 +3764,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "P.107a",
-      "P.107b"
-    ],
+    "children_codes": ["P.107a", "P.107b"],
     "description_scope": "specific",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": true,
@@ -3946,9 +3823,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "P.108a"
-    ],
+    "children_codes": ["P.108a"],
     "description_scope": "specific",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": true,
@@ -4007,10 +3882,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "P.110a",
-      "P.110b"
-    ],
+    "children_codes": ["P.110a", "P.110b"],
     "description_scope": "unverified",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -4071,12 +3943,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "P.111a",
-      "P.111b",
-      "P.111c",
-      "P.111d"
-    ],
+    "children_codes": ["P.111a", "P.111b", "P.111c", "P.111d"],
     "description_scope": "unverified",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -4365,10 +4232,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "P.123a",
-      "P.123b"
-    ],
+    "children_codes": ["P.123a", "P.123b"],
     "description_scope": "unverified",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -5034,11 +4898,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "P.131a",
-      "P.131b",
-      "P.131c"
-    ],
+    "children_codes": ["P.131a", "P.131b", "P.131c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -5498,11 +5358,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "R.302a",
-      "R.302b",
-      "R.302c"
-    ],
+    "children_codes": ["R.302a", "R.302b", "R.302c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -5673,10 +5529,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "R.308a",
-      "R.308b"
-    ],
+    "children_codes": ["R.308a", "R.308b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -5752,11 +5605,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "R.310a",
-      "R.310b",
-      "R.310c"
-    ],
+    "children_codes": ["R.310a", "R.310b", "R.310c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -6618,10 +6467,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "R.415a",
-      "R.415b"
-    ],
+    "children_codes": ["R.415a", "R.415b"],
     "description_scope": "specific",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -6979,10 +6825,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "S.506a",
-      "S.506b"
-    ],
+    "children_codes": ["S.506a", "S.506b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -7058,10 +6901,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "S.508a",
-      "S.508b"
-    ],
+    "children_codes": ["S.508a", "S.508b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -7124,10 +6964,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "S.509a",
-      "S.509b"
-    ],
+    "children_codes": ["S.509a", "S.509b"],
     "description_scope": "specific",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -7227,12 +7064,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.201a",
-      "W.201b",
-      "W.201c",
-      "W.201d"
-    ],
+    "children_codes": ["W.201a", "W.201b", "W.201c", "W.201d"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -7327,10 +7159,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.202a",
-      "W.202b"
-    ],
+    "children_codes": ["W.202a", "W.202b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -7387,11 +7216,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.203a",
-      "W.203b",
-      "W.203c"
-    ],
+    "children_codes": ["W.203a", "W.203b", "W.203c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -7486,13 +7311,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.205a",
-      "W.205b",
-      "W.205c",
-      "W.205d",
-      "W.205e"
-    ],
+    "children_codes": ["W.205a", "W.205b", "W.205c", "W.205d", "W.205e"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -8019,11 +7838,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.215a",
-      "W.215b",
-      "W.215c"
-    ],
+    "children_codes": ["W.215a", "W.215b", "W.215c"],
     "description_scope": "unverified",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -8102,10 +7917,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.216a",
-      "W.216b"
-    ],
+    "children_codes": ["W.216a", "W.216b"],
     "description_scope": "unverified",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -8242,10 +8054,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.221a",
-      "W.221b"
-    ],
+    "children_codes": ["W.221a", "W.221b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -8304,10 +8113,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.222a",
-      "W.222b"
-    ],
+    "children_codes": ["W.222a", "W.222b"],
     "description_scope": "unverified",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -8368,10 +8174,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.223a",
-      "W.223b"
-    ],
+    "children_codes": ["W.223a", "W.223b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -8504,12 +8307,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.228a",
-      "W.228b",
-      "W.228c",
-      "W.228d"
-    ],
+    "children_codes": ["W.228a", "W.228b", "W.228c", "W.228d"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -8794,10 +8592,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.239a",
-      "W.239b"
-    ],
+    "children_codes": ["W.239a", "W.239b"],
     "description_scope": "unverified",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -8895,10 +8690,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.242a",
-      "W.242b"
-    ],
+    "children_codes": ["W.242a", "W.242b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -8955,11 +8747,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.243a",
-      "W.243b",
-      "W.243c"
-    ],
+    "children_codes": ["W.243a", "W.243b", "W.243c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -9054,10 +8842,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.245a",
-      "W.245b"
-    ],
+    "children_codes": ["W.245a", "W.245b"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,
@@ -9118,11 +8903,7 @@
     "qcvn": "QCVN 41:2024/BGTVT",
     "record_type": "family",
     "parent_code": null,
-    "children_codes": [
-      "W.246a",
-      "W.246b",
-      "W.246c"
-    ],
+    "children_codes": ["W.246a", "W.246b", "W.246c"],
     "description_scope": "family_shared",
     "unit_id": "51_2024_TT_BGTVT::QCVN41_2024_BGTVT::D84",
     "image_required": false,

@@ -1,9 +1,21 @@
-import { useLocation, useSearchParams } from 'react-router-dom'
-import { api, send as request } from '../api'
-import { Notice, useTask } from './shared/shared'
-import { citationAnswerPrefix, createChat, chatView, loadCitationSource } from './shared/chat-state'
-import LogoMark from '../components/LogoMark'
-import { Fragment, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { useLocation, useSearchParams } from "react-router-dom";
+import { api, send as request } from "../api";
+import { Notice, useTask } from "./shared/shared";
+import {
+  citationAnswerPrefix,
+  createChat,
+  chatView,
+  loadCitationSource,
+} from "./shared/chat-state";
+import LogoMark from "../components/LogoMark";
+import {
+  Fragment,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+} from "react";
 
 interface LegalReference {
   title: string;
@@ -53,142 +65,159 @@ function Icon({ d, className = "w-4 h-4" }: { d: string; className?: string }) {
 }
 
 const ic = {
-  plus: 'M12 5v14M5 12h14',
-  search: 'M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4',
-  panel: 'M4 5h16v14H4zM9 5v14',
-  book: 'M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4zM5 16a4 4 0 0 1 4-4h10',
-  send: 'M12 19V5M6 11l6-6 6 6',
-  dots: 'M5 12h.01M12 12h.01M19 12h.01',
-  copy: 'M9 9h10v10H9zM5 15V5h10',
-  up: 'M7 10v10M7 10l4-6a2 2 0 0 1 3 2l-1 4h5a2 2 0 0 1 2 2l-2 6a2 2 0 0 1-2 2H7',
-  retry: 'M4 12a8 8 0 1 0 3-6.2M4 4v4h4',
-  close: 'M6 6l12 12M18 6 6 18',
-}
+  plus: "M12 5v14M5 12h14",
+  search: "M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM20 20l-4-4",
+  panel: "M4 5h16v14H4zM9 5v14",
+  book: "M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4zM5 16a4 4 0 0 1 4-4h10",
+  send: "M12 19V5M6 11l6-6 6 6",
+  dots: "M5 12h.01M12 12h.01M19 12h.01",
+  copy: "M9 9h10v10H9zM5 15V5h10",
+  up: "M7 10v10M7 10l4-6a2 2 0 0 1 3 2l-1 4h5a2 2 0 0 1 2 2l-2 6a2 2 0 0 1-2 2H7",
+  retry: "M4 12a8 8 0 1 0 3-6.2M4 4v4h4",
+  close: "M6 6l12 12M18 6 6 18",
+};
 
 export default function ChatPage() {
-  const [chat] = useState(createChat)
-  const data = useSyncExternalStore(chat.subscribe, chat.getSnapshot)
-  const task = useTask()
-  const location = useLocation()
-  const [params, setParams] = useSearchParams()
+  const [chat] = useState(createChat);
+  const data = useSyncExternalStore(chat.subscribe, chat.getSnapshot);
+  const task = useTask();
+  const location = useLocation();
+  const [params, setParams] = useSearchParams();
 
-  const activeId = params.get('c')
-  const urlQ = params.get('q') ?? ''
-  const rawCite = params.get('cite')
-  const citeMatch = rawCite?.match(/^(?:([^:]+):)?(\d+)$/)
-  const citeIndex = citeMatch ? Number(citeMatch[2]) : null
+  const activeId = params.get("c");
+  const urlQ = params.get("q") ?? "";
+  const rawCite = params.get("cite");
+  const citeMatch = rawCite?.match(/^(?:([^:]+):)?(\d+)$/);
+  const citeIndex = citeMatch ? Number(citeMatch[2]) : null;
 
-  const [pinned, setPinned] = useState<Set<string>>(new Set())
-  const [notice, setNotice] = useState('')
-  const lastSubmittedId = useRef<string | undefined>(undefined)
+  const [pinned, setPinned] = useState<Set<string>>(new Set());
+  const [notice, setNotice] = useState("");
+  const lastSubmittedId = useRef<string | undefined>(undefined);
 
-  const [input, setInput] = useState('')
-  const [query, setQuery] = useState(urlQ)
-  const [showList, setShowList] = useState(() => window.innerWidth >= 768)
+  const [input, setInput] = useState("");
+  const [query, setQuery] = useState(urlQ);
+  const [showList, setShowList] = useState(() => window.innerWidth >= 768);
 
   useEffect(() => {
-    setQuery(urlQ)
-  }, [urlQ])
+    setQuery(urlQ);
+  }, [urlQ]);
 
   function updateUrl(patch: Record<string, string | null>, replace = false) {
     setParams(
       (prev) => {
-        const next = new URLSearchParams(prev)
+        const next = new URLSearchParams(prev);
         for (const [k, v] of Object.entries(patch)) {
-          if (v === null || v === '') next.delete(k)
-          else next.set(k, v)
+          if (v === null || v === "") next.delete(k);
+          else next.set(k, v);
         }
-        return next
+        return next;
       },
       { replace },
-    )
+    );
   }
 
   const sessions = useMemo(() => {
-    const byId = new Map<string, Session>()
+    const byId = new Map<string, Session>();
     for (const row of data.rows) {
-      const id = row.conversationId ?? row.id
-      let session = byId.get(id)
+      const id = row.conversationId ?? row.id;
+      let session = byId.get(id);
       if (!session) {
-        session = { id, title: row.question, group: 'Hôm nay', pinned: pinned.has(id), messages: [] }
-        byId.set(id, session)
+        session = {
+          id,
+          title: row.question,
+          group: "Hôm nay",
+          pinned: pinned.has(id),
+          messages: [],
+        };
+        byId.set(id, session);
       }
-      if (row.id === id) session.title = row.question
-      const view = chatView(row)
+      if (row.id === id) session.title = row.question;
+      const view = chatView(row);
       session.messages.push(
         {
           turnId: row.id,
-          role: 'bot',
+          role: "bot",
           text: view.answer,
           status: view.status,
           citations: view.citations.map((c) => ({
-            title: typeof c.source?.document_metadata.title === 'string' && c.source.document_metadata.title.trim()
-              ? c.source.document_metadata.title : c.doc_id,
-            clause: c.unit_id ?? c.sign_id ?? '',
-            label: `${c.doc_id}${c.unit_id || c.sign_id ? ` · ${c.unit_id ?? c.sign_id}` : ''}`,
+            title:
+              typeof c.source?.document_metadata.title === "string" &&
+              c.source.document_metadata.title.trim()
+                ? c.source.document_metadata.title
+                : c.doc_id,
+            clause: c.unit_id ?? c.sign_id ?? "",
+            label: `${c.doc_id}${c.unit_id || c.sign_id ? ` · ${c.unit_id ?? c.sign_id}` : ""}`,
             raw: c,
           })),
         },
-        { turnId: row.id, role: 'user', text: row.question },
-      )
+        { turnId: row.id, role: "user", text: row.question },
+      );
     }
-    for (const session of byId.values()) session.messages.reverse()
-    return [...byId.values()]
-  }, [data.rows, pinned])
+    for (const session of byId.values()) session.messages.reverse();
+    return [...byId.values()];
+  }, [data.rows, pinned]);
 
   useEffect(() => {
-    void chat.load()
-    return () => chat.dispose()
-  }, [chat])
+    void chat.load();
+    return () => chat.dispose();
+  }, [chat]);
 
   useEffect(() => {
     if (data.currentId && data.currentId !== lastSubmittedId.current) {
-      lastSubmittedId.current = data.currentId
-      if (data.currentId !== activeId) updateUrl({ c: data.currentId, cite: null })
+      lastSubmittedId.current = data.currentId;
+      if (data.currentId !== activeId)
+        updateUrl({ c: data.currentId, cite: null });
     }
-  }, [data.currentId])
+  }, [data.currentId]);
 
   useEffect(() => {
-    const q = location.state?.initialQuery
-    if (typeof q === 'string') setInput(q)
-  }, [location.state])
+    const q = location.state?.initialQuery;
+    if (typeof q === "string") setInput(q);
+  }, [location.state]);
 
-  const thinking = data.busy
-  const blocked = data.busy || data.loading || task.busy
-  const endRef = useRef<HTMLDivElement>(null)
-  const taRef = useRef<HTMLTextAreaElement>(null)
-  const citationTriggerRef = useRef<HTMLButtonElement | null>(null)
-  const citationCloseRef = useRef<HTMLButtonElement>(null)
+  const thinking = data.busy;
+  const blocked = data.busy || data.loading || task.busy;
+  const endRef = useRef<HTMLDivElement>(null);
+  const taRef = useRef<HTMLTextAreaElement>(null);
+  const citationTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const citationCloseRef = useRef<HTMLButtonElement>(null);
 
-  const active = sessions.find((s) => s.id === activeId) ?? null
-  const messages = active?.messages ?? []
-  const citationTurn = citeMatch?.[1] ?? activeId
-  const selectedReference = citeIndex !== null
-    ? messages.find((message) => message.role === 'bot' && message.turnId === citationTurn)?.citations?.[citeIndex]
-    : undefined
-  const selectedCitation = selectedReference?.raw
+  const active = sessions.find((s) => s.id === activeId) ?? null;
+  const messages = active?.messages ?? [];
+  const citationTurn = citeMatch?.[1] ?? activeId;
+  const selectedReference =
+    citeIndex !== null
+      ? messages.find(
+          (message) =>
+            message.role === "bot" && message.turnId === citationTurn,
+        )?.citations?.[citeIndex]
+      : undefined;
+  const selectedCitation = selectedReference?.raw;
 
   const filtered = useMemo(
-    () => sessions.filter((s) => s.title.toLowerCase().includes(query.toLowerCase())),
+    () =>
+      sessions.filter((s) =>
+        s.title.toLowerCase().includes(query.toLowerCase()),
+      ),
     [sessions, query],
-  )
+  );
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages.length, thinking]);
 
   useEffect(() => {
-    if (!selectedCitation) return
-    citationCloseRef.current?.focus()
+    if (!selectedCitation) return;
+    citationCloseRef.current?.focus();
     function handleEscape(event: KeyboardEvent) {
-      if (event.key === 'Escape') {
-        updateUrl({ cite: null })
-        citationTriggerRef.current?.focus()
+      if (event.key === "Escape") {
+        updateUrl({ cite: null });
+        citationTriggerRef.current?.focus();
       }
     }
-    document.addEventListener('keydown', handleEscape)
-    return () => document.removeEventListener('keydown', handleEscape)
-  }, [selectedCitation, activeId, citeIndex])
+    document.addEventListener("keydown", handleEscape);
+    return () => document.removeEventListener("keydown", handleEscape);
+  }, [selectedCitation, activeId, citeIndex]);
 
   useEffect(() => {
     const ta = taRef.current;
@@ -198,78 +227,104 @@ export default function ChatPage() {
   }, [input]);
 
   function newChat() {
-    if (thinking) return
-    updateUrl({ c: null, cite: null })
-    setInput('')
+    if (thinking) return;
+    updateUrl({ c: null, cite: null });
+    setInput("");
   }
 
   async function send(text = input) {
-    if (blocked || !text.trim()) return
+    if (blocked || !text.trim()) return;
     if (await chat.submit(text, active?.id)) {
-      setInput('')
-      if (window.innerWidth < 768) setShowList(false)
+      setInput("");
+      if (window.innerWidth < 768) setShowList(false);
     }
   }
 
-  function openCitation(turnId: string, index: number, trigger: HTMLButtonElement) {
-    citationTriggerRef.current = trigger
-    if (turnId === citationTurn && index === citeIndex) citationCloseRef.current?.focus()
-    else updateUrl({ cite: `${turnId}:${index}` })
+  function openCitation(
+    turnId: string,
+    index: number,
+    trigger: HTMLButtonElement,
+  ) {
+    citationTriggerRef.current = trigger;
+    if (turnId === citationTurn && index === citeIndex)
+      citationCloseRef.current?.focus();
+    else updateUrl({ cite: `${turnId}:${index}` });
   }
 
   function answerText(message: Message) {
-    const citations = message.citations ?? []
-    const prefix = citationAnswerPrefix(message.text, citations.map(citation => citation.raw))
-    if (prefix === undefined) return message.text
-    return <>
-      {prefix}
-      {citations.map((citation, index) => (
-        <Fragment key={index}>
-          {index > 0 && '\n\n'}
-          {citation.raw.quote}
-          <button
-            type="button"
-            onClick={(event) => openCitation(message.turnId, index, event.currentTarget)}
-            aria-label={`Trích dẫn ${index + 1} – ${citation.label}`}
-            aria-expanded={citationTurn === message.turnId && citeIndex === index}
-            aria-controls={citationTurn === message.turnId && citeIndex === index ? 'legal-citation-panel' : undefined}
-            title={`${citation.title}\n${citation.raw.quote.slice(0, 180)}${citation.raw.quote.length > 180 ? '…' : ''}`}
-            className={`mx-1 inline-block rounded px-1.5 py-0.5 align-super text-xs font-semibold leading-none hover:bg-accent hover:text-navy focus-visible:outline-2 focus-visible:outline-accent-strong ${
-              citationTurn === message.turnId && citeIndex === index ? 'bg-accent text-navy' : 'bg-selected text-accent-strong'
-            }`}
-          >
-            {index + 1}
-          </button>
-        </Fragment>
-      ))}
-    </>
+    const citations = message.citations ?? [];
+    const prefix = citationAnswerPrefix(
+      message.text,
+      citations.map((citation) => citation.raw),
+    );
+    if (prefix === undefined) return message.text;
+    return (
+      <>
+        {prefix}
+        {citations.map((citation, index) => (
+          <Fragment key={index}>
+            {index > 0 && "\n\n"}
+            {citation.raw.quote}
+            <button
+              type="button"
+              onClick={(event) =>
+                openCitation(message.turnId, index, event.currentTarget)
+              }
+              aria-label={`Trích dẫn ${index + 1} – ${citation.label}`}
+              aria-expanded={
+                citationTurn === message.turnId && citeIndex === index
+              }
+              aria-controls={
+                citationTurn === message.turnId && citeIndex === index
+                  ? "legal-citation-panel"
+                  : undefined
+              }
+              title={`${citation.title}\n${citation.raw.quote.slice(0, 180)}${citation.raw.quote.length > 180 ? "…" : ""}`}
+              className={`mx-1 inline-block rounded px-1.5 py-0.5 align-super text-xs font-semibold leading-none hover:bg-accent hover:text-navy focus-visible:outline-2 focus-visible:outline-accent-strong ${
+                citationTurn === message.turnId && citeIndex === index
+                  ? "bg-accent text-navy"
+                  : "bg-selected text-accent-strong"
+              }`}
+            >
+              {index + 1}
+            </button>
+          </Fragment>
+        ))}
+      </>
+    );
   }
 
   function messageAction(action: string, message: Message, question: string) {
-    if (action === 'Sao chép') {
+    if (action === "Sao chép") {
       void navigator.clipboard
         .writeText(message.text)
-        .then(() => setNotice('Đã sao chép'))
-        .catch(() => setNotice('Không sao chép được'))
-      return
+        .then(() => setNotice("Đã sao chép"))
+        .catch(() => setNotice("Không sao chép được"));
+      return;
     }
-    if (action === 'Tạo lại') {
-      setInput(question)
-      setNotice('Câu hỏi đã đưa vào ô nhập. Gửi để tạo lượt hỏi mới.')
-      return
+    if (action === "Tạo lại") {
+      setInput(question);
+      setNotice("Câu hỏi đã đưa vào ô nhập. Gửi để tạo lượt hỏi mới.");
+      return;
     }
     if (active) {
       void task.run(async () => {
-        await api(`/chat/${message.turnId}/feedback`, request('POST', { feedback: action === 'Hữu ích' ? 'HELPFUL' : action, note: '' }))
-        setNotice('Đã lưu phản hồi')
-      })
+        await api(
+          `/chat/${message.turnId}/feedback`,
+          request("POST", {
+            feedback: action === "Hữu ích" ? "HELPFUL" : action,
+            note: "",
+          }),
+        );
+        setNotice("Đã lưu phản hồi");
+      });
     }
   }
 
   function handleKey(e: React.KeyboardEvent) {
-    if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
-      e.preventDefault()
-      void send()
+    if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
+      e.preventDefault();
+      void send();
     }
   }
 
@@ -297,7 +352,7 @@ export default function ChatPage() {
             disabled={data.stopping}
             className="border border-line rounded-lg px-3 py-2 text-xs disabled:opacity-50"
           >
-            {data.stopping ? 'Đang dừng…' : 'Dừng'}
+            {data.stopping ? "Đang dừng…" : "Dừng"}
           </button>
         )}
         <button
@@ -365,9 +420,9 @@ export default function ChatPage() {
                 aria-label="Tìm cuộc trò chuyện"
                 value={query}
                 onChange={(e) => {
-                  const v = e.target.value
-                  setQuery(v)
-                  updateUrl({ q: v || null }, true)
+                  const v = e.target.value;
+                  setQuery(v);
+                  updateUrl({ q: v || null }, true);
                 }}
                 placeholder="Tìm cuộc trò chuyện"
                 className="flex-1 bg-transparent text-[13px] outline-none text-navy placeholder-muted"
@@ -386,14 +441,14 @@ export default function ChatPage() {
                       s={s}
                       active={s.id === activeId}
                       onClick={() => {
-                        updateUrl({ c: s.id, cite: null })
-                        if (window.innerWidth < 768) setShowList(false)
+                        updateUrl({ c: s.id, cite: null });
+                        if (window.innerWidth < 768) setShowList(false);
                       }}
                       onPin={() =>
                         setPinned((p) => {
-                          const n = new Set(p)
-                          n.has(s.id) ? n.delete(s.id) : n.add(s.id)
-                          return n
+                          const n = new Set(p);
+                          n.has(s.id) ? n.delete(s.id) : n.add(s.id);
+                          return n;
                         })
                       }
                     />
@@ -411,14 +466,14 @@ export default function ChatPage() {
                       s={s}
                       active={s.id === activeId}
                       onClick={() => {
-                        updateUrl({ c: s.id, cite: null })
-                        if (window.innerWidth < 768) setShowList(false)
+                        updateUrl({ c: s.id, cite: null });
+                        if (window.innerWidth < 768) setShowList(false);
                       }}
                       onPin={() =>
                         setPinned((p) => {
-                          const n = new Set(p)
-                          n.has(s.id) ? n.delete(s.id) : n.add(s.id)
-                          return n
+                          const n = new Set(p);
+                          n.has(s.id) ? n.delete(s.id) : n.add(s.id);
+                          return n;
                         })
                       }
                     />
@@ -451,7 +506,9 @@ export default function ChatPage() {
                 <Icon d={ic.panel} />
               </button>
             )}
-            <h1 className="font-sans font-semibold text-[15px] text-navy truncate">{active?.title ?? 'Cuộc trò chuyện mới'}</h1>
+            <h1 className="font-sans font-semibold text-[15px] text-navy truncate">
+              {active?.title ?? "Cuộc trò chuyện mới"}
+            </h1>
           </div>
         </header>
 
@@ -482,7 +539,11 @@ export default function ChatPage() {
           <>
             <div className="flex-1 overflow-y-auto">
               <div className="mx-auto w-full max-w-2xl px-4 py-8 space-y-10">
-                {messages.length === 0 && <p className="text-center text-sm text-muted py-12">Cuộc trò chuyện này chưa có tin nhắn.</p>}
+                {messages.length === 0 && (
+                  <p className="text-center text-sm text-muted py-12">
+                    Cuộc trò chuyện này chưa có tin nhắn.
+                  </p>
+                )}
                 {messages.map((m, i) =>
                   m.role === "user" ? (
                     <div key={i} className="flex justify-end">
@@ -504,16 +565,26 @@ export default function ChatPage() {
                       <p role="status" className="text-xs text-muted">
                         {m.status}
                       </p>
-                      <p className="font-sans text-[16px] leading-[1.7] text-navy whitespace-pre-wrap break-words">{answerText(m)}</p>
+                      <p className="font-sans text-[16px] leading-[1.7] text-navy whitespace-pre-wrap break-words">
+                        {answerText(m)}
+                      </p>
                       {m.citations && m.citations.length > 0 && (
                         <div className="mt-3 flex flex-wrap gap-2">
                           {m.citations.map((citation, referenceIndex) => {
-                            const isSelected = citationTurn === m.turnId && citeIndex === referenceIndex
+                            const isSelected =
+                              citationTurn === m.turnId &&
+                              citeIndex === referenceIndex;
                             return (
                               <button
                                 key={`${citation.title}-${citation.clause}-${referenceIndex}`}
                                 type="button"
-                                onClick={(event) => openCitation(m.turnId, referenceIndex, event.currentTarget)}
+                                onClick={(event) =>
+                                  openCitation(
+                                    m.turnId,
+                                    referenceIndex,
+                                    event.currentTarget,
+                                  )
+                                }
                                 aria-controls={
                                   isSelected
                                     ? "legal-citation-panel"
@@ -521,10 +592,14 @@ export default function ChatPage() {
                                 }
                                 aria-expanded={isSelected}
                                 className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-medium text-left text-xs text-accent-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${
-                                  isSelected ? 'border-accent bg-selected' : 'border-line bg-surface hover:border-accent/60 hover:bg-selected'
+                                  isSelected
+                                    ? "border-accent bg-selected"
+                                    : "border-line bg-surface hover:border-accent/60 hover:bg-selected"
                                 }`}
                               >
-                                <span className="shrink-0 font-semibold">[{referenceIndex + 1}]</span>
+                                <span className="shrink-0 font-semibold">
+                                  [{referenceIndex + 1}]
+                                </span>
                                 <span>{citation.label}</span>
                               </button>
                             );
@@ -547,7 +622,9 @@ export default function ChatPage() {
                           <button
                             type="button"
                             disabled={blocked}
-                            onClick={() => messageAction(a.t, m, messages[i - 1].text)}
+                            onClick={() =>
+                              messageAction(a.t, m, messages[i - 1].text)
+                            }
                             key={a.t}
                             aria-label={a.label ?? a.t}
                             title={a.label ?? a.t}
@@ -596,8 +673,8 @@ export default function ChatPage() {
               ref={citationCloseRef}
               type="button"
               onClick={() => {
-                updateUrl({ cite: null })
-                citationTriggerRef.current?.focus()
+                updateUrl({ cite: null });
+                citationTriggerRef.current?.focus();
               }}
               aria-label="Đóng nguồn trích dẫn"
               className="p-2 rounded-lg text-muted hover:bg-selected hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
@@ -605,7 +682,10 @@ export default function ChatPage() {
               <Icon d={ic.close} />
             </button>
           </div>
-          <CitationSource key={`${citationTurn}:${citeIndex}`} reference={selectedReference} />
+          <CitationSource
+            key={`${citationTurn}:${citeIndex}`}
+            reference={selectedReference}
+          />
         </aside>
       )}
     </div>
@@ -613,38 +693,50 @@ export default function ChatPage() {
 }
 
 function CitationSource({ reference }: { reference: LegalReference }) {
-  const { raw: citation } = reference
-  const [attempt, setAttempt] = useState(0)
+  const { raw: citation } = reference;
+  const [attempt, setAttempt] = useState(0);
   const [result, setResult] = useState<{
-    citation: typeof citation
-    source?: Awaited<ReturnType<typeof loadCitationSource>>
-  }>()
-  const scrollRef = useRef<HTMLDivElement>(null)
-  const markRef = useRef<HTMLElement>(null)
-  const loaded = result?.citation === citation ? result : undefined
-  const source = loaded?.source
+    citation: typeof citation;
+    source?: Awaited<ReturnType<typeof loadCitationSource>>;
+  }>();
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const markRef = useRef<HTMLElement>(null);
+  const loaded = result?.citation === citation ? result : undefined;
+  const source = loaded?.source;
 
   useEffect(() => {
-    let cancelled = false
+    let cancelled = false;
     loadCitationSource(citation).then(
-      (source) => { if (!cancelled) setResult({ citation, source }) },
-      () => { if (!cancelled) setResult({ citation }) },
-    )
-    return () => { cancelled = true }
-  }, [citation, attempt])
+      (source) => {
+        if (!cancelled) setResult({ citation, source });
+      },
+      () => {
+        if (!cancelled) setResult({ citation });
+      },
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [citation, attempt]);
 
   useEffect(() => {
-    const container = scrollRef.current
-    const mark = markRef.current
-    if (!source || !container || !mark) return
+    const container = scrollRef.current;
+    const mark = markRef.current;
+    if (!source || !container || !mark) return;
     container.scrollTo({
-      top: container.scrollTop + mark.getBoundingClientRect().top - container.getBoundingClientRect().top - container.clientHeight / 3,
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
-    })
-  }, [source])
+      top:
+        container.scrollTop +
+        mark.getBoundingClientRect().top -
+        container.getBoundingClientRect().top -
+        container.clientHeight / 3,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
+        ? "instant"
+        : "smooth",
+    });
+  }, [source]);
 
-  const text = source?.text ?? citation.quote
-  const start = source ? text.indexOf(citation.quote) : -1
+  const text = source?.text ?? citation.quote;
+  const start = source ? text.indexOf(citation.quote) : -1;
   return (
     <div ref={scrollRef} className="p-4 overflow-y-auto" aria-live="polite">
       <div className="rounded-xl border border-line bg-surface p-4 shadow-2xs">
@@ -652,29 +744,50 @@ function CitationSource({ reference }: { reference: LegalReference }) {
           <Icon d={ic.book} className="w-3.5 h-3.5" />
           Căn cứ pháp lý
         </div>
-        <h2 className="mb-3 break-words text-[15px] font-semibold leading-relaxed text-navy">{source?.title ?? reference.title}</h2>
+        <h2 className="mb-3 break-words text-[15px] font-semibold leading-relaxed text-navy">
+          {source?.title ?? reference.title}
+        </h2>
         <p className="break-words text-xs leading-relaxed text-muted">
-          {[source?.number, source?.unitType, reference.clause].filter(Boolean).join(' · ')}
+          {[source?.number, source?.unitType, reference.clause]
+            .filter(Boolean)
+            .join(" · ")}
         </p>
         <blockquote className="mt-3 whitespace-pre-wrap break-words text-sm leading-relaxed">
-          {start < 0 ? text : <>
-            {text.slice(0, start)}
-            <mark ref={markRef} className="rounded-sm bg-amber-200 text-navy [box-decoration-break:clone]">{citation.quote}</mark>
-            {text.slice(start + citation.quote.length)}
-          </>}
+          {start < 0 ? (
+            text
+          ) : (
+            <>
+              {text.slice(0, start)}
+              <mark
+                ref={markRef}
+                className="rounded-sm bg-amber-200 text-navy [box-decoration-break:clone]"
+              >
+                {citation.quote}
+              </mark>
+              {text.slice(start + citation.quote.length)}
+            </>
+          )}
         </blockquote>
-        {source && <p className="mt-3 text-xs text-muted">Trích đoạn khớp nguồn; không xác nhận hiệu lực hiện hành.</p>}
+        {source && (
+          <p className="mt-3 text-xs text-muted">
+            Trích đoạn khớp nguồn; không xác nhận hiệu lực hiện hành.
+          </p>
+        )}
         <Notice
           loading={!loaded}
-          error={loaded && !source ? 'Chi tiết nguồn chưa khả dụng hoặc không khớp trích đoạn. Đang hiển thị trích đoạn đã lưu.' : undefined}
+          error={
+            loaded && !source
+              ? "Chi tiết nguồn chưa khả dụng hoặc không khớp trích đoạn. Đang hiển thị trích đoạn đã lưu."
+              : undefined
+          }
           retry={() => {
-            setResult(undefined)
-            setAttempt(attempt + 1)
+            setResult(undefined);
+            setAttempt(attempt + 1);
           }}
         />
       </div>
     </div>
-  )
+  );
 }
 
 function Section({
@@ -718,8 +831,8 @@ function SessionItem({
       <button
         type="button"
         onClick={(e) => {
-          e.stopPropagation()
-          onPin()
+          e.stopPropagation();
+          onPin();
         }}
         className="opacity-0 group-hover:opacity-100 p-0.5 rounded text-muted hover:text-navy"
         aria-label="Ghim trong phiên giao diện"

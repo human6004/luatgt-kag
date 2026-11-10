@@ -1,15 +1,21 @@
-import { createContext, useCallback, useContext, useRef, useState } from 'react'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useRef,
+  useState,
+} from "react";
 
 interface Store {
-  toast: string | null
-  notify: (msg: string) => void
+  toast: string | null;
+  notify: (msg: string) => void;
 }
 
 const Ctx = createContext<Store | null>(null);
 
 export function AdminProvider({ children }: { children: React.ReactNode }) {
-  const [toast, setToast] = useState<string | null>(null)
-  const toastTimer = useRef<number | undefined>(undefined)
+  const [toast, setToast] = useState<string | null>(null);
+  const toastTimer = useRef<number | undefined>(undefined);
 
   const notify = useCallback((msg: string) => {
     setToast(msg);
@@ -17,11 +23,7 @@ export function AdminProvider({ children }: { children: React.ReactNode }) {
     toastTimer.current = window.setTimeout(() => setToast(null), 2600);
   }, []);
 
-  return (
-    <Ctx.Provider value={{ toast, notify }}>
-      {children}
-    </Ctx.Provider>
-  );
+  return <Ctx.Provider value={{ toast, notify }}>{children}</Ctx.Provider>;
 }
 
 export function useAdmin() {

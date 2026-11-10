@@ -100,7 +100,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
   return (
     <Context.Provider
-      value={{ session, ready, checkError, retryCheck, login, register, logout }}
+      value={{
+        session,
+        ready,
+        checkError,
+        retryCheck,
+        login,
+        register,
+        logout,
+      }}
     >
       {children}
     </Context.Provider>
