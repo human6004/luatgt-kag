@@ -124,7 +124,7 @@ public class ContentService {
             if(n.hasNonNull("unit_id")) KagSchema.exactId(n,"unit_id",500);
             sourceText(n,"qcvn",200,publish);
             sourceText(n,"so_hieu",200,false);
-            date(n,"ngay_hieu_luc",publish&&hasSignSource(n)); date(n,"ngay_het_hieu_luc",false);
+            date(n,"ngay_hieu_luc",false); date(n,"ngay_het_hieu_luc",false);
             for(String field:List.of("parent_code","description_scope","image_status","verification_status")) sourceText(n,field,100,false);
             if(n.hasNonNull("record_type")&&n.path("record_type").isTextual()&&n.path("record_type").asText().isBlank())n.putNull("record_type");
             if(n.hasNonNull("record_type")&&!Set.of("family","variant","standalone","unverified_code").contains(n.path("record_type").asText()))throw ApiErrors.bad("record_type không hợp lệ");
