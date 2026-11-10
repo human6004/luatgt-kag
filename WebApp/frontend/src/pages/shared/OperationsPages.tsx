@@ -52,8 +52,7 @@ export function Infrastructure() {
     } catch (error) {
       if (!requestSignal.aborted) setStatusError(inspectionError(error));
     } finally {
-      if (statusPending.current === requestSignal)
-        statusPending.current = undefined;
+      if (statusPending.current === requestSignal) statusPending.current = undefined;
       if (!requestSignal.aborted) setStatusBusy(false);
     }
   }
@@ -63,11 +62,7 @@ export function Infrastructure() {
     return () => controller.abort();
   }, []);
   function refresh() {
-    if (
-      (statusPending.current && !statusPending.current.aborted) ||
-      pending.current
-    )
-      return;
+    if ((statusPending.current && !statusPending.current.aborted) || pending.current) return;
     data.reload();
     void refreshStatus();
   }
@@ -114,10 +109,7 @@ export function Infrastructure() {
       title="Kết nối & chẩn đoán"
       subtitle="Kiểm kết nối dịch vụ và điều kiện dùng đồ thị hiện tại."
       actions={
-        <Button
-          disabled={data.loading || statusBusy || busy || confirm}
-          onClick={refresh}
-        >
+        <Button disabled={data.loading || statusBusy || busy || confirm} onClick={refresh}>
           Kiểm tra lại
         </Button>
       }
@@ -129,10 +121,7 @@ export function Infrastructure() {
         retry={data.reload}
       />
       {Object.entries(data.value || {}).map(([name, state]) => (
-        <div
-          key={name}
-          className="flex justify-between border-b border-line py-4"
-        >
+        <div key={name} className="flex justify-between border-b border-line py-4">
           <p>{name}</p>
           <p className={state === "UP" ? "text-emerald-700" : "text-red-700"}>
             {state === "UP" ? "Kết nối được" : "Chưa khả dụng"}
@@ -163,19 +152,16 @@ export function Infrastructure() {
                   {checkText(check)}
                 </p>
               </div>
-              {(check.httpStatus === 504 ||
-                check.code?.includes("TIMEOUT")) && (
+              {(check.httpStatus === 504 || check.code?.includes("TIMEOUT")) && (
                 <p className="text-sm text-muted mt-2">
-                  Chọn “Kiểm tra lại” để thử lại; chưa có kết luận về đồ thị
-                  hoặc model.
+                  Chọn “Kiểm tra lại” để thử lại; chưa có kết luận về đồ thị hoặc model.
                 </p>
               )}
             </section>
           );
         })}
       <p className="text-sm text-muted mt-4">
-        Kết quả trên kiểm điều kiện dịch vụ. Chưa thử câu trả lời và trích dẫn
-        thật.
+        Kết quả trên kiểm điều kiện dịch vụ. Chưa thử câu trả lời và trích dẫn thật.
       </p>
       <div className="flex flex-wrap gap-4 mt-3 text-sm">
         <Link className="underline" to="/admin/chatbot?step=3">
@@ -190,12 +176,10 @@ export function Infrastructure() {
       </div>
       {kag && (
         <details className="mt-4 text-sm">
-          <summary className="cursor-pointer underline">
-            Chi tiết kỹ thuật
-          </summary>
+          <summary className="cursor-pointer underline">Chi tiết kỹ thuật</summary>
           <p className="mt-3 text-muted">
-            Mục bản dữ liệu kiểm tệp cấu hình; không thay cho kiểm đồ thị hiện
-            tại. Kiểm vector riêng có thể chỉ hỗ trợ dữ liệu mẫu.
+            Mục bản dữ liệu kiểm tệp cấu hình; không thay cho kiểm đồ thị hiện tại. Kiểm vector
+            riêng có thể chỉ hỗ trợ dữ liệu mẫu.
           </p>
           <pre className="mt-3 text-xs whitespace-pre-wrap break-words max-w-full">
             {JSON.stringify(kag, null, 2)}
@@ -214,8 +198,8 @@ export function Infrastructure() {
           .
         </p>
         <p className="text-sm mt-3">
-          Tìm nguồn liên quan bằng model Embedding; có thể phát sinh phí. Kết
-          quả nguồn chưa phải câu trả lời luật.
+          Tìm nguồn liên quan bằng model Embedding; có thể phát sinh phí. Kết quả nguồn chưa phải
+          câu trả lời luật.
         </p>
         <Notice error={sampleError} />
         <form
@@ -276,8 +260,7 @@ export function Infrastructure() {
             </Button>
           </div>
           <p className="text-sm text-muted">
-            Giới hạn số kết quả tìm kiếm; bật tìm thêm để lấy nội dung liên quan
-            trong đồ thị.
+            Giới hạn số kết quả tìm kiếm; bật tìm thêm để lấy nội dung liên quan trong đồ thị.
           </p>
         </form>
         <Modal
@@ -296,8 +279,8 @@ export function Infrastructure() {
           }
         >
           <p className="text-sm">
-            Thao tác gọi model Embedding và có thể phát sinh phí. Tiếp tục truy
-            xuất nội dung vừa nhập?
+            Thao tác gọi model Embedding và có thể phát sinh phí. Tiếp tục truy xuất nội dung vừa
+            nhập?
           </p>
         </Modal>
         {busy && (
@@ -308,18 +291,15 @@ export function Infrastructure() {
         <Notice error={retrieveError} />
         {retrieveError && (
           <p className="text-sm text-muted">
-            Nội dung đã giữ lại. Chọn “Chạy thử truy xuất” để thử lại sau khi
-            kiểm tra dịch vụ.
+            Nội dung đã giữ lại. Chọn “Chạy thử truy xuất” để thử lại sau khi kiểm tra dịch vụ.
           </p>
         )}
         {elapsedMs !== undefined && (
           <details className="mt-3 text-sm">
-            <summary className="cursor-pointer underline">
-              Chi tiết kỹ thuật lượt truy xuất
-            </summary>
+            <summary className="cursor-pointer underline">Chi tiết kỹ thuật lượt truy xuất</summary>
             <p className="mt-3">
-              Thời gian qua backend: {elapsedMs.toFixed(1)} ms; không phải thời
-              gian riêng của Neo4j.
+              Thời gian qua backend: {elapsedMs.toFixed(1)} ms; không phải thời gian riêng của
+              Neo4j.
             </p>
             {result && (
               <pre className="mt-3 text-xs whitespace-pre-wrap break-words">
@@ -348,21 +328,15 @@ export function Infrastructure() {
                 sample?.release_id === result.release_id &&
                 sample.source_snapshot_id === result.source_snapshot_id
                   ? sample.nodes.find(
-                      (n) =>
-                        n.entity_type === item.entity_type &&
-                        item.entity_id === n.entity_id,
+                      (n) => n.entity_type === item.entity_type && item.entity_id === n.entity_id,
                     )
                   : undefined;
               const doc = sample?.nodes.find(
                 (n) =>
-                  n.entity_type === "VietRoadTraffic.LegalDocument" &&
-                  n.entity_id === item.doc_id,
+                  n.entity_type === "VietRoadTraffic.LegalDocument" && n.entity_id === item.doc_id,
               );
               return (
-                <article
-                  key={i}
-                  className="py-4 border-b border-line text-sm space-y-2 min-w-0"
-                >
+                <article key={i} className="py-4 border-b border-line text-sm space-y-2 min-w-0">
                   <h3 className="font-semibold break-words">
                     {doc
                       ? String(doc.properties.title ?? item.doc_id)
@@ -382,9 +356,7 @@ export function Infrastructure() {
                     </details>
                   ))}
                   <details>
-                    <summary className="cursor-pointer underline">
-                      Chi tiết kỹ thuật nguồn
-                    </summary>
+                    <summary className="cursor-pointer underline">Chi tiết kỹ thuật nguồn</summary>
                     <p className="mt-2 break-words">
                       {item.entity_type} · {item.entity_id} · Điểm tương đồng:{" "}
                       {item.score ?? "Không có"}
@@ -392,22 +364,18 @@ export function Infrastructure() {
                     {node ? (
                       node.sources.map((s) => (
                         <p key={s.evidence_id} className="text-xs break-all">
-                          Evidence {s.field}: {s.evidence_id} · source SHA-256{" "}
-                          {s.source_sha256}
+                          Evidence {s.field}: {s.evidence_id} · source SHA-256 {s.source_sha256}
                         </p>
                       ))
                     ) : (
                       <p>
-                        Nguồn được API kiểm theo bản dữ liệu của lượt truy xuất;
-                        trang này không tải lại toàn bộ danh sách nguồn.
+                        Nguồn được API kiểm theo bản dữ liệu của lượt truy xuất; trang này không tải
+                        lại toàn bộ danh sách nguồn.
                       </p>
                     )}
                     <pre className="mt-2 text-xs whitespace-pre-wrap break-words">
                       {JSON.stringify(
-                        {
-                          vector_sources: item.vector_sources,
-                          graph_context: item.graph_context,
-                        },
+                        { vector_sources: item.vector_sources, graph_context: item.graph_context },
                         null,
                         2,
                       )}

@@ -1,10 +1,4 @@
-import {
-  BrowserRouter,
-  Routes,
-  Route,
-  Navigate,
-  useLocation,
-} from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AdminProvider, useAdmin } from "./admin/store";
 import UserLayout from "./layouts/UserLayout";
 import AdminLayout from "./layouts/AdminLayout";
@@ -56,11 +50,7 @@ function RedirectWithParams({
   return <Navigate to={qs ? `${to}?${qs}` : to} replace />;
 }
 
-function ImportsRedirect({
-  defaultType,
-}: {
-  defaultType: "signs" | "questions";
-}) {
+function ImportsRedirect({ defaultType }: { defaultType: "signs" | "questions" }) {
   const { search } = useLocation();
   const params = new URLSearchParams(search);
   const rawType = params.get("type") ?? defaultType;
@@ -73,9 +63,7 @@ function ImportsRedirect({
     return <Navigate to={`/admin/questions?${next.toString()}`} replace />;
   }
   const tab =
-    rawType === "documents" || rawType === "units" || rawType === "signs"
-      ? rawType
-      : "signs";
+    rawType === "documents" || rawType === "units" || rawType === "signs" ? rawType : "signs";
   next.set("tab", tab);
   next.set("import", "1");
   params.forEach((v, k) => {
@@ -92,9 +80,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<SessionHome />} />
             <Route path="/login" element={<LoginPage />} />
-            <Route
-              element={<RequireRole roles={["user", "admin", "police"]} />}
-            >
+            <Route element={<RequireRole roles={["user", "admin", "police"]} />}>
               <Route element={<UserLayout />}>
                 <Route path="/chat" element={<Chat />} />
               </Route>
@@ -103,14 +89,8 @@ export default function App() {
               <Route element={<UserLayout />}>
                 <Route path="/bien-bao" element={<Signs />} />
                 <Route path="/on-thi" element={<Study />} />
-                <Route
-                  path="/on-thi/luyen-tap/:chapterId"
-                  element={<ChapterPractice />}
-                />
-                <Route
-                  path="/tien-do"
-                  element={<RedirectWithParams to="/on-thi" />}
-                />
+                <Route path="/on-thi/luyen-tap/:chapterId" element={<ChapterPractice />} />
+                <Route path="/tien-do" element={<RedirectWithParams to="/on-thi" />} />
                 <Route path="/exam" element={<Exam />} />
               </Route>
             </Route>
@@ -122,10 +102,7 @@ export default function App() {
                 <Route path="/admin/content" element={<Content />} />
                 <Route path="/admin/questions" element={<Questions />} />
                 <Route path="/admin/users" element={<Users />} />
-                <Route
-                  path="/admin/infrastructure"
-                  element={<Infrastructure />}
-                />
+                <Route path="/admin/infrastructure" element={<Infrastructure />} />
                 <Route path="/admin/sources" element={<Sources />} />
                 <Route path="/admin/schema" element={<KagSchemaPage />} />
                 <Route path="/admin/benchmark" element={<Benchmark />} />
@@ -134,10 +111,7 @@ export default function App() {
                 <Route
                   path="/admin/knowledge"
                   element={
-                    <RedirectWithParams
-                      to="/admin/content"
-                      defaults={{ tab: "documents" }}
-                    />
+                    <RedirectWithParams to="/admin/content" defaults={{ tab: "documents" }} />
                   }
                 />
                 <Route
@@ -172,29 +146,16 @@ export default function App() {
                 />
                 <Route
                   path="/admin/question-bank-settings"
-                  element={
-                    <RedirectWithParams
-                      to="/admin/questions"
-                      defaults={{ tab: "sets" }}
-                    />
-                  }
+                  element={<RedirectWithParams to="/admin/questions" defaults={{ tab: "sets" }} />}
                 />
-                <Route
-                  path="/admin/imports"
-                  element={<ImportsRedirect defaultType="signs" />}
-                />
+                <Route path="/admin/imports" element={<ImportsRedirect defaultType="signs" />} />
                 <Route
                   path="/admin/content-imports"
                   element={<ImportsRedirect defaultType="questions" />}
                 />
                 <Route
                   path="/admin/chatlogs"
-                  element={
-                    <RedirectWithParams
-                      to="/admin/users"
-                      defaults={{ tab: "logs" }}
-                    />
-                  }
+                  element={<RedirectWithParams to="/admin/users" defaults={{ tab: "logs" }} />}
                 />
               </Route>
             </Route>

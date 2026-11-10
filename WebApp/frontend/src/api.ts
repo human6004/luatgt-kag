@@ -7,10 +7,7 @@ export class ApiError extends Error {
     this.status = status;
   }
 }
-export async function apiResponse(
-  path: string,
-  init: RequestInit = {},
-): Promise<Response> {
+export async function apiResponse(path: string, init: RequestInit = {}): Promise<Response> {
   const headers = new Headers(init.headers);
   const token = sessionStorage.getItem(tokenKey);
   if (token) headers.set("Authorization", `Bearer ${token}`);
@@ -20,9 +17,7 @@ export async function apiResponse(
   try {
     response = await fetch(`/api${path}`, { ...init, headers });
   } catch {
-    throw new ApiError(
-      "Không kết nối được backend. Vui lòng kiểm tra dịch vụ và thử lại.",
-    );
+    throw new ApiError("Không kết nối được backend. Vui lòng kiểm tra dịch vụ và thử lại.");
   }
   if (response.status === 401 && !path.startsWith("/auth/login")) {
     sessionStorage.removeItem(tokenKey);
@@ -37,19 +32,13 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   try {
     text = await response.text();
   } catch {
-    throw new ApiError(
-      "Không đọc được phản hồi backend. Vui lòng thử lại.",
-      response.status,
-    );
+    throw new ApiError("Không đọc được phản hồi backend. Vui lòng thử lại.", response.status);
   }
   let data: unknown;
   try {
     data = text ? JSON.parse(text) : undefined;
   } catch {
-    throw new ApiError(
-      "Backend chưa khả dụng hoặc phản hồi không hợp lệ.",
-      response.status,
-    );
+    throw new ApiError("Backend chưa khả dụng hoặc phản hồi không hợp lệ.", response.status);
   }
   if (!response.ok) {
     throw new ApiError(
@@ -75,7 +64,6 @@ export type ContentRecord = {
 };
 export async function media(id: string, path?: string): Promise<string> {
   const response = await apiResponse(path || `/content/${id}/media`);
-  if (!response.ok)
-    throw new ApiError("Không tải được ảnh/tài liệu nguồn.", response.status);
+  if (!response.ok) throw new ApiError("Không tải được ảnh/tài liệu nguồn.", response.status);
   return URL.createObjectURL(await response.blob());
 }

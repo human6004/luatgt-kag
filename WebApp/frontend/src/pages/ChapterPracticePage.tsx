@@ -17,21 +17,11 @@ export default function ChapterPracticePage() {
   const [params] = useSearchParams();
   const setId = params.get("questionSetId") || "";
   return (
-    <ChapterPractice
-      key={`${setId}-${chapterId}`}
-      setId={setId}
-      chapterId={Number(chapterId)}
-    />
+    <ChapterPractice key={`${setId}-${chapterId}`} setId={setId} chapterId={Number(chapterId)} />
   );
 }
 
-function ChapterPractice({
-  setId,
-  chapterId,
-}: {
-  setId: string;
-  chapterId: number;
-}) {
+function ChapterPractice({ setId, chapterId }: { setId: string; chapterId: number }) {
   const questions = useData<ContentRecord[]>(
     "/questions?questionSetId=" + encodeURIComponent(setId),
   );
@@ -44,9 +34,7 @@ function ChapterPractice({
   const question = practiceQuestions[index];
   const answer = question ? answers[question.id] : undefined;
   const answered = practiceQuestions.filter((q) => answers[q.id]).length;
-  const correct = practiceQuestions.filter(
-    (q) => answers[q.id]?.correct,
-  ).length;
+  const correct = practiceQuestions.filter((q) => answers[q.id]?.correct).length;
   const backTo = "/on-thi?set=" + encodeURIComponent(setId);
 
   function selectQuestion(next: number) {
@@ -61,10 +49,7 @@ function ChapterPractice({
         `/study/${question.id}/answer`,
         send("POST", { selected, questionSetId: setId }),
       );
-      setAnswers((previous) => ({
-        ...previous,
-        [question.id]: { ...result, selected },
-      }));
+      setAnswers((previous) => ({ ...previous, [question.id]: { ...result, selected } }));
     });
   }
 
@@ -83,9 +68,7 @@ function ChapterPractice({
       </header>
       <Notice {...questions} retry={questions.reload} />
       {!setId ? (
-        <p role="alert">
-          Vui lòng quay lại danh sách chương và chọn bộ câu hỏi.
-        </p>
+        <p role="alert">Vui lòng quay lại danh sách chương và chọn bộ câu hỏi.</p>
       ) : question ? (
         <div className="chapter-practice-layout">
           <section className="min-w-0 space-y-5" aria-label="Câu hỏi luyện tập">
@@ -104,15 +87,10 @@ function ChapterPractice({
                   alt={`Hình minh họa câu ${index + 1}`}
                 />
               )}
-              <div
-                className="mt-6 space-y-3"
-                role="group"
-                aria-label="Chọn đáp án"
-              >
+              <div className="mt-6 space-y-3" role="group" aria-label="Chọn đáp án">
                 {(question.data.options as string[]).map((option, i) => {
                   const isCorrect = !!answer && i === answer.correctAnswer;
-                  const isWrong =
-                    !!answer && i === answer.selected && !answer.correct;
+                  const isWrong = !!answer && i === answer.selected && !answer.correct;
                   return (
                     <button
                       key={i}
@@ -121,26 +99,16 @@ function ChapterPractice({
                       aria-pressed={answer?.selected === i}
                       onClick={() => void submitAnswer(i)}
                       style={{
-                        borderColor: isCorrect
-                          ? "#16a34a"
-                          : isWrong
-                            ? "#dc2626"
-                            : undefined,
+                        borderColor: isCorrect ? "#16a34a" : isWrong ? "#dc2626" : undefined,
                       }}
                       className="flex w-full items-start gap-3 rounded-xl border-2 border-line bg-surface p-4 text-left text-sm sm:text-base leading-relaxed text-navy transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong disabled:cursor-default enabled:hover:border-accent"
                     >
-                      <span className="shrink-0 font-semibold">
-                        {String.fromCharCode(65 + i)}.
-                      </span>
-                      <span className="min-w-0 flex-1 break-words">
-                        {option}
-                      </span>
+                      <span className="shrink-0 font-semibold">{String.fromCharCode(65 + i)}.</span>
+                      <span className="min-w-0 flex-1 break-words">{option}</span>
                       {(isCorrect || isWrong) && (
                         <span
                           className="shrink-0 font-bold"
-                          aria-label={
-                            isCorrect ? "Đáp án đúng" : "Bạn chọn sai"
-                          }
+                          aria-label={isCorrect ? "Đáp án đúng" : "Bạn chọn sai"}
                         >
                           {isCorrect ? "✓" : "✕"}
                         </span>
@@ -161,23 +129,17 @@ function ChapterPractice({
                   className="mt-5 space-y-2 border-t border-line pt-4 text-sm leading-relaxed"
                 >
                   <p className="font-semibold text-navy">
-                    Đáp án đúng:{" "}
-                    {String.fromCharCode(65 + answer.correctAnswer)}.
+                    Đáp án đúng: {String.fromCharCode(65 + answer.correctAnswer)}.
                     {answer.critical ? " Đây là câu điểm liệt." : ""}
                   </p>
                   {answer.explanation && (
-                    <p className="whitespace-pre-line text-navy">
-                      {answer.explanation}
-                    </p>
+                    <p className="whitespace-pre-line text-navy">{answer.explanation}</p>
                   )}
                 </div>
               )}
             </div>
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <Button
-                disabled={task.busy || index === 0}
-                onClick={() => selectQuestion(index - 1)}
-              >
+              <Button disabled={task.busy || index === 0} onClick={() => selectQuestion(index - 1)}>
                 ← Câu trước
               </Button>
               {index < practiceQuestions.length - 1 ? (
@@ -194,9 +156,7 @@ function ChapterPractice({
             </div>
           </section>
           <aside className="min-w-0 space-y-4" aria-label="Điều hướng câu hỏi">
-            <h2 className="text-base font-semibold text-navy">
-              Danh sách câu hỏi
-            </h2>
+            <h2 className="text-base font-semibold text-navy">Danh sách câu hỏi</h2>
             <div className="rounded-2xl border border-line bg-surface p-5">
               <p className="mb-4 text-sm text-muted">
                 Đã trả lời {answered} / {practiceQuestions.length} câu
@@ -213,11 +173,7 @@ function ChapterPractice({
                       aria-current={i === index ? "step" : undefined}
                       aria-label={`Câu ${i + 1}: ${result ? (result.correct ? "đã trả lời đúng" : "đã trả lời sai") : "chưa trả lời"}`}
                       style={{
-                        borderColor: result
-                          ? result.correct
-                            ? "#16a34a"
-                            : "#dc2626"
-                          : undefined,
+                        borderColor: result ? (result.correct ? "#16a34a" : "#dc2626") : undefined,
                       }}
                       className={`min-h-11 rounded-lg border border-line text-sm font-semibold text-navy focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-strong ${i === index ? "bg-selected" : "bg-surface"}`}
                     >
@@ -227,13 +183,11 @@ function ChapterPractice({
                 })}
               </div>
               <div className="mt-5 border-t border-line pt-4 text-xs leading-5 text-muted">
-                Đúng (viền xanh) · Sai (viền đỏ) · Chưa trả lời (viền nhạt) ·
-                Đang xem (nền vàng)
+                Đúng (viền xanh) · Sai (viền đỏ) · Chưa trả lời (viền nhạt) · Đang xem (nền vàng)
               </div>
               {answered === practiceQuestions.length && (
                 <p role="status" className="mt-4 text-sm font-medium text-navy">
-                  Đã hoàn thành lượt luyện tập: đúng {correct} /{" "}
-                  {practiceQuestions.length} câu.
+                  Đã hoàn thành lượt luyện tập: đúng {correct} / {practiceQuestions.length} câu.
                 </p>
               )}
             </div>

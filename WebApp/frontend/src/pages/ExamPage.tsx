@@ -3,15 +3,7 @@ import { useSearchParams } from "react-router-dom";
 
 import { api, send } from "../api";
 
-import {
-  Button,
-  Card,
-  Field,
-  Modal,
-  NavLinkButton,
-  Page,
-  inputCls,
-} from "../admin/ui";
+import { Button, Card, Field, Modal, NavLinkButton, Page, inputCls } from "../admin/ui";
 
 import { Asset, Notice, useData, useTask } from "./shared/shared";
 
@@ -73,9 +65,7 @@ export default function ExamPage() {
 
   const selected =
     rules.value?.find(
-      (r) =>
-        r.rule_id === ruleParam ||
-        r.class_code.toLowerCase() === ruleParam.toLowerCase(),
+      (r) => r.rule_id === ruleParam || r.class_code.toLowerCase() === ruleParam.toLowerCase(),
     ) ?? rules.value?.[0];
 
   function setRuleId(id: string) {
@@ -93,12 +83,7 @@ export default function ExamPage() {
     sessionStorage.setItem("luatgt-active-exam", value.id);
 
     setLeft(
-      Math.max(
-        0,
-        Math.ceil(
-          (Date.parse(value.expiresAt) - Date.parse(value.serverTime)) / 1000,
-        ),
-      ),
+      Math.max(0, Math.ceil((Date.parse(value.expiresAt) - Date.parse(value.serverTime)) / 1000)),
     );
   }
 
@@ -124,10 +109,7 @@ export default function ExamPage() {
 
   useEffect(() => {
     if (!exam || exam.submittedAt) return;
-    const timer = window.setInterval(
-      () => setLeft((v) => Math.max(0, v - 1)),
-      1000,
-    );
+    const timer = window.setInterval(() => setLeft((v) => Math.max(0, v - 1)), 1000);
     return () => window.clearInterval(timer);
   }, [exam?.id, exam?.submittedAt]);
 
@@ -141,19 +123,13 @@ export default function ExamPage() {
   }
 
   useEffect(() => {
-    if (exam && !exam.submittedAt && left === 0 && !task.busy && !task.error)
-      void submit();
+    if (exam && !exam.submittedAt && left === 0 && !task.busy && !task.error) void submit();
   }, [left, exam?.id, exam?.submittedAt, task.busy, task.error]);
 
   function choose(questionId: string, selected: number) {
     if (!exam || task.busy || exam.submittedAt || left <= 0) return;
     void task.run(async () =>
-      accept(
-        await api<Exam>(
-          `/exams/${exam.id}/answers/${questionId}`,
-          send("PUT", { selected }),
-        ),
-      ),
+      accept(await api<Exam>(`/exams/${exam.id}/answers/${questionId}`, send("PUT", { selected }))),
     );
   }
 
@@ -173,8 +149,7 @@ export default function ExamPage() {
       if ((e.target as HTMLElement).closest("input,select,textarea")) return;
       const question = exam.questions[current];
       const number = Number(e.key);
-      if (number >= 1 && number <= question.options.length)
-        choose(question.questionId, number - 1);
+      if (number >= 1 && number <= question.options.length) choose(question.questionId, number - 1);
       else if (e.key === "ArrowRight")
         setCurrent((i) => Math.min(exam.questions.length - 1, i + 1));
       else if (e.key === "ArrowLeft") setCurrent((i) => Math.max(0, i - 1));
@@ -217,19 +192,12 @@ export default function ExamPage() {
                         disabled={task.busy || rules.loading}
                         onChange={(e) =>
                           setRuleId(
-                            rules.value?.find(
-                              (r) => r.set_id === e.target.value,
-                            )?.rule_id || "",
+                            rules.value?.find((r) => r.set_id === e.target.value)?.rule_id || "",
                           )
                         }
                       >
                         {Array.from(
-                          new Map(
-                            (rules.value || []).map((r) => [
-                              r.set_id,
-                              r.set_name,
-                            ]),
-                          ),
+                          new Map((rules.value || []).map((r) => [r.set_id, r.set_name])),
                         ).map(([id, name]) => (
                           <option key={id} value={id}>
                             {name}
@@ -276,9 +244,7 @@ export default function ExamPage() {
                     </div>
                   </dl>
                   {selected.fail_on_critical && (
-                    <p className="text-sm text-muted">
-                      Không sai hoặc bỏ trống câu điểm liệt.
-                    </p>
+                    <p className="text-sm text-muted">Không sai hoặc bỏ trống câu điểm liệt.</p>
                   )}
                   <Button
                     variant="primary"
@@ -287,10 +253,7 @@ export default function ExamPage() {
                     onClick={() =>
                       void task.run(async () => {
                         accept(
-                          await api<Exam>(
-                            "/exams",
-                            send("POST", { ruleId: selected.rule_id }),
-                          ),
+                          await api<Exam>("/exams", send("POST", { ruleId: selected.rule_id })),
                         );
                         setCurrent(0);
                         setFlags(new Set());
@@ -302,12 +265,10 @@ export default function ExamPage() {
                 </>
               ) : !rules.loading && !rules.error ? (
                 <div className="space-y-3">
-                  <p className="font-medium text-navy">
-                    Chưa có đề thi đang áp dụng
-                  </p>
+                  <p className="font-medium text-navy">Chưa có đề thi đang áp dụng</p>
                   <p className="text-sm leading-6 text-muted">
-                    Người quản lý cần cấu hình đề thi và xuất bản đủ câu hỏi.
-                    Bạn không cần tự thiết lập quy tắc.
+                    Người quản lý cần cấu hình đề thi và xuất bản đủ câu hỏi. Bạn không cần tự thiết
+                    lập quy tắc.
                   </p>
                 </div>
               ) : (
@@ -327,25 +288,19 @@ export default function ExamPage() {
                   className="flex flex-wrap items-center justify-between gap-3 border-b border-line pb-3"
                 >
                   <span>
-                    Hạng {h.license} ·{" "}
-                    {new Date(h.startedAt).toLocaleString("vi-VN")} ·{" "}
+                    Hạng {h.license} · {new Date(h.startedAt).toLocaleString("vi-VN")} ·{" "}
                     {h.submittedAt
                       ? `${h.score}/${h.total} · ${
                           h.passed ? "Đạt" : "Không đạt"
                         }${h.criticalFailed ? " · Sai câu điểm liệt" : ""}`
                       : "Chưa nộp"}
                   </span>
-                  <Button
-                    disabled={task.busy}
-                    onClick={() => void task.run(() => open(h.id))}
-                  >
+                  <Button disabled={task.busy} onClick={() => void task.run(() => open(h.id))}>
                     {h.submittedAt ? "Xem bài" : "Tiếp tục"}
                   </Button>
                 </div>
               ))}
-              {history.value?.length === 0 && (
-                <p className="text-muted">Chưa có bài thi.</p>
-              )}
+              {history.value?.length === 0 && <p className="text-muted">Chưa có bài thi.</p>}
             </div>
           </Card>
         </div>
@@ -365,9 +320,7 @@ export default function ExamPage() {
       >
         <Notice error={task.error} />
         {exam.criticalFailed && (
-          <p className="mb-4 text-red-700">
-            Có câu điểm liệt trả lời sai hoặc bỏ trống.
-          </p>
+          <p className="mb-4 text-red-700">Có câu điểm liệt trả lời sai hoặc bỏ trống.</p>
         )}
         <label className="block mb-5 text-sm">
           <input
@@ -381,9 +334,7 @@ export default function ExamPage() {
           {questions.map((q) => (
             <Card
               key={q.questionId}
-              title={`Chương ${q.chapter}${
-                q.critical ? " · Câu điểm liệt" : ""
-              }`}
+              title={`Chương ${q.chapter}${q.critical ? " · Câu điểm liệt" : ""}`}
             >
               <div className="p-5 space-y-3">
                 <p className="font-medium">{q.text}</p>
@@ -398,11 +349,7 @@ export default function ExamPage() {
                   {q.options.map((label, i) => (
                     <li
                       key={i}
-                      className={
-                        i === q.correctAnswer
-                          ? "font-semibold text-emerald-700"
-                          : ""
-                      }
+                      className={i === q.correctAnswer ? "font-semibold text-emerald-700" : ""}
                     >
                       {i + 1}. {label}
                       {i === q.correctAnswer ? " · Đáp án đúng" : ""}
@@ -447,9 +394,7 @@ export default function ExamPage() {
                 <Button
                   key={i}
                   aria-pressed={exam.answers[q.questionId] === i}
-                  variant={
-                    exam.answers[q.questionId] === i ? "dark" : "outline"
-                  }
+                  variant={exam.answers[q.questionId] === i ? "dark" : "outline"}
                   className="w-full justify-start text-left"
                   disabled={task.busy || left <= 0}
                   onClick={() => choose(q.questionId, i)}
@@ -466,10 +411,7 @@ export default function ExamPage() {
             </div>
           </Card>
           <div className="mt-4 flex justify-between gap-3">
-            <Button
-              disabled={current === 0}
-              onClick={() => setCurrent((i) => i - 1)}
-            >
+            <Button disabled={current === 0} onClick={() => setCurrent((i) => i - 1)}>
               Câu trước
             </Button>
             <Button
@@ -484,26 +426,17 @@ export default function ExamPage() {
           <p
             role="timer"
             aria-label="Thời gian còn lại"
-            className={`font-mono text-4xl ${
-              left <= 60 ? "text-red-700" : "text-navy"
-            }`}
+            className={`font-mono text-4xl ${left <= 60 ? "text-red-700" : "text-navy"}`}
           >
-            {String(Math.floor(left / 60)).padStart(2, "0")}:
-            {String(left % 60).padStart(2, "0")}
+            {String(Math.floor(left / 60)).padStart(2, "0")}:{String(left % 60).padStart(2, "0")}
           </p>
           <div className="grid grid-cols-6 gap-2">
             {exam.questions.map((question, i) => (
               <Button
                 key={question.questionId}
-                aria-label={`Câu ${i + 1}${
-                  flags.has(question.questionId) ? ", đánh dấu" : ""
-                }`}
+                aria-label={`Câu ${i + 1}${flags.has(question.questionId) ? ", đánh dấu" : ""}`}
                 aria-current={i === current ? "step" : undefined}
-                variant={
-                  exam.answers[question.questionId] === undefined
-                    ? "outline"
-                    : "dark"
-                }
+                variant={exam.answers[question.questionId] === undefined ? "outline" : "dark"}
                 onClick={() => setCurrent(i)}
               >
                 {i + 1}
@@ -511,11 +444,7 @@ export default function ExamPage() {
               </Button>
             ))}
           </div>
-          <Button
-            variant="primary"
-            disabled={task.busy}
-            onClick={() => setConfirm(true)}
-          >
+          <Button variant="primary" disabled={task.busy} onClick={() => setConfirm(true)}>
             Nộp bài
           </Button>
         </aside>
@@ -534,8 +463,7 @@ export default function ExamPage() {
         }
       >
         <p>
-          Còn {exam.questions.length - answered} câu chưa trả lời. Câu bỏ trống
-          được tính là sai.
+          Còn {exam.questions.length - answered} câu chưa trả lời. Câu bỏ trống được tính là sai.
         </p>
       </Modal>
     </Page>

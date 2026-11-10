@@ -15,18 +15,11 @@ import {
   startBenchmarkRun,
   stopBenchmarkRun,
 } from "./shared/kag-inspection";
-import type {
-  BenchmarkJob,
-  BenchmarkMode,
-  SmokeRun,
-} from "./shared/kag-inspection";
+import type { BenchmarkJob, BenchmarkMode, SmokeRun } from "./shared/kag-inspection";
 import { Notice, saveBlob } from "./shared/shared";
 
 const pct = (n: number) =>
-  (n * 100).toLocaleString("vi-VN", {
-    minimumFractionDigits: 1,
-    maximumFractionDigits: 1,
-  }) + "%";
+  (n * 100).toLocaleString("vi-VN", { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + "%";
 const modeLabels: Record<string, string> = {
   G1: "Truy xuất",
   G2: "Trả lời",
@@ -96,9 +89,7 @@ function parseMetric(mode: string, name: string) {
   const channel = channels.find((c) => c && name.startsWith(`${c}.`)) || "";
   const metric = channel ? name.slice(channel.length + 1) : name;
   const ranking = /^(Hit|Recall|MRR)@(\d+)$/.exec(metric);
-  const family =
-    ranking?.[1] ??
-    (metric === "returned_top_k_MRR" ? "returned_top_k" : metric);
+  const family = ranking?.[1] ?? (metric === "returned_top_k_MRR" ? "returned_top_k" : metric);
   return {
     mode,
     channel,
@@ -119,13 +110,10 @@ function MetricBar({
   value: number | null;
   kind?: "ratio" | "count" | "latency";
 }) {
-  if (value === null)
-    return <span className="text-xs text-muted">Chưa đo</span>;
+  if (value === null) return <span className="text-xs text-muted">Chưa đo</span>;
   if (kind !== "ratio")
     return (
-      <span className="tabular-nums">
-        {kind === "latency" ? `${Math.round(value)} ms` : value}
-      </span>
+      <span className="tabular-nums">{kind === "latency" ? `${Math.round(value)} ms` : value}</span>
     );
   return (
     <div className="flex items-center gap-2" title={pct(value)}>
@@ -184,8 +172,7 @@ function Score({
   danger?: boolean;
 }) {
   if (value === null) return <span className="text-muted">—</span>;
-  if (kind === "latency")
-    return <span className="tabular-nums">{Math.round(value)}</span>;
+  if (kind === "latency") return <span className="tabular-nums">{Math.round(value)}</span>;
   return (
     <span
       className={`tabular-nums font-semibold ${danger && value > 0.2 ? "text-red-600" : "text-navy"}`}
@@ -256,9 +243,7 @@ export default function AdminBenchmark() {
   const { notify } = useAdmin();
   const data = useInspection(loadSampleInspection);
   // Store departures from the default so async data also opens only the first channel.
-  const [toggledChannels, setToggledChannels] = useState<Set<string>>(
-    () => new Set(),
-  );
+  const [toggledChannels, setToggledChannels] = useState<Set<string>>(() => new Set());
   const datasetData = useInspection(loadBenchmarkDatasets);
   const serving = useInspection(loadServing);
   const [graphKey, setGraphKey] = useState("");
@@ -284,43 +269,31 @@ export default function AdminBenchmark() {
   const catalog = data.value?.datasets;
   const datasets = datasetData.value?.datasets ?? [];
   const requestedDataset = params.get("dataset") ?? "";
-  const selected =
-    datasets.find((r) => r.id === requestedDataset) || datasets[0];
+  const selected = datasets.find((r) => r.id === requestedDataset) || datasets[0];
   const row = catalog?.datasets.find((r) => r.id === selected?.id);
   const jobId = params.get("job") ?? "";
   const currentJob = job?.run_id_job === jobId ? job : null;
-  const selectedJob =
-    currentJob?.dataset_id === selected?.id ? currentJob : null;
+  const selectedJob = currentJob?.dataset_id === selected?.id ? currentJob : null;
   const graphRuns = serving.value?.runs ?? [];
-  const graph =
-    graphRuns.find((r) => `${r.project_id}/${r.run_id}` === graphKey) ??
-    graphRuns[0];
+  const graph = graphRuns.find((r) => `${r.project_id}/${r.run_id}` === graphKey) ?? graphRuns[0];
   const fullJobCounts =
     selectedJob?.dataset_hash === selected?.dataset_hash &&
-    Object.values(selectedJob?.category_counts ?? {}).reduce(
-      (a, b) => a + b,
-      0,
-    ) === selected?.record_count
+    Object.values(selectedJob?.category_counts ?? {}).reduce((a, b) => a + b, 0) ===
+      selected?.record_count
       ? selectedJob?.category_counts
       : undefined;
   const categoryCounts =
     fullJobCounts ??
-    (distribution?.id === selected?.id &&
-    distribution?.hash === selected?.dataset_hash
+    (distribution?.id === selected?.id && distribution?.hash === selected?.dataset_hash
       ? distribution?.counts
       : undefined);
   const categories: [string, number][] = categoryCounts
-    ? benchmarkCategories.map((category) => [
-        category,
-        categoryCounts[category] ?? 0,
-      ])
+    ? benchmarkCategories.map((category) => [category, categoryCounts[category] ?? 0])
     : [];
   const maxCatCount = Math.max(1, ...categories.map(([, n]) => n));
   const progressMode = selectedJob?.mode === "BOTH" ? "G1" : selectedJob?.mode;
   const evaluatedCount =
-    progressMode && selectedJob
-      ? selectedJob.progress[progressMode]?.total
-      : undefined;
+    progressMode && selectedJob ? selectedJob.progress[progressMode]?.total : undefined;
 
   useEffect(() => {
     setDistribution(null);
@@ -330,14 +303,9 @@ export default function AdminBenchmark() {
       .then((counts) => {
         if (
           !controller.signal.aborted &&
-          Object.values(counts).reduce((a, b) => a + b, 0) ===
-            selected.record_count
+          Object.values(counts).reduce((a, b) => a + b, 0) === selected.record_count
         )
-          setDistribution({
-            id: selected.id,
-            hash: selected.dataset_hash,
-            counts,
-          });
+          setDistribution({ id: selected.id, hash: selected.dataset_hash, counts });
       })
       .catch(() => {
         /* Optional distribution; benchmark controls remain available. */
@@ -360,9 +328,7 @@ export default function AdminBenchmark() {
         const value = await loadBenchmarkRun(jobId, controller.signal);
         if (!controller.signal.aborted) {
           setJob((previous) =>
-            previous?.run_id_job === jobId && previous.state !== "RUNNING"
-              ? previous
-              : value,
+            previous?.run_id_job === jobId && previous.state !== "RUNNING" ? previous : value,
           );
           setJobError("");
           setNow(Date.now());
@@ -386,15 +352,9 @@ export default function AdminBenchmark() {
   }, [jobId, pollVersion]);
 
   const rawCat = params.get("cat") ?? "all";
-  const cat =
-    rawCat === "all" || categories.some(([id]) => id === rawCat)
-      ? rawCat
-      : "all";
+  const cat = rawCat === "all" || categories.some(([id]) => id === rawCat) ? rawCat : "all";
 
-  type Run = Pick<
-    SmokeRun,
-    "metrics" | "by_category" | "macro" | "latency_ms" | "requested_count"
-  >;
+  type Run = Pick<SmokeRun, "metrics" | "by_category" | "macro" | "latency_ms" | "requested_count">;
   const runs: Record<string, Run | null> | undefined = selectedJob
     ? Object.fromEntries(
         Object.entries(selectedJob.metrics ?? {}).map(([mode, metrics]) => [
@@ -413,9 +373,7 @@ export default function AdminBenchmark() {
     .flatMap(([mode, run]) =>
       run
         ? Object.entries(
-            cat === "all"
-              ? { "Tất cả": run.metrics }
-              : { [cat]: run.by_category?.[cat] || {} },
+            cat === "all" ? { "Tất cả": run.metrics } : { [cat]: run.by_category?.[cat] || {} },
           ).flatMap(([group, metrics]) =>
             Object.entries(metrics).map(([name, m]) => ({
               ...parseMetric(mode, name),
@@ -423,10 +381,7 @@ export default function AdminBenchmark() {
               name,
               value: m.value,
               group,
-              n:
-                group === "Tất cả"
-                  ? run.requested_count
-                  : m.eligible_count + m.excluded_count,
+              n: group === "Tất cả" ? run.requested_count : m.eligible_count + m.excluded_count,
               scored: m.scored_count,
               excluded: m.excluded_count,
             })),
@@ -437,47 +392,31 @@ export default function AdminBenchmark() {
       (a, b) =>
         a.mode.localeCompare(b.mode) ||
         channels.indexOf(a.channel) - channels.indexOf(b.channel) ||
-        (families.includes(a.family)
-          ? families.indexOf(a.family)
-          : families.length) -
-          (families.includes(b.family)
-            ? families.indexOf(b.family)
-            : families.length) ||
+        (families.includes(a.family) ? families.indexOf(a.family) : families.length) -
+          (families.includes(b.family) ? families.indexOf(b.family) : families.length) ||
         a.family.localeCompare(b.family) ||
         a.k - b.k ||
         a.group.localeCompare(b.group),
     );
-  const metricGroups: {
-    key: string;
-    mode: string;
-    channel: string;
-    metrics: typeof measured;
-  }[] = [];
+  const metricGroups: { key: string; mode: string; channel: string; metrics: typeof measured }[] =
+    [];
   for (const metric of measured) {
     const key = `${metric.mode}.${metric.channel}`;
     if (metricGroups.at(-1)?.key !== key)
-      metricGroups.push({
-        key,
-        mode: metric.mode,
-        channel: metric.channel,
-        metrics: [],
-      });
+      metricGroups.push({ key, mode: metric.mode, channel: metric.channel, metrics: [] });
     metricGroups.at(-1)!.metrics.push(metric);
   }
-  const runEntries: [string, Run][] = Object.entries(runs || {}).flatMap(
-    ([mode, run]) => (run ? [[mode, run] as [string, Run]] : []),
+  const runEntries: [string, Run][] = Object.entries(runs || {}).flatMap(([mode, run]) =>
+    run ? [[mode, run] as [string, Run]] : [],
   );
-  const suffix = (mode: string) =>
-    runEntries.length > 1 ? ` · ${modeLabel(mode)}` : "";
+  const suffix = (mode: string) => (runEntries.length > 1 ? ` · ${modeLabel(mode)}` : "");
   // A metric only shows when some run emitted it, so a G1-only run hides every G2 row outright.
   function buildRows(specs: RowSpec[]): MetricRow[] {
     return specs.flatMap(({ name, label }) => {
       for (const [mode, run] of runEntries) {
         const overall = run.metrics[name];
         if (!overall) continue;
-        const m =
-          (cat === "all" ? run.metrics : run.by_category?.[cat])?.[name] ??
-          overall;
+        const m = (cat === "all" ? run.metrics : run.by_category?.[cat])?.[name] ?? overall;
         return [
           {
             key: `${mode}.${name}`,
@@ -616,8 +555,7 @@ export default function AdminBenchmark() {
     try {
       const result = await stopBenchmarkRun(currentJob.run_id_job);
       setJob((previous) =>
-        previous?.run_id_job === result.run_id_job &&
-        previous.state !== "RUNNING"
+        previous?.run_id_job === result.run_id_job && previous.state !== "RUNNING"
           ? previous
           : result,
       );
@@ -634,8 +572,7 @@ export default function AdminBenchmark() {
     setBusy(true);
     try {
       const response = await apiResponse(path);
-      if (!response.ok)
-        throw new Error(`Không tải được file (${response.status}).`);
+      if (!response.ok) throw new Error(`Không tải được file (${response.status}).`);
       saveBlob(await response.blob(), filename);
     } catch (error) {
       notify(error instanceof Error ? error.message : "Không tải được file.");
@@ -647,18 +584,11 @@ export default function AdminBenchmark() {
   async function importFile(file: File) {
     const name = importName.trim();
     setImportErrors([]);
-    if (
-      !/^[A-Za-z0-9_.-]{1,64}$/.test(name) ||
-      name.includes("..") ||
-      name === "."
-    ) {
+    if (!/^[A-Za-z0-9_.-]{1,64}$/.test(name) || name.includes("..") || name === ".") {
       notify("Tên bộ câu hỏi cần 1–64 chữ, số, _, -, dấu chấm; không nhận ..");
       return;
     }
-    if (
-      !file.name.toLowerCase().endsWith(".json") ||
-      file.size > 8 * 1024 * 1024
-    ) {
+    if (!file.name.toLowerCase().endsWith(".json") || file.size > 8 * 1024 * 1024) {
       notify("Chọn file .json không quá 8 MiB.");
       return;
     }
@@ -677,9 +607,7 @@ export default function AdminBenchmark() {
               e &&
               Number.isSafeInteger(e.index) &&
               e.index >= 0 &&
-              ["field", "code", "message"].every(
-                (k) => typeof e[k] === "string",
-              ),
+              ["field", "code", "message"].every((k) => typeof e[k] === "string"),
           )
         ) {
           throw new Error("Phản hồi lỗi import không hợp lệ.");
@@ -694,8 +622,7 @@ export default function AdminBenchmark() {
             ? "Tên bộ câu hỏi đã tồn tại."
             : `Import thất bại (${response.status}).`,
         );
-      const result: { id: string; record_count: number } =
-        await response.json();
+      const result: { id: string; record_count: number } = await response.json();
       setImportErrors([]);
       notify(`Đã import ${result.record_count} câu.`);
       updateUrl({ dataset: result.id, cat: null });
@@ -730,10 +657,7 @@ export default function AdminBenchmark() {
               >
                 {!graph && <option value="">Chưa có đồ thị đã PASS</option>}
                 {graphRuns.map((r) => (
-                  <option
-                    key={`${r.project_id}/${r.run_id}`}
-                    value={`${r.project_id}/${r.run_id}`}
-                  >
+                  <option key={`${r.project_id}/${r.run_id}`} value={`${r.project_id}/${r.run_id}`}>
                     {r.project_name} · {r.run_id}
                   </option>
                 ))}
@@ -769,22 +693,19 @@ export default function AdminBenchmark() {
               />
             </label>
           </div>
-          {(selectedJob?.dataset_status ?? selected?.dataset_status) ===
-            "PROVISIONAL" && (
+          {(selectedJob?.dataset_status ?? selected?.dataset_status) === "PROVISIONAL" && (
             <p className="text-amber-700">
-              Bộ chưa cố định — số liệu tạm, không so sánh được giữa các lần
-              chạy.
+              Bộ chưa cố định — số liệu tạm, không so sánh được giữa các lần chạy.
             </p>
           )}
           {selectedJob?.dataset_status === "FROZEN" && (
             <p className="break-all text-xs">
-              FROZEN · dataset_hash: {selectedJob.dataset_hash} · frozen_at:{" "}
-              {selectedJob.frozen_at}
+              FROZEN · dataset_hash: {selectedJob.dataset_hash} · frozen_at: {selectedJob.frozen_at}
             </p>
           )}
           <p className="text-xs text-amber-700">
-            GraphLock giữ suốt lượt chạy; không thể xóa hoặc dựng lại đồ thị đến
-            khi lượt chạy kết thúc hoặc dừng.
+            GraphLock giữ suốt lượt chạy; không thể xóa hoặc dựng lại đồ thị đến khi lượt chạy kết
+            thúc hoặc dừng.
           </p>
           <div className="flex flex-wrap gap-2">
             <Button
@@ -797,19 +718,14 @@ export default function AdminBenchmark() {
                 serving.value?.busy ||
                 !selected?.record_count ||
                 !selected.dataset_hash ||
-                !["PROVISIONAL", "FROZEN"].includes(
-                  selected.dataset_status ?? "",
-                )
+                !["PROVISIONAL", "FROZEN"].includes(selected.dataset_status ?? "")
               }
               onClick={runBenchmark}
             >
               Chạy benchmark
             </Button>
             {currentJob?.state === "RUNNING" && (
-              <Button
-                disabled={runBusy || stopRequested}
-                onClick={stopBenchmark}
-              >
+              <Button disabled={runBusy || stopRequested} onClick={stopBenchmark}>
                 Dừng benchmark
               </Button>
             )}
@@ -831,14 +747,12 @@ export default function AdminBenchmark() {
               </Button>
             </div>
           )}
-          {jobId && !currentJob && !jobError && (
-            <p role="status">Đang tải trạng thái lượt chạy…</p>
-          )}
+          {jobId && !currentJob && !jobError && <p role="status">Đang tải trạng thái lượt chạy…</p>}
           {currentJob && (
             <div role="status" className="space-y-1 text-xs">
               <p className="break-all">
-                {currentJob.state} · {currentJob.dataset_id} ·{" "}
-                {currentJob.project_id}/{currentJob.run_id}
+                {currentJob.state} · {currentJob.dataset_id} · {currentJob.project_id}/
+                {currentJob.run_id}
               </p>
               {Object.entries(currentJob.progress).map(([m, p]) => (
                 <div key={m}>
@@ -881,9 +795,7 @@ export default function AdminBenchmark() {
                 {Math.max(
                   0,
                   Math.floor(
-                    ((currentJob.finished_at
-                      ? Date.parse(currentJob.finished_at)
-                      : now) -
+                    ((currentJob.finished_at ? Date.parse(currentJob.finished_at) : now) -
                       Date.parse(currentJob.started_at)) /
                       1000,
                   ),
@@ -899,9 +811,7 @@ export default function AdminBenchmark() {
                 </p>
               )}
               {currentJob.state === "FAILED" && (
-                <p className="text-red-700">
-                  Lượt chạy thất bại · {currentJob.code}
-                </p>
+                <p className="text-red-700">Lượt chạy thất bại · {currentJob.code}</p>
               )}
             </div>
           )}
@@ -914,9 +824,7 @@ export default function AdminBenchmark() {
             title="Bộ câu hỏi chuẩn"
             className="[&>header]:min-h-10"
             right={
-              <span className="text-[11.5px] text-muted">
-                {selected?.record_count ?? "—"} câu
-              </span>
+              <span className="text-[11.5px] text-muted">{selected?.record_count ?? "—"} câu</span>
             }
           >
             <div className="px-5 mb-4">
@@ -924,9 +832,7 @@ export default function AdminBenchmark() {
                 aria-label="Dataset"
                 className={inputCls}
                 value={selected?.id || ""}
-                onChange={(e) =>
-                  updateUrl({ dataset: e.target.value, cat: null })
-                }
+                onChange={(e) => updateUrl({ dataset: e.target.value, cat: null })}
               >
                 {datasets.map((r) => (
                   <option key={r.id}>{r.id}</option>
@@ -954,11 +860,7 @@ export default function AdminBenchmark() {
                 </label>
                 <FilePicker
                   title="Nhập bộ câu hỏi benchmark"
-                  hint={
-                    importName.trim()
-                      ? "JSON"
-                      : "JSON · Nhập tên bộ câu hỏi trước"
-                  }
+                  hint={importName.trim() ? "JSON" : "JSON · Nhập tên bộ câu hỏi trước"}
                   accept=".json,application/json"
                   disabled={busy || !importName.trim()}
                   onChange={(e) => {
@@ -972,10 +874,7 @@ export default function AdminBenchmark() {
                     size="sm"
                     disabled={busy}
                     onClick={() =>
-                      void download(
-                        "/admin/kag/benchmark/template",
-                        "benchmark-template.json",
-                      )
+                      void download("/admin/kag/benchmark/template", "benchmark-template.json")
                     }
                   >
                     Tải file mẫu
@@ -1002,8 +901,7 @@ export default function AdminBenchmark() {
                   >
                     {importErrors.map((error, index) => (
                       <li key={index}>
-                        Câu {error.index + 1} · {error.field || "record"} ·{" "}
-                        {error.message}
+                        Câu {error.index + 1} · {error.field || "record"} · {error.message}
                       </li>
                     ))}
                   </ul>
@@ -1037,9 +935,7 @@ export default function AdminBenchmark() {
                         style={{ width: `${(n / maxCatCount) * 100}%` }}
                       />
                     </span>
-                    <span className="text-right tabular-nums text-navy">
-                      {n}
-                    </span>
+                    <span className="text-right tabular-nums text-navy">{n}</span>
                   </li>
                 ))}
               </ul>
@@ -1062,9 +958,7 @@ export default function AdminBenchmark() {
                 className={`${inputCls} sm:w-52`}
                 value={cat}
                 onChange={(e) =>
-                  updateUrl({
-                    cat: e.target.value === "all" ? null : e.target.value,
-                  })
+                  updateUrl({ cat: e.target.value === "all" ? null : e.target.value })
                 }
                 aria-label="Nhóm câu hỏi"
               >
@@ -1079,9 +973,7 @@ export default function AdminBenchmark() {
           >
             {measured.length ? (
               <div role="region" aria-label="Bảng kết quả benchmark">
-                {primaryRows.length > 0 && (
-                  <MetricTable rows={primaryRows} label="Chỉ số chính" />
-                )}
+                {primaryRows.length > 0 && <MetricTable rows={primaryRows} label="Chỉ số chính" />}
                 {diagnosticRows.length > 0 && (
                   <Section title="Chẩn đoán">
                     <MetricTable rows={diagnosticRows} label="Chẩn đoán" />
@@ -1090,10 +982,7 @@ export default function AdminBenchmark() {
                 {breakdownSpecs.length > 0 && breakdownCats.length > 0 && (
                   <Section title="Theo danh mục">
                     <div className="overflow-x-auto">
-                      <table
-                        className="w-full text-sm"
-                        aria-label="Kết quả theo danh mục"
-                      >
+                      <table className="w-full text-sm" aria-label="Kết quả theo danh mục">
                         <thead className="border-y border-line">
                           <tr>
                             <Th className="!px-2">Metric</Th>
@@ -1106,10 +995,7 @@ export default function AdminBenchmark() {
                         </thead>
                         <tbody>
                           {breakdownSpecs.map((s) => (
-                            <tr
-                              key={s.name}
-                              className="border-b border-line/60 last:border-0"
-                            >
+                            <tr key={s.name} className="border-b border-line/60 last:border-0">
                               <Td className="!px-2 text-navy [overflow-wrap:anywhere]">
                                 <span title={s.name}>{s.label}</span>
                               </Td>
@@ -1131,14 +1017,13 @@ export default function AdminBenchmark() {
                 )}
                 {cat !== "all" && (
                   <p className="px-3 pb-3 pt-2 text-xs text-muted">
-                    Đã chấm / bị loại theo metric; khoảng số thể hiện các metric
-                    có số câu khác nhau.
+                    Đã chấm / bị loại theo metric; khoảng số thể hiện các metric có số câu khác
+                    nhau.
                   </p>
                 )}
                 <Section title="Kỹ thuật">
                   {metricGroups.map((group, index) => {
-                    const open =
-                      (index === 0) !== toggledChannels.has(group.key);
+                    const open = (index === 0) !== toggledChannels.has(group.key);
                     return (
                       <section key={group.key} className="border-t border-line">
                         <button
@@ -1155,8 +1040,7 @@ export default function AdminBenchmark() {
                             })
                           }
                         >
-                          {open ? "▼" : "▶"} {modeLabel(group.mode)} ·{" "}
-                          {group.channel || "Chung"}
+                          {open ? "▼" : "▶"} {modeLabel(group.mode)} · {group.channel || "Chung"}
                         </button>
                         {open && (
                           <table
@@ -1165,32 +1049,17 @@ export default function AdminBenchmark() {
                           >
                             <thead className="border-y border-line">
                               <tr>
-                                <Th className="hidden sm:table-cell sm:w-[12%] !px-2">
-                                  Chế độ
-                                </Th>
-                                <Th className="hidden sm:table-cell sm:w-[16%] !px-2">
-                                  Channel
-                                </Th>
-                                <Th className="w-[40%] sm:w-auto !px-2">
-                                  Metric
-                                </Th>
-                                <Th className="w-[24%] sm:w-[22%] !px-2">
-                                  Điểm
-                                </Th>
-                                <Th className="w-[20%] sm:w-[12%] !px-2">
-                                  Đã chấm
-                                </Th>
-                                <Th className="w-[16%] sm:w-[10%] !px-2">
-                                  Bị loại
-                                </Th>
+                                <Th className="hidden sm:table-cell sm:w-[12%] !px-2">Chế độ</Th>
+                                <Th className="hidden sm:table-cell sm:w-[16%] !px-2">Channel</Th>
+                                <Th className="w-[40%] sm:w-auto !px-2">Metric</Th>
+                                <Th className="w-[24%] sm:w-[22%] !px-2">Điểm</Th>
+                                <Th className="w-[20%] sm:w-[12%] !px-2">Đã chấm</Th>
+                                <Th className="w-[16%] sm:w-[10%] !px-2">Bị loại</Th>
                               </tr>
                             </thead>
                             <tbody>
                               {group.metrics.map((m) => (
-                                <tr
-                                  key={m.key}
-                                  className="border-b border-line/60 last:border-0"
-                                >
+                                <tr key={m.key} className="border-b border-line/60 last:border-0">
                                   <Td className="hidden sm:table-cell !px-2">
                                     {modeLabel(m.mode)}
                                   </Td>
@@ -1201,19 +1070,14 @@ export default function AdminBenchmark() {
                                     <span title={m.name}>{m.label}</span>
                                   </Td>
                                   <Td className="!px-2">
-                                    {m.name === "answer_correctness" &&
-                                    m.value === null ? (
-                                      <span className="text-xs text-muted">
-                                        Chưa có giám khảo
-                                      </span>
+                                    {m.name === "answer_correctness" && m.value === null ? (
+                                      <span className="text-xs text-muted">Chưa có giám khảo</span>
                                     ) : (
                                       <MetricBar
                                         value={m.value}
                                         kind={
                                           metricKinds[m.name] ??
-                                          (rankingMetric.test(m.name)
-                                            ? "ratio"
-                                            : "count")
+                                          (rankingMetric.test(m.name) ? "ratio" : "count")
                                         }
                                       />
                                     )}
@@ -1232,9 +1096,7 @@ export default function AdminBenchmark() {
               </div>
             ) : (
               <div className="flex min-h-48 flex-col items-center justify-center gap-2 px-5 pb-6 text-center">
-                <p className="text-sm font-medium text-navy">
-                  Chưa có kết quả đánh giá
-                </p>
+                <p className="text-sm font-medium text-navy">Chưa có kết quả đánh giá</p>
                 <p className="max-w-md text-sm text-muted">
                   {cat === "all"
                     ? "Chưa có execution artifact hợp lệ cho bộ câu hỏi này; các chỉ số chưa đo."
@@ -1250,44 +1112,32 @@ export default function AdminBenchmark() {
                 {selectedJob && (
                   <>
                     <p>
-                      Job: {selectedJob.run_id_job} · Fingerprint:{" "}
-                      {selectedJob.graph_fingerprint}
+                      Job: {selectedJob.run_id_job} · Fingerprint: {selectedJob.graph_fingerprint}
                     </p>
                     <p>
-                      Dataset hash: {selectedJob.dataset_hash} ·{" "}
-                      {selectedJob.dataset_status} · frozen_at:{" "}
-                      {selectedJob.frozen_at ?? "—"}
+                      Dataset hash: {selectedJob.dataset_hash} · {selectedJob.dataset_status} ·
+                      frozen_at: {selectedJob.frozen_at ?? "—"}
                     </p>
                     <p>
-                      Provider requests · embedding:{" "}
-                      {selectedJob.provider_requests.embedding} · chat:{" "}
-                      {selectedJob.provider_requests.chat}
+                      Provider requests · embedding: {selectedJob.provider_requests.embedding} ·
+                      chat: {selectedJob.provider_requests.chat}
                     </p>
-                    {Object.entries(selectedJob.metrics ?? {}).map(
-                      ([m, metrics]) => (
-                        <div key={m} className="space-y-1">
-                          <p>
-                            {modeLabel(m)} · Đã xử lý: {metrics.requested_count}{" "}
-                            · Không đủ điều kiện: {metrics.ineligible_count} ·
-                            Lỗi: {metrics.failed_count}
-                          </p>
-                          <p>
-                            Latency mean:{" "}
-                            <MetricBar
-                              value={metrics.latency_ms.all_attempted.mean}
-                              kind="latency"
-                            />
-                          </p>
-                          <p>
-                            Failure rate:{" "}
-                            <MetricBar
-                              value={metrics.failure_rate.value}
-                              kind="ratio"
-                            />
-                          </p>
-                        </div>
-                      ),
-                    )}
+                    {Object.entries(selectedJob.metrics ?? {}).map(([m, metrics]) => (
+                      <div key={m} className="space-y-1">
+                        <p>
+                          {modeLabel(m)} · Đã xử lý: {metrics.requested_count} · Không đủ điều kiện:{" "}
+                          {metrics.ineligible_count} · Lỗi: {metrics.failed_count}
+                        </p>
+                        <p>
+                          Latency mean:{" "}
+                          <MetricBar value={metrics.latency_ms.all_attempted.mean} kind="latency" />
+                        </p>
+                        <p>
+                          Failure rate:{" "}
+                          <MetricBar value={metrics.failure_rate.value} kind="ratio" />
+                        </p>
+                      </div>
+                    ))}
                   </>
                 )}
                 {data.value && (
@@ -1295,81 +1145,65 @@ export default function AdminBenchmark() {
                     <summary className="cursor-pointer underline">
                       Danh tính graph và cấu hình quan sát
                     </summary>
-                    <p className="mt-1">
-                      Fingerprint: {data.value.graph_fingerprint}
-                    </p>
+                    <p className="mt-1">Fingerprint: {data.value.graph_fingerprint}</p>
+                    <p>Source catalog SHA-256: {data.value.source_catalog_sha256}</p>
                     <p>
-                      Source catalog SHA-256: {data.value.source_catalog_sha256}
-                    </p>
-                    <p>
-                      Model:{" "}
-                      {data.value.providers.configured_chat_model ??
-                        "Chưa cấu hình"}{" "}
-                      · upstream chưa xác minh
+                      Model: {data.value.providers.configured_chat_model ?? "Chưa cấu hình"} ·
+                      upstream chưa xác minh
                     </p>
                   </details>
                 )}
                 {row && (
                   <>
                     <p>
-                      {row.dataset_hash} · eligible {row.eligible_count} ·
-                      ineligible {row.ineligible_count}
+                      {row.dataset_hash} · eligible {row.eligible_count} · ineligible{" "}
+                      {row.ineligible_count}
                     </p>
                     <p>Độ phủ căn cứ chuẩn cho truy xuất · {row.reason}</p>
                     <p>
                       Review: {row.smoke?.review_status ?? "Chưa có"} · official{" "}
-                      {String(row.official_benchmark)} · state{" "}
-                      {row.smoke?.state ?? "NOT_RUN"}
+                      {String(row.official_benchmark)} · state {row.smoke?.state ?? "NOT_RUN"}
                     </p>
-                    {Object.entries(row.smoke?.runs || {}).map(
-                      ([mode, run]) => (
-                        <details key={mode}>
-                          <summary className="cursor-pointer underline">
-                            {modeLabel(mode)}: {run?.status ?? "NOT_RUN"}
-                          </summary>
-                          {run ? (
-                            <div className="mt-1 space-y-1">
-                              <p>
-                                Requested {run.requested_count} · Attempted{" "}
-                                {run.attempted_count} · Failed{" "}
-                                {run.failed_count} · Ineligible{" "}
-                                {run.ineligible_count}
-                              </p>
-                              <p>
-                                {run.started_at} → {run.finished_at}
-                              </p>
-                              <p>
-                                Latency mean:{" "}
-                                <MetricBar
-                                  value={run.latency_ms.all_attempted.mean}
-                                  kind="latency"
-                                />
-                              </p>
-                              <pre className="whitespace-pre-wrap break-all">
-                                {JSON.stringify(run.configuration, null, 2)}
-                              </pre>
-                              {Object.entries(run.metrics).map(([name, m]) => (
-                                <p key={name}>
-                                  {name}:{" "}
-                                  {m.value ??
-                                    (name === "answer_correctness"
-                                      ? "Chưa có giám khảo"
-                                      : "Chưa đo")}{" "}
-                                  · Scored {m.scored_count}/{m.eligible_count} ·
-                                  Failed {m.failed_count} · Excluded{" "}
-                                  {m.excluded_count}
-                                </p>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className="mt-1">
-                              Chưa có execution artifact hợp lệ; metrics chưa
-                              đo.
+                    {Object.entries(row.smoke?.runs || {}).map(([mode, run]) => (
+                      <details key={mode}>
+                        <summary className="cursor-pointer underline">
+                          {modeLabel(mode)}: {run?.status ?? "NOT_RUN"}
+                        </summary>
+                        {run ? (
+                          <div className="mt-1 space-y-1">
+                            <p>
+                              Requested {run.requested_count} · Attempted {run.attempted_count} ·
+                              Failed {run.failed_count} · Ineligible {run.ineligible_count}
                             </p>
-                          )}
-                        </details>
-                      ),
-                    )}
+                            <p>
+                              {run.started_at} → {run.finished_at}
+                            </p>
+                            <p>
+                              Latency mean:{" "}
+                              <MetricBar value={run.latency_ms.all_attempted.mean} kind="latency" />
+                            </p>
+                            <pre className="whitespace-pre-wrap break-all">
+                              {JSON.stringify(run.configuration, null, 2)}
+                            </pre>
+                            {Object.entries(run.metrics).map(([name, m]) => (
+                              <p key={name}>
+                                {name}:{" "}
+                                {m.value ??
+                                  (name === "answer_correctness"
+                                    ? "Chưa có giám khảo"
+                                    : "Chưa đo")}{" "}
+                                · Scored {m.scored_count}/{m.eligible_count} · Failed{" "}
+                                {m.failed_count} · Excluded {m.excluded_count}
+                              </p>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="mt-1">
+                            Chưa có execution artifact hợp lệ; metrics chưa đo.
+                          </p>
+                        )}
+                      </details>
+                    ))}
                     <details>
                       <summary className="cursor-pointer underline">
                         Căn cứ chuẩn còn thiếu trong dữ liệu mẫu

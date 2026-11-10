@@ -30,15 +30,13 @@ const modelErrors: Record<string, string> = {
     "Cấu hình đang áp dụng không còn hợp lệ. Kiểm tra dữ liệu và quyền kết nối.",
   PROXY_POLICY_UNVERIFIED:
     "Chưa xác định được giới hạn lượt gọi qua proxy. Cần quản trị triển khai kiểm tra trước khi thử kết nối.",
-  BLOCKED:
-    "Địa chỉ kết nối chưa được hệ thống cho phép. Cần quản trị triển khai cấp quyền.",
+  BLOCKED: "Địa chỉ kết nối chưa được hệ thống cho phép. Cần quản trị triển khai cấp quyền.",
   AUTH_FAILED: "Provider từ chối API key hoặc quyền truy cập.",
   MODEL_NOT_FOUND: "Provider không tìm thấy model.",
   RATE_LIMITED: "Provider giới hạn lượt gọi. Chờ trước khi kiểm thử lại.",
   PROVIDER_ERROR: "Provider trả lỗi dịch vụ.",
   MODEL_MISMATCH: "Model trong response không khớp model đã lưu.",
-  DIMENSION_MISMATCH:
-    "Số chiều vector không hợp lệ hoặc vượt giới hạn kiểm thử.",
+  DIMENSION_MISMATCH: "Số chiều vector không hợp lệ hoặc vượt giới hạn kiểm thử.",
   INVALID_RESPONSE: "Provider trả dữ liệu không hợp lệ.",
   TIMEOUT: "Request hết thời gian; không tự thử lại.",
   NETWORK_ERROR: "Không kết nối được provider qua gateway.",
@@ -53,10 +51,7 @@ export default function AdminChatbot() {
   const models = useInspection(loadLLMCredentials);
   const serving = useInspection(loadServing);
 
-  const [modelsDirty, setModelsDirty] = useState({
-    chat: false,
-    embedding: false,
-  });
+  const [modelsDirty, setModelsDirty] = useState({ chat: false, embedding: false });
   const [modelsSaving, setModelsSaving] = useState(false);
   const [modelsMessage, setModelsMessage] = useState("");
   const [modelsError, setModelsError] = useState("");
@@ -87,14 +82,10 @@ export default function AdminChatbot() {
   const dirtyRetrieval =
     !!draft &&
     !!retrievalState?.saved &&
-    (draft.top_k !== retrievalState.saved.top_k ||
-      draft.expand !== retrievalState.saved.expand);
+    (draft.top_k !== retrievalState.saved.top_k || draft.expand !== retrievalState.saved.expand);
   const unsaved = modelsDirty.chat || modelsDirty.embedding || dirtyRetrieval;
   const validRetrieval =
-    !!draft &&
-    Number.isInteger(draft.top_k) &&
-    draft.top_k >= 1 &&
-    draft.top_k <= 10;
+    !!draft && Number.isInteger(draft.top_k) && draft.top_k >= 1 && draft.top_k <= 10;
 
   function reloadAll() {
     if (unsaved || serving.loading) return;
@@ -115,10 +106,7 @@ export default function AdminChatbot() {
     serving.reload();
   }
 
-  async function saveModels(
-    event: FormEvent<HTMLFormElement>,
-    role: "chat" | "embedding",
-  ) {
+  async function saveModels(event: FormEvent<HTMLFormElement>, role: "chat" | "embedding") {
     event.preventDefault();
     if (!models.value?.save_allowed) return;
     const form = event.currentTarget,
@@ -136,17 +124,11 @@ export default function AdminChatbot() {
     setModelsMessage("");
     setCopied(false);
     try {
-      const saved = await saveLLMCredentials(
-        models.value.revision,
-        role,
-        input,
-      );
+      const saved = await saveLLMCredentials(models.value.revision, role, input);
       models.setValue(saved);
-      form
-        .querySelectorAll<HTMLInputElement>("input[type=password]")
-        .forEach((field) => {
-          field.value = "";
-        });
+      form.querySelectorAll<HTMLInputElement>("input[type=password]").forEach((field) => {
+        field.value = "";
+      });
       setModelsMessage(
         `${key ? "API key đã lưu thành công" : "Đã lưu cấu hình"} (${role === "chat" ? "Chat" : "Embedding"}). Cần kiểm tra trước khi áp dụng.`,
       );
@@ -259,19 +241,12 @@ export default function AdminChatbot() {
       title="Chatbot"
       subtitle="Cấu hình model và quản lý đồ thị dùng cho Chat."
       actions={
-        <Button
-          disabled={unsaved || modelsSaving || modelRunning || changing}
-          onClick={reloadAll}
-        >
+        <Button disabled={unsaved || modelsSaving || modelRunning || changing} onClick={reloadAll}>
           Tải lại
         </Button>
       }
     >
-      {unsaved && (
-        <p className="mb-4 text-sm">
-          Có thay đổi chưa lưu. Lưu trước khi tải lại.
-        </p>
-      )}
+      {unsaved && <p className="mb-4 text-sm">Có thay đổi chưa lưu. Lưu trước khi tải lại.</p>}
       <div className="space-y-5">
         <Card title="Model & API key">
           <div className="px-5 pb-5 text-sm space-y-4">
@@ -280,18 +255,18 @@ export default function AdminChatbot() {
               <>
                 {models.value.error_code && (
                   <p role="alert" className="text-red-700">
-                    Không đọc hoặc ghi được credentials đã lưu. Cần kiểm tra
-                    file và quyền phía triển khai.
+                    Không đọc hoặc ghi được credentials đã lưu. Cần kiểm tra file và quyền phía
+                    triển khai.
                   </p>
                 )}
                 <p className="text-muted">
-                  Chat trả lời câu hỏi; Embedding tạo vector tìm nguồn liên
-                  quan. Hai kết nối lưu, kiểm tra và áp dụng riêng.
+                  Chat trả lời câu hỏi; Embedding tạo vector tìm nguồn liên quan. Hai kết nối lưu,
+                  kiểm tra và áp dụng riêng.
                 </p>
                 {!models.value.save_allowed && !models.value.error_code && (
                   <p>
-                    Chưa được phép lưu. Cần quản trị triển khai kiểm tra quyền
-                    và phiên bản cấu hình.
+                    Chưa được phép lưu. Cần quản trị triển khai kiểm tra quyền và phiên bản cấu
+                    hình.
                   </p>
                 )}
                 <div className="grid gap-6 md:grid-cols-2">
@@ -300,10 +275,7 @@ export default function AdminChatbot() {
                       key={`${role}-${models.value?.roles[role].saved_revision}`}
                       onSubmit={(event) => void saveModels(event, role)}
                       onChange={() => {
-                        setModelsDirty((current) => ({
-                          ...current,
-                          [role]: true,
-                        }));
+                        setModelsDirty((current) => ({ ...current, [role]: true }));
                         setModelsMessage("");
                       }}
                       autoComplete="off"
@@ -326,21 +298,17 @@ export default function AdminChatbot() {
                         <div className="space-y-1 text-xs">
                           <p>
                             Bản lưu:{" "}
-                            <strong>
-                              {models.value?.[role]?.model ?? "Chưa lưu model"}
-                            </strong>
-                            .{modelsDirty[role] && " Có thay đổi chưa lưu."}
+                            <strong>{models.value?.[role]?.model ?? "Chưa lưu model"}</strong>.
+                            {modelsDirty[role] && " Có thay đổi chưa lưu."}
                           </p>
                           <p>
                             Kiểm tra kết nối:{" "}
                             <strong>
                               {models.value?.roles[role].test?.status === "PASS"
                                 ? "Thành công"
-                                : models.value?.roles[role].test?.status ===
-                                    "FAIL"
+                                : models.value?.roles[role].test?.status === "FAIL"
                                   ? "Lỗi kết nối"
-                                  : models.value?.roles[role].test?.status ===
-                                      "BLOCKED"
+                                  : models.value?.roles[role].test?.status === "BLOCKED"
                                     ? "Chưa thể kiểm tra"
                                     : "Chưa kiểm tra"}
                             </strong>
@@ -356,8 +324,7 @@ export default function AdminChatbot() {
                           {models.value?.roles[role].active &&
                             models.value.roles[role].status !== "APPLIED" && (
                               <p className="text-muted break-words">
-                                Đang dùng bản trước:{" "}
-                                {models.value.roles[role].active?.model}.
+                                Đang dùng bản trước: {models.value.roles[role].active?.model}.
                               </p>
                             )}
                         </div>
@@ -367,9 +334,7 @@ export default function AdminChatbot() {
                             className={inputCls}
                             defaultValue="openai-compatible"
                           >
-                            <option value="openai-compatible">
-                              OpenAI-compatible
-                            </option>
+                            <option value="openai-compatible">OpenAI-compatible</option>
                           </select>
                         </Field>
                         <Field label="Địa chỉ kết nối (Base URL)">
@@ -426,10 +391,7 @@ export default function AdminChatbot() {
                               type="button"
                               onClick={(event) => {
                                 event.currentTarget.form?.reset();
-                                setModelsDirty((current) => ({
-                                  ...current,
-                                  [role]: false,
-                                }));
+                                setModelsDirty((current) => ({ ...current, [role]: false }));
                                 setModelsError("");
                               }}
                             >
@@ -491,10 +453,7 @@ export default function AdminChatbot() {
                           </p>
                         )}
                       {models.value?.roles[role].blocker && (
-                        <p
-                          role="status"
-                          className="text-xs break-words text-muted"
-                        >
+                        <p role="status" className="text-xs break-words text-muted">
                           {modelErrors[models.value.roles[role].blocker!]}
                         </p>
                       )}
@@ -502,15 +461,14 @@ export default function AdminChatbot() {
                   ))}
                 </div>
                 <p className="text-xs text-muted">
-                  Kiểm tra kết nối gửi tối đa 1 request thật và có thể phát sinh
-                  phí; chỉ gửi sau xác nhận. Khi dựng đồ thị, hệ thống dùng
-                  Embedding đã lưu và kiểm tra thành công (không cần chờ Áp dụng
-                  cho Chat).
+                  Kiểm tra kết nối gửi tối đa 1 request thật và có thể phát sinh phí; chỉ gửi sau
+                  xác nhận. Khi dựng đồ thị, hệ thống dùng Embedding đã lưu và kiểm tra thành công
+                  (không cần chờ Áp dụng cho Chat).
                 </p>
                 <p className="text-xs text-muted">
-                  Embedding phải khớp đồ thị đang dùng. Hết hạn mức thì chỉ đổi
-                  API key, giữ nguyên địa chỉ kết nối và tên model. Đổi địa chỉ
-                  hoặc model thì đồ thị cũ phải dựng lại mới dùng được.
+                  Embedding phải khớp đồ thị đang dùng. Hết hạn mức thì chỉ đổi API key, giữ nguyên
+                  địa chỉ kết nối và tên model. Đổi địa chỉ hoặc model thì đồ thị cũ phải dựng lại
+                  mới dùng được.
                 </p>
               </>
             )}
@@ -524,9 +482,7 @@ export default function AdminChatbot() {
                 {modelsError}
               </p>
             )}
-            {modelRunning && (
-              <p role="status">Đang kiểm tra hoặc áp dụng model…</p>
-            )}
+            {modelRunning && <p role="status">Đang kiểm tra hoặc áp dụng model…</p>}
           </div>
         </Card>
       </div>
@@ -534,13 +490,10 @@ export default function AdminChatbot() {
         searchOptions={
           <Card title="Tùy chọn tìm kiếm khi trả lời Chat">
             <div className="px-5 pb-5 text-sm space-y-3">
-              <p>
-                Chọn số nguồn cần tìm và tìm thêm nội dung qua các quan hệ trong
-                đồ thị.
-              </p>
+              <p>Chọn số nguồn cần tìm và tìm thêm nội dung qua các quan hệ trong đồ thị.</p>
               <p className="text-muted">
-                Câu trả lời cần trích dẫn nguồn. Không đủ căn cứ để trả lời thì
-                hệ thống dừng trả lời.
+                Câu trả lời cần trích dẫn nguồn. Không đủ căn cứ để trả lời thì hệ thống dừng trả
+                lời.
               </p>
               <Notice {...retrieval} retry={retrieval.reload} />
               {retrievalState && (
@@ -554,26 +507,22 @@ export default function AdminChatbot() {
                   )}
                   {retrievalState.active && (
                     <p>
-                      Đang áp dụng: {retrievalState.active.top_k} kết quả nguồn;
-                      tìm thêm nội dung liên quan{" "}
-                      {retrievalState.active.expand ? "bật" : "tắt"}.
+                      Đang áp dụng: {retrievalState.active.top_k} kết quả nguồn; tìm thêm nội dung
+                      liên quan {retrievalState.active.expand ? "bật" : "tắt"}.
                     </p>
                   )}
                   {retrievalState.saved && (
                     <p>
-                      {retrievalState.persisted
-                        ? "Đã lưu"
-                        : "Mặc định chưa lưu"}
-                      : {retrievalState.saved.top_k} kết quả nguồn; tìm thêm nội
-                      dung liên quan{" "}
+                      {retrievalState.persisted ? "Đã lưu" : "Mặc định chưa lưu"}:{" "}
+                      {retrievalState.saved.top_k} kết quả nguồn; tìm thêm nội dung liên quan{" "}
                       {retrievalState.saved.expand ? "bật" : "tắt"}.
                       {retrievalState.pending && " Chờ áp dụng."}
                     </p>
                   )}
                   {!retrievalState.runtime_idle && (
                     <p>
-                      Hệ thống đang bận hoặc chưa thể đổi cấu hình an toàn. Thử
-                      áp dụng hoặc khôi phục sau.
+                      Hệ thống đang bận hoặc chưa thể đổi cấu hình an toàn. Thử áp dụng hoặc khôi
+                      phục sau.
                     </p>
                   )}
                   {draft && retrievalState.saved && (
@@ -589,10 +538,7 @@ export default function AdminChatbot() {
                             value={draft.top_k}
                             disabled={changing || !retrievalState.actions.save}
                             onChange={(event) =>
-                              setDraft({
-                                ...draft,
-                                top_k: Number(event.target.value),
-                              })
+                              setDraft({ ...draft, top_k: Number(event.target.value) })
                             }
                           />
                         </Field>
@@ -602,10 +548,7 @@ export default function AdminChatbot() {
                             checked={draft.expand}
                             disabled={changing || !retrievalState.actions.save}
                             onChange={(event) =>
-                              setDraft({
-                                ...draft,
-                                expand: event.target.checked,
-                              })
+                              setDraft({ ...draft, expand: event.target.checked })
                             }
                           />{" "}
                           Tìm thêm nội dung liên quan
@@ -626,11 +569,7 @@ export default function AdminChatbot() {
                             !validRetrieval
                           }
                           onClick={() =>
-                            void updateRetrieval(
-                              "save",
-                              retrievalState.revision,
-                              draft,
-                            )
+                            void updateRetrieval("save", retrievalState.revision, draft)
                           }
                         >
                           Lưu
@@ -672,9 +611,7 @@ export default function AdminChatbot() {
                         {dirtyRetrieval && (
                           <Button
                             disabled={changing || retrieval.loading}
-                            onClick={() =>
-                              setDraft({ ...retrievalState.saved! })
-                            }
+                            onClick={() => setDraft({ ...retrievalState.saved! })}
                           >
                             Hủy thay đổi
                           </Button>
@@ -682,8 +619,7 @@ export default function AdminChatbot() {
                       </div>
                       {dirtyRetrieval && (
                         <p className="text-muted">
-                          Thay đổi trên form chưa lưu. Lưu trước khi áp dụng
-                          hoặc khôi phục.
+                          Thay đổi trên form chưa lưu. Lưu trước khi áp dụng hoặc khôi phục.
                         </p>
                       )}
                     </>
@@ -706,12 +642,8 @@ export default function AdminChatbot() {
         }
       />
       <details className="mt-5 text-sm">
-        <summary className="underline cursor-pointer">
-          Chi tiết kỹ thuật cấu hình
-        </summary>
-        <pre className="whitespace-pre-wrap break-all text-xs mt-3">
-          {snapshot}
-        </pre>
+        <summary className="underline cursor-pointer">Chi tiết kỹ thuật cấu hình</summary>
+        <pre className="whitespace-pre-wrap break-all text-xs mt-3">{snapshot}</pre>
         <Button disabled={copying} onClick={() => void copySnapshot()}>
           Sao chép cấu hình
         </Button>
@@ -732,11 +664,7 @@ export default function AdminChatbot() {
             <Button
               variant="primary"
               onClick={() => {
-                if (confirmation)
-                  void updateRetrieval(
-                    confirmation.action,
-                    confirmation.revision,
-                  );
+                if (confirmation) void updateRetrieval(confirmation.action, confirmation.revision);
               }}
             >
               Xác nhận
@@ -746,11 +674,9 @@ export default function AdminChatbot() {
       >
         {confirmation && (
           <p>
-            Đặt {confirmation.values.top_k} kết quả nguồn; tìm thêm nội dung
-            liên quan {confirmation.values.expand ? "bật" : "tắt"} cho các câu
-            hỏi Chat tiếp theo.{" "}
-            {confirmation.action === "restore" &&
-              "Bản đã lưu cũng được thay bằng bản khôi phục."}{" "}
+            Đặt {confirmation.values.top_k} kết quả nguồn; tìm thêm nội dung liên quan{" "}
+            {confirmation.values.expand ? "bật" : "tắt"} cho các câu hỏi Chat tiếp theo.{" "}
+            {confirmation.action === "restore" && "Bản đã lưu cũng được thay bằng bản khôi phục."}{" "}
             Câu hỏi đang xử lý không bị thay đổi.
           </p>
         )}
@@ -758,11 +684,7 @@ export default function AdminChatbot() {
 
       <Modal
         open={modelAction !== null}
-        title={
-          modelAction?.action === "test"
-            ? "Kiểm thử provider thực"
-            : "Áp dụng model phục vụ"
-        }
+        title={modelAction?.action === "test" ? "Kiểm thử provider thực" : "Áp dụng model phục vụ"}
         onClose={() => setModelAction(null)}
         footer={
           <>

@@ -1,13 +1,7 @@
 import LogoMark from "../components/LogoMark";
 import { AccountMenu, useAuth } from "../auth";
 import { canAccessAdminPage } from "../auth-policy";
-import {
-  Link,
-  NavLink,
-  Outlet,
-  useNavigate,
-  useLocation,
-} from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate, useLocation } from "react-router-dom";
 
 const topItems: [string, string][] = [
   ["/admin/dashboard", "Tổng quan"],
@@ -41,9 +35,7 @@ export default function AdminLayout() {
   const visibleAdvanced = advancedItems.filter(
     ([path]) => session && canAccessAdminPage(session.role, path),
   );
-  const advancedActive = visibleAdvanced.some(
-    ([path]) => path === location.pathname,
-  );
+  const advancedActive = visibleAdvanced.some(([path]) => path === location.pathname);
 
   return (
     <div className="flex h-dvh overflow-hidden bg-bg">
@@ -57,15 +49,9 @@ export default function AdminLayout() {
             {session?.role === "police" ? "Quản lý nội dung" : "Quản trị"}
           </p>
         </div>
-        <nav
-          aria-label="Điều hướng quản trị"
-          className="flex-1 px-4 mt-6 pb-4 overflow-y-auto"
-        >
+        <nav aria-label="Điều hướng quản trị" className="flex-1 px-4 mt-6 pb-4 overflow-y-auto">
           {visibleTop.map(([to, label, basePath]) => (
-            <div
-              key={basePath}
-              className="border-b border-line/60 py-1.5 last:border-0"
-            >
+            <div key={basePath} className="border-b border-line/60 py-1.5 last:border-0">
               <NavLink
                 to={to}
                 className={() =>
@@ -103,11 +89,7 @@ export default function AdminLayout() {
               </summary>
               <div className="ml-3 mb-1 mt-1 space-y-0.5">
                 {visibleAdvanced.map(([to, label]) => (
-                  <NavLink
-                    key={to}
-                    to={to}
-                    className={({ isActive }) => menuLinkClass(isActive)}
-                  >
+                  <NavLink key={to} to={to} className={({ isActive }) => menuLinkClass(isActive)}>
                     {label}
                   </NavLink>
                 ))}

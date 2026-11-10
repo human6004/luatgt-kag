@@ -26,12 +26,10 @@ export interface SignItem {
 }
 
 function isChildOf(sign: SignItem, parent: SignItem) {
-  if (sign.id === parent.id || sign.source?.qcvn !== parent.source?.qcvn)
-    return false;
+  if (sign.id === parent.id || sign.source?.qcvn !== parent.source?.qcvn) return false;
   const codes = parent.source?.children_codes;
   return (
-    sign.source?.parent_code === parent.code ||
-    (Array.isArray(codes) && codes.includes(sign.code))
+    sign.source?.parent_code === parent.code || (Array.isArray(codes) && codes.includes(sign.code))
   );
 }
 
@@ -49,13 +47,10 @@ export default function SignLibraryPage() {
         categoryLabel: String(r.data.group || ""),
         shortDesc: String(r.data.meaning || ""),
         meaning: String(r.data.meaning || ""),
-        applicableCases: String(
-          r.data.applicableCases || "Chưa có thông tin từ backend",
-        ),
+        applicableCases: String(r.data.applicableCases || "Chưa có thông tin từ backend"),
         relatedViolations: [],
         hasImage:
-          r.data.image_status === "verified" &&
-          Boolean(r.data.imageKey || r.data.hasDatasetImage),
+          r.data.image_status === "verified" && Boolean(r.data.imageKey || r.data.hasDatasetImage),
         source: r.data,
       })),
     [data.value],
@@ -63,9 +58,10 @@ export default function SignLibraryPage() {
 
   const categories = [
     { key: "all", label: "Tất cả" },
-    ...Array.from(new Set(signs.map((s) => s.category).filter(Boolean))).map(
-      (v) => ({ key: v, label: v }),
-    ),
+    ...Array.from(new Set(signs.map((s) => s.category).filter(Boolean))).map((v) => ({
+      key: v,
+      label: v,
+    })),
   ];
 
   const urlQ = params.get("q") ?? "";
@@ -99,9 +95,7 @@ export default function SignLibraryPage() {
 
   const filteredSigns = useMemo(() => {
     const query = searchQuery.toLowerCase().trim();
-    const matchingParents = query
-      ? signs.filter((sign) => sign.code.toLowerCase() === query)
-      : [];
+    const matchingParents = query ? signs.filter((sign) => sign.code.toLowerCase() === query) : [];
     return signs.filter((sign) => {
       if (activeCategory !== "all" && sign.category !== activeCategory) {
         return false;
@@ -132,9 +126,7 @@ export default function SignLibraryPage() {
         <div className="flex items-center gap-2 text-xs text-muted mb-2 font-mono">
           <span>LuậtGT</span>
           <span>/</span>
-          <span className="text-navy font-sans font-medium">
-            Hệ thống biển báo hiệu đường bộ
-          </span>
+          <span className="text-navy font-sans font-medium">Hệ thống biển báo hiệu đường bộ</span>
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
@@ -161,12 +153,7 @@ export default function SignLibraryPage() {
             className="w-full bg-bg border border-line rounded-xl pl-10 pr-4 py-3 text-sm text-navy placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all"
           />
           <div className="absolute inset-y-0 left-0 flex items-center pl-3.5 pointer-events-none text-muted">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -184,12 +171,7 @@ export default function SignLibraryPage() {
               }}
               className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted hover:text-navy"
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -204,13 +186,8 @@ export default function SignLibraryPage() {
         <FilterTabs
           label="Phân loại biển báo"
           value={activeCategory}
-          onChange={(key) =>
-            updateUrl({ cat: key === "all" ? null : key, sign: null })
-          }
-          items={categories.map((category) => ({
-            value: category.key,
-            label: category.label,
-          }))}
+          onChange={(key) => updateUrl({ cat: key === "all" ? null : key, sign: null })}
+          items={categories.map((category) => ({ value: category.key, label: category.label }))}
         />
       </div>
 
@@ -227,12 +204,8 @@ export default function SignLibraryPage() {
 
       {filteredSigns.length === 0 ? (
         <div className="bg-surface rounded-2xl border border-dashed border-line p-12 text-center">
-          <p className="font-sans text-lg text-navy">
-            Không tìm thấy biển báo nào
-          </p>
-          <p className="text-sm text-muted mt-1">
-            Vui lòng thử tìm kiếm với từ khóa khác.
-          </p>
+          <p className="font-sans text-lg text-navy">Không tìm thấy biển báo nào</p>
+          <p className="text-sm text-muted mt-1">Vui lòng thử tìm kiếm với từ khóa khác.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-4">
@@ -245,16 +218,10 @@ export default function SignLibraryPage() {
               <div>
                 <div className="w-24 h-24 mx-auto mb-4 p-2 bg-bg rounded-xl border border-selected flex items-center justify-center group-hover:scale-105 transition-transform">
                   {sign.hasImage ? (
-                    <Asset
-                      id={sign.id}
-                      alt={sign.name}
-                      className="h-full w-full object-contain"
-                    />
+                    <Asset id={sign.id} alt={sign.name} className="h-full w-full object-contain" />
                   ) : (
                     <p className="text-center text-xs text-muted">
-                      {sign.source?.record_type === "family"
-                        ? "Nhóm biển"
-                        : "Chưa có ảnh nguồn"}
+                      {sign.source?.record_type === "family" ? "Nhóm biển" : "Chưa có ảnh nguồn"}
                     </p>
                   )}
                 </div>
@@ -263,18 +230,14 @@ export default function SignLibraryPage() {
                   <span className="px-2 py-0.5 rounded-md text-[11px] font-mono font-semibold bg-navy text-white">
                     {sign.code}
                   </span>
-                  <span className="text-[11px] font-medium text-muted">
-                    {sign.categoryLabel}
-                  </span>
+                  <span className="text-[11px] font-medium text-muted">{sign.categoryLabel}</span>
                 </div>
 
                 <h3 className="font-sans text-[17px] font-semibold text-navy group-hover:text-accent-strong transition-colors leading-snug mb-2">
                   {sign.name}
                 </h3>
 
-                <p className="text-xs text-muted line-clamp-2 leading-relaxed">
-                  {sign.shortDesc}
-                </p>
+                <p className="text-xs text-muted line-clamp-2 leading-relaxed">{sign.shortDesc}</p>
               </div>
 
               <div className="mt-4 pt-3 border-t border-selected flex flex-wrap items-center justify-between gap-2 text-[11px] leading-5 text-muted">
@@ -311,12 +274,7 @@ export default function SignLibraryPage() {
                 onClick={() => updateUrl({ sign: null })}
                 className="shrink-0 p-1 rounded-lg text-muted hover:bg-selected hover:text-navy transition-colors"
               >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -348,17 +306,13 @@ export default function SignLibraryPage() {
                   <h4 className="text-xs uppercase tracking-wider font-semibold text-muted">
                     Ý nghĩa biển báo
                   </h4>
-                  <p className="text-sm text-navy leading-relaxed">
-                    {selectedSign.meaning}
-                  </p>
+                  <p className="text-sm text-navy leading-relaxed">{selectedSign.meaning}</p>
                 </div>
               </div>
 
               {selectedChildren.length > 0 && (
                 <section className="rounded-xl border border-line bg-surface p-4">
-                  <h4 className="text-sm font-semibold text-navy">
-                    Biển con liên quan
-                  </h4>
+                  <h4 className="text-sm font-semibold text-navy">Biển con liên quan</h4>
                   <ul className="mt-2 space-y-2">
                     {selectedChildren.map((child) => (
                       <li key={child.id}>
@@ -429,8 +383,7 @@ export default function SignLibraryPage() {
 
                 {selectedSign.relatedViolations.length === 0 ? (
                   <div className="p-4 bg-surface rounded-xl border border-line text-xs text-muted">
-                    Chưa có dữ liệu liên kết mức phạt cho biển này. Không suy ra
-                    không có vi phạm.
+                    Chưa có dữ liệu liên kết mức phạt cho biển này. Không suy ra không có vi phạm.
                   </div>
                 ) : (
                   <div className="space-y-2.5">
@@ -440,9 +393,7 @@ export default function SignLibraryPage() {
                         className="bg-surface p-4 rounded-xl border border-line space-y-2"
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                          <p className="text-xs font-semibold text-navy">
-                            {v.title}
-                          </p>
+                          <p className="text-xs font-semibold text-navy">{v.title}</p>
                           <span className="text-sm font-bold text-accent-strong font-sans shrink-0">
                             {v.fineRange}
                           </span>
@@ -453,9 +404,7 @@ export default function SignLibraryPage() {
                               {v.demerit}
                             </span>
                           )}
-                          <span className="font-mono text-[11px]">
-                            {v.clause}
-                          </span>
+                          <span className="font-mono text-[11px]">{v.clause}</span>
                         </div>
                       </div>
                     ))}
@@ -472,12 +421,7 @@ export default function SignLibraryPage() {
                 }}
                 className="text-xs text-navy hover:text-accent-strong font-medium inline-flex items-center gap-1.5"
               >
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"

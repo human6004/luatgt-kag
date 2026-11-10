@@ -17,9 +17,7 @@ export function Page({
       <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
         <div className="min-w-0 max-w-full break-words">
           <h1 className="text-2xl font-semibold text-navy">{title}</h1>
-          {subtitle && (
-            <p className="mt-1 text-[13px] text-muted">{subtitle}</p>
-          )}
+          {subtitle && <p className="mt-1 text-[13px] text-muted">{subtitle}</p>}
         </div>
         {actions && (
           <div className="flex w-full max-w-full flex-wrap items-center gap-2 sm:w-auto">
@@ -47,10 +45,7 @@ export function Card({
 }) {
   const surfaceClass =
     "min-w-0 overflow-x-auto [overflow-wrap:anywhere] bg-surface rounded-2xl border border-line shadow-[0_1px_2px_rgba(53,45,36,0.04)]";
-  if (!title)
-    return (
-      <section className={`${surfaceClass} ${className}`}>{children}</section>
-    );
+  if (!title) return <section className={`${surfaceClass} ${className}`}>{children}</section>;
   return (
     <section className={`min-w-0 flex flex-col gap-3 ${className}`}>
       <header className="flex min-w-0 flex-wrap items-start justify-between gap-3 sm:items-center">
@@ -58,14 +53,10 @@ export function Card({
           {title}
         </h2>
         {right && (
-          <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2">
-            {right}
-          </div>
+          <div className="flex min-w-0 max-w-full flex-wrap items-center gap-2">{right}</div>
         )}
       </header>
-      <div className={`${surfaceClass} flex-1 ${flush ? "" : "pt-5"}`}>
-        {children}
-      </div>
+      <div className={`${surfaceClass} flex-1 ${flush ? "" : "pt-5"}`}>{children}</div>
     </section>
   );
 }
@@ -148,8 +139,7 @@ const btn: Record<BtnVariant, string> = {
   dark: "bg-navy text-bg hover:bg-navy-light",
   ghost:
     "text-navy underline underline-offset-4 decoration-navy/40 hover:bg-selected hover:decoration-navy",
-  outline:
-    "border border-navy/35 bg-selected text-navy hover:border-navy/60 hover:bg-line",
+  outline: "border border-navy/35 bg-selected text-navy hover:border-navy/60 hover:bg-line",
   danger:
     "text-red-700 underline underline-offset-4 decoration-red-700/40 hover:bg-red-50 hover:decoration-red-700",
 };
@@ -158,17 +148,12 @@ export function Button({
   size = "md",
   className = "",
   ...p
-}: React.ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: BtnVariant;
-  size?: "sm" | "md";
-}) {
+}: React.ButtonHTMLAttributes<HTMLButtonElement> & { variant?: BtnVariant; size?: "sm" | "md" }) {
   return (
     <button
       {...p}
       className={`inline-flex max-w-full items-center justify-center gap-1.5 rounded-md text-center leading-5 font-semibold cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-strong focus-visible:ring-offset-2 ${
-        size === "sm"
-          ? "min-h-8 px-3 py-1.5 text-xs"
-          : "min-h-10 px-4 py-2 text-[13px]"
+        size === "sm" ? "min-h-8 px-3 py-1.5 text-xs" : "min-h-10 px-4 py-2 text-[13px]"
       } ${btn[variant]} ${className}`}
     />
   );
@@ -256,11 +241,7 @@ export function FilePicker({
           );
         }}
       />
-      {selection && (
-        <span className="max-w-full break-all text-xs text-muted">
-          {selection}
-        </span>
-      )}
+      {selection && <span className="max-w-full break-all text-xs text-muted">{selection}</span>}
     </label>
   );
 }
@@ -273,17 +254,9 @@ const tones = {
   gold: "text-accent-strong",
 };
 export type Tone = keyof typeof tones;
-export function Badge({
-  tone = "gray",
-  children,
-}: {
-  tone?: Tone;
-  children: React.ReactNode;
-}) {
+export function Badge({ tone = "gray", children }: { tone?: Tone; children: React.ReactNode }) {
   return (
-    <span
-      className={`inline-block whitespace-nowrap text-xs font-medium ${tones[tone]}`}
-    >
+    <span className={`inline-block whitespace-nowrap text-xs font-medium ${tones[tone]}`}>
       {children}
     </span>
   );
@@ -308,10 +281,7 @@ export function Modal({
   useEffect(() => {
     if (!open || !dialogRef.current) return;
     const dialog = dialogRef.current;
-    const opener =
-      document.activeElement instanceof HTMLElement
-        ? document.activeElement
-        : null;
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     dialog.showModal();
     const firstInput = dialog.querySelector<HTMLElement>(
       'input:not(:disabled):not([type="hidden"]), select:not(:disabled), textarea:not(:disabled)',
@@ -410,9 +380,7 @@ export function Field({
         {required && <RequiredMark />}
       </span>
       {children}
-      {hint && (
-        <span className="block mt-1 text-[11.5px] text-muted">{hint}</span>
-      )}
+      {hint && <span className="block mt-1 text-[11.5px] text-muted">{hint}</span>}
     </label>
   );
 }
@@ -442,11 +410,7 @@ export function Td({
   children?: React.ReactNode;
   className?: string;
 }) {
-  return (
-    <td className={`align-top px-4 py-3 text-[13.5px] leading-6 ${className}`}>
-      {children}
-    </td>
-  );
+  return <td className={`align-top px-4 py-3 text-[13.5px] leading-6 ${className}`}>{children}</td>;
 }
 
 export function Toggle({

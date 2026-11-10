@@ -2,11 +2,7 @@ export type Role = "user" | "police" | "admin";
 export type ServerRole = "USER" | "POLICE" | "ADMIN";
 export type Session = { email: string; name: string; role: Role };
 export const homeFor = (role: Role) =>
-  role === "admin"
-    ? "/admin/dashboard"
-    : role === "police"
-      ? "/admin/content"
-      : "/chat";
+  role === "admin" ? "/admin/dashboard" : role === "police" ? "/admin/content" : "/chat";
 
 export function roleFor(value: unknown): Role {
   if (value === "ADMIN") return "admin";
@@ -32,5 +28,4 @@ const policePages = [
 export const canAccessAdminPage = (role: Role, pathname: string) =>
   role === "admin" ||
   (role === "police" &&
-    (pathname === "/admin" ||
-      policePages.includes(pathname.replace(/\/+$/, ""))));
+    (pathname === "/admin" || policePages.includes(pathname.replace(/\/+$/, ""))));

@@ -20,48 +20,31 @@ export default function ChapterStudyPage() {
   const sets = useData<QuestionSet[]>("/question-sets");
   const setId = params.get("set") || "";
   const selectedSet = setId || sets.value?.[0]?.set_id || "";
-  const suffix = selectedSet
-    ? "?questionSetId=" + encodeURIComponent(selectedSet)
-    : "";
+  const suffix = selectedSet ? "?questionSetId=" + encodeURIComponent(selectedSet) : "";
   const questions = useData<ContentRecord[]>("/questions" + suffix);
   const progress = useData<
     { chapter: number; practiced: number; correct: number; attempts: number }[]
   >("/progress" + suffix);
-  const chapterIds = [
-    ...new Set((questions.value || []).map((q) => Number(q.data.chapter))),
-  ]
+  const chapterIds = [...new Set((questions.value || []).map((q) => Number(q.data.chapter)))]
     .filter((id) => Number.isInteger(id) && id > 0)
     .sort((a, b) => a - b);
   const chapters: ChapterItem[] = chapterIds.map((id) => {
-    const total = questions.value!.filter(
-      (q) => Number(q.data.chapter) === id,
-    ).length;
-    const practiced =
-      progress.value?.find((p) => p.chapter === id)?.practiced || 0;
+    const total = questions.value!.filter((q) => Number(q.data.chapter) === id).length;
+    const practiced = progress.value?.find((p) => p.chapter === id)?.practiced || 0;
     return {
       id,
       title: `Chương ${id}`,
       totalQuestions: total,
       studiedQuestions: practiced,
-      status:
-        practiced >= total
-          ? "completed"
-          : practiced > 0
-            ? "in_progress"
-            : "not_started",
+      status: practiced >= total ? "completed" : practiced > 0 ? "in_progress" : "not_started",
     };
   });
   const ready =
-    !!sets.value &&
-    !!questions.value &&
-    !!progress.value &&
-    !questions.error &&
-    !progress.error;
+    !!sets.value && !!questions.value && !!progress.value && !questions.error && !progress.error;
 
   const filterStatus = params.get("filter") ?? "all";
   const rawChapter = Number(params.get("chapter"));
-  const selectedProgressChapterId =
-    Number.isInteger(rawChapter) && rawChapter > 0 ? rawChapter : 1;
+  const selectedProgressChapterId = Number.isInteger(rawChapter) && rawChapter > 0 ? rawChapter : 1;
   const rawPractice = Number(params.get("practice"));
 
   function updateUrl(patch: Record<string, string | null>) {
@@ -75,20 +58,12 @@ export default function ChapterStudyPage() {
     });
   }
 
-  const totalAllQuestions = chapters.reduce(
-    (acc, c) => acc + c.totalQuestions,
-    0,
-  );
+  const totalAllQuestions = chapters.reduce((acc, c) => acc + c.totalQuestions, 0);
   const totalStudied = chapters.reduce((acc, c) => acc + c.studiedQuestions, 0);
-  const overallPercentage = Math.round(
-    (totalStudied / (totalAllQuestions || 1)) * 100,
-  );
-  const completedChaptersCount = chapters.filter(
-    (c) => c.status === "completed",
-  ).length;
+  const overallPercentage = Math.round((totalStudied / (totalAllQuestions || 1)) * 100);
+  const completedChaptersCount = chapters.filter((c) => c.status === "completed").length;
   const selectedProgressChapter =
-    chapters.find((chapter) => chapter.id === selectedProgressChapterId) ??
-    chapters[0];
+    chapters.find((chapter) => chapter.id === selectedProgressChapterId) ?? chapters[0];
   const selectedProgressPercentage = Math.round(
     ((selectedProgressChapter?.studiedQuestions || 0) /
       (selectedProgressChapter?.totalQuestions || 1)) *
@@ -104,12 +79,7 @@ export default function ChapterStudyPage() {
   });
 
   function practicePath(chapterId: number) {
-    return (
-      "/on-thi/luyen-tap/" +
-      chapterId +
-      "?questionSetId=" +
-      encodeURIComponent(selectedSet)
-    );
+    return "/on-thi/luyen-tap/" + chapterId + "?questionSetId=" + encodeURIComponent(selectedSet);
   }
 
   if (selectedSet && chapters.some((chapter) => chapter.id === rawPractice)) {
@@ -187,8 +157,7 @@ export default function ChapterStudyPage() {
             <div className="space-y-4">
               {filteredChapters.map((chapter) => {
                 const pct = Math.round(
-                  (chapter.studiedQuestions / (chapter.totalQuestions || 1)) *
-                    100,
+                  (chapter.studiedQuestions / (chapter.totalQuestions || 1)) * 100,
                 );
 
                 return (
@@ -215,16 +184,12 @@ export default function ChapterStudyPage() {
                           </>
                         )}
                         {ready && chapter.totalQuestions === 0 && (
-                          <span className="block">
-                            Chưa có câu hỏi để luyện tập.
-                          </span>
+                          <span className="block">Chưa có câu hỏi để luyện tập.</span>
                         )}
                       </p>
                       <Button
                         size="sm"
-                        variant={
-                          chapter.status === "not_started" ? "primary" : "dark"
-                        }
+                        variant={chapter.status === "not_started" ? "primary" : "dark"}
                         className="w-full sm:w-auto"
                         disabled={!ready || chapter.totalQuestions === 0}
                         onClick={() => navigate(practicePath(chapter.id))}
@@ -248,9 +213,7 @@ export default function ChapterStudyPage() {
               <div className="flex items-center justify-between border-b border-selected pb-4">
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-full bg-accent"></span>
-                  <h2 className="font-sans text-lg font-bold text-navy">
-                    Tiến độ của tôi
-                  </h2>
+                  <h2 className="font-sans text-lg font-bold text-navy">Tiến độ của tôi</h2>
                 </div>
                 <span className="text-xs px-2.5 py-0.5 rounded-full bg-selected text-accent-strong font-medium font-mono">
                   Bộ đã chọn
@@ -278,18 +241,13 @@ export default function ChapterStudyPage() {
 
                 <div className="flex flex-wrap justify-between items-center gap-x-3 gap-y-1 text-xs text-muted mt-2.5">
                   <span>
-                    Đã học:{" "}
-                    <strong className="text-navy">
-                      {ready ? totalStudied : "—"}
-                    </strong>{" "}
-                    / {ready ? totalAllQuestions : "—"} câu
+                    Đã học: <strong className="text-navy">{ready ? totalStudied : "—"}</strong> /{" "}
+                    {ready ? totalAllQuestions : "—"} câu
                   </span>
                   <span>
                     Hoàn tất:{" "}
-                    <strong className="text-navy">
-                      {ready ? completedChaptersCount : "—"}
-                    </strong>{" "}
-                    / {chapters.length} chương
+                    <strong className="text-navy">{ready ? completedChaptersCount : "—"}</strong> /{" "}
+                    {chapters.length} chương
                   </span>
                 </div>
               </div>
@@ -306,12 +264,7 @@ export default function ChapterStudyPage() {
                     id="chapter-progress-selection"
                     value={selectedProgressChapter.id}
                     onChange={(event) =>
-                      updateUrl({
-                        chapter:
-                          event.target.value === "1"
-                            ? null
-                            : event.target.value,
-                      })
+                      updateUrl({ chapter: event.target.value === "1" ? null : event.target.value })
                     }
                     className="w-full min-w-0 appearance-none rounded-xl border border-line bg-bg py-3 pl-3 pr-9 text-xs font-medium text-navy cursor-pointer outline-none transition-colors hover:border-accent focus-visible:border-accent focus-visible:ring-2 focus-visible:ring-accent/25"
                   >
@@ -369,8 +322,7 @@ export default function ChapterStudyPage() {
                       <strong className="text-navy">
                         {ready ? selectedProgressChapter.studiedQuestions : "—"}
                       </strong>{" "}
-                      / {ready ? selectedProgressChapter.totalQuestions : "—"}{" "}
-                      câu
+                      / {ready ? selectedProgressChapter.totalQuestions : "—"} câu
                     </span>
                     <span>Còn {selectedProgressRemaining} câu</span>
                   </div>
@@ -392,9 +344,7 @@ export default function ChapterStudyPage() {
         !sets.loading &&
         !sets.error && (
           <section className="rounded-2xl border border-line bg-surface p-6 text-center">
-            <h2 className="text-base font-semibold text-navy">
-              Chưa có nội dung ôn tập
-            </h2>
+            <h2 className="text-base font-semibold text-navy">Chưa có nội dung ôn tập</h2>
             <p className="mt-2 text-sm text-muted">
               {selectedSet
                 ? "Bộ này chưa có câu hỏi đã xuất bản. Nội dung sẽ xuất hiện sau khi người quản lý nhập và duyệt câu hỏi."

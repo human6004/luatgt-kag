@@ -58,16 +58,13 @@ export default function AdminQuestions() {
 
   const rawTab = params.get("tab");
   const tab: "questions" | QuestionBankTab =
-    rawTab === "sets" || rawTab === "chapters" || rawTab === "rules"
-      ? rawTab
-      : "questions";
+    rawTab === "sets" || rawTab === "chapters" || rawTab === "rules" ? rawTab : "questions";
   const urlQ = params.get("q") ?? "";
   const [q, setQ] = useState(urlQ);
   const chapter = params.get("chapter") ?? "all";
   const onlyCritical = params.get("critical") === "1";
   const rawStatus = params.get("status");
-  const statusFilter =
-    rawStatus === "published" || rawStatus === "draft" ? rawStatus : "all";
+  const statusFilter = rawStatus === "published" || rawStatus === "draft" ? rawStatus : "all";
   const showImport = params.get("import") === "1";
   const editId = params.get("id") ?? "";
 
@@ -81,13 +78,9 @@ export default function AdminQuestions() {
         id: r.id,
         externalId: r.externalId,
         published: r.published,
-        chapter:
-          chapters[Number(r.data.chapter) - 1] ||
-          String(r.data.chapter || chapters[0]),
+        chapter: chapters[Number(r.data.chapter) - 1] || String(r.data.chapter || chapters[0]),
         question: String(r.data.text || ""),
-        options: Array.isArray(r.data.options)
-          ? (r.data.options as string[])
-          : ["", ""],
+        options: Array.isArray(r.data.options) ? (r.data.options as string[]) : ["", ""],
         answer: Number(r.data.correctAnswer ?? 0),
         critical: r.data.critical === true,
         explanation: String(r.data.explanation || ""),
@@ -133,11 +126,7 @@ export default function AdminQuestions() {
       return;
     }
     setQuestionSetId(String(rec?.data.questionSetId || ""));
-    setExternalId(
-      String(
-        rec?.data.sourceExternalId || rec?.externalId || item.externalId || "",
-      ),
-    );
+    setExternalId(String(rec?.data.sourceExternalId || rec?.externalId || item.externalId || ""));
     setReviewed(rec?.data.reviewed === true);
     setImageRequired(rec?.data.imageRequired === true);
     setHistory(undefined);
@@ -154,9 +143,7 @@ export default function AdminQuestions() {
       return;
     }
     if (!data.value) return;
-    const target = qbank.find(
-      (x) => x.id === editId || x.externalId === editId,
-    );
+    const target = qbank.find((x) => x.id === editId || x.externalId === editId);
     if (target && editing?.id !== target.id) {
       const rec = data.value.find((r) => r.id === target.id);
       applyEditing(target, rec);
@@ -169,11 +156,8 @@ export default function AdminQuestions() {
         (x) =>
           (chapter === "all" || x.chapter === chapter) &&
           (!onlyCritical || x.critical) &&
-          (statusFilter === "all" ||
-            (statusFilter === "published" ? x.published : !x.published)) &&
-          `${x.externalId} ${x.question} ${x.source}`
-            .toLowerCase()
-            .includes(q.toLowerCase()),
+          (statusFilter === "all" || (statusFilter === "published" ? x.published : !x.published)) &&
+          `${x.externalId} ${x.question} ${x.source}`.toLowerCase().includes(q.toLowerCase()),
       ),
     [qbank, chapter, onlyCritical, statusFilter, q],
   );
@@ -219,11 +203,7 @@ export default function AdminQuestions() {
       else
         await api(
           "/admin/imports/questions/confirm",
-          send("POST", {
-            rows: [payload],
-            updateExisting: false,
-            questionSetId,
-          }),
+          send("POST", { rows: [payload], updateExisting: false, questionSetId }),
         );
       data.reload();
       applyEditing(null);
@@ -296,14 +276,8 @@ export default function AdminQuestions() {
       >
         {(
           [
-            {
-              value: "questions",
-              label: `Ngân hàng câu hỏi (${data.value ? qbank.length : "—"})`,
-            },
-            {
-              value: "sets",
-              label: `Bộ câu hỏi (${sets.value ? sets.value.length : "—"})`,
-            },
+            { value: "questions", label: `Ngân hàng câu hỏi (${data.value ? qbank.length : "—"})` },
+            { value: "sets", label: `Bộ câu hỏi (${sets.value ? sets.value.length : "—"})` },
             { value: "chapters", label: "Chương" },
             { value: "rules", label: "Quy tắc đề thi" },
           ] as const
@@ -359,9 +333,7 @@ export default function AdminQuestions() {
               className={`${inputCls} max-w-[220px]`}
               value={chapter}
               onChange={(e) =>
-                updateUrl({
-                  chapter: e.target.value === "all" ? null : e.target.value,
-                })
+                updateUrl({ chapter: e.target.value === "all" ? null : e.target.value })
               }
               aria-label="Chương"
             >
@@ -374,9 +346,7 @@ export default function AdminQuestions() {
               className={`${inputCls} max-w-[180px]`}
               value={statusFilter}
               onChange={(e) =>
-                updateUrl({
-                  status: e.target.value === "all" ? null : e.target.value,
-                })
+                updateUrl({ status: e.target.value === "all" ? null : e.target.value })
               }
               aria-label="Trạng thái xuất bản"
             >
@@ -408,10 +378,7 @@ export default function AdminQuestions() {
               </thead>
               <tbody>
                 {shown.map((x, i) => (
-                  <tr
-                    key={x.id}
-                    className="border-b border-line/60 last:border-0 hover:bg-bg"
-                  >
+                  <tr key={x.id} className="border-b border-line/60 last:border-0 hover:bg-bg">
                     <Td className="text-muted font-mono text-xs">{i + 1}</Td>
                     <Td className="text-navy">
                       <label className="flex items-start gap-2">
@@ -437,9 +404,7 @@ export default function AdminQuestions() {
                         Đáp án: {x.options[x.answer]}
                       </span>
                     </Td>
-                    <Td className="text-muted whitespace-nowrap">
-                      {x.chapter}
-                    </Td>
+                    <Td className="text-muted whitespace-nowrap">{x.chapter}</Td>
                     <Td className="text-muted">{x.source}</Td>
                     <Td>
                       <Badge tone={x.published ? "green" : "amber"}>
@@ -455,11 +420,7 @@ export default function AdminQuestions() {
                         >
                           {x.published ? "Hủy xuất bản" : "Xuất bản"}
                         </Button>
-                        <Button
-                          size="sm"
-                          variant="ghost"
-                          onClick={() => openEdit(x)}
-                        >
+                        <Button size="sm" variant="ghost" onClick={() => openEdit(x)}>
                           Sửa
                         </Button>
                       </span>
@@ -468,10 +429,7 @@ export default function AdminQuestions() {
                 ))}
                 {!shown.length && (
                   <tr>
-                    <td
-                      colSpan={6}
-                      className="px-4 py-8 text-center text-[13.5px] text-muted"
-                    >
+                    <td colSpan={6} className="px-4 py-8 text-center text-[13.5px] text-muted">
                       Không có câu hỏi phù hợp.
                     </td>
                   </tr>
@@ -554,9 +512,7 @@ export default function AdminQuestions() {
                     rows={2}
                     className={inputCls}
                     value={editing.question}
-                    onChange={(e) =>
-                      setEditing({ ...editing, question: e.target.value })
-                    }
+                    onChange={(e) => setEditing({ ...editing, question: e.target.value })}
                   />
                 </Field>
                 <div className="grid grid-cols-2 gap-3">
@@ -564,9 +520,7 @@ export default function AdminQuestions() {
                     <select
                       className={inputCls}
                       value={editing.chapter}
-                      onChange={(e) =>
-                        setEditing({ ...editing, chapter: e.target.value })
-                      }
+                      onChange={(e) => setEditing({ ...editing, chapter: e.target.value })}
                     >
                       {chapters.map((c) => (
                         <option key={c}>{c}</option>
@@ -577,9 +531,7 @@ export default function AdminQuestions() {
                     <input
                       className={inputCls}
                       value={editing.source}
-                      onChange={(e) =>
-                        setEditing({ ...editing, source: e.target.value })
-                      }
+                      onChange={(e) => setEditing({ ...editing, source: e.target.value })}
                       placeholder="NĐ 168/2024…"
                     />
                   </Field>
@@ -620,9 +572,7 @@ export default function AdminQuestions() {
                             onClick={() =>
                               setEditing({
                                 ...editing,
-                                options: editing.options.filter(
-                                  (_, k) => k !== i,
-                                ),
+                                options: editing.options.filter((_, k) => k !== i),
                                 answer: 0,
                               })
                             }
@@ -637,12 +587,7 @@ export default function AdminQuestions() {
                     <button
                       type="button"
                       className="mt-2 text-xs font-medium text-accent-strong"
-                      onClick={() =>
-                        setEditing({
-                          ...editing,
-                          options: [...editing.options, ""],
-                        })
-                      }
+                      onClick={() => setEditing({ ...editing, options: [...editing.options, ""] })}
                     >
                       + Thêm phương án
                     </button>
@@ -667,8 +612,7 @@ export default function AdminQuestions() {
                 {record && (
                   <>
                     <p className="text-xs">
-                      {record.published ? "Đã xuất bản" : "Bản nháp"} · Version{" "}
-                      {record.version}
+                      {record.published ? "Đã xuất bản" : "Bản nháp"} · Version {record.version}
                     </p>
                     {!!record.data.imageKey && (
                       <Asset
@@ -688,10 +632,7 @@ export default function AdminQuestions() {
                         void task.run(async () => {
                           const body = new FormData();
                           body.append("file", file);
-                          await api(`/admin/content/${record.id}/media`, {
-                            method: "POST",
-                            body,
-                          });
+                          await api(`/admin/content/${record.id}/media`, { method: "POST", body });
                           data.reload();
                         });
                       }}
@@ -700,9 +641,7 @@ export default function AdminQuestions() {
                       disabled={task.busy}
                       onClick={() =>
                         void task.run(async () =>
-                          setHistory(
-                            await api(`/admin/content/${record.id}/history`),
-                          ),
+                          setHistory(await api(`/admin/content/${record.id}/history`)),
                         )
                       }
                     >
@@ -720,9 +659,7 @@ export default function AdminQuestions() {
                     rows={2}
                     className={inputCls}
                     value={editing.explanation}
-                    onChange={(e) =>
-                      setEditing({ ...editing, explanation: e.target.value })
-                    }
+                    onChange={(e) => setEditing({ ...editing, explanation: e.target.value })}
                   />
                 </Field>
                 <label className="flex items-center gap-2 text-[13px] text-navy">

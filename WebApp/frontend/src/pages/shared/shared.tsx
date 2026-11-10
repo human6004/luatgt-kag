@@ -76,9 +76,7 @@ export function Notice({
           )}
         </div>
       )}
-      {empty && !loading && !error && (
-        <p className="py-8 text-muted">Chưa có dữ liệu.</p>
-      )}
+      {empty && !loading && !error && <p className="py-8 text-muted">Chưa có dữ liệu.</p>}
     </>
   );
 }

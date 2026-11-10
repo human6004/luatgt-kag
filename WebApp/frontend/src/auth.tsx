@@ -1,10 +1,4 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  type ReactNode,
-} from "react";
+import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 import {
   canAccessAdminPage,
@@ -51,8 +45,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (mounted) setSession(profile(u));
         })
         .catch((error: unknown) => {
-          if (!mounted || (error instanceof ApiError && error.status === 401))
-            return;
+          if (!mounted || (error instanceof ApiError && error.status === 401)) return;
           setSession(null);
           setCheckError(
             error instanceof Error
@@ -78,10 +71,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setCheckAttempt((attempt) => attempt + 1);
   };
   async function authenticate(path: string, body: unknown) {
-    const r = await api<{ accessToken: string; user: User }>(
-      path,
-      send("POST", body),
-    );
+    const r = await api<{ accessToken: string; user: User }>(path, send("POST", body));
     const next = profile(r.user);
     sessionStorage.removeItem("luatgt-active-exam");
     sessionStorage.setItem(tokenKey, r.accessToken);
@@ -99,17 +89,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null);
   }
   return (
-    <Context.Provider
-      value={{
-        session,
-        ready,
-        checkError,
-        retryCheck,
-        login,
-        register,
-        logout,
-      }}
-    >
+    <Context.Provider value={{ session, ready, checkError, retryCheck, login, register, logout }}>
       {children}
     </Context.Provider>
   );
@@ -151,8 +131,7 @@ export function RequireRole({ roles }: { roles: Role[] }) {
   if (!session) return <Navigate to="/login" replace />;
   const allowed =
     roles.includes(session.role) &&
-    (!pathname.startsWith("/admin") ||
-      canAccessAdminPage(session.role, pathname));
+    (!pathname.startsWith("/admin") || canAccessAdminPage(session.role, pathname));
   return allowed ? <Outlet /> : <Navigate to={homeFor(session.role)} replace />;
 }
 export function SessionHome() {

@@ -18,13 +18,7 @@ import {
 import { Notice, useData, useTask, saveBlob } from "./shared/shared";
 
 type UserRoleLabel = "Người học" | "Cảnh sát" | "Quản trị viên";
-type UserRecord = {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  enabled: boolean;
-};
+type UserRecord = { id: string; name: string; email: string; role: string; enabled: boolean };
 type LogRecord = {
   id: string;
   ownerId: string;
@@ -39,10 +33,7 @@ type LogRecord = {
 };
 
 const roles: UserRoleLabel[] = ["Người học", "Cảnh sát", "Quản trị viên"];
-const serverRoles: Record<string, string> = {
-  "Người học": "USER",
-  "Cảnh sát": "POLICE",
-};
+const serverRoles: Record<string, string> = { "Người học": "USER", "Cảnh sát": "POLICE" };
 
 const statusTone: Record<string, Tone> = {
   "Đã trả lời": "green",
@@ -59,8 +50,7 @@ export default function AdminUsers() {
   const nav = useNavigate();
   const [params, setParams] = useSearchParams();
 
-  const tab: "users" | "logs" =
-    isPolice || params.get("tab") === "logs" ? "logs" : "users";
+  const tab: "users" | "logs" = isPolice || params.get("tab") === "logs" ? "logs" : "users";
   const urlQ = params.get("q") ?? "";
   const [q, setQ] = useState(urlQ);
   const role = params.get("role") ?? "all";
@@ -143,11 +133,7 @@ export default function AdminUsers() {
                   ? "Đã trả lời"
                   : r.state,
         feedback:
-          r.feedback === "HELPFUL"
-            ? ("up" as const)
-            : r.feedback
-              ? ("down" as const)
-              : null,
+          r.feedback === "HELPFUL" ? ("up" as const) : r.feedback ? ("down" as const) : null,
         time: r.createdAt,
       })),
     [logsData.value],
@@ -159,14 +145,8 @@ export default function AdminUsers() {
     return counts;
   }, [logs]);
 
-  const issueCount = useMemo(
-    () => logs.filter((x) => !x.resolved).length,
-    [logs],
-  );
-  const resolvedCount = useMemo(
-    () => logs.filter((x) => x.resolved).length,
-    [logs],
-  );
+  const issueCount = useMemo(() => logs.filter((x) => !x.resolved).length, [logs]);
+  const resolvedCount = useMemo(() => logs.filter((x) => x.resolved).length, [logs]);
 
   function updateUrl(patch: Record<string, string | null>, replace = false) {
     setParams(
@@ -212,8 +192,7 @@ export default function AdminUsers() {
         if (logFilter === "issue" && l.resolved) return false;
         if (logFilter === "resolved" && !l.resolved) return false;
         const u = userMap.get(l.user);
-        const haystack =
-          `${l.question} ${l.user} ${u?.name || ""} ${u?.email || ""}`.toLowerCase();
+        const haystack = `${l.question} ${l.user} ${u?.name || ""} ${u?.email || ""}`.toLowerCase();
         return haystack.includes(q.toLowerCase());
       }),
     [logs, userFilter, logFilter, q, userMap],
@@ -222,10 +201,7 @@ export default function AdminUsers() {
   const cur = logs.find((l) => l.id === selectedLogId);
   const filteredUser = userFilter ? userMap.get(userFilter) : undefined;
 
-  function patchUser(
-    id: string,
-    p: { role?: UserRoleLabel; active?: boolean },
-  ) {
+  function patchUser(id: string, p: { role?: UserRoleLabel; active?: boolean }) {
     if (p.role === "Quản trị viên") return;
     if (p.role || p.active !== undefined) {
       void task.run(async () => {
@@ -237,25 +213,14 @@ export default function AdminUsers() {
           }),
         );
         reloadUsers();
-        notify(
-          p.role
-            ? "Đã cập nhật vai trò tài khoản"
-            : "Đã lưu trạng thái tài khoản",
-        );
+        notify(p.role ? "Đã cập nhật vai trò tài khoản" : "Đã lưu trạng thái tài khoản");
       });
     }
   }
 
   function exportCsv() {
     const rows = [
-      [
-        "thời gian",
-        "người dùng",
-        "email",
-        "câu hỏi",
-        "báo cáo",
-        "trạng thái xử lý",
-      ],
+      ["thời gian", "người dùng", "email", "câu hỏi", "báo cáo", "trạng thái xử lý"],
       ...shownLogs.map((l) => {
         const u = userMap.get(l.user);
         return [
@@ -271,10 +236,7 @@ export default function AdminUsers() {
     const csv = rows
       .map((r) => r.map((c) => `"${String(c).replace(/"/g, '""')}"`).join(","))
       .join("\n");
-    saveBlob(
-      new Blob(["\uFEFF" + csv], { type: "text/csv" }),
-      "bao-cao-chat.csv",
-    );
+    saveBlob(new Blob(["\uFEFF" + csv], { type: "text/csv" }), "bao-cao-chat.csv");
   }
 
   function displayUser(ownerId: string) {
@@ -290,11 +252,7 @@ export default function AdminUsers() {
           ? `${rawUsers ? users.length : "—"} tài khoản · ${rawUsers ? users.filter((u) => u.active).length : "—"} đang hoạt động`
           : "Theo dõi báo cáo phản hồi của người dùng và chuyển câu chưa trả lời được sang bổ sung tri thức."
       }
-      actions={
-        tab === "logs" ? (
-          <Button onClick={exportCsv}>Xuất CSV</Button>
-        ) : undefined
-      }
+      actions={tab === "logs" ? <Button onClick={exportCsv}>Xuất CSV</Button> : undefined}
     >
       {!isPolice && (
         <div
@@ -340,11 +298,7 @@ export default function AdminUsers() {
 
       {tab === "users" ? (
         <>
-          <Notice
-            loading={usersLoading}
-            error={usersError}
-            retry={reloadUsers}
-          />
+          <Notice loading={usersLoading} error={usersError} retry={reloadUsers} />
           <div className="grid gap-3 sm:grid-cols-3 mb-5">
             {roles.map((r) => (
               <Card key={r} className="px-5 py-4">
@@ -371,9 +325,7 @@ export default function AdminUsers() {
               className={`${inputCls} max-w-[200px]`}
               value={role}
               onChange={(e) =>
-                updateUrl({
-                  role: e.target.value === "all" ? null : e.target.value,
-                })
+                updateUrl({ role: e.target.value === "all" ? null : e.target.value })
               }
               aria-label="Vai trò"
             >
@@ -412,12 +364,8 @@ export default function AdminUsers() {
                               .join("")}
                           </span>
                           <span>
-                            <span className="block font-medium text-navy">
-                              {u.name}
-                            </span>
-                            <span className="block text-[12px] text-muted">
-                              {u.email}
-                            </span>
+                            <span className="block font-medium text-navy">{u.name}</span>
+                            <span className="block text-[12px] text-muted">{u.email}</span>
                           </span>
                         </div>
                       </Td>
@@ -427,9 +375,7 @@ export default function AdminUsers() {
                           value={u.role}
                           disabled={task.busy || u.role === "Quản trị viên"}
                           onChange={(e) =>
-                            patchUser(u.id, {
-                              role: e.target.value as UserRoleLabel,
-                            })
+                            patchUser(u.id, { role: e.target.value as UserRoleLabel })
                           }
                           aria-label="Vai trò"
                         >
@@ -438,9 +384,7 @@ export default function AdminUsers() {
                           ))}
                         </select>
                       </Td>
-                      <Td className="text-text-secondary">
-                        {logsData.value ? chatCount : "—"}
-                      </Td>
+                      <Td className="text-text-secondary">{logsData.value ? chatCount : "—"}</Td>
                       <Td>
                         <Toggle
                           checked={u.active}
@@ -451,11 +395,7 @@ export default function AdminUsers() {
                       </Td>
                       <Td className="text-right whitespace-nowrap">
                         <span className="inline-flex flex-wrap justify-end gap-1.5">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => jumpToUserLogs(u.id)}
-                          >
+                          <Button size="sm" variant="outline" onClick={() => jumpToUserLogs(u.id)}>
                             Nhật ký ({logsData.value ? chatCount : "…"}) →
                           </Button>
                         </span>
@@ -465,10 +405,7 @@ export default function AdminUsers() {
                 })}
                 {!shownUsers.length && (
                   <tr>
-                    <td
-                      colSpan={5}
-                      className="px-4 py-8 text-center text-[13.5px] text-muted"
-                    >
+                    <td colSpan={5} className="px-4 py-8 text-center text-[13.5px] text-muted">
                       Không có tài khoản phù hợp.
                     </td>
                   </tr>
@@ -498,19 +435,11 @@ export default function AdminUsers() {
                   <FilterTabs
                     label="Lọc trạng thái báo cáo"
                     value={logFilter}
-                    onChange={(k) =>
-                      updateUrl({ filter: k === "all" ? null : k })
-                    }
+                    onChange={(k) => updateUrl({ filter: k === "all" ? null : k })}
                     items={[
-                      {
-                        value: "all",
-                        label: `Tất cả báo cáo (${logs.length})`,
-                      },
+                      { value: "all", label: `Tất cả báo cáo (${logs.length})` },
                       { value: "issue", label: `Cần xử lý (${issueCount})` },
-                      {
-                        value: "resolved",
-                        label: `Đã xử lý (${resolvedCount})`,
-                      },
+                      { value: "resolved", label: `Đã xử lý (${resolvedCount})` },
                     ]}
                   />
                   {userFilter && (
@@ -546,9 +475,7 @@ export default function AdminUsers() {
                           updateUrl({ log: l.id });
                         }}
                         className={`w-full text-left px-5 py-3.5 transition-colors ${
-                          l.id === selectedLogId
-                            ? "bg-selected/60"
-                            : "hover:bg-bg"
+                          l.id === selectedLogId ? "bg-selected/60" : "hover:bg-bg"
                         }`}
                       >
                         <div className="flex flex-wrap items-start justify-between gap-2">
@@ -562,9 +489,7 @@ export default function AdminUsers() {
                                 : statusTone[l.status] || "gray"
                             }
                           >
-                            {l.resolved && l.status !== "Đã trả lời"
-                              ? "Đã xử lý"
-                              : l.status}
+                            {l.resolved && l.status !== "Đã trả lời" ? "Đã xử lý" : l.status}
                           </Badge>
                         </div>
                         <p className="mt-1 break-words text-[12px] leading-5 text-muted">
@@ -574,18 +499,13 @@ export default function AdminUsers() {
                     </li>
                   ))}
                   {!shownLogs.length && (
-                    <li className="px-5 py-8 text-center text-sm text-muted">
-                      Không có bản ghi.
-                    </li>
+                    <li className="px-5 py-8 text-center text-sm text-muted">Không có bản ghi.</li>
                   )}
                 </ul>
               </Card>
             </div>
 
-            <Card
-              title="Chi tiết hội thoại"
-              className="self-start xl:sticky xl:top-6"
-            >
+            <Card title="Chi tiết hội thoại" className="self-start xl:sticky xl:top-6">
               {cur ? (
                 <div className="px-5 pb-5 space-y-4">
                   <div className="flex justify-end">
@@ -600,18 +520,10 @@ export default function AdminUsers() {
                     {[
                       ["Độ trễ", "Chưa đo"],
                       ["Báo cáo", cur.status],
-                      [
-                        "Người dùng",
-                        userMap.get(cur.user)?.email || "@" + cur.user,
-                      ],
+                      ["Người dùng", userMap.get(cur.user)?.email || "@" + cur.user],
                     ].map(([k, v]) => (
-                      <div
-                        key={k}
-                        className="rounded-xl border border-line bg-bg py-2"
-                      >
-                        <dt className="text-[10.5px] uppercase tracking-wide text-muted">
-                          {k}
-                        </dt>
+                      <div key={k} className="rounded-xl border border-line bg-bg py-2">
+                        <dt className="text-[10.5px] uppercase tracking-wide text-muted">{k}</dt>
                         <dd
                           className="text-[13px] font-semibold text-navy truncate px-1"
                           title={String(v)}
@@ -621,12 +533,8 @@ export default function AdminUsers() {
                       </div>
                     ))}
                   </dl>
-                  {cur.note && (
-                    <p className="text-xs">Phản hồi người dùng: {cur.note}</p>
-                  )}
-                  {cur.resolution && (
-                    <p className="text-xs">Ghi chú xử lý: {cur.resolution}</p>
-                  )}
+                  {cur.note && <p className="text-xs">Phản hồi người dùng: {cur.note}</p>}
+                  {cur.resolution && <p className="text-xs">Ghi chú xử lý: {cur.resolution}</p>}
                   <textarea
                     rows={2}
                     className={inputCls}
@@ -641,10 +549,7 @@ export default function AdminUsers() {
                         variant="primary"
                         onClick={() => {
                           void task.run(async () => {
-                            await api(
-                              `/admin/chatlogs/${cur.id}/resolve`,
-                              send("POST", { note }),
-                            );
+                            await api(`/admin/chatlogs/${cur.id}/resolve`, send("POST", { note }));
                             setNote("");
                             logsData.reload();
                             notify("Đã đánh dấu đã xử lý");
@@ -660,9 +565,7 @@ export default function AdminUsers() {
                   </div>
                 </div>
               ) : (
-                <p className="px-5 pb-5 text-sm text-muted">
-                  Chọn một hội thoại.
-                </p>
+                <p className="px-5 pb-5 text-sm text-muted">Chọn một hội thoại.</p>
               )}
             </Card>
           </div>

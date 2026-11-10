@@ -11,11 +11,7 @@ type Property = {
 };
 
 export type SchemaResponse = {
-  identity: {
-    namespace: string;
-    schema_sha256: string;
-    contract_sha256: string;
-  };
+  identity: { namespace: string; schema_sha256: string; contract_sha256: string };
   contract: {
     node_types: string[];
     node_properties: Record<string, Property[]>;
@@ -65,9 +61,7 @@ export default function KagSchemaPage() {
       {schema && (
         <>
           <details>
-            <summary className="underline cursor-pointer text-sm">
-              Chi tiết kỹ thuật
-            </summary>
+            <summary className="underline cursor-pointer text-sm">Chi tiết kỹ thuật</summary>
             <dl className="grid sm:grid-cols-3 gap-5 py-6 border-b border-line">
               {[
                 ["Namespace", schema.identity.namespace],
@@ -76,26 +70,21 @@ export default function KagSchemaPage() {
               ].map(([label, value]) => (
                 <div key={label}>
                   <dt className="text-sm text-muted">{label}</dt>
-                  <dd className="text-sm font-semibold mt-1 break-all">
-                    {value}
-                  </dd>
+                  <dd className="text-sm font-semibold mt-1 break-all">{value}</dd>
                 </div>
               ))}
             </dl>
           </details>
           <div className="flex flex-wrap gap-4 items-center my-6">
-            <Link
-              to="/admin/sources"
-              className="text-sm underline underline-offset-4"
-            >
+            <Link to="/admin/sources" className="text-sm underline underline-offset-4">
               Về dữ liệu nguồn
             </Link>
             <Button onClick={download}>Tải contract</Button>
           </div>
           <p className="text-sm">
-            Dùng doc_id, unit_id và sign_id nguyên trạng làm ID nguồn. UUID
-            trong WebApp chỉ dùng cho quản trị bản ghi. Chat từ dataset đối
-            chiếu trích dẫn với bản nguồn của đồ thị đang áp dụng.
+            Dùng doc_id, unit_id và sign_id nguyên trạng làm ID nguồn. UUID trong WebApp chỉ dùng
+            cho quản trị bản ghi. Chat từ dataset đối chiếu trích dẫn với bản nguồn của đồ thị đang
+            áp dụng.
           </p>
           <label className="block text-sm mt-6">
             Loại node
@@ -160,13 +149,11 @@ export default function KagSchemaPage() {
             Loại đơn vị pháp lý: {schema.contract.unit_type_values.join(", ")}.
           </p>
           <p className="text-sm mt-3 text-muted">
-            Ingestion theo contract runtime: kiểm tra ràng buộc và codec, ghi
-            node trước cạnh và gộp provenance trước khi ghi.
+            Ingestion theo contract runtime: kiểm tra ràng buộc và codec, ghi node trước cạnh và gộp
+            provenance trước khi ghi.
           </p>
           <details className="mt-4 text-sm">
-            <summary className="cursor-pointer">
-              Contract runtime cho core KAG
-            </summary>
+            <summary className="cursor-pointer">Contract runtime cho core KAG</summary>
             <pre className="overflow-x-auto mt-3 p-3 bg-sidebar">
               {JSON.stringify(schema.contract.runtime_contract, null, 2)}
             </pre>

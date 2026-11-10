@@ -1,11 +1,7 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Button, Page } from "../admin/ui";
-import {
-  ContentManager,
-  ImportPanel,
-  type ContentKind,
-} from "./shared/AdminPages";
+import { ContentManager, ImportPanel, type ContentKind } from "./shared/AdminPages";
 
 const tabs: readonly [ContentKind, string][] = [
   ["documents", "Văn bản"],
@@ -18,8 +14,7 @@ export default function AdminContent() {
   const [refreshKey, setRefreshKey] = useState(0);
 
   const rawTab = params.get("tab");
-  const tab: ContentKind =
-    rawTab === "units" || rawTab === "signs" ? rawTab : "documents";
+  const tab: ContentKind = rawTab === "units" || rawTab === "signs" ? rawTab : "documents";
   const showImport = params.get("import") === "1";
 
   function updateParams(patch: Record<string, string | null>) {
@@ -51,16 +46,11 @@ export default function AdminContent() {
         <>
           <Button
             variant={showImport ? "dark" : "outline"}
-            onClick={() =>
-              updateParams({ tab, import: showImport ? null : "1" })
-            }
+            onClick={() => updateParams({ tab, import: showImport ? null : "1" })}
           >
             {showImport ? "Đóng nhập hàng loạt" : "Nhập hàng loạt"}
           </Button>
-          <Button
-            variant="primary"
-            onClick={() => updateParams({ tab, import: null, id: "new" })}
-          >
+          <Button variant="primary" onClick={() => updateParams({ tab, import: null, id: "new" })}>
             + Thêm mới
           </Button>
         </>

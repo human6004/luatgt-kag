@@ -38,10 +38,7 @@ export default function LoginPage() {
   return (
     <main className="min-h-dvh bg-bg lg:grid lg:grid-cols-2">
       <section className="bg-sidebar border-b lg:border-r border-line px-6 py-8 lg:p-16 flex flex-col justify-between">
-        <Link
-          to="/login"
-          className="inline-flex items-center gap-3 text-2xl font-semibold"
-        >
+        <Link to="/login" className="inline-flex items-center gap-3 text-2xl font-semibold">
           <LogoMark size={30} />
           LuậtGT
         </Link>
@@ -52,13 +49,10 @@ export default function LoginPage() {
             mọi hành trình.
           </h1>
           <p className="mt-6 text-sm leading-7 text-text-secondary">
-            Tra cứu luật giao thông, tìm hiểu biển báo và ôn thi giấy phép lái
-            xe.
+            Tra cứu luật giao thông, tìm hiểu biển báo và ôn thi giấy phép lái xe.
           </p>
         </div>
-        <p className="hidden lg:block text-xs text-muted">
-          Trợ lý luật giao thông & ôn thi lái xe
-        </p>
+        <p className="hidden lg:block text-xs text-muted">Trợ lý luật giao thông & ôn thi lái xe</p>
       </section>
       <section className="flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-[400px]">
@@ -101,9 +95,7 @@ export default function LoginPage() {
                 <input
                   id="auth-password"
                   type={show ? "text" : "password"}
-                  autoComplete={
-                    registration ? "new-password" : "current-password"
-                  }
+                  autoComplete={registration ? "new-password" : "current-password"}
                   required
                   minLength={registration ? 12 : undefined}
                   maxLength={72}
@@ -138,8 +130,7 @@ export default function LoginPage() {
             </div>
             {registration && (
               <p className="text-xs text-muted">
-                Mật khẩu từ 12 ký tự, tối đa 72 byte. Tài khoản mới dành cho
-                người học.
+                Mật khẩu từ 12 ký tự, tối đa 72 byte. Tài khoản mới dành cho người học.
               </p>
             )}
             {error && (
@@ -147,17 +138,8 @@ export default function LoginPage() {
                 {error}
               </p>
             )}
-            <Button
-              type="submit"
-              variant="dark"
-              className="w-full"
-              disabled={busy}
-            >
-              {busy
-                ? "Đang xử lý…"
-                : registration
-                  ? "Tạo tài khoản"
-                  : "Đăng nhập"}
+            <Button type="submit" variant="dark" className="w-full" disabled={busy}>
+              {busy ? "Đang xử lý…" : registration ? "Tạo tài khoản" : "Đăng nhập"}
             </Button>
           </form>
           <button
@@ -176,9 +158,7 @@ export default function LoginPage() {
               setError("");
             }}
           >
-            {registration
-              ? "Đã có tài khoản? Đăng nhập"
-              : "Chưa có tài khoản? Đăng ký"}
+            {registration ? "Đã có tài khoản? Đăng nhập" : "Chưa có tài khoản? Đăng ký"}
           </button>
         </div>
       </section>

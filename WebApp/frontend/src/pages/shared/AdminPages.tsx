@@ -2,23 +2,9 @@ import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { normalizeImport } from "./import-normalization";
 import { api, send, type ContentRecord } from "../../api";
-import {
-  Button,
-  Card,
-  FilePicker,
-  FilterTabs,
-  Modal,
-  Th,
-  Td,
-  inputCls,
-} from "../../admin/ui";
+import { Button, Card, FilePicker, FilterTabs, Modal, Th, Td, inputCls } from "../../admin/ui";
 import { useAdmin } from "../../admin/store";
-import {
-  csvSamples,
-  parseCsv,
-  tableObjects,
-  type ImportKind,
-} from "../../admin/import-data";
+import { csvSamples, parseCsv, tableObjects, type ImportKind } from "../../admin/import-data";
 import { useData, useTask, Notice, Asset, download, saveBlob } from "./shared";
 import type { QuestionSet } from "./QuestionBankSettings";
 
@@ -49,23 +35,8 @@ const fields: Record<ContentKind, string[]> = {
     "ngay_hieu_luc",
     "ngay_het_hieu_luc",
   ],
-  documents: [
-    "externalId",
-    "title",
-    "so_hieu",
-    "source",
-    "ngay_hieu_luc",
-    "ngay_het_hieu_luc",
-  ],
-  units: [
-    "externalId",
-    "doc_id",
-    "parent_id",
-    "unit_type",
-    "so_hieu",
-    "text",
-    "order",
-  ],
+  documents: ["externalId", "title", "so_hieu", "source", "ngay_hieu_luc", "ngay_het_hieu_luc"],
+  units: ["externalId", "doc_id", "parent_id", "unit_type", "so_hieu", "text", "order"],
 };
 
 const labels: Record<string, string> = {
@@ -118,8 +89,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
 
   const urlQuery = parameters.get("q") ?? parameters.get("source_id") ?? "";
   const rawStatus = parameters.get("status");
-  const state =
-    rawStatus === "published" || rawStatus === "draft" ? rawStatus : "";
+  const state = rawStatus === "published" || rawStatus === "draft" ? rawStatus : "";
   const signGroup = kind === "signs" ? (parameters.get("group") ?? "") : "";
   const editId = parameters.get("id") ?? "";
 
@@ -176,21 +146,13 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
     if (editId === "new") {
       if (!selected || selected.id !== "") {
         task.clearError();
-        applySelection({
-          id: "",
-          externalId: "",
-          version: 0,
-          published: false,
-          data: {},
-        });
+        applySelection({ id: "", externalId: "", version: 0, published: false, data: {} });
         setMessage("");
       }
       return;
     }
     if (!data.value) return;
-    const target = data.value.find(
-      (r) => r.id === editId || r.externalId === editId,
-    );
+    const target = data.value.find((r) => r.id === editId || r.externalId === editId);
     if (target && selected?.id !== target.id) {
       task.clearError();
       applySelection(target);
@@ -207,9 +169,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
       (!signGroup || r.data.group === signGroup),
   );
   const signGroups = [
-    ...new Set(
-      (data.value ?? []).map((r) => String(r.data.group ?? "")).filter(Boolean),
-    ),
+    ...new Set((data.value ?? []).map((r) => String(r.data.group ?? "")).filter(Boolean)),
   ].sort((a, b) => a.localeCompare(b, "vi"));
   const drafts = kind === "signs" ? rows.filter((r) => !r.published) : [];
   const chosen = drafts.filter((r) => checked.has(r.id));
@@ -278,14 +238,11 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
     <div>
       {graphContext && (
         <p className="mb-4 text-sm">
-          <Link
-            className="underline"
-            to={`/admin/chatbot?step=3&${graphContext}`}
-          >
+          <Link className="underline" to={`/admin/chatbot?step=3&${graphContext}`}>
             Quay lại đồ thị và kiểm tra lại nguồn
           </Link>
-          . Kiểm duyệt, xuất bản văn bản trước đơn vị; bản phục vụ chỉ đổi sau
-          khi xem trước và xác nhận.
+          . Kiểm duyệt, xuất bản văn bản trước đơn vị; bản phục vụ chỉ đổi sau khi xem trước và xác
+          nhận.
         </p>
       )}
       <Notice {...data} retry={data.reload} empty={!data.value?.length} />
@@ -323,9 +280,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
             updateUrl({ q: v || null }, true);
           }}
           placeholder={
-            kind === "signs"
-              ? "Tìm biển báo, mã, nội dung…"
-              : "Tìm theo mã hoặc nội dung"
+            kind === "signs" ? "Tìm biển báo, mã, nội dung…" : "Tìm theo mã hoặc nội dung"
           }
           className={inputCls}
         />
@@ -375,9 +330,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
           </span>
           <Button
             variant="primary"
-            disabled={
-              task.busy || data.loading || !chosen.length || chosen.length > 600
-            }
+            disabled={task.busy || data.loading || !chosen.length || chosen.length > 600}
             onClick={() =>
               void task.run(async () => {
                 setMessage("");
@@ -393,9 +346,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                   );
                 } catch (error) {
                   setBatchError(
-                    error instanceof Error
-                      ? error.message
-                      : "Yêu cầu xuất bản thất bại.",
+                    error instanceof Error ? error.message : "Yêu cầu xuất bản thất bại.",
                   );
                   return;
                 }
@@ -408,9 +359,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
             Duyệt và xuất bản các biển đã chọn
           </Button>
           {chosen.length > 600 && (
-            <p className="w-full text-xs text-muted">
-              Mỗi lần xuất bản tối đa 600 biển báo.
-            </p>
+            <p className="w-full text-xs text-muted">Mỗi lần xuất bản tối đa 600 biển báo.</p>
           )}
         </div>
       )}
@@ -438,9 +387,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                   checked={allChecked}
                   disabled={task.busy || data.loading || !drafts.length}
                   onChange={(e) =>
-                    setChecked(
-                      new Set(e.target.checked ? drafts.map((r) => r.id) : []),
-                    )
+                    setChecked(new Set(e.target.checked ? drafts.map((r) => r.id) : []))
                   }
                 />
               </Th>
@@ -477,9 +424,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
               )}
               <Td>{r.externalId}</Td>
               <Td>
-                <p className="max-w-xl">
-                  {String(r.data.text || r.data.title || r.data.name)}
-                </p>
+                <p className="max-w-xl">{String(r.data.text || r.data.title || r.data.name)}</p>
               </Td>
               <Td>{r.published ? "Đã xuất bản" : "Bản nháp"}</Td>
               <Td className="text-right whitespace-nowrap">
@@ -497,11 +442,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
         <Modal
           open={!!selected}
           title={`${selected.id ? "Chỉnh sửa" : "Thêm"} ${
-            kind === "signs"
-              ? "biển báo"
-              : kind === "units"
-                ? "đơn vị pháp lý"
-                : "văn bản"
+            kind === "signs" ? "biển báo" : kind === "units" ? "đơn vị pháp lý" : "văn bản"
           }`}
           onClose={closeEdit}
           footer={
@@ -525,9 +466,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                     task.run(async () => {
                       setMessage("");
                       await save(false);
-                      const current = await api<ContentRecord[]>(
-                        `/admin/${kind}`,
-                      );
+                      const current = await api<ContentRecord[]>(`/admin/${kind}`);
                       const record = current.find((r) => r.id === selected.id)!;
                       const updated = await api<ContentRecord>(
                         `${resource}/${record.id}/publication`,
@@ -538,11 +477,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                       );
                       applySelection(updated);
                       data.reload();
-                      setMessage(
-                        selected.published
-                          ? "Đã ngừng xuất bản."
-                          : "Đã xuất bản.",
-                      );
+                      setMessage(selected.published ? "Đã ngừng xuất bản." : "Đã xuất bản.");
                     })
                   }
                 >
@@ -560,12 +495,8 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
           )}
           {kind === "signs" && selected.id && (
             <section className="rounded-xl border border-line bg-surface p-4">
-              <h3 className="text-sm font-semibold text-navy">
-                Xem trước ảnh biển báo
-              </h3>
-              {Boolean(
-                selected.data.imageKey || selected.data.hasDatasetImage,
-              ) ? (
+              <h3 className="text-sm font-semibold text-navy">Xem trước ảnh biển báo</h3>
+              {Boolean(selected.data.imageKey || selected.data.hasDatasetImage) ? (
                 <Asset
                   key={selected.version}
                   id={selected.id}
@@ -594,13 +525,9 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                     send("POST", { rows: [form], updateExisting: false }),
                   );
                   if (result.inserted !== 1)
-                    throw new Error(
-                      "Mã đã tồn tại. Chọn bản ghi hiện có để chỉnh sửa.",
-                    );
+                    throw new Error("Mã đã tồn tại. Chọn bản ghi hiện có để chỉnh sửa.");
                   const allRows = await api<ContentRecord[]>(`/admin/${kind}`);
-                  const created = allRows.find(
-                    (r) => r.externalId === form.externalId,
-                  );
+                  const created = allRows.find((r) => r.externalId === form.externalId);
                   if (created) {
                     applySelection(created);
                     updateUrl({ id: created.id }, true);
@@ -615,9 +542,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
             {fields[kind].map((key) => (
               <label
                 key={key}
-                className={`text-sm ${
-                  ["text", "meaning"].includes(key) ? "sm:col-span-2" : ""
-                }`}
+                className={`text-sm ${["text", "meaning"].includes(key) ? "sm:col-span-2" : ""}`}
               >
                 {kind === "units" && key === "text"
                   ? "Nội dung pháp lý"
@@ -636,26 +561,18 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                   <input
                     readOnly={
                       !!selected.id &&
-                      (key === "externalId" ||
-                        (key === "doc_id" && kind === "units"))
+                      (key === "externalId" || (key === "doc_id" && kind === "units"))
                     }
                     min={key === "order" ? 0 : undefined}
                     step={key === "order" ? 1 : undefined}
-                    type={
-                      key === "order"
-                        ? "number"
-                        : key.startsWith("ngay_")
-                          ? "date"
-                          : "text"
-                    }
+                    type={key === "order" ? "number" : key.startsWith("ngay_") ? "date" : "text"}
                     value={String(form[key] ?? "")}
                     onChange={(e) =>
                       field(
                         key,
                         key === "order"
                           ? Number(e.target.value)
-                          : (key.startsWith("ngay_") || key === "parent_id") &&
-                              !e.target.value
+                          : (key.startsWith("ngay_") || key === "parent_id") && !e.target.value
                             ? null
                             : e.target.value,
                       )
@@ -675,11 +592,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                     <textarea
                       className={inputCls}
                       rows={3}
-                      value={
-                        Array.isArray(form[key])
-                          ? (form[key] as string[]).join("\n")
-                          : ""
-                      }
+                      value={Array.isArray(form[key]) ? (form[key] as string[]).join("\n") : ""}
                       onChange={(e) =>
                         field(
                           key,
@@ -717,22 +630,14 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                 <span className="rounded-full bg-sidebar px-2.5 py-1 text-xs font-medium text-navy">
                   {selected.published ? "Đã xuất bản" : "Bản nháp"}
                 </span>
-                <span className="text-xs text-muted">
-                  Phiên bản {selected.version}
-                </span>
+                <span className="text-xs text-muted">Phiên bản {selected.version}</span>
               </div>
               {kind !== "units" && (
                 <div className="space-y-3 border-y border-line py-3">
                   <FilePicker
-                    title={
-                      kind === "documents"
-                        ? "Tải tài liệu nguồn"
-                        : "Tải ảnh biển báo"
-                    }
+                    title={kind === "documents" ? "Tải tài liệu nguồn" : "Tải ảnh biển báo"}
                     hint={
-                      kind === "documents"
-                        ? "PDF · Tối đa 20 MB"
-                        : "PNG hoặc JPEG · Tối đa 5 MB"
+                      kind === "documents" ? "PDF · Tối đa 20 MB" : "PNG hoặc JPEG · Tối đa 5 MB"
                     }
                     accept={kind === "documents" ? ".pdf" : ".png,.jpg,.jpeg"}
                     disabled={task.busy}
@@ -764,9 +669,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                     disabled={task.busy}
                     onClick={() =>
                       task.run(async () =>
-                        setHistory(
-                          await api(`/admin/content/${selected.id}/history`),
-                        ),
+                        setHistory(await api(`/admin/content/${selected.id}/history`)),
                       )
                     }
                   >
@@ -789,8 +692,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                   className="border-b border-line py-3 text-sm"
                 >
                   <p>
-                    Phiên bản {h.version} ·{" "}
-                    {new Date(h.changedAt).toLocaleString("vi-VN")}
+                    Phiên bản {h.version} · {new Date(h.changedAt).toLocaleString("vi-VN")}
                   </p>
                   <p className="mt-1 text-muted">
                     {String(
@@ -799,12 +701,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                         JSON.parse(h.data).name ||
                         "",
                     )}{" "}
-                    · Nguồn:{" "}
-                    {String(
-                      JSON.parse(h.data).source ||
-                        JSON.parse(h.data).so_hieu ||
-                        "",
-                    )}
+                    · Nguồn: {String(JSON.parse(h.data).source || JSON.parse(h.data).so_hieu || "")}
                   </p>
                 </div>
               ))}
@@ -865,16 +762,14 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
         <Card>
           <div className="px-5">
             {!data.value.length && (
-              <p className="py-6 text-center text-sm text-muted">
-                Chưa có quan hệ văn bản.
-              </p>
+              <p className="py-6 text-center text-sm text-muted">Chưa có quan hệ văn bản.</p>
             )}
             {data.value.map((r) => (
               <p key={r.id} className="text-sm py-3 border-b border-line">
                 {documents.find((d) => d.id === r.successor)?.externalId}{" "}
                 {r.type === "REPLACES" ? "thay thế" : "sửa đổi"}{" "}
-                {documents.find((d) => d.id === r.predecessor)?.externalId} ·{" "}
-                {r.effectiveDate} · {r.note}{" "}
+                {documents.find((d) => d.id === r.predecessor)?.externalId} · {r.effectiveDate} ·{" "}
+                {r.note}{" "}
                 <Button
                   size="sm"
                   onClick={() => {
@@ -898,9 +793,7 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
       )}
       <Modal
         open={editing}
-        title={
-          relationId ? "Chỉnh sửa quan hệ văn bản" : "Thêm quan hệ văn bản"
-        }
+        title={relationId ? "Chỉnh sửa quan hệ văn bản" : "Thêm quan hệ văn bản"}
         onClose={() => {
           if (!task.busy) setEditing(false);
         }}
@@ -909,11 +802,7 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
             <Button disabled={task.busy} onClick={() => setEditing(false)}>
               Hủy
             </Button>
-            <Button
-              type="submit"
-              form="law-relation-editor"
-              disabled={task.busy}
-            >
+            <Button type="submit" form="law-relation-editor" disabled={task.busy}>
               Lưu quan hệ
             </Button>
           </>
@@ -927,9 +816,7 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
             e.preventDefault();
             task.run(async () => {
               await api(
-                relationId
-                  ? "/admin/law-relations/" + relationId
-                  : "/admin/law-relations",
+                relationId ? "/admin/law-relations/" + relationId : "/admin/law-relations",
                 send(relationId ? "PUT" : "POST", {
                   predecessor,
                   successor,
@@ -956,9 +843,7 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
               <select
                 required
                 value={String(value)}
-                onChange={(e) =>
-                  (setter as (s: string) => void)(e.target.value)
-                }
+                onChange={(e) => (setter as (s: string) => void)(e.target.value)}
                 className={`${inputCls} mt-2`}
               >
                 <option value="">Chọn văn bản</option>
@@ -1021,8 +906,7 @@ export function ImportPanel({
   const { notify } = useAdmin();
   const sets = useData<QuestionSet[]>("/admin/questions/sets");
   const [questionSetId, setQuestionSetId] = useState("");
-  const selectedSet =
-    questionSetId || (sets.value?.length === 1 ? sets.value[0].set_id : "");
+  const selectedSet = questionSetId || (sets.value?.length === 1 ? sets.value[0].set_id : "");
   const [rows, setRows] = useState<unknown[]>([]),
     [preview, setPreview] = useState<
       {
@@ -1049,9 +933,7 @@ export function ImportPanel({
 
   function downloadSample() {
     saveBlob(
-      new Blob(["\uFEFF" + csvSamples[kind]], {
-        type: "text/csv;charset=utf-8",
-      }),
+      new Blob(["\uFEFF" + csvSamples[kind]], { type: "text/csv;charset=utf-8" }),
       `${kind}-template.csv`,
     );
   }
@@ -1076,26 +958,19 @@ export function ImportPanel({
       <div className="px-5 pb-5">
         {graphContext && (
           <p className="mb-3 text-sm">
-            <Link
-              className="underline"
-              to={`/admin/chatbot?step=3&${graphContext}`}
-            >
+            <Link className="underline" to={`/admin/chatbot?step=3&${graphContext}`}>
               Quay lại đồ thị và kiểm tra lại nguồn
             </Link>
             . Nhập vẫn là bản nháp; kiểm duyệt và xuất bản trước khi quay lại.
           </p>
         )}
         <p className="mb-4 rounded-lg border border-line bg-bg px-3 py-2 text-xs text-muted">
-          Dữ liệu được kiểm tra trên máy chủ và lưu thành bản nháp; chỉ xuất bản
-          sau khi duyệt.
+          Dữ liệu được kiểm tra trên máy chủ và lưu thành bản nháp; chỉ xuất bản sau khi duyệt.
         </p>
         {kind === "questions" && <Notice {...sets} retry={sets.reload} />}
         <Notice error={task.error} />
         {message && (
-          <p
-            role="status"
-            className="my-3 text-sm text-emerald-700 whitespace-pre-line"
-          >
+          <p role="status" className="my-3 text-sm text-emerald-700 whitespace-pre-line">
             {message}
           </p>
         )}
@@ -1108,12 +983,8 @@ export function ImportPanel({
                 01
               </span>
               <div>
-                <h3 className="text-sm font-semibold text-navy">
-                  Nhập tệp dữ liệu
-                </h3>
-                <p className="mt-0.5 text-xs text-muted">
-                  CSV, Excel (.xlsx) hoặc JSON
-                </p>
+                <h3 className="text-sm font-semibold text-navy">Nhập tệp dữ liệu</h3>
+                <p className="mt-0.5 text-xs text-muted">CSV, Excel (.xlsx) hoặc JSON</p>
               </div>
             </header>
             {kind === "questions" && (
@@ -1175,21 +1046,15 @@ export function ImportPanel({
                 setPreview([]);
                 task.run(async () => {
                   if (kind === "questions" && !selectedSet)
-                    throw new Error(
-                      "Chọn bộ câu hỏi trước khi tải tệp câu hỏi.",
-                    );
-                  if (file.size > 10 * 1024 * 1024)
-                    throw new Error("Tệp dữ liệu tối đa 10 MB.");
+                    throw new Error("Chọn bộ câu hỏi trước khi tải tệp câu hỏi.");
+                  if (file.size > 10 * 1024 * 1024) throw new Error("Tệp dữ liệu tối đa 10 MB.");
                   let input: unknown;
-                  if (file.name.endsWith(".json"))
-                    input = JSON.parse(await file.text());
+                  if (file.name.endsWith(".json")) input = JSON.parse(await file.text());
                   else if (file.name.endsWith(".xlsx")) {
-                    const { readSheet } =
-                      await import("read-excel-file/browser");
+                    const { readSheet } = await import("read-excel-file/browser");
                     input = tableObjects(await readSheet(file));
                   } else input = tableObjects(parseCsv(await file.text()));
-                  if (!Array.isArray(input))
-                    throw new Error("Cần danh sách dữ liệu.");
+                  if (!Array.isArray(input)) throw new Error("Cần danh sách dữ liệu.");
                   input = input.map((row) => normalizeImport(kind, row));
                   setRows(input as unknown[]);
                   setPreview(
@@ -1198,9 +1063,7 @@ export function ImportPanel({
                       send("POST", {
                         rows: input,
                         updateExisting: update,
-                        ...(kind === "questions"
-                          ? { questionSetId: selectedSet }
-                          : {}),
+                        ...(kind === "questions" ? { questionSetId: selectedSet } : {}),
                       }),
                     ),
                   );
@@ -1225,9 +1088,7 @@ export function ImportPanel({
                           send("POST", {
                             rows,
                             updateExisting: nextUpdate,
-                            ...(kind === "questions"
-                              ? { questionSetId: selectedSet }
-                              : {}),
+                            ...(kind === "questions" ? { questionSetId: selectedSet } : {}),
                           }),
                         ),
                       );
@@ -1246,21 +1107,13 @@ export function ImportPanel({
                   hợp lệ
                 </span>
                 <span>
-                  <strong
-                    className={
-                      preview.some((r) => !r.valid)
-                        ? "text-red-700"
-                        : "text-muted"
-                    }
-                  >
+                  <strong className={preview.some((r) => !r.valid) ? "text-red-700" : "text-muted"}>
                     {preview.filter((r) => !r.valid).length}
                   </strong>{" "}
                   lỗi
                 </span>
                 <span>
-                  <strong className="text-navy">
-                    {preview.filter((r) => r.existing).length}
-                  </strong>{" "}
+                  <strong className="text-navy">{preview.filter((r) => r.existing).length}</strong>{" "}
                   đã có
                 </span>
               </p>
@@ -1284,9 +1137,7 @@ export function ImportPanel({
                       send("POST", {
                         rows,
                         updateExisting: update,
-                        ...(kind === "questions"
-                          ? { questionSetId: selectedSet }
-                          : {}),
+                        ...(kind === "questions" ? { questionSetId: selectedSet } : {}),
                       }),
                     );
                     setRows([]);
@@ -1311,18 +1162,13 @@ export function ImportPanel({
                   02
                 </span>
                 <div>
-                  <h3 className="text-sm font-semibold text-navy">
-                    Ghép ảnh qua ZIP
-                  </h3>
-                  <p className="mt-0.5 text-xs text-muted">
-                    Chọn tệp để tải lên và ghép ảnh
-                  </p>
+                  <h3 className="text-sm font-semibold text-navy">Ghép ảnh qua ZIP</h3>
+                  <p className="mt-0.5 text-xs text-muted">Chọn tệp để tải lên và ghép ảnh</p>
                 </div>
               </header>
               <p className="mb-4 text-xs leading-5 text-muted">
-                Tên ảnh theo mã:{" "}
-                {kind === "questions" ? "Q301.png" : "DP.127.png"}. ZIP tối đa
-                20 MB; ảnh PNG/JPEG tối đa 5 MB mỗi tệp.
+                Tên ảnh theo mã: {kind === "questions" ? "Q301.png" : "DP.127.png"}. ZIP tối đa 20
+                MB; ảnh PNG/JPEG tối đa 5 MB mỗi tệp.
               </p>
               <FilePicker
                 key={`${kind}-${zipInputVersion}`}
@@ -1336,9 +1182,7 @@ export function ImportPanel({
                   if (!files.length) return;
                   task.run(async () => {
                     if (kind === "questions" && !selectedSet)
-                      throw new Error(
-                        "Chọn bộ câu hỏi trước khi ghép ảnh câu hỏi.",
-                      );
+                      throw new Error("Chọn bộ câu hỏi trước khi ghép ảnh câu hỏi.");
                     const messages = [];
                     const zipUrl =
                       kind === "questions"
@@ -1379,18 +1223,8 @@ export function ImportPanel({
                 <tr key={r.row}>
                   <Td>{r.row}</Td>
                   <Td>{String(r.data?.externalId || "")}</Td>
-                  <Td>
-                    {String(
-                      r.data?.text || r.data?.name || r.data?.title || "",
-                    )}
-                  </Td>
-                  <Td>
-                    {r.valid
-                      ? r.existing
-                        ? "Đã tồn tại"
-                        : "Hợp lệ"
-                      : r.message}
-                  </Td>
+                  <Td>{String(r.data?.text || r.data?.name || r.data?.title || "")}</Td>
+                  <Td>{r.valid ? (r.existing ? "Đã tồn tại" : "Hợp lệ") : r.message}</Td>
                 </tr>
               ))}
             </tbody>

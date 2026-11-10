@@ -33,13 +33,7 @@ export default function AdminDashboard() {
     task = useTask();
   const report = useData<Record<string, number>>("/admin/reports");
   const data = useData<
-    {
-      id: string;
-      question: string;
-      state: string;
-      feedback: string | null;
-      resolved: boolean;
-    }[]
+    { id: string; question: string; state: string; feedback: string | null; resolved: boolean }[]
   >("/admin/chatlogs?pending=false");
   const kag = useInspection(loadKagStatus),
     builder = useInspection(loadBuilderStatus),
@@ -52,19 +46,13 @@ export default function AdminDashboard() {
   const runtimeReady = kag.value?.queryReadiness.state === "READY";
   const servingBlocked =
     !!serving.value &&
-    (!active ||
-      !serving.value.runtime_ready ||
-      serving.value.chat_blockers.length > 0);
+    (!active || !serving.value.runtime_ready || serving.value.chat_blockers.length > 0);
   const chatReady = runtimeReady && !servingBlocked;
   const rawReleaseId =
-    kag.value?.queryReadiness.evidence?.release_id ??
-    kag.value?.release.evidence?.release_id;
-  const releaseId =
-    typeof rawReleaseId === "string" && rawReleaseId ? rawReleaseId : null;
+    kag.value?.queryReadiness.evidence?.release_id ?? kag.value?.release.evidence?.release_id;
+  const releaseId = typeof rawReleaseId === "string" && rawReleaseId ? rawReleaseId : null;
   const shortReleaseId =
-    releaseId && releaseId.length > 18
-      ? `${releaseId.slice(0, 16)}…`
-      : releaseId;
+    releaseId && releaseId.length > 18 ? `${releaseId.slice(0, 16)}…` : releaseId;
 
   const graphTitle =
     serving.loading && kag.loading
@@ -84,8 +72,7 @@ export default function AdminDashboard() {
       : active
         ? `Phiên ${active.run_id}`
         : "Chọn ở trang Chatbot (bước ③)"
-    : serving.error &&
-        (shortReleaseId || runtimeReady || kag.value?.release.state === "READY")
+    : serving.error && (shortReleaseId || runtimeReady || kag.value?.release.state === "READY")
       ? "Đang phục vụ · đăng nhập OpenSPG để xem tên project"
       : "Xem chi tiết ở trang Chatbot (bước ③)";
 
@@ -114,9 +101,7 @@ export default function AdminDashboard() {
           : chatReady
             ? "Sẵn sàng"
             : "Chưa sẵn sàng",
-      sub: kag.value
-        ? checkText(kag.value.queryReadiness)
-        : "Đang đọc trạng thái dịch vụ",
+      sub: kag.value ? checkText(kag.value.queryReadiness) : "Đang đọc trạng thái dịch vụ",
       warn: !kag.loading && !chatReady,
     },
     {
@@ -147,21 +132,14 @@ export default function AdminDashboard() {
     },
   ];
   const actionFor = (status: string) =>
-    status === "Không có căn cứ"
-      ? "Bổ sung"
-      : status === "Phản hồi sai"
-        ? "Xem xét"
-        : "Cập nhật";
+    status === "Không có căn cứ" ? "Bổ sung" : status === "Phản hồi sai" ? "Xem xét" : "Cập nhật";
 
   return (
     <Page
       title="Tổng quan hệ thống"
       subtitle="Tình trạng trợ lý, đồ thị tri thức đang phục vụ và câu hỏi cần xử lý."
       actions={
-        <Link
-          to="/chat"
-          className="text-xs font-medium text-accent-strong hover:underline"
-        >
+        <Link to="/chat" className="text-xs font-medium text-accent-strong hover:underline">
           Mở trang Hỏi luật ↗
         </Link>
       }
@@ -171,17 +149,10 @@ export default function AdminDashboard() {
       <Notice error={task.error} />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 mb-5">
         {stats.map((s) => (
-          <Card
-            key={s.label}
-            className="grid grid-rows-[auto_1fr_auto] gap-2 p-5"
-          >
+          <Card key={s.label} className="grid grid-rows-[auto_1fr_auto] gap-2 p-5">
             <p className="text-xs leading-5 text-muted">{s.label}</p>
             <p
-              title={
-                s.label === "Đồ thị đang dùng"
-                  ? (releaseId ?? String(s.value))
-                  : undefined
-              }
+              title={s.label === "Đồ thị đang dùng" ? (releaseId ?? String(s.value)) : undefined}
               className={`min-w-0 self-center text-2xl sm:text-3xl leading-tight font-semibold tracking-tight tabular-nums break-words ${s.warn ? "text-accent-strong" : "text-navy"}`}
             >
               {s.value}
@@ -208,24 +179,15 @@ export default function AdminDashboard() {
             <table className="w-full min-w-[520px]">
               <thead>
                 <tr className="text-[11.5px] uppercase tracking-wide text-muted border-y border-line">
-                  <th className="text-left px-5 py-2.5 font-medium">
-                    Câu hỏi người dùng
-                  </th>
+                  <th className="text-left px-5 py-2.5 font-medium">Câu hỏi người dùng</th>
                   <th className="text-left px-5 py-2.5 font-medium">Lý do</th>
-                  <th className="text-right px-5 py-2.5 font-medium">
-                    Thao tác
-                  </th>
+                  <th className="text-right px-5 py-2.5 font-medium">Thao tác</th>
                 </tr>
               </thead>
               <tbody>
                 {issues.map((row) => (
-                  <tr
-                    key={row.id}
-                    className="border-b border-line/60 last:border-0"
-                  >
-                    <td className="px-5 py-3 text-[13.5px] text-navy">
-                      {row.question}
-                    </td>
+                  <tr key={row.id} className="border-b border-line/60 last:border-0">
+                    <td className="px-5 py-3 text-[13.5px] text-navy">{row.question}</td>
                     <td className="px-5 py-3">
                       <Badge
                         tone={
@@ -276,10 +238,7 @@ export default function AdminDashboard() {
                 ))}
                 {!issues.length && (
                   <tr>
-                    <td
-                      colSpan={3}
-                      className="px-5 py-8 text-center text-sm text-muted"
-                    >
+                    <td colSpan={3} className="px-5 py-8 text-center text-sm text-muted">
                       {data.value
                         ? "Không có câu tồn đọng trong danh sách đã đọc."
                         : "Chưa đọc được danh sách câu hỏi."}
@@ -305,12 +264,8 @@ export default function AdminDashboard() {
           >
             <div className="px-5 pb-5 space-y-3">
               <Row label="Điều kiện Chat">
-                <span
-                  className={`text-xs ${runtimeReady ? "text-emerald-700" : "text-amber-800"}`}
-                >
-                  {kag.value
-                    ? checkText(kag.value.queryReadiness)
-                    : "Chưa đọc được trạng thái"}
+                <span className={`text-xs ${runtimeReady ? "text-emerald-700" : "text-amber-800"}`}>
+                  {kag.value ? checkText(kag.value.queryReadiness) : "Chưa đọc được trạng thái"}
                 </span>
               </Row>
               <Row label="Đồ thị đang phục vụ">
@@ -326,17 +281,11 @@ export default function AdminDashboard() {
               </Row>
               <Row label="Chẩn đoán & kiểm thử">
                 <span className="inline-flex flex-wrap justify-end gap-2 text-xs">
-                  <button
-                    className="underline"
-                    onClick={() => nav("/admin/infrastructure")}
-                  >
+                  <button className="underline" onClick={() => nav("/admin/infrastructure")}>
                     Kết nối
                   </button>
                   <span>·</span>
-                  <button
-                    className="underline"
-                    onClick={() => nav("/admin/benchmark")}
-                  >
+                  <button className="underline" onClick={() => nav("/admin/benchmark")}>
                     Benchmark
                   </button>
                 </span>
@@ -362,9 +311,7 @@ export default function AdminDashboard() {
               {builder.value && (
                 <p className="text-text-secondary leading-5">
                   Trạng thái Builder:{" "}
-                  <strong className="text-navy">
-                    {builderStateLabel(builder.value.state)}
-                  </strong>
+                  <strong className="text-navy">{builderStateLabel(builder.value.state)}</strong>
                   {builder.value.run_id
                     ? ` · ${builder.value.run_id}`
                     : " · Chưa có phiên đang chạy"}
@@ -388,19 +335,11 @@ export default function AdminDashboard() {
   );
 }
 
-function Row({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
+function Row({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="grid grid-cols-1 gap-1 text-left sm:grid-cols-2 sm:gap-3">
       <span className="text-[13px] leading-5 text-text-secondary">{label}</span>
-      <div className="min-w-0 break-words leading-5 sm:text-right">
-        {children}
-      </div>
+      <div className="min-w-0 break-words leading-5 sm:text-right">{children}</div>
     </div>
   );
 }

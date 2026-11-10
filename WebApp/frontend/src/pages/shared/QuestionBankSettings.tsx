@@ -166,10 +166,7 @@ export default function QuestionBankSettings({
 
     failOnCritical: true,
 
-    quotas: Array.from({ length: 6 }, (_, i) => ({
-      chapter: i + 1,
-      value: "",
-    })),
+    quotas: Array.from({ length: 6 }, (_, i) => ({ chapter: i + 1, value: "" })),
   });
 
   const today = new Intl.DateTimeFormat("en-CA", {
@@ -179,9 +176,7 @@ export default function QuestionBankSettings({
     day: "2-digit",
   }).format(new Date());
   const nextDay = (date: string) =>
-    new Date(Date.parse(`${date}T00:00:00Z`) + 86400000)
-      .toISOString()
-      .slice(0, 10);
+    new Date(Date.parse(`${date}T00:00:00Z`) + 86400000).toISOString().slice(0, 10);
   const earliestEnd = endingRule
     ? nextDay(today > endingRule.valid_from ? today : endingRule.valid_from)
     : "";
@@ -193,8 +188,7 @@ export default function QuestionBankSettings({
     rule.criticalSlots,
     rule.totalQuestions,
   ].every((value) => value !== "");
-  const allocationMismatch =
-    allocationComplete && allocation !== Number(rule.totalQuestions);
+  const allocationMismatch = allocationComplete && allocation !== Number(rule.totalQuestions);
 
   const content = (
     <>
@@ -217,18 +211,11 @@ export default function QuestionBankSettings({
             <ChapterSettings sets={sets.value || []} />
           </>
         )}
-        <Notice
-          error={
-            !dialog && !endingRule && !pendingDelete ? task.error : undefined
-          }
-        />
+        <Notice error={!dialog && !endingRule && !pendingDelete ? task.error : undefined} />
         {tab === "sets" && (
           <section aria-labelledby="created-sets-heading" className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2
-                id="created-sets-heading"
-                className="text-lg font-semibold text-navy"
-              >
+              <h2 id="created-sets-heading" className="text-lg font-semibold text-navy">
                 Bộ đã tạo
               </h2>
               <Button
@@ -297,11 +284,7 @@ export default function QuestionBankSettings({
                                 size="sm"
                                 variant="danger"
                                 aria-label="Xóa bộ câu hỏi"
-                                disabled={
-                                  task.busy ||
-                                  s.question_count > 0 ||
-                                  s.rule_count > 0
-                                }
+                                disabled={task.busy || s.question_count > 0 || s.rule_count > 0}
                                 title={
                                   s.question_count > 0 || s.rule_count > 0
                                     ? `Đã có ${s.question_count} câu hỏi · ${s.rule_count} quy tắc; không thể xóa.`
@@ -335,12 +318,8 @@ export default function QuestionBankSettings({
                       ))}
                       {!sets.value.length && (
                         <tr>
-                          <td
-                            colSpan={4}
-                            className="px-4 py-6 text-center text-sm text-muted"
-                          >
-                            Chưa có bộ câu hỏi. Bấm “Thêm bộ câu hỏi” để tạo bộ
-                            mới.
+                          <td colSpan={4} className="px-4 py-6 text-center text-sm text-muted">
+                            Chưa có bộ câu hỏi. Bấm “Thêm bộ câu hỏi” để tạo bộ mới.
                           </td>
                         </tr>
                       )}
@@ -352,15 +331,9 @@ export default function QuestionBankSettings({
           </section>
         )}
         {tab === "rules" && (
-          <section
-            aria-labelledby="created-rules-heading"
-            className="space-y-4"
-          >
+          <section aria-labelledby="created-rules-heading" className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
-              <h2
-                id="created-rules-heading"
-                className="text-lg font-semibold text-navy"
-              >
+              <h2 id="created-rules-heading" className="text-lg font-semibold text-navy">
                 Quy tắc đã tạo
               </h2>
               <Button
@@ -377,9 +350,8 @@ export default function QuestionBankSettings({
               </Button>
             </div>
             <p className="text-xs leading-6 text-muted">
-              Giữ quy tắc cũ để chấm bài thi đã lưu. Khi thay đổi, thêm quy tắc
-              cho thời kỳ mới; khoảng hiệu lực trong cùng bộ và hạng không được
-              chồng nhau.
+              Giữ quy tắc cũ để chấm bài thi đã lưu. Khi thay đổi, thêm quy tắc cho thời kỳ mới;
+              khoảng hiệu lực trong cùng bộ và hạng không được chồng nhau.
             </p>
             <Notice {...rules} retry={rules.reload} />
             {rules.value && (
@@ -399,17 +371,12 @@ export default function QuestionBankSettings({
                       {rules.value.map((r) => (
                         <tr key={r.rule_id} className="border-t border-line">
                           <Td>
-                            <p className="font-medium text-navy">
-                              {r.set_name}
-                            </p>
-                            <p className="mt-1 text-xs text-muted">
-                              Hạng {r.class_code}
-                            </p>
+                            <p className="font-medium text-navy">{r.set_name}</p>
+                            <p className="mt-1 text-xs text-muted">Hạng {r.class_code}</p>
                           </Td>
                           <Td>
                             <p>
-                              {r.total_questions} câu · {r.duration_minutes}{" "}
-                              phút
+                              {r.total_questions} câu · {r.duration_minutes} phút
                             </p>
                             <p className="mt-1 text-xs text-muted">
                               Đạt từ {r.minimum_correct} câu đúng
@@ -418,9 +385,7 @@ export default function QuestionBankSettings({
                           <Td>
                             <p>{r.critical_slots} câu</p>
                             <p className="mt-1 text-xs text-muted">
-                              {r.fail_on_critical
-                                ? "Sai câu liệt: trượt"
-                                : "Không tự động trượt"}
+                              {r.fail_on_critical ? "Sai câu liệt: trượt" : "Không tự động trượt"}
                             </p>
                           </Td>
                           <Td>
@@ -466,11 +431,7 @@ export default function QuestionBankSettings({
                                   task.busy ||
                                   (!!r.valid_to &&
                                     r.valid_to <
-                                      nextDay(
-                                        today > r.valid_from
-                                          ? today
-                                          : r.valid_from,
-                                      ))
+                                      nextDay(today > r.valid_from ? today : r.valid_from))
                                 }
                                 onClick={() => {
                                   task.clearError();
@@ -515,8 +476,7 @@ export default function QuestionBankSettings({
                             </div>
                             {r.attempt_count > 0 && (
                               <p className="mt-1 text-xs text-muted">
-                                Đã có {r.attempt_count} bài thi; khóa sửa/xóa để
-                                giữ lịch sử.
+                                Đã có {r.attempt_count} bài thi; khóa sửa/xóa để giữ lịch sử.
                               </p>
                             )}
                           </Td>
@@ -524,12 +484,9 @@ export default function QuestionBankSettings({
                       ))}
                       {!rules.value.length && (
                         <tr>
-                          <td
-                            colSpan={5}
-                            className="px-4 py-6 text-center text-sm text-muted"
-                          >
-                            Chưa có quy tắc đề thi. Tạo bộ câu hỏi trước, sau đó
-                            thêm quy tắc áp dụng.
+                          <td colSpan={5} className="px-4 py-6 text-center text-sm text-muted">
+                            Chưa có quy tắc đề thi. Tạo bộ câu hỏi trước, sau đó thêm quy tắc áp
+                            dụng.
                           </td>
                         </tr>
                       )}
@@ -561,12 +518,7 @@ export default function QuestionBankSettings({
             >
               Hủy
             </Button>
-            <Button
-              type="submit"
-              form="create-question-set"
-              variant="primary"
-              disabled={task.busy}
-            >
+            <Button type="submit" form="create-question-set" variant="primary" disabled={task.busy}>
               {editingSet ? "Lưu thay đổi" : "Tạo bộ câu hỏi"}
             </Button>
           </>
@@ -574,13 +526,10 @@ export default function QuestionBankSettings({
       >
         <Notice error={task.error} />
         <p className="mb-5 text-sm text-muted">
-          Tạo bộ riêng cho 250 và 600 câu trước khi nhập dữ liệu. Các trường có
-          dấu * là bắt buộc.
+          Tạo bộ riêng cho 250 và 600 câu trước khi nhập dữ liệu. Các trường có dấu * là bắt buộc.
         </p>
         {editingSet && (
-          <p className="mb-4 text-xs text-muted">
-            Mã đợt ban hành dùng chung cho các bộ cùng đợt.
-          </p>
+          <p className="mb-4 text-xs text-muted">Mã đợt ban hành dùng chung cho các bộ cùng đợt.</p>
         )}
         <form
           id="create-question-set"
@@ -589,18 +538,10 @@ export default function QuestionBankSettings({
 
             void task.run(async () => {
               const body = editingSet
-                ? {
-                    releaseCode: set.releaseCode,
-                    setCode: set.setCode,
-                    setName: set.setName,
-                  }
-                : Object.fromEntries(
-                    Object.entries(set).filter(([, v]) => v !== ""),
-                  );
+                ? { releaseCode: set.releaseCode, setCode: set.setCode, setName: set.setName }
+                : Object.fromEntries(Object.entries(set).filter(([, v]) => v !== ""));
               await api(
-                editingSet
-                  ? `/admin/questions/sets/${editingSet.set_id}`
-                  : "/admin/questions/sets",
+                editingSet ? `/admin/questions/sets/${editingSet.set_id}` : "/admin/questions/sets",
                 send(editingSet ? "PUT" : "POST", body),
               );
 
@@ -643,18 +584,14 @@ export default function QuestionBankSettings({
                     className={inputCls}
                     aria-label={label}
                     value={set[key as keyof typeof set]}
-                    onChange={(e) =>
-                      setSet((s) => ({ ...s, [key]: e.target.value }))
-                    }
+                    onChange={(e) => setSet((s) => ({ ...s, [key]: e.target.value }))}
                   />
                 </Field>
               ))}
             </div>
             {!editingSet && (
               <fieldset className="min-w-0 border-t border-line pt-4">
-                <legend className="pr-3 text-sm font-medium text-navy">
-                  Nguồn và hiệu lực
-                </legend>
+                <legend className="pr-3 text-sm font-medium text-navy">Nguồn và hiệu lực</legend>
                 <div className="grid gap-4 sm:grid-cols-2">
                   {Object.entries({
                     issuedOn: "Ngày ban hành",
@@ -667,9 +604,7 @@ export default function QuestionBankSettings({
                         className={inputCls}
                         aria-label={label}
                         value={set[key as keyof typeof set]}
-                        onChange={(e) =>
-                          setSet((s) => ({ ...s, [key]: e.target.value }))
-                        }
+                        onChange={(e) => setSet((s) => ({ ...s, [key]: e.target.value }))}
                       />
                     </Field>
                   ))}
@@ -682,9 +617,7 @@ export default function QuestionBankSettings({
                         className={inputCls}
                         aria-label="Nguồn bộ câu hỏi"
                         value={set.sourceUrl}
-                        onChange={(e) =>
-                          setSet((s) => ({ ...s, sourceUrl: e.target.value }))
-                        }
+                        onChange={(e) => setSet((s) => ({ ...s, sourceUrl: e.target.value }))}
                       />
                     </Field>
                   </div>
@@ -718,12 +651,7 @@ export default function QuestionBankSettings({
               type="submit"
               form="create-exam-rule"
               variant="primary"
-              disabled={
-                task.busy ||
-                sets.loading ||
-                !sets.value?.length ||
-                allocationMismatch
-              }
+              disabled={task.busy || sets.loading || !sets.value?.length || allocationMismatch}
             >
               {editingRule ? "Lưu thay đổi" : "Thêm quy tắc đề"}
             </Button>
@@ -784,9 +712,7 @@ export default function QuestionBankSettings({
                   aria-label="Bộ áp dụng"
                   disabled={!!editingRule}
                   value={rule.setId}
-                  onChange={(e) =>
-                    setRule((r) => ({ ...r, setId: e.target.value }))
-                  }
+                  onChange={(e) => setRule((r) => ({ ...r, setId: e.target.value }))}
                 >
                   <option value="">Chọn bộ câu hỏi</option>
                   {sets.value?.map((s) => (
@@ -819,30 +745,21 @@ export default function QuestionBankSettings({
                   className={inputCls}
                   aria-label="Áp dụng từ"
                   value={rule.validFrom}
-                  onChange={(e) =>
-                    setRule((r) => ({ ...r, validFrom: e.target.value }))
-                  }
+                  onChange={(e) => setRule((r) => ({ ...r, validFrom: e.target.value }))}
                 />
               </Field>
-              <Field
-                label="Áp dụng đến"
-                hint="Không gồm ngày này. Để trống nếu chưa giới hạn."
-              >
+              <Field label="Áp dụng đến" hint="Không gồm ngày này. Để trống nếu chưa giới hạn.">
                 <input
                   type="date"
                   className={inputCls}
                   aria-label="Áp dụng đến"
                   value={rule.validTo}
-                  onChange={(e) =>
-                    setRule((r) => ({ ...r, validTo: e.target.value }))
-                  }
+                  onChange={(e) => setRule((r) => ({ ...r, validTo: e.target.value }))}
                 />
               </Field>
             </div>
             <fieldset className="min-w-0 border-t border-line pt-4">
-              <legend className="pr-3 text-sm font-medium text-navy">
-                Cấu hình bài thi
-              </legend>
+              <legend className="pr-3 text-sm font-medium text-navy">Cấu hình bài thi</legend>
               <div className="grid gap-4 sm:grid-cols-2">
                 {Object.entries({
                   totalQuestions: "Tổng số câu",
@@ -866,9 +783,7 @@ export default function QuestionBankSettings({
                       className={inputCls}
                       aria-label={label}
                       value={rule[key as "totalQuestions"]}
-                      onChange={(e) =>
-                        setRule((r) => ({ ...r, [key]: e.target.value }))
-                      }
+                      onChange={(e) => setRule((r) => ({ ...r, [key]: e.target.value }))}
                     />
                   </Field>
                 ))}
@@ -914,11 +829,7 @@ export default function QuestionBankSettings({
               </div>
               <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
                 {rule.quotas.map((quota, i) => (
-                  <Field
-                    key={quota.chapter}
-                    label={`Chương ${quota.chapter}`}
-                    required
-                  >
+                  <Field key={quota.chapter} label={`Chương ${quota.chapter}`} required>
                     <input
                       required
                       type="number"
@@ -946,9 +857,7 @@ export default function QuestionBankSettings({
                       onClick={() =>
                         setRule((r) => ({
                           ...r,
-                          quotas: r.quotas.filter(
-                            (q) => q.chapter !== quota.chapter,
-                          ),
+                          quotas: r.quotas.filter((q) => q.chapter !== quota.chapter),
                         }))
                       }
                     >
@@ -973,19 +882,15 @@ export default function QuestionBankSettings({
               role="status"
               className={`text-sm ${allocationMismatch ? "text-red-700" : "text-muted"}`}
             >
-              Tổng phân bổ: {allocation} / {rule.totalQuestions || "—"} câu (gồm
-              câu điểm liệt).
-              {allocationMismatch &&
-                " Tổng phân bổ phải bằng tổng số câu của đề."}
+              Tổng phân bổ: {allocation} / {rule.totalQuestions || "—"} câu (gồm câu điểm liệt).
+              {allocationMismatch && " Tổng phân bổ phải bằng tổng số câu của đề."}
             </p>
             <label className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"
                 className="accent-[var(--color-accent-strong)]"
                 checked={rule.failOnCritical}
-                onChange={(e) =>
-                  setRule((r) => ({ ...r, failOnCritical: e.target.checked }))
-                }
+                onChange={(e) => setRule((r) => ({ ...r, failOnCritical: e.target.checked }))}
               />
               Trượt khi sai câu điểm liệt
             </label>
@@ -1003,11 +908,7 @@ export default function QuestionBankSettings({
             <Button disabled={task.busy} onClick={() => setEndingRule(null)}>
               Hủy
             </Button>
-            <Button
-              type="submit"
-              form="end-exam-rule"
-              disabled={task.busy || !endDate}
-            >
+            <Button type="submit" form="end-exam-rule" disabled={task.busy || !endDate}>
               Kết thúc hiệu lực
             </Button>
           </>
@@ -1058,11 +959,7 @@ export default function QuestionBankSettings({
       </Modal>
       <Modal
         open={!!pendingDelete}
-        title={
-          pendingDelete?.kind === "set"
-            ? "Xóa bộ câu hỏi"
-            : "Xóa quy tắc đề thi"
-        }
+        title={pendingDelete?.kind === "set" ? "Xóa bộ câu hỏi" : "Xóa quy tắc đề thi"}
         onClose={() => {
           if (!task.busy) setPendingDelete(null);
         }}
@@ -1096,8 +993,8 @@ export default function QuestionBankSettings({
       >
         <Notice error={task.error} />
         <p className="text-sm text-muted">
-          Bạn sắp xóa “{pendingDelete?.label}”. Chỉ mục chưa được dùng mới có
-          thể xóa; câu hỏi hoặc bài thi đã lưu sẽ được giữ nguyên.
+          Bạn sắp xóa “{pendingDelete?.label}”. Chỉ mục chưa được dùng mới có thể xóa; câu hỏi hoặc
+          bài thi đã lưu sẽ được giữ nguyên.
         </p>
       </Modal>
     </>

@@ -5,8 +5,7 @@ export const csvSamples: Record<ImportKind, string> = {
     "code,name,group,meaning,source\nP.DEMO,Biển mẫu,Cấm,Nội dung cần kiểm duyệt,Nguồn cần bổ sung\n",
   questions:
     "id,chapter,question,option1,option2,answer,critical,explanation,source\nDEMO-1,Khái niệm và quy tắc,Câu hỏi mẫu,Phương án 1,Phương án 2,1,false,Giải thích mẫu,Nguồn cần bổ sung\n",
-  documents:
-    "id,name,type,effective\nDOC-DEMO,Văn bản mẫu,Nghị định,2025-01-01\n",
+  documents: "id,name,type,effective\nDOC-DEMO,Văn bản mẫu,Nghị định,2025-01-01\n",
   units:
     "externalId,doc_id,parent_id,unit_type,so_hieu,text,order\nUNIT-DEMO,DOC-DEMO,,article,Điều 1,Nội dung mẫu,1\n",
 };
@@ -29,8 +28,7 @@ export function parseCsv(text: string): string[][] {
         closed = true;
       } else cell += c;
     } else if (c === '"') {
-      if (cell || closed)
-        throw new Error("Dấu ngoặc kép không hợp lệ trong CSV.");
+      if (cell || closed) throw new Error("Dấu ngoặc kép không hợp lệ trong CSV.");
       quoted = true;
     } else if (c === "," || c === "\n" || c === "\r") {
       row.push(cell);
@@ -56,15 +54,10 @@ export function parseCsv(text: string): string[][] {
 
 export function tableObjects(rows: unknown[][]): Record<string, unknown>[] {
   const headers = (rows[0] ?? []).map((v) => String(v ?? "").trim());
-  if (
-    !headers.length ||
-    headers.some((h) => !h) ||
-    new Set(headers).size !== headers.length
-  )
+  if (!headers.length || headers.some((h) => !h) || new Set(headers).size !== headers.length)
     throw new Error("Tên cột trống hoặc trùng. Hãy dùng tệp mẫu.");
   return rows.slice(1).map((row) => {
-    if (row.length > headers.length)
-      throw new Error("Số ô vượt quá số cột trong tiêu đề.");
+    if (row.length > headers.length) throw new Error("Số ô vượt quá số cột trong tiêu đề.");
     return Object.fromEntries(headers.map((h, i) => [h, row[i] ?? ""]));
   });
 }

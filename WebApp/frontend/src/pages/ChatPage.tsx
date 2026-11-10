@@ -8,14 +8,7 @@ import {
   loadCitationSource,
 } from "./shared/chat-state";
 import LogoMark from "../components/LogoMark";
-import {
-  Fragment,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-  useSyncExternalStore,
-} from "react";
+import { Fragment, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 interface LegalReference {
   title: string;
@@ -40,12 +33,7 @@ interface Session {
   messages: Message[];
 }
 
-const groups: Session["group"][] = [
-  "Hôm nay",
-  "Hôm qua",
-  "7 ngày trước",
-  "30 ngày trước",
-];
+const groups: Session["group"][] = ["Hôm nay", "Hôm qua", "7 ngày trước", "30 ngày trước"];
 
 function Icon({ d, className = "w-4 h-4" }: { d: string; className?: string }) {
   return (
@@ -165,8 +153,7 @@ export default function ChatPage() {
   useEffect(() => {
     if (data.currentId && data.currentId !== lastSubmittedId.current) {
       lastSubmittedId.current = data.currentId;
-      if (data.currentId !== activeId)
-        updateUrl({ c: data.currentId, cite: null });
+      if (data.currentId !== activeId) updateUrl({ c: data.currentId, cite: null });
     }
   }, [data.currentId]);
 
@@ -187,18 +174,13 @@ export default function ChatPage() {
   const citationTurn = citeMatch?.[1] ?? activeId;
   const selectedReference =
     citeIndex !== null
-      ? messages.find(
-          (message) =>
-            message.role === "bot" && message.turnId === citationTurn,
-        )?.citations?.[citeIndex]
+      ? messages.find((message) => message.role === "bot" && message.turnId === citationTurn)
+          ?.citations?.[citeIndex]
       : undefined;
   const selectedCitation = selectedReference?.raw;
 
   const filtered = useMemo(
-    () =>
-      sessions.filter((s) =>
-        s.title.toLowerCase().includes(query.toLowerCase()),
-      ),
+    () => sessions.filter((s) => s.title.toLowerCase().includes(query.toLowerCase())),
     [sessions, query],
   );
 
@@ -240,14 +222,9 @@ export default function ChatPage() {
     }
   }
 
-  function openCitation(
-    turnId: string,
-    index: number,
-    trigger: HTMLButtonElement,
-  ) {
+  function openCitation(turnId: string, index: number, trigger: HTMLButtonElement) {
     citationTriggerRef.current = trigger;
-    if (turnId === citationTurn && index === citeIndex)
-      citationCloseRef.current?.focus();
+    if (turnId === citationTurn && index === citeIndex) citationCloseRef.current?.focus();
     else updateUrl({ cite: `${turnId}:${index}` });
   }
 
@@ -267,13 +244,9 @@ export default function ChatPage() {
             {citation.raw.quote}
             <button
               type="button"
-              onClick={(event) =>
-                openCitation(message.turnId, index, event.currentTarget)
-              }
+              onClick={(event) => openCitation(message.turnId, index, event.currentTarget)}
               aria-label={`Trích dẫn ${index + 1} – ${citation.label}`}
-              aria-expanded={
-                citationTurn === message.turnId && citeIndex === index
-              }
+              aria-expanded={citationTurn === message.turnId && citeIndex === index}
               aria-controls={
                 citationTurn === message.turnId && citeIndex === index
                   ? "legal-citation-panel"
@@ -311,10 +284,7 @@ export default function ChatPage() {
       void task.run(async () => {
         await api(
           `/chat/${message.turnId}/feedback`,
-          request("POST", {
-            feedback: action === "Hữu ích" ? "HELPFUL" : action,
-            note: "",
-          }),
+          request("POST", { feedback: action === "Hữu ích" ? "HELPFUL" : action, note: "" }),
         );
         setNotice("Đã lưu phản hồi");
       });
@@ -337,9 +307,7 @@ export default function ChatPage() {
         maxLength={4000}
         rows={1}
         className="block w-full min-h-[52px] resize-none overflow-y-auto bg-transparent px-4 pt-3.5 pb-1 text-[15px] leading-relaxed outline-none placeholder:text-muted/80 text-navy [scrollbar-width:thin]"
-        placeholder={
-          active ? "Hỏi tiếp…" : "Hỏi về luật giao thông hoặc thi bằng lái…"
-        }
+        placeholder={active ? "Hỏi tiếp…" : "Hỏi về luật giao thông hoặc thi bằng lái…"}
         value={input}
         onChange={(e) => setInput(e.target.value)}
         onKeyDown={handleKey}
@@ -377,11 +345,7 @@ export default function ChatPage() {
           className="absolute inset-y-0 left-0 z-10 w-64 max-w-full md:static shrink-0 flex flex-col border-r border-line bg-bg shadow-lg md:shadow-none"
         >
           <div className="p-3 space-y-2">
-            <Notice
-              loading={data.loading}
-              error={data.error}
-              retry={chat.load}
-            />
+            <Notice loading={data.loading} error={data.error} retry={chat.load} />
             <div className="flex items-center gap-1">
               <button
                 type="button"
@@ -482,9 +446,7 @@ export default function ChatPage() {
               );
             })}
             {!filtered.length && (
-              <p className="px-3 py-6 text-xs text-muted">
-                Không tìm thấy cuộc trò chuyện.
-              </p>
+              <p className="px-3 py-6 text-xs text-muted">Không tìm thấy cuộc trò chuyện.</p>
             )}
           </div>
         </aside>
@@ -526,10 +488,7 @@ export default function ChatPage() {
           <div className="flex-1 flex flex-col items-center justify-center px-4 pb-24">
             <div className="w-full max-w-2xl">
               <h2 className="flex items-center justify-center gap-3 font-sans font-semibold text-2xl sm:text-3xl tracking-normal text-center text-navy mb-8">
-                <Icon
-                  d={ic.book}
-                  className="h-7 w-7 shrink-0 text-accent-strong"
-                />
+                <Icon d={ic.book} className="h-7 w-7 shrink-0 text-accent-strong" />
                 Tra cứu luật giao thông
               </h2>
               {composer}
@@ -572,24 +531,15 @@ export default function ChatPage() {
                         <div className="mt-3 flex flex-wrap gap-2">
                           {m.citations.map((citation, referenceIndex) => {
                             const isSelected =
-                              citationTurn === m.turnId &&
-                              citeIndex === referenceIndex;
+                              citationTurn === m.turnId && citeIndex === referenceIndex;
                             return (
                               <button
                                 key={`${citation.title}-${citation.clause}-${referenceIndex}`}
                                 type="button"
                                 onClick={(event) =>
-                                  openCitation(
-                                    m.turnId,
-                                    referenceIndex,
-                                    event.currentTarget,
-                                  )
+                                  openCitation(m.turnId, referenceIndex, event.currentTarget)
                                 }
-                                aria-controls={
-                                  isSelected
-                                    ? "legal-citation-panel"
-                                    : undefined
-                                }
+                                aria-controls={isSelected ? "legal-citation-panel" : undefined}
                                 aria-expanded={isSelected}
                                 className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-medium text-left text-xs text-accent-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${
                                   isSelected
@@ -622,9 +572,7 @@ export default function ChatPage() {
                           <button
                             type="button"
                             disabled={blocked}
-                            onClick={() =>
-                              messageAction(a.t, m, messages[i - 1].text)
-                            }
+                            onClick={() => messageAction(a.t, m, messages[i - 1].text)}
                             key={a.t}
                             aria-label={a.label ?? a.t}
                             title={a.label ?? a.t}
@@ -652,8 +600,7 @@ export default function ChatPage() {
             <div className="mx-auto w-full max-w-2xl px-4 pb-3">
               {composer}
               <p className="mt-2 text-center text-[11px] text-muted">
-                Nội dung mang tính tham khảo, không thay thế tư vấn pháp lý
-                chính thức.
+                Nội dung mang tính tham khảo, không thay thế tư vấn pháp lý chính thức.
               </p>
             </div>
           </>
@@ -682,10 +629,7 @@ export default function ChatPage() {
               <Icon d={ic.close} />
             </button>
           </div>
-          <CitationSource
-            key={`${citationTurn}:${citeIndex}`}
-            reference={selectedReference}
-          />
+          <CitationSource key={`${citationTurn}:${citeIndex}`} reference={selectedReference} />
         </aside>
       )}
     </div>
@@ -748,9 +692,7 @@ function CitationSource({ reference }: { reference: LegalReference }) {
           {source?.title ?? reference.title}
         </h2>
         <p className="break-words text-xs leading-relaxed text-muted">
-          {[source?.number, source?.unitType, reference.clause]
-            .filter(Boolean)
-            .join(" · ")}
+          {[source?.number, source?.unitType, reference.clause].filter(Boolean).join(" · ")}
         </p>
         <blockquote className="mt-3 whitespace-pre-wrap break-words text-sm leading-relaxed">
           {start < 0 ? (
@@ -790,18 +732,10 @@ function CitationSource({ reference }: { reference: LegalReference }) {
   );
 }
 
-function Section({
-  label,
-  children,
-}: {
-  label?: string;
-  children: React.ReactNode;
-}) {
+function Section({ label, children }: { label?: string; children: React.ReactNode }) {
   return (
     <div className="mt-3">
-      {label && (
-        <p className="px-3 pb-1 text-[11px] font-medium text-muted">{label}</p>
-      )}
+      {label && <p className="px-3 pb-1 text-[11px] font-medium text-muted">{label}</p>}
       <div className="space-y-px">{children}</div>
     </div>
   );
@@ -822,9 +756,7 @@ function SessionItem({
     <div
       onClick={onClick}
       className={`group flex items-center gap-2 px-3 py-1.5 rounded-lg cursor-pointer text-[13px] transition-colors ${
-        active
-          ? "bg-selected text-navy font-medium"
-          : "text-text-secondary hover:bg-selected"
+        active ? "bg-selected text-navy font-medium" : "text-text-secondary hover:bg-selected"
       }`}
     >
       <span className="flex-1 truncate">{s.title}</span>

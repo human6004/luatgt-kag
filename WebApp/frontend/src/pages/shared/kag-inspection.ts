@@ -62,18 +62,9 @@ export type ServingPreview = {
 };
 function validateServingOperation(value: ServingOperation): ServingOperation {
   if (
-    !shape(value, [
-      "contract_version",
-      "state",
-      "project_id",
-      "run_id",
-      "code",
-      "result",
-    ]) ||
+    !shape(value, ["contract_version", "state", "project_id", "run_id", "code", "result"]) ||
     value.contract_version !== "builder-serving-operation-v1" ||
-    !["NOT_RUN", "PREPARING", "COMPLETE", "FAILED", "INTERRUPTED"].includes(
-      value.state,
-    ) ||
+    !["NOT_RUN", "PREPARING", "COMPLETE", "FAILED", "INTERRUPTED"].includes(value.state) ||
     (value.state === "NOT_RUN"
       ? value.project_id !== null || value.run_id !== null
       : !Number.isInteger(value.project_id) ||
@@ -95,8 +86,7 @@ function validateServingOperation(value: ServingOperation): ServingOperation {
 }
 export const servingReasons: Record<string, string> = {
   GRAPH_REQUIRED: "Chọn một đồ thị rồi bấm Dùng cho Chat.",
-  SOURCE_MISSING:
-    "Bản nguồn của đồ thị chưa đầy đủ. Chọn lại phiên dựng và kiểm tra nguồn đi kèm.",
+  SOURCE_MISSING: "Bản nguồn của đồ thị chưa đầy đủ. Chọn lại phiên dựng và kiểm tra nguồn đi kèm.",
   SOURCE_NOT_PUBLISHED:
     "Nguồn còn là bản nháp. Kiểm duyệt và xuất bản văn bản, đơn vị pháp lý tương ứng.",
   SOURCE_TEXT_MISMATCH:
@@ -108,13 +98,8 @@ export const servingReasons: Record<string, string> = {
   CHAT_MODEL_NOT_APPLIED:
     "Model Chat chưa áp dụng cho đồ thị này. Bấm Dùng cho Chat rồi xác nhận để dùng.",
 };
-export async function loadServing(
-  signal?: AbortSignal,
-): Promise<ServingCatalog> {
-  const value = await api<ServingCatalog>("/admin/kag/serving", {
-    signal,
-    cache: "no-store",
-  });
+export async function loadServing(signal?: AbortSignal): Promise<ServingCatalog> {
+  const value = await api<ServingCatalog>("/admin/kag/serving", { signal, cache: "no-store" });
   if (
     value.contract_version !== "builder-serving-v1" ||
     !Array.isArray(value.runs) ||
@@ -135,11 +120,7 @@ export async function loadServing(
   if (value.operation != null) validateServingOperation(value.operation);
   return value;
 }
-export type PackageModel = {
-  provider: string;
-  model: string;
-  dimension: number;
-};
+export type PackageModel = { provider: string; model: string; dimension: number };
 export type VectorPackageManifest = {
   format_version: "luatgt-vector-package-v1";
   plan_sha256: string;
@@ -174,8 +155,7 @@ export type BuilderPackageExport = {
   directory: string;
 };
 const packageName = (value: unknown): value is string =>
-  typeof value === "string" &&
-  /^[A-Za-z0-9][A-Za-z0-9._-]{0,119}\.zip$/.test(value);
+  typeof value === "string" && /^[A-Za-z0-9][A-Za-z0-9._-]{0,119}\.zip$/.test(value);
 const listedPackageName = (value: unknown): value is string =>
   typeof value === "string" &&
   value.length > 0 &&
@@ -187,17 +167,14 @@ export function packageReason(code: string) {
     COMPATIBLE: "Tương thích để nhập",
     PACKAGE_NAME:
       "Đổi tên ZIP: chỉ dùng chữ/số ASCII, dấu chấm, gạch ngang hoặc gạch dưới; tối đa 124 ký tự.",
-    PACKAGE_PLAN:
-      "Gói dùng phiên bản dữ liệu khác. Cài đúng dữ liệu nguồn rồi tải lại.",
+    PACKAGE_PLAN: "Gói dùng phiên bản dữ liệu khác. Cài đúng dữ liệu nguồn rồi tải lại.",
     PACKAGE_MODEL:
       "Model của gói không khớp cấu hình hiện tại. Lưu và kiểm tra đúng Embedding rồi tải lại.",
     MODEL_MISMATCH: "Model của gói không khớp cấu hình hiện tại.",
     PACKAGE_SOURCE: "Chưa đọc được dữ liệu nguồn. Tải lại trước khi chọn gói.",
-    PACKAGE_SELECTION:
-      "Phạm vi dữ liệu không khớp gói. Chọn lại gói hoặc kiểm tra dữ liệu nguồn.",
+    PACKAGE_SELECTION: "Phạm vi dữ liệu không khớp gói. Chọn lại gói hoặc kiểm tra dữ liệu nguồn.",
     PACKAGE_CHANGED: "Tệp ZIP đã thay đổi. Tải lại danh sách rồi chọn lại.",
-    PACKAGE_PATH:
-      "Thư mục hoặc tệp ZIP không hợp lệ; không dùng liên kết tượng trưng.",
+    PACKAGE_PATH: "Thư mục hoặc tệp ZIP không hợp lệ; không dùng liên kết tượng trưng.",
     PACKAGE_SIZE: "ZIP vượt giới hạn kích thước hoặc số lượng đã khai báo.",
     PACKAGE_MANIFEST: "Thông tin mô tả gói không hợp lệ.",
     PACKAGE_FILES: "ZIP chứa tệp thiếu, thừa hoặc đường dẫn không hợp lệ.",
@@ -205,8 +182,7 @@ export function packageReason(code: string) {
     PACKAGE_INTEGRITY: "Nội dung gói không khớp dữ liệu nguồn đã chốt.",
     PACKAGE_PROVENANCE: "Thiếu hoặc sai thông tin nguồn của vector.",
     PACKAGE_VECTORS: "Vector thiếu, sai kích thước hoặc không hợp lệ.",
-    PACKAGE_UNAVAILABLE:
-      "Không đọc được ZIP. Kiểm tra quyền đọc và chép lại tệp.",
+    PACKAGE_UNAVAILABLE: "Không đọc được ZIP. Kiểm tra quyền đọc và chép lại tệp.",
   };
   return reasons[code] ?? "Chưa thể dùng gói. Kiểm tra cấu hình rồi tải lại.";
 }
@@ -219,17 +195,13 @@ const packageModel = (value: PackageModel) =>
   count(value.dimension, 65536) &&
   value.dimension > 0;
 const packageReference = (value: VectorPackageReference) =>
-  shape(value, ["name", "sha256"]) &&
-  packageName(value.name) &&
-  hash(value.sha256);
+  shape(value, ["name", "sha256"]) && packageName(value.name) && hash(value.sha256);
 const packageDirectory = (value: unknown) =>
   typeof value === "string" &&
   value.length > 0 &&
   value.length <= 4096 &&
   !/[\x00-\x1f\x7f]/.test(value);
-export async function loadBuilderPackages(
-  signal?: AbortSignal,
-): Promise<BuilderPackages> {
+export async function loadBuilderPackages(signal?: AbortSignal): Promise<BuilderPackages> {
   const value = await api<BuilderPackages>("/admin/kag/builder/packages", {
     signal,
     cache: "no-store",
@@ -238,12 +210,7 @@ export async function loadBuilderPackages(
     throw new ApiError("Danh sách gói vector không hợp lệ", 502);
   };
   if (
-    !shape(value, [
-      "contract_version",
-      "directory",
-      "current_model",
-      "packages",
-    ]) ||
+    !shape(value, ["contract_version", "directory", "current_model", "packages"]) ||
     value.contract_version !== "builder-packages-v1" ||
     !packageDirectory(value.directory) ||
     (value.current_model !== null && !packageModel(value.current_model)) ||
@@ -254,14 +221,7 @@ export async function loadBuilderPackages(
   const names = new Set<string>();
   for (const row of value.packages) {
     if (
-      !shape(row, [
-        "name",
-        "sha256",
-        "size",
-        "compatible",
-        "reason",
-        "manifest",
-      ]) ||
+      !shape(row, ["name", "sha256", "size", "compatible", "reason", "manifest"]) ||
       !listedPackageName(row.name) ||
       names.has(row.name) ||
       (row.sha256 !== null && !hash(row.sha256)) ||
@@ -295,11 +255,8 @@ export async function loadBuilderPackages(
         !hash(m.plan_sha256) ||
         !hash(m.fingerprint) ||
         !packageModel(m.model_identity) ||
-        (m.selection !== null &&
-          (typeof m.selection !== "object" || Array.isArray(m.selection))) ||
-        [m.nodes, m.edges, m.vectors].some(
-          (n) => !count(n, Number.MAX_SAFE_INTEGER),
-        ) ||
+        (m.selection !== null && (typeof m.selection !== "object" || Array.isArray(m.selection))) ||
+        [m.nodes, m.edges, m.vectors].some((n) => !count(n, Number.MAX_SAFE_INTEGER)) ||
         typeof m.application_version !== "string" ||
         !m.application_version ||
         m.application_version.length > 255)
@@ -321,22 +278,14 @@ export async function loadBuilderPackages(
 }
 function validatePackageExport(value: BuilderPackageExport) {
   if (
-    !shape(value, [
-      "contract_version",
-      "state",
-      "name",
-      "size",
-      "code",
-      "directory",
-    ]) ||
+    !shape(value, ["contract_version", "state", "name", "size", "code", "directory"]) ||
     value.contract_version !== "builder-package-export-v1" ||
     !["NOT_RUN", "RUNNING", "COMPLETE", "FAILED"].includes(value.state) ||
     !packageDirectory(value.directory) ||
     (value.name !== null && !packageName(value.name)) ||
     (value.size !== null && !count(value.size, Number.MAX_SAFE_INTEGER)) ||
     (value.code !== null &&
-      (typeof value.code !== "string" ||
-        !/^[A-Z0-9_]{1,64}$/.test(value.code))) ||
+      (typeof value.code !== "string" || !/^[A-Z0-9_]{1,64}$/.test(value.code))) ||
     (value.state === "COMPLETE" &&
       (value.name === null ||
         value.size === null ||
@@ -393,16 +342,9 @@ export async function changeServing(
 ): Promise<ServingPreview | ServingOperation> {
   const raw = await api<ServingPreview | ServingOperation>(
     `/admin/kag/serving/${action}`,
-    send("POST", {
-      project_id,
-      run_id,
-      ...(action === "activate" ? { preview_id } : {}),
-    }),
+    send("POST", { project_id, run_id, ...(action === "activate" ? { preview_id } : {}) }),
   );
-  if (
-    "contract_version" in raw &&
-    raw.contract_version === "builder-serving-operation-v1"
-  ) {
+  if ("contract_version" in raw && raw.contract_version === "builder-serving-operation-v1") {
     const operation = validateServingOperation(raw);
     if (
       action !== "activate" ||
@@ -429,23 +371,13 @@ export async function changeServing(
 }
 
 export type KagCheck = {
-  state:
-    | "ALIVE"
-    | "READY"
-    | "NOT_READY"
-    | "UNAVAILABLE"
-    | "NOT_CONFIGURED"
-    | "RELEASE_UNAVAILABLE";
+  state: "ALIVE" | "READY" | "NOT_READY" | "UNAVAILABLE" | "NOT_CONFIGURED" | "RELEASE_UNAVAILABLE";
   httpStatus: number;
   code?: string;
   evidence?: Record<string, unknown>;
 };
 export type KagStatus = Record<
-  | "liveness"
-  | "queryReadiness"
-  | "retrievalReadiness"
-  | "vectorRetrievalReadiness"
-  | "release",
+  "liveness" | "queryReadiness" | "retrievalReadiness" | "vectorRetrievalReadiness" | "release",
   KagCheck
 >;
 export type Retrieval = {
@@ -542,12 +474,7 @@ export type LLMCredentials = {
         output_chars: number;
         tested_at: string;
       };
-      status:
-        | "NOT_CONFIGURED"
-        | "SAVED"
-        | "PENDING_APPLY"
-        | "APPLIED"
-        | "BLOCKED";
+      status: "NOT_CONFIGURED" | "SAVED" | "PENDING_APPLY" | "APPLIED" | "BLOCKED";
       blocker: string | null;
       actions: { test: boolean; apply: boolean };
     }
@@ -620,9 +547,7 @@ function validateLLMCredentials(value: LLMCredentials) {
         value.build_config.reason === "BUILDER_REPLAY_ONLY")
     ) ||
     (value.error_code !== null &&
-      !["CONFIG_INVALID", "CONFIG_STORAGE_UNAVAILABLE"].includes(
-        value.error_code,
-      ))
+      !["CONFIG_INVALID", "CONFIG_STORAGE_UNAVAILABLE"].includes(value.error_code))
   )
     invalid();
   for (const role of ["chat", "embedding"] as const) {
@@ -648,27 +573,14 @@ function validateLLMCredentials(value: LLMCredentials) {
       ]) ||
       (row.saved_revision === null) !== (model === null) ||
       (row.saved_revision !== null &&
-        (!count(row.saved_revision, value.revision) ||
-          row.saved_revision < 1)) ||
+        (!count(row.saved_revision, value.revision) || row.saved_revision < 1)) ||
       (row.active_revision !== null &&
-        (!count(row.active_revision, value.revision) ||
-          row.active_revision < 1)) ||
+        (!count(row.active_revision, value.revision) || row.active_revision < 1)) ||
       (row.active !== null &&
-        (!shape(row.active, [
-          "provider",
-          "base_url",
-          "model",
-          "key_configured",
-        ]) ||
+        (!shape(row.active, ["provider", "base_url", "model", "key_configured"]) ||
           !llmInput(row.active) ||
           row.active.key_configured !== true)) ||
-      ![
-        "NOT_CONFIGURED",
-        "SAVED",
-        "PENDING_APPLY",
-        "APPLIED",
-        "BLOCKED",
-      ].includes(row.status) ||
+      !["NOT_CONFIGURED", "SAVED", "PENDING_APPLY", "APPLIED", "BLOCKED"].includes(row.status) ||
       (row.blocker !== null && !modelErrorCodes.includes(row.blocker)) ||
       !shape(row.actions, ["test", "apply"]) ||
       typeof row.actions.test !== "boolean" ||
@@ -696,17 +608,13 @@ function validateLLMCredentials(value: LLMCredentials) {
         (test.dimension !== null && !count(test.dimension, 262144)) ||
         (test.observed_model !== null &&
           (typeof test.observed_model !== "string" ||
-            !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(
-              test.observed_model,
-            ))) ||
+            !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(test.observed_model))) ||
         typeof test.tested_at !== "string" ||
         !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\+00:00$/.test(test.tested_at) ||
         (test.status === "PASS" &&
           (test.client_attempts !== 1 ||
             (role === "embedding"
-              ? test.dimension === null ||
-                test.dimension < 1 ||
-                test.dimension > 65536
+              ? test.dimension === null || test.dimension < 1 || test.dimension > 65536
               : test.output_chars < 1))))
     )
       invalid();
@@ -723,14 +631,9 @@ function validateLLMCredentials(value: LLMCredentials) {
       : value.revision !== 0 || value.chat !== null || value.embedding !== null
   )
     invalid();
+  if ((value.error_code !== null || value.revision === 2147483647) && value.save_allowed) invalid();
   if (
-    (value.error_code !== null || value.revision === 2147483647) &&
-    value.save_allowed
-  )
-    invalid();
-  if (
-    value.applied !==
-      Object.values(value.roles).some((row) => row.status === "APPLIED") ||
+    value.applied !== Object.values(value.roles).some((row) => row.status === "APPLIED") ||
     value.connection_tested !==
       Object.values(value.roles).some((row) => row.test?.status === "PASS")
   )
@@ -756,14 +659,9 @@ const modelErrorCodes = [
   "TIMEOUT",
   "NETWORK_ERROR",
 ];
-export async function loadLLMCredentials(
-  signal?: AbortSignal,
-): Promise<LLMCredentials> {
+export async function loadLLMCredentials(signal?: AbortSignal): Promise<LLMCredentials> {
   return validateLLMCredentials(
-    await api<LLMCredentials>("/admin/kag/config/models", {
-      signal,
-      cache: "no-store",
-    }),
+    await api<LLMCredentials>("/admin/kag/config/models", { signal, cache: "no-store" }),
   );
 }
 export async function saveLLMCredentials(
@@ -771,15 +669,8 @@ export async function saveLLMCredentials(
   role: "chat" | "embedding",
   input: LLMInput,
 ): Promise<LLMCredentials> {
-  if (
-    !count(revision, 2147483646) ||
-    !["chat", "embedding"].includes(role) ||
-    !llmInput(input)
-  )
-    throw new ApiError(
-      "Provider, model, Base URL hoặc API key không hợp lệ",
-      400,
-    );
+  if (!count(revision, 2147483646) || !["chat", "embedding"].includes(role) || !llmInput(input))
+    throw new ApiError("Provider, model, Base URL hoặc API key không hợp lệ", 400);
   return validateLLMCredentials(
     await api<LLMCredentials>(
       "/admin/kag/config/models",
@@ -852,38 +743,27 @@ function validateChatRetrieval(value: ChatRetrievalConfiguration) {
     typeof value.pending !== "boolean" ||
     typeof value.runtime_idle !== "boolean" ||
     (value.error_code !== null &&
-      !["CONFIG_INVALID", "CONFIG_STORAGE_UNAVAILABLE"].includes(
-        value.error_code,
-      )) ||
+      !["CONFIG_INVALID", "CONFIG_STORAGE_UNAVAILABLE"].includes(value.error_code)) ||
     (value.active === null
-      ? value.saved !== null ||
-        value.previous !== null ||
-        value.error_code === null
+      ? value.saved !== null || value.previous !== null || value.error_code === null
       : !retrievalValues(value.active) ||
         !retrievalValues(value.saved) ||
         (value.previous !== null && !retrievalValues(value.previous))) ||
     value.pending !==
-      (value.active?.top_k !== value.saved?.top_k ||
-        value.active?.expand !== value.saved?.expand)
+      (value.active?.top_k !== value.saved?.top_k || value.active?.expand !== value.saved?.expand)
   )
     invalid();
   const available =
-    value.active !== null &&
-    value.error_code === null &&
-    value.revision < 2147483647;
+    value.active !== null && value.error_code === null && value.revision < 2147483647;
   if (
     value.actions.save !== available ||
-    value.actions.apply !==
-      (available && value.runtime_idle && value.pending) ||
-    value.actions.restore !==
-      (available && value.runtime_idle && value.previous !== null)
+    value.actions.apply !== (available && value.runtime_idle && value.pending) ||
+    value.actions.restore !== (available && value.runtime_idle && value.previous !== null)
   )
     invalid();
   return value;
 }
-export async function loadChatRetrieval(
-  signal?: AbortSignal,
-): Promise<ChatRetrievalConfiguration> {
+export async function loadChatRetrieval(signal?: AbortSignal): Promise<ChatRetrievalConfiguration> {
   return validateChatRetrieval(
     await api<ChatRetrievalConfiguration>("/admin/kag/config/retrieval", {
       signal,
@@ -909,13 +789,8 @@ export async function changeChatRetrieval(
     ),
   );
 }
-export async function loadKagConfiguration(
-  signal?: AbortSignal,
-): Promise<KagConfiguration> {
-  const value = await api<KagConfiguration>("/admin/kag/config", {
-    signal,
-    cache: "no-store",
-  });
+export async function loadKagConfiguration(signal?: AbortSignal): Promise<KagConfiguration> {
+  const value = await api<KagConfiguration>("/admin/kag/config", { signal, cache: "no-store" });
   const invalid = () => {
     throw new ApiError("Thông tin cấu hình KAG không hợp lệ", 502);
   };
@@ -926,21 +801,10 @@ export async function loadKagConfiguration(
     value.contract_version !== "kag-config-v1" ||
     !shape(value.project, ["source", "release_id", "release_state"]) ||
     value.project.source !== "startup_environment" ||
-    !["NOT_CONFIGURED", "LOADED", "UNAVAILABLE"].includes(
-      value.project.release_state,
-    ) ||
-    !optionalText(
-      value.project.release_id,
-      /^[A-Za-z0-9][A-Za-z0-9_.-]{0,199}$/,
-    ) ||
-    (value.project.release_state === "LOADED" &&
-      value.project.release_id === null) ||
-    !shape(value.models, [
-      "source",
-      "identity_verified",
-      "chat",
-      "embedding",
-    ]) ||
+    !["NOT_CONFIGURED", "LOADED", "UNAVAILABLE"].includes(value.project.release_state) ||
+    !optionalText(value.project.release_id, /^[A-Za-z0-9][A-Za-z0-9_.-]{0,199}$/) ||
+    (value.project.release_state === "LOADED" && value.project.release_id === null) ||
+    !shape(value.models, ["source", "identity_verified", "chat", "embedding"]) ||
     value.models.source !== "startup_environment" ||
     value.models.identity_verified !== false
   )
@@ -949,15 +813,11 @@ export async function loadKagConfiguration(
     const model = value.models[role];
     if (
       !shape(model, ["state", "model", "endpoint"]) ||
-      !["CONFIGURED", "NOT_CONFIGURED", "INCOMPLETE", "INVALID"].includes(
-        model.state,
-      ) ||
+      !["CONFIGURED", "NOT_CONFIGURED", "INCOMPLETE", "INVALID"].includes(model.state) ||
       !optionalText(model.model, /^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/) ||
       !optionalText(model.endpoint, /^https?:\/\/[A-Za-z0-9.\[\]:-]{1,260}$/) ||
-      (model.state === "CONFIGURED" &&
-        (model.model === null || model.endpoint === null)) ||
-      (model.state === "NOT_CONFIGURED" &&
-        (model.model !== null || model.endpoint !== null))
+      (model.state === "CONFIGURED" && (model.model === null || model.endpoint === null)) ||
+      (model.state === "NOT_CONFIGURED" && (model.model !== null || model.endpoint !== null))
     )
       invalid();
   }
@@ -1020,13 +880,7 @@ export type BuilderStatus = {
   target: { project_id: number; database: string; namespace: string } | null;
   progress: { stage: string; done: number; total: number } | null;
   error_code: string | null;
-  actions: {
-    build: boolean;
-    stop: boolean;
-    resume: boolean;
-    abandon?: boolean;
-    delete: false;
-  };
+  actions: { build: boolean; stop: boolean; resume: boolean; abandon?: boolean; delete: false };
   delete_reason: string | null;
   production_write: "BLOCKED" | "CONFIGURED";
 } & (
@@ -1093,11 +947,9 @@ function validateBuilder(value: BuilderStatus): BuilderStatus {
       "production_write",
       ...(detail ? ["stages", "timing", "binding", "result"] : []),
     ]) ||
-    ![
-      "builder-control-v1",
-      "builder-control-v2",
-      "builder-control-v3",
-    ].includes(value.contract_version) ||
+    !["builder-control-v1", "builder-control-v2", "builder-control-v3"].includes(
+      value.contract_version,
+    ) ||
     ![
       "IDLE",
       "RUNNING",
@@ -1109,22 +961,17 @@ function validateBuilder(value: BuilderStatus): BuilderStatus {
     ].includes(value.state) ||
     !["BLOCKED", "CONFIGURED"].includes(value.production_write) ||
     (value.delete_reason !== null &&
-      (typeof value.delete_reason !== "string" ||
-        !/^[A-Z_]{1,64}$/.test(value.delete_reason))) ||
+      (typeof value.delete_reason !== "string" || !/^[A-Z_]{1,64}$/.test(value.delete_reason))) ||
     !value.actions ||
     Object.keys(value.actions).sort().join() !==
-      ["build", "stop", "resume", "delete", ...(extended ? ["abandon"] : [])]
-        .sort()
-        .join() ||
+      ["build", "stop", "resume", "delete", ...(extended ? ["abandon"] : [])].sort().join() ||
     typeof value.actions.build !== "boolean" ||
     typeof value.actions.resume !== "boolean" ||
     (detail
       ? (value.actions.build &&
-          ![
-            "IDLE",
-            "COMPLETE",
-            ...(extended ? ["ABANDONED", "CLEARED"] : []),
-          ].includes(value.state)) ||
+          !["IDLE", "COMPLETE", ...(extended ? ["ABANDONED", "CLEARED"] : [])].includes(
+            value.state,
+          )) ||
         (value.actions.resume && value.state !== "STOPPED")
       : value.actions.build !== ["IDLE", "COMPLETE"].includes(value.state) ||
         value.actions.resume !== (value.state === "STOPPED")) ||
@@ -1158,8 +1005,7 @@ function validateBuilder(value: BuilderStatus): BuilderStatus {
   if (
     progress !== null &&
     (!progress ||
-      Object.keys(progress).sort().join() !==
-        ["stage", "done", "total"].sort().join() ||
+      Object.keys(progress).sort().join() !== ["stage", "done", "total"].sort().join() ||
       ![
         "preflight",
         "plan",
@@ -1179,8 +1025,7 @@ function validateBuilder(value: BuilderStatus): BuilderStatus {
     throw new ApiError("Tiến độ Builder không hợp lệ", 502);
   if (
     value.error_code !== null &&
-    (typeof value.error_code !== "string" ||
-      !/^[A-Z_]{1,32}$/.test(value.error_code))
+    (typeof value.error_code !== "string" || !/^[A-Z_]{1,32}$/.test(value.error_code))
   )
     throw new ApiError("Lỗi Builder không hợp lệ", 502);
   if (value.contract_version !== "builder-control-v1") {
@@ -1192,31 +1037,24 @@ function validateBuilder(value: BuilderStatus): BuilderStatus {
       typeof text === "string" &&
       /(?:Z|[+-]\d{2}:\d{2})$/.test(text) &&
       Number.isFinite(Date.parse(text));
-    if (
-      !Array.isArray(stages) ||
-      stages.length !== (binding === null ? 0 : builderStages.length)
-    )
+    if (!Array.isArray(stages) || stages.length !== (binding === null ? 0 : builderStages.length))
       invalid();
     for (const [index, row] of stages.entries()) {
       if (
         !shape(row, ["name", "state", "done", "total", "error_code"]) ||
         row.name !== builderStages[index] ||
-        !["PENDING", "RUNNING", "COMPLETE", "STOPPED", "BLOCKED"].includes(
-          row.state,
-        ) ||
+        !["PENDING", "RUNNING", "COMPLETE", "STOPPED", "BLOCKED"].includes(row.state) ||
         (row.state === "PENDING"
           ? row.done !== null || row.total !== null
           : !count(row.done) || !count(row.total) || row.done! > row.total!) ||
         (row.state === "COMPLETE" && row.done !== row.total) ||
         (row.error_code !== null &&
-          (typeof row.error_code !== "string" ||
-            !/^[A-Z_]{1,32}$/.test(row.error_code)))
+          (typeof row.error_code !== "string" || !/^[A-Z_]{1,32}$/.test(row.error_code)))
       )
         invalid();
     }
     if (binding === null) {
-      if (timing !== null || result !== null || value.state === "COMPLETE")
-        invalid();
+      if (timing !== null || result !== null || value.state === "COMPLETE") invalid();
     } else {
       if (
         !shape(binding, [
@@ -1247,8 +1085,7 @@ function validateBuilder(value: BuilderStatus): BuilderStatus {
         binding.project_id !== target.project_id ||
         binding.database !== target.database ||
         binding.namespace !== target.namespace ||
-        (binding.scope === "PRODUCTION") !==
-          (value.production_write === "CONFIGURED")
+        (binding.scope === "PRODUCTION") !== (value.production_write === "CONFIGURED")
       )
         invalid();
       try {
@@ -1256,9 +1093,7 @@ function validateBuilder(value: BuilderStatus): BuilderStatus {
           url = new URL(binding.model_identity.slice(0, split));
         if (
           split < 1 ||
-          !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(
-            binding.model_identity.slice(split + 1),
-          ) ||
+          !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(binding.model_identity.slice(split + 1)) ||
           !["http:", "https:"].includes(url.protocol) ||
           !url.hostname ||
           url.username ||
@@ -1307,14 +1142,9 @@ function validateBuilder(value: BuilderStatus): BuilderStatus {
   }
   return value;
 }
-export async function loadBuilderStatus(
-  signal?: AbortSignal,
-): Promise<BuilderStatus> {
+export async function loadBuilderStatus(signal?: AbortSignal): Promise<BuilderStatus> {
   return validateBuilder(
-    await api<BuilderStatus>("/admin/kag/builder/status", {
-      signal,
-      cache: "no-store",
-    }),
+    await api<BuilderStatus>("/admin/kag/builder/status", { signal, cache: "no-store" }),
   );
 }
 export type BuilderConfiguration = {
@@ -1328,12 +1158,7 @@ export type BuilderConfiguration = {
   saved: boolean;
   error_code: "CONFIG" | null;
   vector_package?: VectorPackageReference | null;
-  target: {
-    project_id: number;
-    project_name: string;
-    database: string;
-    namespace: string;
-  } | null;
+  target: { project_id: number; project_name: string; database: string; namespace: string } | null;
   embedding: {
     provider: "openai-compatible";
     base_url: string;
@@ -1373,10 +1198,7 @@ export type BuilderConfigurationChange = Pick<
   project_id?: number;
   selection_preview_id?: string;
 };
-export type SelectionRequest = {
-  mode: "ALL" | "COUNT" | "PERCENT";
-  value: number | null;
-};
+export type SelectionRequest = { mode: "ALL" | "COUNT" | "PERCENT"; value: number | null };
 export type SelectionSummary = {
   nodes: number;
   edges: number;
@@ -1405,13 +1227,7 @@ function validSelectionRequest(request: SelectionRequest) {
 }
 function validSelectionSummary(summary: SelectionSummary) {
   return (
-    shape(summary, [
-      "nodes",
-      "edges",
-      "node_counts",
-      "edge_counts",
-      "excluded_edges",
-    ]) &&
+    shape(summary, ["nodes", "edges", "node_counts", "edge_counts", "excluded_edges"]) &&
     count(summary.nodes) &&
     count(summary.edges) &&
     count(summary.excluded_edges) &&
@@ -1423,8 +1239,7 @@ function validSelectionSummary(summary: SelectionSummary) {
         !Array.isArray(counts) &&
         Object.keys(counts).length <= 512 &&
         Object.entries(counts).every(
-          ([key, value]) =>
-            /^[A-Za-z][A-Za-z0-9_.]{0,255}$/.test(key) && count(value),
+          ([key, value]) => /^[A-Za-z][A-Za-z0-9_.]{0,255}$/.test(key) && count(value),
         ) &&
         Object.values(counts).reduce((a, b) => a + b, 0) ===
           summary[name === "node_counts" ? "nodes" : "edges"]
@@ -1468,14 +1283,7 @@ export async function previewBuilderSelection(
 }
 export type BuilderStructure = {
   contract_version: "builder-structure-v1";
-  state:
-    | "NOT_RUN"
-    | "PREVIEW"
-    | "APPLYING"
-    | "COMPLETE"
-    | "PARTIAL"
-    | "INTERRUPTED"
-    | "BLOCKED";
+  state: "NOT_RUN" | "PREVIEW" | "APPLYING" | "COMPLETE" | "PARTIAL" | "INTERRUPTED" | "BLOCKED";
   revision: number;
   preview_id: string | null;
   checked_at: string | null;
@@ -1491,11 +1299,7 @@ export type BuilderStructure = {
       action: "ADD" | "UPDATE" | "REMOVE" | "KEEP";
       name: string;
     }[];
-    indexes: {
-      label: string;
-      property: string;
-      action: "ADD" | "KEEP" | "REBUILD" | "BLOCKED";
-    }[];
+    indexes: { label: string; property: string; action: "ADD" | "KEEP" | "REBUILD" | "BLOCKED" }[];
     conflicts: string[];
     native_rebuild: string[];
     code: string | null;
@@ -1514,8 +1318,7 @@ function validateBuilderStructure(value: BuilderStructure) {
   const invalid = () => {
     throw new ApiError("Trạng thái chuẩn bị cấu trúc không hợp lệ", 502);
   };
-  const code = (v: unknown) =>
-    v === null || (typeof v === "string" && /^[A-Z_]{1,32}$/.test(v));
+  const code = (v: unknown) => v === null || (typeof v === "string" && /^[A-Z_]{1,32}$/.test(v));
   if (
     !shape(value, [
       "contract_version",
@@ -1528,23 +1331,16 @@ function validateBuilderStructure(value: BuilderStructure) {
       "code",
     ]) ||
     value.contract_version !== "builder-structure-v1" ||
-    ![
-      "NOT_RUN",
-      "PREVIEW",
-      "APPLYING",
-      "COMPLETE",
-      "PARTIAL",
-      "INTERRUPTED",
-      "BLOCKED",
-    ].includes(value.state) ||
+    !["NOT_RUN", "PREVIEW", "APPLYING", "COMPLETE", "PARTIAL", "INTERRUPTED", "BLOCKED"].includes(
+      value.state,
+    ) ||
     !count(value.revision) ||
     value.revision > 2147483647 ||
     (value.preview_id !== null && !hash(value.preview_id)) ||
     typeof value.can_apply !== "boolean" ||
     !code(value.code) ||
     (value.checked_at !== null &&
-      (typeof value.checked_at !== "string" ||
-        !Number.isFinite(Date.parse(value.checked_at))))
+      (typeof value.checked_at !== "string" || !Number.isFinite(Date.parse(value.checked_at))))
   )
     invalid();
   const r = value.report;
@@ -1563,12 +1359,7 @@ function validateBuilderStructure(value: BuilderStructure) {
         "native_rebuild",
         ...(extended ? ["build_ready", "default_types", "index_changes"] : []),
       ]) ||
-      !shape(r.target, [
-        "project_id",
-        "project_name",
-        "namespace",
-        "database",
-      ]) ||
+      !shape(r.target, ["project_id", "project_name", "namespace", "database"]) ||
       !count(r.target.project_id) ||
       r.target.project_id < 1 ||
       typeof r.target.project_name !== "string" ||
@@ -1599,15 +1390,10 @@ function validateBuilderStructure(value: BuilderStructure) {
       r.indexes.some(
         (row) =>
           !shape(row, ["label", "property", "action"]) ||
-          !/^[A-Za-z][A-Za-z0-9_]{0,63}\.(LegalDocument|LegalUnit|TrafficSign)$/.test(
-            row.label,
+          !/^[A-Za-z][A-Za-z0-9_]{0,63}\.(LegalDocument|LegalUnit|TrafficSign)$/.test(row.label) ||
+          !["_title_vector", "_text_vector", "_ten_vector", "_mo_ta_vector"].includes(
+            row.property,
           ) ||
-          ![
-            "_title_vector",
-            "_text_vector",
-            "_ten_vector",
-            "_mo_ta_vector",
-          ].includes(row.property) ||
           !["ADD", "KEEP", "REBUILD", "BLOCKED"].includes(row.action),
       ) ||
       [r.conflicts, r.native_rebuild].some(
@@ -1624,9 +1410,7 @@ function validateBuilderStructure(value: BuilderStructure) {
         !Array.isArray(r.default_types) ||
         r.default_types.length > 18 ||
         r.default_types.some(
-          (name) =>
-            typeof name !== "string" ||
-            !/^[A-Za-z][A-Za-z0-9_.]{0,255}$/.test(name),
+          (name) => typeof name !== "string" || !/^[A-Za-z][A-Za-z0-9_.]{0,255}$/.test(name),
         ) ||
         !Array.isArray(r.index_changes) ||
         r.index_changes.length > 2048 ||
@@ -1638,23 +1422,18 @@ function validateBuilderStructure(value: BuilderStructure) {
             row.name.length > 512 ||
             typeof row.type !== "string" ||
             !/^[A-Z_]{1,32}$/.test(row.type) ||
-            !["ADD", "KEEP", "REMOVE", "REBUILD", "BLOCKED"].includes(
-              row.action,
-            ) ||
+            !["ADD", "KEEP", "REMOVE", "REBUILD", "BLOCKED"].includes(row.action) ||
             [row.labels, row.properties].some(
               (items) =>
                 !Array.isArray(items) ||
                 items.length > 512 ||
-                items.some(
-                  (item) => typeof item !== "string" || item.length > 512,
-                ),
+                items.some((item) => typeof item !== "string" || item.length > 512),
             ),
         ))
     )
       invalid();
   }
-  if (value.can_apply && (value.state !== "PREVIEW" || !r || r.code !== null))
-    invalid();
+  if (value.can_apply && (value.state !== "PREVIEW" || !r || r.code !== null)) invalid();
   if (
     value.state === "COMPLETE" &&
     (!r ||
@@ -1667,14 +1446,9 @@ function validateBuilderStructure(value: BuilderStructure) {
     invalid();
   return value;
 }
-export async function loadBuilderStructure(
-  signal?: AbortSignal,
-): Promise<BuilderStructure> {
+export async function loadBuilderStructure(signal?: AbortSignal): Promise<BuilderStructure> {
   return validateBuilderStructure(
-    await api<BuilderStructure>("/admin/kag/builder/structure", {
-      signal,
-      cache: "no-store",
-    }),
+    await api<BuilderStructure>("/admin/kag/builder/structure", { signal, cache: "no-store" }),
   );
 }
 export async function prepareBuilderStructure(
@@ -1686,24 +1460,13 @@ export async function prepareBuilderStructure(
   return validateBuilderStructure(
     await api<BuilderStructure>(
       "/admin/kag/builder/structure/" + action,
-      send("POST", {
-        project_id,
-        revision,
-        ...(action === "apply" ? { preview_id } : {}),
-      }),
+      send("POST", { project_id, revision, ...(action === "apply" ? { preview_id } : {}) }),
     ),
   );
 }
 export type BuilderClear = {
   contract_version: "builder-clear-v1";
-  state:
-    | "NOT_RUN"
-    | "PREVIEW"
-    | "APPLYING"
-    | "COMPLETE"
-    | "PARTIAL"
-    | "INTERRUPTED"
-    | "BLOCKED";
+  state: "NOT_RUN" | "PREVIEW" | "APPLYING" | "COMPLETE" | "PARTIAL" | "INTERRUPTED" | "BLOCKED";
   revision: number;
   preview_id: string | null;
   checked_at: string | null;
@@ -1732,23 +1495,16 @@ function validateBuilderClear(value: BuilderClear) {
       "report",
     ]) ||
     value.contract_version !== "builder-clear-v1" ||
-    ![
-      "NOT_RUN",
-      "PREVIEW",
-      "APPLYING",
-      "COMPLETE",
-      "PARTIAL",
-      "INTERRUPTED",
-      "BLOCKED",
-    ].includes(value.state) ||
+    !["NOT_RUN", "PREVIEW", "APPLYING", "COMPLETE", "PARTIAL", "INTERRUPTED", "BLOCKED"].includes(
+      value.state,
+    ) ||
     !count(value.revision) ||
     value.revision > 2147483647 ||
     (value.preview_id !== null && !hash(value.preview_id)) ||
     (value.code !== null &&
       (typeof value.code !== "string" || !/^[A-Z_]{1,32}$/.test(value.code))) ||
     (value.checked_at !== null &&
-      (typeof value.checked_at !== "string" ||
-        !Number.isFinite(Date.parse(value.checked_at)))) ||
+      (typeof value.checked_at !== "string" || !Number.isFinite(Date.parse(value.checked_at)))) ||
     !shape(value.deleted, ["nodes", "edges"]) ||
     !count(value.deleted.nodes) ||
     !count(value.deleted.edges)
@@ -1756,18 +1512,12 @@ function validateBuilderClear(value: BuilderClear) {
     invalid();
   const report = value.report;
   if (report === null) {
-    if (["PREVIEW", "APPLYING", "COMPLETE", "PARTIAL"].includes(value.state))
-      invalid();
+    if (["PREVIEW", "APPLYING", "COMPLETE", "PARTIAL"].includes(value.state)) invalid();
   } else if (
     !shape(report, ["target", "database_id", "counts", "batch_size"]) ||
     report.batch_size !== 500 ||
     !/^[A-Za-z0-9._:-]{1,128}$/.test(report.database_id) ||
-    !shape(report.target, [
-      "project_id",
-      "project_name",
-      "namespace",
-      "database",
-    ]) ||
+    !shape(report.target, ["project_id", "project_name", "namespace", "database"]) ||
     !count(report.target.project_id) ||
     report.target.project_id < 1 ||
     typeof report.target.project_name !== "string" ||
@@ -1782,14 +1532,9 @@ function validateBuilderClear(value: BuilderClear) {
     invalid();
   return value;
 }
-export async function loadBuilderClear(
-  signal?: AbortSignal,
-): Promise<BuilderClear> {
+export async function loadBuilderClear(signal?: AbortSignal): Promise<BuilderClear> {
   return validateBuilderClear(
-    await api<BuilderClear>("/admin/kag/builder/clear", {
-      signal,
-      cache: "no-store",
-    }),
+    await api<BuilderClear>("/admin/kag/builder/clear", { signal, cache: "no-store" }),
   );
 }
 export async function clearBuilderData(
@@ -1809,19 +1554,14 @@ export async function clearBuilderData(
     ),
   );
 }
-function validateBuilderConfiguration(
-  value: BuilderConfiguration,
-): BuilderConfiguration {
+function validateBuilderConfiguration(value: BuilderConfiguration): BuilderConfiguration {
   const invalid = () => {
     throw new ApiError("Cấu hình Builder không hợp lệ", 502);
   };
   const packaged = value.contract_version === "builder-configuration-v5",
-    extended =
-      packaged || value.contract_version === "builder-configuration-v4",
-    projects =
-      extended || value.contract_version === "builder-configuration-v3",
-    selected =
-      projects || value.contract_version === "builder-configuration-v2";
+    extended = packaged || value.contract_version === "builder-configuration-v4",
+    projects = extended || value.contract_version === "builder-configuration-v3",
+    selected = projects || value.contract_version === "builder-configuration-v2";
   if (
     !shape(value, [
       "contract_version",
@@ -1853,12 +1593,8 @@ function validateBuilderConfiguration(
     value.batch_size < 1 ||
     value.batch_size > 4096 ||
     (value.request_limit !== null &&
-      (!count(value.request_limit) ||
-        value.request_limit < 1 ||
-        value.request_limit > 1000000)) ||
-    (packaged &&
-      value.vector_package !== null &&
-      !packageReference(value.vector_package!))
+      (!count(value.request_limit) || value.request_limit < 1 || value.request_limit > 1000000)) ||
+    (packaged && value.vector_package !== null && !packageReference(value.vector_package!))
   )
     invalid();
   if (selected) {
@@ -1917,9 +1653,7 @@ function validateBuilderConfiguration(
         const url = new URL(text);
         if (
           !(
-            name === "bolt"
-              ? ["bolt:", "neo4j:", "bolt+s:", "neo4j+s:"]
-              : ["http:", "https:"]
+            name === "bolt" ? ["bolt:", "neo4j:", "bolt+s:", "neo4j+s:"] : ["http:", "https:"]
           ).includes(url.protocol) ||
           !url.hostname ||
           url.username ||
@@ -1952,9 +1686,7 @@ function validateBuilderConfiguration(
       typeof embedding.model !== "string" ||
       !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(embedding.model) ||
       (embedding.dimension !== null &&
-        (!count(embedding.dimension) ||
-          embedding.dimension < 1 ||
-          embedding.dimension > 65536))
+        (!count(embedding.dimension) || embedding.dimension < 1 || embedding.dimension > 65536))
     )
       invalid();
     try {
@@ -1978,8 +1710,7 @@ function validateBuilderConfiguration(
     !Array.isArray(ready.checks) ||
     ready.checks.length > 4 ||
     (ready.checked_at !== null &&
-      (typeof ready.checked_at !== "string" ||
-        !Number.isFinite(Date.parse(ready.checked_at))))
+      (typeof ready.checked_at !== "string" || !Number.isFinite(Date.parse(ready.checked_at))))
   )
     invalid();
   const names = new Set<string>();
@@ -1987,17 +1718,13 @@ function validateBuilderConfiguration(
     if (
       !shape(
         row,
-        row.owner === undefined
-          ? ["name", "state", "code"]
-          : ["name", "state", "code", "owner"],
+        row.owner === undefined ? ["name", "state", "code"] : ["name", "state", "code", "owner"],
       ) ||
       !["source", "embedding", "target", "lock"].includes(row.name) ||
       names.has(row.name) ||
       !["READY", "BLOCKED", "NOT_CHECKED"].includes(row.state) ||
       (row.state === "NOT_CHECKED" &&
-        !["WAIT_SOURCE", "WAIT_EMBEDDING", "WAIT_TARGET"].includes(
-          row.code ?? "",
-        )) ||
+        !["WAIT_SOURCE", "WAIT_EMBEDDING", "WAIT_TARGET"].includes(row.code ?? "")) ||
       (row.state === "READY"
         ? row.code !== null
         : typeof row.code !== "string" || !/^[A-Z_]{1,32}$/.test(row.code))
@@ -2046,17 +1773,12 @@ export async function saveBuilderConfiguration(
   change: BuilderConfigurationChange,
 ): Promise<BuilderConfiguration> {
   return validateBuilderConfiguration(
-    await api<BuilderConfiguration>(
-      "/admin/kag/builder/configuration",
-      send("POST", change),
-    ),
+    await api<BuilderConfiguration>("/admin/kag/builder/configuration", send("POST", change)),
   );
 }
 export async function checkBuilderReadiness(): Promise<BuilderConfiguration> {
   return validateBuilderConfiguration(
-    await api<BuilderConfiguration>("/admin/kag/builder/preflight", {
-      method: "POST",
-    }),
+    await api<BuilderConfiguration>("/admin/kag/builder/preflight", { method: "POST" }),
   );
 }
 export function selectionVectorCount(summary: SelectionSummary): number {
@@ -2075,58 +1797,43 @@ export function selectionVectorCount(summary: SelectionSummary): number {
 export function builderIssue(code: string | null) {
   if (code?.startsWith("PACKAGE_")) return packageReason(code);
   const messages: Record<string, string> = {
-    CONFIG:
-      "Cấu hình dựng đã đổi hoặc chưa đủ. Kiểm tra Model & API key rồi tải lại.",
+    CONFIG: "Cấu hình dựng đã đổi hoặc chưa đủ. Kiểm tra Model & API key rồi tải lại.",
     INDEX:
       "Cấu trúc tìm kiếm chưa phù hợp với số chiều model đã lưu. Tải lại và kiểm tra đồ thị đích.",
     SCHEMA: "Đồ thị chưa có cấu trúc phù hợp. Chọn đồ thị trống khác để dựng.",
     SCHEMA_CUSTOM:
       "Đích có cấu trúc tùy chỉnh nên chưa thể chuẩn bị tự động. Chọn đồ thị trống khác.",
     SCHEMA_DATA: "Đồ thị đã có dữ liệu. Chọn đồ thị trống khác để tiếp tục.",
-    SCHEMA_REINDEX:
-      "Cấu trúc hiện tại cần quản trị kiểm tra. Chọn đồ thị trống khác.",
+    SCHEMA_REINDEX: "Cấu trúc hiện tại cần quản trị kiểm tra. Chọn đồ thị trống khác.",
     STRUCTURE_STALE: "Thông tin đích đã đổi. Tải lại rồi xác nhận lại.",
-    STRUCTURE_INTERRUPTED:
-      "Chuẩn bị cấu trúc bị gián đoạn. Tải lại trạng thái trước khi thử tiếp.",
-    CLEAR_SHARED:
-      "Nơi lưu đồ thị đang được dùng chung. Chọn đồ thị khác hoặc nhờ quản trị xử lý.",
-    CLEAR_SERVING:
-      "Đồ thị vừa được dùng lại cho Chat. Tải lại rồi xác nhận xóa lại.",
+    STRUCTURE_INTERRUPTED: "Chuẩn bị cấu trúc bị gián đoạn. Tải lại trạng thái trước khi thử tiếp.",
+    CLEAR_SHARED: "Nơi lưu đồ thị đang được dùng chung. Chọn đồ thị khác hoặc nhờ quản trị xử lý.",
+    CLEAR_SERVING: "Đồ thị vừa được dùng lại cho Chat. Tải lại rồi xác nhận xóa lại.",
     CLEAR_STALE: "Đích hoặc quyền xóa đã đổi. Tải lại rồi xác nhận lại.",
-    CLEAR_UNCERTAIN:
-      "Chưa xác định xóa đã kết thúc. Nhờ quản trị kiểm tra trước khi thử lại.",
+    CLEAR_UNCERTAIN: "Chưa xác định xóa đã kết thúc. Nhờ quản trị kiểm tra trước khi thử lại.",
     TARGET_MODEL:
       "Dữ liệu tìm kiếm không khớp model đã lưu. Chọn đồ thị trống hoặc dùng đúng model đã dựng đồ thị.",
-    FORBIDDEN:
-      "Đăng nhập lại OpenSPG, kiểm quyền sở hữu đồ thị rồi tải lại danh sách.",
-    NOT_FOUND:
-      "Đồ thị không còn thuộc tài khoản này. Tải lại danh sách và chọn lại.",
+    FORBIDDEN: "Đăng nhập lại OpenSPG, kiểm quyền sở hữu đồ thị rồi tải lại danh sách.",
+    NOT_FOUND: "Đồ thị không còn thuộc tài khoản này. Tải lại danh sách và chọn lại.",
     CONNECTION_NOT_CONFIGURED:
       "Nơi lưu đồ thị chưa khớp cấu hình hệ thống. Nhờ quản trị kiểm tra kết nối.",
-    SERVING_PROTECTED:
-      "Đồ thị đang dùng cho Chat. Chọn đồ thị trống khác để dựng.",
+    SERVING_PROTECTED: "Đồ thị đang dùng cho Chat. Chọn đồ thị trống khác để dựng.",
     LOCK: "Đồ thị đang dựng hoặc có thao tác khác. Dừng dựng trước rồi tải lại.",
     UNCERTAIN_WRITE:
       "Lần dựng trước bị gián đoạn, chưa xác định đã ghi xong. Nhờ quản trị kiểm tra trước khi tiếp tục.",
-    LOCK_MOUNT:
-      "Dịch vụ dựng chưa được cài đặt đầy đủ. Nhờ quản trị kiểm tra rồi thử lại.",
+    LOCK_MOUNT: "Dịch vụ dựng chưa được cài đặt đầy đủ. Nhờ quản trị kiểm tra rồi thử lại.",
     INTEGRITY:
       "Dữ liệu nguồn hoặc điểm lưu đã thay đổi. Kiểm tra đúng phiên bản dữ liệu rồi tải lại.",
     PLAN: "Dữ liệu nguồn hoặc phạm vi không khớp gói đã chọn. Chọn đúng gói rồi tải lại.",
     PROVENANCE:
       "Thông tin nguồn của dữ liệu tìm kiếm không khớp. Kiểm tra gói và model trước khi thử lại.",
-    VECTORS:
-      "Dịch vụ embedding đang lỗi. Bấm Tiếp tục khi dịch vụ hoạt động lại.",
-    VECTORS_KEY:
-      "API hết hạn mức hoặc từ chối key. Đổi key cùng URL và model, rồi bấm Tiếp tục.",
+    VECTORS: "Dịch vụ embedding đang lỗi. Bấm Tiếp tục khi dịch vụ hoạt động lại.",
+    VECTORS_KEY: "API hết hạn mức hoặc từ chối key. Đổi key cùng URL và model, rồi bấm Tiếp tục.",
     PROVIDER_BUDGET:
       "Đã chạm giới hạn gọi dịch vụ của lần dựng. Tiếp tục không làm mới hạn mức; kiểm tra chi phí trước khi dựng lại.",
-    INTERRUPTED:
-      "Tiến độ đã được lưu. Bấm Tiếp tục để kiểm tra và tiếp tục lần dựng này.",
-    RUNTIME:
-      "Dịch vụ dựng gặp lỗi. Tải lại trạng thái hoặc nhờ quản trị kiểm tra.",
-    SCOPE:
-      "Đích lưu hoặc quyền ghi chưa hợp lệ. Nhờ quản trị kiểm tra kết nối và quyền sở hữu.",
+    INTERRUPTED: "Tiến độ đã được lưu. Bấm Tiếp tục để kiểm tra và tiếp tục lần dựng này.",
+    RUNTIME: "Dịch vụ dựng gặp lỗi. Tải lại trạng thái hoặc nhờ quản trị kiểm tra.",
+    SCOPE: "Đích lưu hoặc quyền ghi chưa hợp lệ. Nhờ quản trị kiểm tra kết nối và quyền sở hữu.",
   };
   return code
     ? (messages[code] ??
@@ -2146,17 +1853,10 @@ export async function startBuilderGraph(
   if (graph.counts.nodes || graph.counts.edges)
     throw new ApiError("Đồ thị còn dữ liệu. Chọn đồ thị trống khác.", 409);
   let config = await loadBuilderConfiguration();
-  if (
-    config.revision !== options.selection.revision ||
-    !config.embedding?.tested
-  )
+  if (config.revision !== options.selection.revision || !config.embedding?.tested)
     throw new ApiError("Cấu hình đã đổi. Tải lại rồi xác nhận lại.", 409);
   onProgress("Chuẩn bị cấu trúc");
-  let structure = await prepareBuilderStructure(
-    "preview",
-    options.projectId,
-    config.revision,
-  );
+  let structure = await prepareBuilderStructure("preview", options.projectId, config.revision);
   if (
     !structure.report ||
     structure.code ||
@@ -2180,10 +1880,7 @@ export async function startBuilderGraph(
       await new Promise((resolve) => setTimeout(resolve, 1500));
       structure = await loadBuilderStructure();
     }
-    if (
-      structure.state !== "COMPLETE" ||
-      structure.report?.target.project_id !== options.projectId
-    )
+    if (structure.state !== "COMPLETE" || structure.report?.target.project_id !== options.projectId)
       throw new ApiError(
         "Chuẩn bị cấu trúc chưa hoàn tất. Tải lại trạng thái trước khi thử tiếp.",
         409,
@@ -2201,11 +1898,7 @@ export async function startBuilderGraph(
     vector_package: options.vectorPackage ?? null,
   });
   const savedRevision = config.revision;
-  onProgress(
-    options.vectorPackage
-      ? "Chuẩn bị gói và kiểm tra sẵn sàng"
-      : "Kiểm tra sẵn sàng",
-  );
+  onProgress(options.vectorPackage ? "Chuẩn bị gói và kiểm tra sẵn sàng" : "Kiểm tra sẵn sàng");
   config = await checkBuilderReadiness();
   while (config.readiness.state === "CHECKING") {
     await new Promise((resolve) => setTimeout(resolve, 1500));
@@ -2216,22 +1909,14 @@ export async function startBuilderGraph(
       .filter((row) => row.state === "BLOCKED")
       .map((row) => `${builderIssue(row.code)} (${row.code})`);
     throw new ApiError(
-      reasons.join(" ") ||
-        "Đồ thị chưa sẵn sàng. Tải lại trạng thái trước khi thử tiếp.",
+      reasons.join(" ") || "Đồ thị chưa sẵn sàng. Tải lại trạng thái trước khi thử tiếp.",
       409,
     );
   }
-  if (
-    config.target?.project_id !== options.projectId ||
-    config.revision !== savedRevision
-  )
+  if (config.target?.project_id !== options.projectId || config.revision !== savedRevision)
     throw new ApiError("Cấu hình đã đổi. Tải lại trước khi thử tiếp.", 409);
   onProgress("Bắt đầu dựng đồ thị");
-  return runBuilderAction(
-    "build",
-    `build-${crypto.randomUUID()}`,
-    config.revision,
-  );
+  return runBuilderAction("build", `build-${crypto.randomUUID()}`, config.revision);
 }
 export type BuilderProjects = {
   contract_version: "builder-projects-v1";
@@ -2244,14 +1929,9 @@ export type BuilderProjects = {
     state: "AVAILABLE" | "CONNECTION_NOT_CONFIGURED" | "SERVING_PROTECTED";
   }[];
 };
-export async function loadBuilderProjects(
-  signal?: AbortSignal,
-): Promise<BuilderProjects> {
+export async function loadBuilderProjects(signal?: AbortSignal): Promise<BuilderProjects> {
   return validateBuilderProjects(
-    await api<BuilderProjects>("/admin/kag/builder/projects", {
-      signal,
-      cache: "no-store",
-    }),
+    await api<BuilderProjects>("/admin/kag/builder/projects", { signal, cache: "no-store" }),
   );
 }
 function validateBuilderProjects(value: BuilderProjects): BuilderProjects {
@@ -2261,13 +1941,7 @@ function validateBuilderProjects(value: BuilderProjects): BuilderProjects {
   if (
     !shape(value, ["contract_version", "state", "projects"]) ||
     value.contract_version !== "builder-projects-v1" ||
-    ![
-      "AVAILABLE",
-      "EMPTY",
-      "FORBIDDEN",
-      "NOT_CONFIGURED",
-      "UNAVAILABLE",
-    ].includes(value.state) ||
+    !["AVAILABLE", "EMPTY", "FORBIDDEN", "NOT_CONFIGURED", "UNAVAILABLE"].includes(value.state) ||
     !Array.isArray(value.projects) ||
     value.projects.length > 10000
   )
@@ -2275,13 +1949,7 @@ function validateBuilderProjects(value: BuilderProjects): BuilderProjects {
   const ids = new Set<number>();
   for (const row of value.projects) {
     if (
-      !shape(row, [
-        "project_id",
-        "project_name",
-        "namespace",
-        "database",
-        "state",
-      ]) ||
+      !shape(row, ["project_id", "project_name", "namespace", "database", "state"]) ||
       !count(row.project_id) ||
       row.project_id < 1 ||
       row.project_id > 2147483647 ||
@@ -2290,11 +1958,8 @@ function validateBuilderProjects(value: BuilderProjects): BuilderProjects {
       !row.project_name.trim() ||
       row.project_name.length > 255 ||
       !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(row.namespace) ||
-      (row.database !== null &&
-        !/^[a-z][a-z0-9.-]{0,62}$/.test(row.database)) ||
-      !["AVAILABLE", "CONNECTION_NOT_CONFIGURED", "SERVING_PROTECTED"].includes(
-        row.state,
-      ) ||
+      (row.database !== null && !/^[a-z][a-z0-9.-]{0,62}$/.test(row.database)) ||
+      !["AVAILABLE", "CONNECTION_NOT_CONFIGURED", "SERVING_PROTECTED"].includes(row.state) ||
       (row.state === "AVAILABLE" && row.database === null)
     )
       invalid();
@@ -2336,11 +2001,7 @@ export async function loadGraphProject(
   projectId: number,
   signal?: AbortSignal,
 ): Promise<GraphProject> {
-  if (
-    !Number.isSafeInteger(projectId) ||
-    projectId < 1 ||
-    projectId > 2147483647
-  )
+  if (!Number.isSafeInteger(projectId) || projectId < 1 || projectId > 2147483647)
     throw new ApiError("ID project không hợp lệ", 400);
   const value = await api<GraphProject>("/admin/kag/graph/" + projectId, {
     signal,
@@ -2367,12 +2028,7 @@ export async function loadGraphProject(
     value.contract_version !== "graph-project-v1" ||
     value.vector_count_kind !== "NONEMPTY" ||
     !text(value.database_id, 255) ||
-    !shape(value.target, [
-      "project_id",
-      "project_name",
-      "namespace",
-      "database",
-    ]) ||
+    !shape(value.target, ["project_id", "project_name", "namespace", "database"]) ||
     value.target.project_id !== projectId ||
     !text(value.target.project_name, 255) ||
     !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(value.target.namespace) ||
@@ -2388,12 +2044,7 @@ export async function loadGraphProject(
     if (
       !Array.isArray(rows) ||
       rows.length > 2048 ||
-      rows.some(
-        (row) =>
-          !shape(row, ["name", "count"]) ||
-          !text(row.name) ||
-          !count(row.count),
-      ) ||
+      rows.some((row) => !shape(row, ["name", "count"]) || !text(row.name) || !count(row.count)) ||
       new Set(rows.map((row) => row.name)).size !== rows.length
     )
       invalid();
@@ -2403,27 +2054,15 @@ export async function loadGraphProject(
     value.indexes.length > 2048 ||
     value.indexes.some(
       (row) =>
-        !shape(row, [
-          "name",
-          "state",
-          "type",
-          "labels",
-          "properties",
-          "dimension",
-        ]) ||
+        !shape(row, ["name", "state", "type", "labels", "properties", "dimension"]) ||
         !text(row.name) ||
         !text(row.state, 32) ||
         !text(row.type, 32) ||
         [row.labels, row.properties].some(
-          (rows) =>
-            !Array.isArray(rows) ||
-            rows.length > 512 ||
-            rows.some((v) => !text(v)),
+          (rows) => !Array.isArray(rows) || rows.length > 512 || rows.some((v) => !text(v)),
         ) ||
         (row.dimension !== null &&
-          (!count(row.dimension) ||
-            row.dimension < 1 ||
-            row.dimension > 65536)),
+          (!count(row.dimension) || row.dimension < 1 || row.dimension > 65536)),
     )
   )
     invalid();
@@ -2440,10 +2079,7 @@ export const builderInputLabels = {
   graph_package: "Gói vector đã chọn",
 };
 export type BuilderInputs = {
-  contract_version:
-    | "builder-inputs-v1"
-    | "builder-inputs-v2"
-    | "builder-inputs-v3";
+  contract_version: "builder-inputs-v1" | "builder-inputs-v2" | "builder-inputs-v3";
   configuration: "NOT_CONFIGURED" | "INVALID" | "CONFIGURED";
   error_code: "CONFIG" | null;
   scope: "FRESH_SAMPLE" | "PRODUCTION" | null;
@@ -2489,13 +2125,9 @@ export async function loadBuilderInputs(
     !["builder-inputs-v1", "builder-inputs-v2", "builder-inputs-v3"].includes(
       value.contract_version,
     ) ||
-    !["NOT_CONFIGURED", "INVALID", "CONFIGURED"].includes(
-      value.configuration,
-    ) ||
+    !["NOT_CONFIGURED", "INVALID", "CONFIGURED"].includes(value.configuration) ||
     value.preflight !== "NOT_RUN" ||
-    (value.configuration === "INVALID"
-      ? value.error_code !== "CONFIG"
-      : value.error_code !== null)
+    (value.configuration === "INVALID" ? value.error_code !== "CONFIG" : value.error_code !== null)
   )
     invalid();
   const configured = value.configuration === "CONFIGURED",
@@ -2531,19 +2163,14 @@ export async function loadBuilderInputs(
       !Object.prototype.hasOwnProperty.call(builderInputLabels, input.name) ||
       names.has(input.name) ||
       !hash(input.sha256) ||
-      !["NOT_CHECKED", "MATCHED", "MISSING", "INVALID", "UNAVAILABLE"].includes(
-        input.state,
-      )
+      !["NOT_CHECKED", "MATCHED", "MISSING", "INVALID", "UNAVAILABLE"].includes(input.state)
     )
       invalid();
     names.add(input.name);
   }
   if (configured && !names.has("c3_manifest")) invalid();
   const source = value.source_validation;
-  const sourceErrors: Record<string, string> = {
-    INVALID: "INTEGRITY",
-    UNAVAILABLE: "RUNTIME",
-  };
+  const sourceErrors: Record<string, string> = { INVALID: "INTEGRITY", UNAVAILABLE: "RUNTIME" };
   const extended = value.contract_version === "builder-inputs-v3";
   if (
     !shape(source, [
@@ -2554,18 +2181,14 @@ export async function loadBuilderInputs(
       "edges",
       ...(extended ? ["summary"] : []),
     ]) ||
-    !["NOT_RUN", "CHECKING", "VALID", "INVALID", "UNAVAILABLE"].includes(
-      source.state,
-    ) ||
+    !["NOT_RUN", "CHECKING", "VALID", "INVALID", "UNAVAILABLE"].includes(source.state) ||
     source.error_code !== (sourceErrors[source.state] ?? null) ||
     (source.state === "VALID"
       ? (value.contract_version === "builder-inputs-v1" && !configured) ||
         !hash(source.plan_sha256) ||
         !count(source.nodes) ||
         !count(source.edges)
-      : source.plan_sha256 !== null ||
-        source.nodes !== null ||
-        source.edges !== null)
+      : source.plan_sha256 !== null || source.nodes !== null || source.edges !== null)
   )
     invalid();
   if (
@@ -2589,21 +2212,15 @@ export async function runBuilderAction(
     !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(run_id)
   )
     throw new ApiError("Yêu cầu Builder không hợp lệ", 422);
-  if (
-    revision !== undefined &&
-    (!count(revision) || revision < 1 || revision > 2147483647)
-  )
+  if (revision !== undefined && (!count(revision) || revision < 1 || revision > 2147483647))
     throw new ApiError("Revision Builder không hợp lệ", 422);
   const result = validateBuilder(
     await api<BuilderStatus>(`/admin/kag/builder/${action}`, {
       ...send("POST", { run_id }),
-      ...(revision === undefined
-        ? {}
-        : { headers: { "If-Match": `"${revision}"` } }),
+      ...(revision === undefined ? {} : { headers: { "If-Match": `"${revision}"` } }),
     }),
   );
-  if (result.run_id !== run_id)
-    throw new ApiError("Run Builder không khớp", 502);
+  if (result.run_id !== run_id) throw new ApiError("Run Builder không khớp", 502);
   return result;
 }
 export type BenchmarkDatasets = {
@@ -2632,16 +2249,12 @@ const states = [
 ];
 export function inspectionError(error: unknown) {
   const status = error instanceof ApiError ? error.status : -1;
-  if (
-    status === 504 ||
-    (error instanceof Error && /\bQUERY_TIMEOUT\b/.test(error.message))
-  )
+  if (status === 504 || (error instanceof Error && /\bQUERY_TIMEOUT\b/.test(error.message)))
     return "Chưa kiểm tra xong. Hãy thử lại; chưa có kết luận về đồ thị hoặc model.";
   if (
     status === 502 &&
     error instanceof ApiError &&
-    error.message ===
-      "Danh sách nguồn vượt giới hạn 32 MiB; chưa thể xem hoặc nhập qua màn này"
+    error.message === "Danh sách nguồn vượt giới hạn 32 MiB; chưa thể xem hoặc nhập qua màn này"
   )
     return error.message;
   if (
@@ -2653,9 +2266,7 @@ export function inspectionError(error: unknown) {
   if (
     status === 409 &&
     error instanceof ApiError &&
-    ["BUILDER_SELECTION_STALE", "Phiên dựng trước chưa kết thúc"].includes(
-      error.message,
-    )
+    ["BUILDER_SELECTION_STALE", "Phiên dựng trước chưa kết thúc"].includes(error.message)
   )
     return "Phiên dựng trước chưa kết thúc";
   return status === 401
@@ -2675,29 +2286,18 @@ export async function loadKagStatus(signal?: AbortSignal): Promise<KagStatus> {
   if (
     !result ||
     Object.keys(result).sort().join() !==
-      [
-        "liveness",
-        "queryReadiness",
-        "retrievalReadiness",
-        "vectorRetrievalReadiness",
-        "release",
-      ]
+      ["liveness", "queryReadiness", "retrievalReadiness", "vectorRetrievalReadiness", "release"]
         .sort()
         .join()
   )
     throw new ApiError("Invalid KAG status", 502);
   for (const [key, check] of Object.entries(result)) {
-    if (
-      !check ||
-      !states.includes(check.state) ||
-      !Number.isInteger(check.httpStatus)
-    )
+    if (!check || !states.includes(check.state) || !Number.isInteger(check.httpStatus))
       throw new ApiError("Invalid KAG status", 502);
     if (check.state === "ALIVE" && key !== "liveness")
       throw new ApiError("Liveness is not readiness", 502);
     if (check.state === "READY") {
-      if (key === "liveness")
-        throw new ApiError("Liveness is not readiness", 502);
+      if (key === "liveness") throw new ApiError("Liveness is not readiness", 502);
       const evidence = check.evidence;
       const verified =
         key === "release"
@@ -2711,15 +2311,11 @@ export async function loadKagStatus(signal?: AbortSignal): Promise<KagStatus> {
               evidence?.provider_transport === "not_probed" &&
               evidence?.production_write === "blocked"
             : evidence?.status === "ready" &&
-              evidence?.capability ===
-                (key === "queryReadiness" ? "query-v1" : "retrieve") &&
+              evidence?.capability === (key === "queryReadiness" ? "query-v1" : "retrieve") &&
               ["auth", "runtime", "sources", "admission"].every(
-                (field) =>
-                  (evidence?.checks as Record<string, string>)?.[field] ===
-                  "pass",
+                (field) => (evidence?.checks as Record<string, string>)?.[field] === "pass",
               );
-      if (check.httpStatus !== 200 || !verified)
-        throw new ApiError("Unverified readiness", 502);
+      if (check.httpStatus !== 200 || !verified) throw new ApiError("Unverified readiness", 502);
     }
   }
   return result;
@@ -2794,13 +2390,10 @@ function validateRetrievalItems(items: Retrieval["items"]) {
       !item.source_texts ||
       typeof item.source_texts !== "object" ||
       Array.isArray(item.source_texts) ||
-      Object.values(item.source_texts).some(
-        (text) => text !== null && typeof text !== "string",
-      ) ||
+      Object.values(item.source_texts).some((text) => text !== null && typeof text !== "string") ||
       !Array.isArray(item.vector_sources) ||
       !Array.isArray(item.graph_context) ||
-      (item.score !== null &&
-        (!Number.isFinite(item.score) || item.score < 0 || item.score > 1))
+      (item.score !== null && (!Number.isFinite(item.score) || item.score < 0 || item.score > 1))
     )
       throw new ApiError("Invalid evidence", 502);
   }
@@ -2912,22 +2505,15 @@ export async function loadDataset(
   signal?: AbortSignal,
 ): Promise<DatasetPage> {
   if (
-    ![
-      "documents",
-      "units",
-      "signs",
-      "penalties",
-      "relations",
-      "xrefs",
-    ].includes(group) ||
+    !["documents", "units", "signs", "penalties", "relations", "xrefs"].includes(group) ||
     !Number.isSafeInteger(offset) ||
     offset < 0
   )
     throw new ApiError("Loại nguồn hoặc trang không hợp lệ", 400);
-  const value = await api<DatasetPage>(
-    `/admin/kag/dataset/${group}?offset=${offset}&limit=25`,
-    { signal, cache: "no-store" },
-  );
+  const value = await api<DatasetPage>(`/admin/kag/dataset/${group}?offset=${offset}&limit=25`, {
+    signal,
+    cache: "no-store",
+  });
   if (
     value.contract_version !== "builder-dataset-v1" ||
     value.group !== group ||
@@ -2939,16 +2525,12 @@ export async function loadDataset(
     value.total < 0 ||
     !Array.isArray(value.items) ||
     value.items.length !== Math.min(25, Math.max(0, value.total - offset)) ||
-    value.items.some(
-      (row) => !row || typeof row !== "object" || Array.isArray(row),
-    )
+    value.items.some((row) => !row || typeof row !== "object" || Array.isArray(row))
   )
     throw new ApiError("Chưa đọc được trang dữ liệu nguồn", 502);
   return value;
 }
-export async function loadPipelineStatus(
-  signal?: AbortSignal,
-): Promise<PipelineStatus> {
+export async function loadPipelineStatus(signal?: AbortSignal): Promise<PipelineStatus> {
   const value = await api<PipelineStatus>("/admin/kag/pipeline", { signal });
   if (
     !value ||
@@ -2976,11 +2558,7 @@ export async function loadPipelineStatus(
   )
     throw new ApiError("Invalid pipeline proof", 502);
   if (value.phase === "unavailable") {
-    if (
-      value.active_requests !== null ||
-      value.closed !== null ||
-      value.draining !== null
-    )
+    if (value.active_requests !== null || value.closed !== null || value.draining !== null)
       throw new ApiError("Invalid unavailable runtime", 502);
   } else {
     if (
@@ -3000,35 +2578,25 @@ export async function loadPipelineStatus(
   }
   return value;
 }
-export async function loadBenchmarkDatasets(
-  signal?: AbortSignal,
-): Promise<BenchmarkDatasets> {
-  const value = await api<BenchmarkDatasets>("/admin/kag/benchmark/datasets", {
-    signal,
-  });
+export async function loadBenchmarkDatasets(signal?: AbortSignal): Promise<BenchmarkDatasets> {
+  const value = await api<BenchmarkDatasets>("/admin/kag/benchmark/datasets", { signal });
   return validateBenchmark(value);
 }
 export async function loadBenchmarkCategoryCounts(
   datasetId: string,
   signal?: AbortSignal,
 ): Promise<Record<string, number>> {
-  if (!benchmarkDatasetId(datasetId))
-    throw new ApiError("Mã bộ câu hỏi không hợp lệ", 422);
+  if (!benchmarkDatasetId(datasetId)) throw new ApiError("Mã bộ câu hỏi không hợp lệ", 422);
   const records = await api<unknown>(
     `/admin/kag/benchmark/datasets/${datasetId.split("/").map(encodeURIComponent).join("/")}/export`,
     { signal },
   );
-  if (!Array.isArray(records))
-    throw new ApiError("Phân bố bộ câu hỏi không hợp lệ", 502);
+  if (!Array.isArray(records)) throw new ApiError("Phân bố bộ câu hỏi không hợp lệ", 502);
   const counts: Record<string, number> = Object.fromEntries(
     benchmarkCategories.map((category) => [category, 0]),
   );
   for (const record of records) {
-    if (
-      !record ||
-      typeof record !== "object" ||
-      !benchmarkCategories.includes(record.category)
-    )
+    if (!record || typeof record !== "object" || !benchmarkCategories.includes(record.category))
       throw new ApiError("Phân bố bộ câu hỏi không hợp lệ", 502);
     counts[record.category]++;
   }
@@ -3070,10 +2638,7 @@ export type BenchmarkMetrics = Omit<
   rank_semantics: "channel_projected_returned_top_k";
   top_k: number;
   ks: number[];
-  execution_outcomes?: Record<
-    "answered" | "abstained" | "unanswered" | "error",
-    number
-  >;
+  execution_outcomes?: Record<"answered" | "abstained" | "unanswered" | "error", number>;
 };
 export type BenchmarkJob = Omit<BenchmarkRequest, "limit"> & {
   run_id_job: string;
@@ -3097,12 +2662,8 @@ const benchmarkDatasetId = (v: unknown) =>
   /^[A-Za-z0-9_.-]{1,128}(?:\/eval_questions\.jsonl)?$/.test(v) &&
   !v.includes("..") &&
   v !== ".";
-const benchmarkJobId = (v: unknown) =>
-  typeof v === "string" && /^[0-9a-f]{32}$/.test(v);
-function validateBenchmarkJob(
-  value: BenchmarkJob,
-  jobId: string,
-): BenchmarkJob {
+const benchmarkJobId = (v: unknown) => typeof v === "string" && /^[0-9a-f]{32}$/.test(v);
+function validateBenchmarkJob(value: BenchmarkJob, jobId: string): BenchmarkJob {
   const invalid = () => {
     throw new ApiError("Trạng thái benchmark không hợp lệ", 502);
   };
@@ -3153,17 +2714,13 @@ function validateBenchmarkJob(
     (value.frozen_at !== null && !stamp(value.frozen_at)) ||
     (value.dataset_status === "FROZEN" && value.frozen_at === null) ||
     (value.code !== null &&
-      (typeof value.code !== "string" ||
-        !/^[A-Z][A-Z0-9_]{0,63}$/.test(value.code))) ||
+      (typeof value.code !== "string" || !/^[A-Z][A-Z0-9_]{0,63}$/.test(value.code))) ||
     (value.state === "FAILED" && value.code === null) ||
     !shape(value.provider_requests, ["embedding", "chat"]) ||
     !Object.values(value.provider_requests).every((v) => count(v, 2147483647))
   )
     invalid();
-  const modes =
-    value.mode === "BOTH"
-      ? (["G1", "G2"] as const)
-      : ([value.mode] as ("G1" | "G2")[]);
+  const modes = value.mode === "BOTH" ? (["G1", "G2"] as const) : ([value.mode] as ("G1" | "G2")[]);
   const n = value.total / modes.length;
   if (
     !count(n) ||
@@ -3172,17 +2729,12 @@ function validateBenchmarkJob(
     Object.values(value.progress).some(
       (p) => !shape(p, ["done", "total"]) || p.total !== n || !count(p.done, n),
     ) ||
-    Object.values(value.progress).reduce((sum, p) => sum + p.done, 0) !==
-      value.done ||
+    Object.values(value.progress).reduce((sum, p) => sum + p.done, 0) !== value.done ||
     (value.state === "COMPLETE" && value.done !== value.total) ||
-    (value.mode === "BOTH" &&
-      value.progress.G2!.done > 0 &&
-      value.progress.G1!.done !== n) ||
+    (value.mode === "BOTH" && value.progress.G2!.done > 0 && value.progress.G1!.done !== n) ||
     !value.category_counts ||
     Array.isArray(value.category_counts) ||
-    Object.keys(value.category_counts).some(
-      (c) => !benchmarkCategories.includes(c),
-    ) ||
+    Object.keys(value.category_counts).some((c) => !benchmarkCategories.includes(c)) ||
     !Object.values(value.category_counts).every((v) => count(v, n)) ||
     Object.values(value.category_counts).reduce((a, b) => a + b, 0) !== n ||
     (value.state === "RUNNING" && value.metrics !== null)
@@ -3238,9 +2790,7 @@ function validateBenchmarkJob(
         m.paper_eligible !== false ||
         m.mode !== mode ||
         (m.release_id !== null &&
-          (typeof m.release_id !== "string" ||
-            !m.release_id ||
-            m.release_id.length > 200)) ||
+          (typeof m.release_id !== "string" || !m.release_id || m.release_id.length > 200)) ||
         m.requested_count !== done ||
         m.completed_count !== done ||
         !count(m.scored_count, m.attempted_count - m.failed_count) ||
@@ -3249,13 +2799,9 @@ function validateBenchmarkJob(
         m.top_k < 1 ||
         !Array.isArray(m.ks) ||
         !m.ks.length ||
-        m.ks.some(
-          (k, i) => !count(k, m.top_k) || k < 1 || (i > 0 && k <= m.ks[i - 1]),
-        ) ||
+        m.ks.some((k, i) => !count(k, m.top_k) || k < 1 || (i > 0 && k <= m.ks[i - 1])) ||
         !m.overall ||
-        Object.keys(m.overall).some(
-          (name) => !/^[A-Za-z][A-Za-z0-9_@.:-]{0,127}$/.test(name),
-        ) ||
+        Object.keys(m.overall).some((name) => !/^[A-Za-z][A-Za-z0-9_@.:-]{0,127}$/.test(name)) ||
         !shape(m.by_category, benchmarkCategories) ||
         !m.by_source ||
         typeof m.by_source !== "object" ||
@@ -3266,10 +2812,7 @@ function validateBenchmarkJob(
       const groupCounts = Object.fromEntries(
         Object.entries(m.by_category).map(([c, metrics]) => [
           c,
-          Object.values(Object.values(metrics)[0]?.status_counts ?? {}).reduce(
-            (a, b) => a + b,
-            0,
-          ),
+          Object.values(Object.values(metrics)[0]?.status_counts ?? {}).reduce((a, b) => a + b, 0),
         ]),
       );
       const projected: SmokeRun = {
@@ -3299,14 +2842,11 @@ function validateBenchmarkJob(
         groupCounts,
       );
       for (const [source, metrics] of Object.entries(m.by_source)) {
-        const count = Object.values(
-          Object.values(metrics)[0]?.status_counts ?? {},
-        ).reduce((a, b) => a + b, 0);
-        if (
-          source.length > 512 ||
-          !shape(metrics, Object.keys(m.overall)) ||
-          count > done
-        )
+        const count = Object.values(Object.values(metrics)[0]?.status_counts ?? {}).reduce(
+          (a, b) => a + b,
+          0,
+        );
+        if (source.length > 512 || !shape(metrics, Object.keys(m.overall)) || count > done)
           invalid();
         validateSmokeMetrics(metrics, count);
       }
@@ -3325,24 +2865,15 @@ function validateBenchmarkJob(
         invalid();
       if (
         m.execution_outcomes &&
-        (!shape(m.execution_outcomes, [
-          "answered",
-          "abstained",
-          "unanswered",
-          "error",
-        ]) ||
+        (!shape(m.execution_outcomes, ["answered", "abstained", "unanswered", "error"]) ||
           m.execution_outcomes.error !== m.failed_count ||
-          !Object.values(m.execution_outcomes).every((v) =>
-            count(v, m.attempted_count),
-          ) ||
-          Object.values(m.execution_outcomes).reduce((a, b) => a + b, 0) >
-            m.attempted_count)
+          !Object.values(m.execution_outcomes).every((v) => count(v, m.attempted_count)) ||
+          Object.values(m.execution_outcomes).reduce((a, b) => a + b, 0) > m.attempted_count)
       )
         invalid();
     }
   }
-  if (value.state === "COMPLETE" && !shape(value.metrics, [...modes]))
-    invalid();
+  if (value.state === "COMPLETE" && !shape(value.metrics, [...modes])) invalid();
   return value;
 }
 export async function startBenchmarkRun(
@@ -3367,35 +2898,21 @@ export async function startBenchmarkRun(
     throw new ApiError("Mã lượt benchmark không hợp lệ", 502);
   return value;
 }
-export async function loadBenchmarkRun(
-  jobId: string,
-  signal?: AbortSignal,
-): Promise<BenchmarkJob> {
-  if (!benchmarkJobId(jobId))
-    throw new ApiError("Mã lượt benchmark không hợp lệ", 422);
+export async function loadBenchmarkRun(jobId: string, signal?: AbortSignal): Promise<BenchmarkJob> {
+  if (!benchmarkJobId(jobId)) throw new ApiError("Mã lượt benchmark không hợp lệ", 422);
   return validateBenchmarkJob(
-    await api<BenchmarkJob>(`/admin/kag/benchmark/runs/${jobId}`, {
-      signal,
-      cache: "no-store",
-    }),
+    await api<BenchmarkJob>(`/admin/kag/benchmark/runs/${jobId}`, { signal, cache: "no-store" }),
     jobId,
   );
 }
 export async function stopBenchmarkRun(jobId: string): Promise<BenchmarkJob> {
-  if (!benchmarkJobId(jobId))
-    throw new ApiError("Mã lượt benchmark không hợp lệ", 422);
+  if (!benchmarkJobId(jobId)) throw new ApiError("Mã lượt benchmark không hợp lệ", 422);
   return validateBenchmarkJob(
-    await api<BenchmarkJob>(
-      `/admin/kag/benchmark/runs/${jobId}/stop`,
-      send("POST"),
-    ),
+    await api<BenchmarkJob>(`/admin/kag/benchmark/runs/${jobId}/stop`, send("POST")),
     jobId,
   );
 }
-function validateBenchmark(
-  value: BenchmarkDatasets,
-  sample = false,
-): BenchmarkDatasets {
+function validateBenchmark(value: BenchmarkDatasets, sample = false): BenchmarkDatasets {
   if (
     !value ||
     Object.keys(value).sort().join() !==
@@ -3415,9 +2932,7 @@ function validateBenchmark(
     !Array.isArray(value.execution_blockers) ||
     value.execution_blockers.join() !==
       "OPERATIONAL_PROOF_REQUIRED,BENCHMARK_EXECUTION_NOT_AUTHORIZED" ||
-    !["AVAILABLE", "NOT_CONFIGURED", "UNAVAILABLE", "LIMIT_EXCEEDED"].includes(
-      value.state,
-    ) ||
+    !["AVAILABLE", "NOT_CONFIGURED", "UNAVAILABLE", "LIMIT_EXCEEDED"].includes(value.state) ||
     !Array.isArray(value.datasets) ||
     value.datasets.length > 20 ||
     (value.state !== "AVAILABLE" && value.datasets.length)
@@ -3457,14 +2972,11 @@ function validateBenchmark(
       seen.has(row.id) ||
       !["ELIGIBLE", "BLOCKED"].includes(row.dataset_eligibility) ||
       typeof row.official_benchmark !== "boolean" ||
-      (row.dataset_status !== null &&
-        !["FROZEN", "PROVISIONAL"].includes(row.dataset_status)) ||
+      (row.dataset_status !== null && !["FROZEN", "PROVISIONAL"].includes(row.dataset_status)) ||
       (row.dataset_hash !== null &&
-        (typeof row.dataset_hash !== "string" ||
-          !/^[0-9a-f]{64}$/.test(row.dataset_hash))) ||
+        (typeof row.dataset_hash !== "string" || !/^[0-9a-f]{64}$/.test(row.dataset_hash))) ||
       (row.record_count !== null &&
-        (!Number.isInteger(row.record_count) ||
-          row.record_count < (sample ? 0 : 1))) ||
+        (!Number.isInteger(row.record_count) || row.record_count < (sample ? 0 : 1))) ||
       (row.official_benchmark && row.dataset_status !== "FROZEN") ||
       (row.dataset_eligibility === "BLOCKED" &&
         ![
@@ -3525,10 +3037,7 @@ type SmokeMetric = {
   eligible_count: number;
   excluded_count: number;
   failed_count: number;
-  status_counts: Record<
-    "OK" | "NOT_APPLICABLE" | "UNAVAILABLE" | "UNKNOWN",
-    number
-  >;
+  status_counts: Record<"OK" | "NOT_APPLICABLE" | "UNAVAILABLE" | "UNKNOWN", number>;
   ci_low?: number | null;
   ci_high?: number | null;
 };
@@ -3543,10 +3052,7 @@ export type SmokeRun = {
   ineligible_count: number;
   metrics: Record<string, SmokeMetric>;
   by_category?: Record<string, Record<string, SmokeMetric>>;
-  macro?: Record<
-    string,
-    { value: number | null; scored_category_count: number }
-  >;
+  macro?: Record<string, { value: number | null; scored_category_count: number }>;
   latency_ms: Record<
     "successful" | "all_attempted",
     {
@@ -3642,9 +3148,7 @@ const hash = (v: unknown) => typeof v === "string" && /^[0-9a-f]{64}$/.test(v);
 const count = (v: unknown, max = 1000000): v is number =>
   typeof v === "number" && Number.isSafeInteger(v) && v >= 0 && v <= max;
 const shape = (v: unknown, keys: string[]) =>
-  !!v &&
-  typeof v === "object" &&
-  Object.keys(v).sort().join() === keys.sort().join();
+  !!v && typeof v === "object" && Object.keys(v).sort().join() === keys.sort().join();
 export const benchmarkCategories = [
   "definition",
   "obligation",
@@ -3679,18 +3183,10 @@ function validateSmokeMetrics(metrics: Record<string, SmokeMetric>, n: number) {
       ]) ||
       [metric.ci_low, metric.ci_high].some(
         (v) =>
-          v !== undefined &&
-          v !== null &&
-          (typeof v !== "number" || !Number.isFinite(v) || v < 0),
+          v !== undefined && v !== null && (typeof v !== "number" || !Number.isFinite(v) || v < 0),
       ) ||
-      !shape(metric.status_counts, [
-        "OK",
-        "NOT_APPLICABLE",
-        "UNAVAILABLE",
-        "UNKNOWN",
-      ]) ||
-      (metric.value !== null &&
-        (!Number.isFinite(metric.value) || metric.value < 0)) ||
+      !shape(metric.status_counts, ["OK", "NOT_APPLICABLE", "UNAVAILABLE", "UNKNOWN"]) ||
+      (metric.value !== null && (!Number.isFinite(metric.value) || metric.value < 0)) ||
       ![
         metric.scored_count,
         metric.eligible_count,
@@ -3792,14 +3288,11 @@ function validateSmoke(
         c.top_k < 1 ||
         !Array.isArray(c.ks) ||
         !c.ks.length ||
-        c.ks.some(
-          (k, i) => !count(k, c.top_k) || k < 1 || (i > 0 && k <= c.ks[i - 1]),
-        ) ||
+        c.ks.some((k, i) => !count(k, c.top_k) || k < 1 || (i > 0 && k <= c.ks[i - 1])) ||
         c.expand !== false ||
         c.rank_semantics !== "channel_projected_returned_top_k" ||
         (c.identity_catalog_hash !== null && !hash(c.identity_catalog_hash)) ||
-        (c.release_id !== null &&
-          (typeof c.release_id !== "string" || !c.release_id))
+        (c.release_id !== null && (typeof c.release_id !== "string" || !c.release_id))
       )
         invalid();
       const j = c.judge_config;
@@ -3816,9 +3309,7 @@ function validateSmoke(
         ]) ||
           typeof j.name !== "string" ||
           !j.name.trim() ||
-          ![j.version, j.model, j.prompt_version].every(
-            (v) => typeof v === "string",
-          ) ||
+          ![j.version, j.model, j.prompt_version].every((v) => typeof v === "string") ||
           typeof j.temperature !== "number" ||
           !Number.isFinite(j.temperature) ||
           typeof j.calibrated !== "boolean" ||
@@ -3828,18 +3319,15 @@ function validateSmoke(
     }
     validateSmokeMetrics(run.metrics, total ?? 0);
     if ("by_category" in run) {
-      if (!shape(run.by_category, benchmarkCategories) || !categoryCounts)
-        invalid();
+      if (!shape(run.by_category, benchmarkCategories) || !categoryCounts) invalid();
       for (const [category, metrics] of Object.entries(run.by_category!)) {
         const n = categoryCounts![category] ?? 0;
-        if (!count(n, total ?? 0) || !shape(metrics, Object.keys(run.metrics)))
-          invalid();
+        if (!count(n, total ?? 0) || !shape(metrics, Object.keys(run.metrics))) invalid();
         validateSmokeMetrics(metrics, n);
       }
     }
     if ("macro" in run) {
-      if (!run.by_category || !shape(run.macro, Object.keys(run.metrics)))
-        invalid();
+      if (!run.by_category || !shape(run.macro, Object.keys(run.metrics))) invalid();
       for (const [name, metric] of Object.entries(run.macro!)) {
         if (
           !shape(metric, ["value", "scored_category_count"]) ||
@@ -3850,9 +3338,7 @@ function validateSmoke(
               metric.value < 0)) ||
           (metric.value === null) !== (metric.scored_category_count === 0) ||
           metric.scored_category_count !==
-            Object.values(run.by_category!).filter(
-              (group) => group[name].value !== null,
-            ).length
+            Object.values(run.by_category!).filter((group) => group[name].value !== null).length
         )
           invalid();
       }
@@ -3861,16 +3347,8 @@ function validateSmoke(
       if (
         !shape(latency, ["count", "min", "mean", "median", "p95", "max"]) ||
         !count(latency.count, total ?? 0) ||
-        [
-          latency.min,
-          latency.mean,
-          latency.median,
-          latency.p95,
-          latency.max,
-        ].some((v) =>
-          latency.count === 0
-            ? v !== null
-            : v === null || !Number.isFinite(v) || v < 0,
+        [latency.min, latency.mean, latency.median, latency.p95, latency.max].some((v) =>
+          latency.count === 0 ? v !== null : v === null || !Number.isFinite(v) || v < 0,
         )
       )
         invalid();
@@ -3878,9 +3356,7 @@ function validateSmoke(
   }
   if ((smoke.state === "AVAILABLE") !== hasRun) invalid();
 }
-export async function loadSampleInspection(
-  signal?: AbortSignal,
-): Promise<SampleInspection> {
+export async function loadSampleInspection(signal?: AbortSignal): Promise<SampleInspection> {
   const value = await api<SampleInspection>("/admin/kag/sample", { signal });
   const invalid = () => {
     throw new ApiError("Unverified sample inspection", 502);
@@ -3931,11 +3407,7 @@ export async function loadSampleInspection(
     value.backend.namespace !== "VietRoadTraffic" ||
     !value.backend.database_id ||
     !value.backend.server_id ||
-    !shape(value.schema_contract, [
-      "namespace",
-      "schema_sha256",
-      "contract_sha256",
-    ]) ||
+    !shape(value.schema_contract, ["namespace", "schema_sha256", "contract_sha256"]) ||
     value.schema_contract.namespace !== "VietRoadTraffic" ||
     !hash(value.schema_contract.schema_sha256) ||
     !hash(value.schema_contract.contract_sha256)
@@ -3974,9 +3446,7 @@ export async function loadSampleInspection(
       !n.sources.length ||
       n.sources.length > 2 ||
       Object.keys(n.properties).some(
-        (k) =>
-          k.endsWith("_vector") ||
-          ["password", "credential", "token"].includes(k),
+        (k) => k.endsWith("_vector") || ["password", "credential", "token"].includes(k),
       )
     )
       invalid();
@@ -4030,11 +3500,7 @@ export async function loadSampleInspection(
       const m = row.metadata!,
         categories = benchmarkCategories;
       if (
-        !shape(m, [
-          "dataset_version",
-          "category_counts",
-          "generation_method",
-        ]) ||
+        !shape(m, ["dataset_version", "category_counts", "generation_method"]) ||
         (m.dataset_version !== null &&
           (typeof m.dataset_version !== "string" ||
             !m.dataset_version.trim() ||
@@ -4045,8 +3511,7 @@ export async function loadSampleInspection(
         Object.entries(m.category_counts).some(
           ([cat, n]) => !categories.includes(cat) || !count(n) || n < 1,
         ) ||
-        (m.generation_method !== null &&
-          m.generation_method !== "legacy-b2-evidence-first-adapted")
+        (m.generation_method !== null && m.generation_method !== "legacy-b2-evidence-first-adapted")
       )
         invalid();
       const total = Object.values(m.category_counts).reduce((a, b) => a + b, 0);
@@ -4084,16 +3549,12 @@ export async function loadSampleInspection(
       !count(row.ineligible_count) ||
       !shape(row.missing_gold, ["document", "unit", "sign"]) ||
       Object.values(row.missing_gold).some(
-        (ids) =>
-          !Array.isArray(ids) ||
-          ids.some((id) => typeof id !== "string" || !id),
+        (ids) => !Array.isArray(ids) || ids.some((id) => typeof id !== "string" || !id),
       ) ||
       (row.record_count !== null &&
         (!count(row.invalid_count) ||
           !count(row.gold_count, row.record_count) ||
-          row.eligible_count +
-            row.ineligible_count +
-            (row.invalid_count as number) !==
+          row.eligible_count + row.ineligible_count + (row.invalid_count as number) !==
             row.record_count))
     )
       invalid();
@@ -4122,20 +3583,12 @@ export async function loadSampleInspection(
   } else if (
     !p.attempts ||
     !shape(p.attempts, ["embedding", "chat"]) ||
-    !Object.values(p.attempts).every((v) =>
-      count(v, Number.MAX_SAFE_INTEGER),
-    ) ||
+    !Object.values(p.attempts).every((v) => count(v, Number.MAX_SAFE_INTEGER)) ||
     [
       p.configured_chat_model,
       p.configured_embedding_model,
-      ...(p.policy_response_version === null
-        ? []
-        : [p.policy_response_version]),
-    ].some(
-      (v) =>
-        typeof v !== "string" ||
-        !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(v),
-    ) ||
+      ...(p.policy_response_version === null ? [] : [p.policy_response_version]),
+    ].some((v) => typeof v !== "string" || !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(v)) ||
     !p.receipt_window ||
     !shape(p.receipt_window, ["since", "outcomes", "recent"]) ||
     !Array.isArray(p.receipt_window.recent) ||

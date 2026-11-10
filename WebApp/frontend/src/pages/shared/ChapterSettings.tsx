@@ -27,10 +27,7 @@ export default function ChapterSettings({ sets }: { sets: QuestionSet[] }) {
   const selected = sets.find((s) => s.set_id === setId) || sets[0];
   return (
     <section aria-labelledby="chapter-settings-heading" className="space-y-4">
-      <h2
-        id="chapter-settings-heading"
-        className="text-lg font-semibold text-navy"
-      >
+      <h2 id="chapter-settings-heading" className="text-lg font-semibold text-navy">
         Cấu hình chương
       </h2>
       <Field label="Bộ câu hỏi">
@@ -51,9 +48,7 @@ export default function ChapterSettings({ sets }: { sets: QuestionSet[] }) {
       {selected ? (
         <ChapterList key={selected.set_id} set={selected} />
       ) : (
-        <p className="text-sm text-muted">
-          Tạo bộ câu hỏi trước khi cấu hình chương.
-        </p>
+        <p className="text-sm text-muted">Tạo bộ câu hỏi trước khi cấu hình chương.</p>
       )}
     </section>
   );
@@ -63,11 +58,7 @@ function ChapterList({ set }: { set: QuestionSet }) {
   const path = `/admin/questions/sets/${set.set_id}/chapters`;
   const chapters = useData<Chapter[]>(path),
     task = useTask();
-  const [form, setForm] = useState<{
-    id?: string;
-    chapter: string;
-    name: string;
-  } | null>(null);
+  const [form, setForm] = useState<{ id?: string; chapter: string; name: string } | null>(null);
   const [deleting, setDeleting] = useState<Chapter | null>(null);
   const [confirmed, setConfirmed] = useState(false);
   const [message, setMessage] = useState("");
@@ -155,11 +146,7 @@ function ChapterList({ set }: { set: QuestionSet }) {
                               ? "Chương đang có câu hỏi hoặc quy tắc sử dụng"
                               : `Xóa chương ${c.chapter}`
                           }
-                          disabled={
-                            task.busy ||
-                            c.question_count > 0 ||
-                            c.rule_count > 0
-                          }
+                          disabled={task.busy || c.question_count > 0 || c.rule_count > 0}
                           className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-red-700 hover:bg-red-50 disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent-strong"
                           onClick={() => {
                             task.clearError();
@@ -176,10 +163,7 @@ function ChapterList({ set }: { set: QuestionSet }) {
                 ))}
                 {!chapters.value.length && (
                   <tr>
-                    <td
-                      colSpan={5}
-                      className="p-6 text-center text-sm text-muted"
-                    >
+                    <td colSpan={5} className="p-6 text-center text-sm text-muted">
                       Chưa có chương. Bấm “Thêm chương” để cấu hình.
                     </td>
                   </tr>
@@ -226,9 +210,7 @@ function ChapterList({ set }: { set: QuestionSet }) {
                     name: form.name.trim(),
                   }),
                 );
-                setMessage(
-                  form.id ? "Đã cập nhật tên chương." : "Đã thêm chương.",
-                );
+                setMessage(form.id ? "Đã cập nhật tên chương." : "Đã thêm chương.");
                 setForm(null);
                 chapters.reload();
               });
@@ -295,16 +277,11 @@ function ChapterList({ set }: { set: QuestionSet }) {
         }
       >
         <p>
-          Xóa chương {deleting?.chapter}:{" "}
-          <strong>{deleting?.topic_name}</strong> khỏi đợt {set.release_code}?
-          Thao tác không thể hoàn tác.
+          Xóa chương {deleting?.chapter}: <strong>{deleting?.topic_name}</strong> khỏi đợt{" "}
+          {set.release_code}? Thao tác không thể hoàn tác.
         </p>
         <div className="mt-4">
-          <Toggle
-            checked={confirmed}
-            onChange={setConfirmed}
-            label="Tôi xác nhận xóa chương này"
-          />
+          <Toggle checked={confirmed} onChange={setConfirmed} label="Tôi xác nhận xóa chương này" />
         </div>
         <Notice error={task.error} />
       </Modal>

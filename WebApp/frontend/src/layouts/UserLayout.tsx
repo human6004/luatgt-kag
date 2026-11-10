@@ -66,10 +66,7 @@ export default function UserLayout() {
   const navigate = useNavigate();
 
   return (
-    <div
-      className="flex h-dvh overflow-hidden"
-      style={{ background: "var(--color-bg)" }}
-    >
+    <div className="flex h-dvh overflow-hidden" style={{ background: "var(--color-bg)" }}>
       {/* Sidebar with collapse support */}
       <aside
         className={`hidden md:flex flex-col shrink-0 h-full border-r border-line transition-all duration-200 select-none ${
@@ -106,12 +103,7 @@ export default function UserLayout() {
               isCollapsed ? "hidden" : "block"
             }`}
           >
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -130,12 +122,7 @@ export default function UserLayout() {
               title="Mở rộng menu"
               className="p-1.5 rounded-lg text-muted hover:text-navy hover:bg-selected transition-colors"
             >
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -173,11 +160,7 @@ export default function UserLayout() {
                 strokeWidth={1.8}
                 viewBox="0 0 24 24"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d={item.icon}
-                />
+                <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
               </svg>
 
               {!isCollapsed && (
@@ -201,8 +184,7 @@ export default function UserLayout() {
             value={
               navItems.find(
                 (item) =>
-                  location.pathname === item.to ||
-                  location.pathname.startsWith(item.to + "/"),
+                  location.pathname === item.to || location.pathname.startsWith(item.to + "/"),
               )?.to ?? "/chat"
             }
             onChange={(event) => navigate(event.target.value)}
