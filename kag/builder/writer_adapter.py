@@ -562,15 +562,16 @@ class NativeIntegerKGWriter(KGWriter):
             edge.properties.update(edge_restore.get(edge.id, {}))
         return graph
 
-    def write_subgraph(self, graph: SubGraph, stage: str) -> None:
+    def write_subgraph(self, graph: SubGraph, stage: str, *, on_dispatch=None) -> None:
         if stage not in ('nodes', 'edges'):
             raise WriterAdapterError("stage must be 'nodes' or 'edges'")
         if stage == 'nodes' and graph.edges or stage == 'edges' and graph.nodes:
             raise WriterAdapterError(f'{stage} batch contains objects from the other stage')
-        self._invoke(graph, alter_operation=AlterOperationEnum.Upsert, lead_to_builder=False)
+        self._invoke(graph, alter_operation=AlterOperationEnum.Upsert, lead_to_builder=False,
+                     on_dispatch=on_dispatch)
 
     def _invoke(self, input: SubGraph, alter_operation=AlterOperationEnum.Upsert,
-                lead_to_builder: bool = False, **kwargs):
+                lead_to_builder: bool = False, *, on_dispatch=None, **kwargs):
         """One scope gate also covers inherited invoke/ainvoke entry points."""
         if (self.config is not self._identity_config or self.client is not self._identity_client
                 or self.kag_project_config is not self._identity_config
@@ -604,6 +605,8 @@ class NativeIntegerKGWriter(KGWriter):
             raise WriterAdapterError('writer graph lock changed after construction')
         _check_graph_lock(self.config)
         self._verified_node_keys.difference_update((node.label, node.id) for node in input.nodes)
+        if on_dispatch is not None:
+            on_dispatch()
         return super()._invoke(input, alter_operation=alter_operation,
                                lead_to_builder=lead_to_builder, **kwargs)
 

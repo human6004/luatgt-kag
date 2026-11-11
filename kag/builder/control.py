@@ -17,6 +17,7 @@ import threading
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
+from kag.backend_identity import BackendIdentityTransportError
 from kag.builder.production_scope import (ProductionSettings, _input_version, _spec_hash,
     validate_source_manifest, selection_limit, selection_summary, select_bounded_sources)
 from kag.http_api.contract import ApiFailure
@@ -303,6 +304,9 @@ def _builder_runner(model):
     return execute
 
 
+STOPPED_ERRORS = ('INTERRUPTED', 'TRANSPORT', 'VECTORS', 'VECTORS_KEY')
+
+
 class BuilderControl:
     def __init__(self, config, *, runner=run):
         self.config = _config(config)
@@ -343,9 +347,9 @@ class BuilderControl:
                     status['state'] in ('ABANDONED','CLEARED')
                     or
                     status['state'] == 'PASS' and status['stage'] == 'release'
-                    or status['state'] == 'ERROR' and (status['error_code'] == 'INTERRUPTED'
+                    or status['state'] == 'ERROR' and (status['error_code'] in ('INTERRUPTED', 'TRANSPORT')
                         or status['stage'] == 'vectorize' and status['error_code'] in ('VECTORS','VECTORS_KEY')))
-                    for (status, uncertain, _), _ in records)
+                    for (status, _, _, _), _ in records)
 
     def _directory(self, run_id):
         return validate_run_directory(self.config['paths']['run_root'], run_id,
@@ -362,7 +366,8 @@ class BuilderControl:
                 meta = dict(db.execute("SELECT key,value FROM run_meta WHERE key IN ('identity','status','disposition')"))
                 identity, status = json.loads(meta['identity']), json.loads(meta['status'])
                 pending = db.execute("SELECT 1 FROM run_batches WHERE state='INTENT' "
-                    "AND stage IN ('write-nodes','write-edges') LIMIT 1").fetchone() is not None
+                    "AND stage IN ('write-nodes','write-edges') "
+                    "AND json_extract(result,'$.graph_writes') > 0 LIMIT 1").fetchone() is not None
                 stages = {name:json.loads(result) for name,result in db.execute('SELECT stage,result FROM run_stages')}
                 exported = db.execute("SELECT COUNT(*) FROM run_batches WHERE stage='export-artifact' AND state='CONFIRMED'").fetchone()[0]
             if (identity['config_hash'] != _spec_hash(self.config) or identity['run_id'] != run_id
@@ -388,7 +393,7 @@ class BuilderControl:
                 done = total = None
                 code = None
                 if name==status['stage'] and status['error_code']:
-                    state = 'STOPPED' if status['error_code']=='INTERRUPTED' or name=='vectorize' and status['error_code'] in ('VECTORS','VECTORS_KEY') else 'BLOCKED'
+                    state = 'STOPPED' if status['error_code'] in ('INTERRUPTED', 'TRANSPORT') or name=='vectorize' and status['error_code'] in ('VECTORS','VECTORS_KEY') else 'BLOCKED'
                     done,total,code = status['done'],status['total'],status['error_code']
                 elif name in stages:
                     state = 'COMPLETE'
@@ -432,10 +437,18 @@ class BuilderControl:
                         or disposition['config_hash']!=identity['config_hash']
                         or datetime.fromisoformat(disposition['updated_at']).tzinfo is None):raise ValueError
                 status=dict(status,state=disposition['state'])
-            lock_state = graph_lock_status(lock)['state']
+            lock_info = graph_lock_status(lock)
+            lock_state = lock_info['state']
             uncertain = ('UNCERTAIN_WRITE' if pending or lock_state == 'RETAINED'
                          else 'LOCK' if lock_state == 'HELD' else None)
-            return status, uncertain, detail
+            owner = lock_info.get('owner')
+            recoverable = (pending and 'disposition' not in meta and lock_state == 'RETAINED'
+                           and lock_info.get('retained') == 'UNCERTAIN_WRITE'
+                           and lock_info.get('database_id') == identity['database_id']
+                           and isinstance(owner, dict) and owner.get('run_id') == run_id
+                           and type(owner.get('project_id')) is int
+                           and owner['project_id'] == identity['project_id'])
+            return status, uncertain, detail, recoverable
         except (OSError, sqlite3.Error, ValueError, KeyError, TypeError):
             raise RunBlocked('INTEGRITY') from None
 
@@ -443,11 +456,12 @@ class BuilderControl:
         with self._monitor:
             alive = self.thread is not None and self.thread.is_alive()
             state, progress, code = 'IDLE', None, None
+            recoverable = False
             detail = dict(stages=[],timing=None,binding=None,result=None)
             if alive:
                 state = 'STOPPING' if self.stop_event.is_set() else 'RUNNING'
                 try:
-                    durable, _, detail = self._record(self.run_id)
+                    durable, _, detail, _ = self._record(self.run_id)
                     progress = {key: durable[key] for key in ('stage', 'done', 'total')}
                 except RunBlocked:
                     pass  # Preflight has not created its verified ledger yet.
@@ -457,18 +471,20 @@ class BuilderControl:
                     if self.failed and self.run_id is None:
                         raise RunBlocked('INTEGRITY')
                     if self.run_id is not None:
-                        durable, uncertain, detail = self._record(self.run_id)
+                        durable, uncertain, detail, recoverable = self._record(self.run_id)
                         progress = {key: durable[key] for key in ('stage', 'done', 'total')}
                         code = durable['error_code']
                         if uncertain:
                             raise RunBlocked(uncertain)
-                        if self.failed and not (durable['state']=='ERROR' and code in ('INTERRUPTED','VECTORS','VECTORS_KEY')):
+                        stopped = durable['state'] == 'ERROR' and code in STOPPED_ERRORS
+                        if self.failed and not stopped:
                             raise RunBlocked(code or 'INTEGRITY')
-                        if self.result is not None and durable == self.previous_status:
+                        if (self.result is not None and durable == self.previous_status
+                                and (self.result != 1 or not stopped)):
                             raise RunBlocked('SCOPE' if self.result == 2 else 'RUNTIME')
                         if durable['state'] in ('ABANDONED','CLEARED'):
                             state = durable['state']
-                        elif durable['state'] == 'ERROR' and code in ('INTERRUPTED','VECTORS','VECTORS_KEY'):
+                        elif stopped:
                             state = 'STOPPED'
                         elif self.result == 2:
                             state, code = 'BLOCKED', code or 'SCOPE'
@@ -484,7 +500,7 @@ class BuilderControl:
                 target={key: self.config[key] for key in ('project_id', 'database', 'namespace')},
                 progress=progress, error_code=code,
                 actions=dict(build=state in ('IDLE', 'COMPLETE', 'ABANDONED','CLEARED'), stop=state == 'RUNNING',
-                             resume=state == 'STOPPED', abandon=state == 'STOPPED', delete=False),
+                             resume=state == 'STOPPED' or recoverable, abandon=state == 'STOPPED', delete=False),
                 delete_reason=None,
                 production_write='CONFIGURED' if self.config['scope']=='PRODUCTION' else 'BLOCKED',**detail)
 
@@ -545,9 +561,10 @@ class BuilderControl:
                     durable=json.loads(meta['status'])
                     if (json.loads(meta['identity'])['config_hash']!=_spec_hash(self.config)
                             or not (durable['state']=='RUNNING'
-                                or durable['state']=='ERROR' and durable['error_code']=='INTERRUPTED'
+                                or durable['state']=='ERROR' and durable['error_code'] in ('INTERRUPTED', 'TRANSPORT')
                                 or durable['state']=='BLOCKED' and durable['stage']=='vectorize' and durable['error_code'] in ('VECTORS','VECTORS_KEY'))
-                            or db.execute("SELECT 1 FROM run_batches WHERE state='INTENT' AND stage IN ('write-nodes','write-edges') LIMIT 1").fetchone()):
+                            or db.execute("SELECT 1 FROM run_batches WHERE state='INTENT' AND stage IN ('write-nodes','write-edges') "
+                                      "AND json_extract(result,'$.graph_writes') > 0 LIMIT 1").fetchone()):
                         raise HTTPException(409,'BUILDER_ABANDON_BLOCKED')
                     lock.assert_owned(state['proof'].physical_database_id);state['identity'].validate(state['proof'])
                     db.execute('INSERT OR IGNORE INTO run_meta VALUES (?,?)',('disposition',json.dumps(dict(
@@ -1314,8 +1331,10 @@ def create_app(*, control=None, token=None, state_dir=None):
         except (ValueError, TypeError):
             raise ApiFailure('INVALID_REQUEST') from None
         await inputs(request)
-        if (not setup or control is None or source_task is not None and not source_task.done()
-                or control.status()['state'] not in ('IDLE','COMPLETE','STOPPED','ABANDONED','CLEARED')
+        current = control.status() if control is not None else None
+        if (not setup or current is None or source_task is not None and not source_task.done()
+                or (not current['actions']['resume']
+                    and current['state'] not in ('IDLE','COMPLETE','STOPPED','ABANDONED','CLEARED'))
                 or clear_result['state'] in ('APPLYING','PARTIAL','INTERRUPTED')):
             raise HTTPException(409,'BUILDER_PREFLIGHT_BLOCKED')
         readiness = dict(state='CHECKING',checks=[],checked_at=None)
@@ -1347,20 +1366,27 @@ def create_app(*, control=None, token=None, state_dir=None):
                     _indexes(reader,verified['contract'],snapshot['vector_dimensions'])
                     record('target',True,None)
                     lock = Path(snapshot['paths']['lock_root'])/(hashlib.sha256(verified['database_id'].encode()).hexdigest()+'.lock')
-                    lock_state = graph_lock_status(lock)['state']
-                    if not record('lock',lock_state == 'FREE','UNCERTAIN_WRITE' if lock_state == 'RETAINED' else 'LOCK'):
-                        try:
-                            if lock.is_symlink():raise ValueError
-                            with lock.open('rb') as stream:metadata = json.loads(stream.read(8193))
-                            owner = metadata['owner']
-                            if (metadata['database_id']!=verified['database_id'] or type(owner)!=dict
-                                    or not isinstance(owner.get('run_id'),str)
-                                    or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,127}',owner['run_id'])
-                                    or type(owner.get('project_id')) is not int or not 1<=owner['project_id']<=2147483647):raise ValueError
-                            checks[-1]['owner'] = dict(run_id=owner['run_id'],project_id=owner['project_id'])
-                        except (OSError,ValueError,KeyError,TypeError):
-                            pass
+                    lock_info = graph_lock_status(lock)
+                    lock_state = lock_info['state']
+                    owner = lock_info.get('owner')
+                    valid_owner = (lock_info.get('database_id') == verified['database_id'] and type(owner) is dict
+                                   and isinstance(owner.get('run_id'), str)
+                                   and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._-]{0,127}', owner['run_id'])
+                                   and type(owner.get('project_id')) is int and 1 <= owner['project_id'] <= 2147483647)
+                    resume_lock = False
+                    if lock_state == 'RETAINED' and lock_info.get('retained') == 'UNCERTAIN_WRITE' and valid_owner:
+                        pending_resume = control.status()
+                        resume_lock = (pending_resume['error_code'] == 'UNCERTAIN_WRITE'
+                                       and pending_resume['actions']['resume']
+                                       and pending_resume['run_id'] == current['run_id'] == owner['run_id']
+                                       and pending_resume['binding']['database_id'] == verified['database_id']
+                                       and owner['project_id'] == snapshot['project_id'])
+                    if not record('lock', lock_state == 'FREE' or resume_lock,
+                                  'UNCERTAIN_WRITE' if lock_state == 'RETAINED' else 'LOCK') and valid_owner:
+                        checks[-1]['owner'] = dict(run_id=owner['run_id'], project_id=owner['project_id'])
                     if binding(session_token(request))!=before:raise ValueError
+            except BackendIdentityTransportError:
+                record('target', False, 'TRANSPORT')
             except Exception as error:
                 record('target',False,error.code if isinstance(error,(RunBlocked,ProjectCatalogError)) else 'CONFIG')
             finally:

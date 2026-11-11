@@ -12,6 +12,7 @@ from dataclasses import replace
 from collections import Counter, defaultdict
 from urllib.parse import urlsplit
 
+from kag.backend_identity import BackendIdentityTransportError
 from kag.builder import production_scope as c3
 from kag.builder.codec import canonical_json
 from kag.run_state import (ROOT, STAGES, RunBlocked, RunState, GraphLock, atomic_json,
@@ -417,7 +418,7 @@ def preflight(config, *, project_client, reader, backend_transport=None):
     except (TimeoutError, ConnectionError, RuntimeError):
         if backend_session is not None: backend_session.close()
         if source_index is not None: source_index.close()
-        raise RuntimeError('Graph transport unavailable.') from None
+        raise BackendIdentityTransportError() from None
     except (c3.ProductionScopeError, OSError, KeyError, ValueError, TypeError) as error:
         if backend_session is not None: backend_session.close()
         if source_index is not None: source_index.close()
@@ -803,6 +804,7 @@ def _graph_batches(config, state, verified, reader, writer, kind, output, stop):
     from kag.builder.writer_adapter import to_subgraphs
     from kag.verify import verify_batch
     stage = 'write-' + kind
+    readback = dict(kind=kind, contract=verified['contract'], dimension=config['vector_dimensions'])
     total = len(verified['node_hashes' if kind == 'nodes' else 'edge_hashes'])
     if not state.completed_stage(stage): state.update(stage, 'RUNNING', _confirmed_progress(state, stage), total)
     batches = (_node_batches(state, output, config['batch_size']) if kind == 'nodes' else
@@ -810,23 +812,25 @@ def _graph_batches(config, state, verified, reader, writer, kind, output, stop):
     for ordinal, specs in enumerate(batches):
         _stop(stop, stage, -1)
         key, digest = str(ordinal), c3._spec_hash(specs)
-        existed = state.db.execute('SELECT state FROM run_batches WHERE stage=? AND key=?', (stage, key)).fetchone()
         prior = state.begin_batch(stage, key, digest)
         if prior['state'] == 'CONFIRMED':
-            result = verify_batch(reader, specs, kind=kind, contract=verified['contract'], dimension=config['vector_dimensions'])
+            result = verify_batch(reader, specs, **readback)
             if any(prior['result'].get(k) != v for k, v in result.items()):
                 raise RunBlocked('INTEGRITY')
             continue
         writes = (prior['result'] or {}).get('graph_writes', 0)
-        if config['write_mode'] == 'WRITE' and existed is None:
-            from kag.builder.writer_adapter import _check_graph_lock
-            verified['writer_config'].__post_init__()
-            for graph in to_subgraphs(specs, config['batch_size'], kind, verified['writer_config']):
-                _check_graph_lock(verified['writer_config'])
-                writes = state.record_attempt(stage, key, 'graph_writes')
-                writer.write_subgraph(graph, kind)
-        # Any prior INTENT is uncertain: readback only; never blind resend.
-        result = verify_batch(reader, specs, kind=kind, contract=verified['contract'], dimension=config['vector_dimensions'])
+        result = None
+        if writes:
+            result = verify_batch(reader, specs, allow_absent=config['write_mode'] == 'WRITE', **readback)
+        if result is None:
+            if config['write_mode'] == 'WRITE':
+                def on_dispatch():
+                    nonlocal writes
+                    writes = state.record_attempt(stage, key, 'graph_writes')
+
+                for graph in to_subgraphs(specs, config['batch_size'], kind, verified['writer_config']):
+                    writer.write_subgraph(graph, kind, on_dispatch=on_dispatch)
+            result = verify_batch(reader, specs, **readback)
         state.confirm_batch(stage, key, dict(result, count=len(specs), graph_writes=writes))
         state.update(stage, 'RUNNING', _confirmed_progress(state, stage), total)
         _stop(stop, stage, ordinal)
@@ -973,7 +977,7 @@ def _execute(config, run_id, resume, project_client, reader, vectorizer_factory,
         lock = GraphLock(config['paths']['lock_root'], verified['database_id'], dict(identity,
             openspg_endpoint=config['endpoints']['openspg'], neo4j_endpoint=config['endpoints']['neo4j_http']),
             backend_proof=verified['backend_proof'], backend_session=verified['backend_session'])
-        lock.acquire()
+        lock.acquire(resume=resume and not verify_only)
         if config['scope'] == 'PRODUCTION':
             from kag.builder.serving import protect_active
             protect_active(reader,verified['database_id'])
@@ -1051,10 +1055,12 @@ def _execute(config, run_id, resume, project_client, reader, vectorizer_factory,
             state._receipt()
         return 0
     except Exception as error:
-        code = 'INTERRUPTED' if isinstance(error, _Interrupted) else error.code if isinstance(error, RunBlocked) else 'RUNTIME'
+        code = ('INTERRUPTED' if isinstance(error, _Interrupted) else
+                'TRANSPORT' if isinstance(error, BackendIdentityTransportError) else
+                error.code if isinstance(error, RunBlocked) else 'RUNTIME')
         blocked = isinstance(error, RunBlocked)
         # Preflight/lock refusals still receive a sanitized status when a safe fresh path exists.
-        if state is None and directory is not None and not directory.exists():
+        if not resume and state is None and directory is not None and not directory.exists():
             try:
                 state = RunState(directory, identity or {'run_id': run_id, 'scope': config['scope']})
             except Exception:
@@ -1068,7 +1074,7 @@ def _execute(config, run_id, resume, project_client, reader, vectorizer_factory,
                 pass
         return 2 if blocked else 1
     finally:
-        release_lock = True
+        release_lock = lock is None or lock.retained is None
         if state is not None:
             try:
                 # A timeout or failed readback cannot prove the remote writer finished.

@@ -141,7 +141,9 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
         ? { mode: "ALL", value: null }
         : { mode: "PERCENT", value: Number(percent) };
   const requestKey = JSON.stringify(requestedScope);
-  const building = status && ["RUNNING", "STOPPING", "STOPPED"].includes(status.state);
+  const recoveringWrite = status?.error_code === "UNCERTAIN_WRITE" && status.actions.resume;
+  const building =
+    status && (["RUNNING", "STOPPING", "STOPPED"].includes(status.state) || recoveringWrite);
   const running = status && ["RUNNING", "STOPPING"].includes(status.state);
   const clearing = clearState && ["APPLYING", "PARTIAL", "INTERRUPTED"].includes(clearState.state);
   function acceptProjects(projects: BuilderProjects) {
@@ -381,15 +383,25 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     });
   }
   async function resume() {
-    if (!status?.run_id || !config) return;
+    if (!status?.run_id || !config || !status.actions.resume) return;
+    if (
+      recoveringWrite &&
+      !window.confirm(
+        "Lần ghi trước bị gián đoạn. Phần mềm sẽ đọc lại đợt ghi dở và chỉ ghi lại nếu toàn bộ đợt chưa có trong database. Nếu đã ghi một phần hoặc dữ liệu khác với dự kiến, phần mềm sẽ dừng. Tiếp tục?",
+      )
+    )
+      return;
     await act(async () => {
       let checked = await checkBuilderReadiness();
       while (checked.readiness.state === "CHECKING") {
         await new Promise((resolve) => setTimeout(resolve, 1500));
         checked = await loadBuilderConfiguration();
       }
+      if (checked.readiness.state !== "READY") {
+        const issue = checked.readiness.checks.find((row) => row.state === "BLOCKED");
+        throw new Error(builderIssue(issue?.code ?? "CONFIG"));
+      }
       if (
-        checked.readiness.state !== "READY" ||
         checked.target?.project_id !== status.target?.project_id ||
         checked.revision !== config.revision
       )
@@ -443,13 +455,29 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
         <div className="flex flex-wrap gap-3">
           <Button
             variant="primary"
-            disabled={busy || serving?.busy || !!running || !!clearing || !!readError || !config}
+            disabled={
+              busy ||
+              serving?.busy ||
+              !!running ||
+              !!clearing ||
+              !!readError ||
+              !config ||
+              recoveringWrite
+            }
             onClick={() => openFlow("build")}
           >
             + Dựng đồ thị mới
           </Button>
           <Button
-            disabled={busy || serving?.busy || !!running || !!clearing || !!readError || !config}
+            disabled={
+              busy ||
+              serving?.busy ||
+              !!running ||
+              !!clearing ||
+              !!readError ||
+              !config ||
+              recoveringWrite
+            }
             onClick={() => openFlow("import")}
           >
             + Nhập từ gói

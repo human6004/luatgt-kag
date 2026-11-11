@@ -129,7 +129,7 @@ Preview cũ, graph thay đổi, thiếu quyền hoặc model/index không khớp
 
 Bấm **Dừng**, chờ **Đã dừng an toàn**. Tiến độ và dữ liệu được giữ để **Tiếp tục** sau. Đóng trang hoặc dừng theo dõi log không dừng Worker.
 
-Tiếp tục dùng cùng phiên, nguồn, đích, model, batch và hạn mức cũ; số request đã dùng không được đặt lại. Sau Worker restart, dùng **Tải lại danh sách**, kiểm thông báo rồi bấm **Tiếp tục**; UI tự kiểm sẵn sàng trước khi Resume. Nếu nguồn cần chuẩn bị lại hoặc cấu hình không còn khớp, nhờ người vận hành xử lý. Không sửa cấu hình hoặc xóa khóa để ép tiếp tục.
+Tiếp tục dùng cùng phiên, nguồn, đích, model, batch và hạn mức cũ; số request đã dùng không được đặt lại. Sau Worker restart, dùng **Tải lại danh sách**, kiểm thông báo rồi bấm **Tiếp tục**; UI tự kiểm sẵn sàng trước khi Resume. Nếu lần ghi bị gián đoạn và **Tiếp tục** khả dụng, xác nhận để Builder đọc lại đợt ghi dở. Nếu nguồn cần chuẩn bị lại hoặc cấu hình không còn khớp, nhờ người vận hành xử lý. Không sửa cấu hình hoặc xóa khóa để ép tiếp tục.
 
 ### Chấm dứt phiên qua API quản trị
 
@@ -158,7 +158,7 @@ Khi phiên trước đã kết thúc, bấm **+ Dựng đồ thị mới**, ch�
 - Cấu trúc xung đột hoặc có dữ liệu: đọc lỗi; chọn project riêng phù hợp hoặc nhờ quản trị lập migration, không xóa loại tùy chỉnh.
 - Model chưa kiểm hoặc endpoint bị chặn: lưu/kiểm đúng Embedding và nhờ vận hành kiểm chính sách kết nối.
 - Hết hạn mức request: phiên cũ giữ hạn mức cũ; Resume không tăng ngân sách.
-- Khóa đang giữ, timeout hoặc kết quả ghi chưa rõ: **Tải lại danh sách**, giữ khóa và nhờ vận hành đối soát trước thao tác khác.
+- Khóa đang giữ hoặc kết quả ghi chưa rõ: **Tải lại danh sách**. Nếu **Tiếp tục** khả dụng, dùng nút đó để Builder đọc lại. Nếu dữ liệu chỉ có một phần hoặc khác dự kiến, giữ khóa và nhờ quản trị đối soát.
 
 ## Dành cho quản trị và phát triển
 
@@ -207,6 +207,6 @@ Worker dùng `builder-control-v3`; Java/frontend nhận v1/v2/v3. V1 chỉ có t
 
 Build/Resume/`abandon` dùng revision cấu hình; stale request bị từ chối. Poll chỉ đọc trạng thái; không gọi provider hoặc quét graph. Kết quả hoàn tất vẫn xem được sau restart, nhưng cần kiểm lại nguồn/sẵn sàng trước thao tác ghi mới.
 
-Run giữ ledger SQLite (sổ tiến độ), checkpoint, artifacts và kết quả xác minh. Batch đã xác nhận không gửi lại. Batch ghi chưa rõ kết quả phải đọc lại; thiếu/khác/không chắc thì chặn, không resend mù. Resume giữ nguyên nguồn/schema/target/model/phạm vi/batch/hạn mức.
+Run giữ ledger SQLite (sổ tiến độ), checkpoint, artifacts và kết quả xác minh. Batch đã xác nhận được kiểm lại khi Resume. Batch ghi chưa rõ kết quả được đọc lại theo ID trên đúng database. Nếu đủ và khớp, Builder xác nhận batch. Nếu toàn bộ vắng mặt, Builder mới gửi lại. Nếu chỉ có một phần, payload khác hoặc đọc thất bại, Builder dừng và giữ khóa. Lỗi kết nối trước lần gửi đầu để lại batch chưa gửi, có thể thử lại bằng **Tiếp tục**. Resume giữ nguyên nguồn/schema/target/model/phạm vi/batch/hạn mức.
 
-GraphLock khóa theo **physical database ID**: hai tên trỏ cùng database dùng chung khóa OS trên cùng named volume; không thay volume hoặc xóa file khóa để né xung đột. Khi holder chết, khóa OS tự nhả và metadata cũ hợp lệ không chặn lần lấy khóa tiếp theo; ghi chưa xác định kết quả được đánh dấu `retained: UNCERTAIN_WRITE`, tiếp tục chặn đến khi quản trị đối soát. Khi nâng cấp từ khóa file cũ, dừng mọi writer cũ trước khi dùng writer mới; receipt không cấp quyền ghi hoặc phục vụ Chat.
+GraphLock khóa theo **physical database ID**: hai tên trỏ cùng database dùng chung khóa OS trên cùng named volume; không thay volume hoặc xóa file khóa để né xung đột. Khi holder chết, khóa OS tự nhả và metadata cũ hợp lệ cho phép lấy khóa lần sau. Lần ghi chưa xác định kết quả được đánh dấu `retained: UNCERTAIN_WRITE`. Chỉ Resume đúng run trên cùng database sau khi lấy được khóa OS mới được đối soát batch. Dựng mới và thao tác khác vẫn bị chặn. Khi nâng cấp từ khóa file cũ, dừng mọi writer cũ trước khi dùng writer mới; receipt không cấp quyền ghi hoặc phục vụ Chat.

@@ -103,7 +103,7 @@ Trong **Chatbot → Đồ thị → Tùy chọn tìm kiếm**, chỉnh **Số k�
 
 Mở **Dữ liệu nguồn KAG** để xem văn bản, đơn vị pháp lý, biển báo và quan hệ đi kèm. Trang chỉ đọc, phân trang, không tạo kế hoạch hoặc yêu cầu duyệt lại nguồn. **Schema** hiển thị cấu trúc LuậtGT đóng gói.
 
-Mở **Chatbot → Đồ thị → + Dựng đồ thị mới**, theo [hướng dẫn Builder](runner.md): lưu/kiểm Embedding trước, tạo project/database trống trong OpenSPG, chọn **Đồ thị trống** và **Phạm vi** rồi **Xác nhận dựng**. Chuẩn bị nguồn/cấu trúc và kiểm sẵn sàng chạy tự động. **Dừng**/**Tiếp tục** giữ điều kiện quyền và bảo vệ dữ liệu.
+Mở **Chatbot → Đồ thị → + Dựng đồ thị mới**, theo [hướng dẫn Builder](runner.md): lưu/kiểm Embedding trước, tạo project/database trống trong OpenSPG, chọn **Đồ thị trống** và **Phạm vi** rồi **Xác nhận dựng**. Chuẩn bị nguồn/cấu trúc và kiểm sẵn sàng chạy tự động. **Dừng**/**Tiếp tục** giữ điều kiện quyền và bảo vệ dữ liệu. Nếu lần ghi bị gián đoạn và nút **Tiếp tục** khả dụng, bấm nút và xác nhận để phần mềm đọc lại đợt ghi dở. Phần mềm chỉ ghi lại nếu toàn bộ đợt chưa có trong database.
 
 Muốn dùng một đồ thị đã dựng cho Chat:
 

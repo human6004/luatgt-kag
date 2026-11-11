@@ -541,7 +541,7 @@ def verify_graph(reader, *, db_path, contract, batch_size, nodes_only=False, rec
         db.close()
 
 
-def verify_batch(reader, specs, *, kind, contract, dimension=3072):
+def verify_batch(reader, specs, *, kind, contract, dimension=3072, allow_absent=False):
     try:
         if kind == 'nodes':
             expected = [_expected_node(spec, contract, dimension)[:2] for spec in specs]
@@ -553,7 +553,11 @@ def verify_batch(reader, specs, *, kind, contract, dimension=3072):
             actual = [_edge(record, contract) for record in records]
         else:
             raise RunBlocked('CONFIG')
-        if len(set(expected)) != len(expected) or sorted(actual) != sorted(expected):
+        if len(set(expected)) != len(expected):
+            raise RunBlocked('NODES' if kind == 'nodes' else 'EDGES')
+        if allow_absent and expected and not actual:
+            return None
+        if sorted(actual) != sorted(expected):
             raise RunBlocked('NODES' if kind == 'nodes' else 'EDGES')
         return {'confirmed': len(specs), 'fingerprint': _digest(sorted(actual)), 'state': 'CONFIRMED_EXISTING'}
     except (BuilderContractError, KeyError, TypeError, ValueError) as error:

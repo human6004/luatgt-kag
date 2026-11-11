@@ -128,7 +128,8 @@ def graph_lock_status(path):
             metadata = json.loads(stream.read(8193) or '{}')
             if state == 'FREE' and metadata.get('retained'):
                 state = 'RETAINED'
-            return dict(state=state, owner=metadata.get('owner'))
+            return dict(state=state, owner=metadata.get('owner'),
+                        database_id=metadata.get('database_id'), retained=metadata.get('retained'))
     except FileNotFoundError:
         return dict(state='FREE', owner=None)
     except (OSError, ValueError, TypeError, AttributeError):
@@ -155,6 +156,7 @@ class GraphLock:
                          'pid': os.getpid(), 'hostname': socket.gethostname(), 'created_at': _utc(),
                          'owner': {k: owner[k] for k in allowed if k in owner}}
         self.acquired = False
+        self.retained = None
         self._stream = None
 
     def _validate_backend(self, database_id):
@@ -169,7 +171,7 @@ class GraphLock:
         except ValueError:
             raise RunBlocked('LOCK') from None
 
-    def acquire(self):
+    def acquire(self, *, resume=False):
         if self._backend_proof is not None:
             self._validate_backend(self.metadata['database_id'])
         if self.shared:
@@ -184,18 +186,29 @@ class GraphLock:
             stream = os.fdopen(fd, 'r+', encoding='utf-8', newline='\n')
             portalocker.lock(stream, portalocker.LOCK_EX | portalocker.LOCK_NB)
             previous = json.loads(stream.read(8193) or '{}')
-            if previous.get('retained'):
-                raise RunBlocked('LOCK')
-            stream.seek(0)
-            stream.truncate()
-            stream.write(canonical_json(self.metadata) + '\n')
-            stream.flush()
-            os.fsync(stream.fileno())
+            retained = previous if previous.get('retained') else None
+            if retained:
+                owner = self.metadata['owner']
+                previous_owner = retained.get('owner') or {}
+                if (not resume or retained['retained'] != 'UNCERTAIN_WRITE' or not owner.get('run_id')
+                        or retained.get('database_id') != self.metadata['database_id']
+                        or previous_owner.get('run_id') != owner['run_id']
+                        or type(previous_owner.get('project_id')) is not type(owner.get('project_id'))
+                        or previous_owner.get('project_id') != owner.get('project_id')):
+                    raise RunBlocked('LOCK')
+                # Keep the marker on disk if this process exits before reconciliation.
+            else:
+                stream.seek(0)
+                stream.truncate()
+                stream.write(canonical_json(self.metadata) + '\n')
+                stream.flush()
+                os.fsync(stream.fileno())
         except (OSError, ValueError, TypeError, AttributeError, portalocker.exceptions.LockException):
             if stream is not None:
                 stream.close()
             raise RunBlocked('LOCK') from None
         self._stream = stream
+        self.retained = retained
         self.acquired = True
 
     def assert_owned(self, database_id):
@@ -210,7 +223,7 @@ class GraphLock:
             actual = json.loads(self.path.read_bytes())
         except (OSError, ValueError):
             raise RunBlocked('LOCK') from None
-        if (not self.acquired or actual != self.metadata or database_id != self.metadata['database_id']
+        if (not self.acquired or actual != (self.retained or self.metadata) or database_id != self.metadata['database_id']
                 or self.metadata['pid'] != os.getpid() or self.metadata['hostname'] != socket.gethostname()):
             raise RunBlocked('LOCK')
 
@@ -227,11 +240,12 @@ class GraphLock:
     def retain(self):
         try:
             self.assert_owned(self.metadata['database_id'])
-            self._stream.seek(0)
-            self._stream.truncate()
-            self._stream.write(canonical_json(dict(self.metadata, retained='UNCERTAIN_WRITE')) + '\n')
-            self._stream.flush()
-            os.fsync(self._stream.fileno())
+            if self.retained is None:
+                self._stream.seek(0)
+                self._stream.truncate()
+                self._stream.write(canonical_json(dict(self.metadata, retained='UNCERTAIN_WRITE')) + '\n')
+                self._stream.flush()
+                os.fsync(self._stream.fileno())
         finally:
             self._close()
 
@@ -244,6 +258,7 @@ class GraphLock:
                     self._stream.close()
         finally:
             self._stream = None
+            self.retained = None
             self.acquired = False
 
 

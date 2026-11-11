@@ -972,7 +972,9 @@ function validateBuilder(value: BuilderStatus): BuilderStatus {
           !["IDLE", "COMPLETE", ...(extended ? ["ABANDONED", "CLEARED"] : [])].includes(
             value.state,
           )) ||
-        (value.actions.resume && value.state !== "STOPPED")
+        (value.actions.resume &&
+          value.state !== "STOPPED" &&
+          !(extended && value.state === "BLOCKED" && value.error_code === "UNCERTAIN_WRITE"))
       : value.actions.build !== ["IDLE", "COMPLETE"].includes(value.state) ||
         value.actions.resume !== (value.state === "STOPPED")) ||
     (extended && value.actions.abandon !== (value.state === "STOPPED")) ||
@@ -1820,7 +1822,8 @@ export function builderIssue(code: string | null) {
     SERVING_PROTECTED: "Đồ thị đang dùng cho Chat. Chọn đồ thị trống khác để dựng.",
     LOCK: "Đồ thị đang dựng hoặc có thao tác khác. Dừng dựng trước rồi tải lại.",
     UNCERTAIN_WRITE:
-      "Lần dựng trước bị gián đoạn, chưa xác định đã ghi xong. Nhờ quản trị kiểm tra trước khi tiếp tục.",
+      "Lần ghi trước bị gián đoạn. Phần mềm cần đọc lại đợt ghi dở trước khi tiếp tục.",
+    TRANSPORT: "Mất kết nối đến đồ thị. Kiểm tra kết nối rồi bấm Tiếp tục.",
     LOCK_MOUNT: "Dịch vụ dựng chưa được cài đặt đầy đủ. Nhờ quản trị kiểm tra rồi thử lại.",
     INTEGRITY:
       "Dữ liệu nguồn hoặc điểm lưu đã thay đổi. Kiểm tra đúng phiên bản dữ liệu rồi tải lại.",

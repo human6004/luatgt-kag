@@ -230,13 +230,9 @@ class FreshExecutionTests(unittest.TestCase):
         with patch.object(RunState,'confirm_batch',crash):
             self.assertEqual(api.run(self.config,**options),1)
         self.assertEqual(len(writes),1)
-        retained=locks[0].path.read_bytes()
-        self.assertEqual(api.run(self.config,resume=True,**options),2)
-        self.assertEqual(locks[0].path.read_bytes(),retained)
-        self.assertEqual(len(writes),1)
-        # Only this finished transport fixture is recovered; production never clears stale locks.
-        locks[0].release()
+        self.assertEqual(json.loads(locks[0].path.read_bytes())['retained'],'UNCERTAIN_WRITE')
         self.assertEqual(api.run(self.config,resume=True,**options),0)
+        self.assertEqual(locks[0].path.read_bytes(),b'')
         self.assertEqual(len(writes),3)
         release=self.record(run_id='fresh-flow')['stages']['release']
         self.assertEqual((release['kind'],release['embedding_calls']),('FRESH_SAMPLE/WRITE',0))

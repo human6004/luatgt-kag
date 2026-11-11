@@ -636,7 +636,13 @@ public class KagClient {
             !fields(actions).equals(extended?Set.of("build","stop","resume","delete","abandon"):Set.of("build","stop","resume","delete"))||
             !body.path("delete_reason").isNull()&&!body.path("delete_reason").asText().matches("[A-Z_]{1,64}")||!Set.of("BLOCKED","CONFIGURED").contains(body.path("production_write").asText()))throw new IOException();
         for(String name:fields(actions)) {
-            boolean allowed=switch(name){case "build"->Set.of("IDLE","COMPLETE","ABANDONED","CLEARED").contains(state);case "stop"->state.equals("RUNNING");case "resume","abandon"->state.equals("STOPPED");default->false;};
+            boolean allowed=switch(name){
+                case "build"->Set.of("IDLE","COMPLETE","ABANDONED","CLEARED").contains(state);
+                case "stop"->state.equals("RUNNING");
+                case "resume"->state.equals("STOPPED")||extended&&state.equals("BLOCKED")&&body.path("error_code").asText().equals("UNCERTAIN_WRITE");
+                case "abandon"->state.equals("STOPPED");
+                default->false;
+            };
             if(!actions.path(name).isBoolean()||(detail&&Set.of("build","resume").contains(name)?actions.path(name).asBoolean()&&!allowed:actions.path(name).asBoolean()!=allowed))throw new IOException();
         }
         var runId=body.path("run_id");

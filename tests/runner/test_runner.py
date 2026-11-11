@@ -541,13 +541,9 @@ class RunnerExecutionTests(unittest.TestCase):
         self.assertEqual(len(writes), 1)
         lock = writers[0].config.graph_lock
         self.addCleanup(lambda: lock.release() if lock.acquired else None)
-        retained = lock.path.read_bytes()
-        self.assertEqual(api.run(self.config, resume=True, **options), 2)
-        self.assertEqual(lock.path.read_bytes(), retained)
-        self.assertEqual(len(writes), 1)
-        # Fixture-only recovery: the mocked writer has ended; never clear a live stale lock.
-        lock.release()
+        self.assertEqual(json.loads(lock.path.read_bytes())['retained'], 'UNCERTAIN_WRITE')
         self.assertEqual(api.run(self.config, resume=True, **options), 0)
+        self.assertEqual(lock.path.read_bytes(), b'')
         self.assertEqual(len(writes), 3)  # uncertain first node batch read back, remaining node and edge sent once
         self.assertEqual(self.record(run_id='production-fixture')['stages']['release']['graph_writes'], len(writes))
         self.assertTrue(writes[-1]['resultEdges'])
@@ -576,13 +572,9 @@ class RunnerExecutionTests(unittest.TestCase):
         options = dict(run_id='ack-fixture', reader=self.reader, project_client=self.projects, writer_factory=factory)
         with patch.object(RunState, 'confirm_batch', crash): self.assertEqual(api.run(self.config, **options), 1)
         self.assertEqual(len(writes), 1)
-        retained = locks[0].path.read_bytes()
-        self.assertEqual(api.run(self.config, resume=True, **options), 2)
-        self.assertEqual(locks[0].path.read_bytes(), retained)
-        self.assertEqual(len(writes), 1)
-        # Recovery is explicit and confined to the finished in-memory writer fixture.
-        locks[0].release()
+        self.assertEqual(json.loads(locks[0].path.read_bytes())['retained'], 'UNCERTAIN_WRITE')
         self.assertEqual(api.run(self.config, resume=True, **options), 0)
+        self.assertEqual(locks[0].path.read_bytes(), b'')
         self.assertEqual(len(writes), 3)
         self.assertEqual(self.record(run_id='ack-fixture')['stages']['release']['graph_writes'], len(writes))
 
