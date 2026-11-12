@@ -753,13 +753,17 @@ async def run_query(runtime: RequestRuntime, question: str, as_of):
     runtime.budget.remaining()
     if runtime.closed or question != runtime.question or as_of != runtime.as_of:
         raise ApiFailure('NOT_READY')
-    from kag.legal_solver import aanswer
+    from kag.legal_solver import _abstain, aanswer
     from kag.legal_prompts import _LEGAL_TRACE, legal_trace
+    from kag.solver.pipeline.kag_iterative_pipeline import MaxIterationsReachedError
     selected = os.environ.get('KAG_CHAT_TRACE_QUESTION', '')
     token = None if _LEGAL_TRACE.get() is not None else _LEGAL_TRACE.set(
         _diagnostic_sink(runtime) if selected and selected in (question, '*timings*') else None)
     try:
-        result = await aanswer(question,pipeline=runtime.pipeline,as_of=as_of)
+        try:
+            result = await aanswer(question,pipeline=runtime.pipeline,as_of=as_of)
+        except MaxIterationsReachedError:
+            result = _abstain('Không tìm được căn cứ trong giới hạn số bước.')
         legal_trace('generator.result', **result.to_dict(), reason=result.reason)
     except Exception as exc:
         import json

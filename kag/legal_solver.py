@@ -295,16 +295,25 @@ class LegalDeduceExecutor(KagDeduceExecutor):
             raise ValueError('request as_of must be a date')
         evidence = context.kwargs.get('legal_evidence')
         payload = evidence.payload() if isinstance(evidence, LegalEvidenceResponse) else None
-        if not payload or not payload['items'] or payload['budget_exceeded']:
-            legal_trace('deduce.skipped', reason='missing evidence or evidence budget exceeded')
-            value = {'abstained': True, 'applicability': 'insufficient', 'effectivity': 'uncertain',
-                     'conflict': 'none', 'selections': [], 'support_selections': []}
-        else:
+        prompt_evidence = payload
+        if payload and payload['items'] and not payload['budget_exceeded']:
             if payload['original_question'] != query:
                 raise ValueError('request evidence belongs to another question')
             prompt_evidence = dict(payload, subquery=subquery,
                 authority_scope='DOCUMENT_TITLE' if document_title_question(query) else
                                 'DOCUMENT_CONTENT' if document_content_question(query) else 'CURRENT_LAW')
+            if prompt_evidence['authority_scope'] == 'CURRENT_LAW':
+                documents = payload['documents']
+                removed = {doc_id for doc_id, props in documents.items() if _outside_period(props, as_of)}
+                prompt_evidence['items'] = [item for item in payload['items'] if item['doc_id'] not in removed]
+                retained = {item['doc_id'] for item in prompt_evidence['items']}
+                prompt_evidence['documents'] = {doc_id: props for doc_id, props in documents.items() if doc_id in retained}
+                legal_trace('deduce.period_filter', removed=sorted(removed), as_of=as_of.isoformat())
+        if not prompt_evidence or not prompt_evidence['items'] or prompt_evidence['budget_exceeded']:
+            legal_trace('deduce.skipped', reason='missing evidence or evidence budget exceeded')
+            value = {'abstained': True, 'applicability': 'insufficient', 'effectivity': 'uncertain',
+                     'conflict': 'none', 'selections': [], 'support_selections': []}
+        else:
             try:
                 with legal_timing('deduce.total'):
                     value = self.llm_module.invoke({'question': query, 'evidence': prompt_evidence, 'as_of': as_of.isoformat()},
@@ -360,10 +369,38 @@ def _iso_date(value):
         raise CandidateError('invalid effectivity date') from exc
 
 
-def _partial_period(props):
+def _partial_period(props, as_of):
+    consolidation = props.get('consolidation_as_of')
+    if consolidation is not None:
+        if props.get('scope') == 'consolidated_historical':
+            return True
+        try:
+            if _iso_date(consolidation) > as_of:
+                return True
+        except CandidateError:
+            return True
+    dates = props.get('ngay_hieu_luc_bo_phan')
+    if dates is not None and not isinstance(dates, (list, tuple)):
+        return True
+    if dates:
+        # ponytail: NĐ 168 Điều 53 khoản 2 also has an undated exception for Điều 32.
+        # Document metadata cannot identify exceptions until dates are tracked by unit.
+        try:
+            return any(_iso_date(value) > as_of for value in dates)
+        except CandidateError:
+            return True
     notes = ' '.join(str(props.get(k) or '') for k in ('hieu_luc_note', 'het_hieu_luc_note')).casefold()
-    return (props.get('ngay_hieu_luc_bo_phan') or props.get('consolidation_as_of')
-            or any(phrase in notes for phrase in ('một phần', 'riêng', 'từng phần', 'trừ ')))
+    return any(phrase in notes for phrase in ('một phần', 'riêng', 'từng phần', 'trừ '))
+
+
+def _outside_period(props, as_of):
+    # ponytail: Document effective_to omits NĐ 100's still-effective railway rules; use LegalUnit dates when Builder emits them.
+    try:
+        outside = (_iso_date(props.get('effective_from') or props.get('consolidation_as_of')) > as_of
+                   or props.get('effective_to') and _iso_date(props['effective_to']) < as_of)
+    except CandidateError:
+        return False
+    return bool(outside and not _partial_period(props, as_of))
 
 
 def _current(item, documents, as_of):
@@ -371,7 +408,7 @@ def _current(item, documents, as_of):
     # An amended original cannot establish each retained unit's current validity.
     if str(props.get('current_status') or '').strip().casefold() == 'amended':
         return False
-    if _partial_period(props):
+    if _partial_period(props, as_of):
         return False
     notes = ' '.join(str(props.get(k) or '') for k in ('hieu_luc_note', 'het_hieu_luc_note')).casefold()
     status = ' '.join(str(props.get(k) or '') for k in ('current_status', 'status_hint')).casefold()
@@ -380,7 +417,8 @@ def _current(item, documents, as_of):
     if inactive and not props.get('effective_to'):
         return False  # An undated inactive snapshot cannot establish a historical interval.
     try:
-        if _iso_date(props.get('effective_from')) >= as_of:
+        effective_from = props.get('effective_from')
+        if (effective_from is not None or not props.get('consolidation_as_of')) and _iso_date(effective_from) >= as_of:
             return False
         if props.get('effective_to') and _iso_date(props['effective_to']) <= as_of:
             return False
@@ -447,9 +485,21 @@ def _applicable(query, item, support, payload):
             sign_context = 'nhóm biển'
         if item['metadata'].get('description_scope') in ('family_shared', 'contextual'):
             sign_context += ' quy định chung ý nghĩa chung nội dung chung mô tả chung'
+    # ponytail: Khoản 9 Điều 2 Luật 36/2024/QH15 gọi người điều khiển xe cơ giới là người lái xe.
+    if 'người điều khiển' in own_scope:
+        own_scope.add('người lái xe')
+    if 'người lái xe' in requested['scope']:
+        # The actor and vehicle can share the word "xe" in the question.
+        vehicle_query = re.sub(r'\bngười lái (?=xe\b)', '', query, flags=re.I)
+        for scope in material_constraints(vehicle_query)['scope'] - requested['scope']:
+            if scope.startswith('xe ') and scope.removeprefix('xe ') not in requested['scope']:
+                requested['scope'].add(scope)
     if not requested['scope'] <= own_scope:
         return False
     exclusive_person = {'tổ chức', 'doanh nghiệp', 'cá nhân', 'trẻ em', 'người chưa thành niên', 'người thành niên'}
+    general_person = {'tổ chức', 'cá nhân'}
+    if general_person <= own_scope:
+        exclusive_person -= general_person
     if own_scope & exclusive_person - requested['scope']:
         return False
     vehicle_scopes = {s for s in own_scope if s.startswith('xe ') or s == 'ô tô'}
@@ -479,9 +529,11 @@ def _applicable(query, item, support, payload):
             return False
     # Numbered source paragraphs need their verified typed coordinates, as in planner grounding.
     authority = text+'\n'+authority_metadata+'\n'+document_number+'\n'+context_text+'\n'+coordinates+'\n'+sign_context
-    if not query_content_terms(query) <= {word.casefold() for word in re.findall(r'[^\W\d_]+', authority)}:
-        return False
     provided = material_constraints(authority)
+    # ponytail: word-order patch for one phrase ("chạy không đúng tuyến"); compare negation by meaning, not order, when more cases appear.
+    if 'không đúng' in requested['negation'] and re.search(r'\bkhông\s+chạy\s+đúng\s+tuyến\b', text+'\n'+context_text, re.I):
+        route_query = re.sub(r'\bchạy\s+không\s+đúng\s+tuyến\b', 'không chạy đúng tuyến', query, flags=re.I)
+        requested['negation'] = material_constraints(route_query)['negation']
     for kind in ('documents', 'references', 'negation'):
         required={v.casefold() for v in requested[kind]} if kind in ('references', 'documents') else requested[kind]
         available={v.casefold() for v in provided[kind]} if kind in ('references', 'documents') else provided[kind]
@@ -549,17 +601,15 @@ def _conflict_resolved(query, value, facts, support, payload, as_of):
         field = 'text' if item['entity_type'].endswith('.LegalUnit') else 'moTa' if item['sign_id'] else None
         if not field or (item['doc_id'], item['unit_id']) in linked_parents:
             continue
+        # ponytail: With the whole parent cited, Deduce alone assesses aggravating clauses in that article.
+        parent_id = item['metadata'].get('parent_id')
+        if parent_id and (item['doc_id'], parent_id) in linked_parents:
+            continue
         if not any(_applicable(part, item, support, payload) for part in _question_parts(query)):
             continue
-        if not _current(item, payload['documents'], as_of):
-            props = payload['documents'].get(item['doc_id'], {})
-            try:
-                outside = (_iso_date(props.get('effective_from')) > as_of
-                           or props.get('effective_to') and _iso_date(props['effective_to']) < as_of)
-            except CandidateError:
-                outside = False
-            if outside and not _partial_period(props):
-                continue
+        if (not _current(item, payload['documents'], as_of)
+                and _outside_period(payload['documents'].get(item['doc_id'], {}), as_of)):
+            continue
         # ponytail: distinct relevant whole fields mean uncertainty, not semantic
         # contradiction proved. Passage-level scope mapping is a later phase.
         if item['source_texts'].get(field) != baseline:

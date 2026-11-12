@@ -526,7 +526,8 @@ class SafetyTests(unittest.TestCase):
             module.LegalRetrieverExecutor(retriever).invoke(question, task, ctx)
             ctx.append_task(task)
             result, _, _ = self.render(module, ctx, question, candidate([self.selected(ctx)]))
-            with self.subTest(props=props): self.assertTrue(result.abstained)
+            with self.subTest(props=props):
+                self.assertEqual(result.abstained, 'consolidationAsOf' not in props)
         module, _, _, ctx, question = self.prepare()
         for flags in ({'conflict': 'unresolved'}, {'conflict': 'resolved'}, {'effectivity': 'uncertain'}):
             result, _, _ = self.render(module, ctx, question, candidate([self.selected(ctx)], **flags))
