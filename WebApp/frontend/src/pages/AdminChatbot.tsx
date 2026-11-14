@@ -7,7 +7,6 @@ import { GraphLibrary, useInspection } from "./shared/KagManagement";
 import {
   changeChatRetrieval,
   changeLLMModel,
-  loadBuilderConfiguration,
   loadBuilderInputs,
   loadChatRetrieval,
   loadKagConfiguration,
@@ -46,10 +45,9 @@ export default function AdminChatbot() {
   const config = useInspection(loadKagConfiguration);
   const schema = useData<SchemaResponse>("/admin/kag/schema");
   const builderInputs = useInspection(loadBuilderInputs);
-  const builderConfig = useInspection(loadBuilderConfiguration);
   const retrieval = useInspection(loadChatRetrieval);
   const models = useInspection(loadLLMCredentials);
-  const serving = useInspection(loadServing);
+  const serving = useInspection(loadServing, (value) => value.busy);
   const activeRun = serving.value?.runs.find(
     (run) =>
       run.project_id === serving.value?.active?.project_id &&
@@ -101,7 +99,7 @@ export default function AdminChatbot() {
     !!draft && Number.isInteger(draft.top_k) && draft.top_k >= 1 && draft.top_k <= 10;
 
   function reloadAll() {
-    if (unsaved || serving.loading) return;
+    if (unsaved) return;
     setCopied(false);
     setCopyError("");
     setChangeError("");
@@ -113,7 +111,6 @@ export default function AdminChatbot() {
     config.reload();
     schema.reload();
     builderInputs.reload();
-    builderConfig.reload();
     retrieval.reload();
     models.reload();
     serving.reload();
@@ -508,7 +505,7 @@ export default function AdminChatbot() {
         </Card>
       </div>
       <GraphLibrary
-        onServingChange={serving.setValue}
+        serving={serving}
         searchOptions={
           <Card title="Tùy chọn tìm kiếm khi trả lời Chat">
             <div className="px-5 pb-5 text-sm space-y-3">

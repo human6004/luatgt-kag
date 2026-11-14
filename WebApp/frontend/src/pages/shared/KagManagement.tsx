@@ -17,7 +17,6 @@ import {
   previewBuilderSelection,
   loadBuilderPackages,
   packageReason,
-  loadServing,
   changeServing,
   loadBuilderPackageExport,
   exportBuilderPackage,
@@ -30,22 +29,22 @@ import {
   loadGraphSources,
 } from "./kag-inspection";
 import type {
-  BuilderStatus,
   BuilderConfiguration,
   BuilderSelection,
   SelectionRequest,
-  BuilderProjects,
   BuilderPackages,
-  BuilderPackageExport,
   ServingCatalog,
   ServingPreview,
   GraphRetrieval,
-  BuilderClear,
   GraphProject,
 } from "./kag-inspection";
 import { servingReasons } from "./kag-inspection";
 
-export function useInspection<T>(load: (signal?: AbortSignal) => Promise<T>) {
+export function useInspection<T>(
+  load: (signal?: AbortSignal) => Promise<T>,
+  active?: (value: T) => boolean,
+  onSettled?: () => void,
+) {
   const [value, setValue] = useState<T>(),
     [error, setError] = useState(""),
     [loading, setLoading] = useState(true),
@@ -54,59 +53,79 @@ export function useInspection<T>(load: (signal?: AbortSignal) => Promise<T>) {
     const controller = new AbortController();
     setLoading(true);
     setError("");
-    setValue(undefined);
+    if (!active) setValue(undefined);
     load(controller.signal)
       .then((result) => {
-        if (!controller.signal.aborted) setValue(result);
+        if (controller.signal.aborted) return;
+        setValue(result);
+        if (value !== undefined && active?.(value) && !active(result)) onSettled?.();
       })
       .catch((failure) => {
-        if (!controller.signal.aborted) setError(inspectionError(failure));
+        if (!controller.signal.aborted) {
+          setError(inspectionError(failure));
+          if (failure instanceof ApiError && [401, 403, 409].includes(failure.status))
+            setValue(undefined);
+          else setValue((previous) => (previous && active?.(previous) ? previous : undefined));
+        }
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
   }, [load, version]);
+  const polling = value !== undefined && active?.(value);
+  useEffect(() => {
+    if (!polling || loading) return;
+    const timer = setTimeout(() => setVersion((v) => v + 1), 3000);
+    return () => clearTimeout(timer);
+  }, [polling, loading, version]);
   return { value, setValue, error, loading, reload: () => setVersion((v) => v + 1) };
 }
 
 type LibraryRun = ServingCatalog["runs"][number];
-type LibraryRead = "projects" | "serving" | "configuration" | "status" | "export" | "clear";
-const libraryReadLabels: Record<LibraryRead, string> = {
-  projects: "Danh sách project",
-  serving: "Thư viện đồ thị",
-  configuration: "Cấu hình dựng",
-  status: "Trạng thái dựng",
-  export: "Trạng thái xuất gói",
-  clear: "Trạng thái xóa",
-};
 export function GraphLibrary({
   searchOptions,
-  onServingChange,
+  serving: library,
 }: {
   searchOptions: ReactNode;
-  onServingChange?: (value: ServingCatalog | undefined) => void;
+  serving: ReturnType<typeof useInspection<ServingCatalog>>;
 }) {
   const [parameters, setParameters] = useSearchParams();
-  const [catalog, setCatalog] = useState<BuilderProjects>();
+  const projects = useInspection(loadBuilderProjects);
+  const configuration = useInspection(loadBuilderConfiguration);
+  const build = useInspection(
+    loadBuilderStatus,
+    (value) => ["RUNNING", "STOPPING"].includes(value.state),
+    library.reload,
+  );
+  const exporting = useInspection(loadBuilderPackageExport, (value) => value.state === "RUNNING");
+  const clearingData = useInspection(
+    loadBuilderClear,
+    (value) => value.state === "APPLYING",
+    () => {
+      library.reload();
+      projects.reload();
+      build.reload();
+      configuration.reload();
+    },
+  );
+  const { value: serving, error: libraryError, loading: libraryLoading } = library;
+  const { value: config } = configuration;
+  const { value: status, setValue: setStatus } = build;
+  const { value: exportState, setValue: setExportState } = exporting;
+  const { value: clearState, setValue: setClearState } = clearingData;
+  const projectState = projects.value?.state;
+  const catalog =
+    projectState === "AVAILABLE" || projectState === "EMPTY" ? projects.value : undefined;
+  const projectError =
+    projects.error || (projectState && !catalog ? builderIssue(projectState) : "");
   const [projectData, setProjectData] = useState<
     Record<number, "EMPTY" | "OCCUPIED" | "UNAVAILABLE">
   >({});
-  const [serving, setServing] = useState<ServingCatalog>();
-  useEffect(() => {
-    onServingChange?.(serving);
-  }, [serving, onServingChange]);
-  const [config, setConfig] = useState<BuilderConfiguration>();
-  const [status, setStatus] = useState<BuilderStatus>();
   const [packages, setPackages] = useState<BuilderPackages>();
-  const [exportState, setExportState] = useState<BuilderPackageExport>();
-  const [clearState, setClearState] = useState<BuilderClear>(),
-    [clearConfirmation, setClearConfirmation] = useState<GraphProject>();
+  const [clearConfirmation, setClearConfirmation] = useState<GraphProject>();
   const [error, setError] = useState(""),
     [detailError, setDetailError] = useState("");
-  const [readErrors, setReadErrors] = useState<Partial<Record<LibraryRead, string>>>({});
-  const [libraryLoading, setLibraryLoading] = useState(true);
-  const libraryError = readErrors.serving;
   const [busy, setBusy] = useState(false),
     [version, setVersion] = useState(0);
   const [mode, setMode] = useState<"build" | "import" | null>(null);
@@ -145,14 +164,6 @@ export function GraphLibrary({
     status && (["RUNNING", "STOPPING", "STOPPED"].includes(status.state) || recoveringWrite);
   const running = status && ["RUNNING", "STOPPING"].includes(status.state);
   const clearing = clearState && ["APPLYING", "PARTIAL", "INTERRUPTED"].includes(clearState.state);
-  function acceptProjects(projects: BuilderProjects) {
-    if (!["AVAILABLE", "EMPTY"].includes(projects.state))
-      throw new ApiError(
-        builderIssue(projects.state),
-        projects.state === "FORBIDDEN" ? 403 : 503,
-      );
-    setCatalog(projects);
-  }
   useEffect(() => {
     setWaitSeconds(0);
     if (!mode || (!sourcePreparing && !sourceLoading)) return;
@@ -161,72 +172,26 @@ export function GraphLibrary({
     return () => clearInterval(timer);
   }, [mode, sourcePreparing, sourceLoading]);
   useEffect(() => {
-    if (busy) return;
-    const controller = new AbortController();
-    const timers: Partial<Record<LibraryRead, ReturnType<typeof setTimeout>>> = {};
-    async function read<T>(part: LibraryRead, load: () => Promise<T>, save: (value: T) => void) {
-      if (part === "serving") setLibraryLoading(true);
-      try {
-        const value = await load();
-        if (controller.signal.aborted) return;
-        save(value);
-        setReadErrors((current) => ({ ...current, [part]: "" }));
-      } catch (failure) {
-        if (controller.signal.aborted) return;
-        if (part === "projects") setCatalog(undefined);
-        if (part === "serving") setServing(undefined);
-        setReadErrors((current) => ({ ...current, [part]: inspectionError(failure) }));
-      } finally {
-        if (!controller.signal.aborted) {
-          if (part === "serving") setLibraryLoading(false);
-          timers[part] = setTimeout(() => void read(part, load, save), 3000);
-        }
-      }
-    }
-    if (!mode) void read("projects", () => loadBuilderProjects(controller.signal), acceptProjects);
-    void read("serving", () => loadServing(controller.signal), setServing);
-    void read("configuration", () => loadBuilderConfiguration(controller.signal), setConfig);
-    void read("status", () => loadBuilderStatus(controller.signal), setStatus);
-    void read("export", () => loadBuilderPackageExport(controller.signal), setExportState);
-    void read("clear", () => loadBuilderClear(controller.signal), setClearState);
-    return () => {
-      controller.abort();
-      Object.values(timers).forEach(clearTimeout);
-    };
-  }, [busy, version, mode]);
-  useEffect(() => {
     if (!mode) return;
     const controller = new AbortController();
     setProjectData({});
-    // Refresh counts only on open or explicit reload, after reading the latest catalog.
-    loadBuilderProjects(controller.signal)
-      .then((projects) => {
-        if (controller.signal.aborted) return;
-        acceptProjects(projects);
-        setReadErrors((current) => ({ ...current, projects: "" }));
-        for (const row of projects.projects.filter((row) => row.state === "AVAILABLE")) {
-          loadGraphProject(row.project_id, controller.signal)
-            .then((graph) => {
-              if (!controller.signal.aborted)
-                setProjectData((current) => ({
-                  ...current,
-                  [row.project_id]: graph.counts.nodes || graph.counts.edges ? "OCCUPIED" : "EMPTY",
-                }));
-            })
-            .catch(() => {
-              if (!controller.signal.aborted)
-                setProjectData((current) => ({ ...current, [row.project_id]: "UNAVAILABLE" }));
-            });
-        }
-      })
-      .catch((failure) => {
-        if (!controller.signal.aborted) {
-          setCatalog(undefined);
-          setError(inspectionError(failure));
-        }
-      });
+    for (const row of catalog?.projects ?? []) {
+      if (row.state !== "AVAILABLE") continue;
+      loadGraphProject(row.project_id, controller.signal)
+        .then((graph) => {
+          if (!controller.signal.aborted)
+            setProjectData((current) => ({
+              ...current,
+              [row.project_id]: graph.counts.nodes || graph.counts.edges ? "OCCUPIED" : "EMPTY",
+            }));
+        })
+        .catch(() => {
+          if (!controller.signal.aborted)
+            setProjectData((current) => ({ ...current, [row.project_id]: "UNAVAILABLE" }));
+        });
+    }
     return () => controller.abort();
-  }, [mode, version]);
+  }, [mode, catalog]);
   useEffect(() => {
     if (!mode) return;
     const controller = new AbortController();
@@ -263,7 +228,8 @@ export function GraphLibrary({
     return () => controller.abort();
   }, [mode, version]);
   useEffect(() => {
-    if (!mode || !planSha256) return;
+    if (mode !== "import" || !planSha256) return;
+    setPackages(undefined);
     const controller = new AbortController();
     loadBuilderPackages(controller.signal)
       .then((value) => {
@@ -321,7 +287,15 @@ export function GraphLibrary({
       clearTimeout(delay);
     };
   }, [mode, config?.revision, planSha256, requestKey, selectedPackage?.sha256, version]);
-  const refresh = () => setVersion((value) => value + 1);
+  function refresh() {
+    projects.reload();
+    configuration.reload();
+    build.reload();
+    exporting.reload();
+    clearingData.reload();
+    library.reload();
+    setVersion((value) => value + 1);
+  }
   async function act(operation: () => Promise<unknown>) {
     if (acting.current) return;
     acting.current = true;
@@ -340,7 +314,6 @@ export function GraphLibrary({
     } finally {
       acting.current = false;
       setBusy(false);
-      refresh();
     }
   }
   function openFlow(next: "build" | "import") {
@@ -377,6 +350,7 @@ export function GraphLibrary({
       );
       setMode(null);
       setProgress("");
+      configuration.reload();
     });
   }
   async function resume() {
@@ -458,8 +432,6 @@ export function GraphLibrary({
               !!running ||
               !!clearing ||
               !status ||
-              !!readErrors.status ||
-              !!readErrors.configuration ||
               !config ||
               recoveringWrite
             }
@@ -469,12 +441,7 @@ export function GraphLibrary({
           </Button>
           <Button
             disabled={
-              busy ||
-              serving?.busy ||
-              !!running ||
-              !!clearing ||
-              !catalog ||
-              recoveringWrite
+              busy || serving?.busy || !!running || !!clearing || !catalog || recoveringWrite
             }
             onClick={() => openFlow("import")}
           >
@@ -520,17 +487,22 @@ export function GraphLibrary({
           </details>
         </div>
       </Card>
-      {(error || Object.values(readErrors).some(Boolean)) && (
+      {(error ||
+        libraryError ||
+        projectError ||
+        configuration.error ||
+        build.error ||
+        exporting.error ||
+        clearingData.error) && (
         <div role="alert" className="text-sm space-y-2">
           {error && <p>{error}</p>}
-          {Object.entries(readErrors)
-            .filter(([, message]) => message)
-            .map(([part, message]) => (
-              <p key={part}>
-                {libraryReadLabels[part as LibraryRead]}: {message}
-              </p>
-            ))}
-          {(libraryError || readErrors.projects) && config?.links?.openspg && (
+          {libraryError && <p>Thư viện đồ thị: {libraryError}</p>}
+          {projectError && <p>Danh sách project: {projectError}</p>}
+          {configuration.error && <p>Cấu hình dựng: {configuration.error}</p>}
+          {build.error && <p>Trạng thái dựng: {build.error}</p>}
+          {exporting.error && <p>Trạng thái xuất gói: {exporting.error}</p>}
+          {clearingData.error && <p>Trạng thái xóa: {clearingData.error}</p>}
+          {(libraryError || projectError) && config?.links?.openspg && (
             <a className="underline" target="_blank" rel="noreferrer" href={config.links.openspg}>
               Mở OpenSPG
             </a>
@@ -607,7 +579,7 @@ export function GraphLibrary({
                       Dừng
                     </Button>
                     <Button
-                      disabled={busy || !config || !!readErrors.configuration || !status.actions.resume}
+                      disabled={busy || !config || !status.actions.resume}
                       onClick={() => void resume()}
                     >
                       Tiếp tục
@@ -655,7 +627,7 @@ export function GraphLibrary({
                     </Button>
                     <Button
                       disabled={
-                        busy || !exportState || !!readErrors.export || exportState.state === "RUNNING"
+                        busy || !exportState || !!exporting.error || exportState.state === "RUNNING"
                       }
                       onClick={() =>
                         void act(async () =>
@@ -672,7 +644,7 @@ export function GraphLibrary({
                       disabled={
                         busy ||
                         !clearState ||
-                        !!readErrors.clear ||
+                        !!clearingData.error ||
                         serving?.busy ||
                         (!!clearing && clearReport?.target.database !== row.database) ||
                         clearState?.state === "APPLYING"
@@ -702,7 +674,7 @@ export function GraphLibrary({
                   <Td>{clearState?.state === "APPLYING" ? "Đang xóa" : "Chưa xóa xong"}</Td>
                   <Td>
                     <Button
-                      disabled={busy || !!readErrors.clear || clearState?.state === "APPLYING"}
+                      disabled={busy || !!clearingData.error || clearState?.state === "APPLYING"}
                       onClick={() => void showClear(clearReport.target.project_id)}
                     >
                       Xóa tiếp
@@ -819,8 +791,6 @@ export function GraphLibrary({
                 !selection ||
                 !config ||
                 !status ||
-                !!readErrors.configuration ||
-                !!readErrors.status ||
                 sourceLoading ||
                 sourcePreparing ||
                 !!building ||
@@ -974,6 +944,7 @@ export function GraphLibrary({
                   }
                   if (value.source_validation.state !== "VALID")
                     throw new Error("Nguồn chưa sẵn sàng");
+                  setVersion((v) => v + 1);
                 })
               }
             >
@@ -1008,19 +979,23 @@ export function GraphLibrary({
               </Button>
               <Button
                 variant="primary"
-                disabled={busy || !!libraryError || serving?.busy || !preview.chat_ready}
+                disabled={
+                  busy ||
+                  libraryLoading ||
+                  !serving ||
+                  !!libraryError ||
+                  serving.busy ||
+                  !preview.chat_ready
+                }
                 onClick={() =>
                   void act(async () => {
-                    const result = await changeServing(
+                    await changeServing(
                       "activate",
                       preview.project_id,
                       preview.run_id,
                       preview.preview_id,
                     );
-                    if ("contract_version" in result)
-                      setServing((value) =>
-                        value ? { ...value, busy: true, operation: result } : value,
-                      );
+                    library.reload();
                     setPreview(undefined);
                   })
                 }
@@ -1103,7 +1078,7 @@ export function GraphLibrary({
               </Button>
               <Button
                 variant="primary"
-                disabled={busy || !!readErrors.clear}
+                disabled={busy || !!clearingData.error}
                 onClick={() => void confirmClear()}
               >
                 Xác nhận xóa
@@ -1121,7 +1096,7 @@ export function GraphLibrary({
                 serving.active.database === clearConfirmation.target.database) && (
                 <p>Chat tạm ngưng trả lời cho tới khi chọn đồ thị khác</p>
               )}
-            {(error || readErrors.clear) && <p role="alert">{error || readErrors.clear}</p>}
+            {(error || clearingData.error) && <p role="alert">{error || clearingData.error}</p>}
           </div>
         </Modal>
       )}
