@@ -55,7 +55,6 @@ def validate_active_release(release):
             or selected['release_id']!=release.release_id or selected['database_id']!=release.descriptor['database_id']
             or selected['database']!=release.descriptor['database'] or selected['namespace']!=release.schema_contract.namespace
             or str(selected['project_id'])!=release.backend['project_id']): a._invalid()
-    a._unchanged(release)
     return selected
 
 
@@ -301,7 +300,7 @@ def fixed_read(change):
     release=_READ_RELEASE
     if release is None or (release.root,release.release_id)!=(root,selected['release_id']):
         release=a.load_release(root,selected['release_id'])
-    # Reuse parsing only; validation rereads every artifact byte before and after each read.
+    else:a._unchanged(release)
     validate_active_release(release)
     _READ_RELEASE=release
     descriptor=release.descriptor

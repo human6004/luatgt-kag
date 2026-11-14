@@ -179,6 +179,7 @@ class ServingRelease:
     contract_bytes: bytes
     backend: MappingProxyType
     publication: MappingProxyType | None
+    file_stats: MappingProxyType
 
 
 @dataclass(frozen=True)
@@ -506,7 +507,6 @@ def load_release(root: Path, expected_release_id: str) -> ServingRelease:
                 _identity(descriptor[field])
         if not re.fullmatch(r'[0-9a-f]{64}',descriptor['graph_fingerprint']):
             _invalid()
-        schema_root = Path(__file__).resolve().parents[1]/'schema'
         contract_bytes,identity=release_contract(descriptor['namespace'],production=production)
         contract = _json(contract_bytes)
         if (descriptor['schema_contract'] != identity.__dict__ or descriptor['namespace'] != identity.namespace
@@ -524,10 +524,12 @@ def load_release(root: Path, expected_release_id: str) -> ServingRelease:
         datetime.fromisoformat(descriptor['sealed_at'].replace('Z','+00:00'))
         if (descriptor['webapp_snapshot_id'] is None) != (descriptor['webapp_publication_sha256'] is None):
             _invalid()
-        loaded, artifacts = {}, [('release.json',raw)]
+        loaded, artifacts, file_stats = {}, [('release.json',raw)], {}
         if production:
             for key,filename in (('expected_graph_sha256','expected.sqlite3'),('provenance_sha256','provenance.jsonl')):
                 with _open(root,filename) as stream:
+                    info=os.fstat(stream.fileno())
+                    file_stats[filename]=(info.st_dev,info.st_ino,info.st_size,info.st_mtime_ns,info.st_ctime_ns)
                     if _sha(stream)!=descriptor[key]: _invalid()
         for field, filename in _FILES.items():
             expected = descriptor[field]
@@ -537,6 +539,8 @@ def load_release(root: Path, expected_release_id: str) -> ServingRelease:
                 _invalid()
             if filename == 'source-catalog.json':
                 with _open(root,filename) as stream:
+                    info=os.fstat(stream.fileno())
+                    file_stats[filename]=(info.st_dev,info.st_ino,info.st_size,info.st_mtime_ns,info.st_ctime_ns)
                     if _sha(stream) != expected:
                         _invalid()
                     stream.seek(0)
@@ -575,8 +579,10 @@ def load_release(root: Path, expected_release_id: str) -> ServingRelease:
                 or any(authority[k] is not (not production) for k in ('graph_frozen','schema_frozen','read_only'))):
             raise ArtifactFailure(VerificationState.UNVERIFIED)
         publication = _publication(loaded.get('webapp-publication.json'),descriptor,records)
-        return ServingRelease(root.absolute(),expected_release_id,descriptor['release_kind'],identity,
-            _sha(raw),_freeze(descriptor),records,tuple(artifacts),contract_bytes,_freeze(backend),publication)
+        release=ServingRelease(root.absolute(),expected_release_id,descriptor['release_kind'],identity,
+            _sha(raw),_freeze(descriptor),records,tuple(artifacts),contract_bytes,_freeze(backend),publication,_freeze(file_stats))
+        _unchanged(release)
+        return release
     except ArtifactFailure:
         raise
     except OSError:
@@ -750,18 +756,19 @@ publish_sample=publish_run
 
 
 def _unchanged(release):
-    if any(_read(release.root,name) != raw for name,raw in release.artifacts):
-        _invalid()
-    with _open(release.root,'source-catalog.json') as stream:
-        if _sha(stream) != release.descriptor['source_catalog_sha256']:
+    if type(release) is not ServingRelease: _invalid()
+    try:
+        if any(_read(release.root,name) != raw for name,raw in release.artifacts):
             _invalid()
-    if release.descriptor['release_kind'] == 'PRODUCTION':
-        for key,filename in (('expected_graph_sha256','expected.sqlite3'),('provenance_sha256','provenance.jsonl')):
+        for filename,expected in release.file_stats.items():
             with _open(release.root,filename) as stream:
-                if _sha(stream)!=release.descriptor[key]: _invalid()
-    raw,identity=release_contract(release.schema_contract.namespace,production=release.descriptor['release_kind']=='PRODUCTION')
-    if raw != release.contract_bytes or identity!=release.schema_contract:
-        _invalid()
+                info=os.fstat(stream.fileno())
+                if (info.st_dev,info.st_ino,info.st_size,info.st_mtime_ns,info.st_ctime_ns)!=expected: _invalid()
+        raw,identity=release_contract(release.schema_contract.namespace,production=release.descriptor['release_kind']=='PRODUCTION')
+        if raw != release.contract_bytes or identity!=release.schema_contract:
+            _invalid()
+    except OSError:
+        raise ArtifactFailure(VerificationState.UNAVAILABLE) from None
 
 
 def _backend(reader, release, *, include_access=False):
@@ -880,9 +887,10 @@ def verify_native_sources(result: AnswerResult, release: ServingRelease, reader,
         if release.release_kind!=release.descriptor['release_kind']:_invalid('SOURCE_VALIDATION_FAILED')
         if reader is None:
             raise ArtifactFailure(VerificationState.UNAVAILABLE)
-        _unchanged(release)
         publication = release.publication
         if publication is not None:
+            if _read(release.root,'webapp-publication.json')!=dict(release.artifacts)['webapp-publication.json']:
+                _invalid()
             if publication['snapshot_id'] != webapp_snapshot_id or not publication_covers(publication,as_of):
                 _invalid()
         elif webapp_snapshot_id is not None:
@@ -943,7 +951,6 @@ def verify_native_sources(result: AnswerResult, release: ServingRelease, reader,
                 record.metadata if dataset_sources(release) else None,
                 documents[record.doc_id].metadata if dataset_sources(release) else None))
         _backend(reader,release)
-        _unchanged(release)
         return VerifiedSources(tuple(verified),release.release_id,release.descriptor['source_snapshot_id'],
             release.schema_contract,release.descriptor_sha256,as_of,webapp_snapshot_id,
             VerificationState.VERIFIED if publication is not None or dataset_sources(release) else VerificationState.UNVERIFIED,
@@ -979,7 +986,6 @@ def load_sample_proof(release, expected_sha256, reader_username):
                 or release.descriptor['release_kind'] != 'SAMPLE'
                 or type(expected_sha256) is not str or not re.fullmatch('[0-9a-f]{64}',expected_sha256)):
             _invalid()
-        _unchanged(release)
         raw = _read(release.root,'sample-serving.json')
         if _sha(raw) != expected_sha256:
             _invalid()

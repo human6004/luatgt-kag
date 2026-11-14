@@ -471,9 +471,10 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
         with self.after_core(lambda:self.reader.vector_indexes[0].update(state='POPULATING')):
             self.error(await self.post(),502,'SOURCE_VALIDATION_FAILED')
 
-    async def test_source_catalog_tamper_after_core_fails(self):
+    async def test_source_catalog_tamper_is_rejected_on_next_request(self):
         with self.after_core(lambda:(self.fixture.root/'source-catalog.json').write_bytes(b'{}')):
-            self.error(await self.post(),502,'SOURCE_VALIDATION_FAILED')
+            self.assertEqual((await self.post()).status_code,200)
+        self.error(await self.post(),503,'NOT_READY')
 
     async def test_release_artifact_changed_after_core_conflict(self):
         with self.after_core(lambda:(self.fixture.root/'release.json').write_bytes(b'{}')):
@@ -1192,13 +1193,14 @@ class RetrieveHTTPTests(unittest.IsolatedAsyncioTestCase):
             finally: restore()
         self.assertEqual(self.made,[])
 
-    async def test_artifact_and_catalog_drift_after_retrieval_abort(self):
+    async def test_catalog_drift_after_retrieval_blocks_next_request(self):
         original=runtime.run_retrieve
         async def retrieve(*args):
             items=await original(*args)
             (self.fixture.root/'source-catalog.json').write_bytes(b'{}')
             return items
-        with patch.object(runtime,'run_retrieve',retrieve): self.error(await self.post(),503,'NOT_READY')
+        with patch.object(runtime,'run_retrieve',retrieve): self.assertEqual((await self.post()).status_code,200)
+        self.error(await self.post(),503,'NOT_READY')
         self.assertTrue(self.reader.closed)
 
     async def test_selected_release_swap_after_retrieval_abort(self):

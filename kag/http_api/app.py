@@ -1050,10 +1050,11 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                     identity()
                     try:
                         artifacts._backend(instance.reader,release)
-                        artifacts._readback(instance.reader,release.records,artifacts._json(release.contract_bytes))
                         _verify_retrieve_items(result,release,instance.reader)
+                        keys={(item['entity_type'],item['entity_id']) for item in result}
+                        records=[r for r in release.records if (r.entity_type,r.entity_id) in keys] if settings.production else release.records
+                        artifacts._readback(instance.reader,records,artifacts._json(release.contract_bytes))
                         artifacts._backend(instance.reader,release)
-                        artifacts._unchanged(release)
                     except artifacts.ArtifactFailure as exc:
                         raise ApiFailure('BACKEND_UNAVAILABLE' if exc.state is artifacts.VerificationState.UNAVAILABLE
                                          else 'SOURCE_VALIDATION_FAILED') from None

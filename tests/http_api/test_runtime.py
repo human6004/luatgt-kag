@@ -1166,8 +1166,17 @@ class RetrieveRuntimeTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(self.calls,[('embed',QUESTION)])
         self.assertTrue(self.reader.closed)
 
-    async def test_artifact_drift_after_work_rejects_output(self):
-        await self.post_drift(lambda:(self.root/'source-catalog.json').write_bytes(b'{}'),'NOT_READY')
+    async def test_artifact_drift_after_work_blocks_next_request(self):
+        original=self.reader.vector_search
+        def search(*args):
+            rows=original(*args)
+            (self.root/'source-catalog.json').write_bytes(b'{}')
+            return rows
+        with self.retrieve_synthetic(),patch.object(self.reader,'vector_search',search):
+            await self.retrieve()
+        self.calls.clear()
+        self.events.clear()
+        await self.reject('NOT_READY')
 
     async def test_backend_drift_after_work_rejects_output(self):
         await self.post_drift(lambda:self.reader.metadata.update(databaseID='foreign'),'SOURCE_VALIDATION_FAILED')

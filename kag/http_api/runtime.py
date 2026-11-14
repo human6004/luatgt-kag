@@ -29,7 +29,7 @@ import httpx
 
 from .app import ApiSettings
 from .artifacts import (ArtifactFailure, ServingRelease, VerificationState,
-                        _backend, _json, _readback, _unchanged, load_sample_proof,
+                        _backend, _json, _read, _readback, _unchanged, load_sample_proof,
                         verify_sample_backend, sample_source_vector)
 from .contract import ApiFailure, RetrieveRequest, SampleVectorRequest
 from .security import admit_request, authorize, request_principal
@@ -381,13 +381,11 @@ def _identity(request, settings, release, parsed, as_of=None, *, capability='que
         raise RuntimeFailure('RELEASE_MISMATCH')
     if release.descriptor['source_snapshot_id'] != settings.source_snapshot_id:
         raise RuntimeFailure('SOURCE_SNAPSHOT_MISMATCH')
+    if any(_read(release.root,name)!=raw for name,raw in release.artifacts):
+        raise ArtifactFailure(VerificationState.INVALID)
     if capability in ('retrieve','retrieve-vector'):
         if request.headers.getlist('x-kag-release-id') != [settings.release_id]:
             raise RuntimeFailure('RELEASE_MISMATCH')
-        try:
-            _unchanged(release)
-        except OSError:
-            raise ArtifactFailure(VerificationState.UNAVAILABLE) from None
         return None
     as_of = _today() if as_of is None else as_of
     from .artifacts import dataset_sources
@@ -405,10 +403,6 @@ def _identity(request, settings, release, parsed, as_of=None, *, capability='que
     if (not release.records or not dataset and (publication is None or publication['snapshot_id'] != settings.webapp_snapshot_id
             or not publication_covers(publication,as_of))):
         raise ApiFailure('NOT_READY')
-    try:
-        _unchanged(release)
-    except OSError:
-        raise ArtifactFailure(VerificationState.UNAVAILABLE) from None
     return as_of
 
 
@@ -643,7 +637,6 @@ def make_runtime(settings: ApiSettings, release: ServingRelease, deadline: float
     if runtime.capability not in ('query','retrieve'):
         raise ApiFailure('NOT_READY')
     runtime.budget.remaining()
-    _unchanged(release)
     from kag.retriever.retriever import Retriever
     if settings.query_proof_sha256:
         from .query_policy import load_proof,cached_vector
@@ -1318,6 +1311,7 @@ class RuntimeSupervisor:
                 os.environ.get('KAG_CHAT_TRACE_QUESTION') in (parsed.message, '*timings*') else None)
             try:
                 with legal_timing('request.identity'):
+                    await asyncio.to_thread(_unchanged,release)
                     as_of = await asyncio.to_thread(_identity,request,settings,release,parsed,received_date)
                 runtime.as_of = as_of
                 if settings.query_proof_sha256:runtime.budget.transport_seconds=60.0
@@ -1342,7 +1336,6 @@ class RuntimeSupervisor:
                     if not (settings.production and dataset_sources(release)):
                         _readback(runtime.reader,release.records,_json(release.contract_bytes))
                         _backend(runtime.reader,release)
-                    _unchanged(release)
                     runtime.budget.remaining()
                 with legal_timing('request.preflight'):
                     await asyncio.to_thread(preflight)
@@ -1415,6 +1408,7 @@ class RuntimeSupervisor:
             try:
                 if self._chat_error:
                     raise ApiFailure('NOT_READY')
+                await asyncio.to_thread(_unchanged,release)
                 as_of = await asyncio.to_thread(_identity,request,settings,release,parsed)
                 _require_operational_proof(settings,release)
                 initialize_runtime()
@@ -1498,6 +1492,7 @@ class RuntimeSupervisor:
             runtime.request_id=getattr(request.state,'request_id',None)
             token = None
             try:
+                await asyncio.to_thread(_unchanged,release)
                 await asyncio.to_thread(_identity,request,settings,release,parsed,capability='retrieve')
                 runtime.budget.remaining()
                 _require_operational_proof(settings,release,capability='retrieve')
@@ -1508,9 +1503,9 @@ class RuntimeSupervisor:
                     if settings.query_proof_sha256:
                         verify_sample_backend(release,settings.sample_proof_sha256,None,runtime.reader)
                     _backend(runtime.reader,release)
-                    _readback(runtime.reader,release.records,_json(release.contract_bytes))
+                    if not settings.production:
+                        _readback(runtime.reader,release.records,_json(release.contract_bytes))
                     _backend(runtime.reader,release)
-                    _unchanged(release)
                     runtime.budget.remaining()
                 await asyncio.to_thread(integrity)
                 token = _CURRENT.set((settings,release,runtime))
@@ -1551,6 +1546,7 @@ class RuntimeSupervisor:
                         raise ApiFailure('NOT_READY')
                 else:
                     _identity(request,settings,release,parsed,capability='retrieve-vector')
+                _unchanged(release)
                 _require_operational_proof(settings,release,capability='retrieve-vector')
                 initialize_runtime()
                 runtime.reader = await asyncio.to_thread(_new_reader,settings,release,runtime.budget)
