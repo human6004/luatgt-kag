@@ -5,15 +5,17 @@ Hashes establish integrity within that trust boundary, not independent live proo
 """
 from __future__ import annotations
 
-from contextlib import closing
+from contextlib import closing, contextmanager
 from dataclasses import dataclass
 from datetime import date, datetime, timezone
 from enum import Enum
 import hashlib
+import io
 import json
 import os
 from pathlib import Path
 import re
+import shutil
 import stat
 import sqlite3
 import tempfile
@@ -48,7 +50,12 @@ def _invalid(code='NOT_READY'):
 
 
 def _sha(raw):
-    return hashlib.sha256(raw).hexdigest()
+    if isinstance(raw, bytes):
+        return hashlib.sha256(raw).hexdigest()
+    digest = hashlib.sha256()
+    for chunk in iter(lambda: raw.read(1024*1024), b''):
+        digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _freeze(value):
@@ -94,7 +101,8 @@ def _json(raw):
     return value
 
 
-def _read(root, filename):
+@contextmanager
+def _open(root, filename):
     # Reject symlinks at every component, including the operator's root.
     root = root.absolute()
     path = root/filename
@@ -103,7 +111,14 @@ def _read(root, filename):
     flags = os.O_RDONLY | getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_NONBLOCK', 0)
     with os.fdopen(os.open(path, flags), 'rb') as stream:
         info = os.fstat(stream.fileno())
-        if not stat.S_ISREG(info.st_mode) or info.st_size > 64*1024*1024:
+        if not stat.S_ISREG(info.st_mode):
+            _invalid()
+        yield stream
+
+
+def _read(root, filename):
+    with _open(root, filename) as stream:
+        if os.fstat(stream.fileno()).st_size > 64*1024*1024:
             _invalid()
         raw = stream.read(64*1024*1024+1)
     if len(raw) > 64*1024*1024:
@@ -211,13 +226,78 @@ def _endpoint(value):
         _invalid()
 
 
-def _catalog(value, descriptor, contract):
+def _catalog_records(stream, descriptor):
+    """Decode catalog entries incrementally; validate the envelope before completion."""
+    buffer, decoder = '', json.JSONDecoder()
+
+    def peek():
+        nonlocal buffer
+        buffer = buffer.lstrip(' \t\r\n')
+        while not buffer:
+            chunk = stream.read(64*1024)
+            if not chunk:
+                return ''
+            buffer = chunk.lstrip(' \t\r\n')
+        return buffer[0]
+
+    def take(token):
+        nonlocal buffer
+        if peek() != token:
+            _invalid()
+        buffer = buffer[1:]
+
+    def value():
+        nonlocal buffer
+        peek()
+        while True:
+            try:
+                _, end = decoder.raw_decode(buffer)
+                raw, buffer = buffer[:end], buffer[end:]
+                return _json(raw.encode('utf-8'))
+            except json.JSONDecodeError:
+                chunk = stream.read(64*1024)
+                if not chunk:
+                    _invalid()
+                buffer += chunk
+
+    header = {}
+    take('{')
+    while True:
+        key = value()
+        if type(key) is not str or key in header:
+            _invalid()
+        take(':')
+        if key == 'records':
+            header[key] = []
+            take('[')
+            if peek() != ']':
+                while True:
+                    yield value()
+                    if peek() == ']':
+                        break
+                    take(',')
+            take(']')
+        else:
+            header[key] = value()
+        if peek() == '}':
+            break
+        take(',')
+    take('}')
+    if peek():
+        _invalid()
+    _keys(header, ('schema',*_BINDING,'records'))
+    _binding(header,descriptor)
+    if header['schema'] != 'h1-source-catalog-1.0':
+        _invalid()
+
+
+def _catalog(value, descriptor, contract, *, entries=None):
     _keys(value, ('schema',*_BINDING,'records'))
     _binding(value,descriptor)
     if value['schema'] != 'h1-source-catalog-1.0' or type(value['records']) is not list:
         _invalid()
     records, seen, entities = [], set(), {}
-    for entry in value['records']:
+    for entry in value['records'] if entries is None else entries:
         _keys(entry, SourceRecord.__dataclass_fields__)
         kind = entry['entity_type'].removeprefix(descriptor['namespace']+'.')
         if kind not in TARGETS or entry['entity_type'] != descriptor['namespace']+'.'+kind:
@@ -277,7 +357,8 @@ def _catalog(value, descriptor, contract):
                 for r in relation_rows if r['logical_name'] in relation['properties']}
             if decode_properties(encoded,relation_rows) != relation['properties']:
                 _invalid()
-        record = SourceRecord(**{**entry,'metadata':_freeze(metadata),
+        record = SourceRecord(**{**entry,'source_text':metadata[row['logical_name']],
+                                 'metadata':_freeze(metadata),
                                  'graph_context':_freeze(entry['graph_context'])})
         if record.evidence_id in seen:
             _invalid()
@@ -446,15 +527,25 @@ def load_release(root: Path, expected_release_id: str) -> ServingRelease:
         loaded, artifacts = {}, [('release.json',raw)]
         if production:
             for key,filename in (('expected_graph_sha256','expected.sqlite3'),('provenance_sha256','provenance.jsonl')):
-                data=_read(root,filename)
-                if _sha(data)!=descriptor[key]: _invalid()
-                artifacts.append((filename,data))
+                with _open(root,filename) as stream:
+                    if _sha(stream)!=descriptor[key]: _invalid()
         for field, filename in _FILES.items():
             expected = descriptor[field]
             if field == 'webapp_publication_sha256' and expected is None:
                 continue
             if not _text(expected) or not re.fullmatch(r'[0-9a-f]{64}',expected):
                 _invalid()
+            if filename == 'source-catalog.json':
+                with _open(root,filename) as stream:
+                    if _sha(stream) != expected:
+                        _invalid()
+                    stream.seek(0)
+                    catalog = dict(schema='h1-source-catalog-1.0',records=[],
+                                   **{key:descriptor[key] for key in _BINDING})
+                    with io.TextIOWrapper(stream,encoding='utf-8',newline='') as text:
+                        records = _catalog(catalog,descriptor,contract,
+                            entries=_catalog_records(text,descriptor))
+                continue
             data = _read(root,filename)
             if _sha(data) != expected:
                 _invalid()
@@ -483,7 +574,6 @@ def load_release(root: Path, expected_release_id: str) -> ServingRelease:
                 or authority['catalog_complete'] is not True
                 or any(authority[k] is not (not production) for k in ('graph_frozen','schema_frozen','read_only'))):
             raise ArtifactFailure(VerificationState.UNVERIFIED)
-        records = _catalog(loaded['source-catalog.json'],descriptor,contract)
         publication = _publication(loaded.get('webapp-publication.json'),descriptor,records)
         return ServingRelease(root.absolute(),expected_release_id,descriptor['release_kind'],identity,
             _sha(raw),_freeze(descriptor),records,tuple(artifacts),contract_bytes,_freeze(backend),publication)
@@ -540,8 +630,10 @@ def publish_run(root, run_directory, reader, *, release_id, source_snapshot_id, 
     for suffix in ('-wal','-shm','-journal'):
         if (run_directory/('expected.sqlite3'+suffix)).exists():
             _invalid()
-    expected = _read(run_directory,'expected.sqlite3')
-    provenance = _read(run_directory,'provenance.jsonl')
+    hashes = {}
+    for filename in ('expected.sqlite3','provenance.jsonl'):
+        with _open(run_directory,filename) as stream:
+            hashes[filename] = _sha(stream)
     _verify_sample_provenance(run_directory,model_identity=identity['model_identity'])
     # Production publication is serialized by its caller's physical GraphLock.
     verified = verify_graph(reader,db_path=run_directory/'expected.sqlite3',contract=contract,batch_size=32,recheck=not production)
@@ -611,11 +703,21 @@ def publish_run(root, run_directory, reader, *, release_id, source_snapshot_id, 
     with tempfile.TemporaryDirectory(prefix='.release-',dir=root.parent) as temporary:
         staging = Path(temporary)/'release'; staging.mkdir()
         def write(name, value):
+            if name == 'source-catalog.json':
+                with (staging/name).open('x',encoding='utf-8',newline='\n') as stream:
+                    json.dump(value,stream,ensure_ascii=False,sort_keys=True,separators=(',',':'))
+                    stream.write('\n')
+                with _open(staging,name) as stream:
+                    return _sha(stream)
             atomic_json(staging/name,value)
             return _sha(_read(staging,name))
-        (staging/'expected.sqlite3').write_bytes(expected)
-        (staging/'provenance.jsonl').write_bytes(provenance)
+        for filename,expected_hash in hashes.items():
+            with _open(run_directory,filename) as source, (staging/filename).open('xb') as target:
+                shutil.copyfileobj(source,target,1024*1024)
+            with _open(staging,filename) as stream:
+                if _sha(stream)!=expected_hash: _invalid()
         catalog_hash = write('source-catalog.json',catalog)
+        del catalog, records, source_records, relations, contexts
         backend_hash = write('backend-receipt.json',dict(schema='h1-backend-receipt-1.0',**binding,
             reader_endpoint=reader.endpoint,project_id=str(identity['project_id']),identity_attested=True))
         graph_hash = write('graph-receipt.json',dict(schema='h1-graph-receipt-1.0',**binding,
@@ -626,7 +728,7 @@ def publish_run(root, run_directory, reader, *, release_id, source_snapshot_id, 
             backend_receipt_sha256=backend_hash))
         publication_hash = write('webapp-publication.json',publication) if publication is not None else None
         extra=dict(model_identity=verified['model_identity'],dimension=verified['vectors']['dimension'],
-            run_id=identity['run_id'],partial=partial,expected_graph_sha256=_sha(expected),provenance_sha256=_sha(provenance)) if production else {}
+            run_id=identity['run_id'],partial=partial,expected_graph_sha256=hashes['expected.sqlite3'],provenance_sha256=hashes['provenance.jsonl']) if production else {}
         if dataset:extra['source_mode']=source_mode
         write('release.json',dict(schema='h1-release-1.1' if dataset else 'h1-release-1.0',**binding,release_kind=release_kind,**extra,
             source_catalog_sha256=catalog_hash,backend_receipt_sha256=backend_hash,graph_receipt_sha256=graph_hash,
@@ -650,6 +752,13 @@ publish_sample=publish_run
 def _unchanged(release):
     if any(_read(release.root,name) != raw for name,raw in release.artifacts):
         _invalid()
+    with _open(release.root,'source-catalog.json') as stream:
+        if _sha(stream) != release.descriptor['source_catalog_sha256']:
+            _invalid()
+    if release.descriptor['release_kind'] == 'PRODUCTION':
+        for key,filename in (('expected_graph_sha256','expected.sqlite3'),('provenance_sha256','provenance.jsonl')):
+            with _open(release.root,filename) as stream:
+                if _sha(stream)!=release.descriptor[key]: _invalid()
     raw,identity=release_contract(release.schema_contract.namespace,production=release.descriptor['release_kind']=='PRODUCTION')
     if raw != release.contract_bytes or identity!=release.schema_contract:
         _invalid()
@@ -946,13 +1055,14 @@ def _verify_sample_provenance(root, *, model_identity=None):
     with closing(sqlite3.connect(db_path.as_uri()+'?mode=ro',uri=True)) as db:
         jobs = dict(db.execute('SELECT key,provenance_hash FROM expected_jobs'))
     seen = set()
-    for line in _read(root,'provenance.jsonl').splitlines():
-        job = _json(line)
-        key = canonical_json([job['node_type'],job['node_id'],job['property']])
-        if (key in seen or jobs.get(key) != _sha(canonical_json(job).encode())
-                or model_identity is not None and job.get('model_identity') != model_identity):
-            _invalid()
-        seen.add(key)
+    with _open(root,'provenance.jsonl') as stream:
+        for line in stream:
+            job = _json(line)
+            key = canonical_json([job['node_type'],job['node_id'],job['property']])
+            if (key in seen or jobs.get(key) != _sha(canonical_json(job).encode())
+                    or model_identity is not None and job.get('model_identity') != model_identity):
+                _invalid()
+            seen.add(key)
     if seen != set(jobs):
         _invalid()
 
