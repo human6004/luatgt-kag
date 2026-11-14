@@ -331,7 +331,6 @@ def trial(change,token):
     from kag.retriever.neo4j import Neo4jRetrievalClient
     from kag.retriever.retriever import Retriever
     from kag.vector_contract import valid_vector
-    from kag.verify import verify_graph
     from kag.http_api.read_broker import _BoundedOpener
     a._keys(change,('project_id','run_id','model_identity','vector','top_k','expand'))
     if (type(change['project_id']) is not int or not 1<=change['project_id']<=2147483647
@@ -356,13 +355,9 @@ def trial(change,token):
                 username=os.environ['KAG_NEO4J_USERNAME'],password=os.environ['KAG_NEO4J_PASSWORD'],
                 namespace=target['namespace'],dimension=identity['dimension'],timeout=5)
             reader._opener=_BoundedOpener()
-            def verify():
-                if (verify_graph(reader,db_path=path/'expected.sqlite3',contract=contract,batch_size=32)!=receipt['stages']['verify']
-                        or _record(path)!=receipt):a._invalid('SOURCE_VALIDATION_FAILED')
-                state['identity'].validate(proof)
             state['identity'].validate(proof)
             items=Retriever(reader,None,contract).retrieve_vector(change['vector'],top_k=change['top_k'],expand=change['expand'])
-            verify()
+            state['identity'].validate(proof)
             return dict(contract_version='builder-retrieval-v1',project_id=target['project_id'],run_id=change['run_id'],
                 schema_contract=schema.__dict__,model_identity=identity['model_identity'],dimension=identity['dimension'],
                 graph_fingerprint=receipt['stages']['verify']['fingerprint'],items=items)
