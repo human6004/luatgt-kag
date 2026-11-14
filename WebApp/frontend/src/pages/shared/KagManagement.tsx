@@ -88,13 +88,22 @@ function libraryReadIssue(part: LibraryRead, failure: unknown) {
     : inspectionError(failure);
 }
 
-export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
+export function GraphLibrary({
+  searchOptions,
+  onServingChange,
+}: {
+  searchOptions: ReactNode;
+  onServingChange?: (value: ServingCatalog | undefined) => void;
+}) {
   const [parameters, setParameters] = useSearchParams();
   const [catalog, setCatalog] = useState<BuilderProjects>();
   const [projectData, setProjectData] = useState<
     Record<number, "EMPTY" | "OCCUPIED" | "UNAVAILABLE">
   >({});
   const [serving, setServing] = useState<ServingCatalog>();
+  useEffect(() => {
+    onServingChange?.(serving);
+  }, [serving, onServingChange]);
   const [config, setConfig] = useState<BuilderConfiguration>();
   const [status, setStatus] = useState<BuilderStatus>();
   const [packages, setPackages] = useState<BuilderPackages>();

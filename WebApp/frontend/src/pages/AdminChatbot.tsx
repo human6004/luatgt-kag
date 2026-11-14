@@ -25,7 +25,7 @@ const modelErrors: Record<string, string> = {
   RELEASE_MISMATCH:
     "Embedding đang chọn khác embedding đã dựng đồ thị. Giữ nguyên địa chỉ kết nối và tên model thì chỉ cần đổi API key; đổi địa chỉ hoặc model thì phải dựng lại đồ thị.",
   VECTOR_IDENTITY_MISMATCH:
-    "Embedding không khớp model và chỉ mục đã dùng để dựng đồ thị. Chỉ đổi được API key khi giữ nguyên địa chỉ và tên model.",
+    "Model này khác đồ thị đang dùng cho Chat. Chọn đồ thị dựng bằng model này rồi bấm Dùng cho Chat; embedding sẽ được áp dụng cùng lúc.",
   ACTIVE_CONFIG_INVALID:
     "Cấu hình đang áp dụng không còn hợp lệ. Kiểm tra dữ liệu và quyền kết nối.",
   PROXY_POLICY_UNVERIFIED:
@@ -50,6 +50,19 @@ export default function AdminChatbot() {
   const retrieval = useInspection(loadChatRetrieval);
   const models = useInspection(loadLLMCredentials);
   const serving = useInspection(loadServing);
+  const activeRun = serving.value?.runs.find(
+    (run) =>
+      run.project_id === serving.value?.active?.project_id &&
+      run.run_id === serving.value?.active?.run_id,
+  );
+  const embedding = models.value?.embedding;
+  const embeddingDimension = models.value?.roles.embedding.test?.dimension;
+  const embeddingMismatch = !!(
+    activeRun &&
+    embedding &&
+    (activeRun.model_identity !== `${embedding.base_url.replace(/\/+$/, "")}|${embedding.model}` ||
+      (embeddingDimension != null && activeRun.dimension !== embeddingDimension))
+  );
 
   const [modelsDirty, setModelsDirty] = useState({ chat: false, embedding: false });
   const [modelsSaving, setModelsSaving] = useState(false);
@@ -431,6 +444,7 @@ export default function AdminChatbot() {
                             modelsDirty[role] ||
                             modelsSaving ||
                             modelRunning ||
+                            (role === "embedding" && embeddingMismatch) ||
                             !models.value?.roles[role].actions.apply
                           }
                           onClick={() => {
@@ -452,9 +466,16 @@ export default function AdminChatbot() {
                             {modelErrors[models.value.roles[role].test!.code!]}
                           </p>
                         )}
-                      {models.value?.roles[role].blocker && (
+                      {(models.value?.roles[role].blocker ||
+                        (role === "embedding" && embeddingMismatch)) && (
                         <p role="status" className="text-xs break-words text-muted">
-                          {modelErrors[models.value.roles[role].blocker!]}
+                          {
+                            modelErrors[
+                              role === "embedding" && embeddingMismatch
+                                ? "VECTOR_IDENTITY_MISMATCH"
+                                : models.value!.roles[role].blocker!
+                            ]
+                          }
                         </p>
                       )}
                     </form>
@@ -467,8 +488,8 @@ export default function AdminChatbot() {
                 </p>
                 <p className="text-xs text-muted">
                   Embedding phải khớp đồ thị đang dùng. Hết hạn mức thì chỉ đổi API key, giữ nguyên
-                  địa chỉ kết nối và tên model. Đổi địa chỉ hoặc model thì đồ thị cũ phải dựng lại
-                  mới dùng được.
+                  địa chỉ kết nối và tên model. Đổi địa chỉ hoặc model thì chọn đồ thị dựng bằng
+                  model đó rồi bấm Dùng cho Chat.
                 </p>
               </>
             )}
@@ -487,6 +508,7 @@ export default function AdminChatbot() {
         </Card>
       </div>
       <GraphLibrary
+        onServingChange={serving.setValue}
         searchOptions={
           <Card title="Tùy chọn tìm kiếm khi trả lời Chat">
             <div className="px-5 pb-5 text-sm space-y-3">
