@@ -121,7 +121,8 @@ def _record(path):
 def runs(token):
     from kag.builder.projects import read_projects
     catalog=read_projects(token)
-    if catalog['state'] not in ('AVAILABLE','EMPTY'):raise ApiFailure('SCOPE_DENIED')
+    if catalog['state'] not in ('AVAILABLE','EMPTY'):raise ApiFailure(
+        'DELEGATION_DENIED' if catalog['state']=='DELEGATION_DENIED' else 'SCOPE_DENIED')
     owned={row['project_id']:row for row in catalog['projects']}
     rows=[]
     root=Path(os.environ.get('KAG_BUILDER_RUN_ROOT','/builder-runs'))

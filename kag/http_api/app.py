@@ -317,7 +317,7 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
     def worker_request(path,request,body=None,*,benchmark=False,stop=False):
         import json
         from urllib.request import Request as Outgoing,build_opener,ProxyHandler
-        from urllib.error import HTTPError
+        from urllib.error import HTTPError,URLError
         from kag.verify import _NoRedirect
         values=request.headers.getlist('x-openspg-session')
         token=(settings.secrets.benchmark_write_tokens if benchmark and (body is not None or stop) else
@@ -339,8 +339,13 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                 code=failure.get('error',{}).get('code') or failure.get('detail')
                 if code=='LOCK':code='CONFIG_BUSY'
             except Exception:code=None
-            raise ApiFailure(code if code in ('CONFIG_BUSY','CONFIG_CONFLICT','SCOPE_DENIED','RELEASE_MISMATCH','NOT_READY',
-                'INVALID_REQUEST','REQUEST_TOO_LARGE','RESULT_LIMIT_EXCEEDED') else 'NOT_READY') from None
+            if not benchmark and error.code>=500 and code not in ('NOT_READY','RESULT_LIMIT_EXCEEDED','SOURCE_VALIDATION_FAILED'):
+                raise ApiFailure('BACKEND_UNAVAILABLE') from None
+            raise ApiFailure(code if code in ('CONFIG_BUSY','CONFIG_CONFLICT','SCOPE_DENIED','DELEGATION_DENIED','RELEASE_MISMATCH','NOT_READY',
+                'INVALID_REQUEST','REQUEST_TOO_LARGE','RESULT_LIMIT_EXCEEDED','SOURCE_VALIDATION_FAILED') else 'NOT_READY') from None
+        except URLError:
+            if benchmark:raise
+            raise ApiFailure('BACKEND_UNAVAILABLE') from None
 
     def sample_guard(request, release, runtime_settings):
         if (time.monotonic() >= request.state.request_deadline

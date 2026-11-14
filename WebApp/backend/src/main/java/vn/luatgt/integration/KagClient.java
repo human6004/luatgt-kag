@@ -17,6 +17,7 @@ import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.server.ResponseStatusException;
 import vn.luatgt.service.KagSchema;
 import vn.luatgt.dto.ChatRetrievalChangeRequest;
@@ -25,6 +26,8 @@ import vn.luatgt.dto.ModelConfigActionRequest;
 
 @Component
 public class KagClient {
+    private static final String BUILDER_UNREACHABLE="Dịch vụ dựng đồ thị không phản hồi, khởi động lại kag-builder";
+    private static final String OPENSPG_LOGIN_REQUIRED="Đăng nhập lại OpenSPG rồi tải lại danh sách.";
     private static final org.slf4j.Logger LOG=org.slf4j.LoggerFactory.getLogger(KagClient.class);
     private final RestClient client,inspectionClient; private final ObjectMapper json;
     private final JdkClientHttpRequestFactory queryFactory,inspectionFactory;
@@ -138,10 +141,13 @@ public class KagClient {
                 }
                 if(res.getStatusCode().value()!=200) {
                     String code=errorCode(body);
+                    if(Set.of("INTERNAL_ERROR","BACKEND_UNAVAILABLE").contains(code))
+                        throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,BUILDER_UNREACHABLE);
                     String reason=switch(code) {
                         case "CONFIG_CONFLICT" -> "Bản xem trước đã cũ. Tải lại và xem trước lần nữa";
                         case "CONFIG_BUSY" -> deactivate?"Đồ thị đang dựng hoặc có thao tác khác. Dừng dựng trước rồi tải lại":"Dịch vụ đang xử lý yêu cầu khác. Chờ rồi tải lại trạng thái";
-                        case "SCOPE_DENIED" -> "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project";
+                        case "DELEGATION_DENIED" -> OPENSPG_LOGIN_REQUIRED;
+                        case "SCOPE_DENIED" -> "Không có quyền xem hoặc sử dụng đồ thị";
                         case "RELEASE_MISMATCH" -> "Embedding đang chọn không khớp embedding đã dựng đồ thị (địa chỉ, model hoặc số chiều). Giữ nguyên địa chỉ và model, chỉ đổi API key; nếu đổi model thì phải dựng lại đồ thị";
                         case "SOURCE_VALIDATION_FAILED" -> "Nguồn graph chưa đầy đủ hoặc khác bản đã xác minh. Kiểm văn bản nguồn và phạm vi dựng trước khi xuất bản";
                         default -> "Chưa thể dùng đồ thị. Kiểm phiên đã xác minh, cấu trúc/chỉ mục và model đã kiểm tra ("+code+")";
@@ -160,6 +166,7 @@ public class KagClient {
                 return body;
             });
         } catch(ResponseStatusException e) {throw e;}
+        catch(ResourceAccessException e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,BUILDER_UNREACHABLE);}
         catch(Exception e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Chưa xác nhận được trạng thái đồ thị phục vụ; tải lại trước khi thao tác tiếp");}
     }
     private void validateServingOperation(JsonNode body) throws IOException {
@@ -254,8 +261,10 @@ public class KagClient {
             }
             return request.header(HttpHeaders.AUTHORIZATION,"Bearer "+token).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
                 int code=res.getStatusCode().value();
-                if((graph||sources||export)&&(code==403||code==404))throw new ResponseStatusException(code==403?HttpStatus.FORBIDDEN:HttpStatus.NOT_FOUND,
-                    code==403?"Đăng nhập lại OpenSPG và kiểm quyền sở hữu project":"Project không còn thuộc danh sách được phép xem; hãy tải lại");
+                if(code>=500)throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,BUILDER_UNREACHABLE);
+                if(code==403)throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "DELEGATION_DENIED".equals(inspectionBody(res,token).at("/error/code").asText())?OPENSPG_LOGIN_REQUIRED:"Kiểm tra quyền sở hữu đồ thị trên OpenSPG rồi tải lại danh sách.");
+                if((graph||sources||export)&&code==404)throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Project không còn thuộc danh sách được phép xem; hãy tải lại");
                 if(code==409) {
                     if("selection".equals(action)) {
                         String selectionCode=inspectionBody(res,token).path("detail").asText();
@@ -277,6 +286,7 @@ public class KagClient {
                 return body;
             });
         } catch(ResponseStatusException e) {throw e;}
+        catch(ResourceAccessException e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,BUILDER_UNREACHABLE);}
         catch(Exception e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Builder chưa khả dụng; kiểm tra cấu hình Worker và quyền điều khiển");}
     }
     private void validateBuilderSources(JsonNode body,String action) throws IOException {
@@ -1430,7 +1440,7 @@ public class KagClient {
     }
     private static String errorCode(JsonNode body) throws IOException {
         String code=body.path("error").path("code").asText();
-        if(!Set.of("AUTH_REQUIRED","AUTH_INVALID","SCOPE_DENIED","INVALID_REQUEST","NOT_READY","RELEASE_UNAVAILABLE","QUERY_TIMEOUT","BACKEND_UNAVAILABLE","SCHEMA_CONTRACT_MISMATCH","RELEASE_MISMATCH","SOURCE_SNAPSHOT_MISMATCH","CONCURRENCY_LIMIT","RESULT_LIMIT_EXCEEDED","INTERNAL_ERROR","SOURCE_VALIDATION_FAILED","INVALID_NATIVE_RESULT","CONFIG_BUSY","CONFIG_CONFLICT").contains(code)) throw new IOException("Unknown error");
+        if(!Set.of("AUTH_REQUIRED","AUTH_INVALID","SCOPE_DENIED","DELEGATION_DENIED","INVALID_REQUEST","NOT_READY","RELEASE_UNAVAILABLE","QUERY_TIMEOUT","BACKEND_UNAVAILABLE","SCHEMA_CONTRACT_MISMATCH","RELEASE_MISMATCH","SOURCE_SNAPSHOT_MISMATCH","CONCURRENCY_LIMIT","RESULT_LIMIT_EXCEEDED","INTERNAL_ERROR","SOURCE_VALIDATION_FAILED","INVALID_NATIVE_RESULT","CONFIG_BUSY","CONFIG_CONFLICT").contains(code)) throw new IOException("Unknown error");
         return code;
     }
     private void validateRelease(JsonNode body) throws IOException {
@@ -1504,9 +1514,11 @@ public class KagClient {
                 if(res.getStatusCode().value()!=200) {
                     String code=errorCode(body);
                     String message=switch(code) {
+                        case "BACKEND_UNAVAILABLE" -> BUILDER_UNREACHABLE;
                         case "QUERY_TIMEOUT" -> "Chưa đọc xong kết quả trong thời gian cho phép. Đợi lượt xử lý kết thúc rồi thử lại";
                         case "CONFIG_BUSY","CONCURRENCY_LIMIT" -> "Đồ thị đang được xử lý. Chờ rồi thử lại";
-                        case "SCOPE_DENIED" -> "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project";
+                        case "DELEGATION_DENIED" -> OPENSPG_LOGIN_REQUIRED;
+                        case "SCOPE_DENIED" -> "Không có quyền thử đồ thị đã chọn";
                         case "RELEASE_MISMATCH" -> "Embedding đang chọn khác embedding đã dựng đồ thị. Giữ nguyên địa chỉ kết nối và tên model thì chỉ cần đổi API key; đổi địa chỉ hoặc model thì phải dựng lại đồ thị";
                         default -> "Chưa thể thử đồ thị. Kiểm kết nối, phiên dựng và model đã lưu";
                     };

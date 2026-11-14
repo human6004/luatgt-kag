@@ -85,6 +85,7 @@ function validateServingOperation(value: ServingOperation): ServingOperation {
   return value;
 }
 export const servingReasons: Record<string, string> = {
+  DELEGATION_DENIED: "Đăng nhập lại OpenSPG rồi tải lại danh sách.",
   GRAPH_REQUIRED: "Chọn một đồ thị rồi bấm Dùng cho Chat.",
   SOURCE_MISSING: "Bản nguồn của đồ thị chưa đầy đủ. Chọn lại phiên dựng và kiểm tra nguồn đi kèm.",
   SOURCE_NOT_PUBLISHED:
@@ -1815,7 +1816,7 @@ export function builderIssue(code: string | null) {
     CLEAR_UNCERTAIN: "Chưa xác định xóa đã kết thúc. Nhờ quản trị kiểm tra trước khi thử lại.",
     TARGET_MODEL:
       "Dữ liệu tìm kiếm không khớp model đã lưu. Chọn đồ thị trống hoặc dùng đúng model đã dựng đồ thị.",
-    FORBIDDEN: "Đăng nhập lại OpenSPG, kiểm quyền sở hữu đồ thị rồi tải lại danh sách.",
+    FORBIDDEN: "Kiểm tra quyền sở hữu đồ thị trên OpenSPG rồi tải lại danh sách.",
     NOT_FOUND: "Đồ thị không còn thuộc tài khoản này. Tải lại danh sách và chọn lại.",
     CONNECTION_NOT_CONFIGURED:
       "Nơi lưu đồ thị chưa khớp cấu hình hệ thống. Nhờ quản trị kiểm tra kết nối.",
@@ -2261,9 +2262,11 @@ export function inspectionError(error: unknown) {
   )
     return error.message;
   if (
-    status === 409 &&
     error instanceof ApiError &&
-    error.message === "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project"
+    (([403, 409].includes(status) && error.message === servingReasons.DELEGATION_DENIED) ||
+      (status === 503 &&
+        error.message === "Dịch vụ dựng đồ thị không phản hồi, khởi động lại kag-builder") ||
+      (status === 403 && error.message === builderIssue("FORBIDDEN")))
   )
     return error.message;
   if (

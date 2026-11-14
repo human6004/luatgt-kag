@@ -852,7 +852,9 @@ def create_app(*, control=None, token=None, state_dir=None):
     @app.get('/v1/builder/projects')
     async def projects(request: Request):
         authenticate_request(request)
-        return await asyncio.to_thread(read_projects,session_token(request))
+        value=await asyncio.to_thread(read_projects,session_token(request))
+        if value['state']=='DELEGATION_DENIED':raise ApiFailure('DELEGATION_DENIED')
+        return value
 
     @app.get('/v1/builder/graph/{project_id}')
     async def graph_project(project_id: int, request: Request):
@@ -861,6 +863,7 @@ def create_app(*, control=None, token=None, state_dir=None):
         try:
             return await asyncio.to_thread(inspect_graph,project_id,session_token(request))
         except ProjectCatalogError as error:
+            if error.code=='DELEGATION_DENIED':raise ApiFailure(error.code) from None
             status=403 if error.code=='FORBIDDEN' else 404 if error.code=='NOT_FOUND' else 503
             raise HTTPException(status,'GRAPH_'+error.code) from None
         except (OSError,ValueError,KeyError,TypeError,RuntimeError):
@@ -873,6 +876,7 @@ def create_app(*, control=None, token=None, state_dir=None):
         try:
             return await asyncio.to_thread(sources,project_id,run_id,session_token(request))
         except ProjectCatalogError as error:
+            if error.code=='DELEGATION_DENIED':raise ApiFailure(error.code) from None
             raise HTTPException(403 if error.code=='FORBIDDEN' else 404 if error.code=='NOT_FOUND' else 503,'SOURCES_'+error.code) from None
 
     @app.get('/v1/builder/structure')

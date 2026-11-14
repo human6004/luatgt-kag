@@ -80,14 +80,6 @@ const libraryReadLabels: Record<LibraryRead, string> = {
   export: "Trạng thái xuất gói",
   clear: "Trạng thái xóa",
 };
-function libraryReadIssue(part: LibraryRead, failure: unknown) {
-  return (part === "projects" || part === "serving") &&
-    failure instanceof ApiError &&
-    [403, 409].includes(failure.status)
-    ? "Đăng nhập lại OpenSPG rồi tải lại danh sách."
-    : inspectionError(failure);
-}
-
 export function GraphLibrary({
   searchOptions,
   onServingChange,
@@ -114,9 +106,7 @@ export function GraphLibrary({
     [detailError, setDetailError] = useState("");
   const [readErrors, setReadErrors] = useState<Partial<Record<LibraryRead, string>>>({});
   const [libraryLoading, setLibraryLoading] = useState(true);
-  const libraryError = readErrors.projects || readErrors.serving;
-  const readError =
-    libraryError || readErrors.configuration || readErrors.status || readErrors.clear;
+  const libraryError = readErrors.serving;
   const [busy, setBusy] = useState(false),
     [version, setVersion] = useState(0);
   const [mode, setMode] = useState<"build" | "import" | null>(null);
@@ -158,7 +148,7 @@ export function GraphLibrary({
   function acceptProjects(projects: BuilderProjects) {
     if (!["AVAILABLE", "EMPTY"].includes(projects.state))
       throw new ApiError(
-        "Chưa đọc được danh sách project",
+        builderIssue(projects.state),
         projects.state === "FORBIDDEN" ? 403 : 503,
       );
     setCatalog(projects);
@@ -183,11 +173,9 @@ export function GraphLibrary({
         setReadErrors((current) => ({ ...current, [part]: "" }));
       } catch (failure) {
         if (controller.signal.aborted) return;
-        if (failure instanceof ApiError && [403, 409].includes(failure.status)) {
-          if (part === "projects") setCatalog(undefined);
-          if (part === "serving") setServing(undefined);
-        }
-        setReadErrors((current) => ({ ...current, [part]: libraryReadIssue(part, failure) }));
+        if (part === "projects") setCatalog(undefined);
+        if (part === "serving") setServing(undefined);
+        setReadErrors((current) => ({ ...current, [part]: inspectionError(failure) }));
       } finally {
         if (!controller.signal.aborted) {
           if (part === "serving") setLibraryLoading(false);
@@ -233,8 +221,8 @@ export function GraphLibrary({
       })
       .catch((failure) => {
         if (!controller.signal.aborted) {
-          setError(libraryReadIssue("projects", failure));
-          setDetailError(inspectionError(failure));
+          setCatalog(undefined);
+          setError(inspectionError(failure));
         }
       });
     return () => controller.abort();
@@ -469,7 +457,9 @@ export function GraphLibrary({
               serving?.busy ||
               !!running ||
               !!clearing ||
-              !!readError ||
+              !status ||
+              !!readErrors.status ||
+              !!readErrors.configuration ||
               !config ||
               recoveringWrite
             }
@@ -483,8 +473,7 @@ export function GraphLibrary({
               serving?.busy ||
               !!running ||
               !!clearing ||
-              !!readError ||
-              !config ||
+              !catalog ||
               recoveringWrite
             }
             onClick={() => openFlow("import")}
@@ -541,7 +530,7 @@ export function GraphLibrary({
                 {libraryReadLabels[part as LibraryRead]}: {message}
               </p>
             ))}
-          {libraryError && config?.links?.openspg && (
+          {(libraryError || readErrors.projects) && config?.links?.openspg && (
             <a className="underline" target="_blank" rel="noreferrer" href={config.links.openspg}>
               Mở OpenSPG
             </a>
@@ -618,14 +607,14 @@ export function GraphLibrary({
                       Dừng
                     </Button>
                     <Button
-                      disabled={busy || !!readError || !status.actions.resume}
+                      disabled={busy || !config || !!readErrors.configuration || !status.actions.resume}
                       onClick={() => void resume()}
                     >
                       Tiếp tục
                     </Button>
                     {status.target && (
                       <Button
-                        disabled={busy || !!readError || !!clearing}
+                        disabled={busy || !!clearing}
                         onClick={() => void showClear(status.target!.project_id)}
                       >
                         Xóa
@@ -666,7 +655,7 @@ export function GraphLibrary({
                     </Button>
                     <Button
                       disabled={
-                        busy || !!libraryError || serving?.busy || exportState?.state === "RUNNING"
+                        busy || !exportState || !!readErrors.export || exportState.state === "RUNNING"
                       }
                       onClick={() =>
                         void act(async () =>
@@ -682,7 +671,8 @@ export function GraphLibrary({
                     <Button
                       disabled={
                         busy ||
-                        !!libraryError ||
+                        !clearState ||
+                        !!readErrors.clear ||
                         serving?.busy ||
                         (!!clearing && clearReport?.target.database !== row.database) ||
                         clearState?.state === "APPLYING"
@@ -712,7 +702,7 @@ export function GraphLibrary({
                   <Td>{clearState?.state === "APPLYING" ? "Đang xóa" : "Chưa xóa xong"}</Td>
                   <Td>
                     <Button
-                      disabled={busy || !!readError || clearState?.state === "APPLYING"}
+                      disabled={busy || !!readErrors.clear || clearState?.state === "APPLYING"}
                       onClick={() => void showClear(clearReport.target.project_id)}
                     >
                       Xóa tiếp
@@ -827,6 +817,10 @@ export function GraphLibrary({
                 busy ||
                 !selectedProjectReady ||
                 !selection ||
+                !config ||
+                !status ||
+                !!readErrors.configuration ||
+                !!readErrors.status ||
                 sourceLoading ||
                 sourcePreparing ||
                 !!building ||
@@ -1014,7 +1008,7 @@ export function GraphLibrary({
               </Button>
               <Button
                 variant="primary"
-                disabled={busy || !!readError || !preview.chat_ready}
+                disabled={busy || !!libraryError || serving?.busy || !preview.chat_ready}
                 onClick={() =>
                   void act(async () => {
                     const result = await changeServing(
@@ -1058,7 +1052,7 @@ export function GraphLibrary({
                 {JSON.stringify(preview, null, 2)}
               </pre>
             </details>
-            {(error || readError) && <p role="alert">{readError || error}</p>}
+            {(error || libraryError) && <p role="alert">{error || libraryError}</p>}
           </div>
         </Modal>
       )}
@@ -1109,7 +1103,7 @@ export function GraphLibrary({
               </Button>
               <Button
                 variant="primary"
-                disabled={busy || !!readError}
+                disabled={busy || !!readErrors.clear}
                 onClick={() => void confirmClear()}
               >
                 Xác nhận xóa
@@ -1127,7 +1121,7 @@ export function GraphLibrary({
                 serving.active.database === clearConfirmation.target.database) && (
                 <p>Chat tạm ngưng trả lời cho tới khi chọn đồ thị khác</p>
               )}
-            {(error || readError) && <p role="alert">{readError || error}</p>}
+            {(error || readErrors.clear) && <p role="alert">{error || readErrors.clear}</p>}
           </div>
         </Modal>
       )}
