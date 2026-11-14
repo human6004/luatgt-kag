@@ -550,7 +550,10 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
       )}
       {serving?.operation && ["FAILED", "INTERRUPTED"].includes(serving.operation.state) && (
         <div role="alert">
-          <p>Chưa dùng được đồ thị cho Chat. Tải lại trạng thái trước khi thử tiếp.</p>
+          <p>
+            {(serving.operation.code && servingReasons[serving.operation.code]) ||
+              "Chưa dùng được đồ thị cho Chat. Tải lại trạng thái trước khi thử tiếp."}
+          </p>
           <details>
             <summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary>
             <pre>{serving.operation.code}</pre>
