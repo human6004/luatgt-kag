@@ -149,8 +149,8 @@ services:
     read_only: true
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
-    mem_limit: 768m
-    memswap_limit: 1280m
+    mem_limit: 1280m
+    memswap_limit: 1536m
     cpus: 1.0
     pids_limit: 128
     stop_grace_period: 40s
