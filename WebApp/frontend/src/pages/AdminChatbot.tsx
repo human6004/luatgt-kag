@@ -21,25 +21,25 @@ const modelErrors: Record<string, string> = {
   TEST_REQUIRED: "Cần kiểm thử thành công bản đã lưu trước khi áp dụng.",
   TEST_IN_PROGRESS: "Kiểm thử chưa hoàn tất. Tải lại trước khi thử tiếp.",
   RELEASE_UNAVAILABLE:
-    "Chưa chọn đồ thị phục vụ. Chọn đồ thị đã dựng trong thư viện rồi xác nhận dùng cho Chat.",
+    "Chưa chọn đồ thị phục vụ. Chọn đồ thị đã dựng trong thư viện rồi xác nhận dùng cho trợ lý.",
   RELEASE_MISMATCH:
-    "Embedding đang chọn khác embedding đã dựng đồ thị. Giữ nguyên địa chỉ kết nối và tên model thì chỉ cần đổi API key; đổi địa chỉ hoặc model thì phải dựng lại đồ thị.",
+    "Biểu diễn vectơ đang chọn khác biểu diễn vectơ đã dựng đồ thị. Giữ nguyên địa chỉ kết nối và tên mô hình thì chỉ cần đổi khóa API; đổi địa chỉ hoặc mô hình thì phải dựng lại đồ thị.",
   VECTOR_IDENTITY_MISMATCH:
-    "Embedding không khớp model và chỉ mục đã dùng để dựng đồ thị. Chỉ đổi được API key khi giữ nguyên địa chỉ và tên model.",
+    "Biểu diễn vectơ không khớp mô hình và chỉ mục đã dùng để dựng đồ thị. Chỉ đổi được khóa API khi giữ nguyên địa chỉ và tên mô hình.",
   ACTIVE_CONFIG_INVALID:
     "Cấu hình đang áp dụng không còn hợp lệ. Kiểm tra dữ liệu và quyền kết nối.",
   PROXY_POLICY_UNVERIFIED:
-    "Chưa xác định được giới hạn lượt gọi qua proxy. Cần quản trị triển khai kiểm tra trước khi thử kết nối.",
+    "Chưa xác định được giới hạn lượt gọi qua máy chủ trung gian. Cần quản trị triển khai kiểm tra trước khi thử kết nối.",
   BLOCKED: "Địa chỉ kết nối chưa được hệ thống cho phép. Cần quản trị triển khai cấp quyền.",
-  AUTH_FAILED: "Provider từ chối API key hoặc quyền truy cập.",
-  MODEL_NOT_FOUND: "Provider không tìm thấy model.",
-  RATE_LIMITED: "Provider giới hạn lượt gọi. Chờ trước khi kiểm thử lại.",
-  PROVIDER_ERROR: "Provider trả lỗi dịch vụ.",
-  MODEL_MISMATCH: "Model trong response không khớp model đã lưu.",
-  DIMENSION_MISMATCH: "Số chiều vector không hợp lệ hoặc vượt giới hạn kiểm thử.",
-  INVALID_RESPONSE: "Provider trả dữ liệu không hợp lệ.",
-  TIMEOUT: "Request hết thời gian; không tự thử lại.",
-  NETWORK_ERROR: "Không kết nối được provider qua gateway.",
+  AUTH_FAILED: "Nhà cung cấp từ chối khóa API hoặc quyền truy cập.",
+  MODEL_NOT_FOUND: "Nhà cung cấp không tìm thấy mô hình.",
+  RATE_LIMITED: "Nhà cung cấp giới hạn lượt gọi. Chờ trước khi kiểm thử lại.",
+  PROVIDER_ERROR: "Nhà cung cấp trả lỗi dịch vụ.",
+  MODEL_MISMATCH: "Mô hình trong phản hồi không khớp mô hình đã lưu.",
+  DIMENSION_MISMATCH: "Số chiều vectơ không hợp lệ hoặc vượt giới hạn kiểm thử.",
+  INVALID_RESPONSE: "Nhà cung cấp trả dữ liệu không hợp lệ.",
+  TIMEOUT: "Yêu cầu hết thời gian; không tự thử lại.",
+  NETWORK_ERROR: "Không kết nối được nhà cung cấp qua cổng kết nối.",
 };
 
 export default function AdminChatbot() {
@@ -130,14 +130,14 @@ export default function AdminChatbot() {
         field.value = "";
       });
       setModelsMessage(
-        `${key ? "API key đã lưu thành công" : "Đã lưu cấu hình"} (${role === "chat" ? "Chat" : "Embedding"}). Cần kiểm tra trước khi áp dụng.`,
+        `${key ? "Khóa API đã lưu thành công" : "Đã lưu cấu hình"} (${role === "chat" ? "mô hình trả lời" : "mô hình biểu diễn vectơ"}). Cần kiểm tra trước khi áp dụng.`,
       );
       setModelsDirty((current) => ({ ...current, [role]: false }));
     } catch (error) {
       setModelsError(
         error instanceof ApiError
           ? error.message
-          : "Không lưu được cấu hình model. Hãy tải lại trước khi thử lại.",
+          : "Không lưu được cấu hình mô hình. Hãy tải lại trước khi thử lại.",
       );
     } finally {
       setModelsSaving(false);
@@ -155,7 +155,7 @@ export default function AdminChatbot() {
       const result = await changeLLMModel(role, action, revision);
       models.setValue(result);
       setModelsMessage(
-        `Đã cập nhật trạng thái ${action === "test" ? "kiểm tra" : "áp dụng"} ${role === "chat" ? "Chat" : "Embedding"}. Xem kết quả bên dưới.`,
+        `Đã cập nhật trạng thái ${action === "test" ? "kiểm tra" : "áp dụng"} ${role === "chat" ? "mô hình trả lời" : "mô hình biểu diễn vectơ"}. Xem kết quả bên dưới.`,
       );
       serving.reload();
     } catch (error) {
@@ -185,8 +185,8 @@ export default function AdminChatbot() {
         action === "save"
           ? "Đã lưu bền vững; chưa tự áp dụng."
           : action === "apply"
-            ? "Đã áp dụng vào cấu hình runtime."
-            : "Đã khôi phục bản trước vào cấu hình đã lưu và runtime.",
+            ? "Đã áp dụng vào cấu hình hệ thống đang chạy."
+            : "Đã khôi phục bản trước vào cấu hình đã lưu và hệ thống đang chạy.",
       );
       retrieval.reload();
     } catch (error) {
@@ -238,8 +238,8 @@ export default function AdminChatbot() {
 
   return (
     <Page
-      title="Chatbot"
-      subtitle="Cấu hình model và quản lý đồ thị dùng cho Chat."
+      title="Trợ lý"
+      subtitle="Cấu hình mô hình và quản lý đồ thị dùng cho trợ lý."
       actions={
         <Button disabled={unsaved || modelsSaving || modelRunning || changing} onClick={reloadAll}>
           Tải lại
@@ -248,19 +248,19 @@ export default function AdminChatbot() {
     >
       {unsaved && <p className="mb-4 text-sm">Có thay đổi chưa lưu. Lưu trước khi tải lại.</p>}
       <div className="space-y-5">
-        <Card title="Model & API key">
+        <Card title="Mô hình & khóa API">
           <div className="px-5 pb-5 text-sm space-y-4">
             <Notice {...models} retry={models.reload} />
             {models.value && (
               <>
                 {models.value.error_code && (
                   <p role="alert" className="text-red-700">
-                    Không đọc hoặc ghi được credentials đã lưu. Cần kiểm tra file và quyền phía
+                    Không đọc hoặc ghi được thông tin xác thực đã lưu. Cần kiểm tra tệp và quyền phía
                     triển khai.
                   </p>
                 )}
                 <p className="text-muted">
-                  Chat trả lời câu hỏi; Embedding tạo vector tìm nguồn liên quan. Hai kết nối lưu,
+                  Trợ lý trả lời câu hỏi; biểu diễn vectơ tạo vectơ tìm nguồn liên quan. Hai kết nối lưu,
                   kiểm tra và áp dụng riêng.
                 </p>
                 {!models.value.save_allowed && !models.value.error_code && (
@@ -292,13 +292,13 @@ export default function AdminChatbot() {
                       >
                         <legend className="font-semibold text-navy mb-2">
                           {role === "embedding"
-                            ? "1A. Embedding model (cần trước khi Dựng đồ thị)"
-                            : "1B. Chat model (cần trước khi Dùng cho Chat)"}
+                            ? "1A. Mô hình biểu diễn vectơ (cần trước khi Dựng đồ thị)"
+                            : "1B. Mô hình trả lời (cần trước khi Dùng cho trợ lý)"}
                         </legend>
                         <div className="space-y-1 text-xs">
                           <p>
                             Bản lưu:{" "}
-                            <strong>{models.value?.[role]?.model ?? "Chưa lưu model"}</strong>.
+                            <strong>{models.value?.[role]?.model ?? "Chưa lưu mô hình"}</strong>.
                             {modelsDirty[role] && " Có thay đổi chưa lưu."}
                           </p>
                           <p>
@@ -314,7 +314,7 @@ export default function AdminChatbot() {
                             </strong>
                           </p>
                           <p>
-                            Áp dụng cho Chat:{" "}
+                            Áp dụng cho trợ lý:{" "}
                             <strong>
                               {models.value?.roles[role].status === "APPLIED"
                                 ? "Đang dùng"
@@ -334,10 +334,10 @@ export default function AdminChatbot() {
                             className={inputCls}
                             defaultValue="openai-compatible"
                           >
-                            <option value="openai-compatible">OpenAI-compatible</option>
+                            <option value="openai-compatible">Tương thích OpenAI</option>
                           </select>
                         </Field>
-                        <Field label="Địa chỉ kết nối (Base URL)">
+                        <Field label="Địa chỉ kết nối">
                           <input
                             name={`${role}_base_url`}
                             type="url"
@@ -347,7 +347,7 @@ export default function AdminChatbot() {
                             defaultValue={models.value?.[role]?.base_url ?? ""}
                           />
                         </Field>
-                        <Field label="Tên model">
+                        <Field label="Tên mô hình">
                           <input
                             name={`${role}_model`}
                             required
@@ -357,11 +357,11 @@ export default function AdminChatbot() {
                           />
                         </Field>
                         <Field
-                          label="API key"
+                          label="Khóa API"
                           hint={
                             models.value?.[role]?.key_configured
-                              ? "Đã lưu key; giá trị được ẩn. Để trống để giữ key, nhập key mới rồi Lưu để thay thế."
-                              : "Chưa thiết lập. Lần lưu đầu cần nhập key."
+                              ? "Đã lưu khóa; giá trị được ẩn. Để trống để giữ khóa, nhập khóa mới rồi Lưu để thay thế."
+                              : "Chưa thiết lập. Lần lưu đầu cần nhập khóa."
                           }
                         >
                           <input
@@ -384,7 +384,7 @@ export default function AdminChatbot() {
                               !models.value?.save_allowed
                             }
                           >
-                            Lưu {role === "chat" ? "Chat" : "Embedding"}
+                            Lưu {role === "chat" ? "mô hình trả lời" : "mô hình biểu diễn vectơ"}
                           </Button>
                           {modelsDirty[role] && (
                             <Button
@@ -423,7 +423,7 @@ export default function AdminChatbot() {
                               });
                           }}
                         >
-                          Kiểm tra {role === "chat" ? "Chat" : "Embedding"}
+                          Kiểm tra {role === "chat" ? "mô hình trả lời" : "mô hình biểu diễn vectơ"}
                         </Button>
                         <Button
                           type="button"
@@ -442,7 +442,7 @@ export default function AdminChatbot() {
                               });
                           }}
                         >
-                          Áp dụng {role === "chat" ? "Chat" : "Embedding"}
+                          Áp dụng {role === "chat" ? "mô hình trả lời" : "mô hình biểu diễn vectơ"}
                         </Button>
                       </div>
                       {models.value?.roles[role].test?.code &&
@@ -461,13 +461,13 @@ export default function AdminChatbot() {
                   ))}
                 </div>
                 <p className="text-xs text-muted">
-                  Kiểm tra kết nối gửi tối đa 1 request thật và có thể phát sinh phí; chỉ gửi sau
-                  xác nhận. Khi dựng đồ thị, hệ thống dùng Embedding đã lưu và kiểm tra thành công
-                  (không cần chờ Áp dụng cho Chat).
+                  Kiểm tra kết nối gửi tối đa 1 yêu cầu thật và có thể phát sinh phí; chỉ gửi sau
+                  xác nhận. Khi dựng đồ thị, hệ thống dùng biểu diễn vectơ đã lưu và kiểm tra thành công
+                  (không cần chờ Áp dụng cho trợ lý).
                 </p>
                 <p className="text-xs text-muted">
-                  Embedding phải khớp đồ thị đang dùng. Hết hạn mức thì chỉ đổi API key, giữ nguyên
-                  địa chỉ kết nối và tên model. Đổi địa chỉ hoặc model thì đồ thị cũ phải dựng lại
+                  Biểu diễn vectơ phải khớp đồ thị đang dùng. Hết hạn mức thì chỉ đổi khóa API, giữ nguyên
+                  địa chỉ kết nối và tên mô hình. Đổi địa chỉ hoặc mô hình thì đồ thị cũ phải dựng lại
                   mới dùng được.
                 </p>
               </>
@@ -482,13 +482,13 @@ export default function AdminChatbot() {
                 {modelsError}
               </p>
             )}
-            {modelRunning && <p role="status">Đang kiểm tra hoặc áp dụng model…</p>}
+            {modelRunning && <p role="status">Đang kiểm tra hoặc áp dụng mô hình…</p>}
           </div>
         </Card>
       </div>
       <GraphLibrary
         searchOptions={
-          <Card title="Tùy chọn tìm kiếm khi trả lời Chat">
+          <Card title="Tùy chọn tìm kiếm khi trả lời trợ lý">
             <div className="px-5 pb-5 text-sm space-y-3">
               <p>Chọn số nguồn cần tìm và tìm thêm nội dung qua các quan hệ trong đồ thị.</p>
               <p className="text-muted">
@@ -675,7 +675,7 @@ export default function AdminChatbot() {
         {confirmation && (
           <p>
             Đặt {confirmation.values.top_k} kết quả nguồn; tìm thêm nội dung liên quan{" "}
-            {confirmation.values.expand ? "bật" : "tắt"} cho các câu hỏi Chat tiếp theo.{" "}
+            {confirmation.values.expand ? "bật" : "tắt"} cho các câu hỏi trợ lý tiếp theo.{" "}
             {confirmation.action === "restore" && "Bản đã lưu cũng được thay bằng bản khôi phục."}{" "}
             Câu hỏi đang xử lý không bị thay đổi.
           </p>
@@ -684,7 +684,7 @@ export default function AdminChatbot() {
 
       <Modal
         open={modelAction !== null}
-        title={modelAction?.action === "test" ? "Kiểm thử provider thực" : "Áp dụng model phục vụ"}
+        title={modelAction?.action === "test" ? "Kiểm thử nhà cung cấp thực" : "Áp dụng mô hình phục vụ"}
         onClose={() => setModelAction(null)}
         footer={
           <>
@@ -697,9 +697,9 @@ export default function AdminChatbot() {
       >
         {modelAction && (
           <p>
-            {modelAction.role === "chat" ? "Chat" : "Embedding"}:{" "}
+            {modelAction.role === "chat" ? "mô hình trả lời" : "mô hình biểu diễn vectơ"}:{" "}
             {modelAction.action === "test"
-              ? "gửi tối đa một yêu cầu tới model, có thể phát sinh phí. Không tự thử lại hoặc đổi bản đang áp dụng."
+              ? "gửi tối đa một yêu cầu tới mô hình, có thể phát sinh phí. Không tự thử lại hoặc đổi bản đang áp dụng."
               : "áp dụng bản đã kiểm tra cho các câu hỏi tiếp theo khi tương thích với dữ liệu. Giữ bản đang áp dụng nếu thao tác thất bại; không dựng lại đồ thị."}
           </p>
         )}

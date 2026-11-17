@@ -19,6 +19,7 @@ type Citation = {
 type ChatRecord = {
   id: string;
   conversationId?: string;
+  conversationTitle?: string;
   question: string;
   answer: string;
   state: string;
@@ -27,6 +28,9 @@ type ChatRecord = {
 type ChatState = {
   rows: ChatRecord[];
   loading: boolean;
+  loadingMore: boolean;
+  nextCursor: string;
+  moreError: string;
   error: string;
   busy: boolean;
   stopping: boolean;
@@ -53,11 +57,24 @@ function record(value: unknown): value is ChatRecord {
     !!row.id &&
     (row.conversationId === undefined ||
       (typeof row.conversationId === "string" && !!row.conversationId)) &&
+    (row.conversationTitle === undefined || typeof row.conversationTitle === "string") &&
     typeof row.question === "string" &&
     typeof row.answer === "string" &&
     typeof row.state === "string" &&
     Array.isArray(row.citations)
   );
+}
+
+export function chatStateLabel(state: string) {
+  const labels: Record<string, string> = {
+    ANSWERED: "Đã trả lời",
+    PROCESSING: "Đang trả lời",
+    CANCELLED: "Đã dừng trả lời",
+    CLARIFY: "Cần làm rõ câu hỏi",
+    KAG_ABSTAINED: "Không có căn cứ",
+    UNAVAILABLE: "Dịch vụ chưa khả dụng",
+  };
+  return labels[state] ?? "Chưa xác định";
 }
 
 export function chatView(row: ChatRecord) {
@@ -105,7 +122,7 @@ export function citationAnswerPrefix(answer: string, citations: Pick<Citation, "
 
 export async function loadCitationSource(citation: Citation) {
   if (citation.source) {
-    if (!snapshotMatches(citation)) throw new ApiError("Source snapshot mismatch", 502);
+    if (!snapshotMatches(citation)) throw new ApiError("Bản chụp nguồn không khớp", 502);
     const { metadata, document_metadata: doc, entity_type: kind } = citation.source;
     let unitType = kind.endsWith(".LegalUnit")
       ? String(metadata.unit_type ?? "Đơn vị pháp lý")
@@ -139,7 +156,7 @@ export async function loadCitationSource(citation: Citation) {
     api<ContentRecord[]>("/documents"),
     api<ContentRecord[]>(`/units?docId=${encodeURIComponent(citation.doc_id)}`),
   ]);
-  if (!Array.isArray(documents) || !Array.isArray(units)) throw new ApiError("Invalid source", 502);
+  if (!Array.isArray(documents) || !Array.isArray(units)) throw new ApiError("Nguồn không hợp lệ", 502);
   const doc = documents.find((d) => d.externalId === citation.doc_id),
     unit = units.find((u) => u.externalId === citation.unit_id);
   if (
@@ -153,7 +170,7 @@ export async function loadCitationSource(citation: Citation) {
     typeof doc.data.so_hieu !== "string" ||
     typeof unit.data.unit_type !== "string"
   )
-    throw new ApiError("Source not available", 502);
+    throw new ApiError("Nguồn chưa khả dụng", 502);
   return {
     title: doc.data.title,
     number:
@@ -195,6 +212,9 @@ export function createChat() {
   let state: ChatState = {
     rows: [],
     loading: true,
+    loadingMore: false,
+    nextCursor: "",
+    moreError: "",
     error: "",
     busy: false,
     stopping: false,
@@ -219,7 +239,7 @@ export function createChat() {
   function receive(row: ChatRecord, operation: Pending) {
     if (current !== operation) return;
     const view = chatView(row);
-    if (row.state === "ANSWERED" && !view.answer) throw new ApiError("Invalid chat response", 502);
+    if (row.state === "ANSWERED" && !view.answer) throw new ApiError("Phản hồi trợ lý không hợp lệ", 502);
     update({
       rows: [row, ...state.rows.filter((old) => old.id !== row.id)],
       currentId: row.conversationId ?? row.id,
@@ -254,7 +274,7 @@ export function createChat() {
           row.id !== operation.id ||
           !["CANCELLED", "ANSWERED", "CLARIFY", "KAG_ABSTAINED", "UNAVAILABLE"].includes(row.state)
         )
-          throw new ApiError("Stop not confirmed", 502);
+          throw new ApiError("Chưa xác nhận dừng trả lời", 502);
         receive(row, operation);
         operation.terminal = row;
         operation.controller.abort();
@@ -269,34 +289,56 @@ export function createChat() {
     })();
     return operation.stopTask;
   }
-  function load(): Promise<void> {
+  function loadHistory(more: boolean, selected?: string): Promise<void> {
     if (history) return history;
-    update({ loading: true, error: "" });
-    history = api<unknown>("/chat")
+    if (more && (!state.nextCursor || state.busy)) return Promise.resolve();
+    update(
+      more ? { loadingMore: true, moreError: "" } : { loading: true, error: "", moreError: "" },
+    );
+    let nextCursor = "";
+    const path = more
+      ? `/chat?before=${encodeURIComponent(state.nextCursor)}`
+      : selected
+        ? `/chat?selected=${encodeURIComponent(selected)}`
+        : "/chat";
+    history = apiResponse(path)
+      .then(async (response) => {
+        if (!response.ok) throw new ApiError("Lịch sử chưa khả dụng", response.status);
+        nextCursor = response.headers.get("X-Next-Cursor") ?? "";
+        return response.json();
+      })
       .then((rows) => {
-        if (!Array.isArray(rows) || !rows.every(record)) throw new ApiError("Invalid history", 502);
-        update({ rows });
+        if (!Array.isArray(rows) || !rows.every(record)) throw new ApiError("Lịch sử không hợp lệ", 502);
+        const known = new Set(state.rows.map((row) => row.id));
+        update({
+          rows: more ? [...state.rows, ...rows.filter((row) => !known.has(row.id))] : rows,
+          nextCursor,
+        });
       })
       .catch((error) => {
         const status = error instanceof ApiError ? error.status : -1;
         update({
-          error:
+          [more ? "moreError" : "error"]:
             status === 0
-              ? "Không kết nối được backend. Hãy thử lại."
+              ? "Không kết nối được máy chủ. Hãy thử lại."
               : status === 401
                 ? "Phiên đã hết hạn. Vui lòng đăng nhập lại."
                 : "Không tải được lịch sử. Hãy thử lại.",
-          ...(status === 401 ? { rows: [] } : {}),
+          ...(status === 401 ? { rows: [], nextCursor: "" } : {}),
         });
       })
       .finally(() => {
         history = undefined;
-        update({ loading: false });
+        update({ loading: false, loadingMore: false });
       });
     return history;
   }
+  function load(selected?: string) {
+    return loadHistory(false, selected);
+  }
   async function submit(message: string, conversationId?: string) {
-    if (state.busy || state.loading || !message.trim() || message.length > 4000) return false;
+    if (state.busy || state.loading || state.loadingMore || !message.trim() || message.length > 4000)
+      return false;
     update({
       busy: true,
       stopping: false,
@@ -316,12 +358,12 @@ export function createChat() {
         ...send("POST", { message, conversationId }),
         signal: operation.controller.signal,
       });
-      if (!response.ok) throw new ApiError("Chat unavailable", response.status);
+      if (!response.ok) throw new ApiError("Trợ lý chưa khả dụng", response.status);
       if (
         !response.headers.get("Content-Type")?.toLowerCase().startsWith("text/event-stream") ||
         !response.body
       )
-        throw new ApiError("Invalid chat response", 502);
+        throw new ApiError("Phản hồi trợ lý không hợp lệ", 502);
       reader = response.body.getReader();
       const decoder = new TextDecoder("utf-8", { fatal: true });
       let buffer = "",
@@ -333,15 +375,15 @@ export function createChat() {
         try {
           chunk = await reader.read();
         } catch {
-          throw new ApiError("Chat connection lost", 0);
+          throw new ApiError("Mất kết nối với trợ lý", 0);
         }
         if (chunk.done) break;
         bytes += chunk.value.byteLength;
-        if (bytes > 512 * 1024) throw new ApiError("Chat response too large", 502);
+        if (bytes > 512 * 1024) throw new ApiError("Phản hồi trợ lý vượt giới hạn dung lượng", 502);
         try {
           buffer += decoder.decode(chunk.value, { stream: true });
         } catch {
-          throw new ApiError("Invalid chat encoding", 502);
+          throw new ApiError("Mã hóa phản hồi trợ lý không hợp lệ", 502);
         }
         let end: number;
         while ((end = buffer.indexOf("\n")) >= 0) {
@@ -355,7 +397,7 @@ export function createChat() {
             try {
               row = JSON.parse(payload);
             } catch {
-              throw new ApiError("Invalid chat JSON", 502);
+              throw new ApiError("Dữ liệu phản hồi trợ lý không hợp lệ", 502);
             }
             if (
               !record(row) ||
@@ -363,7 +405,7 @@ export function createChat() {
               (operation.id && row.id !== operation.id) ||
               (conversationId && row.conversationId !== conversationId)
             )
-              throw new ApiError("Invalid chat response", 502);
+              throw new ApiError("Phản hồi trợ lý không hợp lệ", 502);
             if (event === "started" && !operation.id && row.state === "PROCESSING") {
               operation.id = row.id;
               receive(row, operation);
@@ -379,14 +421,14 @@ export function createChat() {
                 operation.terminal = row;
               }
               return operation.terminal.state !== "CANCELLED";
-            } else throw new ApiError("Invalid chat event", 502);
+            } else throw new ApiError("Sự kiện trả lời không hợp lệ", 502);
             event = "";
             payload = "";
-          } else if (line !== "") throw new ApiError("Invalid chat event", 502);
+          } else if (line !== "") throw new ApiError("Sự kiện trả lời không hợp lệ", 502);
         }
       }
       if (operation.terminal) return operation.terminal.state !== "CANCELLED";
-      throw new ApiError("Incomplete chat response", 502);
+      throw new ApiError("Phản hồi trợ lý chưa đầy đủ", 502);
     } catch (error) {
       if (operation.disposed || current !== operation) return false;
       if (operation.terminal) return operation.terminal.state !== "CANCELLED";
@@ -399,7 +441,7 @@ export function createChat() {
           : status === 429
             ? "KAG đang bận. Chờ lượt trước kết thúc rồi kiểm tra lịch sử."
             : status === 0
-              ? "Mất kết nối backend. Tải lại lịch sử để kiểm tra kết quả trước khi gửi lại."
+              ? "Mất kết nối máy chủ. Tải lại lịch sử để kiểm tra kết quả trước khi gửi lại."
               : status === 401
                 ? "Phiên đã hết hạn. Vui lòng đăng nhập lại."
                 : status === 403
@@ -410,7 +452,7 @@ export function createChat() {
         ...(status === 401 ? { rows: [] } : {}),
       });
       // Read persisted outcome once after processing errors; never resend inference.
-      if (unavailable) await load();
+      if (unavailable) await loadHistory(false, conversationId);
       return false;
     } finally {
       operation.controller.abort();
@@ -430,7 +472,30 @@ export function createChat() {
       };
     },
     load,
+    loadMore: () => loadHistory(true),
     submit,
+    renameConversation: async (id: string, title: string) => {
+      if (state.busy || state.loading || state.loadingMore)
+        throw new ApiError("Hãy chờ tải lịch sử hoặc dừng trả lời trước khi đổi tên.");
+      const normalized = title.trim();
+      if (!normalized || normalized.length > 200)
+        throw new ApiError("Tên cuộc trò chuyện cần từ 1 đến 200 ký tự.");
+      await api(`/chat/${encodeURIComponent(id)}`, send("PATCH", { title: normalized }));
+      update({
+        rows: state.rows.map((row) =>
+          row.id === id ? { ...row, conversationTitle: normalized } : row,
+        ),
+      });
+    },
+    removeConversation: async (id: string) => {
+      if (state.busy || state.loading || state.loadingMore)
+        throw new ApiError("Hãy chờ tải lịch sử hoặc dừng trả lời trước khi xóa.");
+      await api(`/chat/${encodeURIComponent(id)}`, send("DELETE"));
+      update({
+        rows: state.rows.filter((row) => (row.conversationId ?? row.id) !== id),
+        ...(state.currentId === id ? { currentId: undefined, requestError: "", observed: "idle" } : {}),
+      });
+    },
     cancel: async () => {
       if (current) {
         current.stopRequested = true;

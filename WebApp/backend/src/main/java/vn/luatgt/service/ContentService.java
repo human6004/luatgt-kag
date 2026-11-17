@@ -208,11 +208,11 @@ public class ContentService {
             if(existing.isPresent()&&!input.updateExisting()) { skipped++; continue; }
             var c=existing.orElseGet(Content::new);
             // Imported media references are never trusted; retain only assets uploaded on this server.
-            n.remove(List.of("imageKey","fileKey","imageMime","fileMime"));
+            n.remove(List.of("imageKey","fileKey","imageMime","fileMime","fileName"));
             if(existing.isPresent()) {
                 remember(c);
                 var old=read(c);
-                for(String field:List.of("imageKey","fileKey","imageMime","fileMime")) if(old.has(field)) n.set(field,old.get(field));
+                for(String field:List.of("imageKey","fileKey","imageMime","fileMime","fileName")) if(old.has(field)) n.set(field,old.get(field));
                 updated++;
             } else inserted++;
             c.kind=kind; c.externalId=key; c.data=write(n); c.published=false; contents.save(c);sync(c);
@@ -226,8 +226,8 @@ public class ContentService {
         var n=validate(c.kind,input.data(),false); var old=read(c);
         if(!c.kind.equals("questions")&&!c.externalId.equals(n.path("externalId").asText())) throw ApiErrors.bad("Không đổi ID nguồn; tạo bản nháp mới nếu nguồn khác");
         remember(c);
-        n.remove(List.of("imageKey","fileKey","imageMime","fileMime"));
-        for(String field:List.of("imageKey","fileKey","imageMime","fileMime")) if(old.has(field)) n.set(field,old.get(field));
+        n.remove(List.of("imageKey","fileKey","imageMime","fileMime","fileName"));
+        for(String field:List.of("imageKey","fileKey","imageMime","fileMime","fileName")) if(old.has(field)) n.set(field,old.get(field));
         c.externalId=n.path("externalId").asText(); c.data=write(n); c.published=false;
         contents.saveAndFlush(c);sync(c); return view(c,true);
     }

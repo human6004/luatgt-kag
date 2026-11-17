@@ -88,7 +88,7 @@ export function Infrastructure() {
   const checks: [keyof KagStatus, string][] = [
     ["liveness", "Kết nối API"],
     ["retrievalReadiness", "Khả năng truy xuất"],
-    ["queryReadiness", "Điều kiện Chat"],
+    ["queryReadiness", "Điều kiện trợ lý"],
   ];
   const checkText = (check: KagCheck) =>
     check.httpStatus === 504 || check.code?.includes("TIMEOUT")
@@ -154,7 +154,7 @@ export function Infrastructure() {
               </div>
               {(check.httpStatus === 504 || check.code?.includes("TIMEOUT")) && (
                 <p className="text-sm text-muted mt-2">
-                  Chọn “Kiểm tra lại” để thử lại; chưa có kết luận về đồ thị hoặc model.
+                  Chọn “Kiểm tra lại” để thử lại; chưa có kết luận về đồ thị hoặc mô hình.
                 </p>
               )}
             </section>
@@ -165,10 +165,10 @@ export function Infrastructure() {
       </p>
       <div className="flex flex-wrap gap-4 mt-3 text-sm">
         <Link className="underline" to="/admin/chatbot?step=3">
-          Kiểm tra để dùng cho Chat
+          Kiểm tra để dùng cho trợ lý
         </Link>
         <Link className="underline" to="/admin/chatbot?step=1">
-          Cấu hình model
+          Cấu hình mô hình
         </Link>
         <Link className="underline" to="/chat">
           Hỏi luật
@@ -178,7 +178,7 @@ export function Infrastructure() {
         <details className="mt-4 text-sm">
           <summary className="cursor-pointer underline">Chi tiết kỹ thuật</summary>
           <p className="mt-3 text-muted">
-            Mục bản dữ liệu kiểm tệp cấu hình; không thay cho kiểm đồ thị hiện tại. Kiểm vector
+            Mục bản dữ liệu kiểm tệp cấu hình; không thay cho kiểm đồ thị hiện tại. Kiểm vectơ
             riêng có thể chỉ hỗ trợ dữ liệu mẫu.
           </p>
           <pre className="mt-3 text-xs whitespace-pre-wrap break-words max-w-full">
@@ -188,17 +188,17 @@ export function Infrastructure() {
       )}
       <details className="mt-8">
         <summary className="font-semibold underline cursor-pointer">
-          Công cụ nâng cao: thử đồ thị Chat đang dùng
+          Công cụ nâng cao: thử đồ thị trợ lý đang dùng
         </summary>
         <p className="text-sm mt-3">
           Để thử một đồ thị khác, mở{" "}
           <Link className="underline" to="/admin/chatbot?step=3">
-            Chatbot · Dùng cho Chat
+            Trợ lý · Dùng cho trợ lý
           </Link>
           .
         </p>
         <p className="text-sm mt-3">
-          Tìm nguồn liên quan bằng model Embedding; có thể phát sinh phí. Kết quả nguồn chưa phải
+          Tìm nguồn liên quan bằng mô hình biểu diễn vectơ; có thể phát sinh phí. Kết quả nguồn chưa phải
           câu trả lời luật.
         </p>
         <Notice error={sampleError} />
@@ -279,7 +279,7 @@ export function Infrastructure() {
           }
         >
           <p className="text-sm">
-            Thao tác gọi model Embedding và có thể phát sinh phí. Tiếp tục truy xuất nội dung vừa
+            Thao tác gọi mô hình biểu diễn vectơ và có thể phát sinh phí. Tiếp tục truy xuất nội dung vừa
             nhập?
           </p>
         </Modal>
@@ -298,7 +298,7 @@ export function Infrastructure() {
           <details className="mt-3 text-sm">
             <summary className="cursor-pointer underline">Chi tiết kỹ thuật lượt truy xuất</summary>
             <p className="mt-3">
-              Thời gian qua backend: {elapsedMs.toFixed(1)} ms; không phải thời gian riêng của
+              Thời gian qua máy chủ: {elapsedMs.toFixed(1)} ms; không phải thời gian riêng của
               Neo4j.
             </p>
             {result && (
@@ -364,7 +364,7 @@ export function Infrastructure() {
                     {node ? (
                       node.sources.map((s) => (
                         <p key={s.evidence_id} className="text-xs break-all">
-                          Evidence {s.field}: {s.evidence_id} · source SHA-256 {s.source_sha256}
+                          Căn cứ {s.field}: {s.evidence_id} · nguồn SHA-256 {s.source_sha256}
                         </p>
                       ))
                     ) : (

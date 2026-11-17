@@ -85,18 +85,18 @@ function validateServingOperation(value: ServingOperation): ServingOperation {
   return value;
 }
 export const servingReasons: Record<string, string> = {
-  GRAPH_REQUIRED: "Chọn một đồ thị rồi bấm Dùng cho Chat.",
+  GRAPH_REQUIRED: "Chọn một đồ thị rồi bấm Dùng cho trợ lý.",
   SOURCE_MISSING: "Bản nguồn của đồ thị chưa đầy đủ. Chọn lại phiên dựng và kiểm tra nguồn đi kèm.",
   SOURCE_NOT_PUBLISHED:
     "Nguồn còn là bản nháp. Kiểm duyệt và xuất bản văn bản, đơn vị pháp lý tương ứng.",
   SOURCE_TEXT_MISMATCH:
     "Nội dung hoặc ngày hiệu lực khác nguồn dựng đồ thị. Kiểm tra và nhập lại đúng nguồn.",
   SOURCE_NOT_EFFECTIVE:
-    "Nguồn chưa có hiệu lực, đã hết hiệu lực hoặc đã bị thay thế; chưa đủ điều kiện Chat.",
+    "Nguồn chưa có hiệu lực, đã hết hiệu lực hoặc đã bị thay thế; chưa đủ điều kiện trợ lý.",
   CHAT_MODEL_REQUIRED:
-    "Chưa có model Chat đã kiểm tra. Lưu và kiểm tra tại Model & API key rồi thử lại.",
+    "Chưa có mô hình trả lời đã kiểm tra. Lưu và kiểm tra tại Mô hình & khóa API rồi thử lại.",
   CHAT_MODEL_NOT_APPLIED:
-    "Model Chat chưa áp dụng cho đồ thị này. Bấm Dùng cho Chat rồi xác nhận để dùng.",
+    "Mô hình trả lời chưa áp dụng cho đồ thị này. Bấm Dùng cho trợ lý rồi xác nhận để dùng.",
 };
 export async function loadServing(signal?: AbortSignal): Promise<ServingCatalog> {
   const value = await api<ServingCatalog>("/admin/kag/serving", { signal, cache: "no-store" });
@@ -169,8 +169,8 @@ export function packageReason(code: string) {
       "Đổi tên ZIP: chỉ dùng chữ/số ASCII, dấu chấm, gạch ngang hoặc gạch dưới; tối đa 124 ký tự.",
     PACKAGE_PLAN: "Gói dùng phiên bản dữ liệu khác. Cài đúng dữ liệu nguồn rồi tải lại.",
     PACKAGE_MODEL:
-      "Model của gói không khớp cấu hình hiện tại. Lưu và kiểm tra đúng Embedding rồi tải lại.",
-    MODEL_MISMATCH: "Model của gói không khớp cấu hình hiện tại.",
+      "Mô hình của gói không khớp cấu hình hiện tại. Lưu và kiểm tra đúng biểu diễn vectơ rồi tải lại.",
+    MODEL_MISMATCH: "Mô hình của gói không khớp cấu hình hiện tại.",
     PACKAGE_SOURCE: "Chưa đọc được dữ liệu nguồn. Tải lại trước khi chọn gói.",
     PACKAGE_SELECTION: "Phạm vi dữ liệu không khớp gói. Chọn lại gói hoặc kiểm tra dữ liệu nguồn.",
     PACKAGE_CHANGED: "Tệp ZIP đã thay đổi. Tải lại danh sách rồi chọn lại.",
@@ -178,10 +178,10 @@ export function packageReason(code: string) {
     PACKAGE_SIZE: "ZIP vượt giới hạn kích thước hoặc số lượng đã khai báo.",
     PACKAGE_MANIFEST: "Thông tin mô tả gói không hợp lệ.",
     PACKAGE_FILES: "ZIP chứa tệp thiếu, thừa hoặc đường dẫn không hợp lệ.",
-    PACKAGE_INVALID: "ZIP hoặc dữ liệu vector không hợp lệ.",
+    PACKAGE_INVALID: "ZIP hoặc dữ liệu vectơ không hợp lệ.",
     PACKAGE_INTEGRITY: "Nội dung gói không khớp dữ liệu nguồn đã chốt.",
-    PACKAGE_PROVENANCE: "Thiếu hoặc sai thông tin nguồn của vector.",
-    PACKAGE_VECTORS: "Vector thiếu, sai kích thước hoặc không hợp lệ.",
+    PACKAGE_PROVENANCE: "Thiếu hoặc sai thông tin nguồn của vectơ.",
+    PACKAGE_VECTORS: "Vectơ thiếu, sai kích thước hoặc không hợp lệ.",
     PACKAGE_UNAVAILABLE: "Không đọc được ZIP. Kiểm tra quyền đọc và chép lại tệp.",
   };
   return reasons[code] ?? "Chưa thể dùng gói. Kiểm tra cấu hình rồi tải lại.";
@@ -207,7 +207,7 @@ export async function loadBuilderPackages(signal?: AbortSignal): Promise<Builder
     cache: "no-store",
   });
   const invalid = () => {
-    throw new ApiError("Danh sách gói vector không hợp lệ", 502);
+    throw new ApiError("Danh sách gói vectơ không hợp lệ", 502);
   };
   if (
     !shape(value, ["contract_version", "directory", "current_model", "packages"]) ||
@@ -315,7 +315,7 @@ export async function exportBuilderPackage(
     typeof run_id !== "string" ||
     !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(run_id)
   )
-    throw new ApiError("Project hoặc phiên xuất không hợp lệ", 400);
+    throw new ApiError("Dự án hoặc phiên xuất không hợp lệ", 400);
   return validatePackageExport(
     await api<BuilderPackageExport>(
       "/admin/kag/builder/packages/export",
@@ -516,7 +516,7 @@ function llmInput(value: LLMInput) {
 }
 function validateLLMCredentials(value: LLMCredentials) {
   const invalid = () => {
-    throw new ApiError("Metadata cấu hình model không hợp lệ", 502);
+    throw new ApiError("Siêu dữ liệu cấu hình mô hình không hợp lệ", 502);
   };
   if (
     !shape(value, [
@@ -670,7 +670,7 @@ export async function saveLLMCredentials(
   input: LLMInput,
 ): Promise<LLMCredentials> {
   if (!count(revision, 2147483646) || !["chat", "embedding"].includes(role) || !llmInput(input))
-    throw new ApiError("Provider, model, Base URL hoặc API key không hợp lệ", 400);
+    throw new ApiError("Nhà cung cấp, mô hình, địa chỉ kết nối hoặc khóa API không hợp lệ", 400);
   return validateLLMCredentials(
     await api<LLMCredentials>(
       "/admin/kag/config/models",
@@ -688,7 +688,7 @@ export async function changeLLMModel(
     !["chat", "embedding"].includes(role) ||
     !["test", "apply"].includes(action)
   )
-    throw new ApiError("Thao tác model không hợp lệ", 400);
+    throw new ApiError("Thao tác mô hình không hợp lệ", 400);
   return validateLLMCredentials(
     await api<LLMCredentials>(
       `/admin/kag/config/models/${role}/${action}`,
@@ -721,7 +721,7 @@ function retrievalValues(value: unknown): value is ChatRetrievalValues {
 }
 function validateChatRetrieval(value: ChatRetrievalConfiguration) {
   const invalid = () => {
-    throw new ApiError("Cấu hình Retrieval cho Chat không hợp lệ", 502);
+    throw new ApiError("Cấu hình truy xuất cho trợ lý không hợp lệ", 502);
   };
   if (
     !shape(value, [
@@ -781,7 +781,7 @@ export async function changeChatRetrieval(
     !count(revision, 2147483646) ||
     (action === "save" ? !retrievalValues(values) : values !== undefined)
   )
-    throw new ApiError("Giá trị Retrieval không hợp lệ", 400);
+    throw new ApiError("Giá trị truy xuất không hợp lệ", 400);
   return validateChatRetrieval(
     await api<ChatRetrievalConfiguration>(
       `/admin/kag/config/retrieval/${action}`,
@@ -927,7 +927,7 @@ export function builderStateLabel(state: BuilderState) {
     STOPPED: "Đã dừng an toàn",
     COMPLETE: "Đã xác minh đồ thị",
     BLOCKED: "Cần xử lý",
-    ABANDONED: "Đã bỏ phiên · graph được giữ",
+    ABANDONED: "Đã bỏ phiên · đồ thị được giữ",
     CLEARED: "Dữ liệu đã được yêu cầu xóa · phiên cũ chỉ là lịch sử",
   }[state];
 }
@@ -983,7 +983,7 @@ function validateBuilder(value: BuilderStatus): BuilderStatus {
       : typeof value.run_id !== "string" ||
         !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value.run_id))
   )
-    throw new ApiError("Trạng thái Builder không hợp lệ", 502);
+    throw new ApiError("Trạng thái công cụ dựng đồ thị không hợp lệ", 502);
   const target = value.target,
     progress = value.progress;
   if (
@@ -1001,7 +1001,7 @@ function validateBuilder(value: BuilderStatus): BuilderStatus {
         ).test(target.database) ||
         !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(target.namespace)
   )
-    throw new ApiError("Cấu hình đích Builder không hợp lệ", 502);
+    throw new ApiError("Cấu hình đích công cụ dựng đồ thị không hợp lệ", 502);
   if (
     progress !== null &&
     (!progress ||
@@ -1022,15 +1022,15 @@ function validateBuilder(value: BuilderStatus): BuilderStatus {
       progress.done < 0 ||
       progress.total < progress.done)
   )
-    throw new ApiError("Tiến độ Builder không hợp lệ", 502);
+    throw new ApiError("Tiến độ công cụ dựng đồ thị không hợp lệ", 502);
   if (
     value.error_code !== null &&
     (typeof value.error_code !== "string" || !/^[A-Z_]{1,32}$/.test(value.error_code))
   )
-    throw new ApiError("Lỗi Builder không hợp lệ", 502);
+    throw new ApiError("Lỗi công cụ dựng đồ thị không hợp lệ", 502);
   if (value.contract_version !== "builder-control-v1") {
     const invalid = () => {
-      throw new ApiError("Kết quả Builder không hợp lệ", 502);
+      throw new ApiError("Kết quả công cụ dựng đồ thị không hợp lệ", 502);
     };
     const { stages, binding, timing, result } = value;
     const timestamp = (text: unknown) =>
@@ -1556,7 +1556,7 @@ export async function clearBuilderData(
 }
 function validateBuilderConfiguration(value: BuilderConfiguration): BuilderConfiguration {
   const invalid = () => {
-    throw new ApiError("Cấu hình Builder không hợp lệ", 502);
+    throw new ApiError("Cấu hình công cụ dựng đồ thị không hợp lệ", 502);
   };
   const packaged = value.contract_version === "builder-configuration-v5",
     extended = packaged || value.contract_version === "builder-configuration-v4",
@@ -1797,9 +1797,9 @@ export function selectionVectorCount(summary: SelectionSummary): number {
 export function builderIssue(code: string | null) {
   if (code?.startsWith("PACKAGE_")) return packageReason(code);
   const messages: Record<string, string> = {
-    CONFIG: "Cấu hình dựng đã đổi hoặc chưa đủ. Kiểm tra Model & API key rồi tải lại.",
+    CONFIG: "Cấu hình dựng đã đổi hoặc chưa đủ. Kiểm tra Mô hình & khóa API rồi tải lại.",
     INDEX:
-      "Cấu trúc tìm kiếm chưa phù hợp với số chiều model đã lưu. Tải lại và kiểm tra đồ thị đích.",
+      "Cấu trúc tìm kiếm chưa phù hợp với số chiều mô hình đã lưu. Tải lại và kiểm tra đồ thị đích.",
     SCHEMA: "Đồ thị chưa có cấu trúc phù hợp. Chọn đồ thị trống khác để dựng.",
     SCHEMA_CUSTOM:
       "Đích có cấu trúc tùy chỉnh nên chưa thể chuẩn bị tự động. Chọn đồ thị trống khác.",
@@ -1808,16 +1808,16 @@ export function builderIssue(code: string | null) {
     STRUCTURE_STALE: "Thông tin đích đã đổi. Tải lại rồi xác nhận lại.",
     STRUCTURE_INTERRUPTED: "Chuẩn bị cấu trúc bị gián đoạn. Tải lại trạng thái trước khi thử tiếp.",
     CLEAR_SHARED: "Nơi lưu đồ thị đang được dùng chung. Chọn đồ thị khác hoặc nhờ quản trị xử lý.",
-    CLEAR_SERVING: "Đồ thị vừa được dùng lại cho Chat. Tải lại rồi xác nhận xóa lại.",
+    CLEAR_SERVING: "Đồ thị vừa được dùng lại cho trợ lý. Tải lại rồi xác nhận xóa lại.",
     CLEAR_STALE: "Đích hoặc quyền xóa đã đổi. Tải lại rồi xác nhận lại.",
     CLEAR_UNCERTAIN: "Chưa xác định xóa đã kết thúc. Nhờ quản trị kiểm tra trước khi thử lại.",
     TARGET_MODEL:
-      "Dữ liệu tìm kiếm không khớp model đã lưu. Chọn đồ thị trống hoặc dùng đúng model đã dựng đồ thị.",
+      "Dữ liệu tìm kiếm không khớp mô hình đã lưu. Chọn đồ thị trống hoặc dùng đúng mô hình đã dựng đồ thị.",
     FORBIDDEN: "Đăng nhập lại OpenSPG, kiểm quyền sở hữu đồ thị rồi tải lại danh sách.",
     NOT_FOUND: "Đồ thị không còn thuộc tài khoản này. Tải lại danh sách và chọn lại.",
     CONNECTION_NOT_CONFIGURED:
       "Nơi lưu đồ thị chưa khớp cấu hình hệ thống. Nhờ quản trị kiểm tra kết nối.",
-    SERVING_PROTECTED: "Đồ thị đang dùng cho Chat. Chọn đồ thị trống khác để dựng.",
+    SERVING_PROTECTED: "Đồ thị đang dùng cho trợ lý. Chọn đồ thị trống khác để dựng.",
     LOCK: "Đồ thị đang dựng hoặc có thao tác khác. Dừng dựng trước rồi tải lại.",
     UNCERTAIN_WRITE:
       "Lần dựng trước bị gián đoạn, chưa xác định đã ghi xong. Nhờ quản trị kiểm tra trước khi tiếp tục.",
@@ -1826,9 +1826,9 @@ export function builderIssue(code: string | null) {
       "Dữ liệu nguồn hoặc điểm lưu đã thay đổi. Kiểm tra đúng phiên bản dữ liệu rồi tải lại.",
     PLAN: "Dữ liệu nguồn hoặc phạm vi không khớp gói đã chọn. Chọn đúng gói rồi tải lại.",
     PROVENANCE:
-      "Thông tin nguồn của dữ liệu tìm kiếm không khớp. Kiểm tra gói và model trước khi thử lại.",
-    VECTORS: "Dịch vụ embedding đang lỗi. Bấm Tiếp tục khi dịch vụ hoạt động lại.",
-    VECTORS_KEY: "API hết hạn mức hoặc từ chối key. Đổi key cùng URL và model, rồi bấm Tiếp tục.",
+      "Thông tin nguồn của dữ liệu tìm kiếm không khớp. Kiểm tra gói và mô hình trước khi thử lại.",
+    VECTORS: "Dịch vụ biểu diễn vectơ đang lỗi. Bấm Tiếp tục khi dịch vụ hoạt động lại.",
+    VECTORS_KEY: "API hết hạn mức hoặc từ chối khóa. Đổi khóa cùng URL và mô hình, rồi bấm Tiếp tục.",
     PROVIDER_BUDGET:
       "Đã chạm giới hạn gọi dịch vụ của lần dựng. Tiếp tục không làm mới hạn mức; kiểm tra chi phí trước khi dựng lại.",
     INTERRUPTED: "Tiến độ đã được lưu. Bấm Tiếp tục để kiểm tra và tiếp tục lần dựng này.",
@@ -1936,7 +1936,7 @@ export async function loadBuilderProjects(signal?: AbortSignal): Promise<Builder
 }
 function validateBuilderProjects(value: BuilderProjects): BuilderProjects {
   const invalid = () => {
-    throw new ApiError("Danh sách project không hợp lệ", 502);
+    throw new ApiError("Danh sách dự án không hợp lệ", 502);
   };
   if (
     !shape(value, ["contract_version", "state", "projects"]) ||
@@ -2002,13 +2002,13 @@ export async function loadGraphProject(
   signal?: AbortSignal,
 ): Promise<GraphProject> {
   if (!Number.isSafeInteger(projectId) || projectId < 1 || projectId > 2147483647)
-    throw new ApiError("ID project không hợp lệ", 400);
+    throw new ApiError("ID dự án không hợp lệ", 400);
   const value = await api<GraphProject>("/admin/kag/graph/" + projectId, {
     signal,
     cache: "no-store",
   });
   const invalid = () => {
-    throw new ApiError("Số liệu graph không hợp lệ", 502);
+    throw new ApiError("Số liệu đồ thị không hợp lệ", 502);
   };
   const text = (v: unknown, max = 512): v is string =>
     typeof v === "string" && !!v.trim() && v.length <= max;
@@ -2069,14 +2069,14 @@ export async function loadGraphProject(
   return value;
 }
 export const builderInputLabels = {
-  c3_manifest: "Manifest nguồn graph",
-  sample_manifest: "Manifest SAMPLE",
-  vector_artifact: "Vector có sẵn",
-  provenance: "Nguồn gốc vector",
-  chunk_manifest: "Manifest phân đoạn",
-  source_checkpoint: "Checkpoint nguồn",
+  c3_manifest: "Bảng kê nguồn đồ thị",
+  sample_manifest: "Bảng kê dữ liệu mẫu",
+  vector_artifact: "Vectơ có sẵn",
+  provenance: "Nguồn gốc vectơ",
+  chunk_manifest: "Bảng kê phân đoạn",
+  source_checkpoint: "Mốc lưu nguồn",
   selection: "Phạm vi nguồn đã chốt",
-  graph_package: "Gói vector đã chọn",
+  graph_package: "Gói vectơ đã chọn",
 };
 export type BuilderInputs = {
   contract_version: "builder-inputs-v1" | "builder-inputs-v2" | "builder-inputs-v3";
@@ -2109,7 +2109,7 @@ export async function loadBuilderInputs(
     cache: "no-store",
   });
   const invalid = () => {
-    throw new ApiError("Thông tin đầu vào Builder không hợp lệ", 502);
+    throw new ApiError("Thông tin đầu vào công cụ dựng đồ thị không hợp lệ", 502);
   };
   if (
     !shape(value, [
@@ -2211,16 +2211,16 @@ export async function runBuilderAction(
     !["build", "stop", "resume", "abandon"].includes(action) ||
     !/^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(run_id)
   )
-    throw new ApiError("Yêu cầu Builder không hợp lệ", 422);
+    throw new ApiError("Yêu cầu công cụ dựng đồ thị không hợp lệ", 422);
   if (revision !== undefined && (!count(revision) || revision < 1 || revision > 2147483647))
-    throw new ApiError("Revision Builder không hợp lệ", 422);
+    throw new ApiError("Phiên bản công cụ dựng đồ thị không hợp lệ", 422);
   const result = validateBuilder(
     await api<BuilderStatus>(`/admin/kag/builder/${action}`, {
       ...send("POST", { run_id }),
       ...(revision === undefined ? {} : { headers: { "If-Match": `"${revision}"` } }),
     }),
   );
-  if (result.run_id !== run_id) throw new ApiError("Run Builder không khớp", 502);
+  if (result.run_id !== run_id) throw new ApiError("Lượt dựng đồ thị không khớp", 502);
   return result;
 }
 export type BenchmarkDatasets = {
@@ -2250,7 +2250,7 @@ const states = [
 export function inspectionError(error: unknown) {
   const status = error instanceof ApiError ? error.status : -1;
   if (status === 504 || (error instanceof Error && /\bQUERY_TIMEOUT\b/.test(error.message)))
-    return "Chưa kiểm tra xong. Hãy thử lại; chưa có kết luận về đồ thị hoặc model.";
+    return "Chưa kiểm tra xong. Hãy thử lại; chưa có kết luận về đồ thị hoặc mô hình.";
   if (
     status === 502 &&
     error instanceof ApiError &&
@@ -2260,7 +2260,7 @@ export function inspectionError(error: unknown) {
   if (
     status === 409 &&
     error instanceof ApiError &&
-    error.message === "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project"
+    error.message === "Đăng nhập lại OpenSPG và kiểm quyền sở hữu dự án"
   )
     return error.message;
   if (
@@ -2272,11 +2272,11 @@ export function inspectionError(error: unknown) {
   return status === 401
     ? "Phiên đã hết hạn. Vui lòng đăng nhập lại."
     : status === 403
-      ? "Chỉ ADMIN được sử dụng chức năng này."
+      ? "Chỉ quản trị viên được sử dụng chức năng này."
       : status === 422 || status === 400
         ? "Yêu cầu truy xuất không hợp lệ."
         : status === 0
-          ? "Không kết nối được backend. Hãy thử lại."
+          ? "Không kết nối được máy chủ. Hãy thử lại."
           : status === 503
             ? "Truy xuất KAG chưa khả dụng hoặc thiếu cấu hình dịch vụ."
             : "Phản hồi KAG chưa đủ bằng chứng hoặc không hợp lệ.";
@@ -2290,14 +2290,14 @@ export async function loadKagStatus(signal?: AbortSignal): Promise<KagStatus> {
         .sort()
         .join()
   )
-    throw new ApiError("Invalid KAG status", 502);
+    throw new ApiError("Trạng thái KAG không hợp lệ", 502);
   for (const [key, check] of Object.entries(result)) {
     if (!check || !states.includes(check.state) || !Number.isInteger(check.httpStatus))
-      throw new ApiError("Invalid KAG status", 502);
+      throw new ApiError("Trạng thái KAG không hợp lệ", 502);
     if (check.state === "ALIVE" && key !== "liveness")
-      throw new ApiError("Liveness is not readiness", 502);
+      throw new ApiError("Kết nối được chưa có nghĩa là sẵn sàng trả lời", 502);
     if (check.state === "READY") {
-      if (key === "liveness") throw new ApiError("Liveness is not readiness", 502);
+      if (key === "liveness") throw new ApiError("Kết nối được chưa có nghĩa là sẵn sàng trả lời", 502);
       const evidence = check.evidence;
       const verified =
         key === "release"
@@ -2315,7 +2315,7 @@ export async function loadKagStatus(signal?: AbortSignal): Promise<KagStatus> {
               ["auth", "runtime", "sources", "admission"].every(
                 (field) => (evidence?.checks as Record<string, string>)?.[field] === "pass",
               );
-      if (check.httpStatus !== 200 || !verified) throw new ApiError("Unverified readiness", 502);
+      if (check.httpStatus !== 200 || !verified) throw new ApiError("Chưa xác minh trạng thái sẵn sàng", 502);
     }
   }
   return result;
@@ -2333,7 +2333,7 @@ export async function runRetrieval(
     top_k > 10 ||
     typeof expand !== "boolean"
   )
-    throw new ApiError("Invalid request", 422);
+    throw new ApiError("Yêu cầu không hợp lệ", 422);
   const value = await api<Retrieval>(
     "/admin/kag/retrieve",
     send("POST", { message, top_k, expand }),
@@ -2361,7 +2361,7 @@ export async function runRetrieval(
     !Array.isArray(value.items) ||
     value.items.length > 110
   )
-    throw new ApiError("Invalid retrieval", 502);
+    throw new ApiError("Kết quả truy xuất không hợp lệ", 502);
   validateRetrievalItems(value.items);
   return value;
 }
@@ -2395,7 +2395,7 @@ function validateRetrievalItems(items: Retrieval["items"]) {
       !Array.isArray(item.graph_context) ||
       (item.score !== null && (!Number.isFinite(item.score) || item.score < 0 || item.score > 1))
     )
-      throw new ApiError("Invalid evidence", 502);
+      throw new ApiError("Căn cứ không hợp lệ", 502);
   }
 }
 export type GraphRetrieval = {
@@ -2556,10 +2556,10 @@ export async function loadPipelineStatus(signal?: AbortSignal): Promise<Pipeline
     value.production_write !== "BLOCKED" ||
     value.provider_egress !== "DENY"
   )
-    throw new ApiError("Invalid pipeline proof", 502);
+    throw new ApiError("Thông tin xác minh quy trình không hợp lệ", 502);
   if (value.phase === "unavailable") {
     if (value.active_requests !== null || value.closed !== null || value.draining !== null)
-      throw new ApiError("Invalid unavailable runtime", 502);
+      throw new ApiError("Trạng thái dịch vụ chưa khả dụng không hợp lệ", 502);
   } else {
     if (
       ![0, 1].includes(value.active_requests as number) ||
@@ -2574,7 +2574,7 @@ export async function loadPipelineStatus(signal?: AbortSignal): Promise<Pipeline
               ? "running"
               : "idle")
     )
-      throw new ApiError("Invalid runtime state", 502);
+      throw new ApiError("Trạng thái hệ thống đang chạy không hợp lệ", 502);
   }
   return value;
 }
@@ -2665,7 +2665,7 @@ const benchmarkDatasetId = (v: unknown) =>
 const benchmarkJobId = (v: unknown) => typeof v === "string" && /^[0-9a-f]{32}$/.test(v);
 function validateBenchmarkJob(value: BenchmarkJob, jobId: string): BenchmarkJob {
   const invalid = () => {
-    throw new ApiError("Trạng thái benchmark không hợp lệ", 502);
+    throw new ApiError("Trạng thái đánh giá không hợp lệ", 502);
   };
   const stamp = (v: unknown) =>
     typeof v === "string" && v.length <= 64 && Number.isFinite(Date.parse(v));
@@ -2889,24 +2889,24 @@ export async function startBenchmarkRun(
     !["G1", "G2", "BOTH"].includes(request.mode) ||
     (request.limit !== null && (!count(request.limit) || request.limit < 1))
   )
-    throw new ApiError("Chọn bộ câu hỏi, đồ thị, mode và số câu hợp lệ", 422);
+    throw new ApiError("Chọn bộ câu hỏi, đồ thị, chế độ và số câu hợp lệ", 422);
   const value = await api<{ run_id_job: string }>(
     "/admin/kag/benchmark/runs",
     send("POST", request),
   );
   if (!shape(value, ["run_id_job"]) || !benchmarkJobId(value.run_id_job))
-    throw new ApiError("Mã lượt benchmark không hợp lệ", 502);
+    throw new ApiError("Mã lượt đánh giá không hợp lệ", 502);
   return value;
 }
 export async function loadBenchmarkRun(jobId: string, signal?: AbortSignal): Promise<BenchmarkJob> {
-  if (!benchmarkJobId(jobId)) throw new ApiError("Mã lượt benchmark không hợp lệ", 422);
+  if (!benchmarkJobId(jobId)) throw new ApiError("Mã lượt đánh giá không hợp lệ", 422);
   return validateBenchmarkJob(
     await api<BenchmarkJob>(`/admin/kag/benchmark/runs/${jobId}`, { signal, cache: "no-store" }),
     jobId,
   );
 }
 export async function stopBenchmarkRun(jobId: string): Promise<BenchmarkJob> {
-  if (!benchmarkJobId(jobId)) throw new ApiError("Mã lượt benchmark không hợp lệ", 422);
+  if (!benchmarkJobId(jobId)) throw new ApiError("Mã lượt đánh giá không hợp lệ", 422);
   return validateBenchmarkJob(
     await api<BenchmarkJob>(`/admin/kag/benchmark/runs/${jobId}/stop`, send("POST")),
     jobId,
@@ -2937,7 +2937,7 @@ function validateBenchmark(value: BenchmarkDatasets, sample = false): BenchmarkD
     value.datasets.length > 20 ||
     (value.state !== "AVAILABLE" && value.datasets.length)
   )
-    throw new ApiError("Invalid benchmark proof", 502);
+    throw new ApiError("Thông tin xác minh đánh giá không hợp lệ", 502);
   const seen = new Set<string>();
   for (const row of value.datasets) {
     if (
@@ -2993,7 +2993,7 @@ function validateBenchmark(value: BenchmarkDatasets, sample = false): BenchmarkD
           (row.record_count as number) < 1 ||
           row.reason !== null))
     )
-      throw new ApiError("Invalid dataset proof", 502);
+      throw new ApiError("Thông tin xác minh bộ dữ liệu không hợp lệ", 502);
     seen.add(row.id);
   }
   return value;
@@ -3161,7 +3161,7 @@ export const benchmarkCategories = [
 ];
 function validateSmokeMetrics(metrics: Record<string, SmokeMetric>, n: number) {
   const invalid = () => {
-    throw new ApiError("Invalid smoke proof", 502);
+    throw new ApiError("Thông tin xác minh kiểm tra nhanh không hợp lệ", 502);
   };
   if (
     !metrics ||
@@ -3209,7 +3209,7 @@ function validateSmoke(
   categoryCounts?: Record<string, number>,
 ) {
   const invalid = () => {
-    throw new ApiError("Invalid smoke proof", 502);
+    throw new ApiError("Thông tin xác minh kiểm tra nhanh không hợp lệ", 502);
   };
   if (
     !shape(smoke, [
@@ -3359,7 +3359,7 @@ function validateSmoke(
 export async function loadSampleInspection(signal?: AbortSignal): Promise<SampleInspection> {
   const value = await api<SampleInspection>("/admin/kag/sample", { signal });
   const invalid = () => {
-    throw new ApiError("Unverified sample inspection", 502);
+    throw new ApiError("Chưa xác minh kết quả kiểm tra dữ liệu mẫu", 502);
   };
   if (
     !shape(value, [

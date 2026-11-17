@@ -11,6 +11,7 @@ import {
 import { Link, useNavigate } from "react-router-dom";
 import { useAdmin } from "../admin/store";
 import { Badge, Button, Card, NavLinkButton, Page } from "../admin/ui";
+import { chatStateLabel } from "./shared/chat-state";
 
 const checkText = (check: KagCheck) =>
   check.httpStatus === 504 || check.code?.includes("TIMEOUT")
@@ -71,10 +72,10 @@ export default function AdminDashboard() {
       ? `${activeRun.nodes.toLocaleString("vi-VN")} nội dung · ${activeRun.edges.toLocaleString("vi-VN")} quan hệ`
       : active
         ? `Phiên ${active.run_id}`
-        : "Chọn ở trang Chatbot (bước ③)"
+        : "Chọn ở trang trợ lý (bước ③)"
     : serving.error && (shortReleaseId || runtimeReady || kag.value?.release.state === "READY")
-      ? "Đang phục vụ · đăng nhập OpenSPG để xem tên project"
-      : "Xem chi tiết ở trang Chatbot (bước ③)";
+      ? "Đang phục vụ · đăng nhập OpenSPG để xem tên dự án"
+      : "Xem chi tiết ở trang trợ lý (bước ③)";
 
   const logs = (data.value || []).map((r) => ({
     ...r,
@@ -87,13 +88,13 @@ export default function AdminDashboard() {
             ? "Đã trả lời"
             : r.state === "KAG_ABSTAINED" || r.feedback === "NO_BASIS"
               ? "Không có căn cứ"
-              : r.state,
+              : chatStateLabel(r.state),
   }));
   const issues = logs.filter((l) => !l.resolved);
 
   const stats = [
     {
-      label: "Trạng thái Chat",
+      label: "Trạng thái trợ lý",
       value: kag.loading
         ? "—"
         : kag.error
@@ -118,7 +119,7 @@ export default function AdminDashboard() {
             kag.value?.release.state !== "READY")),
     },
     {
-      label: "Chat được báo cáo",
+      label: "Trò chuyện được báo cáo",
       value: report.value?.chatMessages ?? "—",
       sub: report.value
         ? `Đã xử lý: ${report.value.chatMessages - report.value.pendingChats}`
@@ -127,7 +128,7 @@ export default function AdminDashboard() {
     {
       label: "Câu cần xử lý",
       value: report.value?.pendingChats ?? "—",
-      sub: "Theo dữ liệu backend",
+      sub: "Theo dữ liệu máy chủ",
       warn: !!issues.length,
     },
   ];
@@ -144,8 +145,9 @@ export default function AdminDashboard() {
         </Link>
       }
     >
-      <Notice {...report} retry={report.reload} />
-      <Notice {...data} retry={data.reload} />
+      <Notice loading={report.loading || data.loading} />
+      <Notice error={report.error} retry={report.reload} />
+      <Notice error={data.error} retry={data.reload} />
       <Notice error={task.error} />
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4 mb-5">
         {stats.map((s) => (
@@ -252,18 +254,18 @@ export default function AdminDashboard() {
 
         <div className="space-y-5">
           <Card
-            title="Tình trạng Chatbot & KAG"
+            title="Tình trạng trợ lý & KAG"
             right={
               <button
                 onClick={() => nav("/admin/chatbot")}
                 className="text-xs font-medium text-accent-strong hover:underline"
               >
-                Chatbot →
+                Trợ lý →
               </button>
             }
           >
             <div className="px-5 pb-5 space-y-3">
-              <Row label="Điều kiện Chat">
+              <Row label="Điều kiện trợ lý">
                 <span className={`text-xs ${runtimeReady ? "text-emerald-700" : "text-amber-800"}`}>
                   {kag.value ? checkText(kag.value.queryReadiness) : "Chưa đọc được trạng thái"}
                 </span>
@@ -286,12 +288,13 @@ export default function AdminDashboard() {
                   </button>
                   <span>·</span>
                   <button className="underline" onClick={() => nav("/admin/benchmark")}>
-                    Benchmark
+                    Đánh giá chất lượng
                   </button>
                 </span>
               </Row>
-              <Notice {...kag} retry={kag.reload} />
-              <Notice {...serving} retry={serving.reload} />
+              <Notice loading={kag.loading || serving.loading} />
+              <Notice error={kag.error} retry={kag.reload} />
+              <Notice error={serving.error} retry={serving.reload} />
             </div>
           </Card>
 
@@ -310,7 +313,7 @@ export default function AdminDashboard() {
               <Notice {...builder} retry={builder.reload} />
               {builder.value && (
                 <p className="text-text-secondary leading-5">
-                  Trạng thái Builder:{" "}
+                  Trạng thái công cụ dựng đồ thị:{" "}
                   <strong className="text-navy">{builderStateLabel(builder.value.state)}</strong>
                   {builder.value.run_id
                     ? ` · ${builder.value.run_id}`
@@ -323,7 +326,7 @@ export default function AdminDashboard() {
       </div>
       <details className="mt-5 text-xs">
         <summary className="cursor-pointer underline text-muted">
-          Số liệu nghiệp vụ từ server
+          Số liệu nghiệp vụ từ máy chủ
         </summary>
         {Object.entries(report.value || {}).map(([k, v]) => (
           <p key={k} className="mt-1">

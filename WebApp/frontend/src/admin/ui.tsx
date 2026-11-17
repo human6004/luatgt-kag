@@ -1,5 +1,90 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, useSyncExternalStore } from "react";
+import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
+
+const pageLoaders = new Set<string>();
+const loadingListeners = new Set<() => void>();
+const activeLoader = () => pageLoaders.values().next().value;
+const notifyLoading = () => loadingListeners.forEach((listener) => listener());
+const subscribeLoading = (listener: () => void) => {
+  loadingListeners.add(listener);
+  return () => { loadingListeners.delete(listener); };
+};
+
+export function LoadingIndicator({
+  label = "Đang tải dữ liệu…",
+  inline = false,
+  className = "",
+}: {
+  label?: string;
+  inline?: boolean;
+  className?: string;
+}) {
+  const id = useId();
+  const active = useSyncExternalStore(subscribeLoading, activeLoader, () => undefined);
+  useEffect(() => {
+    if (inline) return;
+    pageLoaders.add(id);
+    notifyLoading();
+    return () => {
+      pageLoaders.delete(id);
+      notifyLoading();
+    };
+  }, [id, inline]);
+  if (!inline && active !== id) return null;
+
+  const indicator = (
+    <span
+      role="status"
+      className={`${inline ? "flex items-center justify-center" : "fixed inset-0 z-[80] grid place-items-center bg-surface/85"} ${className}`}
+    >
+      <span aria-hidden="true" className={`traffic-loader ${inline ? "traffic-loader--compact" : ""}`}>
+        <svg
+          className="traffic-loader__art"
+          viewBox="0 0 260 112"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <g className="traffic-loader__scenery" opacity="0.35">
+            <path d="M284 98V29a9 9 0 0 1 9-9h15" />
+            <path d="M299 20h15l-3 5h-10z" fill="var(--color-accent)" />
+          </g>
+          <path d="M0 98h260" opacity="0.4" />
+          <path className="traffic-loader__road" d="M-36 106h332" strokeDasharray="18 18" opacity="0.3" />
+          {[82, 174].map((x) => (
+            <g key={x} className="traffic-loader__wheel">
+              <circle cx={x} cy="82" r="15" fill="currentColor" />
+              <circle cx={x} cy="82" r="8" fill="var(--color-surface)" />
+              <path d={`M${x} 75v14m-7-7h14`} />
+            </g>
+          ))}
+          <g className="traffic-loader__suspension">
+            <path d="M81 82l21-23h36l25 23H96" strokeWidth="5" />
+            <path d="M64 73c5-15 27-17 35-3" strokeWidth="3" />
+            <path d="M112 59h27l18 16h-44l-15-8z" fill="var(--color-accent)" />
+            <path d="M110 73h25l6 12h-29z" fill="var(--color-control)" />
+            <path d="M156 51l18 31" strokeWidth="5" />
+            <path d="M144 49h16l5 7" strokeWidth="3" />
+            <path d="M91 54h37" strokeWidth="6" />
+            <path d="M113 52l20 14-6 13h11" strokeWidth="8" />
+            <path d="M120 34l11 5-6 16h-18l5-14z" fill="var(--color-accent)" />
+            <path d="M129 39l11 11 12-1" strokeWidth="6" />
+            <path d="M132 18h12v12l-8 5h-7v-8z" fill="var(--color-sidebar)" />
+            <path d="M119 22a13 13 0 0 1 26 0v4h-10l-3 5h-11z" fill="var(--color-accent)" />
+            <path d="M134 18h10v8h-10z" fill="var(--color-surface)" />
+            <path d="M128 30l5 6 6-4" />
+            <path d="M160 55h7" stroke="var(--color-accent)" strokeWidth="4" />
+          </g>
+        </svg>
+      </span>
+      <span className="sr-only">{label}</span>
+    </span>
+  );
+  return inline ? indicator : createPortal(indicator, document.querySelector("dialog[open]") ?? document.body);
+}
 
 export function Page({
   title,
@@ -44,7 +129,7 @@ export function Card({
   flush?: boolean;
 }) {
   const surfaceClass =
-    "min-w-0 overflow-x-auto [overflow-wrap:anywhere] bg-surface rounded-2xl border border-line shadow-[0_1px_2px_rgba(53,45,36,0.04)]";
+    "min-w-0 overflow-x-auto [overflow-wrap:anywhere] bg-surface rounded-lg border border-line";
   if (!title) return <section className={`${surfaceClass} ${className}`}>{children}</section>;
   return (
     <section className={`min-w-0 flex flex-col gap-3 ${className}`}>
@@ -58,6 +143,44 @@ export function Card({
       </header>
       <div className={`${surfaceClass} flex-1 ${flush ? "" : "pt-5"}`}>{children}</div>
     </section>
+  );
+}
+
+export function ContentStats({ total, published }: { total?: number; published?: number }) {
+  return (
+    <div className="mb-5 grid gap-4 sm:grid-cols-3">
+      {[
+        ["Tổng nội dung", total],
+        ["Đã xuất bản", published],
+        ["Bản nháp", total === undefined || published === undefined ? undefined : total - published],
+      ].map(([label, value]) => (
+        <Card key={label} className="p-5">
+          <p className="text-xs text-muted">{label}</p>
+          <p className="mt-3 text-3xl font-semibold">{value ?? "—"}</p>
+        </Card>
+      ))}
+    </div>
+  );
+}
+
+export function SelectionBar({
+  selected,
+  total,
+  noun = "bản nháp",
+  children,
+}: {
+  selected: number;
+  total: number;
+  noun?: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+      <span className="text-sm text-muted" role="status">
+        Chọn {selected} / {total} {noun}
+      </span>
+      {children}
+    </div>
   );
 }
 
@@ -76,7 +199,7 @@ export function NavLinkButton({
   return (
     <Link
       to={to}
-      className={`inline-flex max-w-full items-center justify-center gap-2 rounded-xl border border-line bg-surface text-center font-semibold text-navy transition-colors hover:bg-bg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-strong focus-visible:ring-offset-2 ${size === "sm" ? "min-h-9 px-3 py-1.5 text-xs" : "min-h-10 px-4 py-2 text-[13px]"} ${className}`}
+      className={`inline-flex max-w-full items-center justify-center gap-2 rounded-md border border-control bg-surface text-center font-medium text-navy transition-colors hover:bg-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-strong focus-visible:ring-offset-2 ${size === "sm" ? "min-h-9 px-3 py-1.5 text-xs" : "min-h-10 px-4 py-2 text-[13px]"} ${className}`}
     >
       <span>{children}</span>
       <svg
@@ -138,8 +261,8 @@ const btn: Record<BtnVariant, string> = {
   primary: "bg-accent text-navy hover:bg-accent-hover",
   dark: "bg-navy text-bg hover:bg-navy-light",
   ghost:
-    "text-navy underline underline-offset-4 decoration-navy/40 hover:bg-selected hover:decoration-navy",
-  outline: "border border-navy/35 bg-selected text-navy hover:border-navy/60 hover:bg-line",
+    "text-text-secondary hover:bg-hover hover:text-navy",
+  outline: "border border-control bg-surface text-navy hover:border-navy/50 hover:bg-hover",
   danger:
     "text-red-700 underline underline-offset-4 decoration-red-700/40 hover:bg-red-50 hover:decoration-red-700",
 };
@@ -152,7 +275,7 @@ export function Button({
   return (
     <button
       {...p}
-      className={`inline-flex max-w-full items-center justify-center gap-1.5 rounded-md text-center leading-5 font-semibold cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-strong focus-visible:ring-offset-2 ${
+      className={`inline-flex max-w-full items-center justify-center gap-1.5 rounded-md text-center leading-5 font-medium cursor-pointer transition-colors disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-strong focus-visible:ring-offset-2 ${
         size === "sm" ? "min-h-8 px-3 py-1.5 text-xs" : "min-h-10 px-4 py-2 text-[13px]"
       } ${btn[variant]} ${className}`}
     />
@@ -386,7 +509,7 @@ export function Field({
 }
 
 export const inputCls =
-  "w-full min-w-0 rounded-xl border border-line bg-white/70 px-3 py-2 text-[13.5px] leading-6 text-navy outline-none placeholder:text-muted/70 focus:border-accent focus:ring-4 focus:ring-accent/10 transition";
+  "w-full min-w-0 rounded-md border border-control bg-surface px-3 py-2 text-[13.5px] leading-6 text-navy outline-none placeholder:text-muted/70 focus:border-accent-strong focus:ring-2 focus:ring-accent/20 transition-colors";
 
 export function Th({
   children,
@@ -397,7 +520,7 @@ export function Th({
 }) {
   return (
     <th
-      className={`text-left align-top px-4 py-2.5 text-[11.5px] leading-5 font-medium uppercase tracking-wide text-muted ${className}`}
+      className={`text-left align-top px-4 py-2.5 text-xs leading-5 font-medium text-muted ${className}`}
     >
       {children}
     </th>

@@ -73,7 +73,7 @@ export function useInspection<T>(load: (signal?: AbortSignal) => Promise<T>) {
 type LibraryRun = ServingCatalog["runs"][number];
 type LibraryRead = "projects" | "serving" | "configuration" | "status" | "export" | "clear";
 const libraryReadLabels: Record<LibraryRead, string> = {
-  projects: "Danh sách project",
+  projects: "Danh sách dự án",
   serving: "Thư viện đồ thị",
   configuration: "Cấu hình dựng",
   status: "Trạng thái dựng",
@@ -147,7 +147,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
   function acceptProjects(projects: BuilderProjects) {
     if (!["AVAILABLE", "EMPTY"].includes(projects.state))
       throw new ApiError(
-        "Chưa đọc được danh sách project",
+        "Chưa đọc được danh sách dự án",
         projects.state === "FORBIDDEN" ? 403 : 503,
       );
     setCatalog(projects);
@@ -462,7 +462,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
       <Card
         title={
           serving?.active
-            ? `Đang dùng cho Chat: ${serving.active.project_name}`
+            ? `Đang dùng cho trợ lý: ${serving.active.project_name}`
             : !serving
               ? libraryError
                 ? "Chưa đọc được đồ thị"
@@ -478,8 +478,8 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
         <div className="px-5 pb-5 text-sm space-y-3">
           <p>
             {serving?.active && serving.runtime_ready && !serving.chat_blockers.length
-              ? "Chat đang dùng đồ thị này để tìm căn cứ trả lời."
-              : "Chọn đồ thị sẵn sàng để Chat tìm căn cứ trả lời."}
+              ? "Trợ lý đang dùng đồ thị này để tìm căn cứ trả lời."
+              : "Chọn đồ thị sẵn sàng để trợ lý tìm căn cứ trả lời."}
           </p>
           {serving?.chat_blockers
             .filter((code) => code !== "GRAPH_REQUIRED")
@@ -518,11 +518,11 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
         </div>
       )}
       {serving?.operation?.state === "PREPARING" && (
-        <p role="status">Đang chuẩn bị đồ thị cho Chat…</p>
+        <p role="status">Đang chuẩn bị đồ thị cho trợ lý…</p>
       )}
       {serving?.operation && ["FAILED", "INTERRUPTED"].includes(serving.operation.state) && (
         <div role="alert">
-          <p>Chưa dùng được đồ thị cho Chat. Tải lại trạng thái trước khi thử tiếp.</p>
+          <p>Chưa dùng được đồ thị cho trợ lý. Tải lại trạng thái trước khi thử tiếp.</p>
           <details>
             <summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary>
             <pre>{serving.operation.code}</pre>
@@ -537,7 +537,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
         <table className="w-full text-sm" aria-label="Thư viện đồ thị">
           <thead>
             <tr>
-              {["Tên", "Phạm vi", "Nội dung", "Liên kết", "Vector", "Trạng thái", "Thao tác"].map(
+              {["Tên", "Phạm vi", "Nội dung", "Liên kết", "Vectơ", "Trạng thái", "Thao tác"].map(
                 (label) => (
                   <Th key={label}>{label}</Th>
                 ),
@@ -603,7 +603,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
                 <Td>{row.edges.toLocaleString("vi-VN")}</Td>
                 <Td>{row.vectors.toLocaleString("vi-VN")}</Td>
                 <Td>
-                  {serving?.active?.database === row.database ? "Đang dùng cho Chat" : "Đã dựng"}
+                  {serving?.active?.database === row.database ? "Đang dùng cho trợ lý" : "Đã dựng"}
                 </Td>
                 <Td>
                   <div className="flex flex-wrap gap-2">
@@ -622,7 +622,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
                         )
                       }
                     >
-                      Dùng cho Chat
+                      Dùng cho trợ lý
                     </Button>
                     <Button
                       disabled={
@@ -703,8 +703,8 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
                     {
                       preflight: "Kiểm tra điều kiện",
                       plan: "Chuẩn bị dữ liệu",
-                      vectorize: "Tạo vector",
-                      "export-artifact": "Lưu vector",
+                      vectorize: "Tạo vectơ",
+                      "export-artifact": "Lưu vectơ",
                       "write-nodes": "Ghi nội dung",
                       "verify-nodes": "Kiểm nội dung",
                       "write-edges": "Ghi liên kết",
@@ -758,7 +758,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
             {clearState.code && (
               <p>
                 {["SCOPE", "CLEAR_SERVING"].includes(clearState.code)
-                  ? "Đồ thị vừa được dùng lại cho Chat. Tải lại rồi xác nhận xóa lại."
+                  ? "Đồ thị vừa được dùng lại cho trợ lý. Tải lại rồi xác nhận xóa lại."
                   : builderIssue(clearState.code)}
               </p>
             )}
@@ -801,7 +801,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
       >
         <div className="space-y-4 text-sm">
           <div className="space-y-3">
-            <p>Tạo project trong OpenSPG, rồi tải lại danh sách và chọn đồ thị trống.</p>
+            <p>Tạo dự án trong OpenSPG, rồi tải lại danh sách và chọn đồ thị trống.</p>
             <div className="flex gap-3">
               {config?.links?.openspg && (
                 <a
@@ -878,7 +878,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
                   Phạm vi từ gói:{" "}
                   {selectedPackage.manifest.selection === null ? "toàn bộ" : "một phần"} ·{" "}
                   {selectedPackage.manifest.nodes.toLocaleString("vi-VN")} nội dung. Nhập vào đồ thị
-                  trống đã có không gọi embedding.
+                  trống đã có không gọi biểu diễn vectơ.
                 </p>
               )}
             </>
@@ -926,7 +926,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
             )
           )}
           {mode === "build" && (
-            <p>Tạo vector có thể phát sinh phí embedding. Dựng xong chưa tự dùng cho Chat.</p>
+            <p>Tạo vectơ có thể phát sinh phí biểu diễn vectơ. Dựng xong chưa tự dùng cho trợ lý.</p>
           )}
           {!selection && !sourceLoading && !sourcePreparing && (
             <Button
@@ -963,7 +963,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
       {preview && (
         <Modal
           open
-          title="Dùng đồ thị cho Chat"
+          title="Dùng đồ thị cho trợ lý"
           onClose={() => {
             if (!busy) setPreview(undefined);
           }}
@@ -991,7 +991,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
                   })
                 }
               >
-                Xác nhận dùng cho Chat
+                Xác nhận dùng cho trợ lý
               </Button>
             </>
           }
@@ -1009,7 +1009,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
             )}
             {preview.chat_blockers.map((code) => (
               <p key={code}>
-                {servingReasons[code] ?? "Chưa thể dùng đồ thị. Kiểm tra model và dữ liệu."}
+                {servingReasons[code] ?? "Chưa thể dùng đồ thị. Kiểm tra mô hình và dữ liệu."}
               </p>
             ))}
             <details>
@@ -1085,7 +1085,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
             {serving?.active &&
               (serving.active.database_id === clearConfirmation.database_id ||
                 serving.active.database === clearConfirmation.target.database) && (
-                <p>Chat tạm ngưng trả lời cho tới khi chọn đồ thị khác</p>
+                <p>Trợ lý tạm ngưng trả lời cho tới khi chọn đồ thị khác</p>
               )}
             {(error || readError) && <p role="alert">{readError || error}</p>}
           </div>
@@ -1190,7 +1190,7 @@ function TrialGraph({
       setResult(await runGraphRetrieval(projectId, runId, question, topK, expand));
     } catch (failure) {
       setError(
-        failure instanceof Error ? failure.message : "Chưa thử được đồ thị. Kiểm model và kết nối.",
+        failure instanceof Error ? failure.message : "Chưa thử được đồ thị. Kiểm mô hình và kết nối.",
       );
     } finally {
       pending.current = false;
@@ -1200,13 +1200,13 @@ function TrialGraph({
   return (
     <section className="space-y-4 text-sm">
       <p>
-        Tìm nguồn trong đồ thị đang xem; không tạo câu trả lời và không đổi đồ thị Chat. Gửi câu thử
-        có thể tính phí Embedding.
+        Tìm nguồn trong đồ thị đang xem; không tạo câu trả lời và không đổi đồ thị trợ lý. Gửi câu thử
+        có thể tính phí biểu diễn vectơ.
       </p>
       <p>
         Đồ thị dựng bằng <strong className="break-all">{builtModel.split("|").pop()}</strong> ·{" "}
-        {dimension.toLocaleString("vi-VN")} chiều. Embedding đang chọn phải trùng địa chỉ kết nối và
-        tên model này; đổi model thì phải dựng lại đồ thị.
+        {dimension.toLocaleString("vi-VN")} chiều. Mô hình biểu diễn vectơ đang chọn phải trùng địa chỉ kết nối và
+        tên mô hình này; đổi mô hình thì phải dựng lại đồ thị.
       </p>
       <form
         className="space-y-4"
@@ -1258,7 +1258,7 @@ function TrialGraph({
         to={modelPath}
         state={{ trialDraft: { projectId, runId, question, topK, expand } }}
       >
-        Chỉnh model
+        Chỉnh mô hình
       </Link>
       {result && (
         <>
@@ -1315,7 +1315,7 @@ function SelectedGraph({
               [
                 ["Nội dung", value.counts.nodes],
                 ["Liên kết", value.counts.edges],
-                ["Vector", value.counts.vectors],
+                ["Vectơ", value.counts.vectors],
               ] as const
             ).map(([label, count]) => (
               <div key={label}>
@@ -1332,7 +1332,7 @@ function SelectedGraph({
             <summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary>
             <div className="mt-3 space-y-3">
               <p className="break-all">
-                Project #{value.target.project_id} · database {value.target.database} · namespace{" "}
+                Dự án #{value.target.project_id} · cơ sở dữ liệu {value.target.database} · không gian tên{" "}
                 {value.target.namespace} · {value.database_id}
               </p>
               {neo4j && (

@@ -6,10 +6,13 @@ import {
   Badge,
   Button,
   Card,
+  ContentStats,
+  EditIconButton,
   Field,
   FilePicker,
   Modal,
   Page,
+  SelectionBar,
   Td,
   Th,
   Toggle,
@@ -22,6 +25,7 @@ import QuestionBankSettings, {
 } from "./shared/QuestionBankSettings";
 import { Asset, Notice, useData, useTask, saveBlob } from "./shared/shared";
 import { chapterNames as chapters } from "./shared/import-normalization";
+import { publicationBatchBody } from "./shared/question-publication";
 
 interface QuestionItem {
   id: string;
@@ -161,6 +165,12 @@ export default function AdminQuestions() {
       ),
     [qbank, chapter, onlyCritical, statusFilter, q],
   );
+  const drafts = shown.filter((row) => !row.published);
+  const chosen = drafts.filter((row) => checked.has(row.id));
+  const allChecked = drafts.length > 0 && chosen.length === drafts.length;
+  useEffect(() => {
+    setChecked(new Set());
+  }, [q, chapter, onlyCritical, statusFilter]);
 
   function openEdit(item: QuestionItem) {
     if (!item.id) sets.reload();
@@ -246,12 +256,12 @@ export default function AdminQuestions() {
 
   return (
     <Page
-      title="Câu hỏi thi"
-      subtitle={
-        tab !== "questions"
-          ? "Quản lý bộ nhận dữ liệu và cấu hình đề thi theo từng hạng giấy phép lái xe."
-          : `${data.value ? qbank.length : "—"} câu · ${data.value ? qbank.filter((x) => x.critical).length : "—"} câu điểm liệt`
-      }
+      title="Quản lý đề thi GPLX"
+      // subtitle={
+      //   tab !== "questions"
+      //     ? "Quản lý bộ nhận dữ liệu và cấu hình đề thi theo từng hạng giấy phép lái xe."
+      //     : undefined
+      // }
       actions={
         tab === "questions" ? (
           <>
@@ -288,11 +298,10 @@ export default function AdminQuestions() {
             role="tab"
             aria-selected={tab === value}
             onClick={() => switchTab(value)}
-            className={`min-h-10 shrink-0 whitespace-nowrap border-b-2 py-2 text-sm font-medium transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-accent-strong ${
-              tab === value
-                ? "border-navy text-navy font-semibold"
-                : "border-transparent text-muted hover:text-navy"
-            }`}
+            className={`min-h-10 shrink-0 whitespace-nowrap border-b-2 py-2 text-sm font-medium transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-accent-strong ${tab === value
+              ? "border-navy text-navy font-semibold"
+              : "border-transparent text-muted hover:text-navy"
+              }`}
           >
             {label}
           </button>
@@ -317,10 +326,15 @@ export default function AdminQuestions() {
             />
           )}
 
-          <div className="flex flex-wrap items-center gap-3 mb-4">
+          <ContentStats
+            total={data.value?.length}
+            published={data.value?.filter((row) => row.published).length}
+          />
+
+          <div className="grid gap-3 mb-4 sm:grid-cols-2 xl:grid-cols-[minmax(16rem,1fr)_14rem_12rem_auto] xl:items-center">
             <input
               aria-label="Tìm câu hỏi"
-              className={`${inputCls} max-w-xs`}
+              className={inputCls}
               placeholder="Tìm câu hỏi, mã, nguồn…"
               value={q}
               onChange={(e) => {
@@ -330,7 +344,7 @@ export default function AdminQuestions() {
               }}
             />
             <select
-              className={`${inputCls} max-w-[220px]`}
+              className={inputCls}
               value={chapter}
               onChange={(e) =>
                 updateUrl({ chapter: e.target.value === "all" ? null : e.target.value })
@@ -343,7 +357,7 @@ export default function AdminQuestions() {
               ))}
             </select>
             <select
-              className={`${inputCls} max-w-[180px]`}
+              className={inputCls}
               value={statusFilter}
               onChange={(e) =>
                 updateUrl({ status: e.target.value === "all" ? null : e.target.value })
@@ -364,55 +378,99 @@ export default function AdminQuestions() {
             </label>
           </div>
 
+          <SelectionBar selected={chosen.length} total={drafts.length}>
+            <Button
+              variant="primary"
+              disabled={task.busy || data.loading || !chosen.length || chosen.length > 600}
+              onClick={() =>
+                void task.run(async () => {
+                  await api(
+                    "/admin/questions/publication-batch",
+                    send("POST", publicationBatchBody(
+                      (data.value || []).filter((row) => chosen.some((item) => item.id === row.id)),
+                    )),
+                  );
+                  setChecked(new Set());
+                  data.reload();
+                })
+              }
+            >
+              Duyệt và xuất bản các câu đã chọn
+            </Button>
+            {chosen.length > 600 && (
+              <p className="w-full text-xs text-muted">Mỗi lần xuất bản tối đa 600 bản ghi.</p>
+            )}
+          </SelectionBar>
+
           <Card className="overflow-x-auto">
-            <table className="w-full min-w-[720px]">
+            <table className="w-full min-w-[960px]">
               <thead className="border-b border-line">
                 <tr>
+                  <Th className="w-12">
+                    <input
+                      type="checkbox"
+                      aria-label="Chọn tất cả câu hỏi bản nháp đang lọc"
+                      checked={allChecked}
+                      className="h-4 w-4 accent-accent-strong"
+                      ref={(input) => { if (input) input.indeterminate = chosen.length > 0 && !allChecked; }}
+                      disabled={task.busy || data.loading || !drafts.length}
+                      onChange={(event) => setChecked(new Set(event.target.checked ? drafts.map((row) => row.id) : []))}
+                    />
+                  </Th>
                   <Th className="w-12">#</Th>
                   <Th>Câu hỏi</Th>
                   <Th>Chương</Th>
-                  <Th>Nguồn</Th>
-                  <Th>Trạng thái</Th>
+                  <Th className="w-48">Nguồn</Th>
+                  <Th className="w-32">Trạng thái</Th>
                   <Th className="text-right">Thao tác</Th>
                 </tr>
               </thead>
               <tbody>
                 {shown.map((x, i) => (
-                  <tr key={x.id} className="border-b border-line/60 last:border-0 hover:bg-bg">
-                    <Td className="text-muted font-mono text-xs">{i + 1}</Td>
-                    <Td className="text-navy">
-                      <label className="flex items-start gap-2">
+                  <tr key={x.id} className="border-b border-line/60 last:border-0 hover:bg-hover">
+                    <Td>
+                      {!x.published && (
                         <input
                           type="checkbox"
+                          aria-label={`Chọn câu hỏi ${x.externalId}`}
                           checked={checked.has(x.id)}
-                          onChange={() =>
-                            setChecked((p) => {
-                              const n = new Set(p);
-                              n.has(x.id) ? n.delete(x.id) : n.add(x.id);
-                              return n;
-                            })
-                          }
+                          className="h-4 w-4 accent-accent-strong"
+                          disabled={task.busy || data.loading}
+                          onChange={(event) => {
+                            const selected = event.target.checked;
+                            setChecked((previous) => {
+                              const next = new Set(previous);
+                              if (selected) next.add(x.id);
+                              else next.delete(x.id);
+                              return next;
+                            });
+                          }}
                         />
-                        <span className="font-medium">{x.question}</span>
-                      </label>
+                      )}
+                    </Td>
+                    <Td className="text-muted font-mono text-xs">{i + 1}</Td>
+                    <Td className="text-navy">
+                      <span className="font-medium">{x.question}</span>
                       {x.critical && (
                         <span className="ml-2">
                           <Badge tone="red">Điểm liệt</Badge>
                         </span>
                       )}
-                      <span className="block mt-0.5 text-[12px] text-muted">
-                        Đáp án: {x.options[x.answer]}
-                      </span>
                     </Td>
                     <Td className="text-muted whitespace-nowrap">{x.chapter}</Td>
-                    <Td className="text-muted">{x.source}</Td>
+                    <Td className="text-muted">
+                      <span className="block max-w-48 truncate" title={x.source}>
+                        {x.source}
+                      </span>
+                    </Td>
                     <Td>
-                      <Badge tone={x.published ? "green" : "amber"}>
+                      <Badge tone={x.published ? "green" : "gray"}>
                         {x.published ? "Đã xuất bản" : "Bản nháp"}
                       </Badge>
                     </Td>
                     <Td className="text-right whitespace-nowrap">
-                      <span className="inline-flex flex-wrap justify-end gap-1.5">
+                      <span className="inline-flex items-center justify-end gap-2">
+                        <EditIconButton onClick={() => openEdit(x)} />
                         <Button
                           size="sm"
                           disabled={task.busy}
@@ -420,16 +478,13 @@ export default function AdminQuestions() {
                         >
                           {x.published ? "Hủy xuất bản" : "Xuất bản"}
                         </Button>
-                        <Button size="sm" variant="ghost" onClick={() => openEdit(x)}>
-                          Sửa
-                        </Button>
                       </span>
                     </Td>
                   </tr>
                 ))}
                 {!shown.length && (
                   <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-[13.5px] text-muted">
+                    <td colSpan={7} className="px-4 py-8 text-center text-[13.5px] text-muted">
                       Không có câu hỏi phù hợp.
                     </td>
                   </tr>
@@ -437,30 +492,6 @@ export default function AdminQuestions() {
               </tbody>
             </table>
           </Card>
-
-          <div className="mt-4 flex flex-wrap gap-3">
-            <Button
-              disabled={task.busy || !checked.size}
-              onClick={() =>
-                void task.run(async () => {
-                  await api(
-                    "/admin/questions/publication-batch",
-                    send("POST", {
-                      rows: (data.value || [])
-                        .filter((r) => checked.has(r.id))
-                        .map((r) => ({ id: r.id, version: r.version })),
-                      reviewed: true,
-                      published: true,
-                    }),
-                  );
-                  setChecked(new Set());
-                  data.reload();
-                })
-              }
-            >
-              Duyệt và xuất bản các câu đã chọn ({checked.size})
-            </Button>
-          </div>
 
           <Modal
             open={!!editing}
@@ -612,7 +643,7 @@ export default function AdminQuestions() {
                 {record && (
                   <>
                     <p className="text-xs">
-                      {record.published ? "Đã xuất bản" : "Bản nháp"} · Version {record.version}
+                      {record.published ? "Đã xuất bản" : "Bản nháp"} · phiên bản {record.version}
                     </p>
                     {!!record.data.imageKey && (
                       <Asset

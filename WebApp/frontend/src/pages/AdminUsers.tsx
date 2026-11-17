@@ -16,6 +16,7 @@ import {
   type Tone,
 } from "../admin/ui";
 import { Notice, useData, useTask, saveBlob } from "./shared/shared";
+import { chatStateLabel } from "./shared/chat-state";
 
 type UserRoleLabel = "Người học" | "Cảnh sát" | "Quản trị viên";
 type UserRecord = { id: string; name: string; email: string; role: string; enabled: boolean };
@@ -131,7 +132,7 @@ export default function AdminUsers() {
                 ? "Không có căn cứ"
                 : r.state === "ANSWERED"
                   ? "Đã trả lời"
-                  : r.state,
+                  : chatStateLabel(r.state),
         feedback:
           r.feedback === "HELPFUL" ? ("up" as const) : r.feedback ? ("down" as const) : null,
         time: r.createdAt,
@@ -246,7 +247,7 @@ export default function AdminUsers() {
 
   return (
     <Page
-      title={isPolice ? "Nhật ký chat" : "Người dùng & Nhật ký chat"}
+      title={isPolice ? "Lịch sử trò chuyện" : "Người dùng & Lịch sử trò chuyện"}
       subtitle={
         tab === "users"
           ? `${rawUsers ? users.length : "—"} tài khoản · ${rawUsers ? users.filter((u) => u.active).length : "—"} đang hoạt động`
@@ -284,7 +285,7 @@ export default function AdminUsers() {
                 : "border-transparent text-muted hover:text-navy"
             }`}
           >
-            Nhật ký chat
+            Lịch sử trò chuyện
             {issueCount > 0 && (
               <span className="ml-1.5 text-xs font-semibold text-accent-strong">
                 · {issueCount} cần xử lý
@@ -313,7 +314,7 @@ export default function AdminUsers() {
             <input
               aria-label="Tìm người dùng"
               className={`${inputCls} max-w-xs`}
-              placeholder="Tìm tên, email…"
+              placeholder="Tìm tên, thư điện tử…"
               value={q}
               onChange={(e) => {
                 const v = e.target.value;
@@ -341,7 +342,7 @@ export default function AdminUsers() {
                 <tr>
                   <Th>Người dùng</Th>
                   <Th>Vai trò</Th>
-                  <Th>Báo cáo chat</Th>
+                  <Th>Báo cáo trò chuyện</Th>
                   <Th>Hoạt động</Th>
                   <Th className="text-right">Thao tác</Th>
                 </tr>
@@ -423,7 +424,7 @@ export default function AdminUsers() {
                 <input
                   aria-label="Tìm báo cáo"
                   className={`${inputCls} w-full`}
-                  placeholder="Tìm câu hỏi, tên, email…"
+                  placeholder="Tìm câu hỏi, tên, thư điện tử…"
                   value={q}
                   onChange={(e) => {
                     const v = e.target.value;

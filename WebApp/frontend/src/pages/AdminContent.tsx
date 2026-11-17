@@ -40,8 +40,8 @@ export default function AdminContent() {
 
   return (
     <Page
-      title="Nội dung luật"
-      subtitle="Quản lý văn bản pháp luật, điều khoản và biển báo; nhập hàng loạt và kiểm duyệt xuất bản tại một nơi."
+      title="Văn bản quy định"
+      // subtitle="Quản lý văn bản pháp luật, điều khoản và biển báo; nhập hàng loạt và kiểm duyệt xuất bản tại một nơi."
       actions={
         <>
           <Button
@@ -68,11 +68,10 @@ export default function AdminContent() {
             role="tab"
             aria-selected={tab === key}
             onClick={() => switchTab(key)}
-            className={`pb-3 text-sm cursor-pointer border-b-2 transition-colors focus-visible:outline-2 focus-visible:outline-accent-strong ${
-              tab === key
+            className={`pb-3 text-sm cursor-pointer border-b-2 transition-colors focus-visible:outline-2 focus-visible:outline-accent-strong ${tab === key
                 ? "border-navy text-navy font-semibold"
                 : "border-transparent text-muted hover:text-navy"
-            }`}
+              }`}
           >
             {label}
           </button>

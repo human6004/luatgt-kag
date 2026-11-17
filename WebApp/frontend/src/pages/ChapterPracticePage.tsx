@@ -198,7 +198,7 @@ function ChapterPractice({ setId, chapterId }: { setId: string; chapterId: numbe
               }}
               className="text-xs text-muted hover:text-navy"
             >
-              Hỏi Chatbot KAG giải thích
+              Hỏi trợ lý KAG giải thích
             </Link>
           </aside>
         </div>

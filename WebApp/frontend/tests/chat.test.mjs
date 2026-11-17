@@ -143,6 +143,93 @@ test("empty history is successful without fabricating a conversation", async () 
   assert.deepEqual(chat.getSnapshot().rows, []);
   assert.equal(chat.getSnapshot().error, "");
 });
+
+test("load more appends complete conversations, deduplicates rows and retries without losing history", async () => {
+  const cursor = "2026-10-10T00:00:00Z|fixture-chat";
+  const first = response([answered]);
+  first.headers.set("X-Next-Cursor", cursor);
+  const chat = await loaded(() => first);
+  let finish;
+  let calls = 0;
+  globalThis.fetch = async (url, options) => {
+    assert.equal(url, `/api/chat?before=${encodeURIComponent(cursor)}`);
+    assert.equal(options.headers.get("Authorization"), "Bearer webapp-jwt-fixture");
+    calls++;
+    return new Promise((resolve) => { finish = resolve; });
+  };
+  const pending = chat.loadMore();
+  const duplicate = chat.loadMore();
+  assert.equal(chat.getSnapshot().loadingMore, true);
+  assert.equal(await chat.submit("Wait for history"), false);
+  finish(response({}, 503));
+  await Promise.all([pending, duplicate]);
+  assert.equal(calls, 1);
+  assert.deepEqual(chat.getSnapshot().rows, [answered]);
+  assert.equal(chat.getSnapshot().nextCursor, cursor);
+  assert.match(chat.getSnapshot().moreError, /Không tải/);
+  const retry = chat.loadMore();
+  const older = { ...answered, id: "older" };
+  finish(response([answered, older]));
+  await retry;
+  assert.deepEqual(chat.getSnapshot().rows, [answered, older]);
+  assert.equal(chat.getSnapshot().moreError, "");
+  assert.equal(chat.getSnapshot().nextCursor, "");
+  await chat.loadMore();
+  assert.equal(calls, 2);
+});
+
+test("an expired session on a later page clears private history and its cursor", async () => {
+  const first = response([answered]);
+  first.headers.set("X-Next-Cursor", "cursor");
+  const chat = await loaded(() => first);
+  globalThis.fetch = async () => response({}, 401);
+  await chat.loadMore();
+  assert.equal(expired, true);
+  assert.deepEqual(chat.getSnapshot().rows, []);
+  assert.equal(chat.getSnapshot().nextCursor, "");
+  assert.match(chat.getSnapshot().moreError, /đăng nhập/);
+});
+
+test("reloading an older selected conversation requests its full history as well", async () => {
+  const chat = createChat();
+  globalThis.fetch = async (url) => {
+    assert.equal(url, "/api/chat?selected=older-root");
+    return response([{ ...answered, id: "older-root" }]);
+  };
+  await chat.load("older-root");
+  assert.equal(chat.getSnapshot().rows[0].id, "older-root");
+  assert.equal(chat.getSnapshot().error, "");
+});
+test("deleting a conversation removes all its turns only after server success", async () => {
+  const root = { ...answered, id: "root", conversationId: "root" };
+  const followup = { ...answered, id: "followup", conversationId: "root" };
+  const chat = await loaded(() => response([followup, root, answered]));
+  let deletion = 0;
+  globalThis.fetch = async (url, options) => {
+    assert.equal(url, "/api/chat/root");
+    assert.equal(options.method, "DELETE");
+    assert.equal(options.headers.get("Authorization"), "Bearer webapp-jwt-fixture");
+    deletion++;
+    return deletion === 1 ? response({ message: "Đang trả lời" }, 409) : new Response(null, { status: 204 });
+  };
+  await assert.rejects(chat.removeConversation("root"), /Đang trả lời/);
+  assert.equal(chat.getSnapshot().rows.length, 3);
+  await chat.removeConversation("root");
+  assert.deepEqual(chat.getSnapshot().rows, [answered]);
+});
+test("renaming preserves message text and changes the root title after server confirmation", async () => {
+  const chat = await loaded(() => response([answered]));
+  globalThis.fetch = async (url, options) => {
+    assert.equal(url, "/api/chat/fixture-chat");
+    assert.equal(options.method, "PATCH");
+    assert.deepEqual(JSON.parse(options.body), { title: "Biển báo đã hỏi" });
+    return new Response(null, { status: 204 });
+  };
+  await assert.rejects(chat.renameConversation(answered.id, "  "), /1 đến 200/);
+  await chat.renameConversation(answered.id, "  Biển báo đã hỏi  ");
+  assert.equal(chat.getSnapshot().rows[0].conversationTitle, "Biển báo đã hỏi");
+  assert.equal(chat.getSnapshot().rows[0].question, answered.question);
+});
 test("history network error is visible and can be retried", async () => {
   const chat = await loaded(() => {
     throw new Error("offline");

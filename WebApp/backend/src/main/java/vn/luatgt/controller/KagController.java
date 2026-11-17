@@ -210,4 +210,5 @@ public class KagController {
     @PostMapping("/admin/imports/units/confirm") Map<String,Integer> confirm(@Valid @RequestBody ImportRequest request) { return units.confirm(request); }
     @PutMapping("/admin/units/{id}") Map<String,Object> edit(@PathVariable UUID id,@Valid @RequestBody ContentChangeRequest request) { return units.edit(id,request); }
     @PostMapping("/admin/units/{id}/publication") Map<String,Object> publish(@PathVariable UUID id,@Valid @RequestBody PublicationRequest request) { return units.publish(id,request); }
+    @PostMapping("/admin/units/publication-batch") void batch(@Valid @RequestBody BatchPublicationRequest request) { units.batchPublication(request); }
 }

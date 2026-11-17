@@ -21,6 +21,7 @@ public class QuestionBankService {
         bank.saveChapter(set,topic,n.path("chapter").asInt(),n.path("name").asText());
     }
     @Transactional public void deleteChapter(UUID set,UUID topic) {bank.deleteChapter(set,topic);}
+    @Transactional public void deleteChapters(UUID set,List<UUID> ids) {for(var id:deletionIds(ids))bank.deleteChapter(set,id);}
     @Transactional public void endRule(UUID id,ObjectNode n) {ContentService.date(n,"validTo",true);bank.endRule(id,LocalDate.parse(n.path("validTo").asText()));}
     @Transactional public void updateSet(UUID id,ObjectNode n) {
         for(String field:List.of("releaseCode","setCode")) {
@@ -31,6 +32,7 @@ public class QuestionBankService {
         bank.updateSet(id,n);
     }
     @Transactional public void deleteSet(UUID id) {bank.deleteSet(id);}
+    @Transactional public void deleteSets(List<UUID> ids) {for(var id:deletionIds(ids))bank.deleteSet(id);}
     public List<ObjectNode> rules(boolean active) {
         var rules=bank.rules(active);
         for(var r:rules) r.set("quotas",json.valueToTree(bank.quotas(UUID.fromString(r.path("rule_id").asText()))));
@@ -58,6 +60,11 @@ public class QuestionBankService {
         return bank.updateRule(id,n);
     }
     @Transactional public void deleteRule(UUID id) {bank.deleteRule(id);}
+    @Transactional public void deleteRules(List<UUID> ids) {for(var id:deletionIds(ids))bank.deleteRule(id);}
+    private List<UUID> deletionIds(List<UUID> ids) {
+        if(new HashSet<>(ids).size()!=ids.size())throw ApiErrors.bad("Trùng ID trong danh sách xóa");
+        return ids.stream().sorted().toList();
+    }
     private void validateRule(ObjectNode n) {
         try {UUID.fromString(n.path("setId").asText());}catch(IllegalArgumentException e){throw ApiErrors.bad("setId không hợp lệ");}
         ContentService.text(n,"license",12,true);if(!n.path("license").asText().matches("[A-Z][A-Z0-9]*"))throw ApiErrors.bad("Hạng GPLX không hợp lệ");

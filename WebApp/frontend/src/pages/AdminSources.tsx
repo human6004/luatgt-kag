@@ -47,12 +47,12 @@ export default function AdminSources() {
       }
     >
       <p className="text-sm mb-5">
-        Đây là nguồn đã chuẩn bị cho Builder. Nguồn dùng trong Chat được giữ theo phiên dựng; cập
+        Đây là nguồn đã chuẩn bị cho công cụ dựng đồ thị. Nguồn dùng trong trợ lý được giữ theo phiên dựng; cập
         nhật bộ dữ liệu này không thay nguồn của câu trả lời cũ.
       </p>
       <nav className="flex flex-wrap gap-4 text-sm mb-5">
         <Link className="underline" to="/admin/schema">
-          Xem schema và quan hệ đồ thị
+          Xem cấu trúc dữ liệu và quan hệ đồ thị
         </Link>
         <Link className="underline" to="/admin/chatbot?step=2">
           Dựng đồ thị từ nguồn này
@@ -161,7 +161,7 @@ export default function AdminSources() {
           <details>
             <summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary>
             <p className="mt-3 break-all">
-              {value.dataset} · {value.source}. Số liệu đọc từ tệp nguồn, không phải số liệu graph.
+              {value.dataset} · {value.source}. Số liệu đọc từ tệp nguồn, không phải số liệu đồ thị.
             </p>
           </details>
         </div>

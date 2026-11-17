@@ -1,369 +1,503 @@
-import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
-import { normalizeImport } from "./import-normalization";
-import { api, send, type ContentRecord } from "../../api";
-import { Button, Card, FilePicker, FilterTabs, Modal, Th, Td, inputCls } from "../../admin/ui";
-import { useAdmin } from "../../admin/store";
-import { csvSamples, parseCsv, tableObjects, type ImportKind } from "../../admin/import-data";
-import { useData, useTask, Notice, Asset, download, saveBlob } from "./shared";
-import type { QuestionSet } from "./QuestionBankSettings";
+import { useEffect, useState } from "react"
 
-export type ContentKind = "signs" | "documents" | "units";
+import { Link, useSearchParams } from "react-router-dom"
+
+import { normalizeImport } from "./import-normalization"
+import { publicationBatchBody } from "./question-publication"
+
+import { api, media, send, type ContentRecord } from "../../api"
+
+import {
+  Button,
+  Card,
+  ContentStats,
+  EditIconButton,
+  FilePicker,
+  Modal,
+  SelectionBar,
+  Th,
+  Td,
+  inputCls,
+} from "../../admin/ui"
+
+import { useAdmin } from "../../admin/store"
+
+import {
+  csvSamples,
+  parseCsv,
+  tableObjects,
+  type ImportKind,
+} from "../../admin/import-data"
+
+import { useData, useTask, Notice, Asset, download, saveBlob } from "./shared"
+
+import type { QuestionSet } from "./QuestionBankSettings"
+
+export type ContentKind = "signs" | "documents" | "units"
 
 const titles: Record<ImportKind, string> = {
   questions: "Ngân hàng câu hỏi",
+
   signs: "Biển báo",
+
   documents: "Văn bản pháp luật",
+
   units: "Điều khoản / đơn vị pháp lý",
-};
+}
 
 const fields: Record<ContentKind, string[]> = {
   signs: [
     "externalId",
+
     "code",
+
     "name",
+
     "group",
+
     "meaning",
+
     "doc_id",
+
     "unit_id",
+
     "qcvn",
+
     "so_hieu",
+
     "bien_phu_variant",
+
     "record_type",
+
     "parent_code",
+
     "description_scope",
+
+    "ngay_hieu_luc",
+
+    "ngay_het_hieu_luc",
+  ],
+
+  documents: [
+    "externalId",
+    "title",
+    "so_hieu",
+    "source",
     "ngay_hieu_luc",
     "ngay_het_hieu_luc",
   ],
-  documents: ["externalId", "title", "so_hieu", "source", "ngay_hieu_luc", "ngay_het_hieu_luc"],
-  units: ["externalId", "doc_id", "parent_id", "unit_type", "so_hieu", "text", "order"],
-};
+
+  units: [
+    "externalId",
+    "doc_id",
+    "parent_id",
+    "unit_type",
+    "so_hieu",
+    "text",
+    "order",
+  ],
+}
 
 const labels: Record<string, string> = {
   externalId: "Mã định danh",
+
   text: "Nội dung",
+
   source: "Nguồn",
+
   code: "Mã biển",
+
   name: "Tên biển",
+
   group: "Nhóm biển",
+
   meaning: "Ý nghĩa",
+
   doc_id: "Mã văn bản nguồn",
+
   unit_id: "Điều/khoản/đơn vị nguồn",
+
   qcvn: "Quy chuẩn",
+
   so_hieu: "Số hiệu văn bản",
+
   bien_phu_variant: "Biến thể biển phụ",
+
   record_type: "Loại bản ghi biển báo",
+
   parent_code: "Mã biển cha",
+
   description_scope: "Phạm vi mô tả",
+
   ngay_hieu_luc: "Ngày hiệu lực",
+
   ngay_het_hieu_luc: "Ngày hết hiệu lực",
+
   title: "Tên văn bản",
+
   parent_id: "ID đơn vị cha (để trống nếu là gốc)",
-  unit_type: "Loại đơn vị theo contract KAG",
+
+  unit_type: "Loại đơn vị theo đặc tả KAG",
+
   order: "Thứ tự trong nguồn",
-};
+}
 
 function Table({ children }: { children: React.ReactNode }) {
   return (
-    <div className="overflow-x-auto rounded-2xl border border-line bg-surface mt-5">
+    <div className="overflow-x-auto rounded-lg border border-line bg-surface">
       <table className="w-full text-sm">{children}</table>
     </div>
-  );
+  )
 }
 
 function sourceGraphContext(parameters: URLSearchParams) {
   const projectId = parameters.get("project_id"),
-    runId = parameters.get("run_id");
+    runId = parameters.get("run_id")
+
   return projectId &&
     /^[1-9][0-9]{0,9}$/.test(projectId) &&
     runId &&
     /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(runId)
     ? `project_id=${projectId}&run_id=${encodeURIComponent(runId)}`
-    : "";
+    : ""
 }
 
 export function ContentManager({ kind }: { kind: ContentKind }) {
-  const resource = kind === "units" ? "/admin/units" : "/admin/content";
-  const [parameters, setParameters] = useSearchParams();
-  const graphContext = sourceGraphContext(parameters);
+  const resource = kind === "units" ? "/admin/units" : "/admin/content"
 
-  const urlQuery = parameters.get("q") ?? parameters.get("source_id") ?? "";
-  const rawStatus = parameters.get("status");
-  const state = rawStatus === "published" || rawStatus === "draft" ? rawStatus : "";
-  const signGroup = kind === "signs" ? (parameters.get("group") ?? "") : "";
-  const editId = parameters.get("id") ?? "";
+  const [parameters, setParameters] = useSearchParams()
+
+  const graphContext = sourceGraphContext(parameters)
+
+  const urlQuery = parameters.get("q") ?? parameters.get("source_id") ?? ""
+
+  const rawStatus = parameters.get("status")
+
+  const state =
+    rawStatus === "published" || rawStatus === "draft" ? rawStatus : ""
+
+  const signGroup = kind === "signs" ? (parameters.get("group") ?? "") : ""
+
+  const editId = parameters.get("id") ?? ""
 
   const data = useData<ContentRecord[]>(`/admin/${kind}`),
     task = useTask(),
     [query, setQuery] = useState(urlQuery),
     [selected, setSelected] = useState<ContentRecord | null>(null),
     [form, setForm] = useState<Record<string, unknown>>({}),
-    [history, setHistory] = useState<
-      {
-        version: number;
-        changedAt: string;
-        data: string;
-      }[]
-    >([]),
-    [message, setMessage] = useState("");
-  const [checked, setChecked] = useState<Set<string>>(() => new Set());
-  const [batchError, setBatchError] = useState("");
+    [history, setHistory] = useState<{
+      version: number
+
+      changedAt: string
+
+      data: string
+    }[]>([]),
+    [message, setMessage] = useState("")
+
+  const [checked, setChecked] = useState<Set<string>>(() => new Set())
+
+  const [pdfPreview, setPdfPreview] = useState("")
 
   useEffect(() => {
-    setQuery(urlQuery);
-  }, [urlQuery]);
+    return () => {
+      if (pdfPreview) URL.revokeObjectURL(pdfPreview)
+    }
+  }, [pdfPreview])
+
+  const [batchError, setBatchError] = useState("")
 
   useEffect(() => {
-    setChecked(new Set());
-  }, [urlQuery, state, signGroup]);
+    setQuery(urlQuery)
+  }, [urlQuery])
+
+  useEffect(() => {
+    setChecked(new Set())
+    setBatchError("")
+  }, [urlQuery, state, signGroup])
 
   function updateUrl(patch: Record<string, string | null>, replace = false) {
     setParameters(
       (prev) => {
-        const next = new URLSearchParams(prev);
-        if ("q" in patch) next.delete("source_id");
+        const next = new URLSearchParams(prev)
+
+        if ("q" in patch) next.delete("source_id")
+
         for (const [k, v] of Object.entries(patch)) {
-          if (v === null || v === "") next.delete(k);
-          else next.set(k, v);
+          if (v === null || v === "") next.delete(k)
+          else next.set(k, v)
         }
-        return next;
+
+        return next
       },
+
       { replace },
-    );
+    )
   }
 
   function applySelection(row: ContentRecord | null) {
-    setSelected(row);
-    setForm(row ? (row.id ? { ...row.data } : { reviewed: false }) : {});
-    setHistory([]);
+    setPdfPreview("")
+
+    setSelected(row)
+
+    setForm(row ? (row.id ? { ...row.data } : { reviewed: false }) : {})
+
+    setHistory([])
   }
 
   useEffect(() => {
     if (!editId) {
-      if (selected !== null) applySelection(null);
-      return;
+      if (selected !== null) applySelection(null)
+
+      return
     }
+
     if (editId === "new") {
       if (!selected || selected.id !== "") {
-        task.clearError();
-        applySelection({ id: "", externalId: "", version: 0, published: false, data: {} });
-        setMessage("");
+        task.clearError()
+
+        applySelection({
+          id: "",
+          externalId: "",
+          version: 0,
+          published: false,
+          data: {},
+        })
+
+        setMessage("")
       }
-      return;
+
+      return
     }
-    if (!data.value) return;
-    const target = data.value.find((r) => r.id === editId || r.externalId === editId);
+
+    if (!data.value) return
+
+    const target = data.value.find(
+      (r) => r.id === editId || r.externalId === editId,
+    )
+
     if (target && selected?.id !== target.id) {
-      task.clearError();
-      applySelection(target);
-      setMessage("");
+      task.clearError()
+
+      applySelection(target)
+
+      setMessage("")
     }
-  }, [editId, data.value]);
+  }, [editId, data.value])
 
   const rows = (data.value || []).filter(
     (r) =>
-      `${r.externalId} ${r.data.name || r.data.title || r.data.text || ""}${kind === "signs" ? ` ${r.data.code ?? ""} ${r.data.meaning ?? ""}` : ""}`
+      `${r.externalId} ${r.data.name || r.data.title || r.data.text || ""}${
+        kind === "signs" ? ` ${r.data.code ?? ""} ${r.data.meaning ?? ""}` : ""
+      }`
+
         .toLowerCase()
+
         .includes(query.toLowerCase()) &&
       (!state || (state === "published" ? r.published : !r.published)) &&
       (!signGroup || r.data.group === signGroup),
-  );
+  )
+
   const signGroups = [
-    ...new Set((data.value ?? []).map((r) => String(r.data.group ?? "")).filter(Boolean)),
-  ].sort((a, b) => a.localeCompare(b, "vi"));
-  const drafts = kind === "signs" ? rows.filter((r) => !r.published) : [];
-  const chosen = drafts.filter((r) => checked.has(r.id));
-  const allChecked = drafts.length > 0 && chosen.length === drafts.length;
+    ...new Set(
+      (data.value ?? []).map((r) => String(r.data.group ?? "")).filter(Boolean),
+    ),
+  ].sort((a, b) => a.localeCompare(b, "vi"))
+
+  const drafts = rows.filter((r) => !r.published)
+
+  const chosen = drafts.filter((r) => checked.has(r.id))
+
+  const allChecked = drafts.length > 0 && chosen.length === drafts.length
 
   function openEdit(row: ContentRecord) {
-    task.clearError();
-    applySelection(row);
-    setMessage("");
-    updateUrl({ id: row.id });
+    task.clearError()
+
+    applySelection(row)
+
+    setMessage("")
+
+    updateUrl({ id: row.id })
   }
 
   function closeEdit() {
-    if (task.busy) return;
-    task.clearError();
-    applySelection(null);
-    updateUrl({ id: null });
+    if (task.busy) return
+
+    task.clearError()
+
+    applySelection(null)
+
+    updateUrl({ id: null })
   }
 
   function field(key: string, value: unknown) {
     setForm((prev) => {
       const source =
         key === "externalId"
-          ? (
-              {
-                documents: "doc_id",
-                signs: "sign_id",
-                units: "unit_id",
-              } as Record<string, string>
-            )[kind]
-          : kind === "signs"
-            ? (
-                {
-                  code: "ma_bien",
-                  name: "ten",
-                  group: "nhom",
-                  meaning: "mo_ta",
-                } as Record<string, string>
-              )[key]
-            : kind === "documents"
-              ? (
-                  {
-                    ngay_hieu_luc: "effective_from",
-                    ngay_het_hieu_luc: "effective_to",
-                    source: "source_url",
-                  } as Record<string, string>
-                )[key]
-              : undefined;
+          ? ({
+              documents: "doc_id",
 
-      return { ...prev, [key]: value, ...(source ? { [source]: value } : {}) };
-    });
+              signs: "sign_id",
+
+              units: "unit_id",
+            } as Record<string, string>)[kind]
+          : kind === "signs"
+            ? ({
+                code: "ma_bien",
+
+                name: "ten",
+
+                group: "nhom",
+
+                meaning: "mo_ta",
+              } as Record<string, string>)[key]
+            : kind === "documents"
+              ? ({
+                  ngay_hieu_luc: "effective_from",
+
+                  ngay_het_hieu_luc: "effective_to",
+
+                  source: "source_url",
+                } as Record<string, string>)[key]
+              : undefined
+
+      return { ...prev, [key]: value, ...(source ? { [source]: value } : {}) }
+    })
   }
 
   async function save(showMessage = true) {
-    if (!selected) return;
+    if (!selected) return
+
     const next = await api<ContentRecord>(
       `${resource}/${selected.id}`,
+
       send("PUT", { version: selected.version, data: form }),
-    );
-    applySelection(next);
-    data.reload();
-    if (showMessage) setMessage("Đã lưu bản nháp.");
+    )
+
+    applySelection(next)
+
+    data.reload()
+
+    if (showMessage) setMessage("Đã lưu bản nháp.")
   }
 
   return (
     <div>
       {graphContext && (
         <p className="mb-4 text-sm">
-          <Link className="underline" to={`/admin/chatbot?step=3&${graphContext}`}>
+          <Link
+            className="underline"
+            to={`/admin/chatbot?step=3&${graphContext}`}
+          >
             Quay lại đồ thị và kiểm tra lại nguồn
           </Link>
-          . Kiểm duyệt, xuất bản văn bản trước đơn vị; bản phục vụ chỉ đổi sau khi xem trước và xác
-          nhận.
+          . Kiểm duyệt, xuất bản văn bản trước đơn vị; bản phục vụ chỉ đổi sau
+          khi xem trước và xác nhận.
         </p>
       )}
-      <Notice {...data} retry={data.reload} empty={!data.value?.length} />
+      <Notice {...data} retry={data.reload} />
       <Notice error={!selected ? task.error : undefined} />
       {message && (
         <p role="status" className="my-3 text-emerald-700">
           {message}
         </p>
       )}
-      <div className="grid sm:grid-cols-3 gap-4 mb-5">
-        {[
-          ["Tổng nội dung", data.value?.length],
-          ["Đã xuất bản", data.value?.filter((r) => r.published).length],
-          ["Bản nháp", data.value?.filter((r) => !r.published).length],
-        ].map(([label, value]) => (
-          <Card key={String(label)} className="p-5">
-            <p className="text-xs text-muted">{label}</p>
-            <p className="text-3xl font-semibold mt-3">{value ?? "—"}</p>
-          </Card>
-        ))}
-      </div>
+      <ContentStats
+        total={data.value?.length}
+        published={data.value?.filter((row) => row.published).length}
+      />
       <div
         className={
           kind === "signs"
             ? "mb-4 grid gap-3 md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)_minmax(0,0.8fr)]"
-            : "mb-3"
+            : "mb-4 grid gap-3 sm:grid-cols-[minmax(0,1fr)_12rem]"
         }
       >
         <input
           aria-label="Tìm nội dung"
           value={query}
           onChange={(e) => {
-            const v = e.target.value;
-            setQuery(v);
-            updateUrl({ q: v || null }, true);
+            const v = e.target.value
+
+            setQuery(v)
+
+            updateUrl({ q: v || null }, true)
           }}
           placeholder={
-            kind === "signs" ? "Tìm biển báo, mã, nội dung…" : "Tìm theo mã hoặc nội dung"
+            kind === "signs"
+              ? "Tìm biển báo, mã, nội dung…"
+              : "Tìm theo mã hoặc nội dung"
           }
           className={inputCls}
         />
         {kind === "signs" && (
-          <>
-            <select
-              className={inputCls}
-              aria-label="Nhóm biển báo"
-              value={signGroup}
-              onChange={(e) => updateUrl({ group: e.target.value })}
-            >
-              <option value="">Tất cả nhóm biển</option>
-              {signGroups.map((group) => (
-                <option key={group}>{group}</option>
-              ))}
-            </select>
-            <select
-              className={inputCls}
-              aria-label="Trạng thái xuất bản"
-              value={state}
-              onChange={(e) => updateUrl({ status: e.target.value })}
-            >
-              <option value="">Mọi trạng thái</option>
-              <option value="published">Đã xuất bản</option>
-              <option value="draft">Bản nháp</option>
-            </select>
-          </>
-        )}
-      </div>
-      {kind !== "signs" && (
-        <FilterTabs
-          label="Lọc trạng thái xuất bản"
-          value={state}
-          onChange={(v) => updateUrl({ status: v || null })}
-          className="mb-4"
-          items={[
-            { value: "", label: "Tất cả" },
-            { value: "published", label: "Đã xuất bản" },
-            { value: "draft", label: "Bản nháp" },
-          ]}
-        />
-      )}
-      {kind === "signs" && (
-        <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-          <span className="text-sm text-muted" role="status">
-            Chọn {chosen.length} / {drafts.length} bản nháp
-          </span>
-          <Button
-            variant="primary"
-            disabled={task.busy || data.loading || !chosen.length || chosen.length > 600}
-            onClick={() =>
-              void task.run(async () => {
-                setMessage("");
-                setBatchError("");
-                try {
-                  await api(
-                    "/admin/signs/publication-batch",
-                    send("POST", {
-                      rows: chosen.map(({ id, version }) => ({ id, version })),
-                      reviewed: true,
-                      published: true,
-                    }),
-                  );
-                } catch (error) {
-                  setBatchError(
-                    error instanceof Error ? error.message : "Yêu cầu xuất bản thất bại.",
-                  );
-                  return;
-                }
-                setChecked(new Set());
-                setMessage(`Đã xuất bản ${chosen.length} biển báo.`);
-                data.reload();
-              })
-            }
+          <select
+            className={inputCls}
+            aria-label="Nhóm biển báo"
+            value={signGroup}
+            onChange={(e) => updateUrl({ group: e.target.value })}
           >
-            Duyệt và xuất bản các biển đã chọn
-          </Button>
-          {chosen.length > 600 && (
-            <p className="w-full text-xs text-muted">Mỗi lần xuất bản tối đa 600 biển báo.</p>
-          )}
-        </div>
-      )}
-      {kind === "signs" && batchError && (
+            <option value="">Tất cả nhóm biển</option>
+            {signGroups.map((group) => (
+              <option key={group}>{group}</option>
+            ))}
+          </select>
+        )}
+        <select
+          className={inputCls}
+          aria-label="Trạng thái xuất bản"
+          value={state}
+          onChange={(e) => updateUrl({ status: e.target.value || null })}
+        >
+          <option value="">Mọi trạng thái</option>
+          <option value="published">Đã xuất bản</option>
+          <option value="draft">Bản nháp</option>
+        </select>
+      </div>
+      <SelectionBar selected={chosen.length} total={drafts.length}>
+        <Button
+          variant="primary"
+          disabled={
+            task.busy || data.loading || !chosen.length || chosen.length > 600
+          }
+          onClick={() =>
+            void task.run(async () => {
+              setMessage("")
+
+              setBatchError("")
+
+              try {
+                await api(
+                  `/admin/${kind}/publication-batch`,
+
+                  send("POST", publicationBatchBody(chosen)),
+                )
+              } catch (error) {
+                setBatchError(
+                  error instanceof Error
+                    ? error.message
+                    : "Yêu cầu xuất bản thất bại.",
+                )
+
+                return
+              }
+
+              setChecked(new Set())
+
+              setMessage(`Đã xuất bản ${chosen.length} bản ghi.`)
+
+              data.reload()
+            })
+          }
+        >
+          Duyệt và xuất bản các bản nháp đã chọn
+        </Button>
+        {chosen.length > 600 && (
+          <p className="w-full text-xs text-muted">
+            Mỗi lần xuất bản tối đa 600 bản ghi.
+          </p>
+        )}
+      </SelectionBar>
+      {batchError && (
         <section
           role="alert"
           className="mb-4 rounded-xl border border-red-200 bg-red-50 p-4 text-sm text-red-800"
@@ -379,19 +513,21 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
       <Table>
         <thead>
           <tr>
-            {kind === "signs" && (
               <Th className="w-12">
                 <input
                   type="checkbox"
-                  aria-label="Chọn tất cả biển báo bản nháp đang lọc"
+                  aria-label="Chọn tất cả bản nháp đang lọc"
                   checked={allChecked}
+                  className="h-4 w-4 accent-accent-strong"
+                  ref={(input) => { if (input) input.indeterminate = chosen.length > 0 && !allChecked }}
                   disabled={task.busy || data.loading || !drafts.length}
                   onChange={(e) =>
-                    setChecked(new Set(e.target.checked ? drafts.map((r) => r.id) : []))
+                    setChecked(
+                      new Set(e.target.checked ? drafts.map((r) => r.id) : []),
+                    )
                   }
                 />
               </Th>
-            )}
             <Th>Mã</Th>
             <Th>Nội dung</Th>
             <Th>Trạng thái</Th>
@@ -400,49 +536,62 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
         </thead>
         <tbody>
           {rows.map((r) => (
-            <tr key={r.id}>
-              {kind === "signs" && (
+            <tr key={r.id} className="border-b border-line/60 last:border-0 hover:bg-hover">
                 <Td>
                   {!r.published && (
                     <input
                       type="checkbox"
-                      aria-label={`Chọn biển ${r.data.code || r.externalId}`}
+                      aria-label={`Chọn bản nháp ${r.data.code || r.externalId}`}
                       checked={checked.has(r.id)}
+                      className="h-4 w-4 accent-accent-strong"
                       disabled={task.busy || data.loading}
                       onChange={(e) => {
-                        const isChecked = e.target.checked;
+                        const isChecked = e.target.checked
+
                         setChecked((prev) => {
-                          const next = new Set(prev);
-                          if (isChecked) next.add(r.id);
-                          else next.delete(r.id);
-                          return next;
-                        });
+                          const next = new Set(prev)
+
+                          if (isChecked) next.add(r.id)
+                          else next.delete(r.id)
+
+                          return next
+                        })
                       }}
                     />
                   )}
                 </Td>
-              )}
               <Td>{r.externalId}</Td>
               <Td>
-                <p className="max-w-xl">{String(r.data.text || r.data.title || r.data.name)}</p>
+                <p className="max-w-xl">
+                  {String(r.data.text || r.data.title || r.data.name)}
+                </p>
               </Td>
               <Td>{r.published ? "Đã xuất bản" : "Bản nháp"}</Td>
               <Td className="text-right whitespace-nowrap">
                 <span className="inline-flex flex-wrap justify-end gap-1.5">
-                  <Button size="sm" onClick={() => openEdit(r)}>
-                    Chỉnh sửa
-                  </Button>
+                  <EditIconButton onClick={() => openEdit(r)} />
                 </span>
               </Td>
             </tr>
           ))}
+          {!rows.length && !data.loading && !data.error && (
+            <tr>
+              <td colSpan={5} className="px-4 py-8 text-center text-sm text-muted">
+                Không có bản ghi phù hợp.
+              </td>
+            </tr>
+          )}
         </tbody>
       </Table>
       {selected && (
         <Modal
           open={!!selected}
           title={`${selected.id ? "Chỉnh sửa" : "Thêm"} ${
-            kind === "signs" ? "biển báo" : kind === "units" ? "đơn vị pháp lý" : "văn bản"
+            kind === "signs"
+              ? "biển báo"
+              : kind === "units"
+                ? "đơn vị pháp lý"
+                : "văn bản"
           }`}
           onClose={closeEdit}
           footer={
@@ -464,20 +613,35 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                   disabled={task.busy}
                   onClick={() =>
                     task.run(async () => {
-                      setMessage("");
-                      await save(false);
-                      const current = await api<ContentRecord[]>(`/admin/${kind}`);
-                      const record = current.find((r) => r.id === selected.id)!;
+                      setMessage("")
+
+                      await save(false)
+
+                      const current = await api<ContentRecord[]>(
+                        `/admin/${kind}`,
+                      )
+
+                      const record = current.find((r) => r.id === selected.id)!
+
                       const updated = await api<ContentRecord>(
                         `${resource}/${record.id}/publication`,
+
                         send("POST", {
                           version: record.version,
+
                           published: !selected.published,
                         }),
-                      );
-                      applySelection(updated);
-                      data.reload();
-                      setMessage(selected.published ? "Đã ngừng xuất bản." : "Đã xuất bản.");
+                      )
+
+                      applySelection(updated)
+
+                      data.reload()
+
+                      setMessage(
+                        selected.published
+                          ? "Đã ngừng xuất bản."
+                          : "Đã xuất bản.",
+                      )
                     })
                   }
                 >
@@ -495,8 +659,12 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
           )}
           {kind === "signs" && selected.id && (
             <section className="rounded-xl border border-line bg-surface p-4">
-              <h3 className="text-sm font-semibold text-navy">Xem trước ảnh biển báo</h3>
-              {Boolean(selected.data.imageKey || selected.data.hasDatasetImage) ? (
+              <h3 className="text-sm font-semibold text-navy">
+                Xem trước ảnh biển báo
+              </h3>
+              {Boolean(
+                selected.data.imageKey || selected.data.hasDatasetImage,
+              ) ? (
                 <Asset
                   key={selected.version}
                   id={selected.id}
@@ -516,33 +684,48 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
           <form
             id="content-editor"
             onSubmit={(e) => {
-              e.preventDefault();
+              e.preventDefault()
+
               task.run(async () => {
-                if (selected.id) await save();
+                if (selected.id) await save()
                 else {
                   const result = await api<{ inserted: number }>(
                     `/admin/imports/${kind}/confirm`,
+
                     send("POST", { rows: [form], updateExisting: false }),
-                  );
+                  )
+
                   if (result.inserted !== 1)
-                    throw new Error("Mã đã tồn tại. Chọn bản ghi hiện có để chỉnh sửa.");
-                  const allRows = await api<ContentRecord[]>(`/admin/${kind}`);
-                  const created = allRows.find((r) => r.externalId === form.externalId);
+                    throw new Error(
+                      "Mã đã tồn tại. Chọn bản ghi hiện có để chỉnh sửa.",
+                    )
+
+                  const allRows = await api<ContentRecord[]>(`/admin/${kind}`)
+
+                  const created = allRows.find(
+                    (r) => r.externalId === form.externalId,
+                  )
+
                   if (created) {
-                    applySelection(created);
-                    updateUrl({ id: created.id }, true);
+                    applySelection(created)
+
+                    updateUrl({ id: created.id }, true)
                   }
-                  data.reload();
-                  setMessage("Đã tạo bản nháp.");
+
+                  data.reload()
+
+                  setMessage("Đã tạo bản nháp.")
                 }
-              });
+              })
             }}
             className="grid sm:grid-cols-2 gap-4 mt-5"
           >
             {fields[kind].map((key) => (
               <label
                 key={key}
-                className={`text-sm ${["text", "meaning"].includes(key) ? "sm:col-span-2" : ""}`}
+                className={`text-sm ${
+                  ["text", "meaning"].includes(key) ? "sm:col-span-2" : ""
+                }`}
               >
                 {kind === "units" && key === "text"
                   ? "Nội dung pháp lý"
@@ -561,18 +744,27 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                   <input
                     readOnly={
                       !!selected.id &&
-                      (key === "externalId" || (key === "doc_id" && kind === "units"))
+                      (key === "externalId" ||
+                        (key === "doc_id" && kind === "units"))
                     }
                     min={key === "order" ? 0 : undefined}
                     step={key === "order" ? 1 : undefined}
-                    type={key === "order" ? "number" : key.startsWith("ngay_") ? "date" : "text"}
+                    type={
+                      key === "order"
+                        ? "number"
+                        : key.startsWith("ngay_")
+                          ? "date"
+                          : "text"
+                    }
                     value={String(form[key] ?? "")}
                     onChange={(e) =>
                       field(
                         key,
+
                         key === "order"
                           ? Number(e.target.value)
-                          : (key.startsWith("ngay_") || key === "parent_id") && !e.target.value
+                          : (key.startsWith("ngay_") || key === "parent_id") &&
+                              !e.target.value
                             ? null
                             : e.target.value,
                       )
@@ -592,13 +784,21 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                     <textarea
                       className={inputCls}
                       rows={3}
-                      value={Array.isArray(form[key]) ? (form[key] as string[]).join("\n") : ""}
+                      value={
+                        Array.isArray(form[key])
+                          ? (form[key] as string[]).join("\n")
+                          : ""
+                      }
                       onChange={(e) =>
                         field(
                           key,
+
                           e.target.value
+
                             .split("\n")
+
                             .map((v) => v.trim())
+
                             .filter(Boolean),
                         )
                       }
@@ -630,33 +830,70 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                 <span className="rounded-full bg-sidebar px-2.5 py-1 text-xs font-medium text-navy">
                   {selected.published ? "Đã xuất bản" : "Bản nháp"}
                 </span>
-                <span className="text-xs text-muted">Phiên bản {selected.version}</span>
+                <span className="text-xs text-muted">
+                  Phiên bản {selected.version}
+                </span>
               </div>
               {kind !== "units" && (
                 <div className="space-y-3 border-y border-line py-3">
+                  {kind === "documents" && (
+                    <div className="space-y-1 text-sm">
+                      <p className="font-medium text-navy">
+                        Số hiệu văn bản:{" "}
+                        {String(form.so_hieu || "Chưa nhập số hiệu")}
+                      </p>
+                      <p className="text-xs text-muted">
+                        Chọn PDF có số hiệu tương ứng và xem lại nội dung trước
+                        khi xuất bản.
+                      </p>
+                      {!!selected.data.fileKey && (
+                        <p className="break-words text-xs text-muted">
+                          Tệp đã gắn:{" "}
+                          {String(
+                            selected.data.fileName ||
+                              "PDF nguồn (chưa lưu tên tệp)",
+                          )}
+                        </p>
+                      )}
+                    </div>
+                  )}
                   <FilePicker
-                    title={kind === "documents" ? "Tải tài liệu nguồn" : "Tải ảnh biển báo"}
+                    title={
+                      kind === "documents"
+                        ? "Tải tài liệu nguồn"
+                        : "Tải ảnh biển báo"
+                    }
                     hint={
-                      kind === "documents" ? "PDF · Tối đa 20 MB" : "PNG hoặc JPEG · Tối đa 5 MB"
+                      kind === "documents"
+                        ? "PDF · Tối đa 20 MB"
+                        : "PNG hoặc JPEG · Tối đa 5 MB"
                     }
                     accept={kind === "documents" ? ".pdf" : ".png,.jpg,.jpeg"}
                     disabled={task.busy}
                     onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (!file) return;
+                      const file = e.target.files?.[0]
+
+                      if (!file) return
+
                       task.run(async () => {
-                        const body = new FormData();
-                        body.append("file", file);
+                        const body = new FormData()
+
+                        body.append("file", file)
+
                         const updated = await api<ContentRecord>(
                           `/admin/content/${selected.id}/media`,
+
                           {
                             method: "POST",
+
                             body,
                           },
-                        );
-                        applySelection(updated);
-                        data.reload();
-                      });
+                        )
+
+                        applySelection(updated)
+
+                        data.reload()
+                      })
                     }}
                   />
                 </div>
@@ -669,11 +906,34 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                     disabled={task.busy}
                     onClick={() =>
                       task.run(async () =>
-                        setHistory(await api(`/admin/content/${selected.id}/history`)),
+                        setHistory(
+                          await api(`/admin/content/${selected.id}/history`),
+                        ),
                       )
                     }
                   >
                     Lịch sử phiên bản
+                  </Button>
+                )}
+                {!!selected.data.fileKey && (
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    disabled={task.busy}
+                    onClick={() =>
+                      task.run(async () => {
+                        if (pdfPreview) setPdfPreview("")
+                        else
+                          setPdfPreview(
+                            await media(
+                              selected.id,
+                              `/admin/content/${selected.id}/media`,
+                            ),
+                          )
+                      })
+                    }
+                  >
+                    {pdfPreview ? "Ẩn PDF" : "Xem PDF nguồn"}
                   </Button>
                 )}
                 {!!selected.data.fileKey && (
@@ -686,13 +946,21 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                   </Button>
                 )}
               </div>
+              {pdfPreview && (
+                <iframe
+                  title="Xem PDF nguồn để đối chiếu văn bản"
+                  src={pdfPreview}
+                  className="h-[55vh] w-full rounded-lg border border-line"
+                />
+              )}
               {history.map((h) => (
                 <div
                   key={`${h.version}-${h.changedAt}`}
                   className="border-b border-line py-3 text-sm"
                 >
                   <p>
-                    Phiên bản {h.version} · {new Date(h.changedAt).toLocaleString("vi-VN")}
+                    Phiên bản {h.version} ·{" "}
+                    {new Date(h.changedAt).toLocaleString("vi-VN")}
                   </p>
                   <p className="mt-1 text-muted">
                     {String(
@@ -701,7 +969,12 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                         JSON.parse(h.data).name ||
                         "",
                     )}{" "}
-                    · Nguồn: {String(JSON.parse(h.data).source || JSON.parse(h.data).so_hieu || "")}
+                    · Nguồn:{" "}
+                    {String(
+                      JSON.parse(h.data).source ||
+                        JSON.parse(h.data).so_hieu ||
+                        "",
+                    )}
                   </p>
                 </div>
               ))}
@@ -711,21 +984,25 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
       )}
       {kind === "documents" && <Relations documents={data.value || []} />}
     </div>
-  );
+  )
 }
 
 export function Relations({ documents }: { documents: ContentRecord[] }) {
-  const data = useData<
-      {
-        id: string;
-        predecessor: string;
-        successor: string;
-        type: string;
-        effectiveDate: string;
-        note: string;
-        version: number;
-      }[]
-    >("/admin/law-relations"),
+  const data = useData<{
+      id: string
+
+      predecessor: string
+
+      successor: string
+
+      type: string
+
+      effectiveDate: string
+
+      note: string
+
+      version: number
+    }[]>("/admin/law-relations"),
     task = useTask(),
     [predecessor, setPredecessor] = useState(""),
     [successor, setSuccessor] = useState(""),
@@ -734,7 +1011,8 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
     [note, setNote] = useState(""),
     [relationId, setRelationId] = useState(""),
     [relationVersion, setRelationVersion] = useState(0),
-    [editing, setEditing] = useState(false);
+    [editing, setEditing] = useState(false)
+
   return (
     <section className="mt-8 space-y-3">
       <div className="flex flex-wrap justify-between items-center gap-3">
@@ -742,15 +1020,23 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
         <Button
           disabled={task.busy}
           onClick={() => {
-            task.clearError();
-            setPredecessor("");
-            setSuccessor("");
-            setType("REPLACES");
-            setDate("");
-            setNote("");
-            setRelationId("");
-            setRelationVersion(0);
-            setEditing(true);
+            task.clearError()
+
+            setPredecessor("")
+
+            setSuccessor("")
+
+            setType("REPLACES")
+
+            setDate("")
+
+            setNote("")
+
+            setRelationId("")
+
+            setRelationVersion(0)
+
+            setEditing(true)
           }}
         >
           Thêm quan hệ
@@ -762,26 +1048,36 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
         <Card>
           <div className="px-5">
             {!data.value.length && (
-              <p className="py-6 text-center text-sm text-muted">Chưa có quan hệ văn bản.</p>
+              <p className="py-6 text-center text-sm text-muted">
+                Chưa có quan hệ văn bản.
+              </p>
             )}
             {data.value.map((r) => (
               <p key={r.id} className="text-sm py-3 border-b border-line">
                 {documents.find((d) => d.id === r.successor)?.externalId}{" "}
                 {r.type === "REPLACES" ? "thay thế" : "sửa đổi"}{" "}
-                {documents.find((d) => d.id === r.predecessor)?.externalId} · {r.effectiveDate} ·{" "}
-                {r.note}{" "}
+                {documents.find((d) => d.id === r.predecessor)?.externalId} ·{" "}
+                {r.effectiveDate} · {r.note}{" "}
                 <Button
                   size="sm"
                   onClick={() => {
-                    task.clearError();
-                    setEditing(true);
-                    setPredecessor(r.predecessor);
-                    setSuccessor(r.successor);
-                    setType(r.type);
-                    setDate(r.effectiveDate);
-                    setNote(r.note);
-                    setRelationId(r.id);
-                    setRelationVersion(r.version);
+                    task.clearError()
+
+                    setEditing(true)
+
+                    setPredecessor(r.predecessor)
+
+                    setSuccessor(r.successor)
+
+                    setType(r.type)
+
+                    setDate(r.effectiveDate)
+
+                    setNote(r.note)
+
+                    setRelationId(r.id)
+
+                    setRelationVersion(r.version)
                   }}
                 >
                   Chỉnh sửa
@@ -793,16 +1089,22 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
       )}
       <Modal
         open={editing}
-        title={relationId ? "Chỉnh sửa quan hệ văn bản" : "Thêm quan hệ văn bản"}
+        title={
+          relationId ? "Chỉnh sửa quan hệ văn bản" : "Thêm quan hệ văn bản"
+        }
         onClose={() => {
-          if (!task.busy) setEditing(false);
+          if (!task.busy) setEditing(false)
         }}
         footer={
           <>
             <Button disabled={task.busy} onClick={() => setEditing(false)}>
               Hủy
             </Button>
-            <Button type="submit" form="law-relation-editor" disabled={task.busy}>
+            <Button
+              type="submit"
+              form="law-relation-editor"
+              disabled={task.busy}
+            >
               Lưu quan hệ
             </Button>
           </>
@@ -813,29 +1115,44 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
           id="law-relation-editor"
           className="grid sm:grid-cols-2 gap-3"
           onSubmit={(e) => {
-            e.preventDefault();
+            e.preventDefault()
+
             task.run(async () => {
               await api(
-                relationId ? "/admin/law-relations/" + relationId : "/admin/law-relations",
+                relationId
+                  ? "/admin/law-relations/" + relationId
+                  : "/admin/law-relations",
+
                 send(relationId ? "PUT" : "POST", {
                   predecessor,
+
                   successor,
+
                   type,
+
                   effectiveDate: date,
+
                   note,
+
                   version: relationVersion,
                 }),
-              );
-              data.reload();
-              setNote("");
-              setRelationId("");
-              setRelationVersion(0);
-              setEditing(false);
-            });
+              )
+
+              data.reload()
+
+              setNote("")
+
+              setRelationId("")
+
+              setRelationVersion(0)
+
+              setEditing(false)
+            })
           }}
         >
           {[
             ["Văn bản cũ", predecessor, setPredecessor],
+
             ["Văn bản mới", successor, setSuccessor],
           ].map(([label, value, setter]) => (
             <label key={String(label)} className="text-sm">
@@ -889,53 +1206,74 @@ export function Relations({ documents }: { documents: ContentRecord[] }) {
         </form>
       </Modal>
     </section>
-  );
+  )
 }
 
 export function ImportPanel({
   kind,
+
   onImported,
+
   onClose,
 }: {
-  kind: ImportKind;
-  onImported?: () => void;
-  onClose?: () => void;
+  kind: ImportKind
+
+  onImported?: () => void
+
+  onClose?: () => void
 }) {
-  const [parameters] = useSearchParams();
-  const graphContext = sourceGraphContext(parameters);
-  const { notify } = useAdmin();
-  const sets = useData<QuestionSet[]>("/admin/questions/sets");
-  const [questionSetId, setQuestionSetId] = useState("");
-  const selectedSet = questionSetId || (sets.value?.length === 1 ? sets.value[0].set_id : "");
+  const [parameters] = useSearchParams()
+
+  const graphContext = sourceGraphContext(parameters)
+
+  const { notify } = useAdmin()
+
+  const sets = useData<QuestionSet[]>("/admin/questions/sets")
+
+  const [questionSetId, setQuestionSetId] = useState("")
+
+  const selectedSet =
+    questionSetId || (sets.value?.length === 1 ? sets.value[0].set_id : "")
+
   const [rows, setRows] = useState<unknown[]>([]),
-    [preview, setPreview] = useState<
-      {
-        row: number;
-        valid: boolean;
-        existing?: boolean;
-        data?: Record<string, unknown>;
-        message?: string;
-      }[]
-    >([]),
+    [preview, setPreview] = useState<{
+      row: number
+
+      valid: boolean
+
+      existing?: boolean
+
+      data?: Record<string, unknown>
+
+      message?: string
+    }[]>([]),
     [update, setUpdate] = useState(false),
     [message, setMessage] = useState(""),
     [dataInputVersion, setDataInputVersion] = useState(0),
-    [zipInputVersion, setZipInputVersion] = useState(0);
-  const task = useTask();
+    [zipInputVersion, setZipInputVersion] = useState(0)
+
+  const task = useTask()
 
   useEffect(() => {
-    setRows([]);
-    setPreview([]);
-    setMessage("");
-    setUpdate(false);
-    setQuestionSetId("");
-  }, [kind]);
+    setRows([])
+
+    setPreview([])
+
+    setMessage("")
+
+    setUpdate(false)
+
+    setQuestionSetId("")
+  }, [kind])
 
   function downloadSample() {
     saveBlob(
-      new Blob(["\uFEFF" + csvSamples[kind]], { type: "text/csv;charset=utf-8" }),
+      new Blob(["\uFEFF" + csvSamples[kind]], {
+        type: "text/csv;charset=utf-8",
+      }),
+
       `${kind}-template.csv`,
-    );
+    )
   }
 
   return (
@@ -958,24 +1296,33 @@ export function ImportPanel({
       <div className="px-5 pb-5">
         {graphContext && (
           <p className="mb-3 text-sm">
-            <Link className="underline" to={`/admin/chatbot?step=3&${graphContext}`}>
+            <Link
+              className="underline"
+              to={`/admin/chatbot?step=3&${graphContext}`}
+            >
               Quay lại đồ thị và kiểm tra lại nguồn
             </Link>
             . Nhập vẫn là bản nháp; kiểm duyệt và xuất bản trước khi quay lại.
           </p>
         )}
         <p className="mb-4 rounded-lg border border-line bg-bg px-3 py-2 text-xs text-muted">
-          Dữ liệu được kiểm tra trên máy chủ và lưu thành bản nháp; chỉ xuất bản sau khi duyệt.
+          Dữ liệu được kiểm tra trên máy chủ và lưu thành bản nháp; chỉ xuất bản
+          sau khi duyệt.
         </p>
         {kind === "questions" && <Notice {...sets} retry={sets.reload} />}
         <Notice error={task.error} />
         {message && (
-          <p role="status" className="my-3 text-sm text-emerald-700 whitespace-pre-line">
+          <p
+            role="status"
+            className="my-3 text-sm text-emerald-700 whitespace-pre-line"
+          >
             {message}
           </p>
         )}
         <div
-          className={`grid items-start gap-4 ${kind === "questions" || kind === "signs" ? "lg:grid-cols-2" : ""}`}
+          className={`grid items-start gap-4 ${
+            kind === "questions" || kind === "signs" ? "lg:grid-cols-2" : ""
+          }`}
         >
           <section className="min-w-0 rounded-xl border border-line bg-white p-4 sm:p-5">
             <header className="mb-4 flex items-center gap-3 border-b border-line pb-3">
@@ -983,8 +1330,12 @@ export function ImportPanel({
                 01
               </span>
               <div>
-                <h3 className="text-sm font-semibold text-navy">Nhập tệp dữ liệu</h3>
-                <p className="mt-0.5 text-xs text-muted">CSV, Excel (.xlsx) hoặc JSON</p>
+                <h3 className="text-sm font-semibold text-navy">
+                  Nhập tệp dữ liệu
+                </h3>
+                <p className="mt-0.5 text-xs text-muted">
+                  CSV, Excel (.xlsx) hoặc JSON
+                </p>
               </div>
             </header>
             {kind === "questions" && (
@@ -996,21 +1347,26 @@ export function ImportPanel({
                     className={`${inputCls} mt-1.5 bg-bg text-sm`}
                     value={selectedSet}
                     onChange={(e) => {
-                      const nextSet = e.target.value;
-                      setQuestionSetId(nextSet);
+                      const nextSet = e.target.value
+
+                      setQuestionSetId(nextSet)
+
                       if (rows.length && nextSet) {
                         void task.run(async () => {
                           setPreview(
                             await api(
                               "/admin/imports/questions/preview",
+
                               send("POST", {
                                 rows,
+
                                 updateExisting: update,
+
                                 questionSetId: nextSet,
                               }),
                             ),
-                          );
-                        });
+                          )
+                        })
                       }
                     }}
                   >
@@ -1040,35 +1396,60 @@ export function ImportPanel({
               accept=".csv,.xlsx,.json"
               disabled={task.busy}
               onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (!file) return;
-                setRows([]);
-                setPreview([]);
+                const file = e.target.files?.[0]
+
+                if (!file) return
+
+                setRows([])
+
+                setPreview([])
+
                 task.run(async () => {
                   if (kind === "questions" && !selectedSet)
-                    throw new Error("Chọn bộ câu hỏi trước khi tải tệp câu hỏi.");
-                  if (file.size > 10 * 1024 * 1024) throw new Error("Tệp dữ liệu tối đa 10 MB.");
-                  let input: unknown;
-                  if (file.name.endsWith(".json")) input = JSON.parse(await file.text());
+                    throw new Error(
+                      "Chọn bộ câu hỏi trước khi tải tệp câu hỏi.",
+                    )
+
+                  if (file.size > 10 * 1024 * 1024)
+                    throw new Error("Tệp dữ liệu tối đa 10 MB.")
+
+                  let input: unknown
+
+                  if (file.name.endsWith(".json"))
+                    input = JSON.parse(await file.text())
                   else if (file.name.endsWith(".xlsx")) {
-                    const { readSheet } = await import("read-excel-file/browser");
-                    input = tableObjects(await readSheet(file));
-                  } else input = tableObjects(parseCsv(await file.text()));
-                  if (!Array.isArray(input)) throw new Error("Cần danh sách dữ liệu.");
-                  input = input.map((row) => normalizeImport(kind, row));
-                  setRows(input as unknown[]);
+                    const { readSheet } = await import(
+                      "read-excel-file/browser"
+                    )
+
+                    input = tableObjects(await readSheet(file))
+                  } else input = tableObjects(parseCsv(await file.text()))
+
+                  if (!Array.isArray(input))
+                    throw new Error("Cần danh sách dữ liệu.")
+
+                  input = input.map((row) => normalizeImport(kind, row))
+
+                  setRows(input as unknown[])
+
                   setPreview(
                     await api(
                       `/admin/imports/${kind}/preview`,
+
                       send("POST", {
                         rows: input,
+
                         updateExisting: update,
-                        ...(kind === "questions" ? { questionSetId: selectedSet } : {}),
+
+                        ...(kind === "questions"
+                          ? { questionSetId: selectedSet }
+                          : {}),
                       }),
                     ),
-                  );
-                  setMessage("Đã kiểm tra tệp.");
-                });
+                  )
+
+                  setMessage("Đã kiểm tra tệp.")
+                })
               }}
             />
             <label className="mt-3 flex cursor-pointer items-center gap-2 text-xs text-text-secondary">
@@ -1078,21 +1459,28 @@ export function ImportPanel({
                 checked={update}
                 disabled={task.busy}
                 onChange={(e) => {
-                  const nextUpdate = e.target.checked;
-                  setUpdate(nextUpdate);
+                  const nextUpdate = e.target.checked
+
+                  setUpdate(nextUpdate)
+
                   if (rows.length) {
                     task.run(async () => {
                       setPreview(
                         await api(
                           `/admin/imports/${kind}/preview`,
+
                           send("POST", {
                             rows,
+
                             updateExisting: nextUpdate,
-                            ...(kind === "questions" ? { questionSetId: selectedSet } : {}),
+
+                            ...(kind === "questions"
+                              ? { questionSetId: selectedSet }
+                              : {}),
                           }),
                         ),
-                      );
-                    });
+                      )
+                    })
                   }
                 }}
               />
@@ -1107,13 +1495,21 @@ export function ImportPanel({
                   hợp lệ
                 </span>
                 <span>
-                  <strong className={preview.some((r) => !r.valid) ? "text-red-700" : "text-muted"}>
+                  <strong
+                    className={
+                      preview.some((r) => !r.valid)
+                        ? "text-red-700"
+                        : "text-muted"
+                    }
+                  >
                     {preview.filter((r) => !r.valid).length}
                   </strong>{" "}
                   lỗi
                 </span>
                 <span>
-                  <strong className="text-navy">{preview.filter((r) => r.existing).length}</strong>{" "}
+                  <strong className="text-navy">
+                    {preview.filter((r) => r.existing).length}
+                  </strong>{" "}
                   đã có
                 </span>
               </p>
@@ -1129,25 +1525,38 @@ export function ImportPanel({
                 onClick={() =>
                   task.run(async () => {
                     const result = await api<{
-                      inserted: number;
-                      updated: number;
-                      skipped: number;
+                      inserted: number
+
+                      updated: number
+
+                      skipped: number
                     }>(
                       `/admin/imports/${kind}/confirm`,
+
                       send("POST", {
                         rows,
+
                         updateExisting: update,
-                        ...(kind === "questions" ? { questionSetId: selectedSet } : {}),
+
+                        ...(kind === "questions"
+                          ? { questionSetId: selectedSet }
+                          : {}),
                       }),
-                    );
-                    setRows([]);
-                    setPreview([]);
-                    setDataInputVersion((version) => version + 1);
+                    )
+
+                    setRows([])
+
+                    setPreview([])
+
+                    setDataInputVersion((version) => version + 1)
+
                     setMessage(
                       `Đã thêm ${result.inserted}, cập nhật ${result.updated}, bỏ qua ${result.skipped} bản ghi.`,
-                    );
-                    notify("Đã nhập bản nháp; chưa xuất bản");
-                    onImported?.();
+                    )
+
+                    notify("Đã nhập bản nháp; chưa xuất bản")
+
+                    onImported?.()
                   })
                 }
               >
@@ -1162,13 +1571,18 @@ export function ImportPanel({
                   02
                 </span>
                 <div>
-                  <h3 className="text-sm font-semibold text-navy">Ghép ảnh qua ZIP</h3>
-                  <p className="mt-0.5 text-xs text-muted">Chọn tệp để tải lên và ghép ảnh</p>
+                  <h3 className="text-sm font-semibold text-navy">
+                    Ghép ảnh qua ZIP
+                  </h3>
+                  <p className="mt-0.5 text-xs text-muted">
+                    Chọn tệp để tải lên và ghép ảnh
+                  </p>
                 </div>
               </header>
               <p className="mb-4 text-xs leading-5 text-muted">
-                Tên ảnh theo mã: {kind === "questions" ? "Q301.png" : "DP.127.png"}. ZIP tối đa 20
-                MB; ảnh PNG/JPEG tối đa 5 MB mỗi tệp.
+                Tên ảnh theo mã:{" "}
+                {kind === "questions" ? "Q301.png" : "DP.127.png"}. ZIP tối đa
+                20 MB; ảnh PNG/JPEG tối đa 5 MB mỗi tệp.
               </p>
               <FilePicker
                 key={`${kind}-${zipInputVersion}`}
@@ -1178,31 +1592,45 @@ export function ImportPanel({
                 multiple
                 disabled={task.busy}
                 onChange={(e) => {
-                  const files = Array.from(e.target.files || []);
-                  if (!files.length) return;
+                  const files = Array.from(e.target.files || [])
+
+                  if (!files.length) return
+
                   task.run(async () => {
                     if (kind === "questions" && !selectedSet)
-                      throw new Error("Chọn bộ câu hỏi trước khi ghép ảnh câu hỏi.");
-                    const messages = [];
+                      throw new Error(
+                        "Chọn bộ câu hỏi trước khi ghép ảnh câu hỏi.",
+                      )
+
+                    const messages = []
+
                     const zipUrl =
                       kind === "questions"
                         ? `/admin/questions/images-zip?questionSetId=${encodeURIComponent(selectedSet)}`
-                        : `/admin/${kind}/images-zip`;
+                        : `/admin/${kind}/images-zip`
+
                     for (const file of files) {
-                      const body = new FormData();
-                      body.append("file", file);
+                      const body = new FormData()
+
+                      body.append("file", file)
+
                       const result = await api<{
-                        matched: string[];
-                        unmatched: string[];
-                      }>(zipUrl, { method: "POST", body });
+                        matched: string[]
+
+                        unmatched: string[]
+                      }>(zipUrl, { method: "POST", body })
+
                       messages.push(
                         `${file.name}: ghép ${result.matched.length} ảnh; chưa khớp ${result.unmatched.join(", ") || "không có"}`,
-                      );
+                      )
                     }
-                    setZipInputVersion((version) => version + 1);
-                    setMessage(messages.join("\n"));
-                    onImported?.();
-                  });
+
+                    setZipInputVersion((version) => version + 1)
+
+                    setMessage(messages.join("\n"))
+
+                    onImported?.()
+                  })
                 }}
               />
             </section>
@@ -1223,8 +1651,18 @@ export function ImportPanel({
                 <tr key={r.row}>
                   <Td>{r.row}</Td>
                   <Td>{String(r.data?.externalId || "")}</Td>
-                  <Td>{String(r.data?.text || r.data?.name || r.data?.title || "")}</Td>
-                  <Td>{r.valid ? (r.existing ? "Đã tồn tại" : "Hợp lệ") : r.message}</Td>
+                  <Td>
+                    {String(
+                      r.data?.text || r.data?.name || r.data?.title || "",
+                    )}
+                  </Td>
+                  <Td>
+                    {r.valid
+                      ? r.existing
+                        ? "Đã tồn tại"
+                        : "Hợp lệ"
+                      : r.message}
+                  </Td>
                 </tr>
               ))}
             </tbody>
@@ -1232,5 +1670,5 @@ export function ImportPanel({
         )}
       </div>
     </Card>
-  );
+  )
 }

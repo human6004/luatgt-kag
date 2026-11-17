@@ -88,9 +88,10 @@ export default function ChapterStudyPage() {
 
   return (
     <div className="min-h-full pb-16 px-6 sm:px-8 max-w-7xl mx-auto pt-6">
-      <Notice {...sets} retry={sets.reload} />
-      <Notice {...questions} retry={questions.reload} />
-      <Notice {...progress} retry={progress.reload} />
+      <Notice loading={sets.loading || questions.loading || progress.loading} />
+      <Notice error={sets.error} retry={sets.reload} />
+      <Notice error={questions.error} retry={questions.reload} />
+      <Notice error={progress.error} retry={progress.reload} />
       {/* Header */}
       <div className="mb-6">
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
@@ -124,9 +125,6 @@ export default function ChapterStudyPage() {
             <h1 className="font-sans font-semibold text-2xl sm:text-3xl text-navy tracking-normal">
               Ôn thi lý thuyết
             </h1>
-          </div>
-          <div className="flex items-center gap-2">
-            <NavLinkButton to="/exam">Vào phòng thi thử</NavLinkButton>
           </div>
         </div>
       </div>
@@ -215,9 +213,6 @@ export default function ChapterStudyPage() {
                   <span className="w-3 h-3 rounded-full bg-accent"></span>
                   <h2 className="font-sans text-lg font-bold text-navy">Tiến độ của tôi</h2>
                 </div>
-                <span className="text-xs px-2.5 py-0.5 rounded-full bg-selected text-accent-strong font-medium font-mono">
-                  Bộ đã chọn
-                </span>
               </div>
 
               <div className="bg-bg rounded-xl p-5 border border-line">
@@ -335,6 +330,9 @@ export default function ChapterStudyPage() {
                   </p>
                 </div>
               </div>
+            </div>
+            <div className="flex justify-end">
+              <NavLinkButton to="/exam">Vào phòng thi thử</NavLinkButton>
             </div>
           </div>
         </div>

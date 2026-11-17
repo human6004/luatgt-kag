@@ -30,13 +30,13 @@ public class ChatService {
     }
     public ChatService(ChatRepository chats,ContentRepository contents,ContentService data,KagClient kag,RateLimit rate,KagSchema schema,LegalUnitService units) { this.chats=chats; this.contents=contents; this.data=data; this.kag=kag; this.rate=rate; this.schema=schema; this.units=units; }
     private ChatMessage start(UUID owner,ChatRequest input) {
-        var chat=new ChatMessage(); chat.ownerId=owner; chat.question=input.message(); chat.conversationId=input.conversationId(); chat.state="PROCESSING"; return chats.save(chat);
+        var chat=new ChatMessage(); chat.ownerId=owner; chat.question=input.message(); chat.conversationId=input.conversationId(); chat.state="PROCESSING"; return chats.append(chat);
     }
     private record Context(ChatMessage root,List<ChatMessage> earlier,List<ChatMessage> recent) {}
 
     private Context context(UUID owner,UUID id) {
         if(id==null) return null;
-        var root=chats.findByIdAndOwnerIdAndConversationIdIsNull(id,owner).orElseThrow(ApiErrors::missing);
+        var root=chats.findByIdAndOwnerIdAndConversationIdIsNull(id,owner).filter(row->row.deletedAt==null).orElseThrow(ApiErrors::missing);
         var recent=new ArrayList<>(chats.recentTurns(owner,id,PageRequest.of(0,4)));
         Collections.reverse(recent);
         var cursor=root.contextThrough==null?root:chats.findById(root.contextThrough).orElseThrow();
@@ -102,7 +102,7 @@ public class ChatService {
         chat.answer=response.path("answer").asText(); chat.citations=data.write(response.path("citations")); chat.state="ANSWERED"; chats.save(chat);
     }
     private Map<String,Object> view(ChatMessage c) {
-        return Map.of("id",c.id,"conversationId",c.conversationId==null?c.id:c.conversationId,"question",c.question,"answer",c.answer==null?"":c.answer,"citations",parse(c.citations),"state",c.state,"createdAt",c.createdAt);
+        return Map.of("id",c.id,"conversationId",c.conversationId==null?c.id:c.conversationId,"conversationTitle",Objects.toString(c.conversationTitle,""),"question",c.question,"answer",c.answer==null?"":c.answer,"citations",parse(c.citations),"state",c.state,"createdAt",c.createdAt);
     }
     private JsonNode parse(String value) { try { return data.mapper().readTree(value); } catch(Exception e) { throw new IllegalStateException(e); } }
     public StreamingResponseBody progress(UUID owner,ChatRequest input) {
@@ -178,8 +178,47 @@ public class ChatService {
         try { output.write(("event: "+event+"\ndata: "+data.mapper().writeValueAsString(value)+"\n\n").getBytes(java.nio.charset.StandardCharsets.UTF_8)); output.flush(); }
         catch(IOException e) { throw new UncheckedIOException(e); }
     }
-    public List<Map<String,Object>> history(UUID owner) {
-        var ids=chats.recentConversationIds(owner,PageRequest.of(0,50));
-        return ids.isEmpty()?List.of():chats.conversationHistory(owner,ids).stream().map(this::view).toList();
+    public record HistoryPage(List<Map<String,Object>> rows,String nextCursor) {}
+    @org.springframework.transaction.annotation.Transactional(readOnly=true)
+    public HistoryPage history(UUID owner,String cursor,UUID selected) {
+        if(selected!=null) chats.findByIdAndOwnerIdAndConversationIdIsNull(selected,owner)
+            .filter(row->row.deletedAt==null).orElseThrow(ApiErrors::missing);
+        var before=java.time.Instant.now();
+        var beforeId=new UUID(0,0);
+        if(cursor!=null) {
+            try {
+                var parts=cursor.split("\\|",-1);
+                if(parts.length!=2) throw new IllegalArgumentException();
+                before=java.time.Instant.parse(parts[0]);
+                beforeId=UUID.fromString(parts[1]);
+            } catch(IllegalArgumentException|java.time.format.DateTimeParseException e) {
+                throw ApiErrors.bad("Mốc lịch sử không hợp lệ. Hãy tải lại lịch sử.");
+            }
+        }
+        var ids=chats.recentConversationIds(owner,before,beforeId,PageRequest.of(0,51));
+        boolean more=ids.size()>50;
+        ids=ids.subList(0,Math.min(50,ids.size()));
+        if(ids.isEmpty()&&selected==null) return new HistoryPage(List.of(),"");
+        var lastId=ids.isEmpty()?null:ids.get(ids.size()-1);
+        if(selected!=null&&!ids.contains(selected)) {ids=new ArrayList<>(ids);ids.add(selected);}
+        var rows=chats.conversationHistory(owner,ids);
+        String next=more?rows.stream().filter(row->lastId.equals(row.conversationId==null?row.id:row.conversationId))
+            .findFirst().map(row->row.createdAt+"|"+lastId).orElse(""):"";
+        return new HistoryPage(rows.stream().map(this::view).toList(),next);
+    }
+    @org.springframework.transaction.annotation.Transactional
+    public void deleteConversation(UUID owner,UUID id) {
+        var root=chats.lockConversation(owner,id).orElseThrow(ApiErrors::missing);
+        if(root.deletedAt!=null) return;
+        if(chats.processingTurns(owner,id)>0)
+            throw new ResponseStatusException(HttpStatus.CONFLICT,"Cuộc trò chuyện đang trả lời. Hãy dừng và thử xóa lại.");
+        chats.hideConversation(owner,id,java.time.Instant.now());
+    }
+    @org.springframework.transaction.annotation.Transactional
+    public void renameConversation(UUID owner,UUID id,String title) {
+        var root=chats.lockConversation(owner,id).filter(row->row.deletedAt==null).orElseThrow(ApiErrors::missing);
+        String normalized=title.strip();
+        if(normalized.isBlank()||normalized.length()>200) throw ApiErrors.bad("Tên cuộc trò chuyện cần từ 1 đến 200 ký tự.");
+        chats.renameConversation(owner,root.id,normalized);
     }
 }

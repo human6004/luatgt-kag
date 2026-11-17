@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api, send } from "../../api";
 import {
   Button,
@@ -6,6 +6,7 @@ import {
   EditIconButton,
   Field,
   Modal,
+  SelectionBar,
   Td,
   Th,
   Toggle,
@@ -59,9 +60,18 @@ function ChapterList({ set }: { set: QuestionSet }) {
   const chapters = useData<Chapter[]>(path),
     task = useTask();
   const [form, setForm] = useState<{ id?: string; chapter: string; name: string } | null>(null);
-  const [deleting, setDeleting] = useState<Chapter | null>(null);
+  const [deleting, setDeleting] = useState<Chapter[] | null>(null);
   const [confirmed, setConfirmed] = useState(false);
   const [message, setMessage] = useState("");
+  const [query, setQuery] = useState("");
+  const shown = (chapters.value || []).filter((chapter) =>
+    `${chapter.chapter} ${chapter.topic_name}`.toLowerCase().includes(query.toLowerCase()),
+  );
+  const [checked, setChecked] = useState<Set<string>>(() => new Set());
+  const selectable = shown.filter((chapter) => !chapter.question_count && !chapter.rule_count);
+  const chosen = selectable.filter((chapter) => checked.has(chapter.topic_id));
+  const allChecked = selectable.length > 0 && chosen.length === selectable.length;
+  useEffect(() => { setChecked(new Set()); }, [query, chapters.value]);
   const trash = (
     <svg
       aria-hidden="true"
@@ -104,74 +114,132 @@ function ChapterList({ set }: { set: QuestionSet }) {
         </p>
       )}
       {chapters.value && (
-        <Card>
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[560px]">
-              <thead>
-                <tr>
-                  <Th>Chương</Th>
-                  <Th>Tên chương</Th>
-                  <Th>Câu hỏi</Th>
-                  <Th>Quy tắc</Th>
-                  <Th className="text-right">Thao tác</Th>
-                </tr>
-              </thead>
-              <tbody>
-                {chapters.value.map((c) => (
-                  <tr key={c.topic_id} className="border-t border-line">
-                    <Td>{c.chapter}</Td>
-                    <Td>{c.topic_name}</Td>
-                    <Td>{c.question_count}</Td>
-                    <Td>{c.rule_count}</Td>
-                    <Td className="text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <EditIconButton
-                          label="Chỉnh sửa chương"
-                          disabled={task.busy}
-                          onClick={() => {
-                            task.clearError();
-                            setMessage("");
-                            setForm({
-                              id: c.topic_id,
-                              chapter: String(c.chapter),
-                              name: c.topic_name,
+        <>
+          <div className="mb-3 flex flex-wrap items-center gap-3">
+            <input
+              aria-label="Tìm chương"
+              placeholder="Tìm số chương, tên chương…"
+              className={`${inputCls} flex-1`}
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+            />
+            <span role="status" className="text-sm text-muted">
+              {shown.length} / {chapters.value.length} chương
+            </span>
+          </div>
+          <SelectionBar selected={chosen.length} total={shown.length} noun="chương">
+            <Button
+              variant="danger"
+              disabled={task.busy || !chosen.length || chosen.length > 600}
+              title="Mỗi lần xóa tối đa 600 mục"
+              onClick={() => {
+                task.clearError();
+                setConfirmed(false);
+                setDeleting(chosen);
+              }}
+            >
+              Xóa các chương đã chọn
+            </Button>
+          </SelectionBar>
+          <Card>
+            <div className="overflow-x-auto">
+              <table className="w-full min-w-[560px]">
+                <thead>
+                  <tr>
+                    <Th className="w-12">
+                      <input
+                        type="checkbox"
+                        aria-label="Chọn tất cả chương có thể xóa đang lọc"
+                        className="h-4 w-4 accent-accent-strong"
+                        checked={allChecked}
+                        ref={(input) => { if (input) input.indeterminate = chosen.length > 0 && !allChecked; }}
+                        disabled={task.busy || !selectable.length}
+                        onChange={(event) => setChecked(new Set(event.target.checked ? selectable.map((item) => item.topic_id) : []))}
+                      />
+                    </Th>
+                    <Th>Chương</Th>
+                    <Th>Tên chương</Th>
+                    <Th>Câu hỏi</Th>
+                    <Th>Quy tắc</Th>
+                    <Th className="text-right">Thao tác</Th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {shown.map((c) => (
+                    <tr key={c.topic_id} className="border-b border-line/60 last:border-0 hover:bg-hover">
+                      <Td>
+                        <input
+                          type="checkbox"
+                          aria-label={`Chọn chương ${c.chapter}`}
+                          className="h-4 w-4 accent-accent-strong"
+                          checked={checked.has(c.topic_id)}
+                          disabled={task.busy || c.question_count > 0 || c.rule_count > 0}
+                          title={c.question_count || c.rule_count ? "Chương đang được sử dụng nên không thể xóa" : "Chọn để xóa"}
+                          onChange={(event) => {
+                            const selected = event.target.checked;
+                            setChecked((previous) => {
+                              const next = new Set(previous);
+                              if (selected) next.add(c.topic_id);
+                              else next.delete(c.topic_id);
+                              return next;
                             });
                           }}
                         />
-                        <button
-                          type="button"
-                          aria-label={`Xóa chương ${c.chapter}`}
-                          title={
-                            c.question_count || c.rule_count
-                              ? "Chương đang có câu hỏi hoặc quy tắc sử dụng"
-                              : `Xóa chương ${c.chapter}`
-                          }
-                          disabled={task.busy || c.question_count > 0 || c.rule_count > 0}
-                          className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-red-700 hover:bg-red-50 disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent-strong"
-                          onClick={() => {
-                            task.clearError();
-                            setMessage("");
-                            setConfirmed(false);
-                            setDeleting(c);
-                          }}
-                        >
-                          {trash}
-                        </button>
-                      </div>
-                    </Td>
-                  </tr>
-                ))}
-                {!chapters.value.length && (
-                  <tr>
-                    <td colSpan={5} className="p-6 text-center text-sm text-muted">
-                      Chưa có chương. Bấm “Thêm chương” để cấu hình.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </Card>
+                      </Td>
+                      <Td>{c.chapter}</Td>
+                      <Td>{c.topic_name}</Td>
+                      <Td>{c.question_count}</Td>
+                      <Td>{c.rule_count}</Td>
+                      <Td className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <EditIconButton
+                            label="Chỉnh sửa chương"
+                            disabled={task.busy}
+                            onClick={() => {
+                              task.clearError();
+                              setMessage("");
+                              setForm({
+                                id: c.topic_id,
+                                chapter: String(c.chapter),
+                                name: c.topic_name,
+                              });
+                            }}
+                          />
+                          <button
+                            type="button"
+                            aria-label={`Xóa chương ${c.chapter}`}
+                            title={
+                              c.question_count || c.rule_count
+                                ? "Chương đang có câu hỏi hoặc quy tắc sử dụng"
+                                : `Xóa chương ${c.chapter}`
+                            }
+                            disabled={task.busy || c.question_count > 0 || c.rule_count > 0}
+                            className="inline-flex h-9 w-9 items-center justify-center rounded-lg text-red-700 hover:bg-red-50 disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent-strong"
+                            onClick={() => {
+                              task.clearError();
+                              setMessage("");
+                              setConfirmed(false);
+                              setDeleting([c]);
+                            }}
+                          >
+                            {trash}
+                          </button>
+                        </div>
+                      </Td>
+                    </tr>
+                  ))}
+                  {!shown.length && (
+                    <tr>
+                      <td colSpan={6} className="p-6 text-center text-sm text-muted">
+                        {query ? "Không có chương phù hợp." : "Chưa có chương. Bấm “Thêm chương” để cấu hình."}
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </Card>
+        </>
       )}
       <Modal
         open={!!form}
@@ -264,8 +332,9 @@ function ChapterList({ set }: { set: QuestionSet }) {
               onClick={() =>
                 void task.run(async () => {
                   if (!deleting) return;
-                  await api(path + "/" + deleting.topic_id, send("DELETE"));
-                  setMessage(`Đã xóa chương ${deleting.chapter}.`);
+                  await api(path + "/deletion-batch", send("DELETE", { ids: deleting.map((chapter) => chapter.topic_id) }));
+                  setMessage(`Đã xóa ${deleting.length} chương.`);
+                  setChecked(new Set());
                   setDeleting(null);
                   chapters.reload();
                 })
@@ -277,11 +346,14 @@ function ChapterList({ set }: { set: QuestionSet }) {
         }
       >
         <p>
-          Xóa chương {deleting?.chapter}: <strong>{deleting?.topic_name}</strong> khỏi đợt{" "}
+          Xóa {deleting?.length} chương khỏi đợt{" "}
           {set.release_code}? Thao tác không thể hoàn tác.
         </p>
+        <ul className="mt-3 max-h-48 list-disc space-y-1 overflow-y-auto pl-5 text-sm">
+          {deleting?.map((chapter) => <li key={chapter.topic_id}>Chương {chapter.chapter}: {chapter.topic_name}</li>)}
+        </ul>
         <div className="mt-4">
-          <Toggle checked={confirmed} onChange={setConfirmed} label="Tôi xác nhận xóa chương này" />
+          <Toggle checked={confirmed} onChange={setConfirmed} label="Tôi xác nhận xóa các chương đã chọn" />
         </div>
         <Notice error={task.error} />
       </Modal>

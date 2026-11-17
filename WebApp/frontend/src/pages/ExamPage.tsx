@@ -172,11 +172,12 @@ export default function ExamPage() {
     return (
       <Page
         title="Thi thử lý thuyết"
-        subtitle="Chọn bộ câu hỏi và hạng giấy phép lái xe để luyện thi."
+        // subtitle="Chọn bộ câu hỏi và hạng giấy phép lái xe để luyện thi."
         actions={<NavLinkButton to="/on-thi">Ôn tập theo chương</NavLinkButton>}
       >
-        <Notice {...rules} retry={rules.reload} />
-        <Notice {...history} retry={history.reload} />
+        <Notice loading={rules.loading || history.loading} />
+        <Notice error={rules.error} retry={rules.reload} />
+        <Notice error={history.error} retry={history.reload} />
         <Notice error={task.error} />
         <div className="grid min-w-0 gap-6 lg:grid-cols-2 items-start">
           <Card title="Chọn bài thi">
@@ -272,11 +273,11 @@ export default function ExamPage() {
                   </p>
                 </div>
               ) : (
-                <p className="text-sm text-muted">
-                  {rules.loading
-                    ? "Đang tải danh sách bài thi…"
-                    : "Chưa tải được danh sách bài thi. Vui lòng thử lại."}
-                </p>
+                !rules.loading && (
+                  <p className="text-sm text-muted">
+                    Chưa tải được danh sách bài thi. Vui lòng thử lại.
+                  </p>
+                )
               )}
             </div>
           </Card>
@@ -290,9 +291,8 @@ export default function ExamPage() {
                   <span>
                     Hạng {h.license} · {new Date(h.startedAt).toLocaleString("vi-VN")} ·{" "}
                     {h.submittedAt
-                      ? `${h.score}/${h.total} · ${
-                          h.passed ? "Đạt" : "Không đạt"
-                        }${h.criticalFailed ? " · Sai câu điểm liệt" : ""}`
+                      ? `${h.score}/${h.total} · ${h.passed ? "Đạt" : "Không đạt"
+                      }${h.criticalFailed ? " · Sai câu điểm liệt" : ""}`
                       : "Chưa nộp"}
                   </span>
                   <Button disabled={task.busy} onClick={() => void task.run(() => open(h.id))}>

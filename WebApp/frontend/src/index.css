@@ -7,11 +7,13 @@
   --color-accent: #d8b84e;
   --color-accent-hover: #caa537;
   --color-accent-strong: #80651a;
-  --color-bg: #fffdf7;
+  --color-bg: #ffffff;
   --color-surface: #ffffff;
   --color-sidebar: #fff9e8;
   --color-selected: #fff2c9;
   --color-line: #f3e7c7;
+  --color-control: #c9c3b8;
+  --color-hover: #f7f6f2;
   --color-progress: #e7c96b;
   --color-text: #352d24;
   --color-text-secondary: #6e6255;
@@ -23,6 +25,76 @@ body {
   font-family: var(--font-sans);
   background-color: var(--color-bg);
   color: var(--color-text);
+}
+
+/* Road motion inspired by Uiverse.io by vinodjangid07. */
+.traffic-loader {
+  position: relative;
+  display: block;
+  width: 260px;
+  height: 112px;
+  overflow: hidden;
+  color: var(--color-navy);
+}
+
+.traffic-loader--compact {
+  --loader-scale: 0.25;
+  width: 80px;
+  height: 28px;
+}
+
+.traffic-loader__art {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 260px;
+  height: 112px;
+  transform: translate(-50%, -50%) scale(var(--loader-scale, 1));
+}
+
+.traffic-loader__suspension {
+  animation: traffic-suspension 0.8s ease-in-out infinite;
+}
+
+.traffic-loader__wheel {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: traffic-wheel 0.7s linear infinite;
+}
+
+.traffic-loader__road {
+  animation: traffic-road 0.5s linear infinite;
+}
+
+.traffic-loader__scenery {
+  animation: traffic-scenery 2.4s linear infinite;
+}
+
+@keyframes traffic-suspension {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(1.5px); }
+}
+
+@keyframes traffic-wheel {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes traffic-road {
+  to { stroke-dashoffset: 36; }
+}
+
+@keyframes traffic-scenery {
+  to { transform: translateX(-340px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .traffic-loader * {
+    animation: none;
+  }
+
+  .traffic-loader__scenery {
+    display: none;
+  }
 }
 
 .question-bank-table {

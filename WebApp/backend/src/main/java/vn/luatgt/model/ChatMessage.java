@@ -9,6 +9,8 @@ public class ChatMessage {
     @Id public UUID id = UUID.randomUUID();
     public UUID ownerId;
     public UUID conversationId;
+    @Column(insertable=false,updatable=false) public Instant deletedAt;
+    @Column(length=200,insertable=false,updatable=false) public String conversationTitle;
     @Column(columnDefinition="text",insertable=false,updatable=false) public String contextSummary;
     @Column(insertable=false,updatable=false) public UUID contextThrough;
     @Column(columnDefinition="longtext") public String question;

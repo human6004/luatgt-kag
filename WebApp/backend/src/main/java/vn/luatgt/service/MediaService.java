@@ -48,7 +48,15 @@ public class MediaService {
     public Map<String,Object> upload(UUID id,MultipartFile file) throws IOException {
         var c=contents.findById(id).orElseThrow(ApiErrors::missing);
         if(file.isEmpty()||file.getSize()>20*1024*1024) throw ApiErrors.bad("Tệp trống hoặc quá lớn");
-        attach(c,file.getBytes()); contents.flush(); return data.view(c,true);
+        attach(c,file.getBytes());
+        if(c.kind.equals("documents")) {
+            var n=data.read(c);
+            String name=Optional.ofNullable(file.getOriginalFilename()).orElse("document.pdf").replace('\\','/');
+            name=name.substring(name.lastIndexOf('/')+1);
+            n.put("fileName",name.length()>500?name.substring(0,500):name);
+            c.data=data.write(n);
+        }
+        contents.flush(); return data.view(c,true);
     }
     @Transactional
     public Map<String,Object> zip(MultipartFile file) throws IOException {

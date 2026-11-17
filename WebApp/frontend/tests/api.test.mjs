@@ -73,7 +73,7 @@ assert.equal(values.get(tokenKey), "test-token");
 globalThis.fetch = async () => {
   throw new Error("offline");
 };
-await assert.rejects(api("/questions"), /Không kết nối được backend/);
+await assert.rejects(api("/questions"), /Không kết nối được máy chủ/);
 assert.equal(send("POST", { selected: 0 }).body, '{"selected":0}');
 const mixedBatch = publicationBatchBody([
   { id: "ready-question", version: 2 },

@@ -5,21 +5,21 @@ import { Link, NavLink, Outlet, useNavigate, useLocation } from "react-router-do
 
 const topItems: [string, string][] = [
   ["/admin/dashboard", "Tổng quan"],
-  ["/admin/chatbot", "Chatbot"],
-  ["/admin/content", "Nội dung luật"],
-  ["/admin/questions", "Câu hỏi thi"],
+  ["/admin/chatbot", "Trợ lý"],
+  ["/admin/content", "Văn bản quy định"],
+  ["/admin/questions", "Quản lý đề thi GPLX"],
   ["/admin/users", "Người dùng"],
 ];
 
 const advancedItems: [string, string][] = [
   ["/admin/infrastructure", "Kết nối & chẩn đoán"],
   ["/admin/sources", "Dữ liệu nguồn KAG"],
-  ["/admin/schema", "Schema"],
-  ["/admin/benchmark", "Benchmark"],
+  ["/admin/schema", "Cấu trúc dữ liệu"],
+  ["/admin/benchmark", "Đánh giá chất lượng"],
 ];
 
 const menuLinkClass = (active: boolean) =>
-  `flex min-h-11 items-center rounded-xl px-3 py-2.5 text-[13px] leading-5 break-words transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-strong ${active ? "bg-selected text-navy font-semibold shadow-2xs" : "text-text-secondary hover:bg-selected/70 hover:text-navy"}`;
+  `flex min-h-11 items-center rounded-md px-3 py-2.5 text-[13px] leading-5 break-words transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-strong ${active ? "bg-selected text-navy font-semibold" : "text-text-secondary hover:bg-hover hover:text-navy"}`;
 
 export default function AdminLayout() {
   const navigate = useNavigate(),
@@ -29,7 +29,7 @@ export default function AdminLayout() {
     .filter(([path]) => session && canAccessAdminPage(session.role, path))
     .map(([path, label]) =>
       session?.role === "police" && path === "/admin/users"
-        ? (["/admin/users?tab=logs", "Nhật ký chat", path] as const)
+        ? (["/admin/users?tab=logs", "Lịch sử trò chuyện", path] as const)
         : ([path, label, path] as const),
     );
   const visibleAdvanced = advancedItems.filter(
@@ -51,7 +51,7 @@ export default function AdminLayout() {
         </div>
         <nav aria-label="Điều hướng quản trị" className="flex-1 px-4 mt-6 pb-4 overflow-y-auto">
           {visibleTop.map(([to, label, basePath]) => (
-            <div key={basePath} className="border-b border-line/60 py-1.5 last:border-0">
+            <div key={basePath} className="py-0.5">
               <NavLink
                 to={to}
                 className={() =>
@@ -66,7 +66,7 @@ export default function AdminLayout() {
             <details
               key={`advanced-${advancedActive}`}
               open={advancedActive}
-              className="group border-b border-line/60 py-1.5 last:border-0"
+              className="group mt-4 border-t border-line py-3"
             >
               <summary
                 className={`flex min-h-11 cursor-pointer list-none items-center justify-between gap-2 border-l-2 border-transparent px-3 py-2.5 text-[13.5px] leading-5 font-semibold transition-colors hover:bg-selected/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent-strong [&::-webkit-details-marker]:hidden ${advancedActive ? "text-accent-strong" : "text-navy"}`}

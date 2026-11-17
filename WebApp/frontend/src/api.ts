@@ -17,7 +17,7 @@ export async function apiResponse(path: string, init: RequestInit = {}): Promise
   try {
     response = await fetch(`/api${path}`, { ...init, headers });
   } catch {
-    throw new ApiError("Không kết nối được backend. Vui lòng kiểm tra dịch vụ và thử lại.");
+    throw new ApiError("Không kết nối được máy chủ. Vui lòng kiểm tra dịch vụ và thử lại.");
   }
   if (response.status === 401 && !path.startsWith("/auth/login")) {
     sessionStorage.removeItem(tokenKey);
@@ -32,19 +32,19 @@ export async function api<T>(path: string, init: RequestInit = {}): Promise<T> {
   try {
     text = await response.text();
   } catch {
-    throw new ApiError("Không đọc được phản hồi backend. Vui lòng thử lại.", response.status);
+    throw new ApiError("Không đọc được phản hồi máy chủ. Vui lòng thử lại.", response.status);
   }
   let data: unknown;
   try {
     data = text ? JSON.parse(text) : undefined;
   } catch {
-    throw new ApiError("Backend chưa khả dụng hoặc phản hồi không hợp lệ.", response.status);
+    throw new ApiError("Máy chủ chưa khả dụng hoặc phản hồi không hợp lệ.", response.status);
   }
   if (!response.ok) {
     throw new ApiError(
       (data as { message?: string })?.message ||
         (response.status === 401
-          ? "Email hoặc mật khẩu không đúng."
+          ? "Thư điện tử hoặc mật khẩu không đúng."
           : `Yêu cầu thất bại (${response.status}).`),
       response.status,
     );

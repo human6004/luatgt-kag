@@ -20,5 +20,15 @@ public class ChatController {
         return ResponseEntity.ok().contentType(MediaType.TEXT_EVENT_STREAM).cacheControl(CacheControl.noStore()).header("X-Accel-Buffering","no").body(service.progress(owner,input));
     }
     @PostMapping("/{id}/stop") Map<String,Object> stop(@PathVariable UUID id,JwtAuthenticationToken auth) {return service.stop(AuthService.user(auth),id);}
-    @GetMapping List<Map<String,Object>> history(JwtAuthenticationToken auth) { return service.history(AuthService.user(auth)); }
+    @GetMapping ResponseEntity<List<Map<String,Object>>> history(@RequestParam(required=false) String before,@RequestParam(required=false) UUID selected,JwtAuthenticationToken auth) {
+        var page=service.history(AuthService.user(auth),before,selected);
+        return ResponseEntity.ok().cacheControl(CacheControl.noStore()).header("X-Next-Cursor",page.nextCursor()).body(page.rows());
+    }
+    @DeleteMapping("/{id}") @ResponseStatus(HttpStatus.NO_CONTENT)
+    void deleteConversation(@PathVariable UUID id,JwtAuthenticationToken auth) { service.deleteConversation(AuthService.user(auth),id); }
+    public record RenameRequest(@jakarta.validation.constraints.NotBlank @jakarta.validation.constraints.Size(max=200) String title) {}
+    @PatchMapping("/{id}") @ResponseStatus(HttpStatus.NO_CONTENT)
+    void renameConversation(@PathVariable UUID id,@Valid @RequestBody RenameRequest input,JwtAuthenticationToken auth) {
+        service.renameConversation(AuthService.user(auth),id,input.title());
+    }
 }

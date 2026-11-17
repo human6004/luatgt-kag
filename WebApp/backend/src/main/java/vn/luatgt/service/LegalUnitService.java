@@ -95,9 +95,27 @@ public class LegalUnitService {
         documents.lockDocuments();
         var u=units.findById(id).orElseThrow(ApiErrors::missing);
         if(u.version!=input.version()) throw new ResponseStatusException(HttpStatus.CONFLICT,"Đơn vị pháp lý vừa thay đổi");
-        if(input.published()) { var n=validate(read(u)); hierarchy(n,Map.of());
-            if(!n.path("reviewed").asBoolean(false)||!document(n).published) throw ApiErrors.bad("Cần duyệt unit và xuất bản văn bản nguồn trước"); }
+        if(input.published()) validatePublication(read(u));
         u.published=input.published(); return view(units.saveAndFlush(u));
+    }
+    private void validatePublication(ObjectNode data) {
+        var n=validate(data); hierarchy(n,Map.of());
+        if(!n.path("reviewed").asBoolean(false)||!document(n).published) throw ApiErrors.bad("Cần duyệt đơn vị pháp lý và xuất bản văn bản nguồn trước");
+    }
+    @Transactional public void batchPublication(BatchPublicationRequest input) {
+        documents.lockDocuments();
+        var seen=new HashSet<UUID>();
+        var pending=new LinkedHashMap<LegalUnit,ObjectNode>();
+        for(var row:input.rows()) {
+            if(!seen.add(row.id())) throw ApiErrors.bad("Trùng ID trong danh sách");
+            var unit=units.findById(row.id()).orElseThrow(ApiErrors::missing);
+            if(unit.version!=row.version()) throw new ResponseStatusException(HttpStatus.CONFLICT,"Đơn vị pháp lý vừa thay đổi");
+            var n=read(unit); n.put("reviewed",input.reviewed());
+            if(input.published()) validatePublication(n);
+            pending.put(unit,n);
+        }
+        pending.forEach((unit,n) -> {unit.data=content.write(n);unit.published=input.published();units.save(unit);});
+        units.flush();
     }
     public boolean citation(String docId,String unitId,String quote) {
         return units.findByUnitId(unitId).filter(u -> u.published&&read(u).path("doc_id").asText().equals(docId)&&!quote.isBlank()&&read(u).path("text").asText().contains(quote)).isPresent();

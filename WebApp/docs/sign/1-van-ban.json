@@ -1,0 +1,77 @@
+[
+ {
+  "so_hieu": "51/2024/TT-BGTVT",
+  "doc_id": "51_2024_TT_BGTVT",
+  "title": "QCVN báo hiệu đường bộ",
+  "tier": "Implementing",
+  "loai": "Thông tư",
+  "co_quan": "Bộ GTVT",
+  "reason": "ok_tt_qcvn_reparse_v2",
+  "source_url": "https://congbao.chinhphu.vn/van-ban/thong-tu-so-51-2024-tt-bgtvt-43387.htm",
+  "source_kind": "congbao_pdf",
+  "raw_files": [
+   "raw/pdf/51_2024_TT_BGTVT.pdf",
+   "raw/pdf/51_2024_TT_BGTVT_cb53148.pdf",
+   "raw/pdf/51_2024_TT_BGTVT_cb53152.pdf",
+   "raw/pdf/51_2024_TT_BGTVT_cb53155.pdf",
+   "raw/pdf/51_2024_TT_BGTVT_cb53158.pdf",
+   "raw/pdf/51_2024_TT_BGTVT_cb53161.pdf"
+  ],
+  "status_hint": "Còn hiệu lực",
+  "ngay_ban_hanh": "2024-11-15",
+  "ngay_hieu_luc": "2025-01-01",
+  "hieu_luc_note": "Thông tư này có hiệu lực thi hành kể từ ngày 01 tháng 01 năm 2025",
+  "scope": "road_core",
+  "effective_from": "2025-01-01"
+ },
+ {
+  "doc_id": "54_2019_TT_BGTVT",
+  "so_hieu": "54/2019/TT-BGTVT",
+  "title": "Ban hành QCVN 41:2019/BGTVT về báo hiệu đường bộ",
+  "loai": "Thông tư",
+  "co_quan": "BGTVT",
+  "tier": "Superseded",
+  "status_hint": "Hết hiệu lực từ 2025-01-01; giữ để tra cứu lịch sử/chuyển tiếp",
+  "source_url": "https://congbao.chinhphu.vn/van-ban/x-30665.htm",
+  "source_kind": "congbao_pdf",
+  "raw_files": [
+   "raw/pdf/54_2019_TT_BGTVT_cb29884.pdf",
+   "raw/pdf/54_2019_TT_BGTVT_cb30010.pdf",
+   "raw/pdf/54_2019_TT_BGTVT_cb30013.pdf",
+   "raw/pdf/54_2019_TT_BGTVT_cb30015.pdf",
+   "raw/pdf/54_2019_TT_BGTVT_cb30016.pdf"
+  ],
+  "ngay_ban_hanh": "2019-12-31",
+  "ngay_hieu_luc": "2020-07-01",
+  "hieu_luc_note": "Thông tư này có hiệu lực thi hành kể từ ngày 01 tháng 7 năm 2020",
+  "ngay_het_hieu_luc": "2025-01-01",
+  "het_hieu_luc_note": "bị 51/2024/TT-BGTVT thay thế/bãi bỏ",
+  "scope": "road_core",
+  "effective_from": "2020-07-01",
+  "current_status": "REPLACED",
+  "effective_to": "2025-01-01",
+  "replaced_by": "51/2024/TT-BGTVT",
+  "source_evidence": {
+   "raw_sources": [
+    {
+     "raw_path": "data/raw/pdf/54_2019_TT_BGTVT_cb30015.pdf",
+     "url": "https://g7.cdnchinhphu.vn/api/download/stream?Url=tm-8mq6BhNw0NbrKRhTDAQWsKg3tuqaY0aWypnY78U6M2BY68Ekp0Gvvr483flbRSfXe9uRUef387gAyKG1SnhhCm0IhdKxk2UaQPRYDq7sgTq99353xB0GEJBFVgG1ud8dxY6BOaYoXR--qjp8jVA~~&file_name=2020_213+%2b+214_54-2019-TT-BGTVT..pdf",
+     "official_page": "https://congbao.chinhphu.vn/van-ban/thong-tu-so-54-2019-tt-bgtvt-30665.htm",
+     "sha256": "52ee9d1361a04ee51941504b1af80e93b67be00dcca9bf600ab0addc687653d9",
+     "version": "54/2019/TT-BGTVT, QCVN41:2019/BGTVT",
+     "attachment_id": 30015,
+     "locator": "Công báo phần 4; PDF1-95"
+    },
+    {
+     "raw_path": "data/raw/pdf/54_2019_TT_BGTVT_cb30016.pdf",
+     "url": "https://g7.cdnchinhphu.vn/api/download/stream?Url=tm-8mq6BhNw0NbrKRhTDAQWsKg3tuqaY0aWypnY78U6M2BY68Ekp0Gvvr483flbRSfXe9uRUef387gAyKG1SnurASJCNSuDPd0ISRABd6L0THpV1pnPdF34dWuAHNOden1faZEFdr0RMa_oQAvHAlA~~&file_name=2020_215+%2b+216_54-2019-TT-BGTVT..pdf",
+     "official_page": "https://congbao.chinhphu.vn/van-ban/thong-tu-so-54-2019-tt-bgtvt-30665.htm",
+     "sha256": "d08ae2e00eef1a2fb0bfb2501ecc9568fea49a60fc2d317cd983d5079615c120",
+     "version": "54/2019/TT-BGTVT, QCVN41:2019/BGTVT",
+     "attachment_id": 30016,
+     "locator": "Công báo phần 5; PDF1-48"
+    }
+   ]
+  }
+ }
+]

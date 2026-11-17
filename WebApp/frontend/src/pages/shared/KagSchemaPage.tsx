@@ -53,7 +53,7 @@ export default function KagSchemaPage() {
 
   return (
     <Page
-      title="Schema & quan hệ"
+      title="Cấu trúc dữ liệu & quan hệ"
       subtitle="Cấu trúc LuậtGT đi kèm bộ dữ liệu. Trang chỉ đọc."
       actions={<Button onClick={data.reload}>Cập nhật</Button>}
     >
@@ -64,9 +64,9 @@ export default function KagSchemaPage() {
             <summary className="underline cursor-pointer text-sm">Chi tiết kỹ thuật</summary>
             <dl className="grid sm:grid-cols-3 gap-5 py-6 border-b border-line">
               {[
-                ["Namespace", schema.identity.namespace],
-                ["SHA-256 schema", schema.identity.schema_sha256],
-                ["SHA-256 contract", schema.identity.contract_sha256],
+                ["Không gian tên", schema.identity.namespace],
+                ["Mã băm cấu trúc (SHA-256)", schema.identity.schema_sha256],
+                ["Mã băm đặc tả (SHA-256)", schema.identity.contract_sha256],
               ].map(([label, value]) => (
                 <div key={label}>
                   <dt className="text-sm text-muted">{label}</dt>
@@ -79,17 +79,16 @@ export default function KagSchemaPage() {
             <Link to="/admin/sources" className="text-sm underline underline-offset-4">
               Về dữ liệu nguồn
             </Link>
-            <Button onClick={download}>Tải contract</Button>
+            <Button onClick={download}>Tải đặc tả</Button>
           </div>
           <p className="text-sm">
             Dùng doc_id, unit_id và sign_id nguyên trạng làm ID nguồn. UUID trong WebApp chỉ dùng
-            cho quản trị bản ghi. Chat từ dataset đối chiếu trích dẫn với bản nguồn của đồ thị đang
-            áp dụng.
+            cho quản trị bản ghi. Trợ lý đối chiếu trích dẫn với bản nguồn của đồ thị đang áp dụng.
           </p>
           <label className="block text-sm mt-6">
-            Loại node
+            Loại nút
             <select
-              aria-label="Loại node"
+              aria-label="Loại nút"
               value={type}
               onChange={(e) => selectType(e.target.value)}
               className={`${inputCls} mt-2 sm:max-w-sm`}
@@ -104,9 +103,9 @@ export default function KagSchemaPage() {
               <thead>
                 <tr>
                   <Th>Trường nguồn</Th>
-                  <Th>Trường graph</Th>
+                  <Th>Trường đồ thị</Th>
                   <Th>Kiểu dữ liệu</Th>
-                  <Th>Contract yêu cầu</Th>
+                  <Th>Đặc tả yêu cầu</Th>
                 </tr>
               </thead>
               <tbody>
@@ -124,14 +123,14 @@ export default function KagSchemaPage() {
               </tbody>
             </table>
           </div>
-          <h2 className="font-semibold mt-8">Quan hệ graph</h2>
+          <h2 className="font-semibold mt-8">Quan hệ đồ thị</h2>
           <div className="overflow-x-auto mt-3">
             <table className="w-full text-sm">
               <thead>
                 <tr>
-                  <Th>Node nguồn</Th>
+                  <Th>Nút nguồn</Th>
                   <Th>Quan hệ</Th>
-                  <Th>Node đích</Th>
+                  <Th>Nút đích</Th>
                 </tr>
               </thead>
               <tbody>
@@ -149,11 +148,11 @@ export default function KagSchemaPage() {
             Loại đơn vị pháp lý: {schema.contract.unit_type_values.join(", ")}.
           </p>
           <p className="text-sm mt-3 text-muted">
-            Ingestion theo contract runtime: kiểm tra ràng buộc và codec, ghi node trước cạnh và gộp
-            provenance trước khi ghi.
+            Nhập dữ liệu theo đặc tả hệ thống đang chạy: kiểm tra ràng buộc và bộ mã hóa, ghi nút trước cạnh và gộp
+            thông tin nguồn gốc trước khi ghi.
           </p>
           <details className="mt-4 text-sm">
-            <summary className="cursor-pointer">Contract runtime cho core KAG</summary>
+            <summary className="cursor-pointer">Đặc tả hệ thống đang chạy cho lõi KAG</summary>
             <pre className="overflow-x-auto mt-3 p-3 bg-sidebar">
               {JSON.stringify(schema.contract.runtime_contract, null, 2)}
             </pre>

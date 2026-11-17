@@ -8,6 +8,7 @@ import {
   loadCitationSource,
 } from "./shared/chat-state";
 import LogoMark from "../components/LogoMark";
+import { Button, LoadingIndicator, Modal, inputCls } from "../admin/ui";
 import { Fragment, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 
 interface LegalReference {
@@ -28,12 +29,8 @@ interface Message {
 interface Session {
   id: string;
   title: string;
-  group: "Hôm nay" | "Hôm qua" | "7 ngày trước" | "30 ngày trước";
-  pinned?: boolean;
   messages: Message[];
 }
-
-const groups: Session["group"][] = ["Hôm nay", "Hôm qua", "7 ngày trước", "30 ngày trước"];
 
 function Icon({ d, className = "w-4 h-4" }: { d: string; className?: string }) {
   return (
@@ -58,11 +55,11 @@ const ic = {
   panel: "M4 5h16v14H4zM9 5v14",
   book: "M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4zM5 16a4 4 0 0 1 4-4h10",
   send: "M12 19V5M6 11l6-6 6 6",
-  dots: "M5 12h.01M12 12h.01M19 12h.01",
   copy: "M9 9h10v10H9zM5 15V5h10",
   up: "M7 10v10M7 10l4-6a2 2 0 0 1 3 2l-1 4h5a2 2 0 0 1 2 2l-2 6a2 2 0 0 1-2 2H7",
   retry: "M4 12a8 8 0 1 0 3-6.2M4 4v4h4",
   close: "M6 6l12 12M18 6 6 18",
+  dots: "M5 12h.01M12 12h.01M19 12h.01",
 };
 
 export default function ChatPage() {
@@ -78,8 +75,30 @@ export default function ChatPage() {
   const citeMatch = rawCite?.match(/^(?:([^:]+):)?(\d+)$/);
   const citeIndex = citeMatch ? Number(citeMatch[2]) : null;
 
-  const [pinned, setPinned] = useState<Set<string>>(new Set());
   const [notice, setNotice] = useState("");
+  const [deleting, setDeleting] = useState<Session | null>(null);
+  const [renaming, setRenaming] = useState<Session | null>(null);
+  const [title, setTitle] = useState("");
+  const [menuId, setMenuId] = useState<string | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!menuId) return;
+    function closeOutside(event: PointerEvent) {
+      if (event.target instanceof Node && !menuRef.current?.contains(event.target)) setMenuId(null);
+    }
+    function closeOnEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        menuRef.current?.querySelector<HTMLButtonElement>("[aria-expanded]")?.focus();
+        setMenuId(null);
+      }
+    }
+    document.addEventListener("pointerdown", closeOutside);
+    document.addEventListener("keydown", closeOnEscape);
+    return () => {
+      document.removeEventListener("pointerdown", closeOutside);
+      document.removeEventListener("keydown", closeOnEscape);
+    };
+  }, [menuId]);
   const lastSubmittedId = useRef<string | undefined>(undefined);
 
   const [input, setInput] = useState("");
@@ -113,13 +132,11 @@ export default function ChatPage() {
         session = {
           id,
           title: row.question,
-          group: "Hôm nay",
-          pinned: pinned.has(id),
           messages: [],
         };
         byId.set(id, session);
       }
-      if (row.id === id) session.title = row.question;
+      if (row.id === id) session.title = row.conversationTitle?.trim() || row.question;
       const view = chatView(row);
       session.messages.push(
         {
@@ -143,10 +160,10 @@ export default function ChatPage() {
     }
     for (const session of byId.values()) session.messages.reverse();
     return [...byId.values()];
-  }, [data.rows, pinned]);
+  }, [data.rows]);
 
   useEffect(() => {
-    void chat.load();
+    void chat.load(activeId ?? undefined);
     return () => chat.dispose();
   }, [chat]);
 
@@ -163,7 +180,7 @@ export default function ChatPage() {
   }, [location.state]);
 
   const thinking = data.busy;
-  const blocked = data.busy || data.loading || task.busy;
+  const blocked = data.busy || data.loading || data.loadingMore || task.busy;
   const endRef = useRef<HTMLDivElement>(null);
   const taRef = useRef<HTMLTextAreaElement>(null);
   const citationTriggerRef = useRef<HTMLButtonElement | null>(null);
@@ -215,7 +232,7 @@ export default function ChatPage() {
   }
 
   async function send(text = input) {
-    if (blocked || !text.trim()) return;
+    if (blocked || (activeId && !active) || !text.trim()) return;
     if (await chat.submit(text, active?.id)) {
       setInput("");
       if (window.innerWidth < 768) setShowList(false);
@@ -326,7 +343,7 @@ export default function ChatPage() {
         <button
           type="button"
           onClick={() => void send()}
-          disabled={!input.trim() || blocked}
+          disabled={!input.trim() || blocked || (!!activeId && !active)}
           className="w-9 h-9 grid place-items-center rounded-full bg-navy text-bg transition hover:bg-navy-light disabled:bg-line disabled:text-muted disabled:cursor-not-allowed shadow-xs"
           aria-label="Gửi"
         >
@@ -337,15 +354,19 @@ export default function ChatPage() {
   );
 
   return (
-    <div className="relative flex h-full bg-bg">
+    <div className="relative flex h-full bg-surface">
       {/* Sessions */}
       {showList && (
         <aside
           aria-label="Lịch sử câu hỏi"
-          className="absolute inset-y-0 left-0 z-10 w-64 max-w-full md:static shrink-0 flex flex-col border-r border-line bg-bg shadow-lg md:shadow-none"
+          className="absolute inset-y-0 left-0 z-10 w-64 max-w-full md:static shrink-0 flex flex-col border-r border-line bg-surface shadow-lg md:shadow-none"
         >
           <div className="p-3 space-y-2">
-            <Notice loading={data.loading} error={data.error} retry={chat.load} />
+            <Notice
+              loading={data.loading}
+              error={data.error}
+              retry={() => chat.load(activeId ?? undefined)}
+            />
             <div className="flex items-center gap-1">
               <button
                 type="button"
@@ -359,8 +380,8 @@ export default function ChatPage() {
               </button>
               <button
                 type="button"
-                disabled={thinking || data.loading}
-                onClick={chat.load}
+                disabled={blocked}
+                onClick={() => void chat.load(activeId ?? undefined)}
                 aria-label="Tải lại lịch sử"
                 title="Tải lại lịch sử"
                 className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-navy cursor-pointer hover:bg-selected disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent-strong"
@@ -389,72 +410,178 @@ export default function ChatPage() {
                   updateUrl({ q: v || null }, true);
                 }}
                 placeholder="Tìm cuộc trò chuyện"
-                className="flex-1 bg-transparent text-[13px] outline-none text-navy placeholder-muted"
+                className="min-w-0 flex-1 bg-transparent text-[13px] outline-none text-navy placeholder-muted"
               />
             </label>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-2 pb-4">
-            {filtered.some((s) => s.pinned) && (
-              <Section label="Đã ghim">
-                {filtered
-                  .filter((s) => s.pinned)
-                  .map((s) => (
-                    <SessionItem
-                      key={s.id}
-                      s={s}
-                      active={s.id === activeId}
-                      onClick={() => {
-                        updateUrl({ c: s.id, cite: null });
-                        if (window.innerWidth < 768) setShowList(false);
-                      }}
-                      onPin={() =>
-                        setPinned((p) => {
-                          const n = new Set(p);
-                          n.has(s.id) ? n.delete(s.id) : n.add(s.id);
-                          return n;
-                        })
-                      }
-                    />
-                  ))}
-              </Section>
+          <div className="flex-1 overflow-y-auto px-2 pb-24">
+            {filtered.map((session) => (
+              <SessionItem
+                key={session.id}
+                s={session}
+                active={session.id === activeId}
+                disabled={blocked}
+                menuOpen={menuId === session.id}
+                menuRef={menuId === session.id ? menuRef : undefined}
+                onToggleMenu={() => {
+                  task.clearError();
+                  setMenuId((current) => (current === session.id ? null : session.id));
+                }}
+                onRename={() => {
+                  setMenuId(null);
+                  task.clearError();
+                  setTitle(session.title.slice(0, 200));
+                  setRenaming(session);
+                }}
+                onDelete={() => {
+                  setMenuId(null);
+                  task.clearError();
+                  setDeleting(session);
+                }}
+                onClick={() => {
+                  setMenuId(null);
+                  updateUrl({ c: session.id, cite: null });
+                  if (window.innerWidth < 768) setShowList(false);
+                }}
+              />
+            ))}
+            {!filtered.length && !data.error && !data.loading && (
+              <p className="px-3 py-6 text-xs text-muted">
+                {query ? "Không tìm thấy trong lịch sử đã tải." : "Chưa có cuộc trò chuyện."}
+              </p>
             )}
-            {groups.map((g) => {
-              const items = filtered.filter((s) => s.group === g && !s.pinned);
-              if (!items.length) return null;
-              return (
-                <Section key={g}>
-                  {items.map((s) => (
-                    <SessionItem
-                      key={s.id}
-                      s={s}
-                      active={s.id === activeId}
-                      onClick={() => {
-                        updateUrl({ c: s.id, cite: null });
-                        if (window.innerWidth < 768) setShowList(false);
-                      }}
-                      onPin={() =>
-                        setPinned((p) => {
-                          const n = new Set(p);
-                          n.has(s.id) ? n.delete(s.id) : n.add(s.id);
-                          return n;
-                        })
-                      }
-                    />
-                  ))}
-                </Section>
-              );
-            })}
-            {!filtered.length && (
-              <p className="px-3 py-6 text-xs text-muted">Không tìm thấy cuộc trò chuyện.</p>
+            {query && data.nextCursor && (
+              <p className="px-3 py-2 text-xs text-muted">
+                Tìm trong lịch sử đã tải. Tải thêm để tìm các cuộc trò chuyện cũ.
+              </p>
+            )}
+            <Notice error={data.moreError} />
+            {data.nextCursor && (
+              <button
+                type="button"
+                onClick={() => void chat.loadMore()}
+                disabled={blocked}
+                className="mt-2 w-full rounded-md px-3 py-2 text-[13px] text-text-secondary hover:bg-selected disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent-strong"
+              >
+                {data.loadingMore ? (
+                  <LoadingIndicator label="Đang tải thêm lịch sử…" inline />
+                ) : data.moreError ? (
+                  "Thử tải thêm lại"
+                ) : (
+                  "Tải thêm"
+                )}
+              </button>
             )}
           </div>
         </aside>
       )}
 
+      <Modal
+        open={!!renaming}
+        title="Đổi tên cuộc trò chuyện"
+        onClose={() => {
+          if (!task.busy) {
+            task.clearError();
+            setRenaming(null);
+          }
+        }}
+        footer={
+          <>
+            <Button
+              variant="ghost"
+              disabled={task.busy}
+              onClick={() => {
+                task.clearError();
+                setRenaming(null);
+              }}
+            >
+              Hủy
+            </Button>
+            <Button variant="primary" type="submit" form="rename-conversation" disabled={blocked || !title.trim()}>
+              Lưu tên
+            </Button>
+          </>
+        }
+      >
+        <form
+          id="rename-conversation"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (blocked || !renaming) return;
+            void task.run(async () => {
+              await chat.renameConversation(renaming.id, title);
+              setRenaming(null);
+              setNotice("Đã đổi tên cuộc trò chuyện.");
+            });
+          }}
+        >
+          <label className="block space-y-2 text-sm">
+            <span>Tên cuộc trò chuyện</span>
+            <input
+              className={inputCls}
+              value={title}
+              required
+              maxLength={200}
+              disabled={task.busy}
+              onChange={(event) => setTitle(event.target.value)}
+            />
+          </label>
+          <Notice error={task.error} />
+        </form>
+      </Modal>
+      <Modal
+        open={!!deleting}
+        title="Xóa cuộc trò chuyện?"
+        onClose={() => {
+          if (!task.busy) {
+            task.clearError();
+            setDeleting(null);
+          }
+        }}
+        footer={
+          <>
+            <Button
+              variant="ghost"
+              disabled={task.busy}
+              onClick={() => {
+                task.clearError();
+                setDeleting(null);
+              }}
+            >
+              Hủy
+            </Button>
+            <Button
+              variant="danger"
+              disabled={blocked || !deleting}
+              onClick={() => void task.run(async () => {
+                if (!deleting) return;
+                const id = deleting.id;
+                await chat.removeConversation(id);
+                if (activeId === id) {
+                  updateUrl({ c: null, cite: null });
+                  setInput("");
+                }
+                setDeleting(null);
+                setNotice("Đã xóa cuộc trò chuyện khỏi lịch sử.");
+              })}
+            >
+              Xóa cuộc trò chuyện
+            </Button>
+          </>
+        }
+      >
+        <p className="mb-3 break-words text-sm font-medium text-navy">{deleting?.title}</p>
+        <p className="text-sm text-muted">
+          Cuộc trò chuyện sẽ được gỡ khỏi lịch sử và không thể mở lại.
+          Các phản hồi bạn đã báo cáo vẫn được giữ để quản trị xử lý.
+        </p>
+        <Notice error={task.error} />
+      </Modal>
+
       {/* Conversation */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-14 shrink-0 flex items-center justify-between px-4 border-b border-line/70 bg-bg/85 backdrop-blur">
+        <header className="h-14 shrink-0 flex items-center justify-between px-4 border-b border-line/70 bg-surface">
           <div className="flex items-center gap-2 min-w-0">
             {!showList && (
               <button
@@ -475,7 +602,7 @@ export default function ChatPage() {
         </header>
 
         <div className="px-4">
-          <Notice error={data.requestError || task.error} />
+          <Notice error={data.requestError || (!deleting && !renaming ? task.error : undefined)} />
           <Notice error={data.error} retry={chat.load} />
           {notice && (
             <p role="status" className="py-2 text-xs text-muted">
@@ -732,45 +859,63 @@ function CitationSource({ reference }: { reference: LegalReference }) {
   );
 }
 
-function Section({ label, children }: { label?: string; children: React.ReactNode }) {
-  return (
-    <div className="mt-3">
-      {label && <p className="px-3 pb-1 text-[11px] font-medium text-muted">{label}</p>}
-      <div className="space-y-px">{children}</div>
-    </div>
-  );
-}
-
 function SessionItem({
   s,
   active,
   onClick,
-  onPin,
+  disabled,
+  menuOpen,
+  menuRef,
+  onToggleMenu,
+  onRename,
+  onDelete,
 }: {
   s: Session;
   active: boolean;
   onClick: () => void;
-  onPin: () => void;
+  disabled: boolean;
+  menuOpen: boolean;
+  menuRef?: React.RefObject<HTMLDivElement | null>;
+  onToggleMenu: () => void;
+  onRename: () => void;
+  onDelete: () => void;
 }) {
   return (
-    <div
-      onClick={onClick}
-      className={`group flex items-center gap-2 px-3 py-1.5 rounded-lg cursor-pointer text-[13px] transition-colors ${
-        active ? "bg-selected text-navy font-medium" : "text-text-secondary hover:bg-selected"
-      }`}
-    >
-      <span className="flex-1 truncate">{s.title}</span>
+    <div className={`relative flex items-center rounded-lg ${active ? "bg-selected" : "hover:bg-selected"}`}>
       <button
         type="button"
-        onClick={(e) => {
-          e.stopPropagation();
-          onPin();
-        }}
-        className="opacity-0 group-hover:opacity-100 p-0.5 rounded text-muted hover:text-navy"
-        aria-label="Ghim trong phiên giao diện"
+        onClick={onClick}
+        aria-current={active ? "true" : undefined}
+        title={s.title}
+        className={`block min-w-0 flex-1 truncate px-3 py-1.5 rounded-lg text-left text-[13px] transition-colors focus-visible:outline-2 focus-visible:outline-accent-strong ${
+          active ? "text-navy font-medium" : "text-text-secondary"
+        }`}
       >
-        <Icon d={ic.dots} />
+        {s.title}
       </button>
+      <div ref={menuRef} className="relative shrink-0">
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={onToggleMenu}
+          title="Tùy chọn cuộc trò chuyện"
+          aria-label={`Tùy chọn cuộc trò chuyện ${s.title}`}
+          aria-expanded={menuOpen}
+          className="mr-1 grid h-8 w-8 place-items-center rounded-md text-muted hover:bg-hover hover:text-navy disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent-strong"
+        >
+          <Icon d={ic.dots} />
+        </button>
+        {menuOpen && (
+          <div className="absolute right-1 top-full z-30 w-40 rounded-md border border-control bg-surface p-1 shadow-md">
+            <button type="button" disabled={disabled} onClick={onRename} className="block w-full rounded px-3 py-2 text-left text-sm text-navy hover:bg-hover focus-visible:outline-2 focus-visible:outline-accent-strong disabled:opacity-40">
+              Đổi tên
+            </button>
+            <button type="button" disabled={disabled} onClick={onDelete} className="block w-full rounded px-3 py-2 text-left text-sm text-red-700 hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-accent-strong disabled:opacity-40">
+              Xóa
+            </button>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

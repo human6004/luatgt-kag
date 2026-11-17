@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { api, media } from "../../api";
 
-import { Button } from "../../admin/ui";
+import { Button, LoadingIndicator } from "../../admin/ui";
 
 export function useData<T>(path: string) {
   const [value, setValue] = useState<T>(),
@@ -61,11 +61,7 @@ export function Notice({
 }) {
   return (
     <>
-      {loading && (
-        <p role="status" className="py-4 text-muted">
-          Đang tải dữ liệu…
-        </p>
-      )}
+      {loading && <LoadingIndicator />}
       {error && (
         <div role="alert" className="py-4 text-red-700">
           {error}

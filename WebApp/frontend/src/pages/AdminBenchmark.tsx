@@ -26,6 +26,38 @@ const modeLabels: Record<string, string> = {
   BOTH: "Truy xuất và trả lời",
 };
 const modeLabel = (mode: string) => modeLabels[mode] ?? mode;
+const sourceLabels: Record<string, string> = {
+  document: "Văn bản",
+  unit: "Đơn vị pháp lý",
+  sign: "Biển báo",
+  source_span: "Trích đoạn",
+  "": "Chung",
+};
+const rankLabels: Record<string, string> = {
+  Hit: "Có kết quả đúng",
+  Recall: "Độ phủ",
+  MRR: "Thứ hạng nghịch đảo trung bình",
+};
+const evaluationLabels: Record<string, string> = {
+  RUNNING: "Đang chạy",
+  COMPLETE: "Hoàn thành",
+  FAILED: "Thất bại",
+  STOPPED: "Đã dừng",
+  NOT_RUN: "Chưa chạy",
+  AVAILABLE: "Có kết quả",
+  INVALID_RECEIPT: "Kết quả không hợp lệ",
+  PROVISIONAL: "Chưa cố định",
+  FROZEN: "Đã cố định",
+  NOT_ATTESTED: "Chưa xác nhận",
+  ELIGIBLE: "Đủ điều kiện",
+  BLOCKED: "Chưa đủ điều kiện",
+  PROVISIONAL_DATASET: "Bộ dữ liệu chưa cố định",
+  NO_GOLD: "Chưa có dữ liệu chuẩn đối chiếu",
+  INVALID_DATASET: "Bộ dữ liệu không hợp lệ",
+  DATASET_TOO_LARGE: "Bộ dữ liệu vượt giới hạn dung lượng",
+  NO_ELIGIBLE_QUESTIONS: "Chưa có câu hỏi đủ điều kiện",
+};
+const evaluationLabel = (value?: string | null) => evaluationLabels[value ?? ""] ?? "Chưa xác định";
 
 // Units follow the producers in kag/evaluation/metrics.py; unavailable-only diagnostics stay raw.
 const metricKinds: Record<string, "ratio" | "count"> = {
@@ -63,7 +95,7 @@ const rankingMetric =
   /^(?:(?:document|unit|sign)\.)?(?:Hit|Recall|MRR)@\d+$|^source_span\.(?:Hit|Recall)@\d+$/;
 
 const displayName: Record<string, string> = {
-  returned_top_k_MRR: "MRR (toàn kết quả)",
+  returned_top_k_MRR: "Thứ hạng nghịch đảo trung bình (toàn kết quả)",
   citation_source_precision: "Chính xác nguồn trích dẫn",
   citation_source_recall: "Phủ nguồn trích dẫn",
   citation_exact_precision: "Chính xác trích dẫn chính xác",
@@ -81,6 +113,12 @@ const displayName: Record<string, string> = {
   evidence_recall: "Phủ căn cứ",
   evidence_recall_required: "Phủ căn cứ bắt buộc",
   context_precision: "Chính xác ngữ cảnh",
+  exact_eligible_citation_count: "Số trích dẫn đủ điều kiện",
+  exact_excluded_citation_count: "Số trích dẫn bị loại",
+  required_source_count: "Số nguồn bắt buộc",
+  acceptable_source_count: "Số nguồn được chấp nhận",
+  citation_article_accuracy: "Độ chính xác điều luật",
+  grounding: "Mức độ dựa trên căn cứ",
 };
 const channels = ["document", "sign", "unit", "source_span", ""];
 const families = ["Hit", "Recall", "MRR", "returned_top_k"];
@@ -96,7 +134,7 @@ function parseMetric(mode: string, name: string) {
     family,
     k: ranking ? Number(ranking[2]) : 0,
     label: ranking
-      ? metric
+      ? `${rankLabels[ranking[1]]} · ${ranking[2]} kết quả đầu`
       : Object.prototype.hasOwnProperty.call(displayName, metric)
         ? displayName[metric]
         : name,
@@ -134,7 +172,7 @@ function MetricBar({
 type RowSpec = { name: string; label: string };
 const primarySpecs: RowSpec[] = [
   { name: "source_span.evidence_recall", label: "Bằng chứng tìm được" },
-  { name: "source_span.Recall@5", label: "Bằng chứng top-5" },
+  { name: "source_span.Recall@5", label: "Bằng chứng 5 kết quả đầu" },
   { name: "marker_coverage", label: "Ý đúng trong trả lời" },
   { name: "markers_all", label: "Đủ hết ý" },
   { name: "citation_unit_accuracy", label: "Trích đúng điều/khoản" },
@@ -143,8 +181,8 @@ const primarySpecs: RowSpec[] = [
   { name: "false_answer_rate", label: "Trả lời khi nên từ chối ↓" },
 ];
 const diagnosticSpecs: RowSpec[] = [
-  { name: "source_span.returned_top_k_MRR", label: "MRR" },
-  { name: "source_span.Hit@5", label: "Hit@5" },
+  { name: "source_span.returned_top_k_MRR", label: "Thứ hạng nghịch đảo trung bình (MRR)" },
+  { name: "source_span.Hit@5", label: "Có kết quả đúng trong 5 kết quả đầu" },
   { name: "source_span.context_precision", label: "Độ chính xác ngữ cảnh" },
   { name: "citation_source_precision", label: "Độ chính xác trích dẫn" },
   { name: "citation_doc_accuracy", label: "Trích đúng văn bản" },
@@ -184,15 +222,15 @@ function Score({
 
 function MetricTable({ rows, label }: { rows: MetricRow[]; label: string }) {
   return (
-    <table className="w-full table-fixed text-sm" aria-label={label}>
+    <table className="w-full table-fixed text-sm [&_th]:whitespace-normal" aria-label={label}>
       <thead className="border-y border-line">
         <tr>
-          <Th className="w-[36%] !px-2">Metric</Th>
-          <Th className="w-[20%] sm:w-[14%] !px-2">Micro</Th>
-          <Th className="hidden sm:table-cell sm:w-[14%] !px-2">Macro</Th>
-          <Th className="hidden sm:table-cell sm:w-[22%] !px-2">95% CI</Th>
-          <Th className="w-[14%] sm:w-[7%] !px-2">n</Th>
-          <Th className="w-[14%] sm:w-[7%] !px-2">N/A</Th>
+          <Th className="w-[36%] !px-2">Chỉ số</Th>
+          <Th className="w-[20%] sm:w-[14%] !px-2">Điểm gộp</Th>
+          <Th className="hidden sm:table-cell sm:w-[14%] !px-2">Trung bình theo nhóm</Th>
+          <Th className="hidden sm:table-cell sm:w-[22%] !px-2">Khoảng tin cậy 95%</Th>
+          <Th className="w-[14%] sm:w-[7%] !px-2">Số câu</Th>
+          <Th className="w-[14%] sm:w-[7%] !px-2">Không áp dụng</Th>
         </tr>
       </thead>
       <tbody>
@@ -572,10 +610,10 @@ export default function AdminBenchmark() {
     setBusy(true);
     try {
       const response = await apiResponse(path);
-      if (!response.ok) throw new Error(`Không tải được file (${response.status}).`);
+      if (!response.ok) throw new Error(`Không tải được tệp (${response.status}).`);
       saveBlob(await response.blob(), filename);
     } catch (error) {
-      notify(error instanceof Error ? error.message : "Không tải được file.");
+      notify(error instanceof Error ? error.message : "Không tải được tệp.");
     } finally {
       setBusy(false);
     }
@@ -589,7 +627,7 @@ export default function AdminBenchmark() {
       return;
     }
     if (!file.name.toLowerCase().endsWith(".json") || file.size > 8 * 1024 * 1024) {
-      notify("Chọn file .json không quá 8 MiB.");
+      notify("Chọn tệp .json không quá 8 MiB.");
       return;
     }
     setBusy(true);
@@ -610,26 +648,26 @@ export default function AdminBenchmark() {
               ["field", "code", "message"].every((k) => typeof e[k] === "string"),
           )
         ) {
-          throw new Error("Phản hồi lỗi import không hợp lệ.");
+          throw new Error("Phản hồi lỗi nhập dữ liệu không hợp lệ.");
         }
         setImportErrors(errors);
-        notify("File có lỗi; chưa lưu bộ câu hỏi.");
+        notify("Tệp có lỗi; chưa lưu bộ câu hỏi.");
         return;
       }
       if (!response.ok)
         throw new Error(
           response.status === 409
             ? "Tên bộ câu hỏi đã tồn tại."
-            : `Import thất bại (${response.status}).`,
+            : `Nhập dữ liệu thất bại (${response.status}).`,
         );
       const result: { id: string; record_count: number } = await response.json();
       setImportErrors([]);
-      notify(`Đã import ${result.record_count} câu.`);
+      notify(`Đã nhập dữ liệu ${result.record_count} câu.`);
       updateUrl({ dataset: result.id, cat: null });
       datasetData.reload();
       data.reload();
     } catch (error) {
-      notify(error instanceof Error ? error.message : "Import thất bại.");
+      notify(error instanceof Error ? error.message : "Nhập dữ liệu thất bại.");
     } finally {
       setBusy(false);
     }
@@ -637,25 +675,26 @@ export default function AdminBenchmark() {
 
   return (
     <Page
-      title="Benchmark"
-      subtitle="Đọc catalog bộ câu hỏi và artifact đánh giá thực tế của KAG từ backend."
+      title="Đánh giá chất lượng"
+      subtitle="Đọc danh mục bộ câu hỏi và tệp kết quả đánh giá thực tế của KAG từ máy chủ."
     >
-      <Notice {...datasetData} retry={datasetData.reload} />
-      <Notice {...serving} retry={serving.reload} />
+      <Notice loading={datasetData.loading || serving.loading} />
+      <Notice error={datasetData.error} retry={datasetData.reload} />
+      <Notice error={serving.error} retry={serving.reload} />
 
-      <Card title="Chạy benchmark" className="mb-6">
+      <Card title="Chạy đánh giá" className="mb-6">
         <div className="px-5 pb-5 space-y-3 text-sm">
           <div className="grid gap-3 lg:grid-cols-3">
             <label>
-              Đồ thị đã PASS
+              Đồ thị đã đạt
               <select
-                aria-label="Đồ thị benchmark"
+                aria-label="Đồ thị đánh giá"
                 className={`${inputCls} mt-1`}
                 value={graph ? `${graph.project_id}/${graph.run_id}` : ""}
                 disabled={runBusy || currentJob?.state === "RUNNING"}
                 onChange={(e) => setGraphKey(e.target.value)}
               >
-                {!graph && <option value="">Chưa có đồ thị đã PASS</option>}
+                {!graph && <option value="">Chưa có đồ thị đã đạt</option>}
                 {graphRuns.map((r) => (
                   <option key={`${r.project_id}/${r.run_id}`} value={`${r.project_id}/${r.run_id}`}>
                     {r.project_name} · {r.run_id}
@@ -666,7 +705,7 @@ export default function AdminBenchmark() {
             <label>
               Chế độ
               <select
-                aria-label="Chế độ benchmark"
+                aria-label="Chế độ đánh giá"
                 className={`${inputCls} mt-1`}
                 value={mode}
                 disabled={runBusy || currentJob?.state === "RUNNING"}
@@ -680,7 +719,7 @@ export default function AdminBenchmark() {
             <label>
               Số câu · để trống = toàn bộ
               <input
-                aria-label="Số câu benchmark"
+                aria-label="Số câu đánh giá"
                 type="number"
                 min={1}
                 max={selected?.record_count ?? undefined}
@@ -700,11 +739,11 @@ export default function AdminBenchmark() {
           )}
           {selectedJob?.dataset_status === "FROZEN" && (
             <p className="break-all text-xs">
-              FROZEN · dataset_hash: {selectedJob.dataset_hash} · frozen_at: {selectedJob.frozen_at}
+              Đã cố định · mã băm bộ dữ liệu: {selectedJob.dataset_hash} · thời điểm cố định: {selectedJob.frozen_at}
             </p>
           )}
           <p className="text-xs text-amber-700">
-            GraphLock giữ suốt lượt chạy; không thể xóa hoặc dựng lại đồ thị đến khi lượt chạy kết
+            Khóa đồ thị giữ suốt lượt chạy; không thể xóa hoặc dựng lại đồ thị đến khi lượt chạy kết
             thúc hoặc dừng.
           </p>
           <div className="flex flex-wrap gap-2">
@@ -722,11 +761,11 @@ export default function AdminBenchmark() {
               }
               onClick={runBenchmark}
             >
-              Chạy benchmark
+              Chạy đánh giá
             </Button>
             {currentJob?.state === "RUNNING" && (
               <Button disabled={runBusy || stopRequested} onClick={stopBenchmark}>
-                Dừng benchmark
+                Dừng đánh giá
               </Button>
             )}
             {jobId && (
@@ -751,7 +790,7 @@ export default function AdminBenchmark() {
           {currentJob && (
             <div role="status" className="space-y-1 text-xs">
               <p className="break-all">
-                {currentJob.state} · {currentJob.dataset_id} · {currentJob.project_id}/
+                {evaluationLabel(currentJob.state)} · {currentJob.dataset_id} · {currentJob.project_id}/
                 {currentJob.run_id}
               </p>
               {Object.entries(currentJob.progress).map(([m, p]) => (
@@ -829,7 +868,7 @@ export default function AdminBenchmark() {
           >
             <div className="px-5 mb-4">
               <select
-                aria-label="Dataset"
+                aria-label="Bộ dữ liệu"
                 className={inputCls}
                 value={selected?.id || ""}
                 onChange={(e) => updateUrl({ dataset: e.target.value, cat: null })}
@@ -840,8 +879,8 @@ export default function AdminBenchmark() {
               </select>
               <p className="mt-2 text-xs text-muted">
                 {selected
-                  ? `${selected.dataset_status} · ${selected.dataset_eligibility}`
-                  : "Chưa có catalog bộ câu hỏi"}
+                  ? `${evaluationLabel(selected.dataset_status)} · ${evaluationLabel(selected.dataset_eligibility)}`
+                  : "Chưa có danh mục bộ câu hỏi"}
               </p>
               <div className="mt-3 space-y-2">
                 <label className="block text-xs text-muted">
@@ -859,7 +898,7 @@ export default function AdminBenchmark() {
                   />
                 </label>
                 <FilePicker
-                  title="Nhập bộ câu hỏi benchmark"
+                  title="Nhập bộ câu hỏi đánh giá"
                   hint={importName.trim() ? "JSON" : "JSON · Nhập tên bộ câu hỏi trước"}
                   accept=".json,application/json"
                   disabled={busy || !importName.trim()}
@@ -877,7 +916,7 @@ export default function AdminBenchmark() {
                       void download("/admin/kag/benchmark/template", "benchmark-template.json")
                     }
                   >
-                    Tải file mẫu
+                    Tải tệp mẫu
                   </Button>
                   {selected && (
                     <Button
@@ -890,7 +929,7 @@ export default function AdminBenchmark() {
                         )
                       }
                     >
-                      Export
+                      Xuất dữ liệu
                     </Button>
                   )}
                 </div>
@@ -901,7 +940,7 @@ export default function AdminBenchmark() {
                   >
                     {importErrors.map((error, index) => (
                       <li key={index}>
-                        Câu {error.index + 1} · {error.field || "record"} · {error.message}
+                        Câu {error.index + 1} · {error.field || "bản ghi"} · {error.message}
                       </li>
                     ))}
                   </ul>
@@ -972,7 +1011,7 @@ export default function AdminBenchmark() {
             }
           >
             {measured.length ? (
-              <div role="region" aria-label="Bảng kết quả benchmark">
+              <div role="region" aria-label="Bảng kết quả đánh giá">
                 {primaryRows.length > 0 && <MetricTable rows={primaryRows} label="Chỉ số chính" />}
                 {diagnosticRows.length > 0 && (
                   <Section title="Chẩn đoán">
@@ -985,7 +1024,7 @@ export default function AdminBenchmark() {
                       <table className="w-full text-sm" aria-label="Kết quả theo danh mục">
                         <thead className="border-y border-line">
                           <tr>
-                            <Th className="!px-2">Metric</Th>
+                            <Th className="!px-2">Chỉ số</Th>
                             {breakdownCats.map((id) => (
                               <Th key={id} className="!px-2">
                                 {id}
@@ -1017,7 +1056,7 @@ export default function AdminBenchmark() {
                 )}
                 {cat !== "all" && (
                   <p className="px-3 pb-3 pt-2 text-xs text-muted">
-                    Đã chấm / bị loại theo metric; khoảng số thể hiện các metric có số câu khác
+                    Đã chấm / bị loại theo chỉ số; khoảng số thể hiện các chỉ số có số câu khác
                     nhau.
                   </p>
                 )}
@@ -1029,7 +1068,7 @@ export default function AdminBenchmark() {
                         <button
                           type="button"
                           className="w-full px-3 py-3 text-left text-sm font-semibold text-navy hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong"
-                          aria-label={`${modeLabel(group.mode)} · ${group.channel || "Chung"}`}
+                          aria-label={`${modeLabel(group.mode)} · ${sourceLabels[group.channel] ?? "Nguồn khác"}`}
                           aria-expanded={open}
                           onClick={() =>
                             setToggledChannels((prev) => {
@@ -1040,18 +1079,18 @@ export default function AdminBenchmark() {
                             })
                           }
                         >
-                          {open ? "▼" : "▶"} {modeLabel(group.mode)} · {group.channel || "Chung"}
+                          {open ? "▼" : "▶"} {modeLabel(group.mode)} · {sourceLabels[group.channel] ?? "Nguồn khác"}
                         </button>
                         {open && (
                           <table
                             className="w-full table-fixed"
-                            aria-label={`${modeLabel(group.mode)} · ${group.channel || "Chung"}`}
+                            aria-label={`${modeLabel(group.mode)} · ${sourceLabels[group.channel] ?? "Nguồn khác"}`}
                           >
                             <thead className="border-y border-line">
                               <tr>
                                 <Th className="hidden sm:table-cell sm:w-[12%] !px-2">Chế độ</Th>
-                                <Th className="hidden sm:table-cell sm:w-[16%] !px-2">Channel</Th>
-                                <Th className="w-[40%] sm:w-auto !px-2">Metric</Th>
+                                <Th className="hidden sm:table-cell sm:w-[16%] !px-2">Loại nguồn</Th>
+                                <Th className="w-[40%] sm:w-auto !px-2">Chỉ số</Th>
                                 <Th className="w-[24%] sm:w-[22%] !px-2">Điểm</Th>
                                 <Th className="w-[20%] sm:w-[12%] !px-2">Đã chấm</Th>
                                 <Th className="w-[16%] sm:w-[10%] !px-2">Bị loại</Th>
@@ -1064,7 +1103,7 @@ export default function AdminBenchmark() {
                                     {modeLabel(m.mode)}
                                   </Td>
                                   <Td className="hidden sm:table-cell !px-2">
-                                    {m.channel || "Chung"}
+                                    {sourceLabels[m.channel] ?? "Nguồn khác"}
                                   </Td>
                                   <Td className="!px-2 text-navy [overflow-wrap:anywhere]">
                                     <span title={m.name}>{m.label}</span>
@@ -1099,7 +1138,7 @@ export default function AdminBenchmark() {
                 <p className="text-sm font-medium text-navy">Chưa có kết quả đánh giá</p>
                 <p className="max-w-md text-sm text-muted">
                   {cat === "all"
-                    ? "Chưa có execution artifact hợp lệ cho bộ câu hỏi này; các chỉ số chưa đo."
+                    ? "Chưa có tệp kết quả thực thi hợp lệ cho bộ câu hỏi này; các chỉ số chưa đo."
                     : `Nhóm ${cat} (${categoryCounts?.[cat] ?? 0} câu): Chưa đo.`}
                 </p>
               </div>
@@ -1107,20 +1146,20 @@ export default function AdminBenchmark() {
           </Card>
 
           {(selectedJob || data.value || row) && (
-            <Card title="Artifact KAG · API thật">
+            <Card title="Tệp kết quả KAG · API thật">
               <div className="px-5 pb-5 text-xs space-y-2 break-words">
                 {selectedJob && (
                   <>
                     <p>
-                      Job: {selectedJob.run_id_job} · Fingerprint: {selectedJob.graph_fingerprint}
+                      Lượt chạy: {selectedJob.run_id_job} · mã định danh: {selectedJob.graph_fingerprint}
                     </p>
                     <p>
-                      Dataset hash: {selectedJob.dataset_hash} · {selectedJob.dataset_status} ·
-                      frozen_at: {selectedJob.frozen_at ?? "—"}
+                      Mã băm bộ dữ liệu: {selectedJob.dataset_hash} · {evaluationLabel(selectedJob.dataset_status)} ·
+                      thời điểm cố định: {selectedJob.frozen_at ?? "—"}
                     </p>
                     <p>
-                      Provider requests · embedding: {selectedJob.provider_requests.embedding} ·
-                      chat: {selectedJob.provider_requests.chat}
+                      Lượt gọi nhà cung cấp · biểu diễn vectơ: {selectedJob.provider_requests.embedding} ·
+                      trợ lý: {selectedJob.provider_requests.chat}
                     </p>
                     {Object.entries(selectedJob.metrics ?? {}).map(([m, metrics]) => (
                       <div key={m} className="space-y-1">
@@ -1129,11 +1168,11 @@ export default function AdminBenchmark() {
                           {metrics.ineligible_count} · Lỗi: {metrics.failed_count}
                         </p>
                         <p>
-                          Latency mean:{" "}
+                          Thời gian phản hồi trung bình:{" "}
                           <MetricBar value={metrics.latency_ms.all_attempted.mean} kind="latency" />
                         </p>
                         <p>
-                          Failure rate:{" "}
+                          Tỷ lệ lỗi:{" "}
                           <MetricBar value={metrics.failure_rate.value} kind="ratio" />
                         </p>
                       </div>
@@ -1143,43 +1182,43 @@ export default function AdminBenchmark() {
                 {data.value && (
                   <details>
                     <summary className="cursor-pointer underline">
-                      Danh tính graph và cấu hình quan sát
+                      Danh tính đồ thị và cấu hình quan sát
                     </summary>
-                    <p className="mt-1">Fingerprint: {data.value.graph_fingerprint}</p>
-                    <p>Source catalog SHA-256: {data.value.source_catalog_sha256}</p>
+                    <p className="mt-1">Mã định danh: {data.value.graph_fingerprint}</p>
+                    <p>Danh mục nguồn SHA-256: {data.value.source_catalog_sha256}</p>
                     <p>
-                      Model: {data.value.providers.configured_chat_model ?? "Chưa cấu hình"} ·
-                      upstream chưa xác minh
+                      Mô hình: {data.value.providers.configured_chat_model ?? "Chưa cấu hình"} ·
+                      hệ thống gốc chưa xác minh
                     </p>
                   </details>
                 )}
                 {row && (
                   <>
                     <p>
-                      {row.dataset_hash} · eligible {row.eligible_count} · ineligible{" "}
+                      {row.dataset_hash} · đủ điều kiện {row.eligible_count} · không đủ điều kiện{" "}
                       {row.ineligible_count}
                     </p>
-                    <p>Độ phủ căn cứ chuẩn cho truy xuất · {row.reason}</p>
+                    <p>Độ phủ căn cứ chuẩn cho truy xuất · {row.reason ? evaluationLabel(row.reason) : "Đủ điều kiện"}</p>
                     <p>
-                      Review: {row.smoke?.review_status ?? "Chưa có"} · official{" "}
-                      {String(row.official_benchmark)} · state {row.smoke?.state ?? "NOT_RUN"}
+                      Kiểm duyệt: {evaluationLabel(row.smoke?.review_status)} · chính thức{" "}
+                      {row.official_benchmark ? "Có" : "Không"} · trạng thái {evaluationLabel(row.smoke?.state ?? "NOT_RUN")}
                     </p>
                     {Object.entries(row.smoke?.runs || {}).map(([mode, run]) => (
                       <details key={mode}>
                         <summary className="cursor-pointer underline">
-                          {modeLabel(mode)}: {run?.status ?? "NOT_RUN"}
+                          {modeLabel(mode)}: {evaluationLabel(run?.status ?? "NOT_RUN")}
                         </summary>
                         {run ? (
                           <div className="mt-1 space-y-1">
                             <p>
-                              Requested {run.requested_count} · Attempted {run.attempted_count} ·
-                              Failed {run.failed_count} · Ineligible {run.ineligible_count}
+                              Yêu cầu {run.requested_count} · đã thử {run.attempted_count} ·
+                              thất bại {run.failed_count} · không đủ điều kiện {run.ineligible_count}
                             </p>
                             <p>
                               {run.started_at} → {run.finished_at}
                             </p>
                             <p>
-                              Latency mean:{" "}
+                              Thời gian phản hồi trung bình:{" "}
                               <MetricBar value={run.latency_ms.all_attempted.mean} kind="latency" />
                             </p>
                             <pre className="whitespace-pre-wrap break-all">
@@ -1187,19 +1226,19 @@ export default function AdminBenchmark() {
                             </pre>
                             {Object.entries(run.metrics).map(([name, m]) => (
                               <p key={name}>
-                                {name}:{" "}
+                                {parseMetric(mode, name).label}:{" "}
                                 {m.value ??
                                   (name === "answer_correctness"
                                     ? "Chưa có giám khảo"
                                     : "Chưa đo")}{" "}
-                                · Scored {m.scored_count}/{m.eligible_count} · Failed{" "}
-                                {m.failed_count} · Excluded {m.excluded_count}
+                                · đã chấm {m.scored_count}/{m.eligible_count} · thất bại{" "}
+                                {m.failed_count} · bị loại {m.excluded_count}
                               </p>
                             ))}
                           </div>
                         ) : (
                           <p className="mt-1">
-                            Chưa có execution artifact hợp lệ; metrics chưa đo.
+                            Chưa có tệp kết quả thực thi hợp lệ; chỉ số chưa đo.
                           </p>
                         )}
                       </details>
@@ -1210,7 +1249,7 @@ export default function AdminBenchmark() {
                       </summary>
                       {Object.entries(row.missing_gold).map(([k, ids]) => (
                         <p key={k} className="mt-1">
-                          {k}: {ids.join(", ") || "Không có"}
+                          {sourceLabels[k] ?? "Nguồn khác"}: {ids.join(", ") || "Không có"}
                         </p>
                       ))}
                     </details>

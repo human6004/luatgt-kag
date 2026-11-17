@@ -10,6 +10,7 @@ import {
   FilterTabs,
   Modal,
   Page,
+  SelectionBar,
   Td,
   Th,
   inputCls,
@@ -102,6 +103,32 @@ export default function QuestionBankSettings({
     rules = useData<ExamRule[]>("/admin/questions/rules"),
     task = useTask();
   const tab = selectedTab ?? localTab;
+  const [setQuery, setSetQuery] = useState("");
+  const [ruleQuery, setRuleQuery] = useState("");
+  const shownSets = (sets.value || []).filter((set) =>
+    `${set.release_code} ${set.set_code} ${set.set_name}`.toLowerCase().includes(setQuery.toLowerCase()),
+  );
+  const shownRules = (rules.value || []).filter((rule) =>
+    `${rule.set_name} ${rule.class_code}`.toLowerCase().includes(ruleQuery.toLowerCase()),
+  );
+  const [checked, setChecked] = useState<Set<string>>(() => new Set());
+  const selectableSets = shownSets.filter((item) => !item.question_count && !item.rule_count);
+  const selectableRules = shownRules.filter((item) => !item.attempt_count);
+  const selectableIds = tab === "sets"
+    ? selectableSets.map((item) => item.set_id)
+    : selectableRules.map((item) => item.rule_id);
+  const selectedIds = selectableIds.filter((id) => checked.has(id));
+  const allChecked = selectableIds.length > 0 && selectedIds.length === selectableIds.length;
+  useEffect(() => { setChecked(new Set()); }, [tab, setQuery, ruleQuery, sets.value, rules.value]);
+
+  function toggleChecked(id: string, selected: boolean) {
+    setChecked((previous) => {
+      const next = new Set(previous);
+      if (selected) next.add(id);
+      else next.delete(id);
+      return next;
+    });
+  }
 
   useEffect(() => {
     if (embedded) task.clearError();
@@ -121,9 +148,19 @@ export default function QuestionBankSettings({
 
   const [pendingDelete, setPendingDelete] = useState<{
     kind: "set" | "rule";
-    id: string;
-    label: string;
+    ids: string[];
+    labels: string[];
   } | null>(null);
+  function confirmDeleteSelection(kind: "set" | "rule") {
+    task.clearError();
+    setPendingDelete({
+      kind,
+      ids: selectedIds,
+      labels: kind === "set"
+        ? selectableSets.filter((item) => checked.has(item.set_id)).map((item) => `${item.release_code} / ${item.set_name}`)
+        : selectableRules.filter((item) => checked.has(item.rule_id)).map((item) => `${item.set_name} / ${item.class_code} / ${item.valid_from}`),
+    });
+  }
 
   const [endingRule, setEndingRule] = useState<ExamRule | null>(null);
 
@@ -242,91 +279,137 @@ export default function QuestionBankSettings({
             </div>
             <Notice {...sets} retry={sets.reload} />
             {sets.value && (
-              <Card className="overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[480px]">
-                    <thead className="bg-sidebar">
-                      <tr>
-                        <Th>Mã đợt ban hành</Th>
-                        <Th>Mã bộ</Th>
-                        <Th>Tên bộ</Th>
-                        <Th className="text-right">Thao tác</Th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sets.value.map((s) => (
-                        <tr key={s.set_id} className="border-t border-line">
-                          <Td>{s.release_code}</Td>
-                          <Td>{s.set_code}</Td>
-                          <Td>{s.set_name}</Td>
-                          <Td className="text-right">
-                            <div className="flex flex-wrap items-center justify-end gap-2">
-                              <EditIconButton
-                                label="Chỉnh sửa bộ câu hỏi"
-                                disabled={task.busy}
-                                onClick={() => {
-                                  task.clearError();
-                                  setEditingSet(s);
-                                  setSet({
-                                    releaseCode: s.release_code,
-                                    releaseTitle: "",
-                                    setCode: s.set_code,
-                                    setName: s.set_name,
-                                    issuedOn: "",
-                                    effectiveFrom: "",
-                                    effectiveTo: "",
-                                    sourceUrl: "",
-                                  });
-                                  setDialog("set");
-                                }}
-                              />
-                              <Button
-                                size="sm"
-                                variant="danger"
-                                aria-label="Xóa bộ câu hỏi"
-                                disabled={task.busy || s.question_count > 0 || s.rule_count > 0}
-                                title={
-                                  s.question_count > 0 || s.rule_count > 0
-                                    ? `Đã có ${s.question_count} câu hỏi · ${s.rule_count} quy tắc; không thể xóa.`
-                                    : "Xóa bộ câu hỏi"
-                                }
-                                onClick={() => {
-                                  task.clearError();
-                                  setPendingDelete({
-                                    kind: "set",
-                                    id: s.set_id,
-                                    label: `${s.release_code} / ${s.set_code}`,
-                                  });
-                                }}
-                              >
-                                <svg
-                                  aria-hidden="true"
-                                  className="h-5 w-5"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="1.8"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                >
-                                  <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
-                                </svg>
-                              </Button>
-                            </div>
-                          </Td>
-                        </tr>
-                      ))}
-                      {!sets.value.length && (
-                        <tr>
-                          <td colSpan={4} className="px-4 py-6 text-center text-sm text-muted">
-                            Chưa có bộ câu hỏi. Bấm “Thêm bộ câu hỏi” để tạo bộ mới.
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+              <>
+                <div className="flex flex-wrap items-center gap-3">
+                  <input
+                    aria-label="Tìm bộ câu hỏi"
+                    placeholder="Tìm mã đợt, mã bộ, tên bộ…"
+                    className={`${inputCls} flex-1`}
+                    value={setQuery}
+                    onChange={(event) => setSetQuery(event.target.value)}
+                  />
+                  <span role="status" className="text-sm text-muted">
+                    {shownSets.length} / {sets.value.length} bộ câu hỏi
+                  </span>
                 </div>
-              </Card>
+                <SelectionBar selected={selectedIds.length} total={shownSets.length} noun="bộ câu hỏi">
+                  <Button
+                    variant="danger"
+                    disabled={task.busy || !selectedIds.length || selectedIds.length > 600}
+                    title="Mỗi lần xóa tối đa 600 mục"
+                    onClick={() => confirmDeleteSelection("set")}
+                  >
+                    Xóa các bộ đã chọn
+                  </Button>
+                </SelectionBar>
+                <Card className="overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-[480px]">
+                      <thead className="bg-sidebar">
+                        <tr>
+                          <Th className="w-12">
+                            <input
+                              type="checkbox"
+                              aria-label="Chọn tất cả bộ câu hỏi có thể xóa đang lọc"
+                              className="h-4 w-4 accent-accent-strong"
+                              checked={allChecked}
+                              ref={(input) => { if (input) input.indeterminate = selectedIds.length > 0 && !allChecked; }}
+                              disabled={task.busy || !selectableIds.length}
+                              onChange={(event) => setChecked(new Set(event.target.checked ? selectableIds : []))}
+                            />
+                          </Th>
+                          <Th>Mã đợt ban hành</Th>
+                          <Th>Mã bộ</Th>
+                          <Th>Tên bộ</Th>
+                          <Th className="text-right">Thao tác</Th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {shownSets.map((s) => (
+                          <tr key={s.set_id} className="border-b border-line/60 last:border-0 hover:bg-hover">
+                            <Td>
+                              <input
+                                type="checkbox"
+                                aria-label={`Chọn bộ ${s.set_name}`}
+                                className="h-4 w-4 accent-accent-strong"
+                                checked={checked.has(s.set_id)}
+                                disabled={task.busy || s.question_count > 0 || s.rule_count > 0}
+                                title={s.question_count || s.rule_count ? "Bộ đang được sử dụng nên không thể xóa" : "Chọn để xóa"}
+                                onChange={(event) => toggleChecked(s.set_id, event.target.checked)}
+                              />
+                            </Td>
+                            <Td>{s.release_code}</Td>
+                            <Td>{s.set_code}</Td>
+                            <Td>{s.set_name}</Td>
+                            <Td className="text-right">
+                              <div className="flex flex-wrap items-center justify-end gap-2">
+                                <EditIconButton
+                                  label="Chỉnh sửa bộ câu hỏi"
+                                  disabled={task.busy}
+                                  onClick={() => {
+                                    task.clearError();
+                                    setEditingSet(s);
+                                    setSet({
+                                      releaseCode: s.release_code,
+                                      releaseTitle: "",
+                                      setCode: s.set_code,
+                                      setName: s.set_name,
+                                      issuedOn: "",
+                                      effectiveFrom: "",
+                                      effectiveTo: "",
+                                      sourceUrl: "",
+                                    });
+                                    setDialog("set");
+                                  }}
+                                />
+                                <Button
+                                  size="sm"
+                                  variant="danger"
+                                  aria-label="Xóa bộ câu hỏi"
+                                  disabled={task.busy || s.question_count > 0 || s.rule_count > 0}
+                                  title={
+                                    s.question_count > 0 || s.rule_count > 0
+                                      ? `Đã có ${s.question_count} câu hỏi · ${s.rule_count} quy tắc; không thể xóa.`
+                                      : "Xóa bộ câu hỏi"
+                                  }
+                                  onClick={() => {
+                                    task.clearError();
+                                    setPendingDelete({
+                                      kind: "set",
+                                      ids: [s.set_id],
+                                      labels: [`${s.release_code} / ${s.set_code}`],
+                                    });
+                                  }}
+                                >
+                                  <svg
+                                    aria-hidden="true"
+                                    className="h-5 w-5"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.8"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
+                                  </svg>
+                                </Button>
+                              </div>
+                            </Td>
+                          </tr>
+                        ))}
+                        {!shownSets.length && (
+                          <tr>
+                            <td colSpan={5} className="px-4 py-6 text-center text-sm text-muted">
+                              {setQuery ? "Không có bộ câu hỏi phù hợp." : "Chưa có bộ câu hỏi. Bấm “Thêm bộ câu hỏi” để tạo bộ mới."}
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </Card>
+              </>
             )}
           </section>
         )}
@@ -355,145 +438,190 @@ export default function QuestionBankSettings({
             </p>
             <Notice {...rules} retry={rules.reload} />
             {rules.value && (
-              <Card className="overflow-hidden">
-                <div className="overflow-x-auto">
-                  <table className="w-full min-w-[800px]">
-                    <thead className="bg-sidebar">
-                      <tr>
-                        <Th>Bộ / Hạng</Th>
-                        <Th>Cấu hình đề</Th>
-                        <Th>Điểm liệt</Th>
-                        <Th>Hiệu lực</Th>
-                        <Th className="text-right">Thao tác</Th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {rules.value.map((r) => (
-                        <tr key={r.rule_id} className="border-t border-line">
-                          <Td>
-                            <p className="font-medium text-navy">{r.set_name}</p>
-                            <p className="mt-1 text-xs text-muted">Hạng {r.class_code}</p>
-                          </Td>
-                          <Td>
-                            <p>
-                              {r.total_questions} câu · {r.duration_minutes} phút
-                            </p>
-                            <p className="mt-1 text-xs text-muted">
-                              Đạt từ {r.minimum_correct} câu đúng
-                            </p>
-                          </Td>
-                          <Td>
-                            <p>{r.critical_slots} câu</p>
-                            <p className="mt-1 text-xs text-muted">
-                              {r.fail_on_critical ? "Sai câu liệt: trượt" : "Không tự động trượt"}
-                            </p>
-                          </Td>
-                          <Td>
-                            <p>{r.valid_from}</p>
-                            <p className="mt-1 text-xs text-muted">
-                              Đến {r.valid_to || "chưa giới hạn"}
-                            </p>
-                          </Td>
-                          <Td className="text-right">
-                            <div className="flex flex-wrap items-center justify-end gap-2">
-                              <EditIconButton
-                                label="Chỉnh sửa quy tắc"
-                                disabled={task.busy || r.attempt_count > 0}
-                                title={
-                                  r.attempt_count > 0
-                                    ? "Đã có bài thi nên khóa sửa để giữ lịch sử"
-                                    : "Chỉnh sửa quy tắc"
-                                }
-                                onClick={() => {
-                                  task.clearError();
-                                  setEditingRule(r);
-                                  setRule({
-                                    setId: r.set_id,
-                                    license: r.class_code,
-                                    validFrom: r.valid_from,
-                                    validTo: r.valid_to || "",
-                                    totalQuestions: String(r.total_questions),
-                                    durationMinutes: String(r.duration_minutes),
-                                    minimumCorrect: String(r.minimum_correct),
-                                    criticalSlots: String(r.critical_slots),
-                                    failOnCritical: r.fail_on_critical,
-                                    quotas: r.quotas.map((q) => ({
-                                      chapter: q.chapter,
-                                      value: String(q.question_quota),
-                                    })),
-                                  });
-                                  setDialog("rule");
-                                }}
-                              />
-                              <Button
-                                size="sm"
-                                disabled={
-                                  task.busy ||
-                                  (!!r.valid_to &&
-                                    r.valid_to <
-                                      nextDay(today > r.valid_from ? today : r.valid_from))
-                                }
-                                onClick={() => {
-                                  task.clearError();
-                                  setEndDate("");
-                                  setEndingRule(r);
-                                }}
-                              >
-                                Kết thúc hiệu lực
-                              </Button>
-                              <Button
-                                size="sm"
-                                variant="danger"
-                                aria-label="Xóa quy tắc"
-                                disabled={task.busy || r.attempt_count > 0}
-                                title={
-                                  r.attempt_count > 0
-                                    ? "Đã có bài thi nên không thể xóa"
-                                    : "Xóa quy tắc"
-                                }
-                                onClick={() => {
-                                  task.clearError();
-                                  setPendingDelete({
-                                    kind: "rule",
-                                    id: r.rule_id,
-                                    label: `${r.set_name} · Hạng ${r.class_code}`,
-                                  });
-                                }}
-                              >
-                                <svg
-                                  aria-hidden="true"
-                                  className="h-5 w-5"
-                                  viewBox="0 0 24 24"
-                                  fill="none"
-                                  stroke="currentColor"
-                                  strokeWidth="1.8"
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                >
-                                  <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
-                                </svg>
-                              </Button>
-                            </div>
-                            {r.attempt_count > 0 && (
-                              <p className="mt-1 text-xs text-muted">
-                                Đã có {r.attempt_count} bài thi; khóa sửa/xóa để giữ lịch sử.
-                              </p>
-                            )}
-                          </Td>
-                        </tr>
-                      ))}
-                      {!rules.value.length && (
-                        <tr>
-                          <td colSpan={5} className="px-4 py-6 text-center text-sm text-muted">
-                            Chưa có quy tắc đề thi. Tạo bộ câu hỏi trước, sau đó thêm quy tắc áp
-                            dụng.
-                          </td>
-                        </tr>
-                      )}
-                    </tbody>
-                  </table>
+              <>
+                <div className="flex flex-wrap items-center gap-3">
+                  <input
+                    aria-label="Tìm quy tắc đề thi"
+                    placeholder="Tìm bộ câu hỏi, hạng giấy phép…"
+                    className={`${inputCls} flex-1`}
+                    value={ruleQuery}
+                    onChange={(event) => setRuleQuery(event.target.value)}
+                  />
+                  <span role="status" className="text-sm text-muted">
+                    {shownRules.length} / {rules.value.length} quy tắc
+                  </span>
                 </div>
-              </Card>
+                <SelectionBar selected={selectedIds.length} total={shownRules.length} noun="quy tắc">
+                  <Button
+                    variant="danger"
+                    disabled={task.busy || !selectedIds.length || selectedIds.length > 600}
+                    title="Mỗi lần xóa tối đa 600 mục"
+                    onClick={() => confirmDeleteSelection("rule")}
+                  >
+                    Xóa các quy tắc đã chọn
+                  </Button>
+                </SelectionBar>
+                <Card className="overflow-hidden">
+                  <div className="overflow-x-auto">
+                    <table className="w-full min-w-[800px]">
+                      <thead className="bg-sidebar">
+                        <tr>
+                          <Th className="w-12">
+                            <input
+                              type="checkbox"
+                              aria-label="Chọn tất cả quy tắc có thể xóa đang lọc"
+                              className="h-4 w-4 accent-accent-strong"
+                              checked={allChecked}
+                              ref={(input) => { if (input) input.indeterminate = selectedIds.length > 0 && !allChecked; }}
+                              disabled={task.busy || !selectableIds.length}
+                              onChange={(event) => setChecked(new Set(event.target.checked ? selectableIds : []))}
+                            />
+                          </Th>
+                          <Th>Bộ / Hạng</Th>
+                          <Th>Cấu hình đề</Th>
+                          <Th>Điểm liệt</Th>
+                          <Th>Hiệu lực</Th>
+                          <Th className="text-right">Thao tác</Th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {shownRules.map((r) => (
+                          <tr key={r.rule_id} className="border-b border-line/60 last:border-0 hover:bg-hover">
+                            <Td>
+                              <input
+                                type="checkbox"
+                                aria-label={`Chọn quy tắc ${r.set_name} / ${r.class_code}`}
+                                className="h-4 w-4 accent-accent-strong"
+                                checked={checked.has(r.rule_id)}
+                                disabled={task.busy || r.attempt_count > 0}
+                                title={r.attempt_count ? "Quy tắc đã có lượt thi nên không thể xóa" : "Chọn để xóa"}
+                                onChange={(event) => toggleChecked(r.rule_id, event.target.checked)}
+                              />
+                            </Td>
+                            <Td>
+                              <p className="font-medium text-navy">{r.set_name}</p>
+                              <p className="mt-1 text-xs text-muted">Hạng {r.class_code}</p>
+                            </Td>
+                            <Td>
+                              <p>
+                                {r.total_questions} câu · {r.duration_minutes} phút
+                              </p>
+                              <p className="mt-1 text-xs text-muted">
+                                Đạt từ {r.minimum_correct} câu đúng
+                              </p>
+                            </Td>
+                            <Td>
+                              <p>{r.critical_slots} câu</p>
+                              <p className="mt-1 text-xs text-muted">
+                                {r.fail_on_critical ? "Sai câu liệt: trượt" : "Không tự động trượt"}
+                              </p>
+                            </Td>
+                            <Td>
+                              <p>{r.valid_from}</p>
+                              <p className="mt-1 text-xs text-muted">
+                                Đến {r.valid_to || "chưa giới hạn"}
+                              </p>
+                            </Td>
+                            <Td className="text-right">
+                              <div className="flex flex-wrap items-center justify-end gap-2">
+                                <EditIconButton
+                                  label="Chỉnh sửa quy tắc"
+                                  disabled={task.busy || r.attempt_count > 0}
+                                  title={
+                                    r.attempt_count > 0
+                                      ? "Đã có bài thi nên khóa sửa để giữ lịch sử"
+                                      : "Chỉnh sửa quy tắc"
+                                  }
+                                  onClick={() => {
+                                    task.clearError();
+                                    setEditingRule(r);
+                                    setRule({
+                                      setId: r.set_id,
+                                      license: r.class_code,
+                                      validFrom: r.valid_from,
+                                      validTo: r.valid_to || "",
+                                      totalQuestions: String(r.total_questions),
+                                      durationMinutes: String(r.duration_minutes),
+                                      minimumCorrect: String(r.minimum_correct),
+                                      criticalSlots: String(r.critical_slots),
+                                      failOnCritical: r.fail_on_critical,
+                                      quotas: r.quotas.map((q) => ({
+                                        chapter: q.chapter,
+                                        value: String(q.question_quota),
+                                      })),
+                                    });
+                                    setDialog("rule");
+                                  }}
+                                />
+                                <Button
+                                  size="sm"
+                                  disabled={
+                                    task.busy ||
+                                    (!!r.valid_to &&
+                                      r.valid_to <
+                                        nextDay(today > r.valid_from ? today : r.valid_from))
+                                  }
+                                  onClick={() => {
+                                    task.clearError();
+                                    setEndDate("");
+                                    setEndingRule(r);
+                                  }}
+                                >
+                                  Kết thúc hiệu lực
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="danger"
+                                  aria-label="Xóa quy tắc"
+                                  disabled={task.busy || r.attempt_count > 0}
+                                  title={
+                                    r.attempt_count > 0
+                                      ? "Đã có bài thi nên không thể xóa"
+                                      : "Xóa quy tắc"
+                                  }
+                                  onClick={() => {
+                                    task.clearError();
+                                    setPendingDelete({
+                                      kind: "rule",
+                                      ids: [r.rule_id],
+                                      labels: [`${r.set_name} · Hạng ${r.class_code}`],
+                                    });
+                                  }}
+                                >
+                                  <svg
+                                    aria-hidden="true"
+                                    className="h-5 w-5"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="1.8"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                  >
+                                    <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
+                                  </svg>
+                                </Button>
+                              </div>
+                              {r.attempt_count > 0 && (
+                                <p className="mt-1 text-xs text-muted">
+                                  Đã có {r.attempt_count} bài thi; khóa sửa/xóa để giữ lịch sử.
+                                </p>
+                              )}
+                            </Td>
+                          </tr>
+                        ))}
+                        {!shownRules.length && (
+                          <tr>
+                            <td colSpan={6} className="px-4 py-6 text-center text-sm text-muted">
+                              {ruleQuery ? "Không có quy tắc đề thi phù hợp." : "Chưa có quy tắc đề thi. Tạo bộ câu hỏi trước, sau đó thêm quy tắc áp dụng."}
+                            </td>
+                          </tr>
+                        )}
+                      </tbody>
+                    </table>
+                  </div>
+                </Card>
+              </>
             )}
           </section>
         )}
@@ -976,12 +1104,13 @@ export default function QuestionBankSettings({
                 void task.run(async () => {
                   await api(
                     pendingDelete.kind === "set"
-                      ? `/admin/questions/sets/${pendingDelete.id}`
-                      : `/admin/questions/rules/${pendingDelete.id}`,
-                    send("DELETE"),
+                      ? "/admin/questions/sets/deletion-batch"
+                      : "/admin/questions/rules/deletion-batch",
+                    send("DELETE", { ids: pendingDelete.ids }),
                   );
-                  if (pendingDelete.kind === "set") sets.reload();
-                  else rules.reload();
+                  setChecked(new Set());
+                  sets.reload();
+                  rules.reload();
                   setPendingDelete(null);
                 });
               }}
@@ -993,9 +1122,12 @@ export default function QuestionBankSettings({
       >
         <Notice error={task.error} />
         <p className="text-sm text-muted">
-          Bạn sắp xóa “{pendingDelete?.label}”. Chỉ mục chưa được dùng mới có thể xóa; câu hỏi hoặc
-          bài thi đã lưu sẽ được giữ nguyên.
+          Xóa {pendingDelete?.ids.length} mục đã chọn? Thao tác không thể hoàn tác.
+          Nếu có mục đang được sử dụng, cả đợt sẽ không bị xóa.
         </p>
+        <ul className="mt-3 max-h-48 list-disc space-y-1 overflow-y-auto pl-5 text-sm">
+          {pendingDelete?.labels.map((label, index) => <li key={pendingDelete.ids[index]}>{label}</li>)}
+        </ul>
       </Modal>
     </>
   );

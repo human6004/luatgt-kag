@@ -21,6 +21,9 @@ class OperationsTest {
     @Autowired MockMvc mvc; @Autowired ObjectMapper json; @Autowired ContentRepository contents; @Autowired ChatRepository chats;
     @Autowired ContentHistoryRepository history;
     @Autowired StudyAttemptRepository attempts;
+    @Autowired LegalUnitRepository legalUnits;
+    @Autowired vn.luatgt.service.QuestionBankService questionBank;
+    @Autowired org.springframework.jdbc.core.JdbcTemplate jdbc;
     @MockitoBean RateLimit rate; @MockitoBean KagClient kag; @MockitoBean ObjectStorage storage;
     String admin,user; UUID userId;
     JsonNode body(MvcResult result) throws Exception { return json.readTree(result.getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8)); }
@@ -68,6 +71,55 @@ class OperationsTest {
         pending=body(mvc.perform(get("/api/admin/chatlogs?pending=true").header("Authorization","Bearer "+admin)).andReturn()); assertFalse(pending.toString().contains(c.id.toString()));
         mvc.perform(get("/api/admin/reports").header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andExpect(jsonPath("$.pendingChats").isNumber());
     }
+    @Test void conversationRenameAndDeleteAreOwnedAndPreserveReports() throws Exception {
+        var root=new ChatMessage();root.ownerId=userId;root.question="Original question";root.state="UNAVAILABLE";root=chats.saveAndFlush(root);
+        var turn=new ChatMessage();turn.ownerId=userId;turn.conversationId=root.id;turn.question="Follow-up";turn.state="ANSWERED";turn.feedback="WRONG";turn=chats.saveAndFlush(turn);
+        String path="/api/chat/"+root.id;
+        mvc.perform(patch(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"title\":\"Forbidden\"}")).andExpect(status().isNotFound());
+        mvc.perform(delete(path).header("Authorization","Bearer "+admin)).andExpect(status().isNotFound());
+        mvc.perform(patch(path).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"title\":\"  Biển báo  \"}")).andExpect(status().isNoContent());
+        var saved=chats.findById(root.id).orElseThrow();
+        assertEquals("Biển báo",saved.conversationTitle);assertEquals("Original question",saved.question);
+        turn.state="PROCESSING";turn=chats.saveAndFlush(turn);
+        mvc.perform(delete(path).header("Authorization","Bearer "+user)).andExpect(status().isConflict());
+        turn.state="ANSWERED";chats.saveAndFlush(turn);
+        mvc.perform(delete(path).header("Authorization","Bearer "+user)).andExpect(status().isNoContent());
+        mvc.perform(delete(path).header("Authorization","Bearer "+user)).andExpect(status().isNoContent());
+        var rows=body(mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn());
+        assertFalse(rows.toString().contains(root.id.toString()));assertFalse(rows.toString().contains(turn.id.toString()));
+        assertTrue(chats.findById(turn.id).isPresent());
+        assertTrue(chats.reported(false,org.springframework.data.domain.PageRequest.of(0,100)).stream().anyMatch(c->c.conversationId!=null&&c.conversationId.equals(saved.id)));
+        var followup=new ChatMessage();followup.ownerId=userId;followup.conversationId=root.id;followup.question="Deleted conversation";followup.state="PROCESSING";
+        assertThrows(org.springframework.web.server.ResponseStatusException.class,()->chats.append(followup));
+        mvc.perform(patch(path).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"title\":\"Hidden\"}")).andExpect(status().isNotFound());
+    }
+    @Test void conversationHistoryLoadsOlderPagesWithoutSplittingTurnsOrSkippingAfterDeletion() throws Exception {
+        var roots=new ArrayList<ChatMessage>();
+        for(int i=0;i<53;i++) {
+            var root=new ChatMessage();root.ownerId=userId;root.question="Page "+i;root.state="UNAVAILABLE";
+            root.createdAt=java.time.Instant.parse("2026-01-01T00:00:00Z");roots.add(root);
+        }
+        chats.saveAllAndFlush(roots);
+        var first=mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn();
+        var rows=body(first);assertEquals(50,rows.size());
+        var cursor=first.getResponse().getHeader("X-Next-Cursor");assertNotNull(cursor);assertFalse(cursor.isBlank());
+        UUID last=UUID.fromString(rows.get(49).path("id").asText());
+        var turn=new ChatMessage();turn.ownerId=userId;turn.conversationId=last;turn.question="New turn";turn.state="UNAVAILABLE";chats.saveAndFlush(turn);
+        mvc.perform(delete("/api/chat/"+rows.get(0).path("id").asText()).header("Authorization","Bearer "+user)).andExpect(status().isNoContent());
+        var second=mvc.perform(get("/api/chat").param("before",cursor).header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn();
+        var older=body(second);assertEquals(3,older.size());
+        assertEquals("",second.getResponse().getHeader("X-Next-Cursor"));
+        for(var row:older) assertFalse(rows.toString().contains(row.path("id").asText()));
+        String oldId=older.get(older.size()-1).path("id").asText();
+        var selected=body(mvc.perform(get("/api/chat").param("selected",oldId).header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn());
+        assertEquals(52,selected.size());assertTrue(selected.toString().contains(oldId));
+        mvc.perform(get("/api/chat").param("selected",oldId).header("Authorization","Bearer "+admin)).andExpect(status().isNotFound());
+        var refreshed=body(mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andExpect(status().isOk()).andReturn());
+        assertEquals(51,refreshed.size());assertTrue(refreshed.toString().contains(turn.id.toString()));
+        var other=body(mvc.perform(get("/api/chat").param("before",cursor).header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andReturn());
+        assertEquals(0,other.size());
+        mvc.perform(get("/api/chat").param("before","invalid").header("Authorization","Bearer "+user)).andExpect(status().isBadRequest());
+    }
     @Test void moderationOnlyExposesExplicitProblemReportsAndPreservesPrivateHistory() throws Exception {
         long before=body(mvc.perform(get("/api/admin/reports").header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andReturn()).path("chatMessages").asLong();
         var privateChats=new ArrayList<ChatMessage>();
@@ -99,6 +151,92 @@ class OperationsTest {
         var visible=body(mvc.perform(get("/api/admin/chatlogs?pending=false").header("Authorization","Bearer "+admin)).andExpect(status().isOk()).andReturn());
         assertFalse(visible.toString().contains(withdrawn.id.toString()));
         mvc.perform(post("/api/admin/chatlogs/"+withdrawn.id+"/resolve").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"note\":\"Must no longer access withdrawn report\"}")).andExpect(status().isNotFound());
+    }
+    @Test void bulkDocumentPublicationKeepsValidationAndRollsBackIncompleteBatch() throws Exception {
+        var first=doc();first.published=false;first=contents.saveAndFlush(first);
+        var second=doc();second.published=false;
+        var metadata=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree(second.data);metadata.remove("fileKey");
+        second.data=json.writeValueAsString(metadata);second=contents.saveAndFlush(second);
+        var request=Map.of("rows",List.of(Map.of("id",first.id,"version",first.version),Map.of("id",second.id,"version",second.version)),"reviewed",true,"published",true);
+        String payload=json.writeValueAsString(request),path="/api/admin/documents/publication-batch";
+        mvc.perform(post(path).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isForbidden());
+        mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isBadRequest());
+        assertFalse(contents.findById(first.id).orElseThrow().published);
+        metadata.put("fileKey","test-pdf");second.data=json.writeValueAsString(metadata);second=contents.saveAndFlush(second);
+        payload=json.writeValueAsString(Map.of("rows",List.of(Map.of("id",first.id,"version",first.version),Map.of("id",second.id,"version",second.version)),"reviewed",true,"published",true));
+        mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isOk());
+        assertTrue(contents.findById(first.id).orElseThrow().published);assertTrue(contents.findById(second.id).orElseThrow().published);
+        mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isConflict());
+    }
+    @Test void bulkUnitPublicationRequiresPublishedSourceAndPreservesTheWholeBatch() throws Exception {
+        var published=doc();var draft=doc();draft.published=false;draft=contents.saveAndFlush(draft);
+        var rows=new ArrayList<LegalUnit>();
+        for(var source:List.of(published,draft)) {
+            var unit=new LegalUnit();unit.unitId=source.externalId+"::TEST";unit.documentId=source.id;
+            unit.data=json.writeValueAsString(Map.of("unit_id",unit.unitId,"doc_id",source.externalId,"so_hieu","TEST","unit_type","Dieu","text","TEST ONLY","order",1,"reviewed",false));
+            rows.add(legalUnits.saveAndFlush(unit));
+        }
+        var request=Map.of("rows",rows.stream().map(unit->Map.of("id",unit.id,"version",unit.version)).toList(),"reviewed",true,"published",true);
+        String payload=json.writeValueAsString(request),path="/api/admin/units/publication-batch";
+        mvc.perform(post(path).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isForbidden());
+        mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isBadRequest());
+        for(var unit:rows) {var saved=legalUnits.findById(unit.id).orElseThrow();assertFalse(saved.published);assertFalse(json.readTree(saved.data).path("reviewed").asBoolean());}
+        draft.published=true;contents.saveAndFlush(draft);
+        mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isOk());
+        for(var unit:rows) {var saved=legalUnits.findById(unit.id).orElseThrow();assertTrue(saved.published);assertTrue(json.readTree(saved.data).path("reviewed").asBoolean());}
+        mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isConflict());
+    }
+    private UUID emptyQuestionSet(String name) {
+        var input=json.createObjectNode().put("releaseCode","BULK-"+UUID.randomUUID().toString().substring(0,8))
+            .put("releaseTitle","Test only").put("setCode","TEST").put("setName",name);
+        return UUID.fromString(questionBank.createSet(input).path("id").asText());
+    }
+    @Test void bulkSetDeletionValidatesPermissionReferencesAndRollsBackAllChanges() throws Exception {
+        UUID first=emptyQuestionSet("First"),second=emptyQuestionSet("Second"),used=emptyQuestionSet("Used");
+        String path="/api/admin/questions/sets/deletion-batch";
+        var fixture=new Content();fixture.kind="questions";fixture.externalId="BULK-"+UUID.randomUUID();
+        fixture.data=json.writeValueAsString(Map.of("questionSetId",used));contents.saveAndFlush(fixture);
+        String payload=json.writeValueAsString(Map.of("ids",List.of(first,second)));
+        mvc.perform(delete(path).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isForbidden());
+        mvc.perform(delete(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"ids\":[]}")).andExpect(status().isBadRequest());
+        mvc.perform(delete(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("ids",List.of(first,first))))).andExpect(status().isBadRequest());
+        mvc.perform(delete(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("ids",List.of(first,used))))).andExpect(status().isBadRequest());
+        UUID missing=new UUID(Long.MAX_VALUE,Long.MAX_VALUE);
+        mvc.perform(delete(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("ids",List.of(first,missing))))).andExpect(status().isNotFound());
+        assertTrue(questionBank.sets().stream().anyMatch(set->set.path("set_id").asText().equals(first.toString())));
+        mvc.perform(delete(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isOk());
+        var remaining=questionBank.sets().stream().map(set->set.path("set_id").asText()).toList();
+        assertFalse(remaining.contains(first.toString()));assertFalse(remaining.contains(second.toString()));assertTrue(remaining.contains(used.toString()));
+    }
+    @Test void bulkChapterAndRuleDeletionPreservesUsageAndExamHistory() throws Exception {
+        UUID set=emptyQuestionSet("Chapters and rules"),missing=new UUID(Long.MAX_VALUE,Long.MAX_VALUE);
+        for(int chapter:List.of(71,72)) questionBank.saveChapter(set,null,json.createObjectNode().put("chapter",chapter).put("name","Test "+chapter));
+        var input=json.createObjectNode().put("setId",set.toString()).put("license","A1").put("validFrom","2000-01-01").put("validTo","2001-01-01")
+            .put("totalQuestions",1).put("durationMinutes",1).put("minimumCorrect",1).put("criticalSlots",0).put("failOnCritical",true);
+        input.putArray("quotas").addObject().put("chapter",73).put("question_quota",1);
+        UUID usedRule=UUID.fromString(questionBank.createRule(input).path("rule_id").asText());
+        var next=input.deepCopy().put("validFrom","2002-01-01").put("validTo","2003-01-01");
+        UUID unusedRule=UUID.fromString(questionBank.createRule(next).path("rule_id").asText());
+        var chapters=questionBank.chapters(set);
+        UUID first=UUID.fromString(chapters.stream().filter(c->c.path("chapter").asInt()==71).findFirst().orElseThrow().path("topic_id").asText());
+        UUID second=UUID.fromString(chapters.stream().filter(c->c.path("chapter").asInt()==72).findFirst().orElseThrow().path("topic_id").asText());
+        UUID used=UUID.fromString(chapters.stream().filter(c->c.path("chapter").asInt()==73).findFirst().orElseThrow().path("topic_id").asText());
+        String path="/api/admin/questions/sets/"+set+"/chapters/deletion-batch";
+        mvc.perform(delete(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("ids",List.of(first,used))))).andExpect(status().isBadRequest());
+        mvc.perform(delete(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("ids",List.of(first,missing))))).andExpect(status().isNotFound());
+        assertEquals(3,questionBank.chapters(set).size());
+        mvc.perform(delete(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("ids",List.of(first,second))))).andExpect(status().isOk());
+        assertEquals(1,questionBank.chapters(set).size());
+        var now=java.sql.Timestamp.from(java.time.Instant.now());
+        jdbc.update("INSERT INTO exam_attempt(attempt_id,user_id,rule_id,set_id,started_at,expires_at) VALUES (?,?,?,?,?,?)",
+            LearningCatalogRepository.binary(UUID.randomUUID()),LearningCatalogRepository.binary(userId),LearningCatalogRepository.binary(usedRule),LearningCatalogRepository.binary(set),now,now);
+        path="/api/admin/questions/rules/deletion-batch";
+        mvc.perform(delete(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("ids",List.of(unusedRule,usedRule))))).andExpect(status().isBadRequest());
+        mvc.perform(delete(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("ids",List.of(unusedRule,missing))))).andExpect(status().isNotFound());
+        assertEquals(2,questionBank.rules(false).stream().filter(rule->rule.path("set_id").asText().equals(set.toString())).count());
+        mvc.perform(delete(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("ids",List.of(unusedRule))))).andExpect(status().isOk());
+        assertTrue(questionBank.rules(false).stream().anyMatch(rule->rule.path("rule_id").asText().equals(usedRule.toString())));
+        assertEquals(1,jdbc.queryForObject("SELECT COUNT(*) FROM exam_attempt WHERE rule_id=?",Integer.class,LearningCatalogRepository.binary(usedRule)));
     }
     @Test void batchReviewCannotPublishMissingImageAndHistoryKeepsPreviousMetadata() throws Exception {
         var q=new Content(); q.kind="questions"; q.externalId="TEST-"+UUID.randomUUID(); q.data=json.writeValueAsString(Map.of("externalId",q.externalId,"text","Câu hỏi thử","chapter",1,"options",List.of("A","B"),"correctAnswer",0,"critical",false,"source","test-only","imageRequired",true)); q=contents.save(q);
