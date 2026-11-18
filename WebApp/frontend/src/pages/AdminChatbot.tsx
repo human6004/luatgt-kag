@@ -96,7 +96,7 @@ export default function AdminChatbot() {
     (draft.top_k !== retrievalState.saved.top_k || draft.expand !== retrievalState.saved.expand);
   const unsaved = modelsDirty.chat || modelsDirty.embedding || dirtyRetrieval;
   const validRetrieval =
-    !!draft && Number.isInteger(draft.top_k) && draft.top_k >= 1 && draft.top_k <= 10;
+    !!draft && Number.isInteger(draft.top_k) && draft.top_k >= 1 && draft.top_k <= 30;
 
   function reloadAll() {
     if (unsaved) return;
@@ -551,7 +551,7 @@ export default function AdminChatbot() {
                           <input
                             type="number"
                             min={1}
-                            max={10}
+                            max={30}
                             step={1}
                             className={inputCls}
                             value={draft.top_k}

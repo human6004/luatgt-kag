@@ -73,6 +73,12 @@ class CoreTest {
         mvc.perform(post("/api/admin/kag/builder/inputs").header("Authorization","Bearer "+admin).header("Transfer-Encoding","chunked")).andExpect(status().isBadRequest());
         verifyNoInteractions(kag);
     }
+    @BeforeEach void prepareChatContext() {
+        when(kag.chatContext(anyMap(),anyString(),anyList(),anyList(),anyLong())).thenAnswer(call -> {
+            Map<String,Object> request=call.getArgument(0);
+            return new KagClient.ChatContext((String)request.get("message"),"","","");
+        });
+    }
     @BeforeEach void admin() throws Exception { admin=token("admin@test.vn","TEST-only-admin-password"); }
     @Test void builderConfigurationAndReadinessRequireAdminAndRejectNetworkParameters() throws Exception {
         String user=register();
@@ -486,8 +492,32 @@ class CoreTest {
         mvc.perform(put("/api/exams/"+expiredId+"/answers/"+expiring.path("questions").get(0).path("questionId").asText()).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content("{\"selected\":0}")).andExpect(status().isConflict());
         mvc.perform(get("/api/exams/"+expiredId).header("Authorization","Bearer "+user)).andExpect(jsonPath("$.score").value(0));
     }
+    @Test @Transactional void contextFailureKeepsQuestionAndSummaryAndContinuesQuery() throws Exception {
+        var owner=streamOwner();
+        var root=new ChatMessage(); root.ownerId=owner; root.question="Chủ đề trước"; root.state="ANSWERED";
+        chats.saveAndFlush(root);
+        for(int i=1;i<=5;i++) {
+            var turn=new ChatMessage(); turn.ownerId=owner; turn.conversationId=root.id;
+            turn.question="Lượt "+i; turn.state="ANSWERED"; turn.createdAt=root.createdAt.plusSeconds(i);
+            chats.saveAndFlush(turn);
+        }
+        when(kag.chatContext(anyMap(),anyString(),anyList(),anyList(),anyLong()))
+            .thenThrow(new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS));
+        when(kag.query(any(),any(UUID.class),anyLong())).thenAnswer(call->{
+            Map<?,?> question=call.getArgument(0);
+            assertEquals("Câu hỏi gốc",question.get("message"));
+            return json.createObjectNode().put("state","KAG_ABSTAINED").put("reason","no_source");
+        });
+        var output=new ByteArrayOutputStream();
+        chat.progress(owner,new ChatRequest("Câu hỏi gốc","",root.id)).writeTo(output);
+        assertEquals("KAG_ABSTAINED",terminal(output.toString(java.nio.charset.StandardCharsets.UTF_8),"done").path("state").asText());
+        var stored=jdbc.queryForMap("select context_summary,context_through from chat_messages where id=?",LearningCatalogRepository.binary(root.id));
+        assertNull(stored.get("context_summary")); assertNull(stored.get("context_through"));
+        verify(kag).query(any(),any(UUID.class),anyLong());
+    }
+
     @Test void unavailableKagNeverFabricatesAnAnswer() throws Exception {
-        when(kag.query(any(),any(UUID.class))).thenThrow(new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Dịch vụ KAG chưa khả dụng")); String user=register();
+        when(kag.query(any(),any(UUID.class),anyLong())).thenThrow(new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Dịch vụ KAG chưa khả dụng")); String user=register();
         assertEquals("UNAVAILABLE",progressResponse(post("/api/chat/stream?progress=true").header("Authorization","Bearer "+user)
             .contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Mức phạt là gì?\"}"),"error").path("state").asText());
         mvc.perform(get("/api/chat").header("Authorization","Bearer "+user)).andExpect(status().isOk()).andExpect(jsonPath("$[0].state").value("UNAVAILABLE")).andExpect(jsonPath("$[0].answer").value(""));
@@ -540,7 +570,7 @@ class CoreTest {
     @Test void chatDelegatesOnlyAuthenticatedOwnerAndRejectsBrowserIdentity() throws Exception {
         String user=register();
         UUID owner=UUID.fromString(body(mvc.perform(get("/api/auth/me").header("Authorization","Bearer "+user)).andReturn()).path("id").asText());
-        when(kag.query(any(),any(UUID.class))).thenAnswer(invocation->{
+        when(kag.query(any(),any(UUID.class),anyLong())).thenAnswer(invocation->{
             Map<?,?> request=invocation.getArgument(0);
             assertEquals(owner,request.get("user_id")); assertInstanceOf(UUID.class,request.get("user_id"));
             UUID chatId=invocation.getArgument(1);
@@ -554,13 +584,13 @@ class CoreTest {
         verifyNoInteractions(kag);
         assertEquals("UNAVAILABLE",progressResponse(post("/api/chat/stream?progress=true").header("Authorization","Bearer "+user).header("X-User-ID",UUID.randomUUID().toString())
             .header("X-KAG-Token","forged-browser-token").contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Căn cứ?\"}"),"error").path("state").asText());
-        verify(kag,times(1)).query(any(),any(UUID.class));
+        verify(kag,times(1)).query(any(),any(UUID.class),anyLong());
     }
     @Test void nativeAbstentionAndMixedInvalidCitationsCannotBecomeAnswers() throws Exception {
         String user=register();
         for(String response:List.of("{\"answer\":\"Không đủ căn cứ\",\"citations\":[]}",
             "{\"answer\":\"Nội dung thử\",\"citations\":[{\"doc_id\":\"missing\",\"unit_id\":\"missing::1\",\"quote\":\"Nguồn\"},{\"sign_id\":\"P.1\"}]}")) {
-            when(kag.query(any(),any(UUID.class))).thenReturn(json.readTree(response));
+            when(kag.query(any(),any(UUID.class),anyLong())).thenReturn(json.readTree(response));
             assertEquals("UNAVAILABLE",progressResponse(post("/api/chat/stream?progress=true").header("Authorization","Bearer "+user)
                 .contentType(MediaType.APPLICATION_JSON).content("{\"message\":\"Căn cứ?\"}"),"error").path("state").asText());
         }
@@ -576,7 +606,7 @@ class CoreTest {
             var answer=json.createObjectNode().put("contract_version","graph-chat-v1").put("answer","Căn cứ "+graph);
             var citation=answer.putArray("citations").addObject().put("doc_id",docId).putNull("unit_id").put("sign_id","sign-1").put("quote",quote);
             citation.putObject("source").put("contract_version","graph-source-v1").put("release_id","release-"+graph).put("text",quote);
-            when(kag.query(any(),any(UUID.class))).thenReturn(answer);
+            when(kag.query(any(),any(UUID.class),anyLong())).thenReturn(answer);
             var saved=progressResponse(post("/api/chat/stream?progress=true").header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON)
                 .content("{\"message\":\"Căn cứ graph "+graph+"?\"}"),"done");
             assertEquals("ANSWERED",saved.path("state").asText());
@@ -624,7 +654,7 @@ class CoreTest {
     }
     void bridge(KagClientTest wire,KagClientTest.Fixture fixture) {
         var actual=wire.client(fixture);
-        when(kag.query(any(),any(UUID.class))).thenAnswer(call->actual.query(call.getArgument(0),call.getArgument(1)));
+        when(kag.query(any(),any(UUID.class),anyLong())).thenAnswer(call->actual.query(call.getArgument(0),call.getArgument(1),call.getArgument(2)));
     }
     @Test @Transactional void realQueryPersistsBeforeDownstreamDone() throws Exception {
             var source=streamSource(); var owner=streamOwner(); var wire=streamWire();

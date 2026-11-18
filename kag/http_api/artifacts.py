@@ -876,10 +876,11 @@ def verify_native_sources(result: AnswerResult, release: ServingRelease, reader,
     """Verify all actual citation types; never repair or classify native roles."""
     from kag.legal_solver import AnswerResult, Citation, _META, _current, _sign_applicable, document_content_question, DOCUMENT_CONTENT_ANSWER
 
+    clarify = type(result) is AnswerResult and result.mode == 'clarify' and not result.abstained
     if (type(result) is not AnswerResult or type(result.abstained) is not bool
             or not _text(result.answer) or not result.answer.strip()
             or type(result.citations) is not tuple or any(type(c) is not Citation for c in result.citations)
-            or result.abstained == bool(result.citations)):
+            or bool(result.citations) == (result.abstained or clarify)):
         _invalid('INVALID_NATIVE_RESULT')
     try:
         if type(release) is not ServingRelease or type(as_of) is not date:

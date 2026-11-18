@@ -44,13 +44,14 @@ public class KagClient {
     private static final ZoneId LEGAL_ZONE=ZoneId.of("Asia/Saigon");
     private static final Set<String> REQUEST_FIELDS=Set.of("user_id","message","context_id","schema_contract");
     private static final Set<String> CITATION_FIELDS=Set.of("doc_id","unit_id","sign_id","evidence_id","field","start","end","quote");
-    private final CircuitBreaker breaker=CircuitBreaker.of("kag",CircuitBreakerConfig.custom().minimumNumberOfCalls(3).slidingWindowSize(6).waitDurationInOpenState(Duration.ofSeconds(30)).ignoreException(error->Thread.currentThread().isInterrupted()).build());
+    private static final int MAX_QUERY_TIMEOUT_SECONDS=900;
+    private final CircuitBreaker breaker=CircuitBreaker.of("kag",CircuitBreakerConfig.custom().slowCallDurationThreshold(Duration.ofSeconds(MAX_QUERY_TIMEOUT_SECONDS)).minimumNumberOfCalls(3).slidingWindowSize(6).waitDurationInOpenState(Duration.ofSeconds(30)).ignoreException(error->Thread.currentThread().isInterrupted()).build());
     public KagClient(@Value("${app.kag-url}") String url,ObjectMapper json,KagSchema schema,
         @Value("${app.kag-token-file:}") String tokenFile,@Value("${app.kag-release-id:}") String release,
         @Value("${app.kag-webapp-snapshot-id:}") String snapshot,ObjectProvider<Clock> clocks,
         @Value("${app.kag-inspect-token-file:}") String inspectTokenFile) {
         var factory=new JdkClientHttpRequestFactory(HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build());
-        factory.setReadTimeout(Duration.ofSeconds(180));
+        factory.setReadTimeout(Duration.ofSeconds(600));
         this.queryFactory=factory;
         this.client=RestClient.builder().baseUrl(url).requestFactory(factory).build(); this.json=json;
         this.schema=schema; this.tokenFile=tokenFile; this.release=release; this.snapshot=snapshot;
@@ -61,12 +62,12 @@ public class KagClient {
         this.inspectionFactory=inspectionFactory;
         this.inspectionClient=RestClient.builder().baseUrl(url).requestFactory(inspectionFactory).build();
         var servingFactory=new JdkClientHttpRequestFactory(HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build());
-        servingFactory.setReadTimeout(Duration.ofSeconds(150));
+        servingFactory.setReadTimeout(Duration.ofSeconds(900));
         this.servingClient=RestClient.builder().baseUrl(url).requestFactory(servingFactory).build();
     }
-    @Value("${app.kag-query-timeout-seconds:180}")
+    @Value("${app.kag-query-timeout-seconds:600}")
     public void queryTimeout(int seconds) {
-        if(seconds<30||seconds>180) throw new IllegalArgumentException("Bounded KAG query timeout required");
+        if(seconds<30||seconds>MAX_QUERY_TIMEOUT_SECONDS) throw new IllegalArgumentException("Bounded KAG query timeout required");
         queryFactory.setReadTimeout(Duration.ofSeconds(seconds));
     }
     @Value("${app.kag-inspection-timeout-seconds:2}")
@@ -850,7 +851,7 @@ public class KagClient {
     public JsonNode chatRetrieval(String action,ChatRetrievalChangeRequest change) {
         if(action!=null&&(!Set.of("save","apply","restore").contains(action)||change==null||change.revision()==null||change.revision()<0||
             (action.equals("save")?!retrievalValues(change.values()):change.values()!=null)))
-            throw vn.luatgt.exception.ApiErrors.bad("Cấu hình Retrieval cần top_k nguyên từ 1 đến 10 và expand boolean");
+            throw vn.luatgt.exception.ApiErrors.bad("Cấu hình Retrieval cần top_k nguyên từ 1 đến 30 và expand boolean");
         try {
             String token=inspectionToken();
             RestClient.RequestHeadersSpec<?> request;
@@ -876,7 +877,7 @@ public class KagClient {
         catch(Exception e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Không đọc hoặc ghi được cấu hình Retrieval. Kiểm tra dịch vụ, quyền truy cập và cấu hình đã lưu.");}
     }
     private static boolean retrievalValues(JsonNode value) {
-        return value!=null&&fields(value).equals(Set.of("top_k","expand"))&&bounded(value.path("top_k"),1,10)&&value.path("expand").isBoolean();
+        return value!=null&&fields(value).equals(Set.of("top_k","expand"))&&bounded(value.path("top_k"),1,30)&&value.path("expand").isBoolean();
     }
     private void validateChatRetrieval(JsonNode body) throws IOException {
         var active=body.path("active");var saved=body.path("saved");var previous=body.path("previous");var actions=body.path("actions");
@@ -908,10 +909,10 @@ public class KagClient {
                 state.equals("NOT_CONFIGURED")&&(!model.path("model").isNull()||!model.path("endpoint").isNull()))throw new IOException("Inconsistent model metadata");
         }
         if(solver.isNull())return;
-        if(!fields(solver).equals(Set.of("source","pipeline","planner","top_k","expand","max_evidence_chars","max_iteration","search_k","expansion_limit","required_vector_dimensions"))||
-            !solver.path("source").asText().equals("source_defaults")||!solver.path("pipeline").asText().equals("KAGIterativePipeline")||
-            !solver.path("planner").asText().equals("KAGIterativePlanner")||!solver.path("expand").isBoolean())throw new IOException("Invalid solver metadata");
-        for(String field:List.of("top_k","max_evidence_chars","max_iteration","search_k","expansion_limit","required_vector_dimensions"))
+        if(!fields(solver).equals(Set.of("source","pipeline","top_k","expand","max_evidence_chars","search_k","expansion_limit","required_vector_dimensions"))||
+            !solver.path("source").asText().equals("source_defaults")||!solver.path("pipeline").asText().equals("DirectAnswerPipeline")||
+            !solver.path("expand").isBoolean())throw new IOException("Invalid solver metadata");
+        for(String field:List.of("top_k","max_evidence_chars","search_k","expansion_limit","required_vector_dimensions"))
             if(!bounded(solver.path(field),1,1000000))throw new IOException("Invalid solver limit");
         if(solver.path("top_k").asInt()>solver.path("search_k").asInt())throw new IOException("Invalid retrieval limit");
     }
@@ -1533,9 +1534,13 @@ public class KagClient {
         }catch(ResponseStatusException e){throw e;}
         catch(Exception e){throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Chưa đọc được kết quả thử đồ thị; lựa chọn Chat được giữ nguyên");}
     }
-    public record ChatContext(String question,String clarification,String summary) {}
+    public record ChatContext(String question,String clarification,String summary,String reply,List<String> searchQueries) {
+        public ChatContext(String question,String clarification,String summary,String reply) {
+            this(question,clarification,summary,reply,List.of());
+        }
+    }
 
-    public ChatContext chatContext(Map<String,Object> request,String summary,List<Map<String,String>> earlier,List<Map<String,String>> recent) {
+    public ChatContext chatContext(Map<String,Object> request,String summary,List<Map<String,String>> earlier,List<Map<String,String>> recent,long deadline) {
         try {
             var admitted=admit(request,null);
             var body=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree(admitted.body());
@@ -1543,7 +1548,7 @@ public class KagClient {
             body.set("earlier",json.valueToTree(earlier));
             body.set("recent",json.valueToTree(recent));
             var context=new Admitted(json.writeValueAsBytes(body),admitted.token(),admitted.date(),admitted.pins());
-            return breaker.executeSupplier(()->post("/v1/chat/context",context).exchange((req,res)->{
+            return post("/v1/chat/context",context,deadline).exchange((req,res)->{
                 if(res.getStatusCode().value()!=200) throw new IOException("Context unavailable");
                 var media=res.getHeaders().getContentType();
                 if(media==null||!MediaType.APPLICATION_JSON.includes(media)||res.getHeaders().containsKey(HttpHeaders.CONTENT_ENCODING))
@@ -1551,22 +1556,25 @@ public class KagClient {
                 byte[] bytes=res.getBody().readNBytes(32*1024+1);
                 if(bytes.length>32*1024) throw new IOException("Context response too large");
                 var result=parse(StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(bytes)).toString(),admitted.token());
-                if(!fields(result).equals(Set.of("question","clarification","summary"))||
+                if(!fields(result).equals(Set.of("question","clarification","summary","reply","search_queries"))||
                     !text(result.path("question"),4000,false)||!text(result.path("clarification"),500,false)||
-                    !text(result.path("summary"),1600,false)) throw new IOException("Invalid context response");
-                var value=new ChatContext(result.path("question").asText().strip(),result.path("clarification").asText().strip(),result.path("summary").asText().strip());
-                if(value.question().isEmpty()==value.clarification().isEmpty()||value.summary().isEmpty()!=earlier.isEmpty())
+                    !text(result.path("summary"),1600,false)||!text(result.path("reply"),500,false)||
+                    !searchQueries(result.path("search_queries"))) throw new IOException("Invalid context response");
+                var value=new ChatContext(result.path("question").asText().strip(),result.path("clarification").asText().strip(),
+                    result.path("summary").asText().strip(),result.path("reply").asText().strip(),result.path("search_queries").valueStream().map(q->q.asText().strip()).toList());
+                if(List.of(value.question(),value.clarification(),value.reply()).stream().filter(s->!s.isEmpty()).count()!=1||
+                    value.summary().isEmpty()!=earlier.isEmpty()||value.question().isEmpty()&&!value.searchQueries().isEmpty())
                     throw new IOException("Invalid context outcome");
                 currentDate(admitted.date());
                 return value;
-            }));
+            });
         } catch(Exception e) {throw unavailable();}
     }
 
     public JsonNode query(Object request) {
-        return query(request,UUID.randomUUID());
+        return query(request,UUID.randomUUID(),0);
     }
-    public JsonNode query(Object request,UUID requestId) {
+    public JsonNode query(Object request,UUID requestId,long deadline) {
         long started=System.nanoTime();
         String localId=Objects.requireNonNull(requestId).toString();
         var diagnostic=new HashMap<String,Object>();
@@ -1575,7 +1583,7 @@ public class KagClient {
             var admitted=admit(request,diagnostic);
             diagnostic.put("stage","transport");
             diagnostic.put("status",0); diagnostic.put("remote_id","none");
-            return breaker.executeSupplier(() -> post("/v1/query",admitted).exchange((req,res) -> {
+            return breaker.executeSupplier(() -> post("/v1/query",admitted,deadline).exchange((req,res) -> {
                 diagnostic.put("status",res.getStatusCode().value());
                 String remoteId=res.getHeaders().getFirst("X-Request-ID");
                 if(remoteId!=null&&remoteId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))diagnostic.put("remote_id",remoteId);
@@ -1652,12 +1660,18 @@ public class KagClient {
             if(headers.containsKey(pin.getKey())) echo(headers,pin.getKey(),pin.getValue());
         currentDate(admitted.date()); return json.createObjectNode().put("state","KAG_ABSTAINED");
     }
+    private static boolean searchQueries(JsonNode value) {
+        return value.isArray()&&value.size()<=3&&value.valueStream().allMatch(query->text(query,4000,true));
+    }
     private Admitted admit(Object request,Map<String,Object> diagnostic) throws IOException {
         currentDate(LocalDate.now(clock));
-        if(!(request instanceof Map<?,?> input)||!input.keySet().equals(REQUEST_FIELDS)||!(input.get("user_id") instanceof UUID owner)) throw new IOException("Invalid request");
+        if(!(request instanceof Map<?,?> input)||!input.keySet().containsAll(REQUEST_FIELDS)||
+            input.keySet().stream().anyMatch(key->!REQUEST_FIELDS.contains(key)&&!"search_queries".equals(key))||
+            !(input.get("user_id") instanceof UUID owner)) throw new IOException("Invalid request");
         var body=json.valueToTree(request);
-        if(!fields(body).equals(REQUEST_FIELDS)||!body.path("user_id").isTextual()||!owner.toString().equals(body.path("user_id").asText())||
+        if(!body.path("user_id").isTextual()||!owner.toString().equals(body.path("user_id").asText())||
             !text(body.path("message"),4000,true)||!body.path("context_id").isTextual()||!body.path("context_id").asText().isEmpty()||
+            body.has("search_queries")&&!searchQueries(body.path("search_queries"))||
             !body.path("schema_contract").equals(json.valueToTree(schema.identity()))) throw new IOException("Invalid request");
         var pins=activePins(diagnostic);headerIdentity(pins.snapshot());
         if(diagnostic!=null) {
@@ -1683,9 +1697,11 @@ public class KagClient {
         if(token.length()<43||token.length()>512||!token.matches("[A-Za-z0-9._~+/-]+=*")) throw new IOException("Credentials unavailable");
         return token;
     }
-    private RestClient.RequestBodySpec post(String path,Admitted admitted) {
+    private RestClient.RequestBodySpec post(String path,Admitted admitted,long deadline) {
         currentDate(admitted.date());
-        return client.post().uri(path).contentType(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION,"Bearer "+admitted.token())
+        var outgoing=client.post().uri(path).contentType(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION,"Bearer "+admitted.token());
+        if(deadline!=0) outgoing.header("X-KAG-Deadline",Long.toString(deadline));
+        return outgoing
             .header("X-KAG-Release-ID",admitted.pins().release()).header(admitted.pins().sourceHeader(),admitted.pins().snapshot()).header("X-KAG-As-Of",admitted.date().toString()).body(admitted.body());
     }
     private void verifyHeaders(HttpHeaders headers,Admitted admitted,MediaType expected) throws IOException {
@@ -1726,8 +1742,12 @@ public class KagClient {
         return true;
     }
     private void validateResult(JsonNode result,Admitted admitted) throws IOException {
+        if(fields(result).equals(Set.of("state","reason")) && "KAG_ABSTAINED".equals(result.path("state").asText()) &&
+            Set.of("no_source","out_of_scope","expired").contains(result.path("reason").asText())) return;
+        if(fields(result).equals(Set.of("state","clarification"))&&"CLARIFY".equals(result.path("state").asText())&&
+            text(result.path("clarification"),500,true)) return;
         if(!admitted.pins().dataset()) {validateResult(result);return;}
-        if(!fields(result).equals(Set.of("contract_version","answer","citations"))||!result.path("contract_version").asText().equals("graph-chat-v1")||
+        if(!answerFields(result,Set.of("contract_version","answer","citations"))||!result.path("contract_version").asText().equals("graph-chat-v1")||
             !text(result.path("answer"),20000,true)||!result.path("citations").isArray()||result.path("citations").isEmpty()||result.path("citations").size()>20)throw new IOException("Invalid graph answer");
         var expectedFields=new HashSet<>(CITATION_FIELDS);expectedFields.add("source");
         for(var citation:result.path("citations")) {
@@ -1760,8 +1780,13 @@ public class KagClient {
         try {return HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(value));}
         catch(java.security.NoSuchAlgorithmException e){throw new IOException(e);}
     }
+    private static boolean answerFields(JsonNode result,Set<String> expected) {
+        if(fields(result).equals(expected)) return true;
+        var withMode=new HashSet<>(expected); withMode.add("mode");
+        return fields(result).equals(withMode)&&Set.of("answer","cases","related").contains(result.path("mode").asText());
+    }
     private static void validateResult(JsonNode result) throws IOException {
-        if(!fields(result).equals(Set.of("answer","citations"))||!text(result.path("answer"),20000,true)||!result.path("citations").isArray()||
+        if(!answerFields(result,Set.of("answer","citations"))||!text(result.path("answer"),20000,true)||!result.path("citations").isArray()||
             result.path("citations").isEmpty()||result.path("citations").size()>20) throw new IOException("Invalid result");
         for(var c:result.path("citations")) {
             if(!fields(c).equals(CITATION_FIELDS)||!text(c.path("doc_id"),256*1024,true)||!text(c.path("unit_id"),256*1024,true)||!c.path("sign_id").isNull()||

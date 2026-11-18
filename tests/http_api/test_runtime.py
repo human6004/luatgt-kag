@@ -21,6 +21,7 @@ from test_artifacts import EvidenceFixture, AS_OF, IDENTITY, sha, raw_json
 
 QUESTION = 'Xe mô tô phải đội mũ bảo hiểm?'
 TEXT = 'Người điều khiển xe mô tô phải đội mũ bảo hiểm.'
+DIRECT_TEXT = TEXT.removesuffix('.')+' [1].'
 USER = '00000000-0000-4000-8000-000000000001'
 SECRETS = ServiceSecrets(('q'*43,), ('i'*43,))
 
@@ -142,33 +143,6 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         self.assertNotIn(secret,output.getvalue())
         self.assertIn('"error_type": "ValueError"',output.getvalue())
 
-    async def test_query_failure_preserves_inner_legal_parse_without_sensitive_text(self):
-        import io
-        from contextlib import redirect_stdout
-        from types import SimpleNamespace
-        from kag.interface import LLMClient
-        from kag.legal_prompts import LegalPlanningPrompt
-        module=api();secret='PRIVATE_PROMPT_RESPONSE_EXCEPTION'
-        class Model(LLMClient):
-            model='offline-fixture'
-            def call_with_json_parse(self, **kwargs):return {'private':secret}
-        model=Model(name='chain-fixture',enable_check=False)
-        async def fail(*args,**kwargs):
-            model.invoke(dict(query=secret,context=[],executors=[]),LegalPlanningPrompt(language='vi'))
-        request=SimpleNamespace(budget=module._Budget(time.monotonic()+10),closed=False,
-            question=secret,as_of=AS_OF,pipeline=object())
-        output=io.StringIO()
-        with patch('kag.legal_solver.aanswer',fail),redirect_stdout(output):
-            with self.assertRaises(module.RuntimeFailure) as caught:await module.run_query(request,secret,AS_OF)
-        row=json.loads(output.getvalue().splitlines()[-1].removeprefix('SAMPLE_QUERY_FAILURE '))
-        self.assertEqual(caught.exception.code,'PROVIDER_ERROR')
-        self.assertNotIn(secret,output.getvalue())
-        self.assertEqual(row['inner_errors'][0]['type'],'ValueError')
-        self.assertEqual(row['inner_errors'][0]['stage'],'legal_parse')
-        self.assertEqual(row['inner_errors'][0]['category'],'LEGAL_RESPONSE_INVALID')
-        self.assertTrue(any(f['file']=='kag/legal_prompts.py' and f['function']=='parse_response'
-                            for f in row['inner_errors'][0]['frames']))
-
     def test_query_failure_chain_prefers_cause_and_bounds_cycles(self):
         secret='PRIVATE_CHAIN_MESSAGE'
         cause=ValueError(secret);context=TypeError(secret);outer=RuntimeError(secret)
@@ -179,7 +153,7 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
 
     def test_query_failure_stage_uses_source_frames_only(self):
         root=Path(api().__file__).resolve().parents[2]
-        cases=[('kag/legal_prompts.py','validate_subquery','legal_parse','LEGAL_SUBQUERY_REJECTED'),
+        cases=[('kag/legal_solver.py','aanswer','legal_parse','LEGAL_RESPONSE_INVALID'),
                ('vendor/KAG/kag/interface/common/llm_client.py','call_with_json_parse','json_parse','JSON_PARSE_FAILED'),
                ('vendor/KAG/kag/common/llm/openai_client.py','__call__','model_call','MODEL_CALL_FAILED')]
         for filename,function,stage,category in cases:
@@ -236,16 +210,11 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
             def __init__(self):
                 super().__init__(name='synthetic-test-llm',enable_check=False)
                 self.model = 'synthetic'
-                self.responses = [action('Retriever'),action('Deduce'),'candidate',action('Finish')]
-            def __call__(self,prompt,**kwargs):
-                response = self.responses.pop(0)
-                if response=='candidate':
-                    value = json.loads(prompt)['evidence']['items'][0]
-                    response = {'abstained':abstain,'applicability':'insufficient' if abstain else 'supported',
-                        'effectivity':'uncertain' if abstain else 'supported','conflict':'none',
-                        'selections':[] if abstain else [{'evidence_id':value['evidence_ids']['text'],
-                            'field':'text','start':0,'end':len(TEXT)}],'support_selections':[]}
-                return json.dumps(response,ensure_ascii=False)
+            def __call__(self, *, messages):
+                source = next(source for source in json.loads(messages[-1]['content'])['sources'] if source['quote'] == TEXT)
+                return json.dumps({'mode':'no_source'} if abstain else
+                    {'mode':'answer','answer':TEXT.removesuffix('.')+f" [{source['n']}].",'citations':[source['n']]},
+                    ensure_ascii=False)
         def proof(settings,release,*,capability='query'):
             events.append('SYNTHETIC.proof')
         def reader(*args):
@@ -288,7 +257,7 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
             result=await supervisor.query(self.request(),self.settings(),self.release)
         self.assertFalse(result.abstained)
         self.assertEqual(result.citations[0].quote,TEXT)
-        self.assertEqual(result.answer,'Căn cứ nguồn đã xác nhận:\n'+TEXT)
+        self.assertEqual((result.mode,result.answer),('answer',DIRECT_TEXT))
         for first,second in (('SYNTHETIC.proof','reader.constructor'),('backend','embedding.constructor'),
                              ('source','embedding.constructor'),('embedding.constructor','llm.constructor')):
             self.assertLess(self.events.index(first),self.events.index(second))
@@ -415,7 +384,92 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
         await self.rejection(settings=replace(self.settings(),embedding_key=None))
         self.assertNotIn('reader.constructor',self.events)
 
-    async def test_fresh_pipeline_and_executor_list(self):
+    async def test_context_legal_text_returns_to_source_query(self):
+        from types import SimpleNamespace
+        from unittest.mock import AsyncMock
+        module = api()
+        supervisor = module.RuntimeSupervisor()
+        try:
+            for field in ('reply','clarification'):
+                for text in ('Có thể giữ xe.', 'Phạt 7 triệu đồng.', 'Bị tước bằng hoặc trừ điểm.'):
+                    value = dict(question='',search_queries=[],reply='',clarification='',summary='')
+                    value[field] = text
+                    model = SimpleNamespace(aclient=SimpleNamespace(max_retries=0),
+                        acall=AsyncMock(return_value=json.dumps(value)))
+                    with self.synthetic(),patch.object(module,'_new_llm',return_value=model):
+                        answer = await supervisor.chat_context(self.request(body={
+                            'message':'Xin tư vấn giúp tôi','summary':'','earlier':[],'recent':[]}),
+                            self.settings(),self.release)
+                    self.assertEqual(answer['question'],'Xin tư vấn giúp tôi')
+                    self.assertEqual(answer[field],'')
+                for text in ('Chúc bạn một ngày tốt lành!', 'Chúc bạn năm mới vui vẻ!',
+                             'Bạn cho mình biết thêm một chút về tình huống nhé?', 'Bạn muốn tới điểm nào?'):
+                    value = dict(question='',search_queries=[],reply='',clarification='',summary='')
+                    value[field] = text
+                    model = SimpleNamespace(aclient=SimpleNamespace(max_retries=0),
+                        acall=AsyncMock(return_value=json.dumps(value)))
+                    with self.synthetic(),patch.object(module,'_new_llm',return_value=model):
+                        answer = await supervisor.chat_context(self.request(body={
+                            'message':'chào','summary':'','earlier':[],'recent':[]}),self.settings(),self.release)
+                    self.assertEqual(answer[field],text)
+        finally:
+            await supervisor.close()
+
+    async def test_context_timeout_keeps_query_deadline(self):
+        from types import SimpleNamespace
+        from unittest.mock import AsyncMock
+        module = api()
+        supplied = self.request(headers={'x-kag-deadline':str(int(time.time()*1000)+30000)})
+        self.assertAlmostEqual(module._chat_deadline(supplied,module.REQUEST_SECONDS)-time.monotonic(),
+                               30-module.TRANSPORT_SECONDS,delta=.1)
+        limit = module._chat_deadline
+        def short_deadline(request, seconds):
+            self.assertLessEqual(seconds,60)
+            return limit(request,.2)
+        supervisor = module.RuntimeSupervisor()
+        async def slow(**kwargs):
+            await asyncio.Event().wait()
+        model = SimpleNamespace(aclient=SimpleNamespace(max_retries=0),acall=AsyncMock(side_effect=slow))
+        request = self.request(body={'message':QUESTION,'summary':'','earlier':[],'recent':[]},
+            headers={'x-kag-deadline':str(int(time.time()*1000)+600000)})
+        try:
+            with self.synthetic(),patch.object(module,'_new_llm',return_value=model),patch.object(module,'_chat_deadline',short_deadline):
+                value = await supervisor.chat_context(request,self.settings(),self.release)
+            self.assertEqual(value['question'],QUESTION)
+            self.assertEqual(value['search_queries'],[])
+            self.assertFalse(supervisor.busy)
+            query = self.request(headers={'x-kag-deadline':str(int(time.time()*1000)+600000)})
+            with self.synthetic():
+                result = await supervisor.query(query,self.settings(),self.release)
+            self.assertGreater(query.state.request_deadline-time.monotonic(),500)
+            self.assertIsNotNone(result)
+        finally:
+            await supervisor.close()
+
+    async def test_chat_context_vehicle_searches_follow_full_question(self):
+        from types import SimpleNamespace
+        from unittest.mock import AsyncMock
+        module = api()
+        supervisor = module.RuntimeSupervisor()
+        queries = ['Xe mô tô không chấp hành đèn tín hiệu mức phạt',
+                   'Xe ô tô không chấp hành đèn tín hiệu']
+        for question, expected in [('Vượt đèn đỏ phạt bao nhiêu?', 2),
+                                   ('Xe máy vượt đèn đỏ phạt bao nhiêu?', 1)]:
+            model = SimpleNamespace(aclient=SimpleNamespace(max_retries=0), acall=AsyncMock(return_value=json.dumps({
+                'question': question, 'search_queries': queries, 'clarification': '', 'summary': '', 'reply': ''})))
+            with self.synthetic(), patch.object(module, '_new_llm', return_value=model):
+                value = await supervisor.chat_context(self.request(body={
+                    'message': question, 'summary': '', 'earlier': [], 'recent': []}),self.settings(),self.release)
+            self.assertEqual(value['question'], question)
+            self.assertEqual(len(value['search_queries']), expected)
+            self.assertNotIn('phạt', value['search_queries'][0])
+            self.assertIn('mô tô', value['search_queries'][0])
+            if expected == 2:
+                self.assertIn('ô tô', value['search_queries'][1])
+            self.assertEqual(model.acall.await_count, 1)
+        await supervisor.close()
+
+    async def test_fresh_pipeline_and_retrieval_per_request(self):
         module=api()
         supervisor=module.RuntimeSupervisor()
         pipelines=[]
@@ -429,7 +483,8 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
             self.reader.closed=False
             await supervisor.query(self.request(),self.settings(),self.release)
         self.assertIsNot(pipelines[0],pipelines[1])
-        self.assertIsNot(pipelines[0].executors,pipelines[1].executors)
+        self.assertIsNot(pipelines[0].retriever,pipelines[1].retriever)
+        self.assertIsNot(pipelines[0].llm,pipelines[1].llm)
         await supervisor.close()
 
     async def test_shared_supervisor_failfast_concurrency(self):
@@ -666,7 +721,7 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
             await supervisor.supervise(operation,125.0)
         self.assertEqual(caught.exception.code,'QUERY_TIMEOUT')
         with patch.dict('os.environ',{'KAG_QUERY_TIMEOUT_SECONDS':'30'}):
-            self.assertEqual(module._request_seconds(),25)
+            self.assertEqual(module._request_seconds(),30-module.TRANSPORT_SECONDS)
         self.assertFalse(supervisor.busy)
         await supervisor.close()
 
@@ -752,11 +807,7 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
             return embed
         def llm(settings,runtime):
             model=original_llm(settings,runtime)
-            responses=[action('Retriever'),action('Deduce'),{
-                'abstained':False,'applicability':'supported','effectivity':'supported',
-                'conflict':'none','selections':[{'evidence_id':next(r.evidence_id for r in self.release.records
-                    if r.entity_type.endswith('.LegalUnit') and r.field=='text'),
-                    'field':'text','start':0,'end':len(TEXT)}],'support_selections':[]},action('Finish')]
+            result={'mode':'answer','answer':DIRECT_TEXT,'citations':[1]}
             def reply(request):
                 self.meter_contexts.append((CURRENT_TASK_ID.get(),TOKEN_METER_IN_MEMORY.get()))
                 if entered is not None and not entered.is_set():
@@ -765,7 +816,7 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
                         raise AssertionError('Synthetic worker must be released')
                 return httpx.Response(200,json={'id':'synthetic','object':'chat.completion',
                     'created':0,'model':'synthetic-chat','choices':[{'index':0,'finish_reason':'stop',
-                        'message':{'role':'assistant','content':json.dumps(responses.pop(0),ensure_ascii=False)}}],
+                        'message':{'role':'assistant','content':json.dumps(result,ensure_ascii=False)}}],
                     'usage':{'prompt_tokens':1,'completion_tokens':1,'total_tokens':2}})
             replace_transport(model,runtime,reply)
             return model
@@ -796,7 +847,7 @@ class RuntimeTests(unittest.IsolatedAsyncioTestCase):
                 second_contexts=list(self.meter_contexts)
             self.assertFalse(first.abstained)
             self.assertEqual(first,second)
-            self.assertTrue(first_contexts and second_contexts)
+            self.assertEqual((len(first_contexts),len(second_contexts)),(1,1))
             self.assertTrue(all(memory is True for _,memory in first_contexts+second_contexts))
             self.assertEqual(len({identity for identity,_ in first_contexts}),1)
             self.assertEqual(len({identity for identity,_ in second_contexts}),1)

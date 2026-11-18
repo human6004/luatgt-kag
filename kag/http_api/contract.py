@@ -1,7 +1,7 @@
 """Pure strict DTOs and lossless, fail-closed Java v1 projection."""
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 import hashlib
 import json
 import math
@@ -127,7 +127,7 @@ class _Request:
     def from_dict(cls, value):
         required = ('user_id', 'message', 'context_id', 'schema_contract') if cls is QueryV1Request else (
             'evidence_id' if cls is SampleVectorRequest else 'message', 'schema_contract')
-        _object(value, required, () if cls is QueryV1Request else ('top_k', 'expand'))
+        _object(value, required, ('search_queries',) if cls is QueryV1Request else ('top_k', 'expand'))
         return cls(**{**value, 'schema_contract': SchemaIdentity.from_dict(value['schema_contract'])})
 
 
@@ -160,12 +160,19 @@ def _request(user_id, message, schema_contract):
         raise ApiFailure('INVALID_REQUEST')
 
 
+def validate_search_queries(values):
+    if type(values) is not list or len(values) > 3 or any(
+            not _text(text) or not text.strip() or utf16_units(text) > 4000 for text in values):
+        raise ApiFailure('INVALID_REQUEST')
+
+
 @dataclass(frozen=True)
 class QueryV1Request(_Request):
     user_id: str
     message: str
     context_id: str
     schema_contract: SchemaIdentity
+    search_queries: list[str] = field(default_factory=list, kw_only=True)
 
     def __post_init__(self):
         _request(self.user_id, self.message, self.schema_contract)
@@ -173,6 +180,7 @@ class QueryV1Request(_Request):
             raise ApiFailure('INVALID_REQUEST')
         if self.context_id:
             raise ApiFailure('CONTEXT_NOT_SUPPORTED')
+        validate_search_queries(self.search_queries)
 
 
 @dataclass(frozen=True)
@@ -211,12 +219,12 @@ class RetrieveRequest(_Request):
         if (not _text(self.message) or not self.message.strip() or utf16_units(self.message) > 4000 or
                 type(self.schema_contract) is not SchemaIdentity):
             raise ApiFailure('INVALID_REQUEST')
-        retrieval_options({'top_k': self.top_k, 'expand': self.expand})
+        retrieval_options({'top_k': self.top_k, 'expand': self.expand}, limit=10)
 
 
-def retrieval_options(value):
+def retrieval_options(value, *, limit=30):
     _object(value, ('top_k', 'expand'))
-    if type(value['top_k']) is not int or not 1 <= value['top_k'] <= 10 or type(value['expand']) is not bool:
+    if type(value['top_k']) is not int or not 1 <= value['top_k'] <= limit or type(value['expand']) is not bool:
         raise ApiFailure('INVALID_REQUEST')
     return dict(value)
 
@@ -298,7 +306,13 @@ def project_v1(result: AnswerResult, verified_sources: VerifiedSources, *, names
     if result.abstained:
         if result.citations:
             raise ApiFailure('INVALID_NATIVE_RESULT')
+        if result.reason_code in ('no_source','out_of_scope','expired'):
+            return {'state':'KAG_ABSTAINED','reason':result.reason_code}
         raise ApiFailure('KAG_ABSTAINED')
+    if result.mode == 'clarify':
+        if result.citations or result.reason_code or utf16_units(result.answer) > 500:
+            raise ApiFailure('INVALID_NATIVE_RESULT')
+        return {'state':'CLARIFY','clarification':result.answer}
     if not result.citations:
         raise ApiFailure('INVALID_NATIVE_RESULT')
 
@@ -351,8 +365,16 @@ def project_v1(result: AnswerResult, verified_sources: VerifiedSources, *, names
                 schema_contract=asdict(verified_sources.schema_contract),entity_type=source.entity_type,
                 entity_id=source.entity_id,source_sha256=source.source_sha256,text=source.source_text,
                 metadata=plain(source.metadata),document_metadata=plain(source.document_metadata),as_of=verified_sources.as_of.isoformat())
-        return {'contract_version':'graph-chat-v1','answer':result.answer,'citations':citations}
-    return {'answer': result.answer, 'citations': citations}
+        payload = {'contract_version':'graph-chat-v1','answer':result.answer,'citations':citations}
+    else:
+        payload = {'answer':result.answer,'citations':citations}
+    if result.reason_code:
+        raise ApiFailure('INVALID_NATIVE_RESULT')
+    if result.mode:
+        if result.mode not in ('answer','cases','related'):
+            raise ApiFailure('INVALID_NATIVE_RESULT')
+        payload['mode'] = result.mode
+    return payload
 
 
 def encode_v1(payload: dict) -> bytes:

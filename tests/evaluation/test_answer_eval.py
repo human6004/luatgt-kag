@@ -35,12 +35,15 @@ class G2Tests(unittest.TestCase):
     def test_public_sync_async_positive(self):
         e = self.driver()
         text = 'Xe mô tô không đội mũ bảo hiểm: phạt 30.000.000 đồng.'
-        ds = self.data(qid='PRIVATE-QID',question=self.fixture.PipelineTests.question,
+        ds = self.data(qid='PRIVATE-QID',question='Xe mô tô không đội mũ bảo hiểm bị phạt bao nhiêu?',
                        citation_gold=[dict(doc_id='văn-bản',unit_id='đơn-vị',field='text',start=0,end=len(text),quote=text)],
                        answer_reference={'expected_answer':'PRIVATE-GOLD'})
         with tempfile.TemporaryDirectory() as temp:
             for asynchronous in (False,True):
-                f,pipeline,llm = self.fixture.PipelineTests().pipeline()
+                from kag import legal_solver as f
+                _, retriever = self.fixture.fixture(text=text)
+                llm = self.fixture.FakeLLM([{'mode': 'answer', 'answer': 'Phạt 30.000.000 đồng [1].'}])
+                pipeline = f.build_pipeline(retriever, llm)
                 name = 'aanswer' if asynchronous else 'answer'
                 with patch.object(f,name,wraps=getattr(f,name)) as spy:
                     out = Path(temp)/name

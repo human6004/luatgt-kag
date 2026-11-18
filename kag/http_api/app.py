@@ -252,6 +252,9 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
 
     @asynccontextmanager
     async def lifespan(application):
+        if not (settings.secrets.query_tokens or settings.secrets.inspect_tokens):
+            yield
+            return
         from .runtime import RuntimeSupervisor, initialize_runtime
         application.state.runtime_supervisor = RuntimeSupervisor()
         application.state.runtime_supervisor.load_llm_config(settings.secrets)
@@ -272,7 +275,7 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
         restore_serving(application)
         application.state.runtime_settings = application.state.runtime_supervisor.restore_llm_runtime(
             application.state.runtime_settings, application.state.serving_release, application.state.provider_test_policy)
-        if settings.secrets.query_tokens or settings.secrets.inspect_tokens:observe_serving()
+        observe_serving()
         try:
             yield
         finally:
@@ -521,7 +524,7 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
             raise ApiFailure('INVALID_REQUEST')
         body=artifacts._json(await bounded_body(request))
         artifacts._keys(body,('message','top_k','expand'))
-        contract.retrieval_options(dict(top_k=body['top_k'],expand=body['expand']))
+        contract.retrieval_options(dict(top_k=body['top_k'],expand=body['expand']),limit=10)
         if not contract._text(body['message']) or not body['message'].strip() or contract.utf16_units(body['message'])>4000:
             raise ApiFailure('INVALID_REQUEST')
         supervisor=app.state.runtime_supervisor

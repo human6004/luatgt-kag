@@ -426,12 +426,10 @@ export type KagConfiguration = {
   };
   solver: null | {
     source: "source_defaults";
-    pipeline: "KAGIterativePipeline";
-    planner: "KAGIterativePlanner";
+    pipeline: "DirectAnswerPipeline";
     top_k: number;
     expand: boolean;
     max_evidence_chars: number;
-    max_iteration: number;
     search_k: number;
     expansion_limit: number;
     required_vector_dimensions: number;
@@ -716,7 +714,7 @@ function retrievalValues(value: unknown): value is ChatRetrievalValues {
     shape(v, ["top_k", "expand"]) &&
     Number.isInteger(v.top_k) &&
     v.top_k >= 1 &&
-    v.top_k <= 10 &&
+    v.top_k <= 30 &&
     typeof v.expand === "boolean"
   );
 }
@@ -828,23 +826,19 @@ export async function loadKagConfiguration(signal?: AbortSignal): Promise<KagCon
     (!shape(solver, [
       "source",
       "pipeline",
-      "planner",
       "top_k",
       "expand",
       "max_evidence_chars",
-      "max_iteration",
       "search_k",
       "expansion_limit",
       "required_vector_dimensions",
     ]) ||
       solver.source !== "source_defaults" ||
-      solver.pipeline !== "KAGIterativePipeline" ||
-      solver.planner !== "KAGIterativePlanner" ||
+      solver.pipeline !== "DirectAnswerPipeline" ||
       typeof solver.expand !== "boolean" ||
       [
         solver.top_k,
         solver.max_evidence_chars,
-        solver.max_iteration,
         solver.search_k,
         solver.expansion_limit,
         solver.required_vector_dimensions,

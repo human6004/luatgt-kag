@@ -97,7 +97,7 @@ def graph_session(change, token):
 def question_runtime(graph, mode, job):
     from kag.http_api.runtime import (RuntimeSettings, RequestRuntime, _Budget, REQUEST_SECONDS, BENCHMARK_TRANSPORT_SECONDS,
                                       _new_embedding, _new_llm, initialize_runtime,_ReaderBoundary)
-    from kag.http_api.provider_budget import ProviderBudget,disable_instance_retries
+    from kag.http_api.provider_budget import ProviderBudget
     from kag.retriever.retriever import Retriever
     from kag.legal_solver import build_pipeline
     initialize_runtime()
@@ -129,7 +129,6 @@ def question_runtime(graph, mode, job):
         if mode == 'G2':
             llm = _new_llm(settings,runtime,timeout=BENCHMARK_TRANSPORT_SECONDS)
             pipeline = build_pipeline(retriever,llm)
-            disable_instance_retries(pipeline,llm)
         elif retriever.namespace != 'VietRoadTraffic':
             # G1's unchanged wire validator uses the logical namespace; public IDs/ranks stay exact.
             native_retrieve, prefix = retriever.retrieve, retriever.namespace+'.'

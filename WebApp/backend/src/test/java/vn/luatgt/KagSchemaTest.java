@@ -96,7 +96,11 @@ class KagSchemaTest {
         var record=records.findByUnitId(id).orElseThrow();
         UUID owner=accounts.findByEmail("admin@test.vn").orElseThrow().id;
         var response=json.createObjectNode().put("answer","Theo căn cứ nguồn."); var citation=response.putArray("citations").addObject().put("doc_id",doc.externalId).put("unit_id",id).put("quote","Nội dung trích dẫn.");
-        when(kag.query(any(),any(UUID.class))).thenAnswer(invocation->{ Map<?,?> request=invocation.getArgument(0); assertEquals(schema.identity(),request.get("schema_contract")); return response; });
+        when(kag.query(any(),any(UUID.class),anyLong())).thenAnswer(invocation->{ Map<?,?> request=invocation.getArgument(0); assertEquals(schema.identity(),request.get("schema_contract")); return response; });
+        when(kag.chatContext(anyMap(),anyString(),anyList(),anyList(),anyLong())).thenAnswer(call -> {
+            Map<String,Object> request=call.getArgument(0);
+            return new KagClient.ChatContext((String)request.get("message"),"","","");
+        });
         var question=new ChatRequest("Căn cứ nào?",null);
         assertProgressState(owner,question,"UNAVAILABLE");
         units.publish(record.id,new PublicationRequest(record.version,true)); assertProgressState(owner,question,"ANSWERED");

@@ -132,8 +132,10 @@ assert 'kag.bootstrap' not in sys.modules or not sys.modules['kag.bootstrap']._i
         self.failure('INVALID_REQUEST', self.api.utf16_units, '\udfff', status=422)
 
     def test_valid_json_utf8_roundtrip(self):
-        raw = json.dumps(query(), ensure_ascii=False).encode('utf-8')
-        self.assertEqual(asdict(self.api.QueryV1Request.from_json(raw)), query())
+        for request in (query(), query(search_queries=['Giấy phép lái xe mô tô','Giấy phép lái xe ô tô'])):
+            with self.subTest(request=request):
+                raw = json.dumps(request, ensure_ascii=False).encode('utf-8')
+                self.assertEqual(asdict(self.api.QueryV1Request.from_json(raw)), {'search_queries': [], **request})
 
     def test_duplicate_keys_rejected_nested_and_top_level(self):
         raws = (b'{"message":"q","message":"q"}',

@@ -19,7 +19,10 @@ type Citation = {
 type ChatRecord = {
   id: string;
   conversationId?: string;
+  mode?: string;
+  reason?: string;
   question: string;
+  understoodQuestion?: string;
   answer: string;
   state: string;
   citations: Citation[];
@@ -43,7 +46,7 @@ type ChatState = {
     | "cancelled";
 };
 const unavailableMessage =
-  "Dịch vụ tra cứu pháp luật hiện đang gặp sự cố hoặc chưa sẵn sàng. Vui lòng thử lại sau.";
+  "Trợ lý chưa xử lý xong câu hỏi. Bạn có thể thử lại hoặc hỏi cụ thể hơn.";
 
 function record(value: unknown): value is ChatRecord {
   if (!value || typeof value !== "object") return false;
@@ -54,6 +57,7 @@ function record(value: unknown): value is ChatRecord {
     (row.conversationId === undefined ||
       (typeof row.conversationId === "string" && !!row.conversationId)) &&
     typeof row.question === "string" &&
+    (row.understoodQuestion === undefined || typeof row.understoodQuestion === "string") &&
     typeof row.answer === "string" &&
     typeof row.state === "string" &&
     Array.isArray(row.citations)
@@ -71,12 +75,26 @@ export function chatView(row: ChatRecord) {
   if (row.state === "KAG_ABSTAINED")
     return {
       status:
-        "Hiện tôi chưa tìm được đủ căn cứ pháp lý được xác minh để trả lời chính xác câu hỏi này.",
+        row.reason === "out_of_scope"
+          ? "Trợ lý chỉ hỗ trợ luật giao thông đường bộ Việt Nam."
+          : row.reason === "no_source"
+            ? "Dữ liệu hiện chưa có nguồn đã xác minh cho câu hỏi này."
+            : row.reason === "expired"
+              ? "Văn bản được hỏi đã hết hiệu lực trong phạm vi giao thông đường bộ."
+              : "Hiện tôi chưa tìm được đủ căn cứ pháp lý được xác minh để trả lời chính xác câu hỏi này.",
       ...empty,
     };
   if (row.state === "UNAVAILABLE") return { status: unavailableMessage, ...empty };
   if (row.state === "CANCELLED") return { status: "Đã dừng trả lời", ...empty };
   if (row.state === "PROCESSING") return { status: "Đang trả lời…", ...empty };
+  if (
+    row.state === "ANSWERED" &&
+    row.mode === "reply" &&
+    !row.citations.length &&
+    row.answer.trim() &&
+    row.answer.length <= 500
+  )
+    return { status: "Đã trả lời", ...empty, answer: row.answer };
   const citationsValid =
     row.citations.length > 0 &&
     row.citations.length <= 20 &&
@@ -91,7 +109,11 @@ export function chatView(row: ChatRecord) {
     );
   if (row.state !== "ANSWERED" || !row.answer.trim() || !citationsValid)
     return { status: "Chưa có câu trả lời đủ căn cứ.", ...empty };
-  return { status: "Đã trả lời", answer: row.answer, citations: row.citations };
+  return {
+    status: "Đã trả lời",
+    answer: row.answer,
+    citations: row.citations,
+  };
 }
 
 export function citationAnswerPrefix(answer: string, citations: Pick<Citation, "quote">[]) {

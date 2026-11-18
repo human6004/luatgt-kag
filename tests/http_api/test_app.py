@@ -52,6 +52,13 @@ class RetrieveAdmissionTests(unittest.IsolatedAsyncioTestCase):
             await self.admit(**arguments)
         self.assertEqual((caught.exception.status, caught.exception.code), (status, code))
 
+    def test_query_accepts_optional_search_queries(self):
+        payload = {'user_id': native.USER, 'message': native.QUESTION, 'context_id': '',
+                   'schema_contract': native.IDENTITY, 'search_queries': ['Không có giấy phép lái xe mô tô', 'Điều khiển ô tô không có giấy phép lái xe']}
+        self.assertEqual(contract.QueryV1Request.from_dict(payload).search_queries, payload['search_queries'])
+        with self.assertRaises(contract.ApiFailure):
+            contract.QueryV1Request.from_dict({**payload, 'search_queries': ['xe máy'] * 4})
+
     async def test_inspect_service_only_admission_without_delegated_uuid(self):
         with patch.object(security, 'authorize', wraps=security.authorize) as authorization:
             try:
@@ -306,7 +313,7 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
         response = await self.post()
         self.assertEqual(response.status_code,200,response.text)
         citation = self.citation()
-        self.assertEqual(response.json(),{'answer':'Căn cứ nguồn đã xác nhận:\n'+native.TEXT,
+        self.assertEqual(response.json(),{'answer':native.DIRECT_TEXT,'mode':'answer',
             'citations':[{'doc_id':'document-1','unit_id':'unit-1','sign_id':None,
                 'evidence_id':citation.evidence_id,'field':'text','start':0,'end':len(native.TEXT),'quote':native.TEXT}]})
         self.assertEqual(response.headers['x-kag-release-id'],'synthetic-release')
@@ -316,10 +323,11 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(self.reader.closed and self.made[0].closed)
         self.assertFalse(self.supervisor.busy)
 
-    async def test_real_native_abstention_never_becomes_success(self):
+    async def test_real_native_abstention_has_reason_without_answer(self):
         with self.fixture.synthetic(abstain=True):
             response = await self.post()
-        self.error(response,503,'KAG_ABSTAINED','abstained')
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.json(),{'state':'KAG_ABSTAINED','reason':'no_source'})
         self.assertTrue(self.reader.closed)
 
     async def test_missing_bearer_before_factory(self):
