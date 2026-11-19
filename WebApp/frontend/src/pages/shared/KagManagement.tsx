@@ -17,7 +17,6 @@ import {
   previewBuilderSelection,
   loadBuilderPackages,
   packageReason,
-  loadServing,
   changeServing,
   loadBuilderPackageExport,
   exportBuilderPackage,
@@ -30,22 +29,22 @@ import {
   loadGraphSources,
 } from "./kag-inspection";
 import type {
-  BuilderStatus,
   BuilderConfiguration,
   BuilderSelection,
   SelectionRequest,
-  BuilderProjects,
   BuilderPackages,
-  BuilderPackageExport,
   ServingCatalog,
   ServingPreview,
   GraphRetrieval,
-  BuilderClear,
   GraphProject,
 } from "./kag-inspection";
 import { servingReasons } from "./kag-inspection";
 
-export function useInspection<T>(load: (signal?: AbortSignal) => Promise<T>) {
+export function useInspection<T>(
+  load: (signal?: AbortSignal) => Promise<T>,
+  active?: (value: T) => boolean,
+  onSettled?: () => void,
+) {
   const [value, setValue] = useState<T>(),
     [error, setError] = useState(""),
     [loading, setLoading] = useState(true),
@@ -54,60 +53,79 @@ export function useInspection<T>(load: (signal?: AbortSignal) => Promise<T>) {
     const controller = new AbortController();
     setLoading(true);
     setError("");
-    setValue(undefined);
+    if (!active) setValue(undefined);
     load(controller.signal)
       .then((result) => {
-        if (!controller.signal.aborted) setValue(result);
+        if (controller.signal.aborted) return;
+        setValue(result);
+        if (value !== undefined && active?.(value) && !active(result)) onSettled?.();
       })
       .catch((failure) => {
-        if (!controller.signal.aborted) setError(inspectionError(failure));
+        if (!controller.signal.aborted) {
+          setError(inspectionError(failure));
+          if (failure instanceof ApiError && [401, 403, 409].includes(failure.status))
+            setValue(undefined);
+          else setValue((previous) => (previous && active?.(previous) ? previous : undefined));
+        }
       })
       .finally(() => {
         if (!controller.signal.aborted) setLoading(false);
       });
     return () => controller.abort();
   }, [load, version]);
+  const polling = value !== undefined && active?.(value);
+  useEffect(() => {
+    if (!polling || loading) return;
+    const timer = setTimeout(() => setVersion((v) => v + 1), 3000);
+    return () => clearTimeout(timer);
+  }, [polling, loading, version]);
   return { value, setValue, error, loading, reload: () => setVersion((v) => v + 1) };
 }
 
 type LibraryRun = ServingCatalog["runs"][number];
-type LibraryRead = "projects" | "serving" | "configuration" | "status" | "export" | "clear";
-const libraryReadLabels: Record<LibraryRead, string> = {
-  projects: "Danh sách dự án",
-  serving: "Thư viện đồ thị",
-  configuration: "Cấu hình dựng",
-  status: "Trạng thái dựng",
-  export: "Trạng thái xuất gói",
-  clear: "Trạng thái xóa",
-};
-function libraryReadIssue(part: LibraryRead, failure: unknown) {
-  return (part === "projects" || part === "serving") &&
-    failure instanceof ApiError &&
-    [403, 409].includes(failure.status)
-    ? "Đăng nhập lại OpenSPG rồi tải lại danh sách."
-    : inspectionError(failure);
-}
-
-export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
+export function GraphLibrary({
+  searchOptions,
+  serving: library,
+}: {
+  searchOptions: ReactNode;
+  serving: ReturnType<typeof useInspection<ServingCatalog>>;
+}) {
   const [parameters, setParameters] = useSearchParams();
-  const [catalog, setCatalog] = useState<BuilderProjects>();
+  const projects = useInspection(loadBuilderProjects);
+  const configuration = useInspection(loadBuilderConfiguration);
+  const build = useInspection(
+    loadBuilderStatus,
+    (value) => ["RUNNING", "STOPPING"].includes(value.state),
+    library.reload,
+  );
+  const exporting = useInspection(loadBuilderPackageExport, (value) => value.state === "RUNNING");
+  const clearingData = useInspection(
+    loadBuilderClear,
+    (value) => value.state === "APPLYING",
+    () => {
+      library.reload();
+      projects.reload();
+      build.reload();
+      configuration.reload();
+    },
+  );
+  const { value: serving, error: libraryError, loading: libraryLoading } = library;
+  const { value: config } = configuration;
+  const { value: status, setValue: setStatus } = build;
+  const { value: exportState, setValue: setExportState } = exporting;
+  const { value: clearState, setValue: setClearState } = clearingData;
+  const projectState = projects.value?.state;
+  const catalog =
+    projectState === "AVAILABLE" || projectState === "EMPTY" ? projects.value : undefined;
+  const projectError =
+    projects.error || (projectState && !catalog ? builderIssue(projectState) : "");
   const [projectData, setProjectData] = useState<
     Record<number, "EMPTY" | "OCCUPIED" | "UNAVAILABLE">
   >({});
-  const [serving, setServing] = useState<ServingCatalog>();
-  const [config, setConfig] = useState<BuilderConfiguration>();
-  const [status, setStatus] = useState<BuilderStatus>();
   const [packages, setPackages] = useState<BuilderPackages>();
-  const [exportState, setExportState] = useState<BuilderPackageExport>();
-  const [clearState, setClearState] = useState<BuilderClear>(),
-    [clearConfirmation, setClearConfirmation] = useState<GraphProject>();
+  const [clearConfirmation, setClearConfirmation] = useState<GraphProject>();
   const [error, setError] = useState(""),
     [detailError, setDetailError] = useState("");
-  const [readErrors, setReadErrors] = useState<Partial<Record<LibraryRead, string>>>({});
-  const [libraryLoading, setLibraryLoading] = useState(true);
-  const libraryError = readErrors.projects || readErrors.serving;
-  const readError =
-    libraryError || readErrors.configuration || readErrors.status || readErrors.clear;
   const [busy, setBusy] = useState(false),
     [version, setVersion] = useState(0);
   const [mode, setMode] = useState<"build" | "import" | null>(null);
@@ -141,17 +159,11 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
         ? { mode: "ALL", value: null }
         : { mode: "PERCENT", value: Number(percent) };
   const requestKey = JSON.stringify(requestedScope);
-  const building = status && ["RUNNING", "STOPPING", "STOPPED"].includes(status.state);
+  const recoveringWrite = status?.error_code === "UNCERTAIN_WRITE" && status.actions.resume;
+  const building =
+    status && (["RUNNING", "STOPPING", "STOPPED"].includes(status.state) || recoveringWrite);
   const running = status && ["RUNNING", "STOPPING"].includes(status.state);
   const clearing = clearState && ["APPLYING", "PARTIAL", "INTERRUPTED"].includes(clearState.state);
-  function acceptProjects(projects: BuilderProjects) {
-    if (!["AVAILABLE", "EMPTY"].includes(projects.state))
-      throw new ApiError(
-        "Chưa đọc được danh sách dự án",
-        projects.state === "FORBIDDEN" ? 403 : 503,
-      );
-    setCatalog(projects);
-  }
   useEffect(() => {
     setWaitSeconds(0);
     if (!mode || (!sourcePreparing && !sourceLoading)) return;
@@ -160,74 +172,26 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     return () => clearInterval(timer);
   }, [mode, sourcePreparing, sourceLoading]);
   useEffect(() => {
-    if (busy) return;
-    const controller = new AbortController();
-    const timers: Partial<Record<LibraryRead, ReturnType<typeof setTimeout>>> = {};
-    async function read<T>(part: LibraryRead, load: () => Promise<T>, save: (value: T) => void) {
-      if (part === "serving") setLibraryLoading(true);
-      try {
-        const value = await load();
-        if (controller.signal.aborted) return;
-        save(value);
-        setReadErrors((current) => ({ ...current, [part]: "" }));
-      } catch (failure) {
-        if (controller.signal.aborted) return;
-        if (failure instanceof ApiError && [403, 409].includes(failure.status)) {
-          if (part === "projects") setCatalog(undefined);
-          if (part === "serving") setServing(undefined);
-        }
-        setReadErrors((current) => ({ ...current, [part]: libraryReadIssue(part, failure) }));
-      } finally {
-        if (!controller.signal.aborted) {
-          if (part === "serving") setLibraryLoading(false);
-          timers[part] = setTimeout(() => void read(part, load, save), 3000);
-        }
-      }
-    }
-    if (!mode) void read("projects", () => loadBuilderProjects(controller.signal), acceptProjects);
-    void read("serving", () => loadServing(controller.signal), setServing);
-    void read("configuration", () => loadBuilderConfiguration(controller.signal), setConfig);
-    void read("status", () => loadBuilderStatus(controller.signal), setStatus);
-    void read("export", () => loadBuilderPackageExport(controller.signal), setExportState);
-    void read("clear", () => loadBuilderClear(controller.signal), setClearState);
-    return () => {
-      controller.abort();
-      Object.values(timers).forEach(clearTimeout);
-    };
-  }, [busy, version, mode]);
-  useEffect(() => {
     if (!mode) return;
     const controller = new AbortController();
     setProjectData({});
-    // Refresh counts only on open or explicit reload, after reading the latest catalog.
-    loadBuilderProjects(controller.signal)
-      .then((projects) => {
-        if (controller.signal.aborted) return;
-        acceptProjects(projects);
-        setReadErrors((current) => ({ ...current, projects: "" }));
-        for (const row of projects.projects.filter((row) => row.state === "AVAILABLE")) {
-          loadGraphProject(row.project_id, controller.signal)
-            .then((graph) => {
-              if (!controller.signal.aborted)
-                setProjectData((current) => ({
-                  ...current,
-                  [row.project_id]: graph.counts.nodes || graph.counts.edges ? "OCCUPIED" : "EMPTY",
-                }));
-            })
-            .catch(() => {
-              if (!controller.signal.aborted)
-                setProjectData((current) => ({ ...current, [row.project_id]: "UNAVAILABLE" }));
-            });
-        }
-      })
-      .catch((failure) => {
-        if (!controller.signal.aborted) {
-          setError(libraryReadIssue("projects", failure));
-          setDetailError(inspectionError(failure));
-        }
-      });
+    for (const row of catalog?.projects ?? []) {
+      if (row.state !== "AVAILABLE") continue;
+      loadGraphProject(row.project_id, controller.signal)
+        .then((graph) => {
+          if (!controller.signal.aborted)
+            setProjectData((current) => ({
+              ...current,
+              [row.project_id]: graph.counts.nodes || graph.counts.edges ? "OCCUPIED" : "EMPTY",
+            }));
+        })
+        .catch(() => {
+          if (!controller.signal.aborted)
+            setProjectData((current) => ({ ...current, [row.project_id]: "UNAVAILABLE" }));
+        });
+    }
     return () => controller.abort();
-  }, [mode, version]);
+  }, [mode, catalog]);
   useEffect(() => {
     if (!mode) return;
     const controller = new AbortController();
@@ -264,7 +228,8 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     return () => controller.abort();
   }, [mode, version]);
   useEffect(() => {
-    if (!mode || !planSha256) return;
+    if (mode !== "import" || !planSha256) return;
+    setPackages(undefined);
     const controller = new AbortController();
     loadBuilderPackages(controller.signal)
       .then((value) => {
@@ -322,7 +287,15 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
       clearTimeout(delay);
     };
   }, [mode, config?.revision, planSha256, requestKey, selectedPackage?.sha256, version]);
-  const refresh = () => setVersion((value) => value + 1);
+  function refresh() {
+    projects.reload();
+    configuration.reload();
+    build.reload();
+    exporting.reload();
+    clearingData.reload();
+    library.reload();
+    setVersion((value) => value + 1);
+  }
   async function act(operation: () => Promise<unknown>) {
     if (acting.current) return;
     acting.current = true;
@@ -341,7 +314,6 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
     } finally {
       acting.current = false;
       setBusy(false);
-      refresh();
     }
   }
   function openFlow(next: "build" | "import") {
@@ -378,18 +350,29 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
       );
       setMode(null);
       setProgress("");
+      configuration.reload();
     });
   }
   async function resume() {
-    if (!status?.run_id || !config) return;
+    if (!status?.run_id || !config || !status.actions.resume) return;
+    if (
+      recoveringWrite &&
+      !window.confirm(
+        "Lần ghi trước bị gián đoạn. Phần mềm sẽ đọc lại đợt ghi dở và chỉ ghi lại nếu toàn bộ đợt chưa có trong database. Nếu đã ghi một phần hoặc dữ liệu khác với dự kiến, phần mềm sẽ dừng. Tiếp tục?",
+      )
+    )
+      return;
     await act(async () => {
       let checked = await checkBuilderReadiness();
       while (checked.readiness.state === "CHECKING") {
         await new Promise((resolve) => setTimeout(resolve, 1500));
         checked = await loadBuilderConfiguration();
       }
+      if (checked.readiness.state !== "READY") {
+        const issue = checked.readiness.checks.find((row) => row.state === "BLOCKED");
+        throw new Error(builderIssue(issue?.code ?? "CONFIG"));
+      }
       if (
-        checked.readiness.state !== "READY" ||
         checked.target?.project_id !== status.target?.project_id ||
         checked.revision !== config.revision
       )
@@ -443,13 +426,23 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
         <div className="flex flex-wrap gap-3">
           <Button
             variant="primary"
-            disabled={busy || serving?.busy || !!running || !!clearing || !!readError || !config}
+            disabled={
+              busy ||
+              serving?.busy ||
+              !!running ||
+              !!clearing ||
+              !status ||
+              !config ||
+              recoveringWrite
+            }
             onClick={() => openFlow("build")}
           >
             + Dựng đồ thị mới
           </Button>
           <Button
-            disabled={busy || serving?.busy || !!running || !!clearing || !!readError || !config}
+            disabled={
+              busy || serving?.busy || !!running || !!clearing || !catalog || recoveringWrite
+            }
             onClick={() => openFlow("import")}
           >
             + Nhập từ gói
@@ -494,17 +487,22 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
           </details>
         </div>
       </Card>
-      {(error || Object.values(readErrors).some(Boolean)) && (
+      {(error ||
+        libraryError ||
+        projectError ||
+        configuration.error ||
+        build.error ||
+        exporting.error ||
+        clearingData.error) && (
         <div role="alert" className="text-sm space-y-2">
           {error && <p>{error}</p>}
-          {Object.entries(readErrors)
-            .filter(([, message]) => message)
-            .map(([part, message]) => (
-              <p key={part}>
-                {libraryReadLabels[part as LibraryRead]}: {message}
-              </p>
-            ))}
-          {libraryError && config?.links?.openspg && (
+          {libraryError && <p>Thư viện đồ thị: {libraryError}</p>}
+          {projectError && <p>Danh sách project: {projectError}</p>}
+          {configuration.error && <p>Cấu hình dựng: {configuration.error}</p>}
+          {build.error && <p>Trạng thái dựng: {build.error}</p>}
+          {exporting.error && <p>Trạng thái xuất gói: {exporting.error}</p>}
+          {clearingData.error && <p>Trạng thái xóa: {clearingData.error}</p>}
+          {(libraryError || projectError) && config?.links?.openspg && (
             <a className="underline" target="_blank" rel="noreferrer" href={config.links.openspg}>
               Mở OpenSPG
             </a>
@@ -522,7 +520,10 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
       )}
       {serving?.operation && ["FAILED", "INTERRUPTED"].includes(serving.operation.state) && (
         <div role="alert">
-          <p>Chưa dùng được đồ thị cho trợ lý. Tải lại trạng thái trước khi thử tiếp.</p>
+          <p>
+            {(serving.operation.code && servingReasons[serving.operation.code]) ||
+              "Chưa dùng được đồ thị cho trợ lý. Tải lại trạng thái trước khi thử tiếp."}
+          </p>
           <details>
             <summary className="underline cursor-pointer">Chi tiết kỹ thuật</summary>
             <pre>{serving.operation.code}</pre>
@@ -578,14 +579,14 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
                       Dừng
                     </Button>
                     <Button
-                      disabled={busy || !!readError || !status.actions.resume}
+                      disabled={busy || !config || !status.actions.resume}
                       onClick={() => void resume()}
                     >
                       Tiếp tục
                     </Button>
                     {status.target && (
                       <Button
-                        disabled={busy || !!readError || !!clearing}
+                        disabled={busy || !!clearing}
                         onClick={() => void showClear(status.target!.project_id)}
                       >
                         Xóa
@@ -626,7 +627,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
                     </Button>
                     <Button
                       disabled={
-                        busy || !!libraryError || serving?.busy || exportState?.state === "RUNNING"
+                        busy || !exportState || !!exporting.error || exportState.state === "RUNNING"
                       }
                       onClick={() =>
                         void act(async () =>
@@ -642,7 +643,8 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
                     <Button
                       disabled={
                         busy ||
-                        !!libraryError ||
+                        !clearState ||
+                        !!clearingData.error ||
                         serving?.busy ||
                         (!!clearing && clearReport?.target.database !== row.database) ||
                         clearState?.state === "APPLYING"
@@ -672,7 +674,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
                   <Td>{clearState?.state === "APPLYING" ? "Đang xóa" : "Chưa xóa xong"}</Td>
                   <Td>
                     <Button
-                      disabled={busy || !!readError || clearState?.state === "APPLYING"}
+                      disabled={busy || !!clearingData.error || clearState?.state === "APPLYING"}
                       onClick={() => void showClear(clearReport.target.project_id)}
                     >
                       Xóa tiếp
@@ -787,6 +789,8 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
                 busy ||
                 !selectedProjectReady ||
                 !selection ||
+                !config ||
+                !status ||
                 sourceLoading ||
                 sourcePreparing ||
                 !!building ||
@@ -940,6 +944,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
                   }
                   if (value.source_validation.state !== "VALID")
                     throw new Error("Nguồn chưa sẵn sàng");
+                  setVersion((v) => v + 1);
                 })
               }
             >
@@ -974,19 +979,23 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
               </Button>
               <Button
                 variant="primary"
-                disabled={busy || !!readError || !preview.chat_ready}
+                disabled={
+                  busy ||
+                  libraryLoading ||
+                  !serving ||
+                  !!libraryError ||
+                  serving.busy ||
+                  !preview.chat_ready
+                }
                 onClick={() =>
                   void act(async () => {
-                    const result = await changeServing(
+                    await changeServing(
                       "activate",
                       preview.project_id,
                       preview.run_id,
                       preview.preview_id,
                     );
-                    if ("contract_version" in result)
-                      setServing((value) =>
-                        value ? { ...value, busy: true, operation: result } : value,
-                      );
+                    library.reload();
                     setPreview(undefined);
                   })
                 }
@@ -1018,7 +1027,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
                 {JSON.stringify(preview, null, 2)}
               </pre>
             </details>
-            {(error || readError) && <p role="alert">{readError || error}</p>}
+            {(error || libraryError) && <p role="alert">{error || libraryError}</p>}
           </div>
         </Modal>
       )}
@@ -1069,7 +1078,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
               </Button>
               <Button
                 variant="primary"
-                disabled={busy || !!readError}
+                disabled={busy || !!clearingData.error}
                 onClick={() => void confirmClear()}
               >
                 Xác nhận xóa
@@ -1087,7 +1096,7 @@ export function GraphLibrary({ searchOptions }: { searchOptions: ReactNode }) {
                 serving.active.database === clearConfirmation.target.database) && (
                 <p>Trợ lý tạm ngưng trả lời cho tới khi chọn đồ thị khác</p>
               )}
-            {(error || readError) && <p role="alert">{readError || error}</p>}
+            {(error || clearingData.error) && <p role="alert">{error || clearingData.error}</p>}
           </div>
         </Modal>
       )}

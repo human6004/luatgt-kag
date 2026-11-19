@@ -55,7 +55,6 @@ def validate_active_release(release):
             or selected['release_id']!=release.release_id or selected['database_id']!=release.descriptor['database_id']
             or selected['database']!=release.descriptor['database'] or selected['namespace']!=release.schema_contract.namespace
             or str(selected['project_id'])!=release.backend['project_id']): a._invalid()
-    a._unchanged(release)
     return selected
 
 
@@ -122,7 +121,8 @@ def _record(path):
 def runs(token):
     from kag.builder.projects import read_projects
     catalog=read_projects(token)
-    if catalog['state'] not in ('AVAILABLE','EMPTY'):raise ApiFailure('SCOPE_DENIED')
+    if catalog['state'] not in ('AVAILABLE','EMPTY'):raise ApiFailure(
+        'DELEGATION_DENIED' if catalog['state']=='DELEGATION_DENIED' else 'SCOPE_DENIED')
     owned={row['project_id']:row for row in catalog['projects']}
     rows=[]
     root=Path(os.environ.get('KAG_BUILDER_RUN_ROOT','/builder-runs'))
@@ -301,7 +301,7 @@ def fixed_read(change):
     release=_READ_RELEASE
     if release is None or (release.root,release.release_id)!=(root,selected['release_id']):
         release=a.load_release(root,selected['release_id'])
-    # Reuse parsing only; validation rereads every artifact byte before and after each read.
+    else:a._unchanged(release)
     validate_active_release(release)
     _READ_RELEASE=release
     descriptor=release.descriptor
@@ -332,7 +332,6 @@ def trial(change,token):
     from kag.retriever.neo4j import Neo4jRetrievalClient
     from kag.retriever.retriever import Retriever
     from kag.vector_contract import valid_vector
-    from kag.verify import verify_graph
     from kag.http_api.read_broker import _BoundedOpener
     a._keys(change,('project_id','run_id','model_identity','vector','top_k','expand'))
     if (type(change['project_id']) is not int or not 1<=change['project_id']<=2147483647
@@ -357,13 +356,9 @@ def trial(change,token):
                 username=os.environ['KAG_NEO4J_USERNAME'],password=os.environ['KAG_NEO4J_PASSWORD'],
                 namespace=target['namespace'],dimension=identity['dimension'],timeout=5)
             reader._opener=_BoundedOpener()
-            def verify():
-                if (verify_graph(reader,db_path=path/'expected.sqlite3',contract=contract,batch_size=32)!=receipt['stages']['verify']
-                        or _record(path)!=receipt):a._invalid('SOURCE_VALIDATION_FAILED')
-                state['identity'].validate(proof)
             state['identity'].validate(proof)
             items=Retriever(reader,None,contract).retrieve_vector(change['vector'],top_k=change['top_k'],expand=change['expand'])
-            verify()
+            state['identity'].validate(proof)
             return dict(contract_version='builder-retrieval-v1',project_id=target['project_id'],run_id=change['run_id'],
                 schema_contract=schema.__dict__,model_identity=identity['model_identity'],dimension=identity['dimension'],
                 graph_fingerprint=receipt['stages']['verify']['fingerprint'],items=items)

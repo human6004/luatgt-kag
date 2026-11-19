@@ -6,9 +6,6 @@ import re
 import json
 from urllib.parse import urlsplit
 
-from kag.evaluation.dataset import load_dataset
-from kag.evaluation.models import ValidationError
-
 LIMIT_BYTES = 8 * 1024 * 1024
 
 
@@ -51,15 +48,13 @@ def configuration_view(environment, provider_keys, secrets=()):
 def solver_defaults():
     """Inspect the shipped constructors, without creating a solver or model."""
     from inspect import signature
-    from kag.legal_solver import LegalRetrieverExecutor, KAGIterativePipeline, KAGIterativePlanner
+    from kag.legal_solver import DirectAnswerPipeline
     from kag.retriever.retriever import Retriever
-    executor = signature(LegalRetrieverExecutor).parameters
+    pipeline = signature(DirectAnswerPipeline).parameters
     retriever = signature(Retriever).parameters
-    return {'source': 'source_defaults', 'pipeline': KAGIterativePipeline.__name__,
-            'planner': KAGIterativePlanner.__name__,
-            'top_k': executor['top_k'].default, 'expand': executor['expand'].default,
-            'max_evidence_chars': executor['max_evidence_chars'].default,
-            'max_iteration': signature(KAGIterativePipeline).parameters['max_iteration'].default,
+    return {'source': 'source_defaults', 'pipeline': DirectAnswerPipeline.__name__,
+            'top_k': pipeline['top_k'].default, 'expand': pipeline['expand'].default,
+            'max_evidence_chars': pipeline['max_evidence_chars'].default,
             'search_k': retriever['search_k'].default, 'expansion_limit': retriever['expansion_limit'].default,
             # HTTP embeddings and Retriever both enforce this dimension, not a provider measurement.
             'required_vector_dimensions': 3072}
@@ -90,11 +85,11 @@ def validate_config(value):
                 or model['state'] == 'NOT_CONFIGURED' and (model['model'] is not None or model['endpoint'] is not None)):
             raise ApiFailure('INVALID_NATIVE_RESULT')
     solver = value['solver']
-    if solver is not None and (not shape(solver, 'source pipeline planner top_k expand max_evidence_chars max_iteration search_k expansion_limit required_vector_dimensions')
-            or solver['source'] != 'source_defaults' or solver['pipeline'] != 'KAGIterativePipeline'
-            or solver['planner'] != 'KAGIterativePlanner' or type(solver['expand']) is not bool
+    if solver is not None and (not shape(solver, 'source pipeline top_k expand max_evidence_chars search_k expansion_limit required_vector_dimensions')
+            or solver['source'] != 'source_defaults' or solver['pipeline'] != 'DirectAnswerPipeline'
+            or type(solver['expand']) is not bool
             or any(type(solver[key]) is not int or not 1 <= solver[key] <= 1000000 for key in
-                   ('top_k', 'max_evidence_chars', 'max_iteration', 'search_k', 'expansion_limit', 'required_vector_dimensions'))
+                   ('top_k', 'max_evidence_chars', 'search_k', 'expansion_limit', 'required_vector_dimensions'))
             or solver['top_k'] > solver['search_k']):
         raise ApiFailure('INVALID_NATIVE_RESULT')
     return value
@@ -134,6 +129,8 @@ def _files(root):
 
 
 def _dataset(path, root):
+    from kag.evaluation.dataset import load_dataset
+
     row = {'id': path.relative_to(root).as_posix(), 'dataset_status': None,
            'dataset_eligibility': 'BLOCKED', 'reason': 'INVALID_DATASET',
            'dataset_hash': None, 'record_count': None, 'official_benchmark': False}
@@ -156,7 +153,7 @@ def _dataset(path, root):
                    record_count=len(dataset.records), official_benchmark=official,
                    dataset_eligibility='ELIGIBLE' if eligible else 'BLOCKED',
                    reason=None if eligible else 'PROVISIONAL_DATASET' if status == 'PROVISIONAL' else 'NO_GOLD')
-    except (OSError, ValueError, ValidationError, KeyError, RecursionError):
+    except (OSError, ValueError, KeyError, RecursionError):
         pass
     return row
 
@@ -183,7 +180,7 @@ def dataset_catalog(root=None):
 
 def dataset_readiness(root, release):
     """Gold identity coverage only; neither solver applicability nor execution proof."""
-    from kag.evaluation.dataset import strict_json
+    from kag.evaluation.dataset import load_dataset, strict_json
     result=dataset_catalog(root)
     identities={'document':set(),'unit':set(),'sign':set()}
     for record in release.records:
@@ -205,7 +202,7 @@ def dataset_readiness(root, release):
             values=[]
             for line in lines:
                 try:value=strict_json(line.decode('utf-8'))
-                except (ValueError,UnicodeError,ValidationError):value={}
+                except (ValueError,UnicodeError):value={}
                 values.append(value if type(value) is dict else {})
             missing={channel:set() for channel in identities};gold_count=0
             for value in values:
@@ -235,7 +232,7 @@ def dataset_readiness(root, release):
             if row['dataset_status']=='FROZEN' and not row['eligible_count']:
                 row.update(dataset_eligibility='BLOCKED',reason='NO_ELIGIBLE_QUESTIONS')
             _smoke_results(path,dataset,release,row['smoke'])
-        except (OSError,ValueError,ValidationError,KeyError,RecursionError):pass
+        except (OSError,ValueError,KeyError,RecursionError):pass
     return result
 
 

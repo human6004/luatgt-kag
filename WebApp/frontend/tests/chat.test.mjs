@@ -79,7 +79,7 @@ const abstained = { ...unavailable, id: "fixture-abstained", state: "KAG_ABSTAIN
 const abstainedMessage =
   "Hiện tôi chưa tìm được đủ căn cứ pháp lý được xác minh để trả lời chính xác câu hỏi này.";
 const unavailableMessage =
-  "Dịch vụ tra cứu pháp luật hiện đang gặp sự cố hoặc chưa sẵn sàng. Vui lòng thử lại sau.";
+  "Trợ lý chưa xử lý xong câu hỏi. Bạn có thể thử lại hoặc hỏi cụ thể hơn.";
 let requests, tokens, expired;
 const response = (body, status = 200) => new Response(JSON.stringify(body), { status });
 beforeEach(() => {

@@ -52,6 +52,13 @@ class RetrieveAdmissionTests(unittest.IsolatedAsyncioTestCase):
             await self.admit(**arguments)
         self.assertEqual((caught.exception.status, caught.exception.code), (status, code))
 
+    def test_query_accepts_optional_search_queries(self):
+        payload = {'user_id': native.USER, 'message': native.QUESTION, 'context_id': '',
+                   'schema_contract': native.IDENTITY, 'search_queries': ['Không có giấy phép lái xe mô tô', 'Điều khiển ô tô không có giấy phép lái xe']}
+        self.assertEqual(contract.QueryV1Request.from_dict(payload).search_queries, payload['search_queries'])
+        with self.assertRaises(contract.ApiFailure):
+            contract.QueryV1Request.from_dict({**payload, 'search_queries': ['xe máy'] * 4})
+
     async def test_inspect_service_only_admission_without_delegated_uuid(self):
         with patch.object(security, 'authorize', wraps=security.authorize) as authorization:
             try:
@@ -306,7 +313,7 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
         response = await self.post()
         self.assertEqual(response.status_code,200,response.text)
         citation = self.citation()
-        self.assertEqual(response.json(),{'answer':'Căn cứ nguồn đã xác nhận:\n'+native.TEXT,
+        self.assertEqual(response.json(),{'answer':native.DIRECT_TEXT,'mode':'answer',
             'citations':[{'doc_id':'document-1','unit_id':'unit-1','sign_id':None,
                 'evidence_id':citation.evidence_id,'field':'text','start':0,'end':len(native.TEXT),'quote':native.TEXT}]})
         self.assertEqual(response.headers['x-kag-release-id'],'synthetic-release')
@@ -316,10 +323,11 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(self.reader.closed and self.made[0].closed)
         self.assertFalse(self.supervisor.busy)
 
-    async def test_real_native_abstention_never_becomes_success(self):
+    async def test_real_native_abstention_has_reason_without_answer(self):
         with self.fixture.synthetic(abstain=True):
             response = await self.post()
-        self.error(response,503,'KAG_ABSTAINED','abstained')
+        self.assertEqual(response.status_code,200)
+        self.assertEqual(response.json(),{'state':'KAG_ABSTAINED','reason':'no_source'})
         self.assertTrue(self.reader.closed)
 
     async def test_missing_bearer_before_factory(self):
@@ -471,9 +479,10 @@ class AppTests(unittest.IsolatedAsyncioTestCase):
         with self.after_core(lambda:self.reader.vector_indexes[0].update(state='POPULATING')):
             self.error(await self.post(),502,'SOURCE_VALIDATION_FAILED')
 
-    async def test_source_catalog_tamper_after_core_fails(self):
+    async def test_source_catalog_tamper_is_rejected_on_next_request(self):
         with self.after_core(lambda:(self.fixture.root/'source-catalog.json').write_bytes(b'{}')):
-            self.error(await self.post(),502,'SOURCE_VALIDATION_FAILED')
+            self.assertEqual((await self.post()).status_code,200)
+        self.error(await self.post(),503,'NOT_READY')
 
     async def test_release_artifact_changed_after_core_conflict(self):
         with self.after_core(lambda:(self.fixture.root/'release.json').write_bytes(b'{}')):
@@ -1192,13 +1201,14 @@ class RetrieveHTTPTests(unittest.IsolatedAsyncioTestCase):
             finally: restore()
         self.assertEqual(self.made,[])
 
-    async def test_artifact_and_catalog_drift_after_retrieval_abort(self):
+    async def test_catalog_drift_after_retrieval_blocks_next_request(self):
         original=runtime.run_retrieve
         async def retrieve(*args):
             items=await original(*args)
             (self.fixture.root/'source-catalog.json').write_bytes(b'{}')
             return items
-        with patch.object(runtime,'run_retrieve',retrieve): self.error(await self.post(),503,'NOT_READY')
+        with patch.object(runtime,'run_retrieve',retrieve): self.assertEqual((await self.post()).status_code,200)
+        self.error(await self.post(),503,'NOT_READY')
         self.assertTrue(self.reader.closed)
 
     async def test_selected_release_swap_after_retrieval_abort(self):

@@ -555,7 +555,7 @@ else:
     def test_artifact_change_after_load_cannot_change_immutable_release(self):
         release = self.load()
         (self.root/'source-catalog.json').write_bytes(b'{}')
-        self.failure(lambda:self.verify(release=release),'NOT_READY')
+        self.failure(lambda:self.api()._unchanged(release),'NOT_READY')
 
     def test_backend_identity_checked_again_after_readback(self):
         original = self.fixture.database_metadata

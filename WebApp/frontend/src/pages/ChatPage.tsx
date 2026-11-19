@@ -23,6 +23,8 @@ interface Message {
   role: "user" | "bot";
   text: string;
   status?: string;
+  mode?: string;
+  understoodQuestion?: string;
   citations?: LegalReference[];
 }
 
@@ -142,6 +144,8 @@ export default function ChatPage() {
         {
           turnId: row.id,
           role: "bot",
+          mode: row.mode,
+          understoodQuestion: row.understoodQuestion,
           text: view.answer,
           status: view.status,
           citations: view.citations.map((c) => ({
@@ -245,13 +249,31 @@ export default function ChatPage() {
     else updateUrl({ cite: `${turnId}:${index}` });
   }
 
-  function answerText(message: Message) {
+  function answerText(message: Message, text = message.text) {
     const citations = message.citations ?? [];
     const prefix = citationAnswerPrefix(
-      message.text,
+      text,
       citations.map((citation) => citation.raw),
     );
-    if (prefix === undefined) return message.text;
+    if (prefix === undefined) {
+      if (!citations.length || !/\[\d+\]/.test(text)) return text;
+      return text.split(/(\[\d+\])/g).map((part, index) => {
+        const reference = /^\[(\d+)\]$/.exec(part);
+        const citationIndex = reference ? Number(reference[1]) - 1 : -1;
+        const citation = citations[citationIndex];
+        return citation ? (
+          <button
+            type="button"
+            key={index}
+            onClick={(event) => openCitation(message.turnId, citationIndex, event.currentTarget)}
+            aria-label={"Trích dẫn " + (citationIndex + 1) + " – " + citation.label}
+            className="mx-1 inline-block text-sm font-semibold text-accent-strong underline"
+          >
+            {part}
+          </button>
+        ) : part;
+      });
+    }
     return (
       <>
         {prefix}
@@ -282,6 +304,35 @@ export default function ChatPage() {
         ))}
       </>
     );
+  }
+
+  function answerBody(message: Message) {
+    if (message.mode === "cases") {
+      return message.text.split("\n\n").map((group, index) => {
+        const headingEnd = group.indexOf("\n");
+        if (headingEnd < 0) return <p key={index}>{answerText(message, group)}</p>;
+        return (
+          <section key={index}>
+            <h3 className="font-semibold">{group.slice(0, headingEnd)}</h3>
+            <p>{answerText(message, group.slice(headingEnd + 1))}</p>
+          </section>
+        );
+      });
+    }
+    if (message.mode === "related") {
+      const [sources, ...notes] = message.text.split("\n\n");
+      return (
+        <>
+          <ul className="list-disc pl-5">
+            {sources.split("\n").map((source, index) => (
+              <li key={index}>{answerText(message, source)}</li>
+            ))}
+          </ul>
+          {notes.map((note, index) => <p key={index}>{answerText(message, note)}</p>)}
+        </>
+      );
+    }
+    return <p>{answerText(message)}</p>;
   }
 
   function messageAction(action: string, message: Message, question: string) {
@@ -644,16 +695,32 @@ export default function ChatPage() {
                           <LogoMark size={15} />
                         </span>
                         Trợ lý LuậtGT
-                        <span className="font-normal text-muted">
-                          · {m.citations?.length ?? 0} trích dẫn
-                        </span>
+                        {m.citations && m.citations.length > 0 && (
+                          <span className="font-normal text-muted">
+                            · {m.citations.length} trích dẫn
+                          </span>
+                        )}
                       </div>
                       <p role="status" className="text-xs text-muted">
                         {m.status}
                       </p>
-                      <p className="font-sans text-[16px] leading-[1.7] text-navy whitespace-pre-wrap break-words">
-                        {answerText(m)}
-                      </p>
+                      {m.understoodQuestion && (
+                        <p className="text-sm text-muted">Hiểu là: {m.understoodQuestion}</p>
+                      )}
+                      <div className="space-y-3 font-sans text-[16px] leading-[1.7] text-navy whitespace-pre-wrap break-words">
+                        {answerBody(m)}
+                      </div>
+                      {m.citations && m.citations.length > 0 && /\[\d+\]/.test(m.text) && (
+                        <details className="mt-3 text-sm text-navy">
+                          <summary className="cursor-pointer font-medium">Nguyên văn trích dẫn</summary>
+                          {m.citations.map((citation, index) => (
+                            <blockquote key={index} className="mt-2 whitespace-pre-wrap border-l border-line pl-3">
+                              <span className="font-medium">[{index + 1}] {citation.label}</span>
+                              {"\n"}{citation.raw.quote}
+                            </blockquote>
+                          ))}
+                        </details>
+                      )}
                       {m.citations && m.citations.length > 0 && (
                         <div className="mt-3 flex flex-wrap gap-2">
                           {m.citations.map((citation, referenceIndex) => {

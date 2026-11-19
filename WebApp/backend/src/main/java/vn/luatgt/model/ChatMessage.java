@@ -14,9 +14,11 @@ public class ChatMessage {
     @Column(columnDefinition="text",insertable=false,updatable=false) public String contextSummary;
     @Column(insertable=false,updatable=false) public UUID contextThrough;
     @Column(columnDefinition="longtext") public String question;
+    @Column(columnDefinition="text") public String understoodQuestion;
     @Column(columnDefinition="longtext") public String answer;
     @Column(columnDefinition="longtext") public String citations = "[]";
     public String state;
+    @Column(length=32) public String mode;
     public String feedback;
     @Column(length=1000) public String feedbackNote;
     public boolean resolved;

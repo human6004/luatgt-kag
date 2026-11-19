@@ -1,10 +1,64 @@
 """Question embedding -> vector targets -> exact graph evidence, no Solver."""
 import math
 import re
+from functools import cached_property
 
 from kag.builder.codec import canonical_json, decode_properties
 from kag.vector_contract import TARGETS, valid_vector as _valid_vector
 from kag.retriever.neo4j import APPROVED, positive_limit
+
+
+def unit_chain(identity, lookup):
+    doc_id, parent = lookup(identity)
+    seen = {identity}
+    while parent and parent not in seen:
+        source = lookup(parent)
+        if source is None or source[0] != doc_id:
+            break
+        seen.add(parent)
+        yield parent
+        parent = source[1]
+
+
+def _article_references(text, metadata):
+    from kag.legal_prompts import _reference_bindings, document_number_matches
+    article = metadata.get('dieu_number')
+    text = re.sub(r'\bĐiều\s+này\b',f'Điều {article}',' '.join(text.split()),flags=re.I)
+    return {(clause, point) for section in text.split(';')
+            for number, reference, clause, point in _reference_bindings(section)
+            if clause and (reference is None or reference == f'điều {article}')
+            and (number is None or document_number_matches(metadata,number))}
+
+
+def _refers_to_clause(references, metadata):
+    clause = 'khoản '+metadata['khoan_number']
+    letter = metadata.get('diem_letter')
+    points = {point for parent,point in references if parent == clause}
+    if letter:
+        return 'điểm '+letter in points or points == {None}
+    return bool(points)
+
+
+def _same_article_referrers(records, selected):
+    targets = {}
+    for record in selected:
+        metadata = record.metadata
+        article = metadata.get('dieu_number')
+        clause = metadata.get('khoan_number')
+        if article and clause and metadata.get('unit_type') in ('Khoan', 'Diem'):
+            targets.setdefault((record.doc_id, article), []).append(record)
+    matched = {}
+    for record in records:
+        metadata = record.metadata
+        article = metadata.get('dieu_number')
+        sources = targets.get((record.doc_id, article))
+        if not sources or metadata.get('unit_type') != 'Khoan' or not metadata.get('khoan_number'):
+            continue
+        references = _article_references(record.source_text,metadata)
+        for source in sources:
+            if record.entity_id != source.entity_id and _refers_to_clause(references,source.metadata):
+                matched.setdefault((source.entity_type,source.entity_id), []).append((record.entity_type,record.entity_id))
+    return matched
 
 
 class Retriever:
@@ -46,6 +100,24 @@ class Retriever:
         if set(result)!=set(keys):
             raise ValueError('exact evidence readback incomplete')
         return result
+
+    @cached_property
+    def _units(self):
+        return {r.entity_id:r for r in self.source_records
+                if r.entity_type == self.namespace+'.LegalUnit' and r.field == 'text'}
+
+    def _unit_link(self, identity):
+        record = self._units.get(identity)
+        if record is not None:
+            return record.doc_id, record.metadata.get('parent_id')
+
+    def same_article_referrers(self, evidence, *, priority=()):
+        priority = set(priority)
+        selected = [self._units[item['unit_id']] for item in evidence
+                    if item['entity_type'] == self.namespace+'.LegalUnit'
+                    and item['unit_id'] in self._units and (item['score'] is not None
+                         or (item['entity_type'],item['unit_id']) in priority)]
+        return _same_article_referrers(self._units.values(), selected)
 
     def _exact_keys(self, question, top_k):
         if not self.source_records:
@@ -90,28 +162,16 @@ class Retriever:
         wanted = dict(zip(('dieu_number','khoan_number','diem_letter'),
                           (value.split(' ',1)[1] if value else None for value in (article,clause,point))))
         kind = 'Diem' if point else 'Khoan' if clause else 'Dieu'
-        units = {r.entity_id:r for r in self.source_records
-                 if r.entity_type == self.namespace+'.LegalUnit' and r.field == 'text'}
-        matches = [r for r in units.values() if (r.metadata.get('so_hieu') or '').casefold() == document.casefold()
+        matches = [r for r in self._units.values() if (r.metadata.get('so_hieu') or '').casefold() == document.casefold()
                    and r.metadata.get('unit_type') == kind
                    and all(str(r.metadata.get(key) or '').casefold() == (value or '') for key,value in wanted.items())]
         if len(matches) != 1:
             return []
-        record, keys = matches[0], []
-        while record is not None:
-            key = record.entity_type,record.entity_id
-            if key in keys or len(keys) >= top_k:
-                return []
-            keys.append(key)
-            parent = record.metadata.get('parent_id')
-            if not parent:
-                return keys
-            record = units.get(parent)
-            if record is None or record.doc_id != matches[0].doc_id:
-                return []
-        return []
+        record = matches[0]
+        chain = [record.entity_id, *unit_chain(record.entity_id, self._unit_link)]
+        return [(record.entity_type, identity) for identity in chain] if len(chain) <= top_k else []
 
-    def retrieve(self,question,*,top_k=10,expand=False):
+    def retrieve(self,question,*,top_k=10,expand=False,include_parents=False):
         positive_limit(top_k,self.search_k)
         if not isinstance(question,str) or not question.strip() or type(expand) is not bool:
             raise ValueError('nonempty exact question and boolean expansion required')
@@ -126,7 +186,14 @@ class Retriever:
             # Retain existing context for applicability/conflict checks; anchors add no fabricated score.
             known = {(item['entity_type'],item['entity_id']) for item in evidence}
             anchors = self._read_evidence(exact, {}, expand)
-            return [item for item in anchors if (item['entity_type'],item['entity_id']) not in known] + evidence
+            evidence = [item for item in anchors if (item['entity_type'],item['entity_id']) not in known] + evidence
+        if include_parents:
+            unit_type = self.namespace+'.LegalUnit'
+            known = {(item['entity_type'],item['entity_id']) for item in evidence}
+            parents = {(kind, parent) for kind, identity in known if kind == unit_type and identity in self._units
+                       for parent in unit_chain(identity, self._unit_link)}
+            if parents - known:
+                evidence.extend(self._hydrate(parents - known).values())
         return evidence
 
     def retrieve_vector(self,vector,*,top_k=10,expand=False):

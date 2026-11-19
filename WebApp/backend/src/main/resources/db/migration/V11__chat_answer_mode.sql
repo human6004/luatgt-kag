@@ -1,0 +1,1 @@
+ALTER TABLE chat_messages ADD COLUMN mode VARCHAR(32) NULL;

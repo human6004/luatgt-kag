@@ -43,7 +43,7 @@ class SampleQueryTests(unittest.TestCase):
 
     def test_unapproved_limits_deny(self):
         from kag.http_api.provider_budget import ProviderBudget
-        for limits in ({'embedding':4,'chat':7},{'embedding':3,'chat':8},{'embedding':True,'chat':7}):
+        for limits in ({'embedding':5,'chat':7},{'embedding':3,'chat':8},{'embedding':True,'chat':7}):
             with self.assertRaises(Exception):ProviderBudget(self.path,embedding_url='https://a/embeddings',
                 embedding_model='a',chat_url='https://b/chat/completions',chat_model='b',limits=limits)
 
@@ -264,7 +264,7 @@ class SampleQueryProofTests(unittest.TestCase):
             self.assertEqual(self.budget().counts(),{'embedding':0,'chat':0})
         asyncio.run(exercise())
 
-    def test_real_iterative_sdk_api_query_uses_four_calls_and_exact_cache(self):
+    def test_real_direct_sdk_api_query_uses_one_call_and_exact_cache(self):
         from kag.http_api import artifacts,runtime
         from kag.http_api.app import create_app,ApiSettings
         from kag.http_api.security import ServiceSecrets
@@ -277,21 +277,20 @@ class SampleQueryProofTests(unittest.TestCase):
         raw=json.dumps(cache).encode();(self.fx.root/'query-embedding.json').write_bytes(raw)
         self.proof['cache_sha256']=hashlib.sha256(raw).hexdigest();self.seal()
         source=next(r for r in self.fx.release.records if r.entity_type.endswith('.LegalUnit'))
-        responses=[{'executor':{'name':name,'arguments':{} if name=='Finish' else {'query':question},'thought':'offline'}}
-                   for name in ('Retriever','Deduce')]
-        responses.append(dict(abstained=False,applicability='supported',effectivity='supported',conflict='none',
-            selections=[dict(evidence_id=source.evidence_id,field='text',start=0,end=len(source.source_text))],support_selections=[]))
-        responses.append({'executor':{'name':'Finish','arguments':{},'thought':'offline'}})
+        answer='Văn bản có nội dung tại đơn vị được trích dẫn'
         seen=[]
         wrong_model=[True]
         def reply(request):
             self.assertEqual(str(request.url),self.module.GATEWAY+'/chat/completions')
             self.assertEqual(request.headers['x-kag-provider-token'],'t'*43)
             body=json.loads(request.content);self.assertEqual(body['model'],self.module.CHAT_MODEL)
+            sources=json.loads(body['messages'][-1]['content'])['sources']
+            index=next(item['n'] for item in sources if item['quote']==source.source_text)
+            message={'mode':'answer','answer':f'{answer} [{index}].','citations':[index]}
             seen.append(self.budget().counts()['chat'])
             mismatch=wrong_model.pop() if wrong_model else False
             return httpx.Response(200,json=dict(id='offline',object='chat.completion',created=0,model='wrong-model' if mismatch else self.module.CHAT_MODEL,
-                choices=[dict(index=0,message=dict(role='assistant',content=json.dumps(responses[0] if mismatch else responses.pop(0),ensure_ascii=False)),finish_reason='stop')],
+                choices=[dict(index=0,message=dict(role='assistant',content=json.dumps(message,ensure_ascii=False)),finish_reason='stop')],
                 usage=dict(prompt_tokens=1,completion_tokens=1,total_tokens=2)))
         def integrity(release,pin,user,reader):
             self.assertIs(reader,self.fx)
@@ -316,10 +315,9 @@ class SampleQueryProofTests(unittest.TestCase):
                 response=await client.post('/v1/query',headers=headers,json=dict(message=question,user_id=USER,context_id='',schema_contract=IDENTITY))
                 self.assertEqual(response.status_code,200,response.text)
                 self.assertEqual(response.json()['citations'][0]['quote'],source.source_text)
-                self.assertEqual(response.json()['answer'],'Căn cứ nguồn đã xác nhận:\n'+source.source_text)
+                self.assertEqual(response.json()['answer'],f'{answer} [1].')
                 ready=await client.get('/v1/health?mode=ready&capability=query-v1',headers=headers)
-                self.assertEqual(ready.status_code,503,ready.text)
-                self.assertEqual(ready.json()['checks']['runtime'],'blocked')
+                self.assertEqual(ready.status_code,200,ready.text)
         with patch.object(runtime,'_today',return_value=AS_OF),patch.object(runtime,'_new_reader',return_value=self.fx), \
              patch.object(runtime,'verify_sample_backend',side_effect=integrity), \
              patch.object(self.module,'verify_gateway'), \
@@ -327,7 +325,7 @@ class SampleQueryProofTests(unittest.TestCase):
              patch.object(self.module.httpx,'AsyncHTTPTransport',side_effect=lambda **kw:httpx.MockTransport(reply)), \
              patch.object(runtime,'_new_embedding',side_effect=AssertionError('Exact cached query must not embed')):
             asyncio.run(exercise())
-        self.assertEqual(seen,[1,2,3,4]);self.assertEqual(self.budget().counts(),{'embedding':0,'chat':4})
+        self.assertEqual(seen,[1,2]);self.assertEqual(self.budget().counts(),{'embedding':0,'chat':2})
         metadata=json.loads(Path('/tmp/sample-provider-responses.json').read_bytes())
         self.assertTrue(metadata)
         self.assertTrue(all('content' not in row for row in metadata))

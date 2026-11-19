@@ -159,12 +159,14 @@ class LockBindingTests(unittest.TestCase):
                              backend_proof=proof, backend_session=self.session)
             self.assertEqual(lock.path.name, hashlib.sha256(b'physical').hexdigest()+'.lock')
             lock.acquire()
+            inode = lock.path.stat().st_ino
             try:
                 other = GraphLock(root, 'physical', {'scope':'PRODUCTION'},
                                   backend_proof=proof, backend_session=self.session)
                 with self.assertRaises(RunBlocked): other.acquire()
             finally: lock.release()
-            self.assertFalse(lock.path.exists())
+            self.assertEqual(lock.path.stat().st_ino, inode)
+            self.assertEqual(lock.path.read_bytes(), b'')
 
 
 class DockerRouteTests(unittest.TestCase):

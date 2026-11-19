@@ -116,7 +116,7 @@ def _parameters(operation,value,*,database=DATABASE,namespace=NAMESPACE,dimensio
         _identity(value['index'])
         if value['label'] not in labels or not valid_vector(value['vector'],dimension):
             raise BrokerFailure()
-        _integer(value['k'],1,10)
+        _integer(value['k'],1,30 if production else 10)
     else:
         _exact(value,('keys','predicates','labels','limit'))
         _keys(value['keys'],labels=labels,maximum=1000 if production else None)

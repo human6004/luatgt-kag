@@ -134,6 +134,14 @@ class BrokerTests(unittest.TestCase):
             ('databases',{'database':'vietroadtraffic'}),('reader_identity',{})):
             with self.subTest(operation=operation):
                 self.assertEqual(self.read(operation,parameters)['rows'],[{'fixture':operation}])
+    def test_production_vector_reads_accept_chat_top_k(self):
+        parameters = {'index':'unit-text','label':'VietRoadTraffic.LegalUnit','k':30,'vector':VECTOR}
+        broker._parameters('retrieval_vector',parameters,database=DB_ID,namespace='VietRoadTraffic',
+                           dimension=3072,production=True)
+        with self.assertRaises(broker.BrokerFailure):
+            broker._parameters('retrieval_vector',{**parameters,'k':31},database=DB_ID,
+                               namespace='VietRoadTraffic',dimension=3072,production=True)
+
     def test_vector_requires_exact_contract_index_and_native_3072_vector(self):
         parameters = {'index':'unit-text','label':'VietRoadTraffic.LegalUnit','k':10,'vector':VECTOR}
         self.assertEqual(self.read('retrieval_vector',parameters)['rows'],[{'fixture':'retrieval_vector'}])

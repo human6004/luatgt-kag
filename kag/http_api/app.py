@@ -252,6 +252,9 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
 
     @asynccontextmanager
     async def lifespan(application):
+        if not (settings.secrets.query_tokens or settings.secrets.inspect_tokens):
+            yield
+            return
         from .runtime import RuntimeSupervisor, initialize_runtime
         application.state.runtime_supervisor = RuntimeSupervisor()
         application.state.runtime_supervisor.load_llm_config(settings.secrets)
@@ -272,7 +275,7 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
         restore_serving(application)
         application.state.runtime_settings = application.state.runtime_supervisor.restore_llm_runtime(
             application.state.runtime_settings, application.state.serving_release, application.state.provider_test_policy)
-        if settings.secrets.query_tokens or settings.secrets.inspect_tokens:observe_serving()
+        observe_serving()
         try:
             yield
         finally:
@@ -317,7 +320,7 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
     def worker_request(path,request,body=None,*,benchmark=False,stop=False):
         import json
         from urllib.request import Request as Outgoing,build_opener,ProxyHandler
-        from urllib.error import HTTPError
+        from urllib.error import HTTPError,URLError
         from kag.verify import _NoRedirect
         values=request.headers.getlist('x-openspg-session')
         token=(settings.secrets.benchmark_write_tokens if benchmark and (body is not None or stop) else
@@ -339,8 +342,13 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                 code=failure.get('error',{}).get('code') or failure.get('detail')
                 if code=='LOCK':code='CONFIG_BUSY'
             except Exception:code=None
-            raise ApiFailure(code if code in ('CONFIG_BUSY','CONFIG_CONFLICT','SCOPE_DENIED','RELEASE_MISMATCH','NOT_READY',
-                'INVALID_REQUEST','REQUEST_TOO_LARGE','RESULT_LIMIT_EXCEEDED') else 'NOT_READY') from None
+            if not benchmark and error.code>=500 and code not in ('NOT_READY','RESULT_LIMIT_EXCEEDED','SOURCE_VALIDATION_FAILED'):
+                raise ApiFailure('BACKEND_UNAVAILABLE') from None
+            raise ApiFailure(code if code in ('CONFIG_BUSY','CONFIG_CONFLICT','SCOPE_DENIED','DELEGATION_DENIED','RELEASE_MISMATCH','NOT_READY',
+                'INVALID_REQUEST','REQUEST_TOO_LARGE','RESULT_LIMIT_EXCEEDED','SOURCE_VALIDATION_FAILED') else 'NOT_READY') from None
+        except URLError:
+            if benchmark:raise
+            raise ApiFailure('BACKEND_UNAVAILABLE') from None
 
     def sample_guard(request, release, runtime_settings):
         if (time.monotonic() >= request.state.request_deadline
@@ -516,7 +524,7 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
             raise ApiFailure('INVALID_REQUEST')
         body=artifacts._json(await bounded_body(request))
         artifacts._keys(body,('message','top_k','expand'))
-        contract.retrieval_options(dict(top_k=body['top_k'],expand=body['expand']))
+        contract.retrieval_options(dict(top_k=body['top_k'],expand=body['expand']),limit=10)
         if not contract._text(body['message']) or not body['message'].strip() or contract.utf16_units(body['message'])>4000:
             raise ApiFailure('INVALID_REQUEST')
         supervisor=app.state.runtime_supervisor
@@ -1050,10 +1058,11 @@ def create_app(settings: ApiSettings | None = None, runtime_factory=None, *, ena
                     identity()
                     try:
                         artifacts._backend(instance.reader,release)
-                        artifacts._readback(instance.reader,release.records,artifacts._json(release.contract_bytes))
                         _verify_retrieve_items(result,release,instance.reader)
+                        keys={(item['entity_type'],item['entity_id']) for item in result}
+                        records=[r for r in release.records if (r.entity_type,r.entity_id) in keys] if settings.production else release.records
+                        artifacts._readback(instance.reader,records,artifacts._json(release.contract_bytes))
                         artifacts._backend(instance.reader,release)
-                        artifacts._unchanged(release)
                     except artifacts.ArtifactFailure as exc:
                         raise ApiFailure('BACKEND_UNAVAILABLE' if exc.state is artifacts.VerificationState.UNAVAILABLE
                                          else 'SOURCE_VALIDATION_FAILED') from None

@@ -85,6 +85,7 @@ function validateServingOperation(value: ServingOperation): ServingOperation {
   return value;
 }
 export const servingReasons: Record<string, string> = {
+  DELEGATION_DENIED: "Đăng nhập lại OpenSPG rồi tải lại danh sách.",
   GRAPH_REQUIRED: "Chọn một đồ thị rồi bấm Dùng cho trợ lý.",
   SOURCE_MISSING: "Bản nguồn của đồ thị chưa đầy đủ. Chọn lại phiên dựng và kiểm tra nguồn đi kèm.",
   SOURCE_NOT_PUBLISHED:
@@ -425,12 +426,10 @@ export type KagConfiguration = {
   };
   solver: null | {
     source: "source_defaults";
-    pipeline: "KAGIterativePipeline";
-    planner: "KAGIterativePlanner";
+    pipeline: "DirectAnswerPipeline";
     top_k: number;
     expand: boolean;
     max_evidence_chars: number;
-    max_iteration: number;
     search_k: number;
     expansion_limit: number;
     required_vector_dimensions: number;
@@ -715,7 +714,7 @@ function retrievalValues(value: unknown): value is ChatRetrievalValues {
     shape(v, ["top_k", "expand"]) &&
     Number.isInteger(v.top_k) &&
     v.top_k >= 1 &&
-    v.top_k <= 10 &&
+    v.top_k <= 30 &&
     typeof v.expand === "boolean"
   );
 }
@@ -827,23 +826,19 @@ export async function loadKagConfiguration(signal?: AbortSignal): Promise<KagCon
     (!shape(solver, [
       "source",
       "pipeline",
-      "planner",
       "top_k",
       "expand",
       "max_evidence_chars",
-      "max_iteration",
       "search_k",
       "expansion_limit",
       "required_vector_dimensions",
     ]) ||
       solver.source !== "source_defaults" ||
-      solver.pipeline !== "KAGIterativePipeline" ||
-      solver.planner !== "KAGIterativePlanner" ||
+      solver.pipeline !== "DirectAnswerPipeline" ||
       typeof solver.expand !== "boolean" ||
       [
         solver.top_k,
         solver.max_evidence_chars,
-        solver.max_iteration,
         solver.search_k,
         solver.expansion_limit,
         solver.required_vector_dimensions,
@@ -972,7 +967,9 @@ function validateBuilder(value: BuilderStatus): BuilderStatus {
           !["IDLE", "COMPLETE", ...(extended ? ["ABANDONED", "CLEARED"] : [])].includes(
             value.state,
           )) ||
-        (value.actions.resume && value.state !== "STOPPED")
+        (value.actions.resume &&
+          value.state !== "STOPPED" &&
+          !(extended && value.state === "BLOCKED" && value.error_code === "UNCERTAIN_WRITE"))
       : value.actions.build !== ["IDLE", "COMPLETE"].includes(value.state) ||
         value.actions.resume !== (value.state === "STOPPED")) ||
     (extended && value.actions.abandon !== (value.state === "STOPPED")) ||
@@ -1813,14 +1810,15 @@ export function builderIssue(code: string | null) {
     CLEAR_UNCERTAIN: "Chưa xác định xóa đã kết thúc. Nhờ quản trị kiểm tra trước khi thử lại.",
     TARGET_MODEL:
       "Dữ liệu tìm kiếm không khớp mô hình đã lưu. Chọn đồ thị trống hoặc dùng đúng mô hình đã dựng đồ thị.",
-    FORBIDDEN: "Đăng nhập lại OpenSPG, kiểm quyền sở hữu đồ thị rồi tải lại danh sách.",
+    FORBIDDEN: "Kiểm tra quyền sở hữu đồ thị trên OpenSPG rồi tải lại danh sách.",
     NOT_FOUND: "Đồ thị không còn thuộc tài khoản này. Tải lại danh sách và chọn lại.",
     CONNECTION_NOT_CONFIGURED:
       "Nơi lưu đồ thị chưa khớp cấu hình hệ thống. Nhờ quản trị kiểm tra kết nối.",
     SERVING_PROTECTED: "Đồ thị đang dùng cho trợ lý. Chọn đồ thị trống khác để dựng.",
     LOCK: "Đồ thị đang dựng hoặc có thao tác khác. Dừng dựng trước rồi tải lại.",
     UNCERTAIN_WRITE:
-      "Lần dựng trước bị gián đoạn, chưa xác định đã ghi xong. Nhờ quản trị kiểm tra trước khi tiếp tục.",
+      "Lần ghi trước bị gián đoạn. Phần mềm cần đọc lại đợt ghi dở trước khi tiếp tục.",
+    TRANSPORT: "Mất kết nối đến đồ thị. Kiểm tra kết nối rồi bấm Tiếp tục.",
     LOCK_MOUNT: "Dịch vụ dựng chưa được cài đặt đầy đủ. Nhờ quản trị kiểm tra rồi thử lại.",
     INTEGRITY:
       "Dữ liệu nguồn hoặc điểm lưu đã thay đổi. Kiểm tra đúng phiên bản dữ liệu rồi tải lại.",
@@ -2258,9 +2256,11 @@ export function inspectionError(error: unknown) {
   )
     return error.message;
   if (
-    status === 409 &&
     error instanceof ApiError &&
-    error.message === "Đăng nhập lại OpenSPG và kiểm quyền sở hữu dự án"
+    (([403, 409].includes(status) && error.message === servingReasons.DELEGATION_DENIED) ||
+      (status === 503 &&
+        error.message === "Dịch vụ dựng đồ thị không phản hồi, khởi động lại kag-builder") ||
+      (status === 403 && error.message === builderIssue("FORBIDDEN")))
   )
     return error.message;
   if (

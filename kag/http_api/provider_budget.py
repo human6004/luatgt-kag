@@ -183,7 +183,7 @@ class ProviderBudget:
         if (type(development_only) is not bool or set(self.limits)!={'embedding','chat'}
                 or (self.limits!={'embedding':None,'chat':None} if development_only else
                     any(type(n) is not int or not 1<=n<=maximum
-                        for n,maximum in ((self.limits['embedding'],3),(self.limits['chat'],7))))
+                        for n,maximum in ((self.limits['embedding'],4),(self.limits['chat'],7))))
                 or type(in_place) is not bool):
             raise BudgetError('PROVIDER_BINDING_INVALID')
         self.in_place = in_place
@@ -383,19 +383,3 @@ class _AsyncTransport(httpx.AsyncBaseTransport):
 
     async def aclose(self):
         await self.transport.aclose()
-
-
-def disable_instance_retries(pipeline, llm):
-    """Unwrap only this request's methods; preserve upstream classes and five iterations."""
-    methods = [(pipeline,'planning'),(llm,'call_with_json_parse'),(llm,'acall_with_json_parse')]
-    if getattr(pipeline,'max_iteration',None)!=5:
-        raise BudgetError('PIPELINE_BINDING_INVALID')
-    unwrapped = []
-    for instance,name in methods:
-        original = getattr(type(instance),name,None)
-        function = getattr(original,'__wrapped__',None)
-        if not callable(function):
-            raise BudgetError('PIPELINE_BINDING_INVALID')
-        unwrapped.append((instance,name,function))
-    for instance,name,function in unwrapped:
-        setattr(instance,name,MethodType(function,instance))

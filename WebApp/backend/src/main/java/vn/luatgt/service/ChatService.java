@@ -61,29 +61,46 @@ public class ChatService {
         return text.substring(0,Character.isHighSurrogate(text.charAt(999))?999:1000);
     }
 
-    private JsonNode answer(ChatMessage chat,Context context) {
-        String question=chat.question;
-        if(context!=null&&!context.recent().isEmpty()) {
-            var root=context.root();
-            var earlier=context.earlier().stream().map(this::contextTurn).toList();
-            var recent=context.recent().stream().map(this::contextTurn).toList();
-            var prepared=kag.chatContext(request(chat.ownerId,question),Objects.toString(root.contextSummary,""),earlier,recent);
-            if(!earlier.isEmpty()) chats.updateContext(chat.ownerId,root.id,root.contextThrough,context.earlier().getLast().id,prepared.summary());
-            if(!prepared.clarification().isEmpty())
-                return data.mapper().createObjectNode().put("state","CLARIFY").put("clarification",prepared.clarification());
-            question=prepared.question();
+    @org.springframework.beans.factory.annotation.Value("${app.kag-query-timeout-seconds:600}")
+    private int queryTimeoutSeconds;
+
+    private JsonNode answer(ChatMessage chat,Context context,long deadline) {
+        var root=context==null?null:context.root();
+        List<Map<String,String>> earlier=context==null?List.of():context.earlier().stream().map(this::contextTurn).toList();
+        List<Map<String,String>> recent=context==null?List.of():context.recent().stream().map(this::contextTurn).toList();
+        KagClient.ChatContext prepared;
+        try {
+            prepared=kag.chatContext(request(chat.ownerId,chat.question),root==null?"":Objects.toString(root.contextSummary,""),earlier,recent,deadline);
+        } catch(RuntimeException e) {
+            prepared=new KagClient.ChatContext(chat.question,"","","");
+            earlier=List.of();
         }
-        return kag.query(request(chat.ownerId,question),chat.id);
+        if(!earlier.isEmpty()) chats.updateContext(chat.ownerId,root.id,root.contextThrough,context.earlier().getLast().id,prepared.summary());
+        if(!prepared.clarification().isEmpty())
+            return data.mapper().createObjectNode().put("state","CLARIFY").put("clarification",prepared.clarification());
+        if(!prepared.reply().isEmpty())
+            return data.mapper().createObjectNode().put("state","ANSWERED").put("reply",prepared.reply());
+        chat.understoodQuestion=prepared.question().equals(chat.question.strip())?null:prepared.question();
+        Map<String,Object> query=new HashMap<>(request(chat.ownerId,prepared.question()));
+        if(!prepared.searchQueries().isEmpty()) query.put("search_queries",prepared.searchQueries());
+        return kag.query(query,chat.id,deadline);
     }
     private Map<String,Object> request(UUID owner,String question) { return Map.of("user_id",owner,"message",question,"context_id","","schema_contract",schema.identity()); }
     private void complete(ChatMessage chat,JsonNode response) {
+        if(response!=null&&response.size()==2&&"ANSWERED".equals(response.path("state").asText())&&
+                response.path("reply").isTextual()&&!response.path("reply").asText().isBlank()&&response.path("reply").asText().length()<=500) {
+            chat.state="ANSWERED"; chat.mode="reply"; chat.answer=response.path("reply").asText(); chats.save(chat); return;
+        }
         if(response!=null&&response.size()==2&&response.path("state").asText().equals("CLARIFY")&&
                 response.path("clarification").isTextual()&&!response.path("clarification").asText().isBlank()&&
                 response.path("clarification").asText().length()<=500) {
             chat.state="CLARIFY"; chat.answer=response.path("clarification").asText(); chats.save(chat); return;
         }
-        if(response!=null&&response.isObject()&&response.size()==1&&response.path("state").isTextual()&&response.path("state").asText().equals("KAG_ABSTAINED")) {
-            chat.state="KAG_ABSTAINED"; chats.save(chat); return;
+        if(response!=null&&response.isObject()&&"KAG_ABSTAINED".equals(response.path("state").asText())) {
+            String reason=response.path("reason").asText();
+            if(response.size()==1 || response.size()==2&&Set.of("no_source","out_of_scope","expired").contains(reason)) {
+                chat.state="KAG_ABSTAINED"; chat.mode=reason.isEmpty()?null:reason; chats.save(chat); return;
+            }
         }
         if(response==null||!response.path("answer").isTextual()||response.path("answer").asText().isBlank()||response.path("answer").asText().length()>20000||!response.path("citations").isArray()||response.path("citations").isEmpty()||response.path("citations").size()>20)
             throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"KAG trả về câu trả lời thiếu căn cứ");
@@ -99,19 +116,29 @@ public class ChatService {
             if(source.isEmpty()||!source.get().published||!data.isEffective(source.get())) throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"KAG dẫn văn bản chưa xuất bản hoặc hết hiệu lực");
             if(!citation.path("quote").isTextual()||!units.citation(citation.path("doc_id").asText(),citation.path("unit_id").asText(),citation.path("quote").asText())) throw new ResponseStatusException(HttpStatus.BAD_GATEWAY,"KAG dẫn unit chưa xuất bản, sai văn bản hoặc trích đoạn không có trong nguồn");
         }
-        chat.answer=response.path("answer").asText(); chat.citations=data.write(response.path("citations")); chat.state="ANSWERED"; chats.save(chat);
+        chat.answer=response.path("answer").asText(); chat.citations=data.write(response.path("citations")); chat.state="ANSWERED";
+        String mode=response.path("mode").asText();
+        if(Set.of("answer","cases","related").contains(mode)) chat.mode=mode;
+        chats.save(chat);
     }
     private Map<String,Object> view(ChatMessage c) {
-        return Map.of("id",c.id,"conversationId",c.conversationId==null?c.id:c.conversationId,"conversationTitle",Objects.toString(c.conversationTitle,""),"question",c.question,"answer",c.answer==null?"":c.answer,"citations",parse(c.citations),"state",c.state,"createdAt",c.createdAt);
+        var result=new LinkedHashMap<String,Object>(Map.of("id",c.id,"conversationId",c.conversationId==null?c.id:c.conversationId,
+            "conversationTitle",Objects.toString(c.conversationTitle,""),
+            "question",c.question,"answer",c.answer==null?"":c.answer,"citations",parse(c.citations),"state",c.state,"createdAt",c.createdAt));
+        if(c.mode!=null) result.put(Set.of("reply","answer","cases","related").contains(c.mode)?"mode":"reason",c.mode);
+        if(c.understoodQuestion!=null&&!"PROCESSING".equals(c.state)) result.put("understoodQuestion",c.understoodQuestion);
+        if("UNAVAILABLE".equals(c.state)) result.put("reason","technical");
+        return result;
     }
     private JsonNode parse(String value) { try { return data.mapper().readTree(value); } catch(Exception e) { throw new IllegalStateException(e); } }
     public StreamingResponseBody progress(UUID owner,ChatRequest input) {
         if(!streams.tryAcquire()) throw new ResponseStatusException(HttpStatus.TOO_MANY_REQUESTS,"Đang có nhiều truy vấn, vui lòng thử lại");
+        long deadline=System.currentTimeMillis()+1000L*queryTimeoutSeconds;
         Pending job;
         try {
             rate.check("chat:"+owner,20,60);
             var context=context(owner,input.conversationId()); var chat=start(owner,input);
-            job=new Pending(chat,()->answer(chat,context)); pending.put(chat.id,job);
+            job=new Pending(chat,()->answer(chat,context,deadline)); pending.put(chat.id,job);
         } catch(RuntimeException e) {streams.release();throw e;}
         return output -> {
             Thread.startVirtualThread(()->{

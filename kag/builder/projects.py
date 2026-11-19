@@ -36,6 +36,8 @@ def _native_request(endpoint, path, token):
 
 
 def owned_project_ids(endpoint, token, *, page_size=100):
+    if token == '':
+        raise ProjectCatalogError('DELEGATION_DENIED')
     if not isinstance(token, str) or not re.fullmatch(r'[A-Za-z0-9._~+/=%:-]{1,8192}', token):
         raise ProjectCatalogError('FORBIDDEN')
     identities, total, page = set(), None, 1
@@ -43,7 +45,7 @@ def owned_project_ids(endpoint, token, *, page_size=100):
         value = _native_request(endpoint, '/v1/projects/list?' + urlencode(
             dict(isOwner='true', pageNo=page, pageSize=page_size)), token)
         if not isinstance(value, dict) or value.get('success') is not True:
-            raise ProjectCatalogError('FORBIDDEN')
+            raise ProjectCatalogError('DELEGATION_DENIED' if isinstance(value,dict) and value.get('errorCode')=='LOGIN_0002' else 'FORBIDDEN')
         try:
             data = value['result']
             # The pinned owner-empty response serializes only the default Page fields.

@@ -123,7 +123,6 @@ def load_proof(settings, release, *, capability='query'):
     # Four calls is the attested normal iterative path; every additional call still reserves before send.
     if capability=='query' and not policy and LIMITS['chat']-counts['chat']<4:
         raise BudgetError('PROVIDER_ATTEMPT_BUDGET_EXHAUSTED')
-    a._unchanged(release)
     return proof,cache,budget
 
 

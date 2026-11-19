@@ -17,6 +17,7 @@ import org.springframework.http.client.JdkClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.server.ResponseStatusException;
 import vn.luatgt.service.KagSchema;
 import vn.luatgt.dto.ChatRetrievalChangeRequest;
@@ -25,6 +26,8 @@ import vn.luatgt.dto.ModelConfigActionRequest;
 
 @Component
 public class KagClient {
+    private static final String BUILDER_UNREACHABLE="Dịch vụ dựng đồ thị không phản hồi, khởi động lại kag-builder";
+    private static final String OPENSPG_LOGIN_REQUIRED="Đăng nhập lại OpenSPG rồi tải lại danh sách.";
     private static final org.slf4j.Logger LOG=org.slf4j.LoggerFactory.getLogger(KagClient.class);
     private final RestClient client,inspectionClient; private final ObjectMapper json;
     private final JdkClientHttpRequestFactory queryFactory,inspectionFactory;
@@ -41,13 +44,14 @@ public class KagClient {
     private static final ZoneId LEGAL_ZONE=ZoneId.of("Asia/Saigon");
     private static final Set<String> REQUEST_FIELDS=Set.of("user_id","message","context_id","schema_contract");
     private static final Set<String> CITATION_FIELDS=Set.of("doc_id","unit_id","sign_id","evidence_id","field","start","end","quote");
-    private final CircuitBreaker breaker=CircuitBreaker.of("kag",CircuitBreakerConfig.custom().minimumNumberOfCalls(3).slidingWindowSize(6).waitDurationInOpenState(Duration.ofSeconds(30)).ignoreException(error->Thread.currentThread().isInterrupted()).build());
+    private static final int MAX_QUERY_TIMEOUT_SECONDS=900;
+    private final CircuitBreaker breaker=CircuitBreaker.of("kag",CircuitBreakerConfig.custom().slowCallDurationThreshold(Duration.ofSeconds(MAX_QUERY_TIMEOUT_SECONDS)).minimumNumberOfCalls(3).slidingWindowSize(6).waitDurationInOpenState(Duration.ofSeconds(30)).ignoreException(error->Thread.currentThread().isInterrupted()).build());
     public KagClient(@Value("${app.kag-url}") String url,ObjectMapper json,KagSchema schema,
         @Value("${app.kag-token-file:}") String tokenFile,@Value("${app.kag-release-id:}") String release,
         @Value("${app.kag-webapp-snapshot-id:}") String snapshot,ObjectProvider<Clock> clocks,
         @Value("${app.kag-inspect-token-file:}") String inspectTokenFile) {
         var factory=new JdkClientHttpRequestFactory(HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build());
-        factory.setReadTimeout(Duration.ofSeconds(180));
+        factory.setReadTimeout(Duration.ofSeconds(600));
         this.queryFactory=factory;
         this.client=RestClient.builder().baseUrl(url).requestFactory(factory).build(); this.json=json;
         this.schema=schema; this.tokenFile=tokenFile; this.release=release; this.snapshot=snapshot;
@@ -58,12 +62,12 @@ public class KagClient {
         this.inspectionFactory=inspectionFactory;
         this.inspectionClient=RestClient.builder().baseUrl(url).requestFactory(inspectionFactory).build();
         var servingFactory=new JdkClientHttpRequestFactory(HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build());
-        servingFactory.setReadTimeout(Duration.ofSeconds(150));
+        servingFactory.setReadTimeout(Duration.ofSeconds(900));
         this.servingClient=RestClient.builder().baseUrl(url).requestFactory(servingFactory).build();
     }
-    @Value("${app.kag-query-timeout-seconds:180}")
+    @Value("${app.kag-query-timeout-seconds:600}")
     public void queryTimeout(int seconds) {
-        if(seconds<30||seconds>180) throw new IllegalArgumentException("Bounded KAG query timeout required");
+        if(seconds<30||seconds>MAX_QUERY_TIMEOUT_SECONDS) throw new IllegalArgumentException("Bounded KAG query timeout required");
         queryFactory.setReadTimeout(Duration.ofSeconds(seconds));
     }
     @Value("${app.kag-inspection-timeout-seconds:2}")
@@ -138,10 +142,13 @@ public class KagClient {
                 }
                 if(res.getStatusCode().value()!=200) {
                     String code=errorCode(body);
+                    if(Set.of("INTERNAL_ERROR","BACKEND_UNAVAILABLE").contains(code))
+                        throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,BUILDER_UNREACHABLE);
                     String reason=switch(code) {
                         case "CONFIG_CONFLICT" -> "Bản xem trước đã cũ. Tải lại và xem trước lần nữa";
                         case "CONFIG_BUSY" -> deactivate?"Đồ thị đang dựng hoặc có thao tác khác. Dừng dựng trước rồi tải lại":"Dịch vụ đang xử lý yêu cầu khác. Chờ rồi tải lại trạng thái";
-                        case "SCOPE_DENIED" -> "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project";
+                        case "DELEGATION_DENIED" -> OPENSPG_LOGIN_REQUIRED;
+                        case "SCOPE_DENIED" -> "Không có quyền xem hoặc sử dụng đồ thị";
                         case "RELEASE_MISMATCH" -> "Embedding đang chọn không khớp embedding đã dựng đồ thị (địa chỉ, model hoặc số chiều). Giữ nguyên địa chỉ và model, chỉ đổi API key; nếu đổi model thì phải dựng lại đồ thị";
                         case "SOURCE_VALIDATION_FAILED" -> "Nguồn graph chưa đầy đủ hoặc khác bản đã xác minh. Kiểm văn bản nguồn và phạm vi dựng trước khi xuất bản";
                         default -> "Chưa thể dùng đồ thị. Kiểm phiên đã xác minh, cấu trúc/chỉ mục và model đã kiểm tra ("+code+")";
@@ -160,6 +167,7 @@ public class KagClient {
                 return body;
             });
         } catch(ResponseStatusException e) {throw e;}
+        catch(ResourceAccessException e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,BUILDER_UNREACHABLE);}
         catch(Exception e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Chưa xác nhận được trạng thái đồ thị phục vụ; tải lại trước khi thao tác tiếp");}
     }
     private void validateServingOperation(JsonNode body) throws IOException {
@@ -254,8 +262,10 @@ public class KagClient {
             }
             return request.header(HttpHeaders.AUTHORIZATION,"Bearer "+token).accept(MediaType.APPLICATION_JSON).exchange((req,res)->{
                 int code=res.getStatusCode().value();
-                if((graph||sources||export)&&(code==403||code==404))throw new ResponseStatusException(code==403?HttpStatus.FORBIDDEN:HttpStatus.NOT_FOUND,
-                    code==403?"Đăng nhập lại OpenSPG và kiểm quyền sở hữu project":"Project không còn thuộc danh sách được phép xem; hãy tải lại");
+                if(code>=500)throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,BUILDER_UNREACHABLE);
+                if(code==403)throw new ResponseStatusException(HttpStatus.FORBIDDEN,
+                    "DELEGATION_DENIED".equals(inspectionBody(res,token).at("/error/code").asText())?OPENSPG_LOGIN_REQUIRED:"Kiểm tra quyền sở hữu đồ thị trên OpenSPG rồi tải lại danh sách.");
+                if((graph||sources||export)&&code==404)throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Project không còn thuộc danh sách được phép xem; hãy tải lại");
                 if(code==409) {
                     if("selection".equals(action)) {
                         String selectionCode=inspectionBody(res,token).path("detail").asText();
@@ -277,6 +287,7 @@ public class KagClient {
                 return body;
             });
         } catch(ResponseStatusException e) {throw e;}
+        catch(ResourceAccessException e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,BUILDER_UNREACHABLE);}
         catch(Exception e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Builder chưa khả dụng; kiểm tra cấu hình Worker và quyền điều khiển");}
     }
     private void validateBuilderSources(JsonNode body,String action) throws IOException {
@@ -636,7 +647,13 @@ public class KagClient {
             !fields(actions).equals(extended?Set.of("build","stop","resume","delete","abandon"):Set.of("build","stop","resume","delete"))||
             !body.path("delete_reason").isNull()&&!body.path("delete_reason").asText().matches("[A-Z_]{1,64}")||!Set.of("BLOCKED","CONFIGURED").contains(body.path("production_write").asText()))throw new IOException();
         for(String name:fields(actions)) {
-            boolean allowed=switch(name){case "build"->Set.of("IDLE","COMPLETE","ABANDONED","CLEARED").contains(state);case "stop"->state.equals("RUNNING");case "resume","abandon"->state.equals("STOPPED");default->false;};
+            boolean allowed=switch(name){
+                case "build"->Set.of("IDLE","COMPLETE","ABANDONED","CLEARED").contains(state);
+                case "stop"->state.equals("RUNNING");
+                case "resume"->state.equals("STOPPED")||extended&&state.equals("BLOCKED")&&body.path("error_code").asText().equals("UNCERTAIN_WRITE");
+                case "abandon"->state.equals("STOPPED");
+                default->false;
+            };
             if(!actions.path(name).isBoolean()||(detail&&Set.of("build","resume").contains(name)?actions.path(name).asBoolean()&&!allowed:actions.path(name).asBoolean()!=allowed))throw new IOException();
         }
         var runId=body.path("run_id");
@@ -834,7 +851,7 @@ public class KagClient {
     public JsonNode chatRetrieval(String action,ChatRetrievalChangeRequest change) {
         if(action!=null&&(!Set.of("save","apply","restore").contains(action)||change==null||change.revision()==null||change.revision()<0||
             (action.equals("save")?!retrievalValues(change.values()):change.values()!=null)))
-            throw vn.luatgt.exception.ApiErrors.bad("Cấu hình Retrieval cần top_k nguyên từ 1 đến 10 và expand boolean");
+            throw vn.luatgt.exception.ApiErrors.bad("Cấu hình Retrieval cần top_k nguyên từ 1 đến 30 và expand boolean");
         try {
             String token=inspectionToken();
             RestClient.RequestHeadersSpec<?> request;
@@ -860,7 +877,7 @@ public class KagClient {
         catch(Exception e) {throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Không đọc hoặc ghi được cấu hình Retrieval. Kiểm tra dịch vụ, quyền truy cập và cấu hình đã lưu.");}
     }
     private static boolean retrievalValues(JsonNode value) {
-        return value!=null&&fields(value).equals(Set.of("top_k","expand"))&&bounded(value.path("top_k"),1,10)&&value.path("expand").isBoolean();
+        return value!=null&&fields(value).equals(Set.of("top_k","expand"))&&bounded(value.path("top_k"),1,30)&&value.path("expand").isBoolean();
     }
     private void validateChatRetrieval(JsonNode body) throws IOException {
         var active=body.path("active");var saved=body.path("saved");var previous=body.path("previous");var actions=body.path("actions");
@@ -892,10 +909,10 @@ public class KagClient {
                 state.equals("NOT_CONFIGURED")&&(!model.path("model").isNull()||!model.path("endpoint").isNull()))throw new IOException("Inconsistent model metadata");
         }
         if(solver.isNull())return;
-        if(!fields(solver).equals(Set.of("source","pipeline","planner","top_k","expand","max_evidence_chars","max_iteration","search_k","expansion_limit","required_vector_dimensions"))||
-            !solver.path("source").asText().equals("source_defaults")||!solver.path("pipeline").asText().equals("KAGIterativePipeline")||
-            !solver.path("planner").asText().equals("KAGIterativePlanner")||!solver.path("expand").isBoolean())throw new IOException("Invalid solver metadata");
-        for(String field:List.of("top_k","max_evidence_chars","max_iteration","search_k","expansion_limit","required_vector_dimensions"))
+        if(!fields(solver).equals(Set.of("source","pipeline","top_k","expand","max_evidence_chars","search_k","expansion_limit","required_vector_dimensions"))||
+            !solver.path("source").asText().equals("source_defaults")||!solver.path("pipeline").asText().equals("DirectAnswerPipeline")||
+            !solver.path("expand").isBoolean())throw new IOException("Invalid solver metadata");
+        for(String field:List.of("top_k","max_evidence_chars","search_k","expansion_limit","required_vector_dimensions"))
             if(!bounded(solver.path(field),1,1000000))throw new IOException("Invalid solver limit");
         if(solver.path("top_k").asInt()>solver.path("search_k").asInt())throw new IOException("Invalid retrieval limit");
     }
@@ -1424,7 +1441,7 @@ public class KagClient {
     }
     private static String errorCode(JsonNode body) throws IOException {
         String code=body.path("error").path("code").asText();
-        if(!Set.of("AUTH_REQUIRED","AUTH_INVALID","SCOPE_DENIED","INVALID_REQUEST","NOT_READY","RELEASE_UNAVAILABLE","QUERY_TIMEOUT","BACKEND_UNAVAILABLE","SCHEMA_CONTRACT_MISMATCH","RELEASE_MISMATCH","SOURCE_SNAPSHOT_MISMATCH","CONCURRENCY_LIMIT","RESULT_LIMIT_EXCEEDED","INTERNAL_ERROR","SOURCE_VALIDATION_FAILED","INVALID_NATIVE_RESULT","CONFIG_BUSY","CONFIG_CONFLICT").contains(code)) throw new IOException("Unknown error");
+        if(!Set.of("AUTH_REQUIRED","AUTH_INVALID","SCOPE_DENIED","DELEGATION_DENIED","INVALID_REQUEST","NOT_READY","RELEASE_UNAVAILABLE","QUERY_TIMEOUT","BACKEND_UNAVAILABLE","SCHEMA_CONTRACT_MISMATCH","RELEASE_MISMATCH","SOURCE_SNAPSHOT_MISMATCH","CONCURRENCY_LIMIT","RESULT_LIMIT_EXCEEDED","INTERNAL_ERROR","SOURCE_VALIDATION_FAILED","INVALID_NATIVE_RESULT","CONFIG_BUSY","CONFIG_CONFLICT").contains(code)) throw new IOException("Unknown error");
         return code;
     }
     private void validateRelease(JsonNode body) throws IOException {
@@ -1498,9 +1515,11 @@ public class KagClient {
                 if(res.getStatusCode().value()!=200) {
                     String code=errorCode(body);
                     String message=switch(code) {
+                        case "BACKEND_UNAVAILABLE" -> BUILDER_UNREACHABLE;
                         case "QUERY_TIMEOUT" -> "Chưa đọc xong kết quả trong thời gian cho phép. Đợi lượt xử lý kết thúc rồi thử lại";
                         case "CONFIG_BUSY","CONCURRENCY_LIMIT" -> "Đồ thị đang được xử lý. Chờ rồi thử lại";
-                        case "SCOPE_DENIED" -> "Đăng nhập lại OpenSPG và kiểm quyền sở hữu project";
+                        case "DELEGATION_DENIED" -> OPENSPG_LOGIN_REQUIRED;
+                        case "SCOPE_DENIED" -> "Không có quyền thử đồ thị đã chọn";
                         case "RELEASE_MISMATCH" -> "Embedding đang chọn khác embedding đã dựng đồ thị. Giữ nguyên địa chỉ kết nối và tên model thì chỉ cần đổi API key; đổi địa chỉ hoặc model thì phải dựng lại đồ thị";
                         default -> "Chưa thể thử đồ thị. Kiểm kết nối, phiên dựng và model đã lưu";
                     };
@@ -1515,9 +1534,13 @@ public class KagClient {
         }catch(ResponseStatusException e){throw e;}
         catch(Exception e){throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE,"Chưa đọc được kết quả thử đồ thị; lựa chọn Chat được giữ nguyên");}
     }
-    public record ChatContext(String question,String clarification,String summary) {}
+    public record ChatContext(String question,String clarification,String summary,String reply,List<String> searchQueries) {
+        public ChatContext(String question,String clarification,String summary,String reply) {
+            this(question,clarification,summary,reply,List.of());
+        }
+    }
 
-    public ChatContext chatContext(Map<String,Object> request,String summary,List<Map<String,String>> earlier,List<Map<String,String>> recent) {
+    public ChatContext chatContext(Map<String,Object> request,String summary,List<Map<String,String>> earlier,List<Map<String,String>> recent,long deadline) {
         try {
             var admitted=admit(request,null);
             var body=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree(admitted.body());
@@ -1525,7 +1548,7 @@ public class KagClient {
             body.set("earlier",json.valueToTree(earlier));
             body.set("recent",json.valueToTree(recent));
             var context=new Admitted(json.writeValueAsBytes(body),admitted.token(),admitted.date(),admitted.pins());
-            return breaker.executeSupplier(()->post("/v1/chat/context",context).exchange((req,res)->{
+            return post("/v1/chat/context",context,deadline).exchange((req,res)->{
                 if(res.getStatusCode().value()!=200) throw new IOException("Context unavailable");
                 var media=res.getHeaders().getContentType();
                 if(media==null||!MediaType.APPLICATION_JSON.includes(media)||res.getHeaders().containsKey(HttpHeaders.CONTENT_ENCODING))
@@ -1533,22 +1556,25 @@ public class KagClient {
                 byte[] bytes=res.getBody().readNBytes(32*1024+1);
                 if(bytes.length>32*1024) throw new IOException("Context response too large");
                 var result=parse(StandardCharsets.UTF_8.newDecoder().decode(ByteBuffer.wrap(bytes)).toString(),admitted.token());
-                if(!fields(result).equals(Set.of("question","clarification","summary"))||
+                if(!fields(result).equals(Set.of("question","clarification","summary","reply","search_queries"))||
                     !text(result.path("question"),4000,false)||!text(result.path("clarification"),500,false)||
-                    !text(result.path("summary"),1600,false)) throw new IOException("Invalid context response");
-                var value=new ChatContext(result.path("question").asText().strip(),result.path("clarification").asText().strip(),result.path("summary").asText().strip());
-                if(value.question().isEmpty()==value.clarification().isEmpty()||value.summary().isEmpty()!=earlier.isEmpty())
+                    !text(result.path("summary"),1600,false)||!text(result.path("reply"),500,false)||
+                    !searchQueries(result.path("search_queries"))) throw new IOException("Invalid context response");
+                var value=new ChatContext(result.path("question").asText().strip(),result.path("clarification").asText().strip(),
+                    result.path("summary").asText().strip(),result.path("reply").asText().strip(),result.path("search_queries").valueStream().map(q->q.asText().strip()).toList());
+                if(List.of(value.question(),value.clarification(),value.reply()).stream().filter(s->!s.isEmpty()).count()!=1||
+                    value.summary().isEmpty()!=earlier.isEmpty()||value.question().isEmpty()&&!value.searchQueries().isEmpty())
                     throw new IOException("Invalid context outcome");
                 currentDate(admitted.date());
                 return value;
-            }));
+            });
         } catch(Exception e) {throw unavailable();}
     }
 
     public JsonNode query(Object request) {
-        return query(request,UUID.randomUUID());
+        return query(request,UUID.randomUUID(),0);
     }
-    public JsonNode query(Object request,UUID requestId) {
+    public JsonNode query(Object request,UUID requestId,long deadline) {
         long started=System.nanoTime();
         String localId=Objects.requireNonNull(requestId).toString();
         var diagnostic=new HashMap<String,Object>();
@@ -1557,7 +1583,7 @@ public class KagClient {
             var admitted=admit(request,diagnostic);
             diagnostic.put("stage","transport");
             diagnostic.put("status",0); diagnostic.put("remote_id","none");
-            return breaker.executeSupplier(() -> post("/v1/query",admitted).exchange((req,res) -> {
+            return breaker.executeSupplier(() -> post("/v1/query",admitted,deadline).exchange((req,res) -> {
                 diagnostic.put("status",res.getStatusCode().value());
                 String remoteId=res.getHeaders().getFirst("X-Request-ID");
                 if(remoteId!=null&&remoteId.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"))diagnostic.put("remote_id",remoteId);
@@ -1634,12 +1660,18 @@ public class KagClient {
             if(headers.containsKey(pin.getKey())) echo(headers,pin.getKey(),pin.getValue());
         currentDate(admitted.date()); return json.createObjectNode().put("state","KAG_ABSTAINED");
     }
+    private static boolean searchQueries(JsonNode value) {
+        return value.isArray()&&value.size()<=3&&value.valueStream().allMatch(query->text(query,4000,true));
+    }
     private Admitted admit(Object request,Map<String,Object> diagnostic) throws IOException {
         currentDate(LocalDate.now(clock));
-        if(!(request instanceof Map<?,?> input)||!input.keySet().equals(REQUEST_FIELDS)||!(input.get("user_id") instanceof UUID owner)) throw new IOException("Invalid request");
+        if(!(request instanceof Map<?,?> input)||!input.keySet().containsAll(REQUEST_FIELDS)||
+            input.keySet().stream().anyMatch(key->!REQUEST_FIELDS.contains(key)&&!"search_queries".equals(key))||
+            !(input.get("user_id") instanceof UUID owner)) throw new IOException("Invalid request");
         var body=json.valueToTree(request);
-        if(!fields(body).equals(REQUEST_FIELDS)||!body.path("user_id").isTextual()||!owner.toString().equals(body.path("user_id").asText())||
+        if(!body.path("user_id").isTextual()||!owner.toString().equals(body.path("user_id").asText())||
             !text(body.path("message"),4000,true)||!body.path("context_id").isTextual()||!body.path("context_id").asText().isEmpty()||
+            body.has("search_queries")&&!searchQueries(body.path("search_queries"))||
             !body.path("schema_contract").equals(json.valueToTree(schema.identity()))) throw new IOException("Invalid request");
         var pins=activePins(diagnostic);headerIdentity(pins.snapshot());
         if(diagnostic!=null) {
@@ -1665,9 +1697,11 @@ public class KagClient {
         if(token.length()<43||token.length()>512||!token.matches("[A-Za-z0-9._~+/-]+=*")) throw new IOException("Credentials unavailable");
         return token;
     }
-    private RestClient.RequestBodySpec post(String path,Admitted admitted) {
+    private RestClient.RequestBodySpec post(String path,Admitted admitted,long deadline) {
         currentDate(admitted.date());
-        return client.post().uri(path).contentType(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION,"Bearer "+admitted.token())
+        var outgoing=client.post().uri(path).contentType(MediaType.APPLICATION_JSON).header(HttpHeaders.AUTHORIZATION,"Bearer "+admitted.token());
+        if(deadline!=0) outgoing.header("X-KAG-Deadline",Long.toString(deadline));
+        return outgoing
             .header("X-KAG-Release-ID",admitted.pins().release()).header(admitted.pins().sourceHeader(),admitted.pins().snapshot()).header("X-KAG-As-Of",admitted.date().toString()).body(admitted.body());
     }
     private void verifyHeaders(HttpHeaders headers,Admitted admitted,MediaType expected) throws IOException {
@@ -1708,8 +1742,12 @@ public class KagClient {
         return true;
     }
     private void validateResult(JsonNode result,Admitted admitted) throws IOException {
+        if(fields(result).equals(Set.of("state","reason")) && "KAG_ABSTAINED".equals(result.path("state").asText()) &&
+            Set.of("no_source","out_of_scope","expired").contains(result.path("reason").asText())) return;
+        if(fields(result).equals(Set.of("state","clarification"))&&"CLARIFY".equals(result.path("state").asText())&&
+            text(result.path("clarification"),500,true)) return;
         if(!admitted.pins().dataset()) {validateResult(result);return;}
-        if(!fields(result).equals(Set.of("contract_version","answer","citations"))||!result.path("contract_version").asText().equals("graph-chat-v1")||
+        if(!answerFields(result,Set.of("contract_version","answer","citations"))||!result.path("contract_version").asText().equals("graph-chat-v1")||
             !text(result.path("answer"),20000,true)||!result.path("citations").isArray()||result.path("citations").isEmpty()||result.path("citations").size()>20)throw new IOException("Invalid graph answer");
         var expectedFields=new HashSet<>(CITATION_FIELDS);expectedFields.add("source");
         for(var citation:result.path("citations")) {
@@ -1742,8 +1780,13 @@ public class KagClient {
         try {return HexFormat.of().formatHex(java.security.MessageDigest.getInstance("SHA-256").digest(value));}
         catch(java.security.NoSuchAlgorithmException e){throw new IOException(e);}
     }
+    private static boolean answerFields(JsonNode result,Set<String> expected) {
+        if(fields(result).equals(expected)) return true;
+        var withMode=new HashSet<>(expected); withMode.add("mode");
+        return fields(result).equals(withMode)&&Set.of("answer","cases","related").contains(result.path("mode").asText());
+    }
     private static void validateResult(JsonNode result) throws IOException {
-        if(!fields(result).equals(Set.of("answer","citations"))||!text(result.path("answer"),20000,true)||!result.path("citations").isArray()||
+        if(!answerFields(result,Set.of("answer","citations"))||!text(result.path("answer"),20000,true)||!result.path("citations").isArray()||
             result.path("citations").isEmpty()||result.path("citations").size()>20) throw new IOException("Invalid result");
         for(var c:result.path("citations")) {
             if(!fields(c).equals(CITATION_FIELDS)||!text(c.path("doc_id"),256*1024,true)||!text(c.path("unit_id"),256*1024,true)||!c.path("sign_id").isNull()||

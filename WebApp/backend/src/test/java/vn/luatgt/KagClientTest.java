@@ -97,6 +97,39 @@ class KagClientTest {
         }
     }
     KagClient client(Fixture f) { return client(f,Map.of(),null); }
+    @Test void contextFailuresDoNotAffectQueryBreaker() throws Exception {
+        try(var f=new Fixture()) {
+            var status=new AtomicInteger(429);
+            f.server.createContext("/v1/chat/context",exchange->{
+                exchange.getRequestBody().readAllBytes();
+                byte[] bytes="{\"question\":\"Căn cứ nào?\",\"clarification\":\"\",\"summary\":\"\",\"reply\":\"\",\"search_queries\":[]}"
+                    .getBytes(java.nio.charset.StandardCharsets.UTF_8);
+                exchange.getResponseHeaders().set("Content-Type","application/json");
+                exchange.sendResponseHeaders(status.get(),bytes.length);
+                try(var out=exchange.getResponseBody()){out.write(bytes);}
+            });
+            var client=client(f);
+            var breaker=(io.github.resilience4j.circuitbreaker.CircuitBreaker)
+                org.springframework.test.util.ReflectionTestUtils.getField(client,"breaker");
+            for(int i=0;i<3;i++) assertThrows(ResponseStatusException.class,
+                ()->client.chatContext(request(),"",List.of(),List.of(),0));
+            assertEquals(0,breaker.getMetrics().getNumberOfFailedCalls());
+            assertEquals(answer(),client.query(request()));
+            status.set(200); breaker.transitionToOpenState();
+            assertEquals("Căn cứ nào?",client.chatContext(request(),"",List.of(),List.of(),0).question());
+        }
+    }
+
+    @Test void conflictAnswerEnvelopeIsRejected() throws Exception {
+        var answer=(com.fasterxml.jackson.databind.node.ObjectNode)answer();
+        answer.put("reason","conflict");
+        answer.withArray("citations").add(answer.path("citations").get(0).deepCopy());
+        ((com.fasterxml.jackson.databind.node.ObjectNode)answer.withArray("citations").get(1)).put("doc_id","other");
+        var fields=KagClient.class.getDeclaredMethod("answerFields",JsonNode.class,Set.class);
+        fields.setAccessible(true);
+        assertEquals(false,fields.invoke(null,answer,Set.of("answer","citations")));
+    }
+
     @Test void servingActivationAcceptsBackgroundStateAndRejectsWrongTarget() throws Exception {
         try(var f=new Fixture()) {
             var operation=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree("""
@@ -123,7 +156,7 @@ class KagClientTest {
             f.status=503;
             f.body="{\"request_id\":\""+f.requestId+"\",\"error\":{\"code\":\"BACKEND_UNAVAILABLE\",\"message\":\"Unavailable\",\"retryable\":false},\"native_state\":null}";
             UUID chatId=UUID.randomUUID();
-            assertThrows(ResponseStatusException.class,()->client(f).query(request(),chatId));
+            assertThrows(ResponseStatusException.class,()->client(f).query(request(),chatId,0));
             assertEquals(1,f.calls.get());
             assertTrue(output.getAll().contains("KAG_QUERY_FAILURE"));
             assertTrue(output.getAll().contains("stage=upstream"));
@@ -748,12 +781,21 @@ class KagClientTest {
             unavailable(()->client.query(request()));
             long seconds=Duration.ofNanos(System.nanoTime()-start).toSeconds(); assertTrue(seconds>=29&&seconds<36); assertEquals(1,f.calls.get()); }
     }
-    @Test void sampleQueryTimeoutIsBoundedWithoutChangingDefault() throws Exception {
+    @Test void slowSuccessfulCallsDoNotOpenBreaker() throws Exception {
+        try(var f=new Fixture()) {
+            var breaker=(io.github.resilience4j.circuitbreaker.CircuitBreaker)
+                org.springframework.test.util.ReflectionTestUtils.getField(client(f),"breaker");
+            for(int i=0;i<3;i++) breaker.onSuccess(61,java.util.concurrent.TimeUnit.SECONDS);
+            assertEquals(io.github.resilience4j.circuitbreaker.CircuitBreaker.State.CLOSED,breaker.getState());
+            assertEquals(0,breaker.getMetrics().getNumberOfSlowSuccessfulCalls());
+        }
+    }
+    @Test void queryTimeoutAcceptsTheWiderBound() throws Exception {
         try(var f=new Fixture()) {
             var client=client(f);
             assertThrows(IllegalArgumentException.class,()->client.queryTimeout(29));
-            assertThrows(IllegalArgumentException.class,()->client.queryTimeout(181));
-            client.queryTimeout(180);
+            assertThrows(IllegalArgumentException.class,()->client.queryTimeout(901));
+            client.queryTimeout(900);
             assertNotNull(client.query(request()));
         }
     }

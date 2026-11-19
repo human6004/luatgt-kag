@@ -7,7 +7,6 @@ import { GraphLibrary, useInspection } from "./shared/KagManagement";
 import {
   changeChatRetrieval,
   changeLLMModel,
-  loadBuilderConfiguration,
   loadBuilderInputs,
   loadChatRetrieval,
   loadKagConfiguration,
@@ -23,9 +22,9 @@ const modelErrors: Record<string, string> = {
   RELEASE_UNAVAILABLE:
     "Chưa chọn đồ thị phục vụ. Chọn đồ thị đã dựng trong thư viện rồi xác nhận dùng cho trợ lý.",
   RELEASE_MISMATCH:
-    "Biểu diễn vectơ đang chọn khác biểu diễn vectơ đã dựng đồ thị. Giữ nguyên địa chỉ kết nối và tên mô hình thì chỉ cần đổi khóa API; đổi địa chỉ hoặc mô hình thì phải dựng lại đồ thị.",
+    "Biểu diễn vectơ đang chọn khác biểu diễn vectơ đã dựng đồ thị. Chọn đồ thị khớp với địa chỉ kết nối và mô hình đã lưu.",
   VECTOR_IDENTITY_MISMATCH:
-    "Biểu diễn vectơ không khớp mô hình và chỉ mục đã dùng để dựng đồ thị. Chỉ đổi được khóa API khi giữ nguyên địa chỉ và tên mô hình.",
+    "Mô hình biểu diễn vectơ không khớp đồ thị đang dùng. Chọn đồ thị đã dựng bằng mô hình này rồi bấm Dùng cho trợ lý để áp dụng cả hai.",
   ACTIVE_CONFIG_INVALID:
     "Cấu hình đang áp dụng không còn hợp lệ. Kiểm tra dữ liệu và quyền kết nối.",
   PROXY_POLICY_UNVERIFIED:
@@ -46,10 +45,22 @@ export default function AdminChatbot() {
   const config = useInspection(loadKagConfiguration);
   const schema = useData<SchemaResponse>("/admin/kag/schema");
   const builderInputs = useInspection(loadBuilderInputs);
-  const builderConfig = useInspection(loadBuilderConfiguration);
   const retrieval = useInspection(loadChatRetrieval);
   const models = useInspection(loadLLMCredentials);
-  const serving = useInspection(loadServing);
+  const serving = useInspection(loadServing, (value) => value.busy);
+  const activeRun = serving.value?.runs.find(
+    (run) =>
+      run.project_id === serving.value?.active?.project_id &&
+      run.run_id === serving.value?.active?.run_id,
+  );
+  const embedding = models.value?.embedding;
+  const embeddingDimension = models.value?.roles.embedding.test?.dimension;
+  const embeddingMismatch = !!(
+    activeRun &&
+    embedding &&
+    (activeRun.model_identity !== `${embedding.base_url.replace(/\/+$/, "")}|${embedding.model}` ||
+      (embeddingDimension != null && activeRun.dimension !== embeddingDimension))
+  );
 
   const [modelsDirty, setModelsDirty] = useState({ chat: false, embedding: false });
   const [modelsSaving, setModelsSaving] = useState(false);
@@ -85,10 +96,10 @@ export default function AdminChatbot() {
     (draft.top_k !== retrievalState.saved.top_k || draft.expand !== retrievalState.saved.expand);
   const unsaved = modelsDirty.chat || modelsDirty.embedding || dirtyRetrieval;
   const validRetrieval =
-    !!draft && Number.isInteger(draft.top_k) && draft.top_k >= 1 && draft.top_k <= 10;
+    !!draft && Number.isInteger(draft.top_k) && draft.top_k >= 1 && draft.top_k <= 30;
 
   function reloadAll() {
-    if (unsaved || serving.loading) return;
+    if (unsaved) return;
     setCopied(false);
     setCopyError("");
     setChangeError("");
@@ -100,7 +111,6 @@ export default function AdminChatbot() {
     config.reload();
     schema.reload();
     builderInputs.reload();
-    builderConfig.reload();
     retrieval.reload();
     models.reload();
     serving.reload();
@@ -431,6 +441,7 @@ export default function AdminChatbot() {
                             modelsDirty[role] ||
                             modelsSaving ||
                             modelRunning ||
+                            (role === "embedding" && embeddingMismatch) ||
                             !models.value?.roles[role].actions.apply
                           }
                           onClick={() => {
@@ -452,9 +463,16 @@ export default function AdminChatbot() {
                             {modelErrors[models.value.roles[role].test!.code!]}
                           </p>
                         )}
-                      {models.value?.roles[role].blocker && (
+                      {(models.value?.roles[role].blocker ||
+                        (role === "embedding" && embeddingMismatch)) && (
                         <p role="status" className="text-xs break-words text-muted">
-                          {modelErrors[models.value.roles[role].blocker!]}
+                          {
+                            modelErrors[
+                              role === "embedding" && embeddingMismatch
+                                ? "VECTOR_IDENTITY_MISMATCH"
+                                : models.value!.roles[role].blocker!
+                            ]
+                          }
                         </p>
                       )}
                     </form>
@@ -466,9 +484,9 @@ export default function AdminChatbot() {
                   (không cần chờ Áp dụng cho trợ lý).
                 </p>
                 <p className="text-xs text-muted">
-                  Biểu diễn vectơ phải khớp đồ thị đang dùng. Hết hạn mức thì chỉ đổi khóa API, giữ nguyên
-                  địa chỉ kết nối và tên mô hình. Đổi địa chỉ hoặc mô hình thì đồ thị cũ phải dựng lại
-                  mới dùng được.
+                  Biểu diễn vectơ phải khớp đồ thị đang dùng. Hết hạn mức thì chỉ đổi khóa API, giữ
+                  nguyên địa chỉ kết nối và tên mô hình. Nếu đổi địa chỉ hoặc mô hình, chọn đồ thị
+                  đã dựng với cấu hình tương ứng rồi bấm Dùng cho trợ lý.
                 </p>
               </>
             )}
@@ -487,6 +505,7 @@ export default function AdminChatbot() {
         </Card>
       </div>
       <GraphLibrary
+        serving={serving}
         searchOptions={
           <Card title="Tùy chọn tìm kiếm khi trả lời trợ lý">
             <div className="px-5 pb-5 text-sm space-y-3">
@@ -532,7 +551,7 @@ export default function AdminChatbot() {
                           <input
                             type="number"
                             min={1}
-                            max={10}
+                            max={30}
                             step={1}
                             className={inputCls}
                             value={draft.top_k}

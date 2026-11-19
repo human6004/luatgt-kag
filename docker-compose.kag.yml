@@ -29,8 +29,8 @@ services:
     image: spg-registry.us-west-1.cr.aliyuncs.com/spg/openspg-neo4j@sha256:4bc5b7f6b83d333b1d2c8f60ac145c068d77d50bca65b3a07c927f9e2a541eb9
     platform: linux/amd64
     restart: "no"
-    mem_limit: 1408m
-    memswap_limit: 1408m
+    mem_limit: 2560m
+    memswap_limit: 2560m
     cpus: 1.0
     pids_limit: 256
     environment:
@@ -38,9 +38,9 @@ services:
       NEO4J_AUTH: neo4j/${KAG_NEO4J_PASSWORD:?Set independent credentials in .env}
       NEO4J_initial_dbms_default__database: ${KAG_DATABASE:-neo4j}
       NEO4J_server_databases_read__only: ${KAG_READ_ONLY_DATABASES:-}
-      NEO4J_server_memory_heap_initial__size: 256M
-      NEO4J_server_memory_heap_max__size: 512M
-      NEO4J_server_memory_pagecache_size: 256M
+      NEO4J_server_memory_heap_initial__size: 768M
+      NEO4J_server_memory_heap_max__size: 768M
+      NEO4J_server_memory_pagecache_size: 512M
     volumes: ["openspg-neo4j-data:/data", "openspg-neo4j-logs:/logs"]
     networks:
       private: {aliases: [neo4j]}
@@ -149,8 +149,8 @@ services:
     read_only: true
     cap_drop: [ALL]
     security_opt: ["no-new-privileges:true"]
-    mem_limit: 768m
-    memswap_limit: 1280m
+    mem_limit: 1280m
+    memswap_limit: 1536m
     cpus: 1.0
     pids_limit: 128
     stop_grace_period: 40s
@@ -160,7 +160,7 @@ services:
       KAG_HTTP_PORT: "8000"
       KAG_HTTP_WORKERS: "1"
       KAG_CHAT_TRACE_QUESTION: ${KAG_CHAT_TRACE_QUESTION:-}
-      KAG_QUERY_TIMEOUT_SECONDS: ${KAG_QUERY_TIMEOUT_SECONDS:-180}
+      KAG_QUERY_TIMEOUT_SECONDS: ${KAG_QUERY_TIMEOUT_SECONDS:-600}
       KAG_HTTP_QUERY_SECRET_FILE: /run/secrets/query_token
       KAG_HTTP_INSPECT_SECRET_FILE: /run/secrets/inspect_token
       KAG_HTTP_CREDENTIALS_WRITE_SECRET_FILE: /run/secrets/credentials_write_token
@@ -258,9 +258,10 @@ services:
     environment:
       KAG_GRAPH_LOCK_VOLUME: ${KAG_GRAPH_LOCK_VOLUME:-${COMPOSE_PROJECT_NAME:-luatgt}_kag-builder-graph-locks}
       KAG_BUILDER_CONFIG: /builder-input/runner.json
-      KAG_QUERY_TIMEOUT_SECONDS: ${KAG_QUERY_TIMEOUT_SECONDS:-180}
+      KAG_QUERY_TIMEOUT_SECONDS: ${KAG_QUERY_TIMEOUT_SECONDS:-600}
       KAG_BUILDER_STATE_DIR: /builder-state
       KAG_BUILDER_RUN_ROOT: /builder-runs
+      SQLITE_TMPDIR: /builder-runs
       KAG_GRAPH_PACKAGES_DIR: /graph-packages
       KAG_GRAPH_PACKAGES_HOST_DIR: ${KAG_STATE_DIR:-../luatgt-state}/graph-packages
       KAG_BUILDER_TOKEN_FILE: /run/secrets/builder_token
@@ -372,7 +373,7 @@ services:
       KAG_CHAT_PROXY_TEST_SAFE: ${KAG_CHAT_PROXY_TEST_SAFE:-0}
       KAG_CHAT_PROXY_ALLOW_UPSTREAM_RETRIES: ${KAG_CHAT_PROXY_ALLOW_UPSTREAM_RETRIES:-0}
       KAG_CHAT_PROXY_HOST: ${KAG_CHAT_PROXY_HOST:-host.docker.internal}
-      KAG_QUERY_TIMEOUT_SECONDS: ${KAG_QUERY_TIMEOUT_SECONDS:-180}
+      KAG_QUERY_TIMEOUT_SECONDS: ${KAG_QUERY_TIMEOUT_SECONDS:-600}
       KAG_CHAT_PROXY_PORT: ${KAG_CHAT_PROXY_PORT:-8317}
     extra_hosts: ["host.docker.internal:host-gateway"]
     volumes:
