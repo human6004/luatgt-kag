@@ -1,10 +1,11 @@
 import LogoMark from "../components/LogoMark";
 
-import { AccountMenu } from "../auth";
+import { AccountMenu, useAuth } from "../auth";
+import { homeFor } from "../auth-policy";
 
 import { useState } from "react";
 
-import { NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router-dom";
 
 interface NavItem {
   to: string;
@@ -60,7 +61,9 @@ const navItems: NavItem[] = [
 
 export default function UserLayout() {
   const [isCollapsed, setIsCollapsed] = useState(false);
-
+  const { session } = useAuth();
+  const adminHome = session && session.role !== "user" ? homeFor(session.role) : undefined;
+  const visibleItems = session?.role === "police" ? navItems.filter(({ to }) => to === "/chat") : navItems;
   const location = useLocation();
 
   const navigate = useNavigate();
@@ -136,7 +139,7 @@ export default function UserLayout() {
 
         {/* Nav Items */}
         <nav className="flex-1 px-2.5 space-y-1">
-          {navItems.map((item) => (
+          {visibleItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
@@ -172,6 +175,19 @@ export default function UserLayout() {
           ))}
         </nav>
 
+        {adminHome && (
+          <div className="border-t border-line/60 px-2.5 py-2">
+            <Link
+              to={adminHome}
+              aria-label="Về quản trị"
+              title="Về quản trị"
+              className={`flex min-h-9 items-center gap-2 rounded-lg text-xs font-medium text-text-secondary hover:bg-selected hover:text-navy focus-visible:outline-2 focus-visible:outline-accent-strong ${isCollapsed ? "justify-center" : "px-3"}`}
+            >
+              <span aria-hidden="true">↖</span>
+              {!isCollapsed && "Về quản trị"}
+            </Link>
+          </div>
+        )}
         <AccountMenu collapsed={isCollapsed} />
       </aside>
 
@@ -182,7 +198,7 @@ export default function UserLayout() {
           <select
             aria-label="Điều hướng người dùng"
             value={
-              navItems.find(
+              visibleItems.find(
                 (item) =>
                   location.pathname === item.to || location.pathname.startsWith(item.to + "/"),
               )?.to ?? "/chat"
@@ -190,11 +206,12 @@ export default function UserLayout() {
             onChange={(event) => navigate(event.target.value)}
             className="min-w-0 flex-1 bg-bg border border-line rounded-md px-2 py-2"
           >
-            {navItems.map((item) => (
+            {visibleItems.map((item) => (
               <option key={item.to} value={item.to}>
                 {item.label}
               </option>
             ))}
+            {adminHome && <option value={adminHome}>Về quản trị</option>}
           </select>
           <AccountMenu collapsed />
         </div>

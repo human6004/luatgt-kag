@@ -83,15 +83,13 @@ export default function App() {
             <Route element={<RequireRole roles={["user", "admin", "police"]} />}>
               <Route element={<UserLayout />}>
                 <Route path="/chat" element={<Chat />} />
-              </Route>
-            </Route>
-            <Route element={<RequireRole roles={["user"]} />}>
-              <Route element={<UserLayout />}>
-                <Route path="/bien-bao" element={<Signs />} />
-                <Route path="/on-thi" element={<Study />} />
-                <Route path="/on-thi/luyen-tap/:chapterId" element={<ChapterPractice />} />
-                <Route path="/tien-do" element={<RedirectWithParams to="/on-thi" />} />
-                <Route path="/exam" element={<Exam />} />
+                <Route element={<RequireRole roles={["user", "admin"]} />}>
+                  <Route path="/bien-bao" element={<Signs />} />
+                  <Route path="/on-thi" element={<Study />} />
+                  <Route path="/on-thi/luyen-tap/:chapterId" element={<ChapterPractice />} />
+                  <Route path="/tien-do" element={<RedirectWithParams to="/on-thi" />} />
+                  <Route path="/exam" element={<Exam />} />
+                </Route>
               </Route>
             </Route>
             <Route element={<RequireRole roles={["admin", "police"]} />}>

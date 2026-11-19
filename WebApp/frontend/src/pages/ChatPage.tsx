@@ -1,20 +1,34 @@
 import { useLocation, useSearchParams } from "react-router-dom";
-import { api, send as request } from "../api";
 import { Notice, useTask } from "./shared/shared";
 import {
   citationAnswerPrefix,
+  citationOriginalUrl,
   createChat,
   chatView,
+  loadCitationDocument,
   loadCitationSource,
 } from "./shared/chat-state";
 import LogoMark from "../components/LogoMark";
 import { Button, LoadingIndicator, Modal, inputCls } from "../admin/ui";
-import { Fragment, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useId,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type CSSProperties,
+  type RefObject,
+} from "react";
 
 interface LegalReference {
   title: string;
   clause: string;
   label: string;
+  originalUrl?: string;
   raw: Parameters<typeof loadCitationSource>[0];
 }
 
@@ -57,11 +71,9 @@ const ic = {
   panel: "M4 5h16v14H4zM9 5v14",
   book: "M5 4h10a4 4 0 0 1 4 4v12H9a4 4 0 0 1-4-4zM5 16a4 4 0 0 1 4-4h10",
   send: "M12 19V5M6 11l6-6 6 6",
-  copy: "M9 9h10v10H9zM5 15V5h10",
-  up: "M7 10v10M7 10l4-6a2 2 0 0 1 3 2l-1 4h5a2 2 0 0 1 2 2l-2 6a2 2 0 0 1-2 2H7",
+  dots: "M5 12h.01M12 12h.01M19 12h.01",
   retry: "M4 12a8 8 0 1 0 3-6.2M4 4v4h4",
   close: "M6 6l12 12M18 6 6 18",
-  dots: "M5 12h.01M12 12h.01M19 12h.01",
 };
 
 export default function ChatPage() {
@@ -81,31 +93,18 @@ export default function ChatPage() {
   const [deleting, setDeleting] = useState<Session | null>(null);
   const [renaming, setRenaming] = useState<Session | null>(null);
   const [title, setTitle] = useState("");
-  const [menuId, setMenuId] = useState<string | null>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!menuId) return;
-    function closeOutside(event: PointerEvent) {
-      if (event.target instanceof Node && !menuRef.current?.contains(event.target)) setMenuId(null);
-    }
-    function closeOnEscape(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        menuRef.current?.querySelector<HTMLButtonElement>("[aria-expanded]")?.focus();
-        setMenuId(null);
-      }
-    }
-    document.addEventListener("pointerdown", closeOutside);
-    document.addEventListener("keydown", closeOnEscape);
-    return () => {
-      document.removeEventListener("pointerdown", closeOutside);
-      document.removeEventListener("keydown", closeOnEscape);
-    };
-  }, [menuId]);
-  const lastSubmittedId = useRef<string | undefined>(undefined);
-
-  const [input, setInput] = useState("");
+  const [blankChat, setBlankChat] = useState(0);
+  const [startingDraft, setStartingDraft] = useState<string>();
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const draftKey = activeId ?? `new:${blankChat}`;
+  const input = drafts[draftKey] ?? "";
   const [query, setQuery] = useState(urlQ);
   const [showList, setShowList] = useState(() => window.innerWidth >= 768);
+  const historyRef = useRef<HTMLElement>(null);
+
+  function setInput(value: string) {
+    setDrafts((previous) => ({ ...previous, [draftKey]: value }));
+  }
 
   useEffect(() => {
     setQuery(urlQ);
@@ -156,6 +155,7 @@ export default function ChatPage() {
                 : c.doc_id,
             clause: c.unit_id ?? c.sign_id ?? "",
             label: `${c.doc_id}${c.unit_id || c.sign_id ? ` · ${c.unit_id ?? c.sign_id}` : ""}`,
+            originalUrl: citationOriginalUrl(c),
             raw: c,
           })),
         },
@@ -172,19 +172,22 @@ export default function ChatPage() {
   }, [chat]);
 
   useEffect(() => {
-    if (data.currentId && data.currentId !== lastSubmittedId.current) {
-      lastSubmittedId.current = data.currentId;
-      if (data.currentId !== activeId) updateUrl({ c: data.currentId, cite: null });
-    }
-  }, [data.currentId]);
+    if (!startingDraft || !data.currentId) return;
+    if (!activeId && startingDraft === draftKey) updateUrl({ c: data.currentId, cite: null });
+    setStartingDraft(undefined);
+  }, [activeId, data.currentId, draftKey, startingDraft]);
 
   useEffect(() => {
     const q = location.state?.initialQuery;
     if (typeof q === "string") setInput(q);
   }, [location.state]);
 
-  const thinking = data.busy;
-  const blocked = data.busy || data.loading || data.loadingMore || task.busy;
+  const requestHere =
+    data.currentId === (activeId ?? undefined) && (activeId !== null || startingDraft === draftKey);
+  const thinking = data.busy && requestHere;
+  const historyBusy = data.loading || data.loadingMore || task.busy;
+  const blocked = data.busy || historyBusy;
+  const deleteBlocked = (id: string) => historyBusy || (data.busy && data.currentId === id);
   const endRef = useRef<HTMLDivElement>(null);
   const taRef = useRef<HTMLTextAreaElement>(null);
   const citationTriggerRef = useRef<HTMLButtonElement | null>(null);
@@ -193,11 +196,9 @@ export default function ChatPage() {
   const active = sessions.find((s) => s.id === activeId) ?? null;
   const messages = active?.messages ?? [];
   const citationTurn = citeMatch?.[1] ?? activeId;
-  const selectedReference =
-    citeIndex !== null
-      ? messages.find((message) => message.role === "bot" && message.turnId === citationTurn)
-          ?.citations?.[citeIndex]
-      : undefined;
+  const references = messages.find((message) => message.role === "bot" && message.turnId === citationTurn)
+    ?.citations;
+  const selectedReference = citeIndex !== null ? references?.[citeIndex] : undefined;
   const selectedCitation = selectedReference?.raw;
 
   const filtered = useMemo(
@@ -230,17 +231,24 @@ export default function ChatPage() {
   }, [input]);
 
   function newChat() {
-    if (thinking) return;
+    setBlankChat((previous) => previous + 1);
     updateUrl({ c: null, cite: null });
-    setInput("");
   }
 
-  async function send(text = input) {
-    if (blocked || (activeId && !active) || !text.trim()) return;
-    if (await chat.submit(text, active?.id)) {
-      setInput("");
-      if (window.innerWidth < 768) setShowList(false);
-    }
+  function send() {
+    if (blocked || (activeId && !active) || !input.trim() || input.length > 4000) return;
+    setStartingDraft(activeId ? undefined : draftKey);
+    if (window.innerWidth < 768) setShowList(false);
+    void chat.submit(input, active?.id, (id) => {
+      setDrafts((previous) => {
+        const draft = previous[draftKey];
+        if (draftKey === id && draft !== input) return previous;
+        const next = { ...previous };
+        delete next[draftKey];
+        if (draft && draft !== input) next[id] = draft;
+        return next;
+      });
+    });
   }
 
   function openCitation(turnId: string, index: number, trigger: HTMLButtonElement) {
@@ -335,30 +343,6 @@ export default function ChatPage() {
     return <p>{answerText(message)}</p>;
   }
 
-  function messageAction(action: string, message: Message, question: string) {
-    if (action === "Sao chép") {
-      void navigator.clipboard
-        .writeText(message.text)
-        .then(() => setNotice("Đã sao chép"))
-        .catch(() => setNotice("Không sao chép được"));
-      return;
-    }
-    if (action === "Tạo lại") {
-      setInput(question);
-      setNotice("Câu hỏi đã đưa vào ô nhập. Gửi để tạo lượt hỏi mới.");
-      return;
-    }
-    if (active) {
-      void task.run(async () => {
-        await api(
-          `/chat/${message.turnId}/feedback`,
-          request("POST", { feedback: action === "Hữu ích" ? "HELPFUL" : action, note: "" }),
-        );
-        setNotice("Đã lưu phản hồi");
-      });
-    }
-  }
-
   function handleKey(e: React.KeyboardEvent) {
     if (e.key === "Enter" && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault();
@@ -409,6 +393,7 @@ export default function ChatPage() {
       {/* Sessions */}
       {showList && (
         <aside
+          ref={historyRef}
           aria-label="Lịch sử câu hỏi"
           className="absolute inset-y-0 left-0 z-10 w-64 max-w-full md:static shrink-0 flex flex-col border-r border-line bg-surface shadow-lg md:shadow-none"
         >
@@ -442,7 +427,6 @@ export default function ChatPage() {
               <button
                 type="button"
                 onClick={newChat}
-                disabled={thinking}
                 aria-label="Cuộc trò chuyện mới"
                 title="Cuộc trò chuyện mới"
                 className="grid h-8 w-8 shrink-0 place-items-center rounded-md bg-transparent text-navy cursor-pointer hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong"
@@ -472,26 +456,18 @@ export default function ChatPage() {
                 key={session.id}
                 s={session}
                 active={session.id === activeId}
-                disabled={blocked}
-                menuOpen={menuId === session.id}
-                menuRef={menuId === session.id ? menuRef : undefined}
-                onToggleMenu={() => {
-                  task.clearError();
-                  setMenuId((current) => (current === session.id ? null : session.id));
-                }}
+                renameDisabled={blocked}
+                deleteDisabled={deleteBlocked(session.id)}
                 onRename={() => {
-                  setMenuId(null);
                   task.clearError();
                   setTitle(session.title.slice(0, 200));
                   setRenaming(session);
                 }}
                 onDelete={() => {
-                  setMenuId(null);
                   task.clearError();
                   setDeleting(session);
                 }}
                 onClick={() => {
-                  setMenuId(null);
                   updateUrl({ c: session.id, cite: null });
                   if (window.innerWidth < 768) setShowList(false);
                 }}
@@ -604,14 +580,14 @@ export default function ChatPage() {
             </Button>
             <Button
               variant="danger"
-              disabled={blocked || !deleting}
+              disabled={!deleting || deleteBlocked(deleting.id)}
               onClick={() => void task.run(async () => {
                 if (!deleting) return;
                 const id = deleting.id;
                 await chat.removeConversation(id);
                 if (activeId === id) {
-                  updateUrl({ c: null, cite: null });
                   setInput("");
+                  newChat();
                 }
                 setDeleting(null);
                 setNotice("Đã xóa cuộc trò chuyện khỏi lịch sử.");
@@ -653,7 +629,7 @@ export default function ChatPage() {
         </header>
 
         <div className="px-4">
-          <Notice error={data.requestError || (!deleting && !renaming ? task.error : undefined)} />
+          <Notice error={(requestHere && data.requestError) || (!deleting && !renaming ? task.error : undefined)} />
           <Notice error={data.error} retry={chat.load} />
           {notice && (
             <p role="status" className="py-2 text-xs text-muted">
@@ -689,7 +665,7 @@ export default function ChatPage() {
                       </div>
                     </div>
                   ) : (
-                    <div key={i} className="group">
+                    <div key={i}>
                       <div className="mb-3 flex items-center gap-2 text-[12.5px] font-semibold text-navy">
                         <span className="w-7 h-7 grid place-items-center rounded-lg bg-surface border border-line shadow-2xs">
                           <LogoMark size={15} />
@@ -721,61 +697,50 @@ export default function ChatPage() {
                           ))}
                         </details>
                       )}
-                      {m.citations && m.citations.length > 0 && (
+                      {!!m.citations?.length && (
                         <div className="mt-3 flex flex-wrap gap-2">
                           {m.citations.map((citation, referenceIndex) => {
                             const isSelected =
                               citationTurn === m.turnId && citeIndex === referenceIndex;
                             return (
-                              <button
+                              <div
                                 key={`${citation.title}-${citation.clause}-${referenceIndex}`}
-                                type="button"
-                                onClick={(event) =>
-                                  openCitation(m.turnId, referenceIndex, event.currentTarget)
-                                }
-                                aria-controls={isSelected ? "legal-citation-panel" : undefined}
-                                aria-expanded={isSelected}
-                                className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 font-medium text-left text-xs text-accent-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${
-                                  isSelected
-                                    ? "border-accent bg-selected"
-                                    : "border-line bg-surface hover:border-accent/60 hover:bg-selected"
-                                }`}
+                                className="inline-flex max-w-full items-center gap-1"
                               >
-                                <span className="shrink-0 font-semibold">
-                                  [{referenceIndex + 1}]
-                                </span>
-                                <span>{citation.label}</span>
-                              </button>
+                                <button
+                                  type="button"
+                                  onClick={(event) =>
+                                    openCitation(m.turnId, referenceIndex, event.currentTarget)
+                                  }
+                                  aria-controls={isSelected ? "legal-citation-panel" : undefined}
+                                  aria-expanded={isSelected}
+                                  className={`inline-flex min-w-0 items-center gap-1.5 rounded-full border px-3 py-1.5 font-medium text-left text-xs text-accent-strong transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40 ${
+                                    isSelected
+                                      ? "border-accent bg-selected"
+                                      : "border-line bg-surface hover:border-accent/60 hover:bg-selected"
+                                  }`}
+                                >
+                                  <span className="shrink-0 font-semibold">
+                                    [{referenceIndex + 1}]
+                                  </span>
+                                  <span className="[overflow-wrap:anywhere]">{citation.label}</span>
+                                </button>
+                                {citation.originalUrl && (
+                                  <a
+                                    href={citation.originalUrl}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label={`Mở văn bản gốc: ${citation.title}, trích dẫn ${referenceIndex + 1}`}
+                                    className="shrink-0 rounded-md px-2 py-1 text-xs font-medium text-accent-strong hover:bg-selected hover:underline focus-visible:outline-2 focus-visible:outline-accent-strong"
+                                  >
+                                    Bản gốc <span aria-hidden="true">↗</span>
+                                  </a>
+                                )}
+                              </div>
                             );
                           })}
                         </div>
                       )}
-                      <div className="mt-4 pt-3 border-t border-dashed border-line flex flex-wrap items-center gap-1 text-muted opacity-70 group-hover:opacity-100 transition-opacity">
-                        {[
-                          { d: ic.copy, t: "Sao chép" },
-                          { d: ic.up, t: "Hữu ích" },
-                          { d: ic.retry, t: "Tạo lại" },
-                          { d: ic.up, t: "WRONG", label: "Câu trả lời sai" },
-                          { d: ic.up, t: "NO_BASIS", label: "Thiếu căn cứ" },
-                          {
-                            d: ic.up,
-                            t: "OUTDATED",
-                            label: "Thông tin lỗi thời",
-                          },
-                        ].map((a) => (
-                          <button
-                            type="button"
-                            disabled={blocked}
-                            onClick={() => messageAction(a.t, m, messages[i - 1].text)}
-                            key={a.t}
-                            aria-label={a.label ?? a.t}
-                            title={a.label ?? a.t}
-                            className="p-1.5 rounded-md hover:bg-selected hover:text-navy"
-                          >
-                            <Icon d={a.d} className="w-3.5 h-3.5" />
-                          </button>
-                        ))}
-                      </div>
                     </div>
                   ),
                 )}
@@ -803,50 +768,75 @@ export default function ChatPage() {
 
       {/* Legal refs */}
       {selectedReference && (
-        <aside
-          id="legal-citation-panel"
-          aria-label="Nguồn trích dẫn"
-          className="absolute inset-y-0 right-0 z-20 w-80 max-w-full shrink-0 border-l border-line bg-sidebar flex flex-col shadow-lg lg:static lg:shadow-none"
-        >
-          <div className="h-14 shrink-0 flex items-center justify-between gap-2 px-4 text-[13px] font-semibold text-navy border-b border-line">
-            <span>Nguồn trích dẫn</span>
-            <button
-              ref={citationCloseRef}
-              type="button"
-              onClick={() => {
-                updateUrl({ cite: null });
-                citationTriggerRef.current?.focus();
-              }}
-              aria-label="Đóng nguồn trích dẫn"
-              className="p-2 rounded-lg text-muted hover:bg-selected hover:text-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
-            >
-              <Icon d={ic.close} />
-            </button>
-          </div>
-          <CitationSource key={`${citationTurn}:${citeIndex}`} reference={selectedReference} />
-        </aside>
+        <CitationSource
+          reference={selectedReference}
+          citations={data.rows.find((row) => row.id === citationTurn)?.citations}
+          historyRef={showList ? historyRef : undefined}
+          closeRef={citationCloseRef}
+          onClose={() => {
+            updateUrl({ cite: null });
+            citationTriggerRef.current?.focus();
+          }}
+        />
       )}
     </div>
   );
 }
 
-function CitationSource({ reference }: { reference: LegalReference }) {
+function reflowSourceText(text: string) {
+  // Join likely PDF line wraps, keeping blank lines and the starts of legal list items.
+  return text.replace(/([\p{L}\p{N},)])[ \t]*\n[ \t]*(?=\p{Ll}{2,}|\d+[ \t]+\p{Ll})/gu, "$1 ");
+}
+
+function formatSourceText(text: string) {
+  return text.replace(/\n(?:[ \t]*\n){2,}/g, "\n\n")
+    .split(/(^#{1,6}[ \t]+[^\n]+)/m)
+    .map((part, index) => index % 2
+      ? <strong key={index} className="font-semibold text-navy">{part.replace(/^#{1,6}[ \t]+/, "")}</strong>
+      : reflowSourceText(part));
+}
+
+function CitationSource({ reference, citations, historyRef, closeRef, onClose }: {
+  reference: LegalReference;
+  citations?: LegalReference["raw"][];
+  historyRef?: RefObject<HTMLElement | null>;
+  closeRef: RefObject<HTMLButtonElement | null>;
+  onClose: () => void;
+}) {
   const { raw: citation } = reference;
   const [attempt, setAttempt] = useState(0);
   const [result, setResult] = useState<{
     citation: typeof citation;
     source?: Awaited<ReturnType<typeof loadCitationSource>>;
+    document?: Awaited<ReturnType<typeof loadCitationDocument>>;
   }>();
+  const panelRef = useRef<HTMLElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const markRef = useRef<HTMLElement>(null);
+  const drag = useRef<{ x: number; width: number; keepQuote: boolean } | null>(null);
+  const keepQuote = useRef(false);
+  const minWidth = 320;
+  const maxReaderWidth = 680;
+  const minChatWidth = 360;
+  const [width, setWidth] = useState(440);
+  const [availableWidth, setAvailableWidth] = useState(maxReaderWidth + minChatWidth);
+  const docked = availableWidth >= minWidth + minChatWidth;
+  const maxWidth = docked ? Math.min(maxReaderWidth, availableWidth - minChatWidth) : maxReaderWidth;
+  const panelWidth = Math.min(width, maxWidth);
   const loaded = result?.citation === citation ? result : undefined;
   const source = loaded?.source;
+  const originalUrl = reference.originalUrl ?? source?.originalUrl;
+  const document = loaded?.document;
 
   useEffect(() => {
     let cancelled = false;
+    const controller = new AbortController();
     loadCitationSource(citation).then(
-      (source) => {
-        if (!cancelled) setResult({ citation, source });
+      async (source) => {
+        if (cancelled) return;
+        const document = await loadCitationDocument(citation, citations ?? [], controller.signal)
+          .catch(() => undefined);
+        if (!cancelled) setResult({ citation, source, document });
       },
       () => {
         if (!cancelled) setResult({ citation });
@@ -854,53 +844,188 @@ function CitationSource({ reference }: { reference: LegalReference }) {
     );
     return () => {
       cancelled = true;
+      controller.abort();
     };
-  }, [citation, attempt]);
+  }, [citation, citations, attempt]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
+    const layout = panelRef.current?.parentElement;
+    if (!layout) return;
+    const history = historyRef?.current;
+    const measure = () => setAvailableWidth(layout.clientWidth - (history?.offsetWidth ?? 0));
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(layout);
+    if (history) observer.observe(history);
+    return () => observer.disconnect();
+  }, [historyRef]);
+
+  const scrollToQuote = useCallback((behavior?: ScrollBehavior) => {
     const container = scrollRef.current;
     const mark = markRef.current;
-    if (!source || !container || !mark) return;
+    if (!container || !mark) return;
     container.scrollTo({
-      top:
-        container.scrollTop +
-        mark.getBoundingClientRect().top -
-        container.getBoundingClientRect().top -
-        container.clientHeight / 3,
-      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? "instant"
-        : "smooth",
+      top: container.scrollTop + mark.getBoundingClientRect().top -
+        container.getBoundingClientRect().top - container.clientHeight / 3,
+      behavior: behavior ?? (window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth"),
     });
-  }, [source]);
+  }, []);
 
-  const text = source?.text ?? citation.quote;
-  const start = source ? text.indexOf(citation.quote) : -1;
+  useLayoutEffect(() => {
+    if (!keepQuote.current) return;
+    keepQuote.current = false;
+    scrollToQuote("instant");
+  }, [panelWidth, scrollToQuote]);
+
+  useEffect(() => {
+    if (!source || !markRef.current) return;
+    let cancelled = false;
+    // Font loading can shift a citation thousands of pixels down a long document.
+    void globalThis.document.fonts.ready.then(() => {
+      if (!cancelled) scrollToQuote();
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [source, document, scrollToQuote]);
+
+  function quoteInView() {
+    const mark = markRef.current?.getBoundingClientRect();
+    const viewport = scrollRef.current?.getBoundingClientRect();
+    return !!(mark && viewport && mark.top < viewport.bottom && mark.bottom > viewport.top);
+  }
+
+  function resize(next: number, alignQuote: boolean) {
+    const clamped = Math.max(minWidth, Math.min(maxWidth, Math.round(next)));
+    if (clamped === panelWidth) return;
+    keepQuote.current = alignQuote;
+    setWidth(clamped);
+  }
+
+  const text = document?.text ?? source?.text ?? citation.quote;
+  const start = document?.start ?? (source ? text.indexOf(citation.quote) : -1);
+  const end = document?.end ?? start + citation.quote.length;
+  const before = useMemo(
+    () => formatSourceText((start < 0 ? text : text.slice(0, start)).replace(/^(?:[ \t]*\n)+/, "")),
+    [text, start],
+  );
+  const after = useMemo(() => start >= 0 ? formatSourceText(text.slice(end)) : null, [text, start, end]);
+  const metadata = source && citation.source?.metadata;
+  const location = metadata && [
+    ["Điều", metadata.dieu_number],
+    ["Khoản", metadata.khoan_number],
+    ["Điểm", metadata.diem_letter],
+  ].filter(([, value]) => typeof value === "string" && value.trim())
+    .map(([label, value]) => `${label} ${value}`).join(" · ");
   return (
-    <div ref={scrollRef} className="p-4 overflow-y-auto" aria-live="polite">
-      <div className="rounded-xl border border-line bg-surface p-4 shadow-2xs">
-        <div className="mb-3 flex items-center gap-2 text-[11px] font-medium uppercase tracking-wider text-muted">
-          <Icon d={ic.book} className="w-3.5 h-3.5" />
-          Căn cứ pháp lý
+    <aside
+      ref={panelRef}
+      id="legal-citation-panel"
+      aria-label="Nguồn trích dẫn"
+      style={{ "--citation-width": `${panelWidth}px` } as CSSProperties}
+      className={`fixed inset-0 z-40 flex w-full shrink-0 flex-col bg-surface lg:w-[var(--citation-width)] lg:border-l lg:border-line ${
+        docked ? "lg:relative lg:inset-auto" : "lg:absolute lg:left-auto lg:shadow-lg"
+      }`}
+    >
+      <div
+        role="separator"
+        tabIndex={0}
+        aria-label="Độ rộng khung nguồn"
+        aria-orientation="vertical"
+        aria-controls="legal-citation-content"
+        aria-valuemin={minWidth}
+        aria-valuemax={maxWidth}
+        aria-valuenow={panelWidth}
+        onPointerDown={(event) => {
+          if (event.button !== 0 || !event.isPrimary) return;
+          event.currentTarget.setPointerCapture(event.pointerId);
+          drag.current = { x: event.clientX, width: panelWidth, keepQuote: quoteInView() };
+          event.currentTarget.focus({ preventScroll: true });
+          event.preventDefault();
+        }}
+        onPointerMove={(event) => {
+          const initial = drag.current;
+          if (initial && event.currentTarget.hasPointerCapture(event.pointerId))
+            resize(initial.width + initial.x - event.clientX, initial.keepQuote);
+        }}
+        onLostPointerCapture={() => { drag.current = null; }}
+        onKeyDown={(event) => {
+          const widths: Record<string, number> = {
+            ArrowLeft: panelWidth + 32, ArrowRight: panelWidth - 32, Home: minWidth, End: maxWidth,
+          };
+          const next = widths[event.key];
+          if (typeof next !== "number") return;
+          event.preventDefault();
+          resize(next, quoteInView());
+        }}
+        className="group absolute inset-y-0 -left-2 z-10 hidden w-4 touch-none cursor-col-resize select-none items-center justify-center focus-visible:outline-2 focus-visible:outline-accent-strong lg:flex"
+      >
+        <span aria-hidden="true" className="h-10 w-1 rounded-full bg-control group-hover:bg-accent-strong group-focus-visible:bg-accent-strong" />
+      </div>
+      <header className="shrink-0 border-b border-line px-5 pb-3 pt-4">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="mb-1 text-xs font-medium text-muted">Nguồn trích dẫn</p>
+            <h2 className="break-words text-base font-semibold text-navy">{source?.number ?? citation.doc_id}</h2>
+          </div>
+          <button
+            ref={closeRef}
+            type="button"
+            onClick={onClose}
+            aria-label="Đóng nguồn trích dẫn"
+            className="shrink-0 rounded-lg p-2 text-muted hover:bg-selected hover:text-navy focus-visible:outline-2 focus-visible:outline-accent-strong"
+          >
+            <Icon d={ic.close} />
+          </button>
         </div>
-        <h2 className="mb-3 break-words text-[15px] font-semibold leading-relaxed text-navy">
+        <p className="mt-1.5 break-words text-sm leading-relaxed text-text-secondary">
           {source?.title ?? reference.title}
-        </h2>
-        <p className="break-words text-xs leading-relaxed text-muted">
-          {[source?.number, source?.unitType, reference.clause].filter(Boolean).join(" · ")}
         </p>
-        <blockquote className="mt-3 whitespace-pre-wrap break-words text-sm leading-relaxed">
-          {start < 0 ? (
-            text
-          ) : (
+        <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
+          <span role="status" className="text-xs text-muted">
+            {[document ? "Toàn văn" : loaded ? "Đoạn trích đã lưu" : "Đang tải nguồn…", location]
+              .filter(Boolean).join(" · ")}
+          </span>
+          <div className="flex flex-wrap items-center gap-1">
+            {originalUrl && (
+              <a
+                href={originalUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rounded-md px-2 py-1 text-xs font-semibold text-accent-strong hover:bg-selected hover:underline focus-visible:outline-2 focus-visible:outline-accent-strong"
+              >
+                Mở văn bản gốc <span aria-hidden="true">↗</span>
+              </a>
+            )}
+            {start >= 0 && (
+              <button
+                type="button"
+                onClick={() => scrollToQuote()}
+                className="rounded-md px-2 py-1 text-xs font-semibold text-accent-strong hover:bg-selected focus-visible:outline-2 focus-visible:outline-accent-strong"
+              >
+                Về đoạn trích
+              </button>
+            )}
+          </div>
+        </div>
+      </header>
+      <div id="legal-citation-content" ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-5 py-4 lg:px-6">
+        {source && !document && (
+          <p className="mb-3 text-xs text-muted">
+            Chưa định vị được trích dẫn trong toàn văn. Đang hiển thị đoạn nguồn đã lưu.
+          </p>
+        )}
+        <blockquote className="whitespace-pre-wrap break-words text-[15px] leading-[1.75] text-text-secondary">
+          {before}
+          {start >= 0 && (
             <>
-              {text.slice(0, start)}
               <mark
                 ref={markRef}
-                className="rounded-sm bg-amber-200 text-navy [box-decoration-break:clone]"
+                className="rounded-sm bg-amber-200/85 text-navy [box-decoration-break:clone]"
               >
-                {citation.quote}
+                {reflowSourceText(text.slice(start, end))}
               </mark>
-              {text.slice(start + citation.quote.length)}
+              {after}
             </>
           )}
         </blockquote>
@@ -922,7 +1047,7 @@ function CitationSource({ reference }: { reference: LegalReference }) {
           }}
         />
       </div>
-    </div>
+    </aside>
   );
 }
 
@@ -930,25 +1055,25 @@ function SessionItem({
   s,
   active,
   onClick,
-  disabled,
-  menuOpen,
-  menuRef,
-  onToggleMenu,
+  renameDisabled,
+  deleteDisabled,
   onRename,
   onDelete,
 }: {
   s: Session;
   active: boolean;
   onClick: () => void;
-  disabled: boolean;
-  menuOpen: boolean;
-  menuRef?: React.RefObject<HTMLDivElement | null>;
-  onToggleMenu: () => void;
+  renameDisabled: boolean;
+  deleteDisabled: boolean;
   onRename: () => void;
   onDelete: () => void;
 }) {
+  const menuId = useId();
+  const menuRef = useRef<HTMLDivElement>(null);
+  const actionClass =
+    "block w-full rounded px-3 py-2 text-left text-sm disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent-strong";
   return (
-    <div className={`relative flex items-center rounded-lg ${active ? "bg-selected" : "hover:bg-selected"}`}>
+    <div className={`flex items-center rounded-lg ${active ? "bg-selected" : "hover:bg-selected"}`}>
       <button
         type="button"
         onClick={onClick}
@@ -960,28 +1085,45 @@ function SessionItem({
       >
         {s.title}
       </button>
-      <div ref={menuRef} className="relative shrink-0">
+      <button
+        type="button"
+        popoverTarget={menuId}
+        title="Tùy chọn cuộc trò chuyện"
+        aria-label={`Tùy chọn cuộc trò chuyện ${s.title}`}
+        className="grid h-8 w-8 shrink-0 place-items-center rounded-md text-muted hover:bg-hover hover:text-navy focus-visible:outline-2 focus-visible:outline-accent-strong"
+      >
+        <Icon d={ic.dots} />
+      </button>
+      <div
+        ref={menuRef}
+        id={menuId}
+        popover="auto"
+        className="inset-auto m-0 w-40 rounded-md border border-control bg-surface p-1 shadow-md [position-area:bottom_span-left] [position-try-fallbacks:flip-block] [position-visibility:anchors-visible]"
+      >
         <button
           type="button"
-          disabled={disabled}
-          onClick={onToggleMenu}
-          title="Tùy chọn cuộc trò chuyện"
-          aria-label={`Tùy chọn cuộc trò chuyện ${s.title}`}
-          aria-expanded={menuOpen}
-          className="mr-1 grid h-8 w-8 place-items-center rounded-md text-muted hover:bg-hover hover:text-navy disabled:opacity-40 disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent-strong"
+          disabled={renameDisabled}
+          onClick={() => {
+            menuRef.current?.hidePopover();
+            onRename();
+          }}
+          aria-label={`Đổi tên cuộc trò chuyện ${s.title}`}
+          className={`${actionClass} text-navy hover:bg-hover`}
         >
-          <Icon d={ic.dots} />
+          Đổi tên
         </button>
-        {menuOpen && (
-          <div className="absolute right-1 top-full z-30 w-40 rounded-md border border-control bg-surface p-1 shadow-md">
-            <button type="button" disabled={disabled} onClick={onRename} className="block w-full rounded px-3 py-2 text-left text-sm text-navy hover:bg-hover focus-visible:outline-2 focus-visible:outline-accent-strong disabled:opacity-40">
-              Đổi tên
-            </button>
-            <button type="button" disabled={disabled} onClick={onDelete} className="block w-full rounded px-3 py-2 text-left text-sm text-red-700 hover:bg-red-50 focus-visible:outline-2 focus-visible:outline-accent-strong disabled:opacity-40">
-              Xóa
-            </button>
-          </div>
-        )}
+        <button
+          type="button"
+          disabled={deleteDisabled}
+          onClick={() => {
+            menuRef.current?.hidePopover();
+            onDelete();
+          }}
+          aria-label={`Xóa cuộc trò chuyện ${s.title}`}
+          className={`${actionClass} text-red-700 hover:bg-red-50`}
+        >
+          Xóa
+        </button>
       </div>
     </div>
   );

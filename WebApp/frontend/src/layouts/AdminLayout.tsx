@@ -102,7 +102,7 @@ export default function AdminLayout() {
             to="/chat"
             className="flex items-center justify-between rounded-lg px-3 py-2 text-xs font-medium text-text-secondary hover:bg-selected/60 hover:text-navy transition-colors"
           >
-            <span>Mở trang Hỏi luật</span>
+            <span>Chuyển sang Hỏi luật</span>
             <span aria-hidden="true">↗</span>
           </Link>
         </div>
@@ -131,6 +131,7 @@ export default function AdminLayout() {
                 ))}
               </optgroup>
             )}
+            <option value="/chat">Chuyển sang Hỏi luật</option>
           </select>
           <AccountMenu collapsed />
         </div>

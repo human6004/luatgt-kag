@@ -142,6 +142,25 @@ export function citationAnswerPrefix(answer: string, citations: Pick<Citation, "
   return !prefix || prefix.endsWith("\n") ? prefix : undefined;
 }
 
+function originalDocumentUrl(docId: string, value: unknown) {
+  if (typeof value !== "string" || !/^https?:\/\//i.test(value.trim())) return;
+  try {
+    const url = new URL(value);
+    if (url.username || url.password) return;
+    // Older citations saved the Công báo page for the 2012 document with the same number.
+    if (docId === "11_VBHN_VPQH" && url.href === "https://congbao.chinhphu.vn/van-ban/x-17539.htm")
+      return "https://congbao.chinhphu.vn/van-ban/van-ban-hop-nhat-so-11-vbhn-vpqh-44425.htm";
+    return url.href;
+  } catch {
+    return undefined;
+  }
+}
+
+export function citationOriginalUrl(citation: Citation) {
+  if (!citation.source || !snapshotMatches(citation)) return;
+  return originalDocumentUrl(citation.doc_id, citation.source.document_metadata.source_url);
+}
+
 export async function loadCitationSource(citation: Citation) {
   if (citation.source) {
     if (!snapshotMatches(citation)) throw new ApiError("Bản chụp nguồn không khớp", 502);
@@ -193,6 +212,7 @@ export async function loadCitationSource(citation: Citation) {
     typeof unit.data.unit_type !== "string"
   )
     throw new ApiError("Nguồn chưa khả dụng", 502);
+  const originalUrl = originalDocumentUrl(citation.doc_id, doc.data.source);
   return {
     title: doc.data.title,
     number:
@@ -200,7 +220,38 @@ export async function loadCitationSource(citation: Citation) {
       doc.data.so_hieu,
     unitType: unit.data.unit_type,
     text: unit.data.text,
+    ...(originalUrl ? { originalUrl } : {}),
   };
+}
+
+export async function loadCitationDocument(citation: Citation, references: Citation[], signal?: AbortSignal) {
+  const response = await apiResponse(`/documents/${encodeURIComponent(citation.doc_id)}/text`, { signal });
+  if (!response.ok || !response.headers.get("Content-Type")?.startsWith("text/plain")) return;
+  const text = (await response.text()).replace(/\r\n?/g, "\n");
+  const quote = citation.quote.replace(/\r\n?/g, "\n");
+  if (!quote.trim()) return;
+
+  const first = text.indexOf(quote);
+  if (first < 0) return;
+  if (text.indexOf(quote, first + 1) < 0) return { text, start: first, end: first + quote.length };
+
+  // A repeated quote can be located by its cited parent from the same source snapshot.
+  const parentId = citation.source?.metadata.parent_id;
+  if (typeof parentId !== "string" || !parentId) return;
+  const parent = references.find((reference) =>
+    reference.doc_id === citation.doc_id && reference.unit_id === parentId &&
+    reference.source?.source_snapshot_id === citation.source?.source_snapshot_id &&
+    snapshotMatches(reference),
+  );
+  if (!parent) return;
+
+  const context = parent.quote.replace(/\r\n?/g, "\n");
+  const contextStart = text.indexOf(context);
+  const offset = context.indexOf(quote);
+  if (contextStart < 0 || offset < 0 || text.indexOf(context, contextStart + 1) >= 0 ||
+    context.indexOf(quote, offset + 1) >= 0) return;
+  const start = contextStart + offset;
+  return { text, start, end: start + quote.length };
 }
 
 function snapshotMatches(citation: Citation) {
@@ -358,13 +409,13 @@ export function createChat() {
   function load(selected?: string) {
     return loadHistory(false, selected);
   }
-  async function submit(message: string, conversationId?: string) {
+  async function submit(message: string, conversationId?: string, onStarted?: (id: string) => void) {
     if (state.busy || state.loading || state.loadingMore || !message.trim() || message.length > 4000)
       return false;
     update({
       busy: true,
       stopping: false,
-      currentId: undefined,
+      currentId: conversationId,
       observed: "idle",
       requestError: "",
     });
@@ -431,6 +482,7 @@ export function createChat() {
             if (event === "started" && !operation.id && row.state === "PROCESSING") {
               operation.id = row.id;
               receive(row, operation);
+              if (current === operation) onStarted?.(row.conversationId ?? row.id);
               if (operation.stopRequested) void stop(operation);
             } else if (
               operation.id &&
@@ -510,9 +562,11 @@ export function createChat() {
       });
     },
     removeConversation: async (id: string) => {
-      if (state.busy || state.loading || state.loadingMore)
+      if (state.loading || state.loadingMore || (state.busy && state.currentId === id))
         throw new ApiError("Hãy chờ tải lịch sử hoặc dừng trả lời trước khi xóa.");
       await api(`/chat/${encodeURIComponent(id)}`, send("DELETE"));
+      // A concurrent reply can trigger a history refresh that still includes this conversation.
+      await history;
       update({
         rows: state.rows.filter((row) => (row.conversationId ?? row.id) !== id),
         ...(state.currentId === id ? { currentId: undefined, requestError: "", observed: "idle" } : {}),

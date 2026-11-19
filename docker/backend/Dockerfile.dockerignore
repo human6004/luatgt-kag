@@ -8,6 +8,10 @@
 !kag/schema/
 !kag/schema/schema_contract.json
 !kag/schema/VietRoadTraffic.schema
+!data/
+!data/processed/
+!data/processed/documents/
+!data/processed/documents/*.md
 
 WebApp/backend/src/test/
 WebApp/backend/src/test/**

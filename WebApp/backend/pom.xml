@@ -24,6 +24,7 @@
     <resources>
       <resource><directory>src/main/resources</directory></resource>
       <resource><directory>${project.basedir}/../../kag/schema</directory><targetPath>kag-schema</targetPath><includes><include>schema_contract.json</include><include>VietRoadTraffic.schema</include></includes></resource>
+      <resource><directory>${project.basedir}/../../data/processed/documents</directory><targetPath>legal-documents</targetPath><includes><include>*.md</include></includes></resource>
     </resources>
     <plugins><plugin><groupId>org.springframework.boot</groupId><artifactId>spring-boot-maven-plugin</artifactId></plugin></plugins>
   </build>

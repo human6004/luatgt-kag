@@ -2,11 +2,14 @@ package vn.luatgt.controller;
 
 import jakarta.validation.Valid;
 import java.util.*;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
 import org.springframework.web.bind.annotation.*;
 import vn.luatgt.dto.ContentChangeRequest;
 import vn.luatgt.dto.ImportRequest;
 import vn.luatgt.dto.PublicationRequest;
 import vn.luatgt.dto.BatchPublicationRequest;
+import vn.luatgt.exception.ApiErrors;
 import vn.luatgt.service.ContentService;
 
 @RestController @RequestMapping("/api")
@@ -14,6 +17,13 @@ public class ContentController {
     private final ContentService service;
     public ContentController(ContentService service) { this.service=service; }
     @GetMapping("/{kind:questions|signs|documents}") List<Map<String,Object>> list(@PathVariable String kind,@RequestParam(required=false) Integer chapter,@RequestParam(required=false) UUID questionSetId) { return service.list(kind,chapter,questionSetId); }
+    @GetMapping(value="/documents/{docId}/text", produces="text/plain;charset=UTF-8")
+    Resource documentText(@PathVariable String docId) {
+        if(!docId.matches("[A-Za-z0-9_-]{1,250}")) throw ApiErrors.missing();
+        var source=new ClassPathResource("legal-documents/"+docId+".md");
+        if(!source.exists()) throw ApiErrors.missing();
+        return source;
+    }
     @GetMapping("/admin/{kind:questions|signs|documents}") List<Map<String,Object>> admin(@PathVariable String kind) { return service.admin(kind); }
     @PostMapping("/admin/imports/{kind}/preview") List<Map<String,Object>> preview(@PathVariable String kind,@Valid @RequestBody ImportRequest input) { return service.preview(kind,input); }
     @PostMapping("/admin/imports/{kind}/confirm") Map<String,Integer> confirm(@PathVariable String kind,@Valid @RequestBody ImportRequest input) { return service.confirm(kind,input); }
