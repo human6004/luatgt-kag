@@ -14,6 +14,7 @@ import {
   EditIconButton,
   FilePicker,
   Modal,
+  RequiredMark,
   SelectionBar,
   Th,
   Td,
@@ -720,6 +721,11 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
             }}
             className="grid sm:grid-cols-2 gap-4 mt-5"
           >
+            {kind === "documents" && (
+              <p className="sm:col-span-2 text-xs text-muted">
+                Các mục có dấu <RequiredMark /> bắt buộc khi xuất bản.
+              </p>
+            )}
             {fields[kind].map((key) => (
               <label
                 key={key}
@@ -732,6 +738,9 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                   : kind === "signs" && key === "doc_id"
                     ? "Mã văn bản nguồn (không bắt buộc nhập)"
                     : labels[key]}
+                {kind === "documents" && key !== "ngay_het_hieu_luc" && (
+                  <RequiredMark />
+                )}
                 {["text", "meaning"].includes(key) ||
                 (kind === "signs" && ["name", "group"].includes(key)) ? (
                   <textarea
@@ -742,6 +751,9 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                   />
                 ) : (
                   <input
+                    aria-required={
+                      kind === "documents" && key !== "ngay_het_hieu_luc"
+                    }
                     readOnly={
                       !!selected.id &&
                       (key === "externalId" ||
@@ -818,10 +830,12 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
             <label className="text-sm">
               <input
                 type="checkbox"
+                aria-required={kind === "documents"}
                 checked={!!form.reviewed}
                 onChange={(e) => field("reviewed", e.target.checked)}
               />{" "}
               Đã đối chiếu nội dung với nguồn
+              {kind === "documents" && <RequiredMark />}
             </label>
           </form>
           {selected.id && (
@@ -843,8 +857,8 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                         {String(form.so_hieu || "Chưa nhập số hiệu")}
                       </p>
                       <p className="text-xs text-muted">
-                        Chọn PDF có số hiệu tương ứng và xem lại nội dung trước
-                        khi xuất bản.
+                        Có thể đính kèm PDF có số hiệu tương ứng để đối chiếu.
+                        Tệp PDF không bắt buộc khi xuất bản.
                       </p>
                       {!!selected.data.fileKey && (
                         <p className="break-words text-xs text-muted">
@@ -860,7 +874,7 @@ export function ContentManager({ kind }: { kind: ContentKind }) {
                   <FilePicker
                     title={
                       kind === "documents"
-                        ? "Tải tài liệu nguồn"
+                        ? "Tải tài liệu nguồn (không bắt buộc)"
                         : "Tải ảnh biển báo"
                     }
                     hint={
@@ -1305,7 +1319,7 @@ export function ImportPanel({
             . Nhập vẫn là bản nháp; kiểm duyệt và xuất bản trước khi quay lại.
           </p>
         )}
-        <p className="mb-4 rounded-lg border border-line bg-bg px-3 py-2 text-xs text-muted">
+        <p className="mb-4 text-xs text-muted">
           Dữ liệu được kiểm tra trên máy chủ và lưu thành bản nháp; chỉ xuất bản
           sau khi duyệt.
         </p>

@@ -152,20 +152,33 @@ class OperationsTest {
         assertFalse(visible.toString().contains(withdrawn.id.toString()));
         mvc.perform(post("/api/admin/chatlogs/"+withdrawn.id+"/resolve").header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content("{\"note\":\"Must no longer access withdrawn report\"}")).andExpect(status().isNotFound());
     }
+    @Test void documentPublicationRequiresReviewWithoutRequiringPdf() throws Exception {
+        var document=doc();document.published=false;
+        var metadata=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree(document.data);
+        metadata.remove(List.of("fileKey","fileMime"));metadata.put("reviewed",false);
+        document.data=json.writeValueAsString(metadata);document=contents.saveAndFlush(document);
+        String path="/api/admin/content/"+document.id+"/publication";
+        mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("version",document.version,"published",true)))).andExpect(status().isBadRequest());
+        assertFalse(contents.findById(document.id).orElseThrow().published);
+        metadata.put("reviewed",true);document.data=json.writeValueAsString(metadata);document=contents.saveAndFlush(document);
+        mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(json.writeValueAsString(Map.of("version",document.version,"published",true)))).andExpect(status().isOk()).andExpect(jsonPath("$.published").value(true)).andExpect(jsonPath("$.data.fileKey").doesNotExist());
+        mvc.perform(get("/api/content/"+document.id+"/media").header("Authorization","Bearer "+user)).andExpect(status().isNotFound());
+    }
     @Test void bulkDocumentPublicationKeepsValidationAndRollsBackIncompleteBatch() throws Exception {
         var first=doc();first.published=false;first=contents.saveAndFlush(first);
         var second=doc();second.published=false;
-        var metadata=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree(second.data);metadata.remove("fileKey");
+        var metadata=(com.fasterxml.jackson.databind.node.ObjectNode)json.readTree(second.data);metadata.remove(List.of("fileKey","fileMime","source"));
         second.data=json.writeValueAsString(metadata);second=contents.saveAndFlush(second);
         var request=Map.of("rows",List.of(Map.of("id",first.id,"version",first.version),Map.of("id",second.id,"version",second.version)),"reviewed",true,"published",true);
         String payload=json.writeValueAsString(request),path="/api/admin/documents/publication-batch";
         mvc.perform(post(path).header("Authorization","Bearer "+user).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isForbidden());
         mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isBadRequest());
         assertFalse(contents.findById(first.id).orElseThrow().published);
-        metadata.put("fileKey","test-pdf");second.data=json.writeValueAsString(metadata);second=contents.saveAndFlush(second);
+        metadata.put("source","test-only");second.data=json.writeValueAsString(metadata);second=contents.saveAndFlush(second);
         payload=json.writeValueAsString(Map.of("rows",List.of(Map.of("id",first.id,"version",first.version),Map.of("id",second.id,"version",second.version)),"reviewed",true,"published",true));
         mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isOk());
         assertTrue(contents.findById(first.id).orElseThrow().published);assertTrue(contents.findById(second.id).orElseThrow().published);
+        assertFalse(json.readTree(contents.findById(second.id).orElseThrow().data).hasNonNull("fileKey"));
         mvc.perform(post(path).header("Authorization","Bearer "+admin).contentType(MediaType.APPLICATION_JSON).content(payload)).andExpect(status().isConflict());
     }
     @Test void bulkUnitPublicationRequiresPublishedSourceAndPreservesTheWholeBatch() throws Exception {

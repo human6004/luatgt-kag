@@ -144,7 +144,7 @@ public class ContentService {
             alias(n,"externalId","doc_id"); KagSchema.exactId(n,"externalId",250); sourceText(n,"title",1000,true);
             sourceText(n,"so_hieu",200,publish); text(n,"source",2000,publish);
             date(n,"ngay_hieu_luc",publish); date(n,"ngay_het_hieu_luc",false);
-            if(publish && (!n.path("reviewed").asBoolean(false)||!n.hasNonNull("fileKey"))) throw ApiErrors.bad("Văn bản cần tệp nguồn và reviewed=true");
+            if(publish && !n.path("reviewed").asBoolean(false)) throw ApiErrors.bad("Cần xác nhận đã đối chiếu nội dung văn bản với nguồn trước khi xuất bản.");
         }
         if(n.hasNonNull("ngay_hieu_luc")&&n.hasNonNull("ngay_het_hieu_luc") && LocalDate.parse(n.path("ngay_het_hieu_luc").asText()).isBefore(LocalDate.parse(n.path("ngay_hieu_luc").asText()))) throw ApiErrors.bad("Ngày hết hiệu lực trước ngày hiệu lực");
         return n;
