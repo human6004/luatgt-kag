@@ -1,6 +1,6 @@
 # Kiến trúc LuậtGT
 
-WebApp quản lý nghiệp vụ, nội dung kiểm duyệt và lịch sử. KAG xây graph, truy hồi nguồn và trả lời theo căn cứ. [Docker](../docker/README.md) mô tả services, mạng, cổng và storage; [USER-GUIDE](USER-GUIDE.md) giữ phạm vi chức năng thật/Demo.
+WebApp quản lý tài khoản, nội dung, học thi và lịch sử trò chuyện. KAG dựng đồ thị, tìm nguồn và trả lời theo căn cứ. Xem [cách sử dụng](USER-GUIDE.md) và [cách vận hành Docker](../docker/README.md).
 
 ## Thành phần
 
@@ -18,24 +18,24 @@ Nguồn + schema + quan hệ → kiểm input/plan → vectorize hoặc replay
   → ghi node → đọc lại node → ghi cạnh → verify graph/vector
 ```
 
-Đường điều khiển: React → Spring Boot kiểm ADMIN → Worker xác thực control token/phiên OpenSPG → Runner. Worker lưu cấu hình/kế hoạch trong Builder state, tiến độ trong run volume. Chuẩn bị schema/index là thao tác preview/apply riêng trước Build, không gọi model. [Runner](runner.md) giữ hướng dẫn thao tác.
+React gửi yêu cầu qua Spring Boot đến Worker và Runner. Spring Boot kiểm vai trò ADMIN. Worker kiểm control token và phiên OpenSPG, lưu cấu hình và tiến độ vào các volume của Builder. Luồng dựng tự chuẩn bị schema và index trên đích rỗng trước khi tạo vector. [Hướng dẫn Builder](runner.md)
 
 `PRODUCTION/WRITE` hỗ trợ corpus đã pin, chọn toàn bộ hoặc một phần, dùng model/dimension của phiên. Trước ghi phải khớp nguồn, confirmation, quyền project, identity vật lý và GraphLock; không dùng database serving. `FRESH_SAMPLE` là scope thử biệt lập có giới hạn riêng, không phải giới hạn chung của sản phẩm.
 
-Vectorizer không tự chuyển từ replay sang provider khi thiếu vector. Builder dùng dimension theo model đã kiểm. Release PRODUCTION giữ namespace/dimension/model của phiên đã xác minh; SAMPLE giữ contract 3072 chiều. Dựng xong không tự kích hoạt Chat: ADMIN chọn phiên, xem trước và xác nhận tại Đồ thị tri thức; publisher kiểm graph và nguồn WebApp trước khi đổi lựa chọn. Worker cấp phép đọc cố định cho API; graph đang phục vụ được chặn Build/xóa. Điều kiện: [chọn graph phục vụ](runner.md#chọn-graph-phục-vụ-truy-xuấtchat), [backend identity](backend-identity.md#writer-và-lock), [publisher](../docker/README.md#publisher-nâng-cao).
+Replay dùng vector trong gói. Builder giữ namespace, số chiều và model của phiên đã xác minh đối với PRODUCTION. SAMPLE dùng contract 3072 chiều. Sau khi dựng, ADMIN vào **Trợ lý → Đồ thị → Dùng cho trợ lý** để kiểm tra và kích hoạt. Publisher xác minh đồ thị và nguồn theo loại release. Worker cấp quyền đọc cho API và chặn dựng hoặc xóa đồ thị đang phục vụ. [Chọn đồ thị phục vụ](runner.md#chọn-graph-phục-vụ-truy-xuấtchat)
 
 ## Luồng câu hỏi
 
 ```text
-React → Spring Boot (auth/rate limit/lịch sử) → Python HTTP API
-  → OpenSPG Planner → Retriever → Read Broker → Neo4j
-  → Deduce → SafeLegalGenerator → Spring Boot kiểm nguồn → React
+React → Spring Boot → KAG /v1/chat/context
+  → KAG /v1/query khi cần tra luật → DirectAnswerPipeline
+  → KAG API kiểm chứng trích dẫn → Spring Boot lưu kết quả → React
 ```
 
-1. API kiểm release/snapshot, publication, schema, target, ngày truy vấn và ngân sách provider. Browser chỉ giữ JWT; token KAG là secrets giữa dịch vụ.
-2. Planner/pipeline lặp upstream điều phối truy hồi và suy luận. Retriever tìm vector, đọc nguyên văn theo ID; mở rộng một hop có giới hạn, mặc định tắt.
-3. Deduce kiểm căn cứ, điều kiện áp dụng, hiệu lực và xung đột. SafeLegalGenerator kiểm source/span/liên kết yêu cầu, ghép trích đoạn đã xác minh; không gọi thêm model để viết tự do.
-4. Spring Boot kiểm document/unit đã xuất bản, điều kiện hiệu lực và quote khớp rồi lưu. Thiếu căn cứ thì abstain; lỗi dịch vụ thì unavailable.
+1. Spring Boot kiểm quyền và giới hạn truy cập. KAG nhận câu hỏi, tóm tắt và một số lượt gần đây của cùng cuộc trò chuyện để hiểu câu hỏi tiếp nối, hỏi lại hoặc trả lời xã giao. Nếu bước chuẩn bị lỗi, backend chuyển câu gốc sang truy vấn luật.
+2. Tuyến truy vấn kiểm định danh release, nguồn, đồ thị và ngày tra cứu. Runtime tạo [`DirectAnswerPipeline`](../kag/legal_solver.py) của LuậtGT-KAG, dùng giao diện pipeline và client mô hình của SDK. Yêu cầu tra tên văn bản hoặc trích nguyên văn đủ điều kiện lấy trực tiếp từ bộ nguồn phục vụ. Nhánh này trả trạng thái thiếu căn cứ nếu tra chính xác không thành công.
+3. Với câu hỏi thông thường, pipeline gọi [Retriever](retrieval.md). Retriever dùng Embedding khi cần vector cho câu truy vấn, tìm theo ngữ nghĩa và định danh rồi đọc nguyên văn từ Neo4j. Tùy kết quả và cấu hình, luồng này bổ sung đơn vị cha, cạnh hợp lệ hoặc dẫn chiếu trong cùng điều. Bộ giải lọc phạm vi, hiệu lực và sai lệch nguồn trước khi gọi Chat, rồi kiểm trích dẫn và số liệu trong phản hồi.
+4. KAG API đối chiếu trích dẫn với bản nguồn và đọc lại bản ghi từ đồ thị. Spring Boot kiểm lại theo loại nguồn rồi lưu câu trả lời cùng trích dẫn và câu hỏi đã diễn giải, nếu có. Thiếu căn cứ được trả dưới dạng `KAG_ABSTAINED`. Lỗi kỹ thuật được ghi nhận là `UNAVAILABLE` ở WebApp.
 
 `Trích nội dung văn bản: ...` chỉ tra nội dung văn bản xác định, ghi rõ không xác nhận hiệu lực hiện hành.
 
@@ -47,17 +47,17 @@ React → Spring Boot (auth/rate limit/lịch sử) → Python HTTP API
 
 ## Đọc và ghi graph
 
-SDK writer ghi qua OpenSPG Server. Retriever/verifier đọc Neo4j bằng truy vấn được cho phép. SAMPLE Community dùng `BrokerRetrievalClient` gửi operation DTO tới Read Broker; API không giữ credential DB ở đường này. Đường reader trực tiếp cần cấu hình/mạng riêng. Danh tính project/namespace/physical database phải khớp; endpoint hoặc receipt cũ không cấp quyền.
+SDK writer ghi qua OpenSPG Server. Retriever và bộ kiểm chứng đọc Neo4j bằng các truy vấn được cho phép. PRODUCTION đọc qua Worker. SAMPLE Community đọc qua Read Broker. Với cấu hình reader trực tiếp, KAG API cần quyền đọc và kết nối riêng tới Neo4j. Danh tính project/namespace/physical database phải khớp; endpoint hoặc receipt cũ không cấp quyền.
 
 ## Hợp đồng HTTP và chính sách tương thích
 
 Nguồn chuẩn: [app.py](../kag/http_api/app.py), [contract.py](../kag/http_api/contract.py), [KagClient.java](../WebApp/backend/src/main/java/vn/luatgt/integration/KagClient.java).
 
-- Query: `{user_id,message,context_id,schema_contract}`; `context_id` rỗng, headers bind release/snapshot/`as_of`. Lịch sử không tự thành ngữ cảnh hội thoại.
-- Native Solver hỗ trợ document/unit/sign; success HTTP v1 chỉ hỗ trợ **`LegalUnit.text` nguyên trường**, đủ publication. Không cắt nguồn/đổi ID để ép vừa contract; kết quả không biểu diễn được trả `V1_RESULT_UNREPRESENTABLE`.
-- `answer` ≤20.000 UTF-16 units; 1–20 citations gồm `doc_id,unit_id,sign_id,evidence_id,field,start,end,quote`. `sign_id=null`, `field=text`, `start=0`, `end` tính Unicode code points.
-- Abstention hợp lệ: HTTP 503 `KAG_ABSTAINED`, `native_state=abstained`; Java kiểm cấu trúc/headers/request identity rồi lưu `KAG_ABSTAINED`. Lỗi khác lưu `UNAVAILABLE`.
-- UI gửi `POST /api/chat/stream?progress=true`; Java phát SSE `started` rồi `done`/`error` và giữ kết nối bằng heartbeat. Java gọi Python `POST /v1/query` nhận JSON đã kiểm căn cứ; không còn endpoint Python SSE.
+- `POST /v1/chat/context` chuẩn bị ngữ cảnh. `POST /v1/query` nhận `user_id`, `message`, `context_id` rỗng, `schema_contract` và `search_queries` tùy chọn. Phản hồi truy vấn gắn định danh release, snapshot và ngày đối chiếu.
+- `graph-chat-v1` hỗ trợ trích dẫn văn bản, điều khoản hoặc biển báo. Mỗi trích dẫn mang bản nguồn `graph-source-v1`. Release legacy yêu cầu `LegalUnit.text` nguyên trường và kiểm xuất bản trong WebApp.
+- Câu trả lời theo nguồn dài tối đa 20.000 đơn vị UTF-16, kèm 1–20 trích dẫn. `start=0`, `end` tính theo điểm mã Unicode của nguyên trường.
+- `CLARIFY` yêu cầu làm rõ. `KAG_ABSTAINED` có thể mang lý do `no_source`, `out_of_scope` hoặc `expired`. Mã abstain HTTP 503 cũ vẫn được xử lý. Lỗi kỹ thuật lưu `UNAVAILABLE`.
+- UI gửi `POST /api/chat/stream?progress=true`. Spring Boot phát SSE `started`, heartbeat và kết quả `done` hoặc `error`. Hai API KAG trả JSON.
 - `/v1/health` chỉ liveness. `/v1/operations/sample`, `/v1/pipeline/status`, `/v1/benchmark/datasets` phục vụ inspection, không chạy Builder/benchmark.
 
 Endpoint và secrets: [Docker](../docker/README.md#cấu-hình-chatbot). Control ADMIN, tiến trình và kết quả phiên: [runner](runner.md#dựng-đồ-thị-qua-5-bước). API Builder v3 hỗ trợ `abandon`/xóa dữ liệu với quyền riêng; hai thao tác không tương đương và không tự kích hoạt Chat.

@@ -20,7 +20,9 @@ HTTP SAMPLE cần nguồn/proof/ngân sách theo [Docker](../docker/README.md#c�
 
 [`vector_contract.py`](../kag/vector_contract.py) giữ bốn targets: LegalUnit.text, LegalDocument.title, TrafficSign.ten/moTa. Mỗi target cần đúng một ONLINE index dùng cosine. Số chiều do model Embedding đã cấu hình quyết định và phải khớp index; mặc định của cấu hình hiện tại là 3072. Hàm `valid_vector(vector, dimension)` trong `vector_contract.py` nhận dimension làm tham số, không cố định 3072. Query vector hữu hạn, khác zero, score `[0,1]`.
 
-Hydrate theo fully-qualified type + ID, decode outer layer một lần; giữ nguyên ID/Unicode/suffix/text. Evidence gồm source_texts, IDs, score, vector_sources, graph_context. Dedup type + ID, giữ score cao nhất mỗi field; chọn tối đa top_k seeds chung, xếp score giảm rồi type/ID. ANN có thể đổi candidates theo index/runtime.
+Retriever đọc nguyên văn theo type và ID, giữ mã Unicode và nội dung nguồn. Kết quả gồm `source_texts`, ID, điểm, `vector_sources` và `graph_context`. Chat còn tìm theo mã định danh, bổ sung đơn vị cha khi cần và gộp trùng theo type/ID giữa các truy vấn. [Retriever](../kag/retriever/retriever.py)
+
+Khi có bản ghi nguồn, `retrieve()` xử lý riêng yêu cầu chỉ tra tên theo số hiệu đầy đủ. Hàm đọc tiêu đề theo ID nếu khớp duy nhất. Nếu không khớp hoặc khớp nhiều ID, hàm trả `[]` và dừng. Các câu hỏi khác đi theo nhánh vector, có thể bổ sung căn cứ khớp định danh. Luồng trả lời Chat xử lý yêu cầu tra chính xác trong bộ giải trước khi gọi Retriever.
 
 Expansion mặc định tắt; bật thì một hop, mặc định tối đa 50 relations hợp schema, mỗi cạnh chạm seed. Giữ thứ tự seeds, thêm node dedup theo type/ID; graph-only evidence có `score=null`, `vector_sources=[]`. Không suy các nodes mở rộng là kết quả vector.
 
