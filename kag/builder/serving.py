@@ -293,6 +293,7 @@ def prepare(change,token,*,activate=False):
 def fixed_read(change):
     global _READ_RELEASE
     from kag.http_api.read_broker import _parameters,_BoundedOpener
+    from kag.http_api.runtime import REQUEST_SECONDS
     from kag.retriever.neo4j import Neo4jRetrievalClient
     a._keys(change,('release_id','operation','parameters'))
     selected=active_selection()
@@ -309,7 +310,7 @@ def fixed_read(change):
         namespace=descriptor['namespace'],dimension=descriptor['dimension'],production=True)
     reader=Neo4jRetrievalClient(release.backend['reader_endpoint'],descriptor['database'],
         username=os.environ['KAG_NEO4J_USERNAME'],password=os.environ['KAG_NEO4J_PASSWORD'],
-        namespace=descriptor['namespace'],dimension=descriptor['dimension'],timeout=5)
+        namespace=descriptor['namespace'],dimension=descriptor['dimension'],timeout=REQUEST_SECONDS)
     reader._opener=_BoundedOpener()
     try:
         access=a._backend(reader,release,include_access=True)

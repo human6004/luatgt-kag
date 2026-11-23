@@ -461,7 +461,7 @@ public class KagClient {
     }
     private void validatePackageModel(JsonNode model) throws IOException {
         if(!fields(model).equals(Set.of("provider","model","dimension"))||!model.path("provider").asText().equals("openai-compatible")||
-            !model.path("model").isTextual()||!model.path("model").asText().matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}")||
+            !model.path("model").isTextual()||!model.path("model").asText().matches("[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}")||
             !bounded(model.path("dimension"),1,65536))throw new IOException();
     }
     private void validatePackageManifest(JsonNode manifest) throws IOException {
@@ -549,7 +549,7 @@ public class KagClient {
             if(!fields(embedding).equals(Set.of("provider","base_url","model","revision","key_configured","tested","dimension"))||
                 !embedding.path("provider").asText().equals("openai-compatible")||!bounded(embedding.path("revision"),1,Integer.MAX_VALUE)||
                 !embedding.path("key_configured").isBoolean()||!embedding.path("tested").isBoolean()||
-                !embedding.path("model").asText().matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}")||
+                !embedding.path("model").asText().matches("[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}")||
                 !embedding.path("dimension").isNull()&&!bounded(embedding.path("dimension"),1,65536))throw new IOException();
             var uri=java.net.URI.create(embedding.path("base_url").asText());
             if(!Set.of("http","https").contains(uri.getScheme())||uri.getHost()==null||uri.getUserInfo()!=null||uri.getQuery()!=null||uri.getFragment()!=null)throw new IOException();
@@ -696,7 +696,7 @@ public class KagClient {
             !binding.path("database_id").asText().matches("[A-Za-z0-9._:-]{1,128}"))throw new IOException();
         for(String key:List.of("project_id","database","namespace"))if(!binding.path(key).equals(body.path("target").path(key)))throw new IOException();
         String identity=binding.path("model_identity").asText();int split=identity.lastIndexOf('|');
-        if(split<1||!identity.substring(split+1).matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}"))throw new IOException();
+        if(split<1||!identity.substring(split+1).matches("[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}"))throw new IOException();
         var uri=java.net.URI.create(identity.substring(0,split));
         if(!Set.of("http","https").contains(uri.getScheme())||uri.getHost()==null||uri.getUserInfo()!=null||uri.getQuery()!=null||uri.getFragment()!=null)throw new IOException();
         if(!fields(timing).equals(Set.of("started_at","updated_at")))throw new IOException();
@@ -765,7 +765,7 @@ public class KagClient {
         } else if(!input)return false;
         if(input?!(keys.equals(Set.of("base_url","model"))||keys.equals(Set.of("base_url","model","api_key"))):
             !keys.equals(Set.of("base_url","model","key_configured")))return false;
-        if(!value.path("model").isTextual()||!value.path("model").asText().matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}")||
+        if(!value.path("model").isTextual()||!value.path("model").asText().matches("[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}")||
             !value.path("base_url").isTextual()||value.path("base_url").asText().length()>2048||
             value.path("base_url").asText().matches("(?s).*[\\s\\x00-\\x1f\\x7f].*"))return false;
         try {
@@ -835,7 +835,7 @@ public class KagClient {
                     !bounded(test.path("client_attempts"),0,1)||!bounded(test.path("output_chars"),0,262144)||
                     !test.path("dimension").isNull()&&!bounded(test.path("dimension"),0,262144)||
                     !test.path("observed_model").isNull()&&(!test.path("observed_model").isTextual()||
-                        !test.path("observed_model").asText().matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}"))||
+                        !test.path("observed_model").asText().matches("[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}"))||
                     !test.path("tested_at").isTextual()||!test.path("tested_at").asText().matches("[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\+00:00")||
                     test.path("status").asText().equals("PASS")&&(!test.path("code").isNull()||test.path("client_attempts").asInt()!=1||
                         (role.equals("embedding")?!bounded(test.path("dimension"),1,65536):test.path("output_chars").asInt()<1)))throw new IOException("Invalid provider result");
@@ -903,7 +903,7 @@ public class KagClient {
         for(String role:List.of("chat","embedding")) {
             var model=models.path(role);String state=model.path("state").asText();
             if(!fields(model).equals(Set.of("state","model","endpoint"))||!Set.of("CONFIGURED","NOT_CONFIGURED","INCOMPLETE","INVALID").contains(state)||
-                (!model.path("model").isNull()&&(!model.path("model").isTextual()||!model.path("model").asText().matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}")))||
+                (!model.path("model").isNull()&&(!model.path("model").isTextual()||!model.path("model").asText().matches("[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}")))||
                 (!model.path("endpoint").isNull()&&(!text(model.path("endpoint"),270,true)||!configEndpoint(model.path("endpoint").asText()))))throw new IOException("Invalid model metadata");
             if(state.equals("CONFIGURED")&&(model.path("model").isNull()||model.path("endpoint").isNull())||
                 state.equals("NOT_CONFIGURED")&&(!model.path("model").isNull()||!model.path("endpoint").isNull()))throw new IOException("Inconsistent model metadata");
@@ -1169,7 +1169,7 @@ public class KagClient {
             if(!body.path("attempts").isNull()||!body.path("receipt_window").isNull())throw new IOException("Unobserved provider counts");return;
         }
         for(String name:List.of("configured_chat_model","configured_embedding_model","policy_response_version"))
-            if(!(name.equals("policy_response_version")&&body.path(name).isNull())&&(!body.path(name).isTextual()||!body.path(name).asText().matches("[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}")))throw new IOException("Invalid model route");
+            if(!(name.equals("policy_response_version")&&body.path(name).isNull())&&(!body.path(name).isTextual()||!body.path(name).asText().matches("[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}")))throw new IOException("Invalid model route");
         var counts=body.path("attempts");if(!fields(counts).equals(Set.of("embedding","chat")))throw new IOException("Invalid request counts");
         for(var count:counts)if(!count.isIntegralNumber()||!count.canConvertToLong()||count.asLong()<0)throw new IOException("Invalid request count");
         var window=body.path("receipt_window");

@@ -247,7 +247,7 @@ def llm_options(value):
     if value.get('provider', 'openai-compatible') != 'openai-compatible':
         raise ApiFailure('INVALID_REQUEST')
     model, endpoint = value['model'], value['base_url']
-    if type(model) is not str or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}', model):
+    if type(model) is not str or not re.fullmatch(r'[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}', model):
         raise ApiFailure('INVALID_REQUEST')
     try:
         if type(endpoint) is not str or len(endpoint) > 2048 or re.search(r'[\s\x00-\x1f\x7f]', endpoint):

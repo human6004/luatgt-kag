@@ -82,7 +82,7 @@ def _manifest(value):
     identity = value['model_identity']
     if (type(identity) is not dict or set(identity) != {'provider','model','dimension'}
             or identity['provider'] != 'openai-compatible' or not isinstance(identity['model'],str)
-            or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}',identity['model']) or type(identity['dimension']) is not int
+            or not re.fullmatch(r'[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}',identity['model']) or type(identity['dimension']) is not int
             or not 1 <= identity['dimension'] <= 65536):
         raise PackageError('PACKAGE_MANIFEST')
     selection = value['selection']

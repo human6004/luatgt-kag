@@ -42,7 +42,7 @@ class BudgetError(RuntimeError):
 
 
 def provider_route(config, role, policy):
-    """Approve a saved endpoint; the isolated gateway resolves and pins its public IP."""
+    """Route the administrator's saved HTTP(S) endpoint through the isolated gateway."""
     if (role not in ('chat', 'embedding') or type(policy) is not dict or policy.get('enabled') is not True
             or not policy.get('token') or config.get('provider','openai-compatible') != 'openai-compatible'):
         raise BudgetError('BLOCKED')
@@ -56,8 +56,7 @@ def provider_route(config, role, policy):
         if not proxy.get('safe') and not proxy.get('allow_upstream_retries'):
             raise BudgetError('PROXY_POLICY_UNVERIFIED')
         return dict(mode='proxy', base_url=config['base_url'])
-    if (url.scheme != 'https' or url.port not in (None,443) or url.host not in policy.get('allowed_hosts',())
-            or not re.fullmatch(r'(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z][a-z0-9-]*',url.host)):
+    if url.scheme not in ('http','https'):
         raise BudgetError('BLOCKED')
     return dict(mode='public', base_url=config['base_url'])
 
@@ -71,12 +70,14 @@ def _forward(request, gateway, token, upstream, route=None):
     trace_id = request.extensions.get('kag_trace_id')
     if isinstance(trace_id, str) and re.fullmatch(r'[a-f0-9-]{36}\.[a-f0-9]{32}', trace_id):
         headers['X-KAG-Trace-ID'] = trace_id
-    for name in ('host','X-KAG-Provider-Token','X-KAG-Provider-Route','X-KAG-Provider-Host','X-KAG-Provider-Path','X-KAG-Provider-Base'):
+    for name in ('host','X-KAG-Provider-Token','X-KAG-Provider-Route','X-KAG-Provider-Host','X-KAG-Provider-Path','X-KAG-Provider-Base','X-KAG-Provider-Scheme','X-KAG-Provider-Port'):
         headers.pop(name,None)
     headers['X-KAG-Provider-Token'] = token
     if route is not None:
         headers.update({'X-KAG-Provider-Route':route['mode'],'X-KAG-Provider-Host':request.url.host,
-                        'X-KAG-Provider-Path':request.url.path,'X-KAG-Provider-Base':route['base_url']})
+                        'X-KAG-Provider-Path':request.url.path,'X-KAG-Provider-Base':route['base_url'],
+                        'X-KAG-Provider-Scheme':request.url.scheme,
+                        'X-KAG-Provider-Port':str(request.url.port or (443 if request.url.scheme=='https' else 80))})
     return httpx.Request(request.method,gateway+suffix,headers=headers,content=request.content,extensions=request.extensions)
 
 
@@ -134,7 +135,7 @@ def test_provider(config, role, policy):
                         raise BudgetError('TIMEOUT')
         body = json.loads(raw, object_pairs_hook=_object)
         observed = body.get('model')
-        if (type(observed) is str and re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}',observed)
+        if (type(observed) is str and re.fullmatch(r'[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}',observed)
                 and not any(secret and secret in observed for secret in (config['api_key'],policy['token']))):
             result['observed_model'] = observed
         if role == 'chat':
@@ -198,7 +199,7 @@ class ProviderBudget:
                 valid = (type(endpoint) is str and url.scheme in ('http','https')
                     and bool(url.host) and not url.userinfo and not url.query
                     and not url.fragment and url.path.endswith(suffix)
-                    and type(model) is str and re.fullmatch(r'[A-Za-z0-9_./:-]{1,256}',model))
+                    and type(model) is str and re.fullmatch(r'[A-Za-z0-9_./:@-]{1,256}',model))
             except (TypeError,ValueError):
                 valid = False
             if not valid:

@@ -502,7 +502,7 @@ def _configure_production_model(settings,model,role,runtime):
 def _new_reader(settings, release, budget):
     if settings.production:
         from .community import WorkerRetrievalClient
-        reader=WorkerRetrievalClient(release,settings.broker_token,timeout=TRANSPORT_SECONDS)
+        reader=WorkerRetrievalClient(release,settings.broker_token,timeout=REQUEST_SECONDS)
         reader._opener=_ReaderBoundary(reader._opener,budget,transport_seconds=REQUEST_SECONDS)
         return reader
     if settings.broker_url:
@@ -588,6 +588,8 @@ def _new_llm(settings, runtime, *, timeout=TRANSPORT_SECONDS):
     from kag.common.llm.openai_client import OpenAIClient
     model = _sdk_instance(OpenAIClient,runtime,name='kag-'+uuid4().hex,model=settings.chat_model,
         api_key=settings.chat_key,base_url=settings.chat_url,enable_check=False,timeout=timeout)
+    # Upstream defaults include chat_template_kwargs, which OpenAI-compatible providers may reject.
+    model.extra_body = {}
     model.client.max_retries = 0
     if settings.production:
         _configure_production_model(settings,model,'chat',runtime)
@@ -972,7 +974,7 @@ class RuntimeSupervisor:
                 or type(value['output_chars']) is not int or not 0 <= value['output_chars'] <= 262144
                 or value['dimension'] is not None and (type(value['dimension']) is not int or not 0 <= value['dimension'] <= 262144)
                 or value['observed_model'] is not None and (type(value['observed_model']) is not str
-                    or not re.fullmatch(r'[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}', value['observed_model']))
+                    or not re.fullmatch(r'[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}', value['observed_model']))
                 or type(value['tested_at']) is not str or not re.fullmatch(r'\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\+00:00', value['tested_at'])
                 or value['status'] == 'PASS' and (value['client_attempts'] != 1 or
                     (value['dimension'] is None or not 1 <= value['dimension'] <= 65536 if role == 'embedding' else value['output_chars'] < 1))):

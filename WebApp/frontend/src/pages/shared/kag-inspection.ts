@@ -192,7 +192,7 @@ const packageModel = (value: PackageModel) =>
   typeof value.provider === "string" &&
   /^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$/.test(value.provider) &&
   typeof value.model === "string" &&
-  /^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(value.model) &&
+  /^[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}$/.test(value.model) &&
   count(value.dimension, 65536) &&
   value.dimension > 0;
 const packageReference = (value: VectorPackageReference) =>
@@ -487,7 +487,7 @@ function llmInput(value: LLMInput) {
     !value ||
     value.provider !== "openai-compatible" ||
     typeof value.model !== "string" ||
-    !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(value.model) ||
+    !/^[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}$/.test(value.model) ||
     typeof value.base_url !== "string" ||
     value.base_url.length > 2048 ||
     /[\s\x00-\x1f\x7f]/.test(value.base_url)
@@ -607,7 +607,7 @@ function validateLLMCredentials(value: LLMCredentials) {
         (test.dimension !== null && !count(test.dimension, 262144)) ||
         (test.observed_model !== null &&
           (typeof test.observed_model !== "string" ||
-            !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(test.observed_model))) ||
+            !/^[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}$/.test(test.observed_model))) ||
         typeof test.tested_at !== "string" ||
         !/^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\d\+00:00$/.test(test.tested_at) ||
         (test.status === "PASS" &&
@@ -813,7 +813,7 @@ export async function loadKagConfiguration(signal?: AbortSignal): Promise<KagCon
     if (
       !shape(model, ["state", "model", "endpoint"]) ||
       !["CONFIGURED", "NOT_CONFIGURED", "INCOMPLETE", "INVALID"].includes(model.state) ||
-      !optionalText(model.model, /^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/) ||
+      !optionalText(model.model, /^[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}$/) ||
       !optionalText(model.endpoint, /^https?:\/\/[A-Za-z0-9.\[\]:-]{1,260}$/) ||
       (model.state === "CONFIGURED" && (model.model === null || model.endpoint === null)) ||
       (model.state === "NOT_CONFIGURED" && (model.model !== null || model.endpoint !== null))
@@ -1090,7 +1090,7 @@ function validateBuilder(value: BuilderStatus): BuilderStatus {
           url = new URL(binding.model_identity.slice(0, split));
         if (
           split < 1 ||
-          !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(binding.model_identity.slice(split + 1)) ||
+          !/^[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}$/.test(binding.model_identity.slice(split + 1)) ||
           !["http:", "https:"].includes(url.protocol) ||
           !url.hostname ||
           url.username ||
@@ -1681,7 +1681,7 @@ function validateBuilderConfiguration(value: BuilderConfiguration): BuilderConfi
       typeof embedding.key_configured !== "boolean" ||
       typeof embedding.tested !== "boolean" ||
       typeof embedding.model !== "string" ||
-      !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(embedding.model) ||
+      !/^[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}$/.test(embedding.model) ||
       (embedding.dimension !== null &&
         (!count(embedding.dimension) || embedding.dimension < 1 || embedding.dimension > 65536))
     )
@@ -3588,7 +3588,7 @@ export async function loadSampleInspection(signal?: AbortSignal): Promise<Sample
       p.configured_chat_model,
       p.configured_embedding_model,
       ...(p.policy_response_version === null ? [] : [p.policy_response_version]),
-    ].some((v) => typeof v !== "string" || !/^[A-Za-z0-9][A-Za-z0-9._/:-]{0,199}$/.test(v)) ||
+    ].some((v) => typeof v !== "string" || !/^[A-Za-z0-9@][A-Za-z0-9._/@:-]{0,199}$/.test(v)) ||
     !p.receipt_window ||
     !shape(p.receipt_window, ["since", "outcomes", "recent"]) ||
     !Array.isArray(p.receipt_window.recent) ||

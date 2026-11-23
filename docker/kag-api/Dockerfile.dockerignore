@@ -41,3 +41,5 @@
 
 !docker/
 !docker/openspg-server.sh
+!docker/kag-api/
+!docker/kag-api/PatchOpenSpgModelId.java

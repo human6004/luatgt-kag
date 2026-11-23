@@ -1,5 +1,19 @@
 # Đánh giá KAG
 
+## Benchmark chatbot WebApp (13 cột)
+
+Bộ mới: [`data/benchmark.csv`](data/benchmark.csv), bản tương đương
+[`data/benchmark.json`](data/benchmark.json). Định nghĩa cột/miền giá trị/rubric và
+công thức metrics: [`definition.md`](definition.md). Hướng dẫn chạy 5 bước, cấu
+hình, resume và giới hạn API: [`runner/README.md`](runner/README.md).
+
+Đây là bộ 100 lượt hỏi, cần review pháp lý trước khi dùng làm kết luận thực nghiệm.
+Runner gọi API chat thực tế của WebApp, không thay thế bằng native solver.
+Output của bộ mới nằm trong `benchmark/output` theo yêu cầu triển khai; logs và
+fixtures kiểm thử tạm vẫn nằm ngoài repo. Các file `data/benchmark-template.*`
+cũ được giữ nguyên. Phần dưới mô tả framework KAG native riêng, không phải schema
+13 cột hoặc đường chạy WebApp mới.
+
 Implementation: [`kag/evaluation/`](../kag/evaluation/). Inputs/output thực chạy nằm ngoài repo. Đánh giá không phải bước startup.
 
 ## Dataset

@@ -845,7 +845,11 @@ def create_app(*, control=None, token=None, state_dir=None):
         except (ProjectCatalogError,RunBlocked) as error:
             raise HTTPException(409,error.code) from None
         except ApiFailure:raise
-        except Exception:raise ApiFailure('NOT_READY') from None
+        except Exception as error:
+            if action=='read':
+                from kag.http_api.runtime import _query_failure_diagnostic
+                print('SERVING_READ_FAILURE '+json.dumps(_query_failure_diagnostic(error)),flush=True)
+            raise ApiFailure('NOT_READY') from None
         finally:
             if action!='read' and not (action=='activate' and serving_result['state']=='PREPARING'):serving_busy=False
 

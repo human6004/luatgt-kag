@@ -27,6 +27,48 @@ RUN git init -q vendor/KAG \
 # Operators may use a different UID; this immutable path still gets full source validation.
 USER 0
 RUN git config --system --add safe.directory /workspace/vendor/KAG
+# Cloudflare model names start with @; preserve them after the instance ID separator.
+COPY docker/kag-api/PatchOpenSpgModelId.java /tmp/PatchOpenSpgModelId.java
+RUN python - <<'PY'
+from io import BytesIO
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from zipfile import ZipFile
+import os
+import shutil
+import subprocess
+
+archive = Path('/arks-sofaboot-0.0.1-SNAPSHOT-executable.jar')
+library = 'BOOT-INF/lib/com.antgroup.openspg.server-infra-dao-0.0.1-SNAPSHOT.jar'
+repository = 'com/antgroup/openspg/server/infra/dao/repository/common/UserModelRepositoryImpl.class'
+source = Path('/tmp/PatchOpenSpgModelId.java')
+with TemporaryDirectory(prefix='openspg-model-id-') as directory:
+    work = Path(directory)
+    with ZipFile(archive) as boot:
+        javassist = work / 'javassist.jar'
+        javassist.write_bytes(boot.read('BOOT-INF/lib/javassist-3.19.0-GA.jar'))
+        with ZipFile(BytesIO(boot.read(library))) as original:
+            bytecode = work / 'UserModelRepositoryImpl.class'
+            bytecode.write_bytes(original.read(repository))
+            subprocess.run(['javac', '-cp', str(javassist), '-d', directory, str(source)], check=True)
+            subprocess.run(['java', '-cp', directory + ':' + str(javassist),
+                            'PatchOpenSpgModelId', str(bytecode)], check=True)
+            patched_library = BytesIO()
+            with ZipFile(patched_library, 'w') as patched:
+                for entry in original.infolist():
+                    patched.writestr(entry, bytecode.read_bytes() if entry.filename == repository
+                                     else original.read(entry))
+        output = work / archive.name
+        with ZipFile(output, 'w') as patched:
+            for entry in boot.infolist():
+                if entry.filename == library:
+                    patched.writestr(entry, patched_library.getvalue())
+                else:
+                    with boot.open(entry) as reader, patched.open(entry, 'w') as writer:
+                        shutil.copyfileobj(reader, writer)
+    os.replace(output, archive)
+source.unlink()
+PY
 RUN mkdir -p /run/kag-locks /builder-runs /provider-state /builder-state /benchmark-data \
     && chmod 1777 /run/kag-locks /builder-runs \
     && chown 10001:10001 /provider-state /builder-state /benchmark-data && chmod 700 /provider-state /builder-state /benchmark-data

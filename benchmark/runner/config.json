@@ -1,0 +1,10 @@
+{
+  "base_url": "http://localhost:8081",
+  "timeout_seconds": 180,
+  "interval_seconds": 3.1,
+  "retries": 2,
+  "retry_backoff_seconds": 5,
+  "dataset_version": "corpus-100-balanced-v2-2026-11-19",
+  "system_version": null,
+  "model_version": null
+}
